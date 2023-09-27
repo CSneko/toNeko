@@ -8,3 +8,6 @@
 获取厥猫棍(该物品在击杀猫娘时会有特殊死亡提示):
 
 `/toneko item`
+
+## bStats:
+![bStats](https://bstats.org/signatures/bukkit/CSNKTools.svg)
