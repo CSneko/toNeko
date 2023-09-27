@@ -3,9 +3,11 @@ version: '${project.version}'
 main: com.crystalneko.toneko.ToNeko
 api-version: '1.20'
 commands:
-  tocat:
+  toneko:
     usage: /toneko
-    aliases: [cnk]
+    aliases: [cnk,tocat]
 permissions:
   toneko.command:
+    default: true
+  toneko.command.item:
     default: true

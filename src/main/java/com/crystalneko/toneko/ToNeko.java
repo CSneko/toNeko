@@ -1,15 +1,18 @@
 package com.crystalneko.toneko;
 
 import com.crystalneko.toneko.command.ToNekoCommand;
+import com.crystalneko.toneko.event.PlayerDeath;
 import com.crystalneko.toneko.files.create;
 import com.crystalneko.toneko.chat.nekoed;
+import com.crystalneko.toneko.items.getStick;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
 public final class ToNeko extends JavaPlugin {
     private create createFile;
     private nekoed catedChat;
-    private Metrics metrics;
+    private getStick getstick;
+    private PlayerDeath playerDeath;
 
     @Override
     public void onEnable() {
@@ -44,10 +47,15 @@ public final class ToNeko extends JavaPlugin {
 
         //创建数据保存文件
         createFile.createNewFile("plugins/toNeko/nekos.yml");
-        // 注册命令执行器
-        getCommand("toCat").setExecutor(new ToNekoCommand(this,createFile));
         //初始化聊天监听器
         this.catedChat = new nekoed(this);
+        //初始化厥猫棍获取器
+        this.getstick = new getStick(this);
+        //初始化死亡监听器
+        this.playerDeath = new PlayerDeath(this);
+        // 注册命令执行器
+        getCommand("toneko").setExecutor(new ToNekoCommand(this,createFile,getstick));
+
     }
 
 

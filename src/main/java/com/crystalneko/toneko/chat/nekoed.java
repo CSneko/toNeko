@@ -38,9 +38,9 @@ public class nekoed implements Listener{
             String catMessage = catChatMessage(player, message,owner);
 
             // 修改消息的格式并重新发送
-            event.setFormat("[§a猫娘§f]" + player.getDisplayName() + " >> " + catMessage);
+            event.setFormat("[§a猫娘§f]" + player.getDisplayName() + " >> §7" + catMessage);
         } else {
-            event.setFormat(player.getDisplayName() + " >> " + message);
+            event.setFormat(player.getDisplayName() + " >> §7" + message);
         }
 
     }

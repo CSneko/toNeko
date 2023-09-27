@@ -8,10 +8,12 @@ com/crystalneko/toneko/chat/nekoed.class
 com/crystalneko/toneko/Metrics$JsonObjectBuilder$JsonObject.class
 com/crystalneko/toneko/command/ToNekoCommand.class
 com/crystalneko/toneko/Metrics$MetricsBase.class
+com/crystalneko/toneko/items/getStick.class
 com/crystalneko/toneko/Metrics.class
 com/crystalneko/toneko/Metrics$SimpleBarChart.class
 com/crystalneko/toneko/Metrics$AdvancedBarChart.class
 com/crystalneko/toneko/ToNeko.class
+com/crystalneko/toneko/event/PlayerDeath.class
 com/crystalneko/toneko/files/download.class
 com/crystalneko/toneko/Metrics$MultiLineChart.class
 com/crystalneko/toneko/Metrics$SimplePie.class
