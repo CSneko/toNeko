@@ -10,4 +10,4 @@
 `/toneko item`
 
 ## bStats:
-![bStats](https://bstats.org/signatures/bukkit/CSNKTools.svg)
+![bStats](https://bstats.org/signatures/bukkit/toneko.svg)
