@@ -26,5 +26,10 @@
       <option name="name" value="JBoss Community repository" />
       <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="ctLib" />
+      <option name="name" value="ctLib" />
+      <option name="url" value="https://raw.githubusercontent.com/CSneko/ctLib/main" />
+    </remote-repository>
   </component>
 </project>

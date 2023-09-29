@@ -7,10 +7,15 @@ import java.io.IOException;
 
 public class create {
     public Boolean createNewFile(String filePath) {
-
         File file = new File(filePath);
 
         if (!file.exists()) {
+            // 检查文件所在的文件夹是否存在，不存在则创建
+            File parentDir = file.getParentFile();
+            if (!parentDir.exists()) {
+                parentDir.mkdirs();
+            }
+
             try {
                 return file.createNewFile();
             } catch (IOException e) {
