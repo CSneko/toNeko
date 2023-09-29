@@ -1,9 +1,8 @@
 package com.crystalneko.toneko.files;
 
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 public class create {
     public Boolean createNewFile(String filePath) {
@@ -36,7 +35,7 @@ public class create {
      * @param configFile yml文件
      */
 
-    public Boolean createNewKey(String key, Object value, YamlConfiguration config, File configFile) {
+    public static Boolean createNewKey(String key, Object value, YamlConfiguration config, File configFile) {
         // 检查配置文件是否已经包含了指定键
         if (!config.contains(key)) {
             // 在配置文件中创建新键
@@ -50,6 +49,32 @@ public class create {
             return  true;
         }else{
             return false;
+        }
+    }
+    //用于判断和设置yaml中某个键是否存在并设置值
+    public static void setValue(String keyToSet , Object value,File file) {
+        YamlConfiguration yamlConfiguration = new YamlConfiguration();
+
+        try {
+            yamlConfiguration.load(file);
+            yamlConfiguration.set(keyToSet, value);
+            yamlConfiguration.save(file);
+        } catch (IOException | InvalidConfigurationException e) {
+        }
+    }
+    //设置某个值为null
+    public static void setNullValue(File file, String keyToSetNull) {
+        YamlConfiguration yamlConfiguration = new YamlConfiguration();
+
+        try {
+            yamlConfiguration.load(file);
+            if (yamlConfiguration.contains(keyToSetNull)) {
+                yamlConfiguration.set(keyToSetNull, null);
+                yamlConfiguration.save(file);
+            } else {
+            }
+        } catch (IOException | InvalidConfigurationException e) {
+            System.out.println(e.getMessage());
         }
     }
 }

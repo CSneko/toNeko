@@ -1,13 +1,15 @@
 name: toNeko
-version: '0.0.2'
+version: '0.0.3'
 main: com.crystalneko.toneko.ToNeko
 api-version: '1.20'
 commands:
   toneko:
-    usage: /toneko
+    usage: /toneko help
     aliases: [cnk,tocat]
 permissions:
   toneko.command:
     default: true
   toneko.command.item:
     default: true
+  toneko.command.remove:
+      default: true

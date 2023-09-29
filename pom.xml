@@ -6,7 +6,7 @@
 
     <groupId>com.crystalneko</groupId>
     <artifactId>toNeko</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
     <packaging>jar</packaging>
 
     <name>toNeko</name>
@@ -71,8 +71,12 @@
             <version>1.20.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-        
-
-
+        <dependency>
+            <groupId>com.crystalneko</groupId>
+            <artifactId>ctLib</artifactId>
+            <version>0.0.2</version>
+            <scope>system</scope>
+            <systemPath>/media/crystalneko/BA106C158B1B58EF/javatest/Plugins/ctLib/target/ctLib-0.0.2.jar</systemPath>
+        </dependency>
     </dependencies>
 </project>

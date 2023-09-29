@@ -1,5 +1,6 @@
 package com.crystalneko.toneko.chat;
 
+import com.crystalneko.ctlib.chat.chatPrefix;
 import com.crystalneko.toneko.ToNeko;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -36,9 +37,10 @@ public class nekoed implements Listener{
             String  owner =data.getString(player.getDisplayName()+".owner");
             // 对消息进行处理
             String catMessage = catChatMessage(player, message,owner);
-
+            //获取前缀
+            String Prefix = chatPrefix.getPrivatePrefix(player);
             // 修改消息的格式并重新发送
-            event.setFormat("[§a猫娘§f]" + player.getDisplayName() + " >> §7" + catMessage);
+            event.setFormat(Prefix + player.getDisplayName() + " >> §7" + catMessage);
         } else {
             event.setFormat(player.getDisplayName() + " >> §7" + message);
         }

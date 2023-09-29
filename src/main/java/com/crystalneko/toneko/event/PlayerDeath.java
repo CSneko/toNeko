@@ -1,6 +1,7 @@
 package com.crystalneko.toneko.event;
 
 import com.crystalneko.toneko.ToNeko;
+import com.crystalneko.toneko.files.create;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -12,6 +13,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.io.File;
+import java.util.Random;
 
 import static org.bukkit.Bukkit.getServer;
 
@@ -49,8 +51,21 @@ public class PlayerDeath implements Listener {
                         //判断玩家是否为猫娘
                         if(data.getString(player.getDisplayName() + ".owner") != null) {
                             //发送死亡提示
-                            String deathMessage = "猫娘 " + player.getName() + " 被 " + killer.getName() + " §f撅死了！";
+                            String deathMessage = "猫娘 " + player.getDisplayName() + " 被 " + killer.getName() + " §f撅死了！";
                             event.setDeathMessage(deathMessage);
+                            //判断是否为主人
+                            if(killer.getDisplayName().equals(data.getString(player.getDisplayName() + ".owner"))){
+                                //生成随机数
+                                Random random = new Random();
+                                int randomNumber = random.nextInt(7) + 3;
+                                //检查配置是否存在
+                                create.createNewKey(player.getDisplayName() + "." + "xp", 0, data, dataFile);
+                                //减去值
+                                int xpValue = data.getInt(player.getDisplayName() + ".xp") - randomNumber;
+                                create.setValue(player.getDisplayName() + ".xp",xpValue,dataFile);
+                                player.sendMessage("§c你与§e" + killer.getDisplayName() + "§c的好感经验减少了" + randomNumber);
+                                killer.sendMessage("§c你与§e" + player.getDisplayName() + "§c的好感经验减少了" + randomNumber);
+                            }
                         }
                     }
                 }
