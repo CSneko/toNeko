@@ -22,7 +22,7 @@ public class getStick {
         //获取物品的ItemMeta对象
         ItemMeta itemMeta = itemStack.getItemMeta();
         //设置物品的展示名称
-        itemMeta.setDisplayName("§9§o厥猫棍");
+        itemMeta.setDisplayName("§9§o撅猫棍");
         //为物品添加附魔特效
         itemMeta.addEnchant(Enchantment.DURABILITY, 1, true);
         //设置物品的NBT标签
