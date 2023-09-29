@@ -54,7 +54,7 @@ public class ToNekoCommand implements CommandExecutor, TabCompleter {
             }
 
         } else if (args[0].equalsIgnoreCase("help")) {
-            player.sendMessage("§b/toneko 帮助:\n§a/toneko help §b获取帮助\n§a/toneko player <玩家名> §b将一位玩家变成猫娘(但是你会被祭献)");
+            player.sendMessage("§b/toneko 帮助:\n§a/toneko help §b获取帮助\n§a/toneko player <玩家名> §b将一位玩家变成猫娘(但是你会被祭献)\n§a/toneko item §b获取撅猫棍");
         } else if (args[0].equalsIgnoreCase("item")) {
             if (player.hasPermission("toneko.command.item")){
                 getstick.getStick(player);

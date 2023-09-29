@@ -49,7 +49,7 @@ public class PlayerDeath implements Listener {
                         //判断玩家是否为猫娘
                         if(data.getString(player.getDisplayName() + ".owner") != null) {
                             //发送死亡提示
-                            String deathMessage = "猫娘 " + player.getName() + " 被 " + killer.getName() + " §f厥死了！";
+                            String deathMessage = "猫娘 " + player.getName() + " 被 " + killer.getName() + " §f撅死了！";
                             event.setDeathMessage(deathMessage);
                         }
                     }
