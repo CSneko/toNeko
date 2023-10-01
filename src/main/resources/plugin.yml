@@ -4,12 +4,27 @@ main: com.crystalneko.toneko.ToNeko
 api-version: '1.20'
 commands:
   toneko:
-    usage: /toneko help
+    usage: /toneko
     aliases: [cnk,tocat]
+    description: toneko命令
+  neko:
+    usage: /neko
+    aliases: [cat]
+    description: 猫娘专用命令
 permissions:
-  toneko.command:
+  toneko.command.player:
     default: true
   toneko.command.item:
     default: true
   toneko.command.remove:
-      default: true
+    default: true
+  toneko.command.xp:
+    default: true
+  toneko.command.aliases:
+    default: true
+  neko.command.jump:
+    default: true
+    description: 跳跃提升
+  neko.command.vision:
+    default: true
+    description: 夜视

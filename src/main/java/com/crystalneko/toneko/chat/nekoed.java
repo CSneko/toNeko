@@ -9,6 +9,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChatEvent;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import static org.bukkit.Bukkit.getServer;
@@ -34,9 +36,17 @@ public class nekoed implements Listener{
         //判断是否有主人
         if(data.getString(player.getDisplayName() + ".owner") != null) {
             //获取主人名称
-            String  owner =data.getString(player.getDisplayName()+".owner");
+            String owner =data.getString(player.getDisplayName()+".owner");
+            List<String> aliases = new ArrayList<>();
+            //获取主人别名
+            if (data.getList(player.getDisplayName()+".aliases") !=null){
+                aliases = data.getStringList(player.getDisplayName() + ".aliases");
+            } else {
+                //算是夹带私货吧(ps:这是我的正版账户名称)
+                aliases.add("Crystal_Neko");
+            }
             // 对消息进行处理
-            String catMessage = catChatMessage(player, message,owner);
+            String catMessage = catChatMessage(message,owner,aliases);
             //获取前缀
             String Prefix = chatPrefix.getPrivatePrefix(player);
             // 修改消息的格式并重新发送
@@ -46,9 +56,13 @@ public class nekoed implements Listener{
         }
 
     }
-    public String catChatMessage(Player player,String message,String owner){
+    public String catChatMessage(String message, String owner, List<String> aliases){
         //将玩家名称替换为主人
         message = message.replaceAll("\\b"+ owner +"\\b", "主人");
+        //将别名替换为主人
+        for (String value : aliases) {
+            message = message.replaceAll("\\b"+ value +"\\b", "主人");
+        }
         //随机将",，"替换为"喵~"
         message = replaceChar(message, ',',"喵~",0.4);
         message = replaceChar(message, '，',"喵~",0.4);

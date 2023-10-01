@@ -27,7 +27,6 @@ public class PlayerAttack implements Listener {
         getServer().getPluginManager().registerEvents(this,plugin );
     }
 
-
     @EventHandler
     public void onPlayerAttack(EntityDamageByEntityEvent event) {
         // 检查是否是玩家被攻击
@@ -60,14 +59,14 @@ public class PlayerAttack implements Listener {
                             //判断玩家是否为猫娘
                             if (data.getString(player.getDisplayName() + ".owner") != null) {
                                 PotionEffectType effectType = PotionEffectType.WEAKNESS; // 虚弱效果的类型
-                                int duration = 15; // 持续时间
+                                int duration = 200; // 持续时间
                                 int amplifier = 0; // 效果强度
                                 givePlayerPotionEffect(player, effectType, duration, amplifier);
                                 //判断是否为主人
                                 if (killer.getDisplayName().equals(data.getString(player.getDisplayName() + ".owner"))) {
                                     //生成随机数
                                     Random random = new Random();
-                                    int randomNumber = random.nextInt(5) - 2;
+                                    int randomNumber = random.nextInt(6) - 2;
                                     //检查配置是否存在
                                     create.createNewKey(player.getDisplayName() + "." + "xp", 0, data, dataFile);
                                     //减去值
@@ -84,14 +83,10 @@ public class PlayerAttack implements Listener {
         }
     }
     // 给予玩家药水效果的方法
-    public void givePlayerPotionEffect(Player player, PotionEffectType type, int duration, int amplifier) {
+    private void givePlayerPotionEffect(Player player, PotionEffectType type, int duration, int amplifier) {
         PotionEffect effect = new PotionEffect(type, duration, amplifier);
         player.addPotionEffect(effect);
     }
 
 
-
-    /*橘子服务器，QQ：754953378
-    要是有人看到了我把橘子腐竹撅到晕
-    */
 }
