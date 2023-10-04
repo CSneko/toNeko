@@ -49,22 +49,22 @@ public class PlayerDeath implements Listener {
                     //判断NBT是否正确
                     if (nbtValue.equals("true")){
                         //判断玩家是否为猫娘
-                        if(data.getString(player.getDisplayName() + ".owner") != null) {
+                        if(data.getString(player.getName() + ".owner") != null) {
                             //发送死亡提示
-                            String deathMessage = "猫娘 " + player.getDisplayName() + " 被 " + killer.getName() + " §f撅死了！";
+                            String deathMessage = "猫娘 " + player.getName() + " 被 " + killer.getName() + " §f撅死了！";
                             event.setDeathMessage(deathMessage);
                             //判断是否为主人
-                            if(killer.getDisplayName().equals(data.getString(player.getDisplayName() + ".owner"))){
+                            if(killer.getName().equals(data.getString(player.getName() + ".owner"))){
                                 //生成随机数
                                 Random random = new Random();
                                 int randomNumber = random.nextInt(7) + 3;
                                 //检查配置是否存在
-                                create.createNewKey(player.getDisplayName() + "." + "xp", 0, data, dataFile);
+                                create.createNewKey(player.getName() + "." + "xp", 0, data, dataFile);
                                 //减去值
-                                int xpValue = data.getInt(player.getDisplayName() + ".xp") - randomNumber;
-                                create.setValue(player.getDisplayName() + ".xp",xpValue,dataFile);
-                                player.sendMessage("§c你与§e" + killer.getDisplayName() + "§c的好感经验减少了" + randomNumber);
-                                killer.sendMessage("§c你与§e" + player.getDisplayName() + "§c的好感经验减少了" + randomNumber);
+                                int xpValue = data.getInt(player.getName() + ".xp") - randomNumber;
+                                create.setValue(player.getName() + ".xp",xpValue,dataFile);
+                                player.sendMessage("§c你与§e" + killer.getName() + "§c的好感经验减少了" + randomNumber);
+                                killer.sendMessage("§c你与§e" + player.getName() + "§c的好感经验减少了" + randomNumber);
                             }
                         }
                     }

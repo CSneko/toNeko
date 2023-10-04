@@ -32,4 +32,22 @@ public class getStick {
         //添加到玩家背包
         player.getInventory().addItem(itemStack);
     }
+    public void getStick2(Player player){
+        // 创建一个NamespacedKey，用于唯一标识NBT标签
+        NamespacedKey key = new NamespacedKey(plugin, "nekolevel");
+        //创建一个新的对象
+        ItemStack itemStack = new ItemStack(Material.END_ROD);
+        //获取物品的ItemMeta对象
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        //设置物品的展示名称
+        itemMeta.setDisplayName("§9§o撅猫棍2级");
+        //为物品添加附魔特效
+        itemMeta.addEnchant(Enchantment.DURABILITY, 10, true);
+        //设置物品的NBT标签
+        itemMeta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, 2);
+        //将修改后的ItemMeta对象应用到物品上
+        itemStack.setItemMeta(itemMeta);
+        //添加到玩家背包
+        player.getInventory().addItem(itemStack);
+    }
 }

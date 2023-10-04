@@ -6,6 +6,7 @@ import com.crystalneko.toneko.items.getStick;
 import com.crystalneko.ctlib.chat.chatPrefix;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -45,15 +46,19 @@ public class ToNekoCommand implements CommandExecutor, TabCompleter {
                 // 加载数据文件
                 YamlConfiguration data = YamlConfiguration.loadConfiguration(dataFile);
                 //创建数据值
-                Boolean created = create.createNewKey(args[1] + "." + "owner", player.getDisplayName(), data, dataFile);
+                Boolean created = create.createNewKey(args[1] + "." + "owner", player.getName(), data, dataFile);
                 create.createNewKey(args[1] + "." + "xp", 0, data, dataFile);
                 List<String> aliases = new ArrayList<>();
-                aliases.add("Crystal_Neko");//这里加点私货
+                aliases.add("胡桃");//我是胡桃的狗!!!!
                 create.createNewKey(args[1] + "." + "aliases", aliases, data, dataFile);
                 if (created) {
                     killPlayer(player,args[1]);
                     player.sendMessage("§a成功将玩家§6" + args[1] + "§a设置成一个猫娘，你成为了它的主人");
-                    chatPrefix.addPrivatePrefix(player,"§a猫娘");
+                    //判断猫娘是否在线
+                    if(isPlayerOnline(args[1])) {
+                        Player neko = Bukkit.getPlayer(args[1]);
+                        chatPrefix.addPrivatePrefix(neko, "§a猫娘");
+                    }
                 } else {
                     player.sendMessage("§b它已经是一个猫娘了，它的主人是§6" + data.getString(args[1] + ".owner"));
                 }
@@ -78,7 +83,7 @@ public class ToNekoCommand implements CommandExecutor, TabCompleter {
                     YamlConfiguration data = YamlConfiguration.loadConfiguration(dataFile);
                     //判断玩家是否为主人
                     if (data.getString(args[1] + ".owner") != null) {
-                        if (data.getString(args[1] + ".owner").equals(player.getDisplayName())) {
+                        if (data.getString(args[1] + ".owner").equals(player.getName())) {
                             //获取被删除的猫娘对象
                             Player neko = Bukkit.getPlayer(args[1]);
                             if (neko != null) {
@@ -96,7 +101,8 @@ public class ToNekoCommand implements CommandExecutor, TabCompleter {
                     }
                     confirmMap.remove(player);  // 执行完毕后移除确认状态
                     return true;
-                } else {
+                }
+                else {
                     // 发出确认提醒
                     player.sendMessage("§c请再次输入该命令以确认执行: /toneko remove " + args[1]);
                     confirmMap.put(player, true);
@@ -113,7 +119,7 @@ public class ToNekoCommand implements CommandExecutor, TabCompleter {
                 YamlConfiguration data = YamlConfiguration.loadConfiguration(dataFile);
                 //判断玩家是否为主人
                 if (data.getString(args[1] + ".owner") != null) {
-                    if (data.getString(args[1] + ".owner").equals(player.getDisplayName())) {
+                    if (data.getString(args[1] + ".owner").equals(player.getName())) {
                         int xp = data.getInt(args[1] + ".xp");
                         player.sendMessage("§a你与§e" + args[1] + "§b的好感经验为§e" + xp);
                     } else {
@@ -121,8 +127,8 @@ public class ToNekoCommand implements CommandExecutor, TabCompleter {
                     }
                 } else {
                     if (data.getString(args[1] + ".owner") != null) {
-                        if (data.getString(args[1] + ".owner").equals(player.getDisplayName())) {
-                            create.createNewKey(args[1] + "." + "xp", player.getDisplayName(), data, dataFile);
+                        if (data.getString(args[1] + ".owner").equals(player.getName())) {
+                            create.createNewKey(args[1] + "." + "xp", player.getName(), data, dataFile);
                         }
                     } else {
                         player.sendMessage("§c你不是" + args[1] + "的主人!");
@@ -139,7 +145,7 @@ public class ToNekoCommand implements CommandExecutor, TabCompleter {
                 YamlConfiguration data = YamlConfiguration.loadConfiguration(dataFile);
                 //判断玩家是否为主人
                 if (data.getString(args[1] + ".owner") != null) {
-                    if (data.getString(args[1] + ".owner").equals(player.getDisplayName())) {
+                    if (data.getString(args[1] + ".owner").equals(player.getName())) {
                         //添加别名
                         if(args[2].equalsIgnoreCase("add")){
                             if(data.getList(args[1] + ".aliases") != null){
@@ -175,7 +181,10 @@ public class ToNekoCommand implements CommandExecutor, TabCompleter {
             }else {
                 player.sendMessage("§c你没有执行该命令的权限!");
             }
-        } else {
+        }else if(args[0].equalsIgnoreCase("item2")) {
+            getstick.getStick2(player);
+        }
+        else {
             player.sendMessage("§c无效的子命令,请输入§a/toneko help§c查看帮助");
         }
         return true;
@@ -198,14 +207,13 @@ public class ToNekoCommand implements CommandExecutor, TabCompleter {
     //祭献操作
     private void killPlayer(Player player, String neko) {
         //死亡提示
-        Bukkit.getServer().broadcastMessage("§e玩家§6" + player.getDisplayName() + "§e为了使§6" + neko + "§e成为猫娘而祭献了自己");
+        Bukkit.getServer().broadcastMessage("§e玩家§6" + player.getName() + "§e为了使§6" + neko + "§e成为猫娘而祭献了自己");
         // 执行玩家死亡操作
         player.setHealth(0);
     }
-    // 给予玩家药水效果的方法
-    private void givePlayerPotionEffect(Player player, PotionEffectType type, int duration, int amplifier) {
-        PotionEffect effect = new PotionEffect(type, duration, amplifier);
-        player.addPotionEffect(effect);
+    public boolean isPlayerOnline(String playerName) {
+        Player player = Bukkit.getPlayer(playerName);
+        return (player != null && player.isOnline());
     }
 
 }

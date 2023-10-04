@@ -1,9 +1,10 @@
 /media/crystalneko/BA106C158B1B58EF/javatest/Plugins/toNeko/src/main/java/com/crystalneko/toneko/ToNeko.java
+/media/crystalneko/BA106C158B1B58EF/javatest/Plugins/toNeko/src/main/java/com/crystalneko/toneko/command/NekoCommand.java
 /media/crystalneko/BA106C158B1B58EF/javatest/Plugins/toNeko/src/main/java/com/crystalneko/toneko/event/PlayerDeath.java
 /media/crystalneko/BA106C158B1B58EF/javatest/Plugins/toNeko/src/main/java/com/crystalneko/toneko/command/ToNekoCommand.java
 /media/crystalneko/BA106C158B1B58EF/javatest/Plugins/toNeko/src/main/java/com/crystalneko/toneko/chat/nekoed.java
 /media/crystalneko/BA106C158B1B58EF/javatest/Plugins/toNeko/src/main/java/com/crystalneko/toneko/Metrics.java
-/media/crystalneko/BA106C158B1B58EF/javatest/Plugins/toNeko/src/main/java/com/crystalneko/toneko/files/download.java
+/media/crystalneko/BA106C158B1B58EF/javatest/Plugins/toNeko/src/main/java/com/crystalneko/toneko/files/downloadPlugin.java
 /media/crystalneko/BA106C158B1B58EF/javatest/Plugins/toNeko/src/main/java/com/crystalneko/toneko/files/create.java
 /media/crystalneko/BA106C158B1B58EF/javatest/Plugins/toNeko/src/main/java/com/crystalneko/toneko/event/PlayerJoin.java
 /media/crystalneko/BA106C158B1B58EF/javatest/Plugins/toNeko/src/main/java/com/crystalneko/toneko/event/PlayerQuit.java

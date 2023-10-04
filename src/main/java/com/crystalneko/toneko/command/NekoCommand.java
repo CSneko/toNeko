@@ -1,9 +1,6 @@
 package com.crystalneko.toneko.command;
 
 
-
-import com.crystalneko.toneko.ToNeko;
-import com.crystalneko.toneko.items.getStick;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -36,7 +33,9 @@ public class NekoCommand implements CommandExecutor, TabCompleter {
                     PotionEffectType effectType = PotionEffectType.JUMP;
                     //持续时间
                     int duration = getDuration(player);
-                    givePlayerPotionEffect(player, effectType, duration, 1);
+                    //效果等级
+                    int amplifier = getAmplifier(player);
+                    givePlayerPotionEffect(player, effectType, duration, amplifier);
                 }
             } else {player.sendMessage("§c你没有执行该命令的权限!");}
         }else if(args[0].equalsIgnoreCase("vision")){
@@ -46,7 +45,9 @@ public class NekoCommand implements CommandExecutor, TabCompleter {
                     PotionEffectType effectType = PotionEffectType.NIGHT_VISION;
                     //持续时间
                     int duration = getDuration(player);
-                    givePlayerPotionEffect(player, effectType, duration, 1);
+                    //效果等级
+                    int amplifier = getAmplifier(player);
+                    givePlayerPotionEffect(player, effectType, duration, amplifier);
                 }
             } else {player.sendMessage("§c你没有执行该命令的权限!");}
         } else {
@@ -77,7 +78,7 @@ public class NekoCommand implements CommandExecutor, TabCompleter {
         File dataFile = new File("plugins/toNeko/nekos.yml");
         // 加载数据文件
         YamlConfiguration data = YamlConfiguration.loadConfiguration(dataFile);
-        if(data.getString(player.getDisplayName() + ".owner") != null){
+        if(data.getString(player.getName() + ".owner") != null){
             return true;
         } else {
             player.sendMessage("§c你不是猫娘，无法执行该命令");
@@ -85,12 +86,35 @@ public class NekoCommand implements CommandExecutor, TabCompleter {
         }
     }
     //根据xp设置药水效果时间
+    private int getAmplifier(Player player){
+        //创建数据文件实例
+        File dataFile = new File("plugins/toNeko/nekos.yml");
+        // 加载数据文件
+        YamlConfiguration data = YamlConfiguration.loadConfiguration(dataFile);
+        int xp =data.getInt(player.getName() + ".xp");
+        int duration = 1;
+        if(xp >= 500 && xp < 1000 ){
+            duration = 2;
+        } else if(xp >= 1000 && xp < 2000){
+            duration = 3;
+        } else if(xp >= 2000 && xp <4000){
+            duration = 4;
+        } else if(xp >= 4000 && xp <8000){
+            duration = 5;
+        } else if(xp >= 8000 && xp <16000){
+            duration = 6;
+        } else if(xp >= 16000){
+            duration = 7;
+        }
+        return duration;
+    }
+    //根据xp设置药水效果时间
     private int getDuration(Player player){
         //创建数据文件实例
         File dataFile = new File("plugins/toNeko/nekos.yml");
         // 加载数据文件
         YamlConfiguration data = YamlConfiguration.loadConfiguration(dataFile);
-        int xp =data.getInt(player.getDisplayName() + ".xp");
+        int xp =data.getInt(player.getName() + ".xp");
         int duration = 12000;
         if(xp >= 500 && xp < 1000 ){
             duration = 36000;
