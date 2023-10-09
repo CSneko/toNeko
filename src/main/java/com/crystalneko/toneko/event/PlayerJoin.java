@@ -28,9 +28,9 @@ public class PlayerJoin implements Listener {
         Player player = event.getPlayer();
         //判断是否有主人
         if(data.getString(player.getName() + ".owner") != null) {
-        //添加前缀
+            //添加前缀
             chatPrefix.addPrivatePrefix(player,"§a猫娘");
-        } else {}
+        }
     }
 
 }

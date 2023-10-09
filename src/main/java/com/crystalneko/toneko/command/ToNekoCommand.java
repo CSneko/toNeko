@@ -101,8 +101,7 @@ public class ToNekoCommand implements CommandExecutor, TabCompleter {
                     }
                     confirmMap.remove(player);  // 执行完毕后移除确认状态
                     return true;
-                }
-                else {
+                } else {
                     // 发出确认提醒
                     player.sendMessage("§c请再次输入该命令以确认执行: /toneko remove " + args[1]);
                     confirmMap.put(player, true);

@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "tonekofabric",
+  "version": "${version}",
+  "name": "toNekoFabric",
+  "description": "toNeko插件的Fabric版本",
+  "authors": [
+    "CrystalNeko"
+  ],
+  "contact": {
+    "website": "https://github.com/CSNeko/toNekoFabric",
+    "repo": "https://github.com/CSNeko/toNekoFabric",
+    "issues": "https://github.com/CSNeko/toNekoFabric/issues"
+  },
+  "license": "GPL-3.0",
+  "icon": "assets/tonekofabric/essentials/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "com.crystalneko.tonekofabric.client.ToNekoFabricClient"
+    ],
+    "main": [
+      "com.crystalneko.tonekofabric.ToNekoFabric"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.14.22",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
