@@ -1,5 +1,6 @@
 package com.crystalneko.toneko;
 
+import com.crystalneko.toneko.bstats.Metrics;
 import com.crystalneko.toneko.command.NekoCommand;
 import com.crystalneko.toneko.command.ToNekoCommand;
 import com.crystalneko.toneko.event.PlayerAttack;

@@ -8,9 +8,10 @@
     "CrystalNeko"
   ],
   "contact": {
-    "website": "https://github.com/CSNeko/toNekoFabric",
-    "repo": "https://github.com/CSNeko/toNekoFabric",
-    "issues": "https://github.com/CSNeko/toNekoFabric/issues"
+    "website": "https://github.com/CSNeko/toNeko",
+    "repo": "https://github.com/CSNeko/toNeko",
+    "issues": "https://github.com/CSNeko/toNeko/issues",
+    "homepage": "https://github.com/CSNeko/toNeko"
   },
   "license": "GPL-3.0",
   "icon": "assets/tonekofabric/essentials/icon.png",

@@ -1,0 +1,149 @@
+---- Minecraft Crash Report ----
+// I blame Dinnerbone.
+
+Time: 2023-10-13 22:59:22
+Description: Initializing game
+
+java.lang.RuntimeException: Could not execute entrypoint stage 'main' due to errors, provided by 'tonekofabric'!
+	at net.fabricmc.loader.impl.FabricLoaderImpl.lambda$invokeEntrypoints$2(FabricLoaderImpl.java:387)
+	at net.fabricmc.loader.impl.util.ExceptionUtil.gatherExceptions(ExceptionUtil.java:33)
+	at net.fabricmc.loader.impl.FabricLoaderImpl.invokeEntrypoints(FabricLoaderImpl.java:385)
+	at net.fabricmc.loader.impl.game.minecraft.Hooks.startClient(Hooks.java:52)
+	at net.minecraft.client.MinecraftClient.<init>(MinecraftClient.java:466)
+	at net.minecraft.client.main.Main.main(Main.java:214)
+	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:468)
+	at net.fabricmc.loader.impl.launch.knot.Knot.launch(Knot.java:74)
+	at net.fabricmc.loader.impl.launch.knot.KnotClient.main(KnotClient.java:23)
+	at net.fabricmc.devlaunchinjector.Main.main(Main.java:86)
+Caused by: java.lang.ClassCastException: class net.minecraft.client.MinecraftClient cannot be cast to class net.minecraft.server.MinecraftServer (net.minecraft.client.MinecraftClient and net.minecraft.server.MinecraftServer are in unnamed module of loader net.fabricmc.loader.impl.launch.knot.KnotClassLoader @6fc6f14e)
+	at com.crystalneko.tonekofabric.libs.base.getWorldName(base.java:16)
+	at com.crystalneko.tonekofabric.command.command.<init>(command.java:20)
+	at com.crystalneko.tonekofabric.ToNekoFabric.onInitialize(ToNekoFabric.java:18)
+	at net.fabricmc.loader.impl.FabricLoaderImpl.invokeEntrypoints(FabricLoaderImpl.java:383)
+	... 7 more
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- Head --
+Thread: Render thread
+Stacktrace:
+	at net.fabricmc.loader.impl.FabricLoaderImpl.lambda$invokeEntrypoints$2(FabricLoaderImpl.java:387)
+	at net.fabricmc.loader.impl.util.ExceptionUtil.gatherExceptions(ExceptionUtil.java:33)
+	at net.fabricmc.loader.impl.FabricLoaderImpl.invokeEntrypoints(FabricLoaderImpl.java:385)
+	at net.fabricmc.loader.impl.game.minecraft.Hooks.startClient(Hooks.java:52)
+	at net.minecraft.client.MinecraftClient.<init>(MinecraftClient.java:466)
+
+-- Initialization --
+Details:
+	Modules: 
+Stacktrace:
+	at net.minecraft.client.main.Main.main(Main.java:214)
+	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:468)
+	at net.fabricmc.loader.impl.launch.knot.Knot.launch(Knot.java:74)
+	at net.fabricmc.loader.impl.launch.knot.KnotClient.main(KnotClient.java:23)
+	at net.fabricmc.devlaunchinjector.Main.main(Main.java:86)
+
+-- System Details --
+Details:
+	Minecraft Version: 1.20.2
+	Minecraft Version ID: 1.20.2
+	Operating System: Linux (amd64) version 6.2.0-34-generic
+	Java Version: 17.0.8, Oracle Corporation
+	Java VM Version: Java HotSpot(TM) 64-Bit Server VM (mixed mode, sharing), Oracle Corporation
+	Memory: 233475128 bytes (222 MiB) / 587202560 bytes (560 MiB) up to 2592079872 bytes (2472 MiB)
+	CPUs: 4
+	Processor Vendor: GenuineIntel
+	Processor Name: Intel(R) Core(TM) i5-2410M CPU @ 2.30GHz
+	Identifier: Intel64 Family 6 Model 42 Stepping 7
+	Microarchitecture: Sandy Bridge (Client)
+	Frequency (GHz): 2.30
+	Number of physical packages: 1
+	Number of physical CPUs: 2
+	Number of logical CPUs: 4
+	Graphics card #0 name: 2nd Generation Core Processor Family Integrated Graphics Controller
+	Graphics card #0 vendor: Intel Corporation (0x8086)
+	Graphics card #0 VRAM (MB): 128.00
+	Graphics card #0 deviceId: 0x0116
+	Graphics card #0 versionInfo: unknown
+	Graphics card #1 name: GF108M [GeForce GT 520M]
+	Graphics card #1 vendor: NVIDIA Corporation (0x10de)
+	Graphics card #1 VRAM (MB): 288.00
+	Graphics card #1 deviceId: 0x0ded
+	Graphics card #1 versionInfo: unknown
+	Virtual memory max (MB): 4942.21
+	Virtual memory used (MB): 9267.00
+	Swap memory total (MB): 0.00
+	Swap memory used (MB): 0.00
+	JVM Flags: 0 total; 
+	Fabric Mods: 
+		ctlibfabric: ctLibFabric 0.0.4
+		fabric-api: Fabric API 0.90.0+1.20.2
+		fabric-api-base: Fabric API Base 0.4.33+fce67b32a0
+		fabric-api-lookup-api-v1: Fabric API Lookup API (v1) 1.6.41+fce67b32a0
+		fabric-biome-api-v1: Fabric Biome API (v1) 13.0.12+d9a2869ba0
+		fabric-block-api-v1: Fabric Block API (v1) 1.0.12+73761d2ea0
+		fabric-block-view-api-v2: Fabric BlockView API (v2) 1.0.1+73761d2ea0
+		fabric-blockrenderlayer-v1: Fabric BlockRenderLayer Registration (v1) 1.1.43+f4b7e424a0
+		fabric-client-tags-api-v1: Fabric Client Tags 1.1.4+86b12645a0
+		fabric-command-api-v1: Fabric Command API (v1) 1.2.36+f71b366fa0
+		fabric-command-api-v2: Fabric Command API (v2) 2.2.15+86b12645a0
+		fabric-commands-v0: Fabric Commands (v0) 0.2.53+df3654b3a0
+		fabric-containers-v0: Fabric Containers (v0) 0.1.72+df3654b3a0
+		fabric-content-registries-v0: Fabric Content Registries (v0) 5.0.4+285022b3a0
+		fabric-convention-tags-v1: Fabric Convention Tags 1.5.7+f4b7e424a0
+		fabric-crash-report-info-v1: Fabric Crash Report Info (v1) 0.2.20+f4b7e424a0
+		fabric-data-generation-api-v1: Fabric Data Generation API (v1) 13.1.2+d19c4129a0
+		fabric-dimensions-v1: Fabric Dimensions API (v1) 2.1.56+b1229956a0
+		fabric-entity-events-v1: Fabric Entity Events (v1) 1.5.25+f4b7e424a0
+		fabric-events-interaction-v0: Fabric Events Interaction (v0) 0.6.9+daef22a2a0
+		fabric-events-lifecycle-v0: Fabric Events Lifecycle (v0) 0.2.68+df3654b3a0
+		fabric-game-rule-api-v1: Fabric Game Rule API (v1) 1.0.40+f4b7e424a0
+		fabric-gametest-api-v1: Fabric Game Test API (v1) 1.2.15+86b12645a0
+		fabric-item-api-v1: Fabric Item API (v1) 2.1.32+43511215a0
+		fabric-item-group-api-v1: Fabric Item Group API (v1) 4.0.13+f4b7e424a0
+		fabric-key-binding-api-v1: Fabric Key Binding API (v1) 1.0.38+f4b7e424a0
+		fabric-keybindings-v0: Fabric Key Bindings (v0) 0.2.36+df3654b3a0
+		fabric-lifecycle-events-v1: Fabric Lifecycle Events (v1) 2.2.26+3bafade3a0
+		fabric-loot-api-v2: Fabric Loot API (v2) 2.0.2+0ba8e9cea0
+		fabric-message-api-v1: Fabric Message API (v1) 6.0.1+e982ae85a0
+		fabric-mining-level-api-v1: Fabric Mining Level API (v1) 2.1.54+f4b7e424a0
+		fabric-model-loading-api-v1: Fabric Model Loading API (v1) 1.0.5+f4b7e424a0
+		fabric-models-v0: Fabric Models (v0) 0.4.4+9386d8a7a0
+		fabric-networking-api-v1: Fabric Networking API (v1) 3.0.8+b18afef3a0
+		fabric-object-builder-api-v1: Fabric Object Builder API (v1) 12.1.1+b1b4f7b0a0
+		fabric-particles-v1: Fabric Particles (v1) 1.1.4+f4b7e424a0
+		fabric-recipe-api-v1: Fabric Recipe API (v1) 2.0.5+96509552a0
+		fabric-registry-sync-v0: Fabric Registry Sync (v0) 4.0.3+34a3e0e2a0
+		fabric-renderer-api-v1: Fabric Renderer API (v1) 3.2.1+2034447ca0
+		fabric-renderer-indigo: Fabric Renderer - Indigo 1.5.1+2034447ca0
+		fabric-renderer-registries-v1: Fabric Renderer Registries (v1) 3.2.48+df3654b3a0
+		fabric-rendering-data-attachment-v1: Fabric Rendering Data Attachment (v1) 0.3.39+73761d2ea0
+		fabric-rendering-fluids-v1: Fabric Rendering Fluids (v1) 3.0.30+f4b7e424a0
+		fabric-rendering-v0: Fabric Rendering (v0) 1.1.51+df3654b3a0
+		fabric-rendering-v1: Fabric Rendering (v1) 3.0.10+86b12645a0
+		fabric-resource-conditions-api-v1: Fabric Resource Conditions API (v1) 2.3.9+43511215a0
+		fabric-resource-loader-v0: Fabric Resource Loader (v0) 0.11.11+86b12645a0
+		fabric-screen-api-v1: Fabric Screen API (v1) 2.0.11+0ba8e9cea0
+		fabric-screen-handler-api-v1: Fabric Screen Handler API (v1) 1.3.38+86b12645a0
+		fabric-sound-api-v1: Fabric Sound API (v1) 1.0.14+f4b7e424a0
+		fabric-transfer-api-v1: Fabric Transfer API (v1) 3.3.8+109a65e5a0
+		fabric-transitive-access-wideners-v1: Fabric Transitive Access Wideners (v1) 5.0.3+fce67b32a0
+		fabricloader: Fabric Loader 0.14.23
+		java: Java HotSpot(TM) 64-Bit Server VM 17
+		minecraft: Minecraft 1.20.2
+		modmenu: Mod Menu 8.0.0
+		tonekofabric: toNekoFabric 0.0.6
+	JVM uptime in seconds: 44.721
+	Launched Version: Fabric
+	Backend library: LWJGL version 3.3.2-snapshot
+	Backend API: Unknown
+	Window size: <not initialized>
+	GL Caps: Using framebuffer using OpenGL 3.2
+	GL debug messages: <disabled>
+	Using VBOs: Yes
+	Is Modded: Definitely; Client brand changed to 'fabric'
+	Type: Client (map_client.txt)
+	Locale: zh_CN
+	CPU: <unknown>

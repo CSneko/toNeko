@@ -1,0 +1,22 @@
+/toneko player
+/toneko player dds
+/toneko player
+/toneko
+/toneko player player104
+/toneko
+/toneko player Player532
+/gamerule keepInventory
+/gamerule keepInventory true
+/toneko player lPlayer854
+/list
+/playsound
+/me
+/me dddffd
+/toneko player Player79
+/toneko player Player782
+/f
+/toneko player Player782
+/time set day
+/toneko
+/toneko player
+/toneko player Player782

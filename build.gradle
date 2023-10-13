@@ -17,6 +17,7 @@ repositories {
         url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
     }
     maven { url = 'https://oss.sonatype.org/content/groups/public/' }
+
 }
 
 dependencies {
@@ -24,8 +25,10 @@ dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    implementation fileTree(dir: '/media/crystalneko/BA106C158B1B58EF/javatest/Plugins/ctLib/target/', includes: ['ctLib-0.0.3.jar'])
+    implementation fileTree(dir: '/media/crystalneko/BA106C158B1B58EF/javatest/mods/ctLibFabric/build/libs', includes: ['ctLib-0.0.4.jar'])
+    implementation fileTree(dir: '/media/crystalneko/BA106C158B1B58EF/javatest/mods/toNekoFabric/run/mods', includes: ['fabric-api-0.90.0+1.20.2.jar'])
     compileOnly 'org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT'
+
 
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
