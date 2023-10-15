@@ -1,0 +1,5 @@
+{
+  "message.toneko.player.success": "§a成功将玩家§6%d§a设置成一个猫娘，你成为了它的主人",
+  "message.toneko.player.nekoed": "§b它已经是一个猫娘了，它的主人是§6%d",
+  "message.toneko.help": "§b/toneko 帮助:\n§a/toneko help §b获取帮助\n§a/toneko player <玩家名> §b将一位玩家变成猫娘(但是你会被祭献)"
+}

@@ -1,0 +1,14 @@
+{
+  "mappings": {
+    "com/crystalneko/tonekofabric/mixins/chat": {
+      "onChatMessage": "Lnet/minecraft/class_3244;method_12048(Lnet/minecraft/class_2797;)V"
+    }
+  },
+  "data": {
+    "named:intermediary": {
+      "com/crystalneko/tonekofabric/mixins/chat": {
+        "onChatMessage": "Lnet/minecraft/class_3244;method_12048(Lnet/minecraft/class_2797;)V"
+      }
+    }
+  }
+}

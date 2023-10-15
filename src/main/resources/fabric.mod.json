@@ -28,5 +28,8 @@
     "fabricloader": ">=0.14.22",
     "fabric": "*",
     "minecraft": "${minecraft_version}"
-  }
+  },
+  "mixins": [
+    "fabric/tonekofabric.mixins.json"
+  ]
 }

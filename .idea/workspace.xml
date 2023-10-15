@@ -58,6 +58,11 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources/assets/tonekofabric" />
+    </key>
+  </component>
   <component name="RunManager" selected="Gradle.toNekoFabric build">
     <configuration name="toNekoFabric [dependencies]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>

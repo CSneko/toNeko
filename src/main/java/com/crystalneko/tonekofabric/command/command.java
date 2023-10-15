@@ -6,11 +6,6 @@ import com.mojang.brigadier.suggestion.SuggestionProvider;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
-import org.bukkit.configuration.file.YamlConfiguration;
-
-import java.io.File;
-
 import static net.minecraft.server.command.CommandManager.*;
 
 public class command{
@@ -39,21 +34,21 @@ public class command{
                                         final ServerCommandSource source = context.getSource();
                                         // 使用 getArgument 方法获取玩家名称
                                         String target = context.getArgument("target", String.class);
+                                        System.out.println("aaa");
                                         //判断是否有主人
                                         if(base.isNekoHasOwner(target,worldName) == null){
                                             //设置玩家为猫娘
                                             base.setPlayerNeko(target,worldName,source.getName());
                                             //发送成功消息
-                                            source.sendMessage(Text.of("§a成功将玩家§6" + target + "§a设置成一个猫娘，你成为了它的主人"));
+                                            source.sendMessage(base.getStringLanguage("message.toneko.player.success", new String[]{target}));
                                         } else {
-                                            source.sendMessage(Text.of("§b它已经是一个猫娘了，它的主人是§6" + base.isNekoHasOwner(target,worldName)));
+                                            source.sendMessage(base.getStringLanguage("message.toneko.player.nekoed",new String[]{base.isNekoHasOwner(target,worldName)}));
                                         }
-
                                         return 1;
                                     })))
                     //----------------------------------------无参数-----------------------------------------
                     .executes(context -> {
-                        context.getSource().sendMessage(Text.of("§b/toneko 帮助:\n§a/toneko help §b获取帮助\n§a/toneko player <玩家名> §b将一位玩家变成猫娘(但是你会被祭献)"));
+                        context.getSource().sendMessage(base.getStringLanguage("message.toneko.help",new String[]{""}));
                         return 1;
                     }));
         });

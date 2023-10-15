@@ -1,0 +1,7 @@
+v1	named	intermediary
+FIELD	com/crystalneko/tonekofabric/mixins/chat	Lnet/minecraft/server/network/ServerPlayerEntity;	player	field_14140
+METHOD	com/crystalneko/tonekofabric/mixins/chat	(Lnet/minecraft/network/message/SignedCommandArguments;Lnet/minecraft/server/command/ServerCommandSource;)Lnet/minecraft/server/command/ServerCommandSource;	method_45002	method_45002
+METHOD	com/crystalneko/tonekofabric/mixins/chat	(DDDFF)V	requestTeleport	method_14363
+METHOD	com/crystalneko/tonekofabric/mixins/chat	(Lnet/minecraft/network/encryption/PublicPlayerSession;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;	method_46366	method_46366
+METHOD	com/crystalneko/tonekofabric/mixins/chat	(Ljava/util/List;Ljava/util/function/UnaryOperator;Lnet/minecraft/item/ItemStack;)V	setTextToBook	method_33796
+METHOD	com/crystalneko/tonekofabric/mixins/chat	(DDDFFLjava/util/Set;)V	requestTeleport	method_14360

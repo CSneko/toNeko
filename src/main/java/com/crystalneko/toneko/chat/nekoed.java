@@ -74,7 +74,7 @@ public class nekoed implements Listener{
         message = replaceChar(message, ',',"喵~",0.4);
         message = replaceChar(message, '，',"喵~",0.4);
         //将最后替换成"喵~"
-        if(toString().endsWith("喵~")){}else {
+        if(!toString().endsWith("喵~")){
             if (toString().endsWith("。")) {
                 message = replaceChar(message,'。',"喵",1.0);
             }else {

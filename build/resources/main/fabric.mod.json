@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "tonekofabric",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "name": "toNekoFabric",
   "description": "toNeko插件的Fabric版本",
   "authors": [
@@ -28,5 +28,8 @@
     "fabricloader": ">=0.14.22",
     "fabric": "*",
     "minecraft": "1.20.2"
-  }
+  },
+  "mixins": [
+    "fabric/tonekofabric.mixins.json"
+  ]
 }

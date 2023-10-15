@@ -1,15 +1,3 @@
-/toneko player
-/toneko player dds
-/toneko player
-/toneko
-/toneko player player104
-/toneko
-/toneko player Player532
-/gamerule keepInventory
-/gamerule keepInventory true
-/toneko player lPlayer854
-/list
-/playsound
 /me
 /me dddffd
 /toneko player Player79
@@ -20,3 +8,43 @@
 /toneko
 /toneko player
 /toneko player Player782
+/toneko player Player419
+/toneko player Player897
+/toneko player Player737
+/toneko player Player489
+/toneko player Player308
+/time set day
+/toneko player Player817
+/toneko player Player208
+/toneko player Player970
+/toneko player Player318
+/toneko player Player857
+/toneko player Player518
+/toneko player Player253
+/toneko
+/time set day
+/toneko
+/toneko player Player253
+/toneko
+/toneko player Player973
+/toneko player Player972
+/toneko player Player461
+/
+/toneko player Player345
+/toneko player Player836
+/toneko player Player169
+/weather clear
+/toneko player
+/toneko player Player594
+/toneko player Player492
+/time add
+/time set day
+/toneko player Player179
+/toneko player Player182
+/toneko player Player306
+/toneko player
+/toneko player Player83
+/time set day
+/toneko player
+/toneko player Player730
+/toneko player Player476
