@@ -25,6 +25,8 @@
 /toneko xp <猫娘名称>           #toneko.command.xp
 #设置别名（别名会被替换成主人）
 /toneko aliases <猫娘名称> add或remove <别名>
+#添加屏蔽词和替换词
+/toneko block <猫娘名称> add或remove <屏蔽词> <替换词> all或word
 #----------------------以下命令仅猫娘可用-----------------------
 #获取跳跃提升（根据好感经验来设置时长）
 /neko jump                    #toneko.command.jump
