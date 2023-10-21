@@ -1,0 +1,65 @@
+
+
+name: toNeko 
+ 
+on: [ pull_request, workflow_dispatch ]           
+
+env:                                              
+  MINECRAFT_VERSION: 1.20.2                      
+  JAVA_VERSION: 17      
+  VERSION: 0.0.8
+  RELEASE_NAME: toNeko ${{ VERSION }}
+  MODRINTH_TOKEN:  mrp_1EPQSPocQsZGOzw0Mm7LHDl05uSiQPbWlAoCOxgHB5Tz6QFyJaDjuTo0mwRX
+  CURSEFORGE_TOKEN: cfadffdd-3736-47cd-8743-8a1d0ff438bb
+  GITHUB_TOKEN: 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          
+
+permissions:
+  contents: write
+
+jobs:                                             
+  build:                                          
+    runs-on: ubuntu-latest                        
+    steps:                                        
+      - name: 检查环境变量
+        run: env
+
+      - name: 签出存储库
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: 设置 Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: "temurin"
+          java-version: 17
+
+      - name: 使 Gradle Wrapper 可执行
+        if: ${{ runner.os != 'Windows' }}
+        run: chmod +x ./gradlew
+
+      - name: 构建
+        run: ./gradlew clean build
+        
+      - name: 发布（CurseForge/Modrinth/Github）
+        uses: Kir-Antipov/mc-publish@v3.2                                   
+        with:
+          curseforge-id: 923322                                       
+          curseforge-token: "${{env.CURSEFORGE_TOKEN}}"
+          
+          modrinth-id: v8iwQEgE                                          
+          modrinth-token: "${{env.MODRINTH_TOKEN}}"
+          
+          github-tag: "v${{env.VERSION}}"
+          github-token: "${{env.GITHUB_TOKEN}}"
+
+          name: "${{env.RELEASE_NAME}}"                             
+          version: "${{env.VERSION}}"
+          version-type: release
+          changelog-file: CHANGELOG.md                                      
+
+          loaders: fabric
+          game-versions: "${{env.MINECRAFT_VERSION}}"
+          java: "${{env.JAVA_VERSION}}"
+
+

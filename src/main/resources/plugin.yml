@@ -4,11 +4,11 @@ main: com.crystalneko.toneko.ToNeko
 api-version: '1.20'
 commands:
   toneko:
-    usage: /toneko
+    usage: /toneko help
     aliases: [cnk,tocat]
     description: toneko命令
   neko:
-    usage: /neko
+    usage: /neko help
     aliases: [cat]
     description: 猫娘专用命令
 permissions:

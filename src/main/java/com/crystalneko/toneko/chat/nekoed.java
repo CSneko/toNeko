@@ -1,6 +1,7 @@
 package com.crystalneko.toneko.chat;
 
 import com.crystalneko.ctlib.chat.chatPrefix;
+import com.crystalneko.ctlib.sql.sqlite;
 import com.crystalneko.toneko.ToNeko;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -10,6 +11,7 @@ import org.bukkit.event.player.PlayerChatEvent;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -56,6 +58,8 @@ public class nekoed implements Listener{
             }
             // 对消息进行处理
             String catMessage = catChatMessage(message,owner,aliases);
+            //替换屏蔽词
+            catMessage = replaceBlocks(catMessage,player.getName());
             // 修改消息的格式并重新发送
             event.setFormat(prefix + player.getName() + " >> §7" + catMessage);
         } else {
@@ -76,7 +80,7 @@ public class nekoed implements Listener{
         //将最后替换成"喵~"
         if(!toString().endsWith("喵~")){
             if (toString().endsWith("。")) {
-                message = replaceChar(message,'。',"喵",1.0);
+                message = replaceChar(message,'。',"喵~",1.0);
             }else {
                 message = message + "喵~";
             }
@@ -97,5 +101,36 @@ public class nekoed implements Listener{
 
         return builder.toString();
     }
-
+    private String replaceBlocks(String message,String neko){
+        //检查值是否存在
+        if(sqlite.checkValueExists("nekoblockword", "neko", neko)) {
+            //读取数据
+            String block = sqlite.getColumnValue("nekoblockword", "block", "neko", neko);
+            String replace = sqlite.getColumnValue("nekoblockword", "replace", "neko", neko);
+            String method = sqlite.getColumnValue("nekoblockword", "method", "neko", neko);
+            if(block != null) {
+                //转换为数组
+                String[] blocks = block.split(",");
+                String[] replaces = replace.split(",");
+                String[] methods = method.split(",");
+                //获取数组长度
+                int length = blocks.length;
+                //判断是否存在all
+                int allIndex = Arrays.binarySearch(methods, "all");
+                //判断是否存在屏蔽词
+                if(allIndex >= 0 && message.contains(blocks[allIndex])){
+                    //直接替换屏蔽词
+                    message = message.replaceAll(message,replaces[allIndex]);
+                } else {
+                    //循环替换
+                    int i = 0;
+                    while (i < length) {
+                        message = message.replaceAll(blocks[i], replaces[i]);
+                        i ++;
+                    }
+                }
+            }
+        }
+        return message;
+    }
 }

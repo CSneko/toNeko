@@ -1,5 +1,5 @@
-[14:13:03] [main/INFO] (FabricLoader/GameProvider) Loading Minecraft 1.20.2 with Fabric Loader 0.14.23
-[14:13:04] [main/INFO] (FabricLoader) Loading 57 mods:
+[22:46:33] [main/INFO] (FabricLoader/GameProvider) Loading Minecraft 1.20.2 with Fabric Loader 0.14.23
+[22:46:34] [main/INFO] (FabricLoader) Loading 57 mods:
 	- ctlibfabric 0.0.4
 	- fabric-api 0.90.0+1.20.2
 	- fabric-api-base 0.4.33+fce67b32a0
@@ -56,14 +56,14 @@
 	- java 17
 	- minecraft 1.20.2
 	- modmenu 8.0.0
-	- tonekofabric 0.0.6
-[14:13:17] [main/INFO] (FabricLoader/Mixin) SpongePowered MIXIN Subsystem Version=0.8.5 Source=file:/home/crystalneko/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.12.5+mixin.0.8.5/8d31fb97c3e0cd7c8dad3441851c523bcfae6d8e/sponge-mixin-0.12.5+mixin.0.8.5.jar Service=Knot/Fabric Env=CLIENT
-[14:13:17] [main/INFO] (FabricLoader/Mixin) Loaded Fabric development mappings for mixin remapper!
-[14:13:17] [main/INFO] (FabricLoader/Mixin) Compatibility level set to JAVA_16
-[14:13:17] [main/INFO] (FabricLoader/Mixin) Compatibility level set to JAVA_17
-[14:13:32] [Datafixer Bootstrap/INFO] (Minecraft) 192 Datafixer optimizations took 819 milliseconds
-[14:13:38] [Render thread/INFO] (Minecraft) Environment: Environment[accountsHost=https://api.mojang.com, sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
-[14:13:40] [Render thread/ERROR] (Minecraft) Failed to verify authentication
+	- tonekofabric 0.0.7
+[22:46:42] [main/INFO] (FabricLoader/Mixin) SpongePowered MIXIN Subsystem Version=0.8.5 Source=file:/home/crystalneko/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.12.5+mixin.0.8.5/8d31fb97c3e0cd7c8dad3441851c523bcfae6d8e/sponge-mixin-0.12.5+mixin.0.8.5.jar Service=Knot/Fabric Env=CLIENT
+[22:46:42] [main/INFO] (FabricLoader/Mixin) Loaded Fabric development mappings for mixin remapper!
+[22:46:42] [main/INFO] (FabricLoader/Mixin) Compatibility level set to JAVA_16
+[22:46:42] [main/INFO] (FabricLoader/Mixin) Compatibility level set to JAVA_17
+[22:46:56] [Datafixer Bootstrap/INFO] (Minecraft) 192 Datafixer optimizations took 572 milliseconds
+[22:47:02] [Render thread/INFO] (Minecraft) Environment: Environment[accountsHost=https://api.mojang.com, sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
+[22:47:04] [Render thread/ERROR] (Minecraft) Failed to verify authentication
 com.mojang.authlib.exceptions.InvalidCredentialsException: Status: 401
 	at com.mojang.authlib.exceptions.MinecraftClientHttpException.toAuthenticationException(MinecraftClientHttpException.java:59) ~[authlib-5.0.47.jar:?]
 	at com.mojang.authlib.yggdrasil.YggdrasilUserApiService.fetchProperties(YggdrasilUserApiService.java:159) ~[authlib-5.0.47.jar:?]
@@ -81,109 +81,21 @@ Caused by: com.mojang.authlib.exceptions.MinecraftClientHttpException: Status: 4
 	at com.mojang.authlib.minecraft.client.MinecraftClient.get(MinecraftClient.java:57) ~[authlib-5.0.47.jar:?]
 	at com.mojang.authlib.yggdrasil.YggdrasilUserApiService.fetchProperties(YggdrasilUserApiService.java:130) ~[authlib-5.0.47.jar:?]
 	... 9 more
-[14:13:40] [Render thread/INFO] (Minecraft) Setting user: Player476
-[14:13:41] [Worker-Main-2/INFO] (Mod Menu/Update Checker) Checking mod updates...
-[14:13:41] [Render thread/INFO] (Indigo) [Indigo] Registering Indigo renderer!
-[14:13:42] [Render thread/INFO] (Minecraft) Backend library: LWJGL version 3.3.2-snapshot
-[14:13:45] [Render thread/INFO] (Minecraft) Reloading ResourceManager: vanilla, fabric (fabric-loot-api-v2, fabric-gametest-api-v1, fabric-sound-api-v1, fabric-game-rule-api-v1, modmenu, fabric-crash-report-info-v1, fabric-command-api-v2, fabric-mining-level-api-v1, fabric-registry-sync-v0, fabric-entity-events-v1, fabric-item-api-v1, fabric-block-api-v1, fabric-item-group-api-v1, fabric-block-view-api-v2, fabric-client-tags-api-v1, fabric-renderer-indigo, fabric-rendering-v0, fabric-containers-v0, fabric-transfer-api-v1, fabric-lifecycle-events-v1, fabric-resource-conditions-api-v1, ctlibfabric, fabric-renderer-registries-v1, fabric-keybindings-v0, fabric-recipe-api-v1, fabric-convention-tags-v1, fabric-biome-api-v1, fabric-events-lifecycle-v0, fabric-api-base, fabric-networking-api-v1, fabric-blockrenderlayer-v1, fabric-message-api-v1, fabric-screen-handler-api-v1, fabric-resource-loader-v0, fabric-renderer-api-v1, fabric-rendering-v1, fabric-key-binding-api-v1, fabric-rendering-data-attachment-v1, fabric-api-lookup-api-v1, fabric-data-generation-api-v1, fabric-commands-v0, fabric-transitive-access-wideners-v1, fabric-events-interaction-v0, fabric-command-api-v1, fabric-model-loading-api-v1, fabric-models-v0, fabric-api, fabric-screen-api-v1, fabricloader, fabric-rendering-fluids-v1, tonekofabric, fabric-particles-v1, fabric-dimensions-v1, fabric-object-builder-api-v1, fabric-content-registries-v0)
-[14:13:45] [Worker-Main-3/INFO] (Minecraft) Found unifont_all_no_pua-15.0.06.hex, loading
-[14:13:50] [Render thread/WARN] (Minecraft) Missing sound for event: minecraft:item.goat_horn.play
-[14:13:50] [Render thread/WARN] (Minecraft) Missing sound for event: minecraft:entity.goat.screaming.horn_break
-[14:13:50] [Render thread/INFO] (Minecraft) OpenAL initialized on device 内置音频 模拟立体声
-[14:13:50] [Render thread/INFO] (Minecraft) Sound engine started
-[14:13:51] [Render thread/INFO] (Minecraft) Created: 1024x512x4 minecraft:textures/atlas/blocks.png-atlas
-[14:13:51] [Render thread/INFO] (Minecraft) Created: 256x256x4 minecraft:textures/atlas/signs.png-atlas
-[14:13:51] [Render thread/INFO] (Minecraft) Created: 512x512x4 minecraft:textures/atlas/banner_patterns.png-atlas
-[14:13:51] [Render thread/INFO] (Minecraft) Created: 512x512x4 minecraft:textures/atlas/shield_patterns.png-atlas
-[14:13:51] [Render thread/INFO] (Minecraft) Created: 1024x1024x4 minecraft:textures/atlas/armor_trims.png-atlas
-[14:13:51] [Render thread/INFO] (Minecraft) Created: 256x256x4 minecraft:textures/atlas/chest.png-atlas
-[14:13:51] [Render thread/INFO] (Minecraft) Created: 128x64x4 minecraft:textures/atlas/decorated_pot.png-atlas
-[14:13:51] [Render thread/INFO] (Minecraft) Created: 512x256x4 minecraft:textures/atlas/beds.png-atlas
-[14:13:51] [Render thread/INFO] (Minecraft) Created: 512x256x4 minecraft:textures/atlas/shulker_boxes.png-atlas
-[14:13:51] [Render thread/WARN] (Minecraft) Shader rendertype_entity_translucent_emissive could not find sampler named Sampler2 in the specified shader program.
-[14:13:52] [Render thread/INFO] (Minecraft) Created: 256x256x0 minecraft:textures/atlas/particles.png-atlas
-[14:13:52] [Render thread/INFO] (Minecraft) Created: 256x256x0 minecraft:textures/atlas/paintings.png-atlas
-[14:13:52] [Render thread/INFO] (Minecraft) Created: 128x128x0 minecraft:textures/atlas/mob_effects.png-atlas
-[14:13:52] [Render thread/INFO] (Minecraft) Created: 1024x512x0 minecraft:textures/atlas/gui.png-atlas
-[14:13:53] [IO-Worker-1/INFO] (Minecraft) Could not authorize you against Realms server: Invalid session id
-[14:13:53] [IO-Worker-1/ERROR] (Minecraft) Couldn't connect to realms
-net.minecraft.client.realms.exception.RealmsServiceException: Realms authentication error with message 'Invalid session id'
-	at net.minecraft.client.realms.RealmsClient.execute(RealmsClient.java:432) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.jar:?]
-	at net.minecraft.client.realms.RealmsClient.clientCompatible(RealmsClient.java:218) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.jar:?]
-	at net.minecraft.client.realms.RealmsAvailability.method_52627(RealmsAvailability.java:45) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.jar:?]
-	at java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1768) ~[?:?]
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136) ~[?:?]
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635) ~[?:?]
-	at java.lang.Thread.run(Thread.java:833) ~[?:?]
-[14:14:07] [Render thread/INFO] (Minecraft) Loaded 7 recipes
-[14:14:08] [Render thread/INFO] (Minecraft) Loaded 1271 advancements
-[14:14:09] [Render thread/INFO] (BiomeModificationImpl) Applied 0 biome modifications to 0 of 64 new biomes in 3.157 ms
-[14:14:09] [Server thread/INFO] (Minecraft) Starting integrated minecraft server version 1.20.2
-[14:14:09] [Server thread/INFO] (Minecraft) Generating keypair
-[14:14:19] [Server thread/INFO] (Minecraft) Preparing start region for dimension minecraft:overworld
-[14:14:30] [Render thread/INFO] (Minecraft) 准备生成区域中：0%
-[14:14:30] [Render thread/INFO] (Minecraft) 准备生成区域中：0%
-[14:14:30] [Render thread/INFO] (Minecraft) 准备生成区域中：0%
-[14:14:30] [Render thread/INFO] (Minecraft) 准备生成区域中：0%
-[14:14:30] [Render thread/INFO] (Minecraft) 准备生成区域中：0%
-[14:14:30] [Render thread/INFO] (Minecraft) 准备生成区域中：0%
-[14:14:30] [Render thread/INFO] (Minecraft) 准备生成区域中：0%
-[14:14:30] [Render thread/INFO] (Minecraft) 准备生成区域中：0%
-[14:14:30] [Render thread/INFO] (Minecraft) 准备生成区域中：0%
-[14:14:30] [Render thread/INFO] (Minecraft) 准备生成区域中：0%
-[14:14:30] [Render thread/INFO] (Minecraft) 准备生成区域中：0%
-[14:14:30] [Render thread/INFO] (Minecraft) 准备生成区域中：0%
-[14:14:30] [Render thread/INFO] (Minecraft) 准备生成区域中：0%
-[14:14:30] [Render thread/INFO] (Minecraft) 准备生成区域中：0%
-[14:14:30] [Render thread/INFO] (Minecraft) 准备生成区域中：0%
-[14:14:30] [Render thread/INFO] (Minecraft) 准备生成区域中：0%
-[14:14:30] [Render thread/INFO] (Minecraft) 准备生成区域中：0%
-[14:14:30] [Render thread/INFO] (Minecraft) 准备生成区域中：0%
-[14:14:30] [Render thread/INFO] (Minecraft) 准备生成区域中：0%
-[14:14:30] [Render thread/INFO] (Minecraft) 准备生成区域中：0%
-[14:14:30] [Render thread/INFO] (Minecraft) 准备生成区域中：0%
-[14:14:30] [Render thread/INFO] (Minecraft) 准备生成区域中：0%
-[14:14:30] [Render thread/INFO] (Minecraft) 准备生成区域中：0%
-[14:14:31] [Render thread/INFO] (Minecraft) 准备生成区域中：0%
-[14:14:31] [Render thread/INFO] (Minecraft) 准备生成区域中：0%
-[14:14:32] [Render thread/INFO] (Minecraft) 准备生成区域中：0%
-[14:14:32] [Render thread/INFO] (Minecraft) 准备生成区域中：0%
-[14:14:33] [Render thread/INFO] (Minecraft) 准备生成区域中：0%
-[14:14:33] [Render thread/INFO] (Minecraft) 准备生成区域中：0%
-[14:14:34] [Render thread/INFO] (Minecraft) 准备生成区域中：0%
-[14:14:34] [Render thread/INFO] (Minecraft) 准备生成区域中：16%
-[14:14:35] [Render thread/INFO] (Minecraft) 准备生成区域中：38%
-[14:14:35] [Render thread/INFO] (Minecraft) 准备生成区域中：67%
-[14:14:36] [Render thread/INFO] (Minecraft) 准备生成区域中：87%
-[14:14:36] [Render thread/INFO] (Minecraft) Time elapsed: 16900 ms
-[14:14:36] [Server thread/INFO] (Minecraft) Changing view distance to 2, from 10
-[14:14:36] [Server thread/INFO] (Minecraft) Changing simulation distance to 5, from 0
-[14:14:38] [Netty Local Client IO #0/INFO] (ClientPlayNetworkAddon for Player476) Negotiated common packet version 1
-[14:14:38] [Netty Server IO #1/INFO] (ServerConfigurationNetworkAddon for Player476) Negotiated common packet version 1
-[14:14:38] [Server thread/INFO] (Minecraft) Player476[local:E:86dd7591] logged in with entity id 179 at (105.69999998807907, 77.0, -422.30000001192093)
-[14:14:38] [Server thread/INFO] (Minecraft) Player476加入了游戏
-[14:14:40] [Render thread/INFO] (Minecraft) Loaded 2 advancements
-[14:14:40] [Server thread/WARN] (Minecraft) Can't keep up! Is the server overloaded? Running 3304ms or 66 ticks behind
-[14:15:07] [Server thread/INFO] (Minecraft) [STDOUT]: aaa
-[14:15:08] [Render thread/INFO] (Minecraft) [System] [CHAT] §a成功将玩家§6Player476§a设置成一个猫娘，你成为了它的主人
-[14:15:11] [Render thread/INFO] (Minecraft) [System] [CHAT] [§a猫娘§f§r]Player476§b>>§7uuggug喵~
-[14:15:11] [Server thread/INFO] (Minecraft) [Not Secure] <Player476> uuggug
-[14:15:11] [Render thread/INFO] (Minecraft) [CHAT] <Player476> uuggug
-[14:15:20] [Server thread/INFO] (Minecraft) Saving and pausing game...
-[14:15:20] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[新的世界]'/minecraft:overworld
-[14:15:20] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[新的世界]'/minecraft:the_nether
-[14:15:20] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[新的世界]'/minecraft:the_end
-[14:15:21] [Render thread/INFO] (Minecraft) Stopping!
-[14:15:21] [Server thread/INFO] (Minecraft) Player476 lost connection: 连接中断
-[14:15:21] [Server thread/INFO] (Minecraft) Player476退出了游戏
-[14:15:21] [Server thread/INFO] (Minecraft) Stopping singleplayer server as player logged out
-[14:15:21] [Server thread/INFO] (Minecraft) Stopping server
-[14:15:21] [Server thread/INFO] (Minecraft) Saving players
-[14:15:21] [Server thread/INFO] (Minecraft) Saving worlds
-[14:15:26] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[新的世界]'/minecraft:overworld
-[14:15:27] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[新的世界]'/minecraft:the_nether
-[14:15:27] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[新的世界]'/minecraft:the_end
-[14:15:27] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage (新的世界): All chunks are saved
-[14:15:27] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
-[14:15:27] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage (DIM1): All chunks are saved
-[14:15:27] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage: All dimensions are saved
+[22:47:04] [Render thread/INFO] (Minecraft) Setting user: Player922
+[22:47:06] [Worker-Main-2/INFO] (Mod Menu/Update Checker) Checking mod updates...
+[22:47:06] [Render thread/INFO] (Indigo) [Indigo] Registering Indigo renderer!
+[22:47:07] [Render thread/INFO] (Minecraft) Backend library: LWJGL version 3.3.2-snapshot
+[22:47:09] [Render thread/INFO] (Minecraft) Reloading ResourceManager: vanilla, fabric (fabric-containers-v0, fabric-events-lifecycle-v0, fabric-key-binding-api-v1, fabric-blockrenderlayer-v1, fabric-crash-report-info-v1, fabric-api, fabric-recipe-api-v1, fabric-api-lookup-api-v1, modmenu, fabric-command-api-v2, fabric-block-api-v1, fabric-events-interaction-v0, fabric-registry-sync-v0, fabric-screen-api-v1, fabric-transitive-access-wideners-v1, fabric-message-api-v1, fabric-keybindings-v0, fabric-rendering-data-attachment-v1, ctlibfabric, fabric-particles-v1, fabric-networking-api-v1, fabric-object-builder-api-v1, fabric-models-v0, fabric-renderer-registries-v1, fabric-renderer-api-v1, fabric-mining-level-api-v1, fabric-rendering-fluids-v1, fabric-rendering-v1, fabric-lifecycle-events-v1, fabric-convention-tags-v1, fabric-block-view-api-v2, fabric-client-tags-api-v1, fabric-screen-handler-api-v1, fabric-dimensions-v1, fabric-commands-v0, fabric-loot-api-v2, fabric-transfer-api-v1, fabric-data-generation-api-v1, fabric-api-base, fabric-rendering-v0, fabric-content-registries-v0, fabric-item-api-v1, fabric-resource-loader-v0, fabric-game-rule-api-v1, fabric-renderer-indigo, fabric-command-api-v1, fabric-biome-api-v1, fabric-sound-api-v1, tonekofabric, fabric-gametest-api-v1, fabric-model-loading-api-v1, fabricloader, fabric-resource-conditions-api-v1, fabric-entity-events-v1, fabric-item-group-api-v1)
+[22:47:10] [Worker-Main-3/INFO] (Minecraft) Found unifont_all_no_pua-15.0.06.hex, loading
+[22:47:14] [Render thread/INFO] (Minecraft) Stopping!
+[22:47:14] [Render thread/ERROR] (Minecraft) Shutdown failure!
+java.util.ConcurrentModificationException: null
+	at java.util.HashMap.forEach(HashMap.java:1424) ~[?:?]
+	at net.minecraft.client.texture.TextureManager.close(TextureManager.java:173) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.jar:?]
+	at net.minecraft.client.MinecraftClient.close(MinecraftClient.java:1194) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.jar:?]
+	at net.minecraft.client.MinecraftClient.stop(MinecraftClient.java:1168) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.jar:?]
+	at net.minecraft.client.main.Main.main(Main.java:269) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.jar:?]
+	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:468) ~[fabric-loader-0.14.23.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.Knot.launch(Knot.java:74) ~[fabric-loader-0.14.23.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.KnotClient.main(KnotClient.java:23) ~[fabric-loader-0.14.23.jar:?]
+	at net.fabricmc.devlaunchinjector.Main.main(Main.java:86) ~[dev-launch-injector-0.2.1+build.8.jar:?]

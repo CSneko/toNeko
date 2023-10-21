@@ -2,6 +2,7 @@ package com.crystalneko.toneko;
 
 import com.crystalneko.toneko.bstats.Metrics;
 import com.crystalneko.toneko.command.NekoCommand;
+import com.crystalneko.toneko.command.TabCompleter;
 import com.crystalneko.toneko.command.ToNekoCommand;
 import com.crystalneko.toneko.event.PlayerAttack;
 import com.crystalneko.toneko.event.PlayerDeath;
@@ -61,6 +62,8 @@ public final class ToNeko extends JavaPlugin {
         //注册命令执行器
         getCommand("toneko").setExecutor(new ToNekoCommand(this,getstick));
         getCommand("neko").setExecutor(new NekoCommand());
+        getCommand("toneko").setTabCompleter(new TabCompleter());
+        getCommand("neko").setTabCompleter(new TabCompleter());
         //注册玩家加入监听器
         this.playerJoin = new PlayerJoin(this);
         //注册玩家受到攻击监听器

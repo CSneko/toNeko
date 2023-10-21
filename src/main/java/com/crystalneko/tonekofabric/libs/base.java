@@ -1,21 +1,12 @@
 package com.crystalneko.tonekofabric.libs;
 
 import com.crystalneko.ctlibfabric.sql.sqlite;
-//import com.fasterxml.jackson.databind.JsonNode;
-//import com.fasterxml.jackson.databind.ObjectMapper;
-//import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.sun.source.doctree.SeeTree;
+
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.resource.language.LanguageManager;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableTextContent;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.util.Language;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -74,79 +65,8 @@ public class base {
         //设置主人的值
         sqlite.saveDataWhere(worldName+"Nekos","owner","neko",neko,owner);
     }
-    /*public static String getJson(String filePath,String jsonPath){
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            File jsonFile = new File(filePath);
-            // 将JSON数据读取为JsonNode对象
-            JsonNode rootNode = objectMapper.readTree(jsonFile);
-
-            if (rootNode.has(jsonPath)) {
-                return rootNode.get(jsonPath).asText();
-            } else {
-                // 处理节点不存在的情况
-                return null;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-
-    }
-    public static void setJson(String filePath, String jsonPath, String jsonValue) {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            File jsonFile = new File(filePath);
-            boolean fileExists = jsonFile.exists();
-
-            // 如果文件不存在或者为空文件，则创建新的 JSON 结构
-            if (!fileExists || jsonFile.length() == 0) {
-                ObjectNode rootNode = objectMapper.createObjectNode();
-                setJsonNodeValue(rootNode, jsonPath, jsonValue);
-
-                String updatedJson = objectMapper.writeValueAsString(rootNode);
-
-                FileWriter writer = new FileWriter(jsonFile);
-                writer.write(updatedJson);
-                writer.close();
-
-                return;
-            }
-
-            // 将JSON数据读取为JsonNode对象
-            JsonNode rootNode = objectMapper.readTree(jsonFile);
-
-            setJsonNodeValue(rootNode, jsonPath, jsonValue);
-
-            // 将修改后的JsonNode对象转换为JSON字符串
-            String updatedJson = objectMapper.writeValueAsString(rootNode);
-
-            // 写入更新后的JSON字符串至文件
-            FileWriter writer = new FileWriter(jsonFile);
-            writer.write(updatedJson);
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static void setJsonNodeValue(JsonNode rootNode, String jsonPath, String jsonValue) {
-        String[] pathSegments = jsonPath.split("/");
-        ObjectNode currentNode = (ObjectNode) rootNode;
-
-        for (int i = 1; i < pathSegments.length - 1; i++) {
-            String segment = pathSegments[i];
-            if (!currentNode.has(segment) || !currentNode.get(segment).isObject()) {
-                currentNode.set(segment, currentNode.objectNode());
-            }
-            currentNode = (ObjectNode) currentNode.get(segment);
-        }
-
-        String lastSegment = pathSegments[pathSegments.length - 1];
-        currentNode.put(lastSegment, jsonValue);
-    }*/
     public static Text getStringLanguage(String key, String[] replace){
-        MutableText TextResult = Text.translatable(key,replace);
+        MutableText TextResult = Text.translatable(key, (Object) replace);
         return TextResult;
     }
 
