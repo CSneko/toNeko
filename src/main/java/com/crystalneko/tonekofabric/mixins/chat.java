@@ -85,7 +85,8 @@ public abstract class chat{
             stringMessage = "[§a猫娘§f§r]" + playerName + "§b>>§7" + stringMessage;
             return Text.of(stringMessage);
         } else {
-            return message;
+            stringMessage = playerName + "§b>>§7" + stringMessage;
+            return Text.of(stringMessage);
         }
     }
 

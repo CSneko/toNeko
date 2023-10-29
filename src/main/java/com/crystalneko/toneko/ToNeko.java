@@ -7,23 +7,25 @@ import com.crystalneko.toneko.command.ToNekoCommand;
 import com.crystalneko.toneko.event.PlayerAttack;
 import com.crystalneko.toneko.event.PlayerDeath;
 import com.crystalneko.toneko.event.PlayerJoin;
+import com.crystalneko.toneko.event.PlayerQuit;
 import com.crystalneko.toneko.files.create;
 import com.crystalneko.toneko.chat.nekoed;
 import com.crystalneko.toneko.files.downloadPlugin;
 import com.crystalneko.toneko.items.getStick;
 
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.InvalidPluginException;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 
 public final class ToNeko extends JavaPlugin {
@@ -34,17 +36,26 @@ public final class ToNeko extends JavaPlugin {
     private downloadPlugin DownloadPlugin;
     private PlayerJoin playerJoin;
     private PlayerAttack playerAttack;
+    public static FileConfiguration languageConfig;
+    private String language;
+    private PlayerQuit playerQuit;
 
 
     @Override
     public void onEnable() {
-        //温馨提示：代码中所有的判断是否为猫娘都是判断是否有主人，这意味着猫娘必须有主人，否则就不是猫娘
+        //温馨提示：代码中所有的判断是否为猫娘都是判断是否有主人，这意味着猫娘必须有主人，否则就不被判断为猫娘
         int pluginId = 19899;
         Metrics metrics = new Metrics(this, pluginId);
         //判断是否启用了ctLib
         downloadPlugin.checkAndDownloadPlugin("ctLib","https://w.csk.asia/res/plugins/ctLib.jar");
         //获取config.yml
         checkAndSaveResource("config.yml");
+        //更新配置文件
+        updateConfig();
+        //复制文件
+        copyResource();
+        //加载语言文件
+        loadLanguageFile();
         //初始化下载类
         this.DownloadPlugin = new downloadPlugin(this);
         //检查更新和自动更新
@@ -57,8 +68,6 @@ public final class ToNeko extends JavaPlugin {
         this.catedChat = new nekoed(this);
         //初始化厥猫棍获取器
         this.getstick = new getStick(this);
-        //初始化死亡监听器
-        this.playerDeath = new PlayerDeath(this);
         //注册命令执行器
         getCommand("toneko").setExecutor(new ToNekoCommand(this,getstick));
         getCommand("neko").setExecutor(new NekoCommand());
@@ -66,8 +75,14 @@ public final class ToNeko extends JavaPlugin {
         getCommand("neko").setTabCompleter(new TabCompleter());
         //注册玩家加入监听器
         this.playerJoin = new PlayerJoin(this);
+        //注册玩家退出监听器
+        this.playerQuit = new PlayerQuit(this);
         //注册玩家受到攻击监听器
         this.playerAttack = new PlayerAttack(this);
+        //初始化死亡监听器
+        this.playerDeath = new PlayerDeath(this);
+
+
     }
 
 
@@ -110,24 +125,24 @@ public final class ToNeko extends JavaPlugin {
                 String pluginVersion = getDescription().getVersion(); // 获取插件的版本号
                 if (!pluginVersion.equals(remoteVersion)) {
                     // 版本不同，发出更新提醒
-                    System.out.println("有新版本可以下载，请前往 https://github.com/CSneko/toneko 下载");
+                    System.out.println(getMessage("onEnable.new-version"));
                     connection.disconnect();
                     return true;
                 } else {
                     // 版本相同，无需更新
-                    System.out.println("当前已是最新版本");
+                    System.out.println(getMessage("onEnable.up-to-date"));
                     connection.disconnect();
                     return false;
                 }
             } else {
                 // 请求失败
-                System.out.println("无法检查更新");
+                System.out.println(getMessage("onEnable.unable-check-update"));
                 connection.disconnect();
                 return false;
             }
         } catch (IOException e) {
             // 发生异常
-            System.out.println("无法检查更新:" + e);
+            System.out.println(getMessage("onEnable.unable-check-update")+":" + e);
             return false;
         }
     }
@@ -159,4 +174,81 @@ public final class ToNeko extends JavaPlugin {
             }
         }
     }
+    //配置文件更新
+    private void updateConfig() {
+        //备份配置文件
+        File backupFile = new File("plugins/toNeko/config_old.yml");
+
+        //加载配置
+        File configFile = new File("plugins/toNeko/config.yml");
+        //判断旧配置是否存在
+        if(backupFile.exists()){
+            backupFile.delete();
+        }
+        try {
+            Files.copy(configFile.toPath(), backupFile.toPath());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        //使用默认配置文件替换旧的配置文件
+        InputStream defaultConfigStream = getResource("config.yml"); // 默认配置文件的输入流
+        try {
+            Files.copy(defaultConfigStream, configFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        File newConfigFile = new File("plugins/toNeko/config.yml");
+        YamlConfiguration newConfig = YamlConfiguration.loadConfiguration(newConfigFile);
+        //将新的配置项写入到配置文件中
+        newConfig.set("automatic-updates", ifConfig("automatic-updates"));
+        newConfig.set("online", ifConfig("online"));
+        newConfig.set("language", ifConfig("language"));
+        try {
+            newConfig.save(configFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
+    private String ifConfig(String option){
+        File oldConfigFile = new File("plugins/toNeko/config_old.yml");
+        YamlConfiguration oldConfig = YamlConfiguration.loadConfiguration(oldConfigFile);
+        if(oldConfig.getString(option) != null){
+            return oldConfig.getString(option);
+        }else {
+            File configFile = new File("plugins/toNeko/config.yml");
+            YamlConfiguration config = YamlConfiguration.loadConfiguration(configFile);
+            return config.getString(option);
+        }
+    }
+    //复制资源
+    private void copyResource(){
+        // 创建目标文件夹
+        File targetFolder = new File(getDataFolder().getParentFile(), "toNeko");
+        if (!targetFolder.exists()) {
+            targetFolder.mkdirs();
+        }
+        saveResource("language/zh_cn.yml", true);
+        saveResource("language/en_us.yml", true);
+    }
+    private void loadLanguageFile() {
+        // 获取配置文件中的语言选项
+        language = getConfig().getString("language");
+
+        // 根据语言选项加载对应的语言文件
+        File languageFile = new File(getDataFolder(), "language/" + language + ".yml");
+        if (!languageFile.exists()) {
+            saveResource("language/" + language + ".yml", false);
+        }
+
+        languageConfig = YamlConfiguration.loadConfiguration(languageFile);
+    }
+
+    // 获取翻译内容的方法
+    public static String getMessage(String key) {
+        return languageConfig.getString(key);
+    }
+
 }
+

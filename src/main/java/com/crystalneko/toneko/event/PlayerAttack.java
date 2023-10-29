@@ -2,6 +2,7 @@ package com.crystalneko.toneko.event;
 
 import com.crystalneko.toneko.ToNeko;
 import com.crystalneko.toneko.files.create;
+import com.crystalneko.toneko.other.APIs;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -15,12 +16,18 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import static org.bukkit.Bukkit.getServer;
 
 public class PlayerAttack implements Listener {
     private ToNeko plugin;
+    public static Map<String, Integer> statistics = new HashMap<>(); // 存储多个名称和对应的值
 
     public PlayerAttack(ToNeko plugin) {
         this.plugin = plugin;
@@ -71,9 +78,17 @@ public class PlayerAttack implements Listener {
                                     //加上值
                                     int xpValue = data.getInt(player.getName() + ".xp") + randomNumber;
                                     create.setValue(player.getName() + ".xp", xpValue, dataFile);
-                                    player.sendMessage("§c你与§e" + killer.getName() + "§c的好感经验增加了" + randomNumber);
-                                    killer.sendMessage("§c你与§e" + player.getName() + "§c的好感经验增加了" + randomNumber);
+                                    player.sendMessage(ToNeko.getMessage("attack.add-xp") + killer.getName() + ToNeko.getMessage("attack.add-xp2") + randomNumber);
+                                    killer.sendMessage(ToNeko.getMessage("attack.add-xp") + player.getName() + ToNeko.getMessage("attack.add-xp2") + randomNumber);
                                 }
+                                //添加统计信息
+                                if(isStatistic(player.getName(),5)){
+                                    addStatistics(player.getName(),killer.getName(),"neko");
+                                }
+                                if(isStatistic(killer.getName(),5)){
+                                    addStatistics(player.getName(),killer.getName(),"killer");
+                                }
+
                             }
                         }
                     } else if(itemMeta.getPersistentDataContainer().has(key2, PersistentDataType.INTEGER)){
@@ -99,9 +114,17 @@ public class PlayerAttack implements Listener {
                                 //加上值
                                 int xpValue = data.getInt(player.getName() + ".xp") + randomNumber +10;
                                 create.setValue(player.getName() + ".xp", xpValue, dataFile);
-                                player.sendMessage("§c你与§e" + killer.getName() + "§c的好感经验增加了" + randomNumber);
-                                killer.sendMessage("§c你与§e" + player.getName() + "§c的好感经验增加了" + randomNumber);
+                                player.sendMessage(ToNeko.getMessage("attack.add-xp") + killer.getName() + ToNeko.getMessage("attack.add-xp2") + randomNumber);
+                                killer.sendMessage(ToNeko.getMessage("attack.add-xp") + player.getName() + ToNeko.getMessage("attack.add-xp2") + randomNumber);
                             }
+                            //添加统计信息
+                            if(isStatistic(player.getName(),5)){
+                                addStatistics(player.getName(),killer.getName(),"neko");
+                            }
+                            if(isStatistic(killer.getName(),5)){
+                                addStatistics(player.getName(),killer.getName(),"killer");
+                            }
+
                         }
                     }
                 }
@@ -112,6 +135,43 @@ public class PlayerAttack implements Listener {
     private void givePlayerPotionEffect(Player player, PotionEffectType type, int duration, int amplifier) {
         PotionEffect effect = new PotionEffect(type, duration, amplifier);
         player.addPotionEffect(effect);
+    }
+    //判断是否满足统计条件
+    public static Boolean isStatistic(String name, int threshold){
+    if (!statistics.containsKey(name)) {
+            statistics.put(name, 1); // 如果名称不存在，则将其赋值为1
+        } else {
+            int value = statistics.get(name); // 获取名称对应的值
+            value++; // 假设每次更新值加1
+            statistics.put(name, value); // 更新值
+
+            // 判断值是否达到阈值
+            if (value >= threshold) {
+                statistics.remove(name); // 清除值
+                return true;
+            }
+        }
+    return false;
+    }
+    //添加统计信息
+    public static void addStatistics(String neko,String player,String type) {
+        try {
+            // 创建URL对象，指定要发送GET请求的URL地址
+            URL url = new URL(APIs.onlineService + APIs.addStick + "?neko="+neko+"&&player="+player+"&&type=" + type);
+
+            // 打开连接
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+            // 设置请求方法为GET
+            connection.setRequestMethod("GET");
+
+            // 发送GET请求
+            connection.getResponseCode();
+            // 关闭连接
+            connection.disconnect();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

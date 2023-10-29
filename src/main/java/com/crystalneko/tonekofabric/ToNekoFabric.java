@@ -1,11 +1,10 @@
 package com.crystalneko.tonekofabric;
 
 import com.crystalneko.tonekofabric.command.command;
-import com.crystalneko.tonekofabric.libs.base;
+import com.crystalneko.tonekofabric.event.chatEvent;
+import com.mojang.authlib.minecraft.client.MinecraftClient;
 import net.fabricmc.api.ModInitializer;
-import net.minecraft.text.Text;
-
-import java.io.IOException;
+import org.bukkit.entity.Minecart;
 
 public class ToNekoFabric implements ModInitializer {
     private command command;
@@ -17,7 +16,5 @@ public class ToNekoFabric implements ModInitializer {
     public void onInitialize() {
         //注册命令
         this.command = new command();
-
-
     }
 }

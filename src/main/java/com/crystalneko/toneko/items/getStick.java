@@ -22,7 +22,7 @@ public class getStick {
         //获取物品的ItemMeta对象
         ItemMeta itemMeta = itemStack.getItemMeta();
         //设置物品的展示名称
-        itemMeta.setDisplayName("§9§o撅猫棍");
+        itemMeta.setDisplayName(ToNeko.getMessage("item.stick"));
         //为物品添加附魔特效
         itemMeta.addEnchant(Enchantment.DURABILITY, 1, true);
         //设置物品的NBT标签
@@ -40,7 +40,7 @@ public class getStick {
         //获取物品的ItemMeta对象
         ItemMeta itemMeta = itemStack.getItemMeta();
         //设置物品的展示名称
-        itemMeta.setDisplayName("§9§o撅猫棍2级");
+        itemMeta.setDisplayName(ToNeko.getMessage("item.stick-level-2"));
         //为物品添加附魔特效
         itemMeta.addEnchant(Enchantment.DURABILITY, 10, true);
         //设置物品的NBT标签

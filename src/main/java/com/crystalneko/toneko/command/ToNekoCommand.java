@@ -30,7 +30,7 @@ public class ToNekoCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage("§c此命令只能由玩家执行");
+            sender.sendMessage(ToNeko.getMessage("command.only-player"));
             return true;
         }
 
@@ -38,7 +38,7 @@ public class ToNekoCommand implements CommandExecutor {
 
         // 处理子命令
         if(args.length == 0){
-            player.sendMessage("§b/toneko 帮助:\n§a/toneko help §b获取帮助\n§a/toneko player <玩家名> §b将一位玩家变成猫娘(但是你会被祭献)\n§a/toneko item §b获取撅猫棍\n§a/toneko remove <猫娘名称> §b删除猫娘§c（这是个危险操作，请谨慎使用）\n§a/toneko xp <猫娘名称> §b查看好感经验\n§a/toneko aliases <猫娘名称> add或remove <别名> §b为你添加或删除别名（会转换为'主人'的词）\n§a/toneko block <猫娘名称> add或remove <屏蔽词> <替换词> word或all §b添加屏蔽词（屏蔽词会被替换成替换词，all代表替换整句,word替换单词)");
+            player.sendMessage(ToNeko.getMessage("command.toneko.help"));
         } else if (args.length == 2 && args[0].equalsIgnoreCase("player")) {
             if (player.hasPermission("toneko.command.player")) {
                 //创建数据文件实例
@@ -63,7 +63,7 @@ public class ToNekoCommand implements CommandExecutor {
                     player.sendMessage("§b它已经是一个猫娘了，它的主人是§6" + data.getString(args[1] + ".owner"));
                 }
             }else {
-                player.sendMessage("§c你没有执行该命令的权限!");
+                player.sendMessage(ToNeko.getMessage("command.no-permission"));
             }
 
         } else if (args[0].equalsIgnoreCase("help")) {
@@ -72,7 +72,7 @@ public class ToNekoCommand implements CommandExecutor {
             if (player.hasPermission("toneko.command.item")){
                 getstick.getStick(player);
             }else {
-                player.sendMessage("§c你没有执行该命令的权限!");
+                player.sendMessage(ToNeko.getMessage("command.no-permission"));
             }
         }else if (args.length == 2 && args[0].equalsIgnoreCase("remove")){
             if (player.hasPermission("toneko.command.remove")) {
@@ -108,7 +108,7 @@ public class ToNekoCommand implements CommandExecutor {
                     return true;
                 }
             } else {
-                player.sendMessage("§c你没有执行该命令的权限!");
+                player.sendMessage(ToNeko.getMessage("command.no-permission"));
             }
         }else if(args.length == 2 && args[0].equalsIgnoreCase("xp")){
             if(player.hasPermission("toneko.command.xp")) {
@@ -178,7 +178,7 @@ public class ToNekoCommand implements CommandExecutor {
                         player.sendMessage("§c你不是" + args[1] + "的主人!");
                 }
             }else {
-                player.sendMessage("§c你没有执行该命令的权限!");
+                player.sendMessage(ToNeko.getMessage("command.no-permission"));
             }
         }else if(args[0].equalsIgnoreCase("item2")) {
             getstick.getStick2(player);

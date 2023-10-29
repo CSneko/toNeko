@@ -1,5 +1,6 @@
 package com.crystalneko.toneko.event;
 
+import com.crystalneko.toneko.ToNeko;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -9,7 +10,14 @@ import com.crystalneko.ctlib.chat.chatPrefix;
 
 import java.io.File;
 
+import static org.bukkit.Bukkit.getServer;
+
 public class PlayerQuit implements Listener {
+    private ToNeko plugin;
+    public PlayerQuit(ToNeko plugin){
+        this.plugin = plugin;
+        getServer().getPluginManager().registerEvents(this,plugin );
+    }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event){
@@ -20,7 +28,7 @@ public class PlayerQuit implements Listener {
         Player player = event.getPlayer();
         if(data.getString(player.getName() + ".owner") != null){
         //删除前缀
-            chatPrefix.subPrivatePrefix(player,"§a猫娘");
+            chatPrefix.subPrivatePrefix(player, ToNeko.getMessage("other.neko"));
         }
     }
 }

@@ -1,5 +1,5 @@
 {
-  "message.toneko.player.success": "§aSuccessfully set player§6[playerName]§a to be a neko girl, and you become its owner",
-  "message.toneko.player.nekoed": "§bIt is already a neko girl, and its owner is§6[owner]",
+  "message.toneko.player.success": "§aSuccessfully set player§6%d§a to be a neko girl, and you become its owner",
+  "message.toneko.player.nekoed": "§bIt is already a neko girl, and its owner is§6%d",
   "message.toneko.help": "§b/toneko Help:\n§a/toneko help §bGet help\n§a/toneko player <player name> §bTurn a player into a neko girl (but you will sacrificed)"
 }

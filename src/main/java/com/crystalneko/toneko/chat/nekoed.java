@@ -69,20 +69,20 @@ public class nekoed implements Listener{
     }
     public String catChatMessage(String message, String owner, List<String> aliases){
         //将玩家名称替换为主人
-        message = message.replaceAll(owner, "主人");
+        message = message.replaceAll(owner, ToNeko.getMessage("other.owner"));
         //将别名替换为主人
         for (String value : aliases) {
-            message = message.replaceAll(value, "主人");
+            message = message.replaceAll(value, ToNeko.getMessage("other.owner"));
         }
         //随机将",，"替换为"喵~"
-        message = replaceChar(message, ',',"喵~",0.4);
-        message = replaceChar(message, '，',"喵~",0.4);
+        message = replaceChar(message, ',',ToNeko.getMessage("other.nya"),0.4);
+        message = replaceChar(message, '，',ToNeko.getMessage("other.nya"),0.4);
         //将最后替换成"喵~"
-        if(!toString().endsWith("喵~")){
-            if (toString().endsWith("。")) {
-                message = replaceChar(message,'。',"喵~",1.0);
+        if(!toString().endsWith(ToNeko.getMessage("other.nya"))){
+            if (toString().endsWith(".")) {
+                message = replaceChar(message,'.',ToNeko.getMessage("other.nya"),1.0);
             }else {
-                message = message + "喵~";
+                message = message + ToNeko.getMessage("other.nya");
             }
         }
         return message;

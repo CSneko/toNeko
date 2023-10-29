@@ -34,7 +34,6 @@ public class command{
                                         final ServerCommandSource source = context.getSource();
                                         // 使用 getArgument 方法获取玩家名称
                                         String target = context.getArgument("target", String.class);
-                                        System.out.println("aaa");
                                         //判断是否有主人
                                         if(base.isNekoHasOwner(target,worldName) == null){
                                             //设置玩家为猫娘

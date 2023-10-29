@@ -1,10 +1,6 @@
 package com.crystalneko.tonekofabric.libs;
 
 import com.crystalneko.ctlibfabric.sql.sqlite;
-
-import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 
 import java.io.IOException;
@@ -14,15 +10,6 @@ import java.nio.file.Paths;
 
 public class base {
     //--------------------------------------------------------获取世界名称---------------------------------------------
-    public static final String getWorldName() {
-        MinecraftServer server = (MinecraftServer) FabricLoader.getInstance().getGameInstance();
-        if (server != null) {
-            String worldName = server.getSaveProperties().getLevelName();
-            return worldName;
-        } else {
-            return "publicWorld";
-        }
-    }
     /**创建文件和目录
     *示例：createFileInDirectory("path/to","/file.txt")
      * @param directoryPath 文件路径
@@ -66,8 +53,7 @@ public class base {
         sqlite.saveDataWhere(worldName+"Nekos","owner","neko",neko,owner);
     }
     public static Text getStringLanguage(String key, String[] replace){
-        MutableText TextResult = Text.translatable(key, (Object) replace);
-        return TextResult;
+        return Text.translatable(key, (Object[]) replace);
     }
 
 

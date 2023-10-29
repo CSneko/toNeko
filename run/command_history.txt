@@ -1,9 +1,3 @@
-/me
-/me dddffd
-/toneko player Player79
-/toneko player Player782
-/f
-/toneko player Player782
 /time set day
 /toneko
 /toneko player
@@ -48,3 +42,9 @@
 /toneko player
 /toneko player Player730
 /toneko player Player476
+/toneko player Player530
+/toneko player Player330
+/time set day
+/toneko player Player330
+/say wf
+/toneko

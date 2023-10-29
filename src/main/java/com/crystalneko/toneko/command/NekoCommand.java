@@ -1,6 +1,7 @@
 package com.crystalneko.toneko.command;
 
 
+import com.crystalneko.toneko.ToNeko;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,13 +19,13 @@ public class NekoCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage("§c此命令只能由玩家执行");
+            sender.sendMessage(ToNeko.getMessage("command.only-player"));
             return true;
         }
         Player player = (Player) sender;
         // 处理子命令
         if (args[0].equalsIgnoreCase("help")) {
-            player.sendMessage("§b/neko 帮助:\n§a/neko help §b获取帮助\n§a/neko jump §b获取跳跃提升");
+            player.sendMessage(ToNeko.getMessage("command.neko.help"));
         } else if(args[0].equalsIgnoreCase("jump")){
             //给予跳跃提升效果
             if(player.hasPermission("neko.command.jump")) {
@@ -37,7 +38,7 @@ public class NekoCommand implements CommandExecutor, TabCompleter {
                     int amplifier = getAmplifier(player);
                     givePlayerPotionEffect(player, effectType, duration, amplifier);
                 }
-            } else {player.sendMessage("§c你没有执行该命令的权限!");}
+            } else {player.sendMessage(ToNeko.getMessage("command.no-permission"));}
         }else if(args[0].equalsIgnoreCase("vision")){
             if(player.hasPermission("neko.command.vision")){
                 if (isPlayerNeko(player)) {
@@ -49,9 +50,9 @@ public class NekoCommand implements CommandExecutor, TabCompleter {
                     int amplifier = getAmplifier(player);
                     givePlayerPotionEffect(player, effectType, duration, amplifier);
                 }
-            } else {player.sendMessage("§c你没有执行该命令的权限!");}
+            } else {player.sendMessage(ToNeko.getMessage("command.no-permission"));}
         } else {
-            player.sendMessage("§c无效的子命令,请输入§a/neko help§c查看帮助");
+            player.sendMessage(ToNeko.getMessage("command.neko.Invalid"));
         }
         return true;
     }
@@ -81,7 +82,7 @@ public class NekoCommand implements CommandExecutor, TabCompleter {
         if(data.getString(player.getName() + ".owner") != null){
             return true;
         } else {
-            player.sendMessage("§c你不是猫娘，无法执行该命令");
+            player.sendMessage(ToNeko.getMessage("command.neko.not-neko"));
             return false;
         }
     }

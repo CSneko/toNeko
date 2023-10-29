@@ -29,7 +29,7 @@ public class PlayerJoin implements Listener {
         //判断是否有主人
         if(data.getString(player.getName() + ".owner") != null) {
             //添加前缀
-            chatPrefix.addPrivatePrefix(player,"§a猫娘");
+            chatPrefix.addPrivatePrefix(player,ToNeko.getMessage("other.neko"));
         }
     }
 
