@@ -82,12 +82,16 @@ public class PlayerAttack implements Listener {
                                     killer.sendMessage(ToNeko.getMessage("attack.add-xp") + player.getName() + ToNeko.getMessage("attack.add-xp2") + randomNumber);
                                 }
                                 //添加统计信息
-                                if(isStatistic(player.getName(),5)){
+                               /* if(isStatistic(player.getName(),5)){
                                     addStatistics(player.getName(),killer.getName(),"neko");
                                 }
                                 if(isStatistic(killer.getName(),5)){
                                     addStatistics(player.getName(),killer.getName(),"killer");
-                                }
+                                }*/
+                                //发送撅人音效
+                                player.getWorld().playSound(player.getLocation(),"toneko.neko.stick",1,1);
+                                killer.getWorld().playSound(player.getLocation(),"toneko.neko.stick",1,1);
+
 
                             }
                         }
@@ -118,13 +122,15 @@ public class PlayerAttack implements Listener {
                                 killer.sendMessage(ToNeko.getMessage("attack.add-xp") + player.getName() + ToNeko.getMessage("attack.add-xp2") + randomNumber);
                             }
                             //添加统计信息
-                            if(isStatistic(player.getName(),5)){
+                            /*if(isStatistic(player.getName(),5)){
                                 addStatistics(player.getName(),killer.getName(),"neko");
                             }
                             if(isStatistic(killer.getName(),5)){
                                 addStatistics(player.getName(),killer.getName(),"killer");
-                            }
-
+                            }*/
+                            //发送撅人音效
+                            player.getWorld().playSound(player.getLocation(),"toneko.neko.stick.level2",1,1);
+                            killer.getWorld().playSound(player.getLocation(),"toneko.neko.stick.level2",1,1);
                         }
                     }
                 }
