@@ -12,7 +12,7 @@ death:
   sub-xp: "§cYour friendship experience with §e"
   sub-xp2: "§c hsa reduced"
 other:
-  neko: "§a neko"
+  neko: "§aneko"
   owner: "owner"
   nya: "nya~"
 command:
