@@ -13,6 +13,7 @@ import com.crystalneko.toneko.chat.nekoed;
 import com.crystalneko.toneko.files.downloadPlugin;
 import com.crystalneko.toneko.items.getStick;
 
+import com.crystalneko.toneko.items.stickLevel2;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -81,7 +82,8 @@ public final class ToNeko extends JavaPlugin {
         this.playerAttack = new PlayerAttack(this);
         //初始化死亡监听器
         this.playerDeath = new PlayerDeath(this);
-
+        //注册物品
+        new stickLevel2();
 
     }
 
