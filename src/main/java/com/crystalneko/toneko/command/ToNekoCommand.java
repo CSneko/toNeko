@@ -180,9 +180,7 @@ public class ToNekoCommand implements CommandExecutor {
             }else {
                 player.sendMessage(ToNeko.getMessage("command.no-permission"));
             }
-        }else if(args[0].equalsIgnoreCase("item2")) {
-            getstick.getStick2(player);
-        } else if (args.length == 6 && args[0].equalsIgnoreCase("block")) {
+        }else if (args.length == 6 && args[0].equalsIgnoreCase("block")) {
             /*替换词 1=猫娘名称 2= add/remove 3=屏蔽词 4=替换词 5=all/word
             数据库结构
             | 名称 | 屏蔽词 | 替换词 | 替换方式 |

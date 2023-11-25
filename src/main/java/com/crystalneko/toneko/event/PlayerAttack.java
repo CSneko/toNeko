@@ -51,19 +51,18 @@ public class PlayerAttack implements Listener {
                 if (itemStack == null || !itemStack.getType().isItem()) {
                     return;
                 }
-                if (itemStack != null) {
                     // 获取物品的ItemMeta对象
                     ItemMeta itemMeta = itemStack.getItemMeta();
                     //定义NBT标签
                     NamespacedKey key = new NamespacedKey(plugin, "neko");
                     NamespacedKey key2 = new NamespacedKey(plugin, "nekolevel");
                     // 检查物品是否含有该自定义NBT标签
-                    if (itemMeta.getPersistentDataContainer().has(key, PersistentDataType.STRING)) {
+                    if (itemMeta != null && itemMeta.getPersistentDataContainer().has(key, PersistentDataType.STRING)) {
                         // 读取NBT标签的值
                         String nbtValue = itemMeta.getPersistentDataContainer().get(key, PersistentDataType.STRING);
                         //判断NBT是否正确
-                        if (nbtValue.equals("true")) {
-                            if(data.getString(player.getName() + ".owner") != null) {
+                        if (nbtValue.equalsIgnoreCase("true")) {
+                            if (data.getString(player.getName() + ".owner") != null) {
                                 PotionEffectType effectType = PotionEffectType.WEAKNESS; // 虚弱效果的类型
                                 int duration = 200; // 持续时间
                                 int amplifier = 0; // 效果强度
@@ -89,8 +88,8 @@ public class PlayerAttack implements Listener {
                                     addStatistics(player.getName(),killer.getName(),"killer");
                                 }*/
                                 //发送撅人音效
-                                player.getWorld().playSound(player.getLocation(),"toneko.neko.stick",1,1);
-                                killer.getWorld().playSound(player.getLocation(),"toneko.neko.stick",1,1);
+                                player.getWorld().playSound(player.getLocation(), "toneko.neko.stick", 1, 1);
+                                killer.getWorld().playSound(player.getLocation(), "toneko.neko.stick", 1, 1);
 
 
                             }
@@ -134,7 +133,6 @@ public class PlayerAttack implements Listener {
                         }
                     }
                 }
-            }
             }
         }
     // 给予玩家药水效果的方法
