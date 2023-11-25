@@ -1,50 +1,48 @@
 # toNeko
-[English](README.md) | [简体中文](README_zh.md)
-## brief introduction
-This is a plug-in that can turn players into catgirls in the server, adding a little fun to your server. The Fabric version is not yet complete.
-## Instructions
-Put it into the server's `plugins` folder (Spigot) or into the `mods` folder (Fabric1.20.2)
+[简体中文](README.md) | [English](README_en.md)
+## 简单的介绍
+这是一个可以在服务器中把玩家变成猫娘的插件，为服务器增添一点乐趣,Fabric版本目前尚完善,并且支持Folia
+## 使用方法
+放入服务器的`plugins`文件夹（Spigot） 或放入`mods`文件夹(Fabric1.20.2)
 
-Forge is not supported yet, and the Fabric version is not yet complete.
+暂不支持Forge,Fabric版本暂不完善
 
-If you find that it does not start successfully, you can try to restart the server/client, or check whether the server/client has the [ctLib plug-in installed (if you run it on the plug-in side, it will be installed automatically for you under normal circumstances)](https: //github.com/csneko/ctlib)
-## Commands & permissions (all owned by default)
+如果你发现没有成功启动的话，可以尝试重启服务器/客户端，或检查服务器/客户端是否安装了[ctLib插件（如果你运行在插件端,正常情况下会自动为你安装好）](https://github.com/csneko/ctlib)
+## 命令&权限（默认全部拥有）
 ```yaml
-#GetHelp
+#获取帮助
 /toneko help
-#Turn the player into a cat girl (this will sacrifice yourself (kill), please use with caution):
-/toneko player <player name> #toneko.command.player
-#Get the Jue Mao Stick (this item will have a special death prompt when defeating the cat lady, and can increase or decrease the favorability experience):
-/toneko item #toneko.command.item
-#Delete Cat Girl (dangerous operation, requires secondary confirmation)
-/toneko remove <catgirl name> #toneko.command.remove
-#View favorable experience
-/toneko xp <catgirl name> #toneko.command.xp
-#Set alias (the alias will be replaced by the owner)
-/toneko aliases <cat girl name> add or remove <alias>
-#Add masking words and replacement words
-/toneko block <cat girl name> add or remove <block word> <replacement word> all or word
-#----------------------The following commands are only available to Catgirls---------------------- -
-#Get jump boost (set duration based on favorability experience)
-/neko jump #toneko.command.jump
-#Get night vision (set duration based on favorability experience)
-/neko vision #toneko.command.vision
+#将玩家变成猫娘(这会献祭自己(kill)，请谨慎使用):
+/toneko player <玩家名称>        #toneko.command.player
+#获取厥猫棍(该物品在击败猫娘时会有特殊死亡提示,并且能够增加或减少好感经验):
+/toneko item                   #toneko.command.item
+#删除猫娘（危险操作，需要二次确认）
+/toneko remove <猫娘名称>       #toneko.command.remove
+#查看好感经验
+/toneko xp <猫娘名称>           #toneko.command.xp
+#设置别名（别名会被替换成主人）
+/toneko aliases <猫娘名称> add或remove <别名>
+#添加屏蔽词和替换词
+/toneko block <猫娘名称> add或remove <屏蔽词> <替换词> all或word
+#----------------------以下命令仅猫娘可用-----------------------
+#获取跳跃提升（根据好感经验来设置时长）
+/neko jump                    #toneko.command.jump
+#获取夜视（根据好感经验来设置时长）
+/neko vision                  #toneko.command.vision
 ```
-## Configuration
-### Main configuration file: `config.yml`
+## 配置
+### 主要配置文件:`config.yml`
 ```yaml
-#Language options (support zh_cn, en_us)
+#语言选项（支持 zh_cn,en_us）
 language: zh_cn
-#Whether to enable automatic updates
+#是否开启自动更新
 automatic-updates: false
-#Whether to access the online website (statistics information will be uploaded, see https://w.csk.asia/toneko for details)
+#是否接入在线网站(统计信息会被上传，详情见 https://w.csk.asia/toneko)
 online: true
 ```
-## Plug-in website
-This is a simple website made for the plug-in, built on cloudflare pages, used to query statistical information.
+## 插件网站
+这是对该插件做的一个简易的网站，搭建在cloudflare pages上，用于查询统计信息(已停用)
 
-ps:The website is only supported Chinese
-
-Website link: https://w.csk.asia/toneko
+网站链接: https://w.csk.asia/toneko
 ## bStats:
 ![bStats](https://bstats.org/signatures/bukkit/toneko.svg)
