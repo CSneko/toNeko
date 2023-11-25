@@ -2,6 +2,7 @@
 [简体中文](README.md) | [English](README_en.md)
 ## 简单的介绍
 这是一个可以在服务器中把玩家变成猫娘的插件，为服务器增添一点乐趣,Fabric版本目前尚完善,并且支持Folia
+[Modrinth](https://modrinth.com/plugin/toneko/)
 ## 使用方法
 放入服务器的`plugins`文件夹（Spigot） 或放入`mods`文件夹(Fabric1.20.2)
 

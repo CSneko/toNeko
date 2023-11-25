@@ -2,6 +2,7 @@
 [简体中文](README.md) | [English](README_en.md)
 ## brief introduction
 This is a plug-in that can turn players into catgirls in the server, adding a little fun to the server. The Fabric version is currently complete and supports Folia.
+[Modrinth](https://modrinth.com/plugin/toneko/)
 ## Instructions
 Put it into the server's `plugins` folder (Spigot) or into the `mods` folder (Fabric1.20.2)
 
