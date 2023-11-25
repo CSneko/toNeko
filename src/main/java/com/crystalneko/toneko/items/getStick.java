@@ -56,6 +56,7 @@ public class getStick {
         itemMeta.setDisplayName(ToNeko.getMessage("item.stick-level-2"));
         //为物品添加附魔特效
         itemMeta.addEnchant(Enchantment.DURABILITY, 10, true);
+        itemMeta.addEnchant(Enchantment.LOYALTY, 1, true);
         //设置物品的自定义材质
         itemMeta.setCustomModelData(10000);
         //设置物品的NBT标签

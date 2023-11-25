@@ -40,6 +40,7 @@ public final class ToNeko extends JavaPlugin {
     public static FileConfiguration languageConfig;
     private String language;
     private PlayerQuit playerQuit;
+    public stickLevel2 stickLevel;
 
 
     @Override
@@ -83,13 +84,10 @@ public final class ToNeko extends JavaPlugin {
         //初始化死亡监听器
         this.playerDeath = new PlayerDeath(this);
         //注册物品
-        new stickLevel2();
+        stickLevel = new stickLevel2();
+        stickLevel.stickLevel2(this);
 
     }
-
-
-
-
 
     @Override
     public void onDisable() {

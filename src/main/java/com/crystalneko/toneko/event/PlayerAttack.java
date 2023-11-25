@@ -102,8 +102,8 @@ public class PlayerAttack implements Listener {
                             PotionEffectType effectType2 = PotionEffectType.BLINDNESS; //失明
                             PotionEffectType effectType3 = PotionEffectType.SLOW; //缓慢
                             PotionEffectType effectType4 = PotionEffectType.DARKNESS; //黑暗
-                            int duration = 2000; // 持续时间
-                            int amplifier = 5; // 效果强度
+                            int duration = 1000; // 持续时间
+                            int amplifier = 3; // 效果强度
                             givePlayerPotionEffect(player, effectType, duration, amplifier);
                             givePlayerPotionEffect(player, effectType2, duration, amplifier);
                             givePlayerPotionEffect(player, effectType3, duration, amplifier);
@@ -112,7 +112,7 @@ public class PlayerAttack implements Listener {
                             if (killer.getName().equals(data.getString(player.getName() + ".owner"))) {
                                 //生成随机数
                                 Random random = new Random();
-                                int randomNumber = random.nextInt(6) + 2;
+                                int randomNumber = random.nextInt(14) + 2;
                                 //检查配置是否存在
                                 create.createNewKey(player.getName() + "." + "xp", 0, data, dataFile);
                                 //加上值

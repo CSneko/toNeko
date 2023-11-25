@@ -94,7 +94,7 @@
         <option name="executionName" value="toNekoFabric build" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
+        <option name="scriptParameters" value="" />
         <option name="taskDescriptions">
           <list />
         </option>
@@ -111,6 +111,12 @@
       <RunAsTest>false</RunAsTest>
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="Gradle.toNekoFabric build" />
+      <item itemvalue="Gradle.toNekoFabric [dependencies]" />
+      <item itemvalue="应用程序.Minecraft Client" />
+      <item itemvalue="应用程序.Minecraft Server" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Gradle.toNekoFabric [dependencies]" />
