@@ -24,3 +24,6 @@ command:
     help: "§b/neko 帮助:\n§a/neko help §b获取帮助\n§a/neko jump §b获取跳跃提升"
   toneko:
     help: "§b/toneko 帮助:\n§a/toneko help §b获取帮助\n§a/toneko player <玩家名> §b将一位玩家变成猫娘(但是你会被祭献)\n§a/toneko item §b获取撅猫棍\n§a/toneko remove <猫娘名称> §b删除猫娘§c（这是个危险操作，请谨慎使用）\n§a/toneko xp <猫娘名称> §b查看好感经验\n§a/toneko aliases <猫娘名称> add或remove <别名> §b为你添加或删除别名（会转换为'主人'的词）\n§a/toneko block <猫娘名称> add或remove <屏蔽词> <替换词> word或all §b添加屏蔽词（屏蔽词会被替换成替换词，all代表替换整句,word替换单词)"
+folia:
+  use:
+    chatEvent: "检测到使用Paper/Folia，将使用Paper/Folia的聊天监听器"

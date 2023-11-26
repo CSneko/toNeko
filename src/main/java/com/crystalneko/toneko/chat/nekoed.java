@@ -3,11 +3,16 @@ package com.crystalneko.toneko.chat;
 import com.crystalneko.ctlib.chat.chatPrefix;
 import com.crystalneko.ctlib.sql.sqlite;
 import com.crystalneko.toneko.ToNeko;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
+import org.bukkit.event.*;
 import org.bukkit.event.player.PlayerChatEvent;
+import io.papermc.paper.event.player.AsyncChatEvent;
+import org.bukkit.plugin.EventExecutor;
+
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -15,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import static com.crystalneko.toneko.ToNeko.logger;
 import static org.bukkit.Bukkit.getServer;
 
 public class nekoed implements Listener{
@@ -22,11 +28,28 @@ public class nekoed implements Listener{
     public nekoed(ToNeko plugin) {
         this.plugin = plugin;
         //注册玩家聊天监听器
-        getServer().getPluginManager().registerEvents(this, plugin);
+        try {
+            //使用Paper的聊天监听器
+            Class.forName("io.papermc.paper.event.player.AsyncChatEvent");
+            logger.info(ToNeko.getMessage("folia.use.chatEvent"));
+            getServer().getPluginManager().registerEvent(AsyncChatEvent.class,this, EventPriority.NORMAL,new EventExecutor() {
+                @Override
+                public void execute(Listener listener, Event event) throws EventException {
+                    onPlayerChatPaper((AsyncChatEvent) event);
+                }
+            },plugin);
+        } catch (ClassNotFoundException e) {
+            getServer().getPluginManager().registerEvent(PlayerChatEvent.class,this, EventPriority.NORMAL,new EventExecutor() {
+                @Override
+                public void execute(Listener listener, Event event) throws EventException {
+                    onPlayerChat((PlayerChatEvent) event);
+                }
+            },plugin);
+        }
+
 
     }
 
-    @EventHandler
     public void onPlayerChat(PlayerChatEvent event) {
         //创建数据文件实例
         File dataFile = new File( "plugins/toNeko/nekos.yml");
@@ -67,6 +90,58 @@ public class nekoed implements Listener{
         }
 
     }
+
+    public void onPlayerChatPaper(AsyncChatEvent event){
+        event.setCancelled(true);
+        //创建数据文件实例
+        File dataFile = new File( "plugins/toNeko/nekos.yml");
+        // 加载数据文件
+        YamlConfiguration data = YamlConfiguration.loadConfiguration(dataFile);
+        Player player = event.getPlayer();
+        String message = MiniMessage.miniMessage().serialize(event.message());
+        //获取前缀
+        String publicPrefix = chatPrefix.getAllPublicPrefixValues();
+        String privatePrefix = chatPrefix.getPrivatePrefix(player);
+        //判断是否有私有前缀
+        if(privatePrefix.equalsIgnoreCase("[§a无前缀§f§r]")){
+            privatePrefix = "";
+        } else if (privatePrefix.equalsIgnoreCase("[§a无任何前缀§f§r]")) {
+            privatePrefix = "";
+        }
+        String prefix = publicPrefix + privatePrefix;
+        //判断是否有主人
+        if(data.getString(player.getName() + ".owner") != null) {
+            //获取主人名称
+            String owner =data.getString(player.getName()+".owner");
+            List<String> aliases = new ArrayList<>();
+            //获取主人别名
+            if (data.getList(player.getName()+".aliases") !=null){
+                aliases = data.getStringList(player.getName() + ".aliases");
+            } else {
+                //算是夹带私货吧(ps:这是我的正版账户名称)
+                aliases.add("Crystal_Neko");
+            }
+            // 对消息进行处理
+            String catMessage = catChatMessage(message,owner,aliases);
+            //替换屏蔽词
+            catMessage = replaceBlocks(catMessage,player.getName());
+            //Component modifiedMessage = Component.text(prefix + player.getName() + " >> §7" + catMessage);
+            // 修改消息的格式并重新发送
+            for (Player players : Bukkit.getOnlinePlayers()) {
+                // 向每个玩家发送消息
+                players.sendMessage(prefix + player.getName() + " >> §7" + catMessage);
+            }
+        } else {
+            //Component modifiedMessage = Component.text(prefix + player.getName() + " >> §7" + message);
+            for (Player players : Bukkit.getOnlinePlayers()) {
+                // 向每个玩家发送消息
+                players.sendMessage(prefix + player.getName() + " >> §7" + message);
+            }
+        }
+    }
+
+
+
     public String catChatMessage(String message, String owner, List<String> aliases){
         //将玩家名称替换为主人
         message = message.replaceAll(owner, ToNeko.getMessage("other.owner"));

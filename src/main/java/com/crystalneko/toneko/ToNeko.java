@@ -27,6 +27,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.logging.Logger;
 
 
 public final class ToNeko extends JavaPlugin {
@@ -41,11 +42,16 @@ public final class ToNeko extends JavaPlugin {
     private String language;
     private PlayerQuit playerQuit;
     public stickLevel2 stickLevel;
+    public static Logger logger;
 
 
     @Override
     public void onEnable() {
         //温馨提示：代码中所有的判断是否为猫娘都是判断是否有主人，这意味着猫娘必须有主人，否则就不被判断为猫娘
+
+        //获取logger
+        logger = Logger.getLogger("toNeko");
+
         int pluginId = 19899;
         Metrics metrics = new Metrics(this, pluginId);
         //判断是否启用了ctLib
