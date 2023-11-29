@@ -1,6 +1,8 @@
 package com.crystalneko.toneko.items;
 
 import com.crystalneko.toneko.ToNeko;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
@@ -8,6 +10,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class getStick {
     private ToNeko plugin;
@@ -35,6 +40,14 @@ public class getStick {
         ItemMeta itemMeta = itemStack.getItemMeta();
         //设置物品的展示名称
         itemMeta.setDisplayName(ToNeko.getMessage("item.stick"));
+        // 原始的String类型的lore
+        String loreString = ToNeko.getMessage("item.stick.lore");
+        // 将String类型的lore转换为Component类型
+        Component loreComponent = Component.text(loreString);
+        // 创建一个List<Component>并加入转换后的lore
+        List<Component> lore = new ArrayList<>();
+        lore.add(loreComponent);
+        itemMeta.lore(lore);
         //为物品添加附魔特效
         itemMeta.addEnchant(Enchantment.DURABILITY, 1, true);
         //设置物品的自定义材质
@@ -54,6 +67,14 @@ public class getStick {
         ItemMeta itemMeta = itemStack.getItemMeta();
         //设置物品的展示名称
         itemMeta.setDisplayName(ToNeko.getMessage("item.stick-level-2"));
+        // 原始的String类型的lore
+        String loreString = ToNeko.getMessage("item.stick-level-2.lore");
+        // 将String类型的lore转换为Component类型
+        Component loreComponent = Component.text(loreString);
+        // 创建一个List<Component>并加入转换后的lore
+        List<Component> lore = new ArrayList<>();
+        lore.add(loreComponent);
+        itemMeta.lore(lore);
         //为物品添加附魔特效
         itemMeta.addEnchant(Enchantment.DURABILITY, 10, true);
         itemMeta.addEnchant(Enchantment.LOYALTY, 1, true);

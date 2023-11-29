@@ -1,6 +1,7 @@
 package com.crystalneko.tonekofabric.libs;
 
 import com.crystalneko.ctlibfabric.sql.sqlite;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 
 import java.io.IOException;
@@ -9,6 +10,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class base {
+    public base(){
+    }
     //--------------------------------------------------------获取世界名称---------------------------------------------
     /**创建文件和目录
     *示例：createFileInDirectory("path/to","/file.txt")
@@ -39,6 +42,9 @@ public class base {
      * @return 猫娘的主人（没有则返回null）
      */
     public static String isNekoHasOwner(String neko,String worldName){
+        sqlite.createTable(worldName+"Nekos");
+        sqlite.addColumn(worldName+"Nekos","neko");
+        sqlite.addColumn(worldName+"Nekos","owner");
         //判断是否为猫娘
         if(sqlite.checkValueExists(worldName+"Nekos","neko",neko)){
             return sqlite.getColumnValue(worldName+"Nekos","owner","neko",neko);
@@ -47,10 +53,30 @@ public class base {
         }
     }
     public static void setPlayerNeko(String neko,String worldName,String owner) {
+        sqlite.createTable(worldName+"Nekos");
+        sqlite.addColumn(worldName+"Nekos","neko");
+        sqlite.addColumn(worldName+"Nekos","owner");
         //设置值
         sqlite.saveData(worldName+"Nekos","neko",neko);
         //设置主人的值
         sqlite.saveDataWhere(worldName+"Nekos","owner","neko",neko,owner);
+    }
+    public static String getOwner(String neko,String worldName){
+        sqlite.createTable(worldName+"Nekos");
+        sqlite.addColumn(worldName+"Nekos","neko");
+        sqlite.addColumn(worldName+"Nekos","owner");
+        //获取主人名称
+        String owner = sqlite.getColumnValue(worldName+"Nekos","owner","neko",neko);
+        if(owner != null){
+            return owner;
+        }else {
+            return Text.translatable("base.null.owner").getString();
+        }
+    }
+    public static String getPlayerName(PlayerEntity player){
+        String playerName = player.getName().getString();
+        playerName = playerName.replace("literal{", "").replace("}", "");
+        return playerName;
     }
     public static Text getStringLanguage(String key, String[] replace){
         return Text.translatable(key, (Object[]) replace);

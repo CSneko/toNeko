@@ -1,5 +1,18 @@
 {
   "message.toneko.player.success": "§aSuccessfully set player§6%d§a to be a neko girl, and you become its owner",
   "message.toneko.player.nekoed": "§bIt is already a neko girl, and its owner is§6%d",
-  "message.toneko.help": "§b/toneko Help:\n§a/toneko help §bGet help\n§a/toneko player <player name> §bTurn a player into a neko girl (but you will sacrificed)"
+  "message.toneko.help": "§b/toneko Help:\n§a/toneko help §bGet help\n§a/toneko player <player name> §bTurn a player into a neko girl (but you will sacrificed)",
+  "message.toneko.notOwner": "§cYou are not %d's owner",
+  "message.toneko.aliases.add.true" : "§aAlias set successfully!",
+  "message.toneko.aliases.add.exists" : "§cAlias exists",
+  "message.toneko.aliases.remove.no": "§cAlias doesn't exists",
+  "message.toneko.aliases.remove.true": "§aRemove Alias successfully!",
+  "chat.neko.nya": "nya~",
+  "chat.neko.prefix": "[§aneko§f§r]",
+  "chat.neko.owner": "owner",
+  "base.null.owner": "no owner",
+  "item.tonekofabric.stick" : "§9§oCat stick",
+  "item.tonekofabric.stick.lore": "§9§oNo IP68",
+  "item.tonekofabric.stick-level-2": "§9§oCat stick level 2",
+  "item.tonekofabric.stick-level-2.lore": "§9§oIP68!No water can damage it!"
 }

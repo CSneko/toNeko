@@ -125,14 +125,12 @@ public class nekoed implements Listener{
             String catMessage = catChatMessage(message,owner,aliases);
             //替换屏蔽词
             catMessage = replaceBlocks(catMessage,player.getName());
-            //Component modifiedMessage = Component.text(prefix + player.getName() + " >> §7" + catMessage);
             // 修改消息的格式并重新发送
             for (Player players : Bukkit.getOnlinePlayers()) {
                 // 向每个玩家发送消息
                 players.sendMessage(prefix + player.getName() + " >> §7" + catMessage);
             }
         } else {
-            //Component modifiedMessage = Component.text(prefix + player.getName() + " >> §7" + message);
             for (Player players : Bukkit.getOnlinePlayers()) {
                 // 向每个玩家发送消息
                 players.sendMessage(prefix + player.getName() + " >> §7" + message);

@@ -1,13 +1,4 @@
 /time set day
-/toneko
-/toneko player
-/toneko player Player782
-/toneko player Player419
-/toneko player Player897
-/toneko player Player737
-/toneko player Player489
-/toneko player Player308
-/time set day
 /toneko player Player817
 /toneko player Player208
 /toneko player Player970
@@ -48,3 +39,12 @@
 /toneko player Player330
 /say wf
 /toneko
+/toneko player Player7
+/toneko aliases Player285 add ddd
+/toneko
+/toneko player Player285
+/toneko aliases Player285 add dd
+/toneko
+/toneko aliases Player591 add ss
+/toneko aliases Player591 add sss
+/toneko player Player591
