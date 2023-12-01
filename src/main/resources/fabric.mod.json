@@ -29,6 +29,9 @@
     "fabric": "*",
     "minecraft": "${minecraft_version}"
   },
+    "suggests": {
+    "luckperms": "*"
+  },
   "mixins": [
     "fabric/tonekofabric.mixins.json"
   ]

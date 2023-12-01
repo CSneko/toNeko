@@ -1,19 +1,21 @@
 package com.crystalneko.tonekofabric.mixins;
 
 import com.crystalneko.ctlibPublic.sql.sqlite;
+import com.crystalneko.tonekofabric.libs.base;
+import com.crystalneko.tonekofabric.libs.lp;
 import com.mojang.brigadier.ParseResults;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.encryption.PublicPlayerSession;
 import net.minecraft.network.message.SignedCommandArguments;
 import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket;
 import net.minecraft.network.packet.s2c.play.PositionFlag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.filter.FilteredMessage;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,7 +24,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -73,7 +74,11 @@ public abstract class chat{
 
     // 用来修改聊天消息
     private Text modifyMessage(Text message, PlayerEntity player) {
-        String worldName = player.getWorld().asString();
+        lp.build();
+        String worldName = base.getWorldName(player.getWorld());
+        if(!sqlite.isTableExists(worldName + "Nekos")) {
+            sqlite.createTable(worldName + "Nekos");
+        }
         sqlite.addColumn(worldName + "Nekos","neko");
         sqlite.addColumn(worldName + "Nekos","owner");
         sqlite.addColumn(worldName + "Nekos","aliases");
@@ -93,18 +98,20 @@ public abstract class chat{
             }
             //获取别名
             String strAliases = sqlite.getColumnValue(worldName + "Nekos","aliases","neko",playerName);
-            String[] aliases = strAliases.split(",");
-            //替换别名
-            for (String value : aliases) {
-                stringMessage = stringMessage.replaceAll(value, ownerText);
+            if(strAliases != null) {
+                String[] aliases = strAliases.split(",");
+                //替换别名
+                for (String value : aliases) {
+                    stringMessage = stringMessage.replaceAll(value, ownerText);
+                }
             }
-
             // 随机将",，"替换为"喵~"
             String nya = Text.translatable("chat.neko.nya").getString();
             stringMessage = replaceChar(stringMessage, ',', nya, 0.4);
             stringMessage = replaceChar(stringMessage, '，', nya, 0.4);
             stringMessage = stringMessage + nya;
-            stringMessage = Text.translatable("chat.neko.prefix") + playerName + "§b >> §7" + stringMessage;
+            String prefix = Text.translatable("chat.neko.prefix").getString();
+            stringMessage = prefix  + playerName + "§b >> §7" + stringMessage;
 
             return Text.of(stringMessage);
         } else {

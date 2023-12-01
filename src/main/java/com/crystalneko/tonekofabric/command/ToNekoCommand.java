@@ -1,7 +1,9 @@
 package com.crystalneko.tonekofabric.command;
 
 import com.crystalneko.ctlibPublic.sql.sqlite;
+import com.crystalneko.tonekofabric.ToNekoFabric;
 import com.crystalneko.tonekofabric.libs.base;
+import com.crystalneko.tonekofabric.libs.lp;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.command.ServerCommandSource;
@@ -14,7 +16,9 @@ public class ToNekoCommand {
     //toneko player <neko>
     public static int Player(CommandContext<ServerCommandSource> context){
         final ServerCommandSource source = context.getSource();
-        final String worldName = source.getWorld().asString();
+        final String worldName = base.getWorldName(source.getWorld());
+        final PlayerEntity player = source.getPlayer();
+        if(!lp.hasPermission(player, "toneko.command.player")){return noPS(player);}
         // 使用 getArgument 方法获取玩家名称
         String target = context.getArgument("neko", String.class);
         //判断是否有主人
@@ -32,7 +36,8 @@ public class ToNekoCommand {
     public static int AliasesAdd(CommandContext<ServerCommandSource> context){
         final ServerCommandSource source = context.getSource();
         final PlayerEntity player = source.getPlayer();
-        final String worldName = player.getWorld().asString();
+        final String worldName = base.getWorldName(player.getWorld());
+        if(!lp.hasPermission(player, "toneko.command.aliases")){return noPS(player);}
         sqlite.addColumn(worldName+"Nekos","aliases");
         String playerName = base.getPlayerName(player); //玩家名称
         String neko = context.getArgument("neko", String.class); //猫娘的名称
@@ -70,7 +75,8 @@ public class ToNekoCommand {
     public static int AliasesRemove(CommandContext<ServerCommandSource> context){
         final ServerCommandSource source = context.getSource();
         final PlayerEntity player = source.getPlayer();
-        final String worldName = player.getWorld().asString();
+        final String worldName = base.getWorldName(player.getWorld());
+        if(!lp.hasPermission(player, "toneko.command.aliases")){return noPS(player);}
         sqlite.addColumn(worldName+"Nekos","aliases");
         String playerName = base.getPlayerName(player); //玩家名称
         String neko = context.getArgument("neko", String.class); //猫娘的名称
@@ -103,6 +109,14 @@ public class ToNekoCommand {
         return 1;
     }
     public static int item(CommandContext<ServerCommandSource> context){
+        final ServerCommandSource source = context.getSource();
+        final PlayerEntity player = source.getPlayer();
+        if(!lp.hasPermission(player, "toneko.command.item")){return noPS(player);}
+        player.giveItemStack(ToNekoFabric.STICK.getDefaultStack());
+        return 1;
+    }
+    public static int noPS(PlayerEntity player){
+        player.sendMessage(Text.translatable("message.permission.no"));
         return 1;
     }
 }

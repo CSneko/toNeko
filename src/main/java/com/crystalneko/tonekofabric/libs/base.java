@@ -3,6 +3,7 @@ package com.crystalneko.tonekofabric.libs;
 import com.crystalneko.ctlibfabric.sql.sqlite;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.world.World;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -80,6 +81,13 @@ public class base {
     }
     public static Text getStringLanguage(String key, String[] replace){
         return Text.translatable(key, (Object[]) replace);
+    }
+    public static String getWorldName(World world){
+        String name = world.toString();
+        name = name.replace("[","");
+        name = name.replace("]","");
+        name = name.replace("ServerLevel","");
+        return name;
     }
 
 

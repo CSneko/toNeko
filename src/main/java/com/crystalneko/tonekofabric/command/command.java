@@ -7,7 +7,8 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-import static net.minecraft.server.command.CommandManager.*;
+import static net.minecraft.server.command.CommandManager.argument;
+import static net.minecraft.server.command.CommandManager.literal;
 
 public class command{
     private final String worldName;
@@ -34,12 +35,6 @@ public class command{
                                     })
                             )
                     )
-                    //--------------------------------------------------item-----------------------------------------
-                    .then(literal("item")
-                            .executes(context -> {
-                                return ToNekoCommand.item(context);
-                            })
-                    )
                     //--------------------------------------------------aliases--------------------------------------
                     .then(literal("aliases")
                             .then(argument("neko", StringArgumentType.string())
@@ -60,6 +55,13 @@ public class command{
                                      )
                             )
                     )
+                    //--------------------------------------------------item-----------------------------------------
+                    .then(literal("item")
+                            .executes(context -> {
+                                return ToNekoCommand.item(context);
+                            })
+                    )
+
                     //----------------------------------------无参数-----------------------------------------
                     .executes(context -> {
                         context.getSource().sendMessage(base.getStringLanguage("message.toneko.help", new String[]{""}));

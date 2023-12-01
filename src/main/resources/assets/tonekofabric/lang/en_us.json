@@ -7,12 +7,14 @@
   "message.toneko.aliases.add.exists" : "§cAlias exists",
   "message.toneko.aliases.remove.no": "§cAlias doesn't exists",
   "message.toneko.aliases.remove.true": "§aRemove Alias successfully!",
-  "chat.neko.nya": "nya~",
+  "message.permission.no": "§cYou don't hava permission to execute this command",
+  "chat.neko.nya": "-nya~",
   "chat.neko.prefix": "[§aneko§f§r]",
   "chat.neko.owner": "owner",
   "base.null.owner": "no owner",
   "item.tonekofabric.stick" : "§9§oCat stick",
   "item.tonekofabric.stick.lore": "§9§oNo IP68",
   "item.tonekofabric.stick-level-2": "§9§oCat stick level 2",
-  "item.tonekofabric.stick-level-2.lore": "§9§oIP68!No water can damage it!"
+  "item.tonekofabric.stick-level-2.lore": "§9§oIP68!No water can damage it!",
+  "attack.xp.add":"§6Your friendship experience with %d has increased by %c"
 }

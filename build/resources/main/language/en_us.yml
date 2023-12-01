@@ -16,7 +16,7 @@ death:
 other:
   neko: "§aneko"
   owner: "owner"
-  nya: "nya~"
+  nya: "-nya~"
 command:
   only-player: "§cThis command can only be executed by players"
   no-permission: "§cYou do not have permission to execute this command!"

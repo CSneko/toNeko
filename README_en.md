@@ -1,19 +1,33 @@
-#toNeko
-[简体中文](README.md) | [English](README_en.md)
+# toNeko
+[Simplified Chinese](README.md) | [English](README_en.md)
 ## brief introduction
 This is a plug-in that can turn players into catgirls in the server, adding a little fun to the server. The Fabric version is currently complete and supports Folia.
-[Modrinth](https://modrinth.com/plugin/toneko/)
+### chat
+- Add prefix and modify format
+- Aliases, masking words and replacement words
+### Pussy cat girl
+- Level 1 & Level 2 Cat Stick
+- Being poked sound effects
+- Effect of being poked
+- Favorable experience
+### promote
+- Jump boost and night vision
+### Download stable version: [Modrinth](https://modrinth.com/plugin/toneko/)
 ## Instructions
-Put it into the server's `plugins` folder (Spigot) or into the `mods` folder (Fabric1.20.2)
+Put it into the server's `plugins` folder or `mods` folder (Fabric1.20.2). If you do not have the [ctLib](https://modrinth.com/plugin/ctlib) pre-plugin installed, please install it
 
-Forge is not supported yet, and the Fabric version is not yet complete.
+Supported versions:
+- Fabric 1.20.2
+- Spigot/Paper/Folia 1.16~1.20.2
 
-If you find that it does not start successfully, you can try to restart the server/client, or check whether the server/client has the [ctLib plug-in installed (if you run it on the plug-in side, it will be installed automatically for you under normal circumstances)](https: //github.com/csneko/ctlib)
+If you find that it does not start successfully, you can try to restart the server/client, or check whether the server/client has the ctLib plug-in installed (if you run it on the plug-in side, it will be installed automatically for you under normal circumstances)
+### Linkage
+Linkage module: [luckperms](https://luckperms.net/)
 ## Commands & permissions (all owned by default)
 ```yaml
 #GetHelp
 /toneko help
-#Turn the player into a cat girl (this will sacrifice yourself (kill), please use with caution):
+#Turn players into catgirls:
 /toneko player <player name> #toneko.command.player
 #Get the Jue Mao Stick (this item will have a special death prompt when defeating the cat lady, and can increase or decrease the favorability experience):
 /toneko item #toneko.command.item
@@ -22,7 +36,7 @@ If you find that it does not start successfully, you can try to restart the serv
 #View favorable experience
 /toneko xp <catgirl name> #toneko.command.xp
 #Set alias (the alias will be replaced by the owner)
-/toneko aliases <cat girl name> add or remove <alias>
+/toneko aliases <cat girl name> add or remove <alias> #toneko.command.aliases
 #Add masking words and replacement words
 /toneko block <cat girl name> add or remove <block word> <replacement word> all or word
 #----------------------The following commands are only available to Catgirls---------------------- -
