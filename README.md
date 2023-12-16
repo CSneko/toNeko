@@ -1,7 +1,7 @@
 # toNeko
 [简体中文](README.md) | [English](README_en.md)
 ## 简单的介绍
-这是一个可以在服务器中把玩家变成猫娘的插件，为服务器增添一点乐趣,Fabric版本目前尚完善,并且支持Folia
+这是一个可以在服务器中把玩家变成猫娘的插件，为服务器增添一点乐趣,Fabric版本目前尚完善,支持Folia
 ### 聊天
 - 添加前缀，修改格式
 - 别名，屏蔽词与替换词
@@ -14,7 +14,7 @@
 - 跳跃提升与夜视
 ### 下载稳定版 : [Modrinth](https://modrinth.com/plugin/toneko/)
 ## 使用方法
-放入服务器的`plugins`文件夹或`mods`文件夹(Fabric1.20.2)。如果你没有安装[ctLib](https://modrinth.com/plugin/ctlib)前置插件，请安装它
+放入服务器的`plugins`文件夹或`mods`文件夹。如果你没有安装[ctLib](https://modrinth.com/plugin/ctlib)前置插件，请安装它
 
 提供支持的版本:
 - Fabric >= 1.20
