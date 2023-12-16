@@ -103,9 +103,7 @@ public class nekoed implements Listener{
         String publicPrefix = chatPrefix.getAllPublicPrefixValues();
         String privatePrefix = chatPrefix.getPrivatePrefix(player);
         //判断是否有私有前缀
-        if(privatePrefix.equalsIgnoreCase("[§a无前缀§f§r]")){
-            privatePrefix = "";
-        } else if (privatePrefix.equalsIgnoreCase("[§a无任何前缀§f§r]")) {
+        if(privatePrefix.equalsIgnoreCase("[§a无前缀§f§r]") || privatePrefix.equalsIgnoreCase("[§a无任何前缀§f§r]")){
             privatePrefix = "";
         }
         String prefix = publicPrefix + privatePrefix;

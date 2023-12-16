@@ -123,8 +123,123 @@ public class ToNekoCommand {
         world.spawnEntity(itemEntity);
         return 1;
     }
+    public static int addBlock(CommandContext<ServerCommandSource> context){
+        final ServerCommandSource source = context.getSource();
+        final PlayerEntity player = source.getPlayer();
+        final String worldName = base.getWorldName(player.getWorld());
+        if(!lp.hasPermission(player, "toneko.command.block")){return noPS(player);}
+
+        //获取关键信息
+        String playerName = base.getPlayerName(player); //玩家名称
+        String neko = context.getArgument("neko", String.class); //猫娘的名称
+        String block = context.getArgument("block", String.class); //屏蔽词
+        String replace = context.getArgument("replace", String.class); //替换词
+        String method = context.getArgument("method", String.class); //all or word
+
+        blockTable(worldName,neko);
+
+        if (!base.getOwner(neko, worldName).equalsIgnoreCase(playerName)) {
+            player.sendMessage(Text.translatable("message.toneko.notOwner", neko));
+            return 1; //不是主人，直接结束
+        }
+
+        //读取原值
+        String savedBlock = sqlite.getColumnValue(worldName+"Nekos","block","neko",neko);
+        String savedReplace = sqlite.getColumnValue(worldName+"Nekos","replace","neko",neko);
+        String savedMethod = sqlite.getColumnValue(worldName+"Nekos","method","neko",neko);
+        //转换为数组
+        String[] blockArr = savedBlock.split(",");
+
+        if(contains(blockArr,block)){player.sendMessage(Text.translatable("message.toneko.block.exists"));return 1;} //屏蔽词存在
+
+        //保存数据
+        savedBlock = savedBlock + "," + block;
+        savedReplace = savedReplace + "," + replace;
+        savedMethod = savedMethod + "," + method;
+        sqlite.saveDataWhere(worldName+"Nekos","block","neko",neko,savedBlock);
+        sqlite.saveDataWhere(worldName+"Nekos","replace","neko",neko,savedReplace);
+        sqlite.saveDataWhere(worldName+"Nekos","method","neko",neko,savedMethod);
+
+        player.sendMessage(Text.translatable("message.toneko.block.add.success"));
+        return 1;
+    }
+
+    public static int removeBlock(CommandContext<ServerCommandSource> context){
+        final ServerCommandSource source = context.getSource();
+        final PlayerEntity player = source.getPlayer();
+        final String worldName = base.getWorldName(player.getWorld());
+        if(!lp.hasPermission(player, "toneko.command.block")){return noPS(player);}
+
+        //获取关键信息
+        String playerName = base.getPlayerName(player); //玩家名称
+        String neko = context.getArgument("neko", String.class); //猫娘的名称
+        String block = context.getArgument("block", String.class); //屏蔽词
+
+        blockTable(worldName,neko);
+
+        if (!base.getOwner(neko, worldName).equalsIgnoreCase(playerName)) {
+            player.sendMessage(Text.translatable("message.toneko.notOwner", neko));
+            return 1; //不是主人，直接结束
+        }
+
+        //读取原值
+        String savedBlock = sqlite.getColumnValue(worldName+"Nekos","block","neko",neko);
+        String savedReplace = sqlite.getColumnValue(worldName+"Nekos","replace","neko",neko);
+        String savedMethod = sqlite.getColumnValue(worldName+"Nekos","method","neko",neko);
+        //转换为数组
+        String[] blockArr = savedBlock.split(",");
+        String[] replaceArr = savedReplace.split(",");
+        String[] methodArr = savedMethod.split(",");
+
+        if(!contains(blockArr,block)){player.sendMessage(Text.translatable("message.toneko.block.exists.false"));return 1;} //屏蔽词不存在
+
+        int index = Arrays.binarySearch(blockArr,block); //获取引导
+
+        //删除引导
+        blockArr = deleteIndex(blockArr,index);
+        replaceArr = deleteIndex(replaceArr,index);
+        methodArr = deleteIndex(methodArr,index);
+
+        //保存屏蔽词
+        sqlite.saveDataWhere(worldName+"Nekos","block","neko",neko,String.join(",",blockArr));
+        sqlite.saveDataWhere(worldName+"Nekos","replace","neko",neko,String.join(",",replaceArr));
+        sqlite.saveDataWhere(worldName+"Nekos","method","neko",neko,String.join(",",methodArr));
+
+        player.sendMessage(Text.translatable("message.toneko.block.remove.success"));
+        return 1;
+    }
+
     public static int noPS(PlayerEntity player){
         player.sendMessage(Text.translatable("message.permission.no"));
         return 1;
+    }
+    public static void blockTable(String worldName,String neko){
+        sqlite.addColumn(worldName+"Nekos","block");
+        sqlite.addColumn(worldName+"Nekos","replace");
+        sqlite.addColumn(worldName+"Nekos","method");
+        if(sqlite.getColumnValue(worldName+"Nekos","block","neko",neko) == null){
+            sqlite.saveDataWhere(worldName+"Nekos","block","neko",neko,"CrystalNeko");
+            sqlite.saveDataWhere(worldName+"Nekos","replace","neko",neko,"CrystalNeko");
+            sqlite.saveDataWhere(worldName+"Nekos","method","neko",neko,"word");
+        }
+    }
+    //判断数组的某个值是否存在
+    public static boolean contains(String[] array, String value) {
+        for (String str : array) {
+            if (str.equals(value)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static String[] deleteIndex(String[] arr,int index){
+        // 将目标索引后面的元素向前移动一位
+        for (int i = index; i < arr.length - 1; i++) {
+            arr[i] = arr[i + 1];
+        }
+        // 将数组的长度减一
+        String[] newArr = Arrays.copyOf(arr, arr.length - 1);
+        return newArr;
     }
 }

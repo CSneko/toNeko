@@ -61,6 +61,44 @@ public class command{
                                 return ToNekoCommand.item(context);
                             })
                     )
+                    //-----------------------------------------------block--------------------------------------------
+                    .then(literal("block")
+                            .then(argument("neko", StringArgumentType.string())
+                                    .suggests(getOnlinePlayers)
+                                    //--------------------------------add------------------------------------
+                                    .then(literal("add")
+                                            .then(argument("block",StringArgumentType.string())
+                                                    .then(argument("replace",StringArgumentType.string())
+                                                            .then(argument("method",StringArgumentType.string())
+                                                                    .suggests((context, builder) -> {
+                                                                        builder.suggest("all");
+                                                                        builder.suggest("word");
+                                                                        return builder.buildFuture();
+                                                                    })
+                                                                    .executes(context -> {
+                                                                        return ToNekoCommand.addBlock(context);
+                                                                    })
+                                                            )
+                                                    )
+                                            )
+                                    )
+                                    //----------------------------remove----------------------------------
+                                    .then(literal("remove")
+                                            .then(argument("block",StringArgumentType.string())
+                                                    .executes(context -> {
+                                                        return ToNekoCommand.removeBlock(context);
+                                                    })
+                                            )
+                                    )
+                            )
+                    )
+                    //-------------------------------------help---------------------------------------------------
+                                    .then(literal("help")
+                                            .executes(context -> {
+                                                context.getSource().sendMessage(base.getStringLanguage("message.toneko.help", new String[]{""}));
+                                                return 1;
+                                            })
+                                    )
 
                     //----------------------------------------无参数-----------------------------------------
                     .executes(context -> {
@@ -81,7 +119,6 @@ public class command{
         }
         return builder.buildFuture();
     };
-
 
 
 }

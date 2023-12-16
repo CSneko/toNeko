@@ -25,6 +25,7 @@ public class lp {
         Node.builder("toneko.command.player").value(true).build();
         Node.builder("toneko.command.aliases").value(true).build();
         Node.builder("toneko.command.item").value(true).build();
+        Node.builder("toneko.command.block").value(true).build();
         return true;
     }
 

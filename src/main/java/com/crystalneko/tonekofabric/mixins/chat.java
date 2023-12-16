@@ -1,5 +1,6 @@
 package com.crystalneko.tonekofabric.mixins;
 
+import com.crystalneko.ctlibPublic.inGame.chatPrefix;
 import com.crystalneko.ctlibPublic.sql.sqlite;
 import com.crystalneko.tonekofabric.libs.base;
 import com.crystalneko.tonekofabric.libs.lp;
@@ -24,6 +25,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -110,7 +112,18 @@ public abstract class chat{
             stringMessage = replaceChar(stringMessage, ',', nya, 0.4);
             stringMessage = replaceChar(stringMessage, '，', nya, 0.4);
             stringMessage = stringMessage + nya;
-            String prefix = Text.translatable("chat.neko.prefix").getString();
+
+            //替换屏蔽词
+            stringMessage = replaceBlocks(stringMessage,playerName,worldName);
+
+            //获取聊天前缀
+            String libPublicPrefix = chatPrefix.getAllPublicPrefixValues();
+            String libPrefix = chatPrefix.getPrivatePrefix(playerName);
+            if(libPrefix.equalsIgnoreCase("[§a无前缀§f§r]") ||libPrefix.equalsIgnoreCase("[§a无前缀§f§r]")){
+                libPrefix = "";
+            }
+            String prefix = Text.translatable("chat.neko.prefix").getString() + libPrefix + libPublicPrefix;
+
             stringMessage = prefix  + playerName + "§b >> §7" + stringMessage;
 
             return Text.of(stringMessage);
@@ -133,5 +146,38 @@ public abstract class chat{
         }
 
         return builder.toString();
+    }
+
+    private String replaceBlocks(String message,String neko,String worldName){
+        //检查值是否存在
+        if(sqlite.checkValueExists(worldName +"Nekos", "neko", neko)) {
+            //读取数据
+            String block = sqlite.getColumnValue(worldName +"Nekos", "block", "neko", neko);
+            String replace = sqlite.getColumnValue(worldName +"Nekos", "replace", "neko", neko);
+            String method = sqlite.getColumnValue(worldName +"Nekos", "method", "neko", neko);
+            if(block != null) {
+                //转换为数组
+                String[] blocks = block.split(",");
+                String[] replaces = replace.split(",");
+                String[] methods = method.split(",");
+                //获取数组长度
+                int length = blocks.length;
+                //判断是否存在all
+                int allIndex = Arrays.binarySearch(methods, "all");
+                //判断是否存在屏蔽词
+                if(allIndex >= 0 && message.contains(blocks[allIndex])){
+                    //直接替换屏蔽词
+                    message = message.replaceAll(message,replaces[allIndex]);
+                } else {
+                    //循环替换
+                    int i = 0;
+                    while (i < length) {
+                        message = message.replaceAll(blocks[i], replaces[i]);
+                        i ++;
+                    }
+                }
+            }
+        }
+        return message;
     }
 }
