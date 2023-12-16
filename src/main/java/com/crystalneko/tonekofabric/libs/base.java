@@ -43,7 +43,9 @@ public class base {
      * @return 猫娘的主人（没有则返回null）
      */
     public static String isNekoHasOwner(String neko,String worldName){
-        sqlite.createTable(worldName+"Nekos");
+        if(!sqlite.isTableExists(worldName+"Nekos")) {
+            sqlite.createTable(worldName + "Nekos");
+        }
         sqlite.addColumn(worldName+"Nekos","neko");
         sqlite.addColumn(worldName+"Nekos","owner");
         //判断是否为猫娘
@@ -54,7 +56,9 @@ public class base {
         }
     }
     public static void setPlayerNeko(String neko,String worldName,String owner) {
-        sqlite.createTable(worldName+"Nekos");
+        if(!sqlite.isTableExists(worldName+"Nekos")) {
+            sqlite.createTable(worldName + "Nekos");
+        }
         sqlite.addColumn(worldName+"Nekos","neko");
         sqlite.addColumn(worldName+"Nekos","owner");
         //设置值
@@ -63,7 +67,9 @@ public class base {
         sqlite.saveDataWhere(worldName+"Nekos","owner","neko",neko,owner);
     }
     public static String getOwner(String neko,String worldName){
-        sqlite.createTable(worldName+"Nekos");
+        if(!sqlite.isTableExists(worldName+"Nekos")) {
+            sqlite.createTable(worldName + "Nekos");
+        }
         sqlite.addColumn(worldName+"Nekos","neko");
         sqlite.addColumn(worldName+"Nekos","owner");
         //获取主人名称

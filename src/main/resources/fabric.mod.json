@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "id": "tonekofabric",
+  "id": "toneko",
   "version": "${version}",
-  "name": "toNekoFabric",
+  "name": "toNeko",
   "description": "toNeko插件的Fabric版本",
   "authors": [
     "CrystalNeko"
@@ -25,9 +25,9 @@
     ]
   },
   "depends": {
-    "fabricloader": ">=0.14.22",
+    "fabricloader": "*",
     "fabric": "*",
-    "minecraft": "${minecraft_version}"
+    "minecraft": ">=1.19.2"
   },
     "suggests": {
     "luckperms": "*"

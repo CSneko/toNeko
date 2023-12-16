@@ -17,7 +17,7 @@
 放入服务器的`plugins`文件夹或`mods`文件夹(Fabric1.20.2)。如果你没有安装[ctLib](https://modrinth.com/plugin/ctlib)前置插件，请安装它
 
 提供支持的版本:
-- Fabric 1.20.2
+- Fabric >= 1.20
 - Spigot/Paper/Folia 1.16~1.20.2
 
 如果你发现没有成功启动的话，可以尝试重启服务器/客户端，或检查服务器/客户端是否安装了ctLib插件（如果你运行在插件端,正常情况下会自动为你安装好)
@@ -37,8 +37,8 @@
 /toneko xp <猫娘名称>           #toneko.command.xp
 #设置别名（别名会被替换成主人）
 /toneko aliases <猫娘名称> add或remove <别名>    #toneko.command.aliases
-#添加屏蔽词和替换词
-/toneko block <猫娘名称> add或remove <屏蔽词> <替换词> all或word
+#添加屏蔽词和替换词  
+/toneko block <猫娘名称> add或remove <屏蔽词> <替换词> all或word  #toneko.command.block
 #----------------------以下命令仅猫娘可用-----------------------
 #获取跳跃提升（根据好感经验来设置时长）
 /neko jump                    #toneko.command.jump

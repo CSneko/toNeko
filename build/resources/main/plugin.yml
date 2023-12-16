@@ -1,5 +1,5 @@
 name: toNeko
-version: '0.1.2'
+version: '0.1.3'
 main: com.crystalneko.toneko.ToNeko
 api-version: '1.20'
 author: CrystalNeko

@@ -1,14 +1,12 @@
-[23:59:32] [main/INFO] (FabricLoader/GameProvider) Loading Minecraft 1.20.2 with Fabric Loader 0.14.23
-[23:59:32] [main/INFO] (FabricLoader) Loading 56 mods:
-	- ctlibfabric 0.0.9
+[19:23:56] [main/INFO] (FabricLoader/GameProvider) Loading Minecraft 1.20.2 with Fabric Loader 0.14.23
+[19:23:56] [main/INFO] (FabricLoader) Loading 44 mods:
+	- ctlib 0.0.12
 	- fabric-api 0.89.3+1.20.2
 	- fabric-api-base 0.4.33+fce67b32a0
 	- fabric-api-lookup-api-v1 1.6.41+fce67b32a0
 	- fabric-biome-api-v1 13.0.12+d9a2869ba0
 	- fabric-block-api-v1 1.0.12+73761d2ea0
 	- fabric-block-view-api-v2 1.0.1+73761d2ea0
-	- fabric-blockrenderlayer-v1 1.1.43+f4b7e424a0
-	- fabric-client-tags-api-v1 1.1.4+86b12645a0
 	- fabric-command-api-v1 1.2.36+f71b366fa0
 	- fabric-command-api-v2 2.2.15+86b12645a0
 	- fabric-commands-v0 0.2.53+df3654b3a0
@@ -25,140 +23,33 @@
 	- fabric-gametest-api-v1 1.2.15+86b12645a0
 	- fabric-item-api-v1 2.1.32+43511215a0
 	- fabric-item-group-api-v1 4.0.13+f4b7e424a0
-	- fabric-key-binding-api-v1 1.0.38+f4b7e424a0
-	- fabric-keybindings-v0 0.2.36+df3654b3a0
 	- fabric-lifecycle-events-v1 2.2.26+3bafade3a0
 	- fabric-loot-api-v2 2.0.2+0ba8e9cea0
 	- fabric-message-api-v1 6.0.1+e982ae85a0
 	- fabric-mining-level-api-v1 2.1.54+f4b7e424a0
-	- fabric-model-loading-api-v1 1.0.5+f4b7e424a0
-	- fabric-models-v0 0.4.4+9386d8a7a0
 	- fabric-networking-api-v1 3.0.8+b18afef3a0
 	- fabric-object-builder-api-v1 12.1.1+b1b4f7b0a0
 	- fabric-particles-v1 1.1.4+f4b7e424a0
+	- fabric-permissions-api-v0 0.2-SNAPSHOT
 	- fabric-recipe-api-v1 2.0.5+96509552a0
 	- fabric-registry-sync-v0 4.0.3+34a3e0e2a0
-	- fabric-renderer-api-v1 3.2.1+2034447ca0
-	- fabric-renderer-indigo 1.5.1+2034447ca0
-	- fabric-renderer-registries-v1 3.2.48+df3654b3a0
 	- fabric-rendering-data-attachment-v1 0.3.39+73761d2ea0
 	- fabric-rendering-fluids-v1 3.0.30+f4b7e424a0
-	- fabric-rendering-v0 1.1.51+df3654b3a0
-	- fabric-rendering-v1 3.0.10+86b12645a0
 	- fabric-resource-conditions-api-v1 2.3.9+43511215a0
 	- fabric-resource-loader-v0 0.11.11+86b12645a0
-	- fabric-screen-api-v1 2.0.11+0ba8e9cea0
 	- fabric-screen-handler-api-v1 1.3.38+86b12645a0
-	- fabric-sound-api-v1 1.0.14+f4b7e424a0
 	- fabric-transfer-api-v1 3.3.8+109a65e5a0
 	- fabric-transitive-access-wideners-v1 5.0.3+fce67b32a0
 	- fabricloader 0.14.23
 	- java 17
 	- minecraft 1.20.2
-	- tonekofabric 0.1.1
-[23:59:33] [main/INFO] (FabricLoader/Mixin) SpongePowered MIXIN Subsystem Version=0.8.5 Source=file:/home/crystalneko/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.12.5+mixin.0.8.5/8d31fb97c3e0cd7c8dad3441851c523bcfae6d8e/sponge-mixin-0.12.5+mixin.0.8.5.jar Service=Knot/Fabric Env=CLIENT
-[23:59:34] [main/INFO] (FabricLoader/Mixin) Loaded Fabric development mappings for mixin remapper!
-[23:59:34] [main/INFO] (FabricLoader/Mixin) Compatibility level set to JAVA_16
-[23:59:34] [main/INFO] (FabricLoader/Mixin) Compatibility level set to JAVA_17
-[23:59:35] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_970 (java.lang.ClassNotFoundException: net/minecraft/class_970)
-[23:59:35] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_970 was not found fabric-rendering-v1.mixins.json:ArmorFeatureRendererMixin from mod fabric-rendering-v1
-[23:59:35] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_5616 (java.lang.ClassNotFoundException: net/minecraft/class_5616)
-[23:59:35] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_5616 was not found fabric-rendering-v1.mixins.json:BlockEntityRendererFactoriesMixin from mod fabric-rendering-v1
-[23:59:35] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_756 (java.lang.ClassNotFoundException: net/minecraft/class_756)
-[23:59:35] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_756 was not found fabric-rendering-v1.mixins.json:BuiltinModelItemRendererMixin from mod fabric-rendering-v1
-[23:59:35] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_972 (java.lang.ClassNotFoundException: net/minecraft/class_972)
-[23:59:35] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_972 was not found fabric-rendering-v1.mixins.json:CapeFeatureRendererMixin from mod fabric-rendering-v1
-[23:59:35] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_5294 (java.lang.ClassNotFoundException: net/minecraft/class_5294)
-[23:59:35] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_5294 was not found fabric-rendering-v1.mixins.json:DimensionEffectsAccessor from mod fabric-rendering-v1
-[23:59:35] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_5619 (java.lang.ClassNotFoundException: net/minecraft/class_5619)
-[23:59:35] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_5619 was not found fabric-rendering-v1.mixins.json:EntityRenderersMixin from mod fabric-rendering-v1
-[23:59:35] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_922 (java.lang.ClassNotFoundException: net/minecraft/class_922)
-[23:59:35] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_922 was not found fabric-rendering-v1.mixins.json:LivingEntityRendererAccessor from mod fabric-rendering-v1
-[23:59:35] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_761 (java.lang.ClassNotFoundException: net/minecraft/class_761)
-[23:59:35] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_761 was not found fabric-rendering-v1.mixins.json:WorldRendererMixin from mod fabric-rendering-v1
-[23:59:35] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_757 (java.lang.ClassNotFoundException: net/minecraft/class_757)
-[23:59:35] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_757 was not found fabric-rendering-v1.mixins.json:shader.GameRendererMixin from mod fabric-rendering-v1
-[23:59:35] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_5944 (java.lang.ClassNotFoundException: net/minecraft/class_5944)
-[23:59:35] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_5944 was not found fabric-rendering-v1.mixins.json:shader.ShaderProgramMixin from mod fabric-rendering-v1
-[23:59:35] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_853 (java.lang.ClassNotFoundException: net/minecraft/class_853)
-[23:59:35] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_853 was not found fabric-block-view-api-v2.client.mixins.json:ChunkRendererRegionMixin from mod fabric-block-view-api-v2
-[23:59:35] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_6850 (java.lang.ClassNotFoundException: net/minecraft/class_6850)
-[23:59:35] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_6850 was not found fabric-block-view-api-v2.client.mixins.json:ChunkRendererRegionBuilderMixin from mod fabric-block-view-api-v2
-[23:59:35] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_853 (java.lang.ClassNotFoundException: net/minecraft/class_853)
-[23:59:35] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_853 was not found fabric-rendering-data-attachment-v1.client.mixins.json:ChunkRendererRegionMixin from mod fabric-rendering-data-attachment-v1
-[23:59:35] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_1087 (java.lang.ClassNotFoundException: net/minecraft/class_1087)
-[23:59:35] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_1087 was not found fabric-renderer-api-v1.mixins.json:client.BakedModelMixin from mod fabric-renderer-api-v1
-[23:59:35] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_1095 (java.lang.ClassNotFoundException: net/minecraft/class_1095)
-[23:59:35] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_1095 was not found fabric-renderer-api-v1.mixins.json:client.MultipartBakedModelMixin from mod fabric-renderer-api-v1
-[23:59:35] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_1097 (java.lang.ClassNotFoundException: net/minecraft/class_1097)
-[23:59:35] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_1097 was not found fabric-renderer-api-v1.mixins.json:client.WeightedBakedModelMixin from mod fabric-renderer-api-v1
-[23:59:35] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_1059 (java.lang.ClassNotFoundException: net/minecraft/class_1059)
-[23:59:35] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_1059 was not found fabric-renderer-api-v1.mixins.json:client.SpriteAtlasTextureMixin from mod fabric-renderer-api-v1
-[23:59:35] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_1092 (java.lang.ClassNotFoundException: net/minecraft/class_1092)
-[23:59:35] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_1092 was not found fabric-model-loading-api-v1.mixins.json:BakedModelManagerMixin from mod fabric-model-loading-api-v1
-[23:59:35] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_1088 (java.lang.ClassNotFoundException: net/minecraft/class_1088)
-[23:59:35] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_1088 was not found fabric-model-loading-api-v1.mixins.json:ModelLoaderMixin from mod fabric-model-loading-api-v1
-[23:59:35] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_727 (java.lang.ClassNotFoundException: net/minecraft/class_727)
-[23:59:35] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_727 was not found fabric-particles-v1.client.mixins.json:BlockDustParticleMixin from mod fabric-particles-v1
-[23:59:35] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_702 (java.lang.ClassNotFoundException: net/minecraft/class_702)
-[23:59:35] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_702 was not found fabric-particles-v1.client.mixins.json:ParticleManagerMixin from mod fabric-particles-v1
-[23:59:35] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_702 (java.lang.ClassNotFoundException: net/minecraft/class_702)
-[23:59:35] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_702 was not found fabric-particles-v1.client.mixins.json:ParticleManagerAccessor from mod fabric-particles-v1
-[23:59:35] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_702$class_4090 (java.lang.ClassNotFoundException: net/minecraft/class_702$class_4090)
-[23:59:35] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_702$class_4090 was not found fabric-particles-v1.client.mixins.json:ParticleManagerAccessor$SimpleSpriteProviderAccessor from mod fabric-particles-v1
-[23:59:35] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_1065 (java.lang.ClassNotFoundException: net/minecraft/class_1065)
-[23:59:35] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_1065 was not found fabric-resource-loader-v0.client.mixins.json:DefaultClientResourcePackProviderMixin from mod fabric-resource-loader-v0
-[23:59:35] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_1144 (java.lang.ClassNotFoundException: net/minecraft/class_1144)
-[23:59:35] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_1144 was not found fabric-resource-loader-v0.client.mixins.json:KeyedResourceReloadListenerClientMixin from mod fabric-resource-loader-v0
-[23:59:35] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_1092 (java.lang.ClassNotFoundException: net/minecraft/class_1092)
-[23:59:35] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_1092 was not found fabric-resource-loader-v0.client.mixins.json:KeyedResourceReloadListenerClientMixin from mod fabric-resource-loader-v0
-[23:59:35] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_1076 (java.lang.ClassNotFoundException: net/minecraft/class_1076)
-[23:59:35] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_1076 was not found fabric-resource-loader-v0.client.mixins.json:KeyedResourceReloadListenerClientMixin from mod fabric-resource-loader-v0
-[23:59:35] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_1060 (java.lang.ClassNotFoundException: net/minecraft/class_1060)
-[23:59:35] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_1060 was not found fabric-resource-loader-v0.client.mixins.json:KeyedResourceReloadListenerClientMixin from mod fabric-resource-loader-v0
-[23:59:35] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_761 (java.lang.ClassNotFoundException: net/minecraft/class_761)
-[23:59:35] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_761 was not found fabric-resource-loader-v0.client.mixins.json:KeyedResourceReloadListenerClientMixin from mod fabric-resource-loader-v0
-[23:59:35] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_776 (java.lang.ClassNotFoundException: net/minecraft/class_776)
-[23:59:35] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_776 was not found fabric-resource-loader-v0.client.mixins.json:KeyedResourceReloadListenerClientMixin from mod fabric-resource-loader-v0
-[23:59:35] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_918 (java.lang.ClassNotFoundException: net/minecraft/class_918)
-[23:59:35] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_918 was not found fabric-resource-loader-v0.client.mixins.json:KeyedResourceReloadListenerClientMixin from mod fabric-resource-loader-v0
-[23:59:35] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_5272 (java.lang.ClassNotFoundException: net/minecraft/class_5272)
-[23:59:35] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_5272 was not found fabric-object-builder-v1.client.mixins.json:ModelPredicateProviderRegistryAccessor from mod fabric-object-builder-api-v1
-[23:59:35] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_5272 (java.lang.ClassNotFoundException: net/minecraft/class_5272)
-[23:59:35] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_5272 was not found fabric-object-builder-v1.client.mixins.json:ModelPredicateProviderRegistrySpecificAccessor from mod fabric-object-builder-api-v1
-[23:59:35] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_4722 (java.lang.ClassNotFoundException: net/minecraft/class_4722)
-[23:59:35] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_4722 was not found fabric-object-builder-v1.client.mixins.json:TexturedRenderLayersMixin from mod fabric-object-builder-api-v1
-[23:59:35] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_746 (java.lang.ClassNotFoundException: net/minecraft/class_746)
-[23:59:35] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_746 was not found fabric-entity-events-v1.client.mixins.json:elytra.ClientPlayerEntityMixin from mod fabric-entity-events-v1
-[23:59:35] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_775 (java.lang.ClassNotFoundException: net/minecraft/class_775)
-[23:59:36] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_775 was not found fabric-rendering-fluids-v1.mixins.json:FluidRendererMixin from mod fabric-rendering-fluids-v1
-[23:59:36] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_1113 (java.lang.ClassNotFoundException: net/minecraft/class_1113)
-[23:59:36] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_1113 was not found fabric-sound-api-v1.mixins.json:SoundInstanceMixin from mod fabric-sound-api-v1
-[23:59:36] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_1140 (java.lang.ClassNotFoundException: net/minecraft/class_1140)
-[23:59:36] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_1140 was not found fabric-sound-api-v1.mixins.json:SoundSystemMixin from mod fabric-sound-api-v1
-[23:59:36] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_763 (java.lang.ClassNotFoundException: net/minecraft/class_763)
-[23:59:36] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_763 was not found fabric-registry-sync-v0.client.mixins.json:ItemModelsMixin from mod fabric-registry-sync-v0
-[23:59:36] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_702 (java.lang.ClassNotFoundException: net/minecraft/class_702)
-[23:59:36] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_702 was not found fabric-registry-sync-v0.client.mixins.json:ParticleManagerMixin from mod fabric-registry-sync-v0
-[23:59:36] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_1087 (java.lang.ClassNotFoundException: net/minecraft/class_1087)
-[23:59:36] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_1087 was not found fabric-renderer-indigo.mixins.json:BakedModelMixin from mod fabric-renderer-indigo
-[23:59:36] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_778 (java.lang.ClassNotFoundException: net/minecraft/class_778)
-[23:59:36] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_778 was not found fabric-renderer-indigo.mixins.json:BlockModelRendererMixin from mod fabric-renderer-indigo
-[23:59:36] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_846$class_851$class_4578 (java.lang.ClassNotFoundException: net/minecraft/class_846$class_851$class_4578)
-[23:59:36] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_846$class_851$class_4578 was not found fabric-renderer-indigo.mixins.json:ChunkBuilderBuiltChunkRebuildTaskMixin from mod fabric-renderer-indigo
-[23:59:36] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_853 (java.lang.ClassNotFoundException: net/minecraft/class_853)
-[23:59:36] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_853 was not found fabric-renderer-indigo.mixins.json:ChunkRendererRegionMixin from mod fabric-renderer-indigo
-[23:59:36] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_918 (java.lang.ClassNotFoundException: net/minecraft/class_918)
-[23:59:36] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_918 was not found fabric-renderer-indigo.mixins.json:ItemRendererMixin from mod fabric-renderer-indigo
-[23:59:36] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_4696 (java.lang.ClassNotFoundException: net/minecraft/class_4696)
-[23:59:36] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_4696 was not found fabric-blockrenderlayer-v1.mixins.json:RenderLayersMixin from mod fabric-blockrenderlayer-v1
-[23:59:36] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_757 (java.lang.ClassNotFoundException: net/minecraft/class_757)
-[23:59:36] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_757 was not found fabric-screen-api-v1.mixins.json:GameRendererMixin from mod fabric-screen-api-v1
-[23:59:36] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/class_759 (java.lang.ClassNotFoundException: net/minecraft/class_759)
-[23:59:36] [main/WARN] (FabricLoader/Mixin) @Mixin target net.minecraft.class_759 was not found fabric-item-api-v1.client.mixins.json:HeldItemRendererMixin from mod fabric-item-api-v1
-[23:59:36] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/server/MinecraftServer$class_6897 (java.lang.ClassNotFoundException: net/minecraft/server/MinecraftServer$class_6897)
-[23:59:53] [Datafixer Bootstrap/INFO] (Minecraft) 192 Datafixer optimizations took 1063 milliseconds
-[23:59:53] [main/ERROR] (FabricLoader/Mixin) Mixin apply for mod fabric-lifecycle-events-v1 failed fabric-lifecycle-events-v1.mixins.json:MinecraftServerMixin from mod fabric-lifecycle-events-v1 -> net.minecraft.server.MinecraftServer: org.spongepowered.asm.mixin.transformer.throwables.InvalidMixinException @Shadow field field_25318 was not located in the target class net.minecraft.server.MinecraftServer. Using refmap fabric-lifecycle-events-v1-refmap.json
+	- toneko 0.1.2
+[19:23:57] [main/INFO] (FabricLoader/Mixin) SpongePowered MIXIN Subsystem Version=0.8.5 Source=file:/home/crystalneko/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.12.5+mixin.0.8.5/8d31fb97c3e0cd7c8dad3441851c523bcfae6d8e/sponge-mixin-0.12.5+mixin.0.8.5.jar Service=Knot/Fabric Env=SERVER
+[19:23:58] [main/INFO] (FabricLoader/Mixin) Loaded Fabric development mappings for mixin remapper!
+[19:23:58] [main/INFO] (FabricLoader/Mixin) Compatibility level set to JAVA_16
+[19:23:58] [main/INFO] (FabricLoader/Mixin) Compatibility level set to JAVA_17
+[19:23:59] [main/WARN] (FabricLoader/Mixin) Error loading class: net/minecraft/server/MinecraftServer$class_6897 (java.lang.ClassNotFoundException: net/minecraft/server/MinecraftServer$class_6897)
+[19:24:13] [main/ERROR] (FabricLoader/Mixin) Mixin apply for mod fabric-lifecycle-events-v1 failed fabric-lifecycle-events-v1.mixins.json:MinecraftServerMixin from mod fabric-lifecycle-events-v1 -> net.minecraft.server.MinecraftServer: org.spongepowered.asm.mixin.transformer.throwables.InvalidMixinException @Shadow field field_25318 was not located in the target class net.minecraft.server.MinecraftServer. Using refmap fabric-lifecycle-events-v1-refmap.json
 org.spongepowered.asm.mixin.transformer.throwables.InvalidMixinException: @Shadow field field_25318 was not located in the target class net.minecraft.server.MinecraftServer. Using refmap fabric-lifecycle-events-v1-refmap.json
 	at org.spongepowered.asm.mixin.transformer.MixinPreProcessorStandard.attachFields(MixinPreProcessorStandard.java:624) ~[sponge-mixin-0.12.5+mixin.0.8.5.jar:0.12.5+mixin.0.8.5]
 	at org.spongepowered.asm.mixin.transformer.MixinPreProcessorStandard.attach(MixinPreProcessorStandard.java:302) ~[sponge-mixin-0.12.5+mixin.0.8.5.jar:0.12.5+mixin.0.8.5]
@@ -186,17 +77,17 @@ org.spongepowered.asm.mixin.transformer.throwables.InvalidMixinException: @Shado
 	at net.minecraft.block.Blocks.<clinit>(Blocks.java:1190) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.jar:?]
 	at net.minecraft.block.FireBlock.registerDefaultFlammables(FireBlock.java:326) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.jar:?]
 	at net.minecraft.Bootstrap.initialize(Bootstrap.java:54) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.jar:?]
-	at net.minecraft.client.main.Main.main(Main.java:169) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.jar:?]
+	at net.minecraft.server.Main.main(Main.java:106) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.jar:?]
 	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:468) ~[fabric-loader-0.14.23.jar:?]
 	at net.fabricmc.loader.impl.launch.knot.Knot.launch(Knot.java:74) ~[fabric-loader-0.14.23.jar:?]
-	at net.fabricmc.loader.impl.launch.knot.KnotClient.main(KnotClient.java:23) ~[fabric-loader-0.14.23.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.KnotServer.main(KnotServer.java:23) ~[fabric-loader-0.14.23.jar:?]
 	at net.fabricmc.devlaunchinjector.Main.main(Main.java:86) ~[dev-launch-injector-0.2.1+build.8.jar:?]
-[23:59:53] [main/ERROR] (FabricLoader) Minecraft has crashed!
+[19:24:13] [main/ERROR] (FabricLoader) Minecraft has crashed!
 net.fabricmc.loader.impl.FormattedException: java.lang.ExceptionInInitializerError
 	at net.fabricmc.loader.impl.FormattedException.ofLocalized(FormattedException.java:63) ~[fabric-loader-0.14.23.jar:?]
 	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:470) ~[fabric-loader-0.14.23.jar:?]
 	at net.fabricmc.loader.impl.launch.knot.Knot.launch(Knot.java:74) ~[fabric-loader-0.14.23.jar:?]
-	at net.fabricmc.loader.impl.launch.knot.KnotClient.main(KnotClient.java:23) ~[fabric-loader-0.14.23.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.KnotServer.main(KnotServer.java:23) ~[fabric-loader-0.14.23.jar:?]
 	at net.fabricmc.devlaunchinjector.Main.main(Main.java:86) ~[dev-launch-injector-0.2.1+build.8.jar:?]
 Caused by: java.lang.ExceptionInInitializerError
 	at net.minecraft.item.Items.<clinit>(Items.java:1285) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.jar:?]
@@ -209,7 +100,7 @@ Caused by: java.lang.ExceptionInInitializerError
 	at net.minecraft.block.Blocks.<clinit>(Blocks.java:1190) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.jar:?]
 	at net.minecraft.block.FireBlock.registerDefaultFlammables(FireBlock.java:326) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.jar:?]
 	at net.minecraft.Bootstrap.initialize(Bootstrap.java:54) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.jar:?]
-	at net.minecraft.client.main.Main.main(Main.java:169) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.jar:?]
+	at net.minecraft.server.Main.main(Main.java:106) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.jar:?]
 	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:468) ~[fabric-loader-0.14.23.jar:?]
 	... 3 more
 Caused by: java.lang.RuntimeException: Mixin transformation of net.minecraft.server.MinecraftServer failed
@@ -229,7 +120,7 @@ Caused by: java.lang.RuntimeException: Mixin transformation of net.minecraft.ser
 	at net.minecraft.block.Blocks.<clinit>(Blocks.java:1190) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.jar:?]
 	at net.minecraft.block.FireBlock.registerDefaultFlammables(FireBlock.java:326) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.jar:?]
 	at net.minecraft.Bootstrap.initialize(Bootstrap.java:54) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.jar:?]
-	at net.minecraft.client.main.Main.main(Main.java:169) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.jar:?]
+	at net.minecraft.server.Main.main(Main.java:106) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.jar:?]
 	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:468) ~[fabric-loader-0.14.23.jar:?]
 	... 3 more
 Caused by: org.spongepowered.asm.mixin.transformer.throwables.MixinTransformerError: An unexpected critical error was encountered
@@ -252,7 +143,7 @@ Caused by: org.spongepowered.asm.mixin.transformer.throwables.MixinTransformerEr
 	at net.minecraft.block.Blocks.<clinit>(Blocks.java:1190) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.jar:?]
 	at net.minecraft.block.FireBlock.registerDefaultFlammables(FireBlock.java:326) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.jar:?]
 	at net.minecraft.Bootstrap.initialize(Bootstrap.java:54) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.jar:?]
-	at net.minecraft.client.main.Main.main(Main.java:169) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.jar:?]
+	at net.minecraft.server.Main.main(Main.java:106) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.jar:?]
 	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:468) ~[fabric-loader-0.14.23.jar:?]
 	... 3 more
 Caused by: org.spongepowered.asm.mixin.throwables.MixinApplyError: Mixin [fabric-lifecycle-events-v1.mixins.json:MinecraftServerMixin from mod fabric-lifecycle-events-v1] from phase [DEFAULT] in config [fabric-lifecycle-events-v1.mixins.json] FAILED during APPLY
@@ -277,7 +168,7 @@ Caused by: org.spongepowered.asm.mixin.throwables.MixinApplyError: Mixin [fabric
 	at net.minecraft.block.Blocks.<clinit>(Blocks.java:1190) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.jar:?]
 	at net.minecraft.block.FireBlock.registerDefaultFlammables(FireBlock.java:326) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.jar:?]
 	at net.minecraft.Bootstrap.initialize(Bootstrap.java:54) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.jar:?]
-	at net.minecraft.client.main.Main.main(Main.java:169) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.jar:?]
+	at net.minecraft.server.Main.main(Main.java:106) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.jar:?]
 	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:468) ~[fabric-loader-0.14.23.jar:?]
 	... 3 more
 Caused by: org.spongepowered.asm.mixin.transformer.throwables.InvalidMixinException: @Shadow field field_25318 was not located in the target class net.minecraft.server.MinecraftServer. Using refmap fabric-lifecycle-events-v1-refmap.json
@@ -307,6 +198,6 @@ Caused by: org.spongepowered.asm.mixin.transformer.throwables.InvalidMixinExcept
 	at net.minecraft.block.Blocks.<clinit>(Blocks.java:1190) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.jar:?]
 	at net.minecraft.block.FireBlock.registerDefaultFlammables(FireBlock.java:326) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.jar:?]
 	at net.minecraft.Bootstrap.initialize(Bootstrap.java:54) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.jar:?]
-	at net.minecraft.client.main.Main.main(Main.java:169) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.jar:?]
+	at net.minecraft.server.Main.main(Main.java:106) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.jar:?]
 	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:468) ~[fabric-loader-0.14.23.jar:?]
 	... 3 more

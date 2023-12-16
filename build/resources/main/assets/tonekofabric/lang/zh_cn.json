@@ -12,9 +12,9 @@
   "chat.neko.prefix": "[§a猫娘§f§r]",
   "chat.neko.owner": "主人",
   "base.null.owner": "没有主人",
-  "item.tonekofabric.stick" : "§9§o撅猫棍",
-  "item.tonekofabric.stick.lore": "§9§o它不防水",
-  "item.tonekofabric.stick-level-2": "§9§o二级撅猫棍",
-  "item.tonekofabric.stick-level-2.lore": "§9§oIP68级防水",
+  "item.toneko.stick" : "§9§o撅猫棍",
+  "item.toneko.stick.lore": "§9§o它不防水",
+  "item.toneko.stick-level-2": "§9§o二级撅猫棍",
+  "item.toneko.stick-level-2.lore": "§9§oIP68级防水",
   "attack.xp.add": "§6你与%d的好感经验提升了%c"
 }

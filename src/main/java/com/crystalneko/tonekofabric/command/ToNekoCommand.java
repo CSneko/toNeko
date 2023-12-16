@@ -1,13 +1,17 @@
 package com.crystalneko.tonekofabric.command;
 
 import com.crystalneko.ctlibPublic.sql.sqlite;
-import com.crystalneko.tonekofabric.ToNekoFabric;
+import com.crystalneko.tonekofabric.items.stick;
 import com.crystalneko.tonekofabric.libs.base;
 import com.crystalneko.tonekofabric.libs.lp;
 import com.mojang.brigadier.context.CommandContext;
+import net.minecraft.entity.EntityPose;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 
 import java.util.Arrays;
 import java.util.List;
@@ -111,8 +115,12 @@ public class ToNekoCommand {
     public static int item(CommandContext<ServerCommandSource> context){
         final ServerCommandSource source = context.getSource();
         final PlayerEntity player = source.getPlayer();
+        final World world = player.getWorld();
         if(!lp.hasPermission(player, "toneko.command.item")){return noPS(player);}
-        player.giveItemStack(ToNekoFabric.STICK.getDefaultStack());
+        //给予玩家撅猫棒
+        Vec3d pos = player.getPos();
+        ItemEntity itemEntity = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), stick.get()); //在玩家脚下生成一个掉落物
+        world.spawnEntity(itemEntity);
         return 1;
     }
     public static int noPS(PlayerEntity player){

@@ -12,9 +12,9 @@
   "chat.neko.prefix": "[§aneko§f§r]",
   "chat.neko.owner": "owner",
   "base.null.owner": "no owner",
-  "item.tonekofabric.stick" : "§9§oCat stick",
-  "item.tonekofabric.stick.lore": "§9§oNo IP68",
-  "item.tonekofabric.stick-level-2": "§9§oCat stick level 2",
-  "item.tonekofabric.stick-level-2.lore": "§9§oIP68!No water can damage it!",
+  "item.toneko.stick" : "§9§oCat stick",
+  "item.toneko.stick.lore": "§9§oNo IP68",
+  "item.toneko.stick-level-2": "§9§oCat stick level 2",
+  "item.toneko.stick-level-2.lore": "§9§oIP68!No water can damage it!",
   "attack.xp.add":"§6Your friendship experience with %d has increased by %c"
 }

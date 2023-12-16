@@ -1,29 +1,36 @@
 package com.crystalneko.tonekofabric.items;
 
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtString;
 import net.minecraft.text.Text;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.world.World;
-import java.util.List;
 
 
-public class stick extends Item {
-    public stick(Settings settings) {
-        super(settings);
+public class stick {
+    public static ItemStack stack;
+    public stick(){
+        //注册物品
+        register();
     }
-    @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-        return TypedActionResult.success(player.getStackInHand(hand));
+    public static void register(){
+        ItemStack stack1 = new ItemStack(Items.STICK);
+        //设置nbt ["neko","true"]
+        NbtCompound nbt = new NbtCompound();
+        NbtString nbtValue = NbtString.of("true");
+        nbt.put("neko",nbtValue);
+        // 创建描述文本对象
+        Text description = Text.translatable("item.toneko.stick.lore");
+        nbt.putString("display",Text.Serializer.toJson(description));
+        stack1.setNbt(nbt);
+        //设置名称
+        stack1.setCustomName(Text.translatable("item.toneko.stick"));
+        // 添加附魔特效(耐久1)
+        stack1.addEnchantment(Enchantments.UNBREAKING, 1);
+        stack = stack1;
     }
-    @Override
-    public void appendTooltip(ItemStack itemStack, World world, List<Text> tooltip, TooltipContext tooltipContext) {
-        // 添加物品提示
-        tooltip.add(Text.translatable("item.tonekofabric.stick.lore"));
+    public static ItemStack get(){
+        return stack;
     }
-
-
 }
