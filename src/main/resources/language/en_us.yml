@@ -17,6 +17,14 @@ other:
   neko: "§aneko"
   owner: "owner"
   nya: "-nya~"
+base:
+  null:
+    owner: "no owner"
+chat:
+  neko:
+    nya: "-nya~"
+    prefix: "§aneko"
+    owner: "owner"
 command:
   only-player: "§cThis command can only be executed by players"
   no-permission: "§cYou do not have permission to execute this command!"
@@ -26,6 +34,25 @@ command:
     help: "§b/neko help:\n§a/neko help §bGet help\n§a/neko jump §bGet jump boost"
   toneko:
     help: "§b/toneko Help:\n§a/toneko help §bGet help\n§a/toneko player <player name> §bTurn a player into a catgirl (but you will be sacrificed)\n§a/ toneko item §bGet the cat stick\n§a/toneko remove <cat girl name> §bDelete cat girl§c (This is a dangerous operation, please use it with caution)\n§a/toneko xp <cat girl name> §bCheck the favorability Experience\n§a/toneko aliases <cat girl name> add or remove <alias> §bAdd or remove aliases for you (a word that will be converted to 'owner')\n§a/toneko block <cat girl name> add or remove <Blocking word> <Replacement word> word or all §bAdd a masking word (the masking word will be replaced with a replacement word, all means replacing the entire sentence, word replaces the word)"
+    notOwner: "§cYou are not %d's owner"
+    player:
+      success: "§aSuccessfully set player§6%d§a to be a neko girl, and you become its owner"
+      nekoed: "§bIt is already a neko girl, and its owner is§6%d"
+      notOwner: "§cYou are not %d's owner"
+    aliases:
+      add:
+        true: "§aAlias set successfully!"
+        exists: "§cAlias exists"
+      remove:
+        no: "§cAlias doesn't exists"
+        true: "§aRemove Alias successfully!"
+    block:
+      exists: "§cBlock Word was exists"
+      no-exists: "§cBlock Word isn't exists"
+      add:
+        success: "§aAdd Block Word successfully"
+      remove:
+        success: "§aRemove Block Word successfully"
 folia:
   use:
     chatEvent: "Use of paper/Folia detected, Paper/Folia's chat listener will be used"

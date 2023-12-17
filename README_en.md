@@ -50,6 +50,8 @@ Linkage module: [luckperms](https://luckperms.net/)
 ```yaml
 #Language options (support zh_cn, en_us)
 language: zh_cn
+#use client language（only Fabric）
+client-language: false
 #Whether to enable automatic updates
 automatic-updates: false
 #Whether to access the online website (statistics information will be uploaded, see https://w.csk.asia/toneko for details)

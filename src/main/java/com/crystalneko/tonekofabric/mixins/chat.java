@@ -33,6 +33,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.UnaryOperator;
 
+import static com.crystalneko.tonekofabric.libs.base.translatable;
+
 @Mixin(ServerPlayNetworkHandler.class)
 public abstract class chat{
     @Shadow @Final private ServerPlayerEntity player;
@@ -94,7 +96,7 @@ public abstract class chat{
         if (sqlite.checkValueExists(worldName + "Nekos", "neko", playerName)) {
             String owner = sqlite.getColumnValue(worldName + "Nekos", "owner", "neko", player.getName().getString());
             // 替换主人名称
-            String ownerText = Text.translatable("chat.neko.owner").getString();
+            String ownerText = translatable("chat.neko.owner").getString();
             if (owner != null && !owner.isEmpty()) {
                 stringMessage = stringMessage.replaceAll(owner,ownerText);
             }
@@ -108,7 +110,7 @@ public abstract class chat{
                 }
             }
             // 随机将",，"替换为"喵~"
-            String nya = Text.translatable("chat.neko.nya").getString();
+            String nya = translatable("chat.neko.nya").getString();
             stringMessage = replaceChar(stringMessage, ',', nya, 0.4);
             stringMessage = replaceChar(stringMessage, '，', nya, 0.4);
             stringMessage = stringMessage + nya;
@@ -119,11 +121,10 @@ public abstract class chat{
             //获取聊天前缀
             String libPublicPrefix = chatPrefix.getAllPublicPrefixValues();
             String libPrefix = chatPrefix.getPrivatePrefix(playerName);
-            if(libPrefix.equalsIgnoreCase("[§a无前缀§f§r]") ||libPrefix.equalsIgnoreCase("[§a无前缀§f§r]")){
+            if(libPrefix.equalsIgnoreCase("[§a无前缀§f§r]")){
                 libPrefix = "";
             }
-            String prefix = Text.translatable("chat.neko.prefix").getString() + libPrefix + libPublicPrefix;
-
+            String prefix = libPrefix + libPublicPrefix;
             stringMessage = prefix  + playerName + "§b >> §7" + stringMessage;
 
             return Text.of(stringMessage);

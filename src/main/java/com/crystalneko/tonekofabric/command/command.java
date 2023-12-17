@@ -1,12 +1,12 @@
 package com.crystalneko.tonekofabric.command;
 
-import com.crystalneko.tonekofabric.libs.base;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 
+import static com.crystalneko.tonekofabric.libs.base.translatable;
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
@@ -95,14 +95,14 @@ public class command{
                     //-------------------------------------help---------------------------------------------------
                                     .then(literal("help")
                                             .executes(context -> {
-                                                context.getSource().sendMessage(base.getStringLanguage("message.toneko.help", new String[]{""}));
+                                                context.getSource().sendMessage(translatable("command.toneko.help"));
                                                 return 1;
                                             })
                                     )
 
                     //----------------------------------------无参数-----------------------------------------
                     .executes(context -> {
-                        context.getSource().sendMessage(base.getStringLanguage("message.toneko.help", new String[]{""}));
+                        context.getSource().sendMessage(translatable("command.toneko.help"));
                         return 1;
                     })
             );

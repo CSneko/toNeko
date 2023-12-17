@@ -1,17 +1,37 @@
 package com.crystalneko.tonekofabric.libs;
 
+import com.crystalneko.ctlibPublic.File.YamlConfiguration;
 import com.crystalneko.ctlibfabric.sql.sqlite;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.world.World;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 public class base {
+    public static YamlConfiguration config;
+    public static String dataFolder = "ctlib/toneko";
+    public static String language;
+    public static YamlConfiguration languageConfig;
+    public static Boolean clientLanguage;
     public base(){
+        create();  //创建必要目录
+        Path configFile = Path.of("ctlib/toneko/config.yml");
+        if(!Files.exists(configFile)){copyResource("/config.yml",dataFolder);}  //如果配置文件不存在，则复制到文件夹中
+        try {
+            config = new YamlConfiguration(configFile);
+        } catch (IOException e) {
+            System.out.println("无法加载配置文件:"+e.getMessage());
+        }
+        //读取语言文件
+        loadLanguageFile();
+        //是否使用客户端语言
+        clientLanguage = config.getBoolean("client-language");
     }
     //--------------------------------------------------------获取世界名称---------------------------------------------
     /**创建文件和目录
@@ -77,7 +97,7 @@ public class base {
         if(owner != null){
             return owner;
         }else {
-            return Text.translatable("base.null.owner").getString();
+            return translatable("base.null.owner").getString();
         }
     }
     public static String getPlayerName(PlayerEntity player){
@@ -94,6 +114,79 @@ public class base {
         name = name.replace("]","");
         name = name.replace("ServerLevel","");
         return name;
+    }
+    public void create(){
+        Path path = Path.of("ctlib/toneko");
+        if(!Files.exists(path)){
+            try {
+                Files.createDirectory(path);
+            } catch (IOException e) {
+                System.out.println("can not create path:"+e.getMessage());
+            }
+        }
+    }
+    public void copyResource(String resourcePath,String dataFolder){
+        try (InputStream in = getClass().getResourceAsStream(resourcePath)) {
+            if (in == null) {
+                System.out.println("无法找到资源文件");
+                return;
+            }
+
+            // 获取插件的数据文件夹路径
+            Path pluginDataFolder = Path.of(dataFolder);
+
+            // 将资源文件复制到插件数据文件夹下的ctlib目录
+            Path outputPath = pluginDataFolder.resolve("config.yml");
+            Files.copy(in, outputPath, StandardCopyOption.REPLACE_EXISTING);
+            System.out.println("资源文件复制成功");
+
+        } catch (IOException e) {
+            System.out.println("无法复制资源文件" + e);
+        }
+    }
+    private void loadLanguageFile() {
+        // 获取配置文件中的语言选项
+        language = config.getString("language");
+        // 根据语言选项加载对应的语言文件
+        Path languageFile = Path.of("ctlib/toneko/language/" + language + ".yml");
+        if (!Files.exists(languageFile)) {
+            copyResource("/language/" + language + ".yml", dataFolder);
+        }
+
+        try {
+            languageConfig = new YamlConfiguration(languageFile);
+        } catch (IOException e) {
+            System.out.println("无法加载语言文件:" + e.getMessage());
+        }
+    }
+
+    // 获取翻译内容的方法
+    public static String getMessage(String key) {
+        return languageConfig.getString(key);
+    }
+    public static Text translatable(String key){
+        //如果使用客户端语言，则返回客户端语言,否则返回服务端语言
+        if(clientLanguage){
+            return Text.translatable(key);
+        }else {
+            String text = getMessage(key);
+            Text text1 = Text.of(text);
+            return  text1;
+        }
+    }
+    public static Text translatable(String key,String[] replace){
+        //如果使用客户端语言，则返回客户端语言,否则返回服务端语言
+        if(clientLanguage){
+            return Text.translatable(key, (Object[]) replace);
+        }else {
+            String text = getMessage(key);
+            text = text.replace("%d",replace[0]);
+            if(replace.length ==2){
+                text = text.replace("%c",replace[1]);
+            }
+            Text text1 = Text.of(text);
+            return  text1;
+        }
     }
 
 

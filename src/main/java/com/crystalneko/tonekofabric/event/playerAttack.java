@@ -8,10 +8,11 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 
 import java.util.Random;
+
+import static com.crystalneko.tonekofabric.libs.base.translatable;
 
 public class playerAttack {
     public playerAttack() {
@@ -59,8 +60,8 @@ public class playerAttack {
                         String.valueOf(
                                 Integer.parseInt(sqlite.getColumnValue(worldName + "Nekos","xp","neko",nekoName))
                                         + randomNumber));
-                player.sendMessage(Text.translatable("attack.xp.add", nekoName, String.valueOf(randomNumber)));
-                neko.sendMessage(Text.translatable("attack.xp.add", playerName, String.valueOf(randomNumber)));
+                player.sendMessage(translatable("attack.add-xp",new String[]{ nekoName, String.valueOf(randomNumber)}));
+                neko.sendMessage(translatable("attack.add-xp",new String[]{ nekoName, String.valueOf(randomNumber)}));
             }
         }
     }

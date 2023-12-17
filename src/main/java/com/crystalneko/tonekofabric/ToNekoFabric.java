@@ -1,7 +1,7 @@
 package com.crystalneko.tonekofabric;
 
 import com.crystalneko.tonekofabric.command.command;
-import com.crystalneko.tonekofabric.event.playerAttack;
+import com.crystalneko.tonekofabric.event.*;
 import com.crystalneko.tonekofabric.items.stick;
 import com.crystalneko.tonekofabric.libs.base;
 import com.crystalneko.tonekofabric.libs.lp;
@@ -33,6 +33,8 @@ public class ToNekoFabric implements ModInitializer {
     private void event(){
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             new playerAttack();
+            new playerJoin();
+            new playerLeave();
         });
     }
 }
