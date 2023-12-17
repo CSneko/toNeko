@@ -60,7 +60,7 @@ automatic-updates: false
 #是否接入在线网站(统计信息会被上传，详情见 https://w.csk.asia/toneko)
 online: true
 ```
-## 插件网站zhiling142
+## 插件网站
 
 这是对该插件做的一个简易的网站，搭建在cloudflare pages上，用于查询统计信息(已停用)
 
