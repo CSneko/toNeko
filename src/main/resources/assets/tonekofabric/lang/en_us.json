@@ -18,8 +18,8 @@
   "chat.neko.owner": "owner",
   "base.null.owner": "no owner",
   "item.stick" : "§9§oCat stick",
-  "item.stick.lore": "§9§oNo IP68",
+  "item.stick-lore": "§9§oNo IP68",
   "item.stick-level-2": "§9§oCat stick level 2",
-  "item.stick-level-2.lore": "§9§oIP68!No water can damage it!",
+  "item.stick-level-2-lore": "§9§oIP68!No water can damage it!",
   "attack.add-xp":"§6Your friendship experience with %d has increased by %c"
 }

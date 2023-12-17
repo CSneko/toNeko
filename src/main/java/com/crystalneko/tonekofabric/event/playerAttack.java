@@ -39,8 +39,9 @@ public class playerAttack {
         if(player.getMainHandStack() == null){return;}else{
             ItemStack stack =  player.getMainHandStack(); //获取主手物品
             NbtCompound nbt = stack.getNbt(); //获取nbt
-            if(!nbt.contains("neko") || !nbt.getString("neko").equalsIgnoreCase("true")){
-                return;}
+            if (nbt == null || !nbt.contains("neko") || !nbt.getString("neko").equalsIgnoreCase("true")) {
+                return;
+            }
         }
         //判断对方是否为猫娘
         if(sqlite.getColumnValue(worldName + "Nekos","owner","neko",nekoName) != null){

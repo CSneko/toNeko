@@ -41,7 +41,7 @@ public class getStick {
         //设置物品的展示名称
         itemMeta.setDisplayName(ToNeko.getMessage("item.stick"));
         // 原始的String类型的lore
-        String loreString = ToNeko.getMessage("item.stick.lore");
+        String loreString = ToNeko.getMessage("item.stick-lore");
         // 将String类型的lore转换为Component类型
         Component loreComponent = Component.text(loreString);
         // 创建一个List<Component>并加入转换后的lore
@@ -68,7 +68,7 @@ public class getStick {
         //设置物品的展示名称
         itemMeta.setDisplayName(ToNeko.getMessage("item.stick-level-2"));
         // 原始的String类型的lore
-        String loreString = ToNeko.getMessage("item.stick-level-2.lore");
+        String loreString = ToNeko.getMessage("item.stick-level-2-lore");
         // 将String类型的lore转换为Component类型
         Component loreComponent = Component.text(loreString);
         // 创建一个List<Component>并加入转换后的lore

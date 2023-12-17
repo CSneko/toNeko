@@ -1,7 +1,7 @@
 package com.crystalneko.tonekofabric.libs;
 
 import com.crystalneko.ctlibPublic.File.YamlConfiguration;
-import com.crystalneko.ctlibfabric.sql.sqlite;
+import com.crystalneko.ctlibPublic.sql.sqlite;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.world.World;
@@ -22,7 +22,7 @@ public class base {
     public base(){
         create();  //创建必要目录
         Path configFile = Path.of("ctlib/toneko/config.yml");
-        if(!Files.exists(configFile)){copyResource("/config.yml",dataFolder);}  //如果配置文件不存在，则复制到文件夹中
+        if(!Files.exists(configFile)){copyResource("/config.yml",dataFolder,"config.yml");}  //如果配置文件不存在，则复制到文件夹中
         try {
             config = new YamlConfiguration(configFile);
         } catch (IOException e) {
@@ -124,19 +124,25 @@ public class base {
                 System.out.println("can not create path:"+e.getMessage());
             }
         }
+        if(!Files.exists(Path.of("ctlib/toneko/language"))){
+            try {
+                Files.createDirectory(Path.of("ctlib/toneko/language"));
+            } catch (IOException e) {
+                System.out.println("无法创建文件夹:" +e.getMessage());
+            }
+        }
+
     }
-    public void copyResource(String resourcePath,String dataFolder){
+    public void copyResource(String resourcePath,String dataFolder,String fileName){
         try (InputStream in = getClass().getResourceAsStream(resourcePath)) {
             if (in == null) {
                 System.out.println("无法找到资源文件");
                 return;
             }
-
             // 获取插件的数据文件夹路径
             Path pluginDataFolder = Path.of(dataFolder);
-
             // 将资源文件复制到插件数据文件夹下的ctlib目录
-            Path outputPath = pluginDataFolder.resolve("config.yml");
+            Path outputPath = pluginDataFolder.resolve(fileName);
             Files.copy(in, outputPath, StandardCopyOption.REPLACE_EXISTING);
             System.out.println("资源文件复制成功");
 
@@ -150,7 +156,7 @@ public class base {
         // 根据语言选项加载对应的语言文件
         Path languageFile = Path.of("ctlib/toneko/language/" + language + ".yml");
         if (!Files.exists(languageFile)) {
-            copyResource("/language/" + language + ".yml", dataFolder);
+            copyResource("/language/" + language + ".yml", dataFolder+"/language",language + ".yml");
         }
 
         try {

@@ -7,9 +7,9 @@ attack:
   add-xp2: "§c的好感经验增加了"
 item:
   stick: "§9§o撅猫棍"
-  stick.lore: "§9§o它不防水"
+  stick-lore: "§9§o它不防水"
   stick-level-2: "§9§o二级撅猫棍"
-  stick-level-2.lore: "§9§oIP68级防水"
+  stick-level-2-lore: "§9§oIP68级防水"
 death:
   sub-xp: "§c你与§e"
   sub-xp2: "§c的好感经验减少了"

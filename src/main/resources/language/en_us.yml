@@ -7,9 +7,9 @@ attack:
   add-xp2: "§c has increased"
 item:
   stick: "§9§oCat stick"
-  stick.lore: "§9§oNo IP68"
+  stick-lore: "§9§oNo IP68"
   stick-level-2: "§9§oCat stick level 2"
-  stick-level-2.lore: "§9§oIP68!No water can damage it!"
+  stick-level-2-lore: "§9§oIP68!No water can damage it!"
 death:
   sub-xp: "§cYour friendship experience with §e"
   sub-xp2: "§c hsa reduced"
