@@ -47,6 +47,9 @@
 ```
 ## 配置
 ### 主要配置文件:`config.yml`
+#### 路径:
+Fabric: `ctlib/toneko/config.yml`
+Bukkit: `plugins/toNeko/config.yml`
 ```yaml
 #语言选项（支持 zh_cn,en_us）
 language: zh_cn

@@ -47,6 +47,9 @@ Linkage module: [luckperms](https://luckperms.net/)
 ```
 ## Configuration
 ### Main configuration file: `config.yml`
+#### Path:
+Fabric: `ctlib/toneko/config.yml`
+Bukkit: `plugins/toNeko/config.yml`
 ```yaml
 #Language options (support zh_cn, en_us)
 language: zh_cn
