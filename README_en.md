@@ -1,7 +1,7 @@
 # toNeko
 [Simplified Chinese](README.md) | [English](README_en.md)
 ## brief introduction
-This is a plug-in that can turn players into catgirls in the server, adding a little fun to the server. The Fabric version is currently complete and supports Folia.
+This is a plug-in that can turn players into catgirls in the server, adding a little fun to the server.Supports Folia.
 ### chat
 - Add prefix and modify format
 - Aliases, masking words and replacement words
@@ -17,7 +17,7 @@ This is a plug-in that can turn players into catgirls in the server, adding a li
 Put it into the server's `plugins` folder or `mods` folder (Fabric1.20.2). If you do not have the [ctLib](https://modrinth.com/plugin/ctlib) pre-plugin installed, please install it
 
 Supported versions:
-- Fabric 1.20.2
+- Fabric >=1.20
 - Spigot/Paper/Folia 1.16~1.20.2
 
 If you find that it does not start successfully, you can try to restart the server/client, or check whether the server/client has the ctLib plug-in installed (if you run it on the plug-in side, it will be installed automatically for you under normal circumstances)
