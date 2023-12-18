@@ -213,6 +213,23 @@ public class ToNekoCommand {
         player.sendMessage(translatable("command.toneko.block.remove.success"));
         return 1;
     }
+    public static int xp(CommandContext<ServerCommandSource> context){
+        final ServerCommandSource source = context.getSource();
+        final PlayerEntity player = source.getPlayer();
+        final String worldName = base.getWorldName(player.getWorld());
+        if(!lp.hasPermission(player, "toneko.command.xp")){return noPS(player);}
+        //获取关键信息
+        String playerName = base.getPlayerName(player); //玩家名称
+        String neko = context.getArgument("neko", String.class); //猫娘的名称
+        if (!base.getOwner(neko, worldName).equalsIgnoreCase(playerName)) {
+            player.sendMessage(translatable("command.toneko.notOwner",new String[]{neko}));
+            return 1; //不是主人，直接结束
+        }
+        //获取好感经验度
+        String xp = sqlite.getColumnValue(worldName+"Nekos","xp","neko",neko);
+        player.sendMessage(translatable("command.toneko.xp",new String[]{neko,xp})); //向玩家发送消息
+        return 1;
+    }
 
     public static int noPS(PlayerEntity player){
         player.sendMessage(translatable("command.no-permission"));

@@ -92,13 +92,22 @@ public class command{
                                     )
                             )
                     )
+                    //-----------------------------------------xp------------------------------------------------
+                    .then(literal("xp")
+                            .then(argument("neko",StringArgumentType.string())
+                                    .suggests(getOnlinePlayers)
+                                    .executes(context -> {
+                                        return ToNekoCommand.xp(context);
+                                    })
+                            )
+                    )
                     //-------------------------------------help---------------------------------------------------
-                                    .then(literal("help")
-                                            .executes(context -> {
-                                                context.getSource().sendMessage(translatable("command.toneko.help"));
-                                                return 1;
-                                            })
-                                    )
+                    .then(literal("help")
+                                    .executes(context -> {
+                                        context.getSource().sendMessage(translatable("command.toneko.help"));
+                                        return 1;
+                                    })
+                    )
 
                     //----------------------------------------无参数-----------------------------------------
                     .executes(context -> {
@@ -106,6 +115,28 @@ public class command{
                         return 1;
                     })
             );
+            //-------------------------------------------------neko-------------------------------------------------
+             dispatcher.register(literal("neko")
+                     //------------------------------------------help---------------------------------------
+                     .then(literal("help")
+                             .executes(context -> {
+                                 context.getSource().sendMessage(translatable("command.neko.help"));
+                                 return 1;
+                             })
+                     )
+                     //----------------------------------------jump-------------------------------------
+                     .then(literal("jump")
+                             .executes(context -> {
+                                 return NekoCommand.jump(context);
+                             })
+                     )
+                     //----------------------------------------vision---------------------------------
+                     .then(literal("vision")
+                             .executes(context -> {
+                                 return NekoCommand.vision(context);
+                             })
+                     )
+             );
         });
     }
 

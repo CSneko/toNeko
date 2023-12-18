@@ -14,6 +14,7 @@ import com.crystalneko.toneko.files.downloadPlugin;
 import com.crystalneko.toneko.items.getStick;
 
 import com.crystalneko.toneko.items.stickLevel2;
+import net.minecraft.text.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -254,6 +255,14 @@ public final class ToNeko extends JavaPlugin {
     // 获取翻译内容的方法
     public static String getMessage(String key) {
         return languageConfig.getString(key);
+    }
+    public static String getMessage(String key,String[] replace) {
+        String text = getMessage(key);
+        text = text.replace("%d",replace[0]);
+        if(replace.length ==2){
+            text = text.replace("%c",replace[1]);
+        }
+        return  text;
     }
 
 }

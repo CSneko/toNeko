@@ -77,8 +77,8 @@ public class PlayerAttack implements Listener {
                                     //加上值
                                     int xpValue = data.getInt(player.getName() + ".xp") + randomNumber;
                                     create.setValue(player.getName() + ".xp", xpValue, dataFile);
-                                    player.sendMessage(ToNeko.getMessage("attack.add-xp") + killer.getName() + ToNeko.getMessage("attack.add-xp2") + randomNumber);
-                                    killer.sendMessage(ToNeko.getMessage("attack.add-xp") + player.getName() + ToNeko.getMessage("attack.add-xp2") + randomNumber);
+                                    player.sendMessage(ToNeko.getMessage("attack.add-xp",new String[]{killer.getName(), String.valueOf(randomNumber)}));
+                                    killer.sendMessage(ToNeko.getMessage("attack.add-xp",new String[]{player.getName(), String.valueOf(randomNumber)}));
                                 }
                                 //添加统计信息
                                /* if(isStatistic(player.getName(),5)){
@@ -117,8 +117,8 @@ public class PlayerAttack implements Listener {
                                 //加上值
                                 int xpValue = data.getInt(player.getName() + ".xp") + randomNumber +10;
                                 create.setValue(player.getName() + ".xp", xpValue, dataFile);
-                                player.sendMessage(ToNeko.getMessage("attack.add-xp") + killer.getName() + ToNeko.getMessage("attack.add-xp2") + randomNumber);
-                                killer.sendMessage(ToNeko.getMessage("attack.add-xp") + player.getName() + ToNeko.getMessage("attack.add-xp2") + randomNumber);
+                                player.sendMessage(ToNeko.getMessage("attack.add-xp",new String[]{killer.getName(), String.valueOf(randomNumber)}));
+                                killer.sendMessage(ToNeko.getMessage("attack.add-xp",new String[]{player.getName(), String.valueOf(randomNumber)}));
                             }
                             //添加统计信息
                             /*if(isStatistic(player.getName(),5)){

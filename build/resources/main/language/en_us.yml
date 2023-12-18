@@ -3,16 +3,14 @@ onEnable:
   up-to-date: "Currently the latest version"
   unable-check-update: "Unable to check for updates"
 attack:
-  add-xp: "§cYour friendship experience with §e"
-  add-xp2: "§c has increased"
+  add-xp: "§cYour favorable experience with §e%d§c has increased%c"
 item:
   stick: "§9§oCat stick"
   stick-lore: "§9§oNo IP68"
   stick-level-2: "§9§oCat stick level 2"
   stick-level-2-lore: "§9§oIP68!No water can damage it!"
 death:
-  sub-xp: "§cYour friendship experience with §e"
-  sub-xp2: "§c hsa reduced"
+  sub-xp: "§cYour favorable experience with §e%d§c has decreased%c"
 other:
   neko: "§aneko"
   owner: "owner"
@@ -53,6 +51,7 @@ command:
         success: "§aAdd Block Word successfully"
       remove:
         success: "§aRemove Block Word successfully"
+    xp: "§aYour experience of goodwill with %d is %c."
 folia:
   use:
     chatEvent: "Use of paper/Folia detected, Paper/Folia's chat listener will be used"

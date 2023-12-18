@@ -3,16 +3,14 @@ onEnable:
   up-to-date: "当前已是最新版本"
   unable-check-update: "无法检查更新"
 attack:
-  add-xp: "§c你与§e"
-  add-xp2: "§c的好感经验增加了"
+  add-xp: "§c你与§e%d§c的好感经验增加了%c"
 item:
   stick: "§9§o撅猫棍"
   stick-lore: "§9§o它不防水"
   stick-level-2: "§9§o二级撅猫棍"
   stick-level-2-lore: "§9§oIP68级防水"
 death:
-  sub-xp: "§c你与§e"
-  sub-xp2: "§c的好感经验减少了"
+  sub-xp: "§c你与§e%d§c的好感经验减少了%c"
 other:
   neko: "§a猫娘"
   owner: "主人"
@@ -54,6 +52,7 @@ command:
         success: "§a成功添加屏蔽词"
       remove:
         success: "§a成功删除屏蔽词"
+    xp: "§a你与%d的好感经验为%c"
 folia:
   use:
     chatEvent: "检测到使用Paper/Folia，将使用Paper/Folia的聊天监听器"

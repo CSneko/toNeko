@@ -63,8 +63,8 @@ public class PlayerDeath implements Listener {
                                 //减去值
                                 int xpValue = data.getInt(player.getName() + ".xp") - randomNumber;
                                 create.setValue(player.getName() + ".xp",xpValue,dataFile);
-                                player.sendMessage(ToNeko.getMessage("death.sub-xp") + killer.getName() +ToNeko.getMessage("death.sub-xp2")+ randomNumber);
-                                killer.sendMessage(ToNeko.getMessage("death.sub-xp") + player.getName() + ToNeko.getMessage("death.sub-xp") + randomNumber);
+                                player.sendMessage(ToNeko.getMessage("death.sub-xp",new String[]{killer.getName(), String.valueOf(randomNumber)}));
+                                killer.sendMessage(ToNeko.getMessage("death.sub-xp",new String[]{player.getName(), String.valueOf(randomNumber)}));
                             }
                         }
                     }
