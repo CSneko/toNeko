@@ -16,6 +16,7 @@ public class playerJoin {
             if(base.isNekoHasOwner(playerName,worldName) != null){
                 chatPrefix.addPrivatePrefix(playerName,prefix);
             }
+            base.start(worldName);
         });
     }
 }

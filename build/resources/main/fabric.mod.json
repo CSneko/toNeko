@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "toneko",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "name": "toNeko",
   "description": "toNeko插件的Fabric版本",
   "authors": [

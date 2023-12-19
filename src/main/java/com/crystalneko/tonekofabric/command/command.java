@@ -101,6 +101,15 @@ public class command{
                                     })
                             )
                     )
+                    //-------------------------------------------remove--------------------------------------
+                    .then(literal("remove")
+                            .then(argument("neko",StringArgumentType.string())
+                                    .suggests(getOnlinePlayers)
+                                    .executes(context -> {
+                                        return ToNekoCommand.remove(context);
+                                    })
+                            )
+                    )
                     //-------------------------------------help---------------------------------------------------
                     .then(literal("help")
                                     .executes(context -> {

@@ -2,6 +2,7 @@ package com.crystalneko.tonekofabric.libs;
 
 import com.crystalneko.ctlibPublic.File.YamlConfiguration;
 import com.crystalneko.ctlibPublic.sql.sqlite;
+import com.crystalneko.tonekofabric.ToNekoFabric;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.world.World;
@@ -33,6 +34,20 @@ public class base {
         //是否使用客户端语言
         clientLanguage = config.getBoolean("client-language");
     }
+    public static void start(String worldName){
+        if(!ToNekoFabric.started){
+            if(!sqlite.isTableExists(worldName+"Nekos")) {
+                sqlite.createTable(worldName + "Nekos");
+            }
+            sqlite.addColumn(worldName+"Nekos","neko");
+            sqlite.addColumn(worldName+"Nekos","owner");
+            sqlite.addColumn(worldName+"Nekos","block");
+            sqlite.addColumn(worldName+"Nekos","method");
+            sqlite.addColumn(worldName+"Nekos","replace");
+            sqlite.addColumn(worldName+"Nekos","xp");
+            ToNekoFabric.started = true;
+        }
+    }
     //--------------------------------------------------------获取世界名称---------------------------------------------
     /**创建文件和目录
     *示例：createFileInDirectory("path/to","/file.txt")
@@ -63,11 +78,7 @@ public class base {
      * @return 猫娘的主人（没有则返回null）
      */
     public static String isNekoHasOwner(String neko,String worldName){
-        if(!sqlite.isTableExists(worldName+"Nekos")) {
-            sqlite.createTable(worldName + "Nekos");
-        }
-        sqlite.addColumn(worldName+"Nekos","neko");
-        sqlite.addColumn(worldName+"Nekos","owner");
+
         //判断是否为猫娘
         if(sqlite.checkValueExists(worldName+"Nekos","neko",neko)){
             return sqlite.getColumnValue(worldName+"Nekos","owner","neko",neko);
@@ -76,22 +87,14 @@ public class base {
         }
     }
     public static void setPlayerNeko(String neko,String worldName,String owner) {
-        if(!sqlite.isTableExists(worldName+"Nekos")) {
-            sqlite.createTable(worldName + "Nekos");
-        }
-        sqlite.addColumn(worldName+"Nekos","neko");
-        sqlite.addColumn(worldName+"Nekos","owner");
+
+        sqlite.saveDataWhere(worldName+"Nekos","xp","neko",neko,"0");
         //设置值
         sqlite.saveData(worldName+"Nekos","neko",neko);
         //设置主人的值
         sqlite.saveDataWhere(worldName+"Nekos","owner","neko",neko,owner);
     }
     public static String getOwner(String neko,String worldName){
-        if(!sqlite.isTableExists(worldName+"Nekos")) {
-            sqlite.createTable(worldName + "Nekos");
-        }
-        sqlite.addColumn(worldName+"Nekos","neko");
-        sqlite.addColumn(worldName+"Nekos","owner");
         //获取主人名称
         String owner = sqlite.getColumnValue(worldName+"Nekos","owner","neko",neko);
         if(owner != null){
@@ -129,6 +132,23 @@ public class base {
                 Files.createDirectory(Path.of("ctlib/toneko/language"));
             } catch (IOException e) {
                 System.out.println("无法创建文件夹:" +e.getMessage());
+            }
+        }
+        //删除语言文件
+        Path zh_cnPath = Path.of("ctlib/toneko/language/zh_cn.yml");
+        if (Files.exists(zh_cnPath)){
+            try {
+                Files.delete(zh_cnPath);
+            } catch (IOException e) {
+                System.out.println("无法删除语言文件:"+e.getMessage());
+            }
+        }
+        Path en_usPath = Path.of("ctlib/toneko/language/en_us.yml");
+        if (Files.exists(zh_cnPath)){
+            try {
+                Files.delete(en_usPath);
+            } catch (IOException e) {
+                System.out.println("无法删除语言文件:"+e.getMessage());
             }
         }
 

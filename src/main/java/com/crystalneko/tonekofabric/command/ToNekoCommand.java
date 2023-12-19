@@ -9,16 +9,18 @@ import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.crystalneko.tonekofabric.libs.base.translatable;
 
 public class ToNekoCommand {
+    private static Map<String,Boolean> remove = new HashMap();
     //toneko player <neko>
     public static int Player(CommandContext<ServerCommandSource> context){
         final ServerCommandSource source = context.getSource();
@@ -228,6 +230,27 @@ public class ToNekoCommand {
         //获取好感经验度
         String xp = sqlite.getColumnValue(worldName+"Nekos","xp","neko",neko);
         player.sendMessage(translatable("command.toneko.xp",new String[]{neko,xp})); //向玩家发送消息
+        return 1;
+    }
+    public static int remove(CommandContext<ServerCommandSource> context){
+        final ServerCommandSource source = context.getSource();
+        final PlayerEntity player = source.getPlayer();
+        final String worldName = base.getWorldName(player.getWorld());
+        if(!lp.hasPermission(player, "toneko.command.remove")){return noPS(player);}
+        //获取关键信息
+        String playerName = base.getPlayerName(player); //玩家名称
+        String neko = context.getArgument("neko", String.class); //猫娘的名称
+        if (!base.getOwner(neko, worldName).equalsIgnoreCase(playerName)) {
+            player.sendMessage(translatable("command.toneko.notOwner",new String[]{neko}));
+            return 1; //不是主人，直接结束
+        }
+        //查看是否二次确认
+        if(!remove.containsKey(playerName) || !remove.get(playerName)){
+            player.sendMessage(translatable("command.toneko.remove.confirm"));
+            remove.put(playerName,true);
+            return 1;
+        }
+        player.sendMessage(translatable("command.toneko.remove.success",new String[]{neko}));
         return 1;
     }
 

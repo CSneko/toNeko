@@ -53,6 +53,9 @@ command:
       remove:
         success: "§a成功删除屏蔽词"
     xp: "§a你与%d的好感经验为%c"
+    remove:
+      confirm: "§c请再次执行该命令以确认"
+      success: "§a成功删除猫娘 %d"
 folia:
   use:
     chatEvent: "检测到使用Paper/Folia，将使用Paper/Folia的聊天监听器"

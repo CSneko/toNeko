@@ -80,12 +80,7 @@ public abstract class chat{
     private Text modifyMessage(Text message, PlayerEntity player) {
         lp.build();
         String worldName = base.getWorldName(player.getWorld());
-        if(!sqlite.isTableExists(worldName + "Nekos")) {
-            sqlite.createTable(worldName + "Nekos");
-        }
-        sqlite.addColumn(worldName + "Nekos","neko");
-        sqlite.addColumn(worldName + "Nekos","owner");
-        sqlite.addColumn(worldName + "Nekos","aliases");
+        base.start(worldName);
         if (message == null || message.getString().isEmpty()) {
             return null;
         }
