@@ -87,10 +87,9 @@ public class base {
         }
     }
     public static void setPlayerNeko(String neko,String worldName,String owner) {
-
-        sqlite.saveDataWhere(worldName+"Nekos","xp","neko",neko,"0");
         //设置值
         sqlite.saveData(worldName+"Nekos","neko",neko);
+        sqlite.saveDataWhere(worldName+"Nekos","xp","neko",neko,"0");
         //设置主人的值
         sqlite.saveDataWhere(worldName+"Nekos","owner","neko",neko,owner);
     }

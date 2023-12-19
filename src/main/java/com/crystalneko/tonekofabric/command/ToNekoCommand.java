@@ -251,6 +251,8 @@ public class ToNekoCommand {
             return 1;
         }
         player.sendMessage(translatable("command.toneko.remove.success",new String[]{neko}));
+        sqlite.deleteLine(worldName+"Nekos","neko",neko);
+        chatPrefix.subPrivatePrefix(neko,translatable("chat.neko.prefix").getString());
         return 1;
     }
 
