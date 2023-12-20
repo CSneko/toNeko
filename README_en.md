@@ -1,5 +1,5 @@
 # toNeko
-[Simplified Chinese](README.md) | [English](README_en.md)
+[简体中文](README.md) | [English](README_en.md)
 ## brief introduction
 This is a plug-in that can turn players into catgirls in the server, adding a little fun to the server.Supports Folia.
 ### chat
