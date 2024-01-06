@@ -22,8 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import static com.crystalneko.toneko.ToNeko.config;
-import static com.crystalneko.toneko.ToNeko.logger;
+import static com.crystalneko.toneko.ToNeko.*;
 import static org.bukkit.Bukkit.getServer;
 
 public class nekoed implements Listener{
@@ -103,6 +102,8 @@ public class nekoed implements Listener{
                         String API = config.getString("AI.API");
                         //获取提示词
                         String prompt = config.getString("AI.prompt");
+                        prompt = prompt.replaceAll("%name%",str);
+                        prompt = prompt.replaceAll("%owner%",owner);
                         //替换用户输入中的&符号
                         String rightMsg = message.replaceAll("&", "and");
                         //构建链接
@@ -113,16 +114,20 @@ public class nekoed implements Listener{
                         try {
                             response = httpGet.getJson(url, null);
                         } catch (IOException e) {
-                            logger.severe("无法获取json:"+e.getMessage());
+                            System.out.println("无法获取json:"+e.getMessage());
                         }
                         String AIMsg;
                         //读取响应
-                        if (language.equalsIgnoreCase("zh_cn")) {
-                            AIMsg = response.getString("response");
-                        } else {
-                            AIMsg = response.getString("source_response");
+                        if(response != null) {
+                            if (language.equalsIgnoreCase("zh_cn")) {
+                                AIMsg = response.getString("response");
+                            } else {
+                                AIMsg = response.getString("source_response");
+                            }
+                            if (AIMsg != null) {
+                                sendMessageToPlayers(str,"["+getMessage("chat.neko.prefix")+"]", AIMsg, true);
+                            }
                         }
-                        sendMessageToPlayers(str,"",AIMsg,true);
                     }
                 }
             }

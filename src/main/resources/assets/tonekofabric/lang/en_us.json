@@ -18,6 +18,7 @@
   "command.toneko.success": "§a Successfully deleted catgril %d",
   "command.neko.help": "§b/neko help:\n§a/neko help §bGet help\n§a/neko jump §bGet jump boost",
   "command.neko.not-neko": "§cYou are not a neko lady and cannot execute this command",
+  "command.aineko.help": "§b/aineko help:\n§a/aineko help §b get help\n§a/aineko add <name> §b add an AI catgirl\n§a/aineko remove <name> §b remove an AI catgirl",
   "chat.neko.nya": "-nya~",
   "chat.neko.prefix": "§aneko",
   "chat.neko.owner": "owner",

@@ -38,6 +38,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.UnaryOperator;
 
+import static com.crystalneko.toneko.ToNeko.config;
+import static com.crystalneko.toneko.ToNeko.getMessage;
 import static com.crystalneko.tonekofabric.libs.base.translatable;
 
 @Mixin(ServerPlayNetworkHandler.class)
@@ -166,37 +168,43 @@ public abstract class chat{
                             //对于存在的，进行处理
                             String type = sqlite.getColumnValue(worldName + "Nekos", "type", "neko", str);
                             if (base.getOwner(str, worldName).equalsIgnoreCase(playerName) && type != null && type.equalsIgnoreCase("AI")) {
-                                //猫娘为AI并且主人正确
+                                //获取语言
+                                String language = config.getString("language");
+                                //获取API
+                                String API = config.getString("AI.API");
+                                //获取提示词
+                                String prompt = config.getString("AI.prompt");
+                                prompt = prompt.replaceAll("%name%",str);
+                                prompt = prompt.replaceAll("%owner%",owner);
+                                //替换用户输入中的&符号
+                                String rightMsg = stringMessage.replaceAll("&", "and");
+                                //构建链接
+                                String url = API.replaceAll("%text%", rightMsg);
+                                url = url.replaceAll("%prompt%", prompt);
+                                //获取数据
+                                JsonConfiguration response = null;
                                 try {
-                                    //获取语言
-                                    String language = config.getString("language");
-                                    //获取API
-                                    String API = config.getString("AI.API");
-                                    //获取提示词
-                                    String prompt = config.getString("AI.prompt");
-                                    //替换用户输入中的&符号
-                                    String rightMsg = stringMessage.replaceAll("&", "and");
-                                    //构建链接
-                                    String url = API.replaceAll("%text%", rightMsg);
-                                    url = url.replaceAll("%prompt%", prompt);
-                                    //获取数据
-                                    JsonConfiguration response = httpGet.getJson(url, null);
-                                    String AIMsg;
-                                    //读取响应
+                                    response = httpGet.getJson(url, null);
+                                } catch (IOException e) {
+                                    System.out.println("无法获取json:"+e.getMessage());
+                                }
+                                String AIMsg;
+                                //读取响应
+                                if(response != null) {
                                     if (language.equalsIgnoreCase("zh_cn")) {
                                         AIMsg = response.getString("response");
                                     } else {
                                         AIMsg = response.getString("source_response");
                                     }
-                                    //对AI的消息进行修改
-                                    Text textAIMsg = modifyMessage(Text.of(AIMsg), worldName, playerName, true, server);
-                                    //再次发送消息
-                                    sendMsg(textAIMsg, server);
-                                } catch (IOException e) {
-                                    //遇到错误，直接退出循环
-                                    System.out.println("加载配置文件时出错:" + e.getMessage());
-                                    break;
+                                    if (AIMsg != null) {
+                                        sendMsg(Text.of("[" + getMessage("chat.neko.prefix") + "]"+str+AIMsg), server);
+                                        //对AI的消息进行修改
+                                        Text textAIMsg = modifyMessage(Text.of(AIMsg), worldName, playerName, true, server);
+                                        //再次发送消息
+                                        sendMsg(textAIMsg, server);
+                                    }
                                 }
+
                             }
                         }
                     }

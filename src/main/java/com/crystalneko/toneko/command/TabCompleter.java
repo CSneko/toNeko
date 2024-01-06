@@ -44,7 +44,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
     private List<String> completeToneko(String[] args){
         List<String> complete = new ArrayList<>();
         if(args.length == 1){ // 补全 toneko 命令选项
-            complete.addAll(Arrays.asList("help", "player", "item", "remove", "xp", "aliases", "block"));
+            complete.addAll(Arrays.asList("help", "player", "item", "remove", "xp", "aliases", "block", "reload"));
         } else if (args.length == 2 && args[0].equalsIgnoreCase("player")) { // 补全 toneko player 子命令
             complete.addAll(Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList()));
         } else if (args.length == 2 && args[0].equalsIgnoreCase("remove")) { // 补全 toneko remove 子命令

@@ -1,70 +1,64 @@
 # toNeko
 [简体中文](README.md) | [English](README_en.md)
 ## 简单的介绍
-这是一个把玩家变成猫娘的模组，为游戏增添一点乐趣,支持Folia
-### 聊天
-- 添加前缀，修改格式
-- 别名，屏蔽词与替换词
-### 撅猫娘
-- 一级&二级撅猫棍
-- 被撅音效
-- 被撅效果
-- 好感经验
-### 提升
-- 跳跃提升与夜视
-### 下载稳定版 : [Modrinth](https://modrinth.com/plugin/toneko/)
+这是一个把玩家变成猫娘的模组/插件，为游戏增添一点乐趣,支持Folia
+
+它对聊天系统进行了修改，同时添加了一些增益效果已经游戏玩法
+### 下载:
+[插件版](https://modrinth.com/plugin/toneko/)
+[模组版](https://modrinth.com/mod/tonekomod/)
 ## 使用方法
 放入服务器/客户端的`plugins`文件夹或`mods`文件夹。如果你没有安装[ctLib](https://modrinth.com/plugin/ctlib)前置插件/模组，请安装它
 
-提供支持的版本:
+提供支持的版本(不代表它不能在其它版本运行):
 - Fabric >= 1.20
-- Spigot/Paper/Folia 1.16~1.20.2
-
-
-如果你发现没有成功启动的话，可以尝试重启服务器/客户端，或检查服务器/客户端是否安装了ctLib插件（如果你运行在插件端,正常情况下会自动为你安装好)
+- Spigot/Paper/Folia 1.16~最新
 ### 联动
 联动模组: [luckperms](https://luckperms.net/)
 ## 命令&权限（默认全部拥有）
 ```yaml
-#获取帮助
-/toneko help
-#将玩家变成猫娘:
-/toneko player <玩家名称>        #toneko.command.player
-#获取厥猫棍(该物品在击败猫娘时会有特殊死亡提示,并且能够增加或减少好感经验):
-/toneko item                   #toneko.command.item
-#删除猫娘（危险操作，需要二次确认）
-/toneko remove <猫娘名称>       #toneko.command.remove
+#toneko部分，权限:toneko.command.xxx
+#添加或删除猫娘:
+/toneko player <玩家名称>
+/toneko remove <猫娘名称>
+#获取厥猫棍:
+/toneko item
 #查看好感经验
-/toneko xp <猫娘名称>           #toneko.command.xp
+/toneko xp <猫娘名称>
 #设置别名（别名会被替换成主人）
-/toneko aliases <猫娘名称> add或remove <别名>    #toneko.command.aliases
+/toneko aliases <猫娘名称> add或remove <别名>
 #添加屏蔽词和替换词  
-/toneko block <猫娘名称> add或remove <屏蔽词> <替换词> all或word  #toneko.command.block
+/toneko block <猫娘名称> add或remove <屏蔽词> <替换词> all或word
 #----------------------以下命令仅猫娘可用-----------------------
-#获取跳跃提升（根据好感经验来设置时长）
-/neko jump                    #toneko.command.jump
-#获取夜视（根据好感经验来设置时长）
-/neko vision                  #toneko.command.vision
+#neko部分，权限:neko.command.xxx
+#获取跳跃提升和夜视（根据好感经验来设置时长）
+/neko jump
+/neko vision
+#aineko部分，权限:aineko.command.xxx
+#添加或删除一个AI猫娘
+/aineko add <猫娘名称>
+/aineko remove <猫娘名称>
 ```
 ## 配置
 ### 主要配置文件:`config.yml`
 #### 路径:
-Fabric: `ctlib/toneko/config.yml`
-Bukkit: `plugins/toNeko/config.yml`
+Fabric/Quilt: `ctlib/toneko/config.yml`
+Spigot/Paper: `plugins/toNeko/config.yml`
 ```yaml
-#语言选项（支持 zh_cn,en_us）
+#语言选项（支持 zh_cn,en_us）,可自定义语言，详细查看 https://github.com/CSneko/toNeko/docs/CUSTOM_LANGUAGE.md
 language: zh_cn
-#是否使用客户端语言（仅在Fabric生效）
+#使用客户端语言，启用后语言选项无效，且要求玩家必须在客户端安装mod,否则无法正常显示消息（仅在Fabric生效）
 client-language: false
 #是否开启自动更新
 automatic-updates: false
-#是否接入在线网站(统计信息会被上传，详情见 https://w.csk.asia/toneko)
-online: true
+#Ai功能
+AI:
+  # 是否启用AI,推荐在Folia启用该选项
+  enable: false
+  #AI的API,占位符 %text% = 用户输入, %prompt% = 提示词
+  API: "https://chat.ai.crystalneko.online?t=%text%&&p=%prompt%"
+  #提示词，请勿输入&&符号 占位符 %name% = 猫娘名称, %owner% = 主人
+  prompt: "你是一只可爱的猫娘，你的名字是%name%，你的主人是%owner%"
 ```
-## 插件网站
-
-这是对该插件做的一个简易的网站，搭建在cloudflare pages上，用于查询统计信息(已停用)
-
-网站链接: https://w.csk.asia/toneko
 ## bStats:
 ![bStats](https://bstats.org/signatures/bukkit/toneko.svg)

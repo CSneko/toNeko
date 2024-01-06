@@ -1,68 +1,64 @@
 # toNeko
 [简体中文](README.md) | [English](README_en.md)
 ## brief introduction
-This is a plug-in that can turn players into catgirls in the server, adding a little fun to the server.Supports Folia.
-### chat
-- Add prefix and modify format
-- Aliases, masking words and replacement words
-### Pussy cat girl
-- Level 1 & Level 2 Cat Stick
-- Being poked sound effects
-- Effect of being poked
-- Favorable experience
-### promote
-- Jump boost and night vision
-### Download stable version: [Modrinth](https://modrinth.com/plugin/toneko/)
+This is a mod/plug-in that turns players into cat girls, adding a little fun to the game. Supports Folia
+
+It revamps the chat system while adding some buffs and gameplay
+### download:
+[Plug-in version](https://modrinth.com/plugin/toneko/)
+[Mod version](https://modrinth.com/mod/tonekomod/)
 ## Instructions
-Put it into the server's `plugins` folder or `mods` folder (Fabric1.20.2). If you do not have the [ctLib](https://modrinth.com/plugin/ctlib) pre-plugin installed, please install it
+Place it in the server/client's `plugins` folder or `mods` folder. If you do not have [ctLib](https://modrinth.com/plugin/ctlib) pre-plugin/module installed, please install it
 
-Supported versions:
-- Fabric >=1.20
-- Spigot/Paper/Folia 1.16~1.20.2
-
-If you find that it does not start successfully, you can try to restart the server/client, or check whether the server/client has the ctLib plug-in installed (if you run it on the plug-in side, it will be installed automatically for you under normal circumstances)
+Supported versions (doesn't mean it can't run on other versions):
+- Fabric >= 1.20
+- Spigot/Paper/Folia 1.16~Latest
 ### Linkage
-Linkage module: [luckperms](https://luckperms.net/)
+Linkage mods: [luckperms](https://luckperms.net/)
 ## Commands & permissions (all owned by default)
 ```yaml
-#GetHelp
-/toneko help
-#Turn players into catgirls:
-/toneko player <player name> #toneko.command.player
-#Get the Jue Mao Stick (this item will have a special death prompt when defeating the cat lady, and can increase or decrease the favorability experience):
-/toneko item #toneko.command.item
-#Delete Cat Girl (dangerous operation, requires secondary confirmation)
-/toneko remove <catgirl name> #toneko.command.remove
+#toneko section, permission: toneko.command.xxx
+#Add or remove catgirls:
+/toneko player <player name>
+/toneko remove <catgirl name>
+#Get Jue Mao Stick:
+/toneko item
 #View favorable experience
-/toneko xp <catgirl name> #toneko.command.xp
+/toneko xp <catgirl name>
 #Set alias (the alias will be replaced by the owner)
-/toneko aliases <cat girl name> add or remove <alias> #toneko.command.aliases
+/toneko aliases <cat girl name> add or remove <alias>
 #Add masking words and replacement words
 /toneko block <cat girl name> add or remove <block word> <replacement word> all or word
 #----------------------The following commands are only available to Catgirls---------------------- -
-#Get jump boost (set duration based on favorability experience)
-/neko jump #toneko.command.jump
-#Get night vision (set duration based on favorability experience)
-/neko vision #toneko.command.vision
+#neko part, permission: neko.command.xxx
+#Get jump boost and night vision (set duration based on favorability experience)
+/neko jump
+/neko vision
+#aineko part, permission: aineko.command.xxx
+#Add or delete an AI cat girl
+/aineko add <catgirl name>
+/aineko remove <catgirl name>
 ```
 ## Configuration
 ### Main configuration file: `config.yml`
 #### Path:
-Fabric: `ctlib/toneko/config.yml`
-Bukkit: `plugins/toNeko/config.yml`
+Fabric/Quilt: `ctlib/toneko/config.yml`
+Spigot/Paper: `plugins/toNeko/config.yml`
 ```yaml
-#Language options (support zh_cn, en_us)
+#Language option (supports zh_cn, en_us), you can customize the language, see https://github.com/CSneko/toNeko/docs/CUSTOM_LANGUAGE.md for details
 language: zh_cn
-#use client language（only Fabric）
+#Use the client language. The language option is invalid after enabling it, and the player must install the mod on the client, otherwise the message cannot be displayed normally (only effective in Fabric)
 client-language: false
 #Whether to enable automatic updates
 automatic-updates: false
-#Whether to access the online website (statistics information will be uploaded, see https://w.csk.asia/toneko for details)
-online: true
+#AiFunction
+AI:
+   # Whether to enable AI, it is recommended to enable this option in Folia
+   enable: false
+   #AI API, placeholder %text% = user input, %prompt% = prompt word
+   API: "https://chat.ai.crystalneko.online?t=%text%&&p=%prompt%"
+   #Prompt word, please do not enter the && symbol. Placeholder %name% = cat girl name, %owner% = owner
+   prompt: "You are a cute cat girl, your name is %name%, and your owner is %owner%"
 ```
-## Plug-in website
-This is a simple website made for the plug-in, built on cloudflare pages, used to query statistical information (disabled)
-
-Website link: https://w.csk.asia/toneko
 ## bStats:
 ![bStats](https://bstats.org/signatures/bukkit/toneko.svg)

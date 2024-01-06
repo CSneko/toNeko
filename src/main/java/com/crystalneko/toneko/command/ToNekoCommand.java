@@ -264,6 +264,13 @@ public class ToNekoCommand implements CommandExecutor {
                 } else {
                         player.sendMessage("§c你不是" + args[1] + "的主人!");
                 }
+        } else if (args[1].equalsIgnoreCase("reload")) {
+            if(player.hasPermission("toneko.command.reload")){
+                ToNeko.config = null;
+                ToNeko.config = YamlConfiguration.loadConfiguration(new File("plugins/toNeko/config.yml"));
+            }else {
+                player.sendMessage(ToNeko.getMessage("command.no-permission"));
+            }
         } else {
             player.sendMessage("§c无效的子命令,请输入§a/toneko help§c查看帮助");
         }

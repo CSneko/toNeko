@@ -1,6 +1,5 @@
 package com.crystalneko.toneko;
 
-import com.crystalneko.ctlibPublic.sql.sqlite;
 import com.crystalneko.toneko.bstats.Metrics;
 import com.crystalneko.toneko.chat.nekoed;
 import com.crystalneko.toneko.command.AINekoCommand;
@@ -63,7 +62,7 @@ public final class ToNeko extends JavaPlugin {
         //复制文件
         copyResource();
         //加载配置文件
-        config = YamlConfiguration.loadConfiguration(new File("plugins/config.yml"));
+        config = YamlConfiguration.loadConfiguration(new File("plugins/toNeko/config.yml"));
         //加载语言文件
         loadLanguageFile();
         //初始化下载类
@@ -102,6 +101,46 @@ public final class ToNeko extends JavaPlugin {
 
     @Override
     public void onDisable() {
+
+    }
+
+    //配置文件更新
+    private void updateConfig() {
+        //备份配置文件
+        File backupFile = new File("plugins/toNeko/config_old.yml");
+
+        //加载配置
+        File configFile = new File("plugins/toNeko/config.yml");
+        //判断旧配置是否存在
+        if(backupFile.exists()){
+            backupFile.delete();
+        }
+        try {
+            Files.copy(configFile.toPath(), backupFile.toPath());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        //使用默认配置文件替换旧的配置文件
+        InputStream defaultConfigStream = getResource("config.yml"); // 默认配置文件的输入流
+        try {
+            Files.copy(defaultConfigStream, configFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        File newConfigFile = new File("plugins/toNeko/config.yml");
+        YamlConfiguration newConfig = YamlConfiguration.loadConfiguration(newConfigFile);
+        //将新的配置项写入到配置文件中
+        newConfig.set("automatic-updates", ifConfig("automatic-updates"));
+        newConfig.set("language", ifConfig("language"));
+        newConfig.set("AI.enable", ifConfig("AI.enable"));
+        newConfig.set("AI.API", ifConfig("AI.API"));
+        newConfig.set("AI.prompt", ifConfig("AI.prompt"));
+        try {
+            newConfig.save(configFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
 
     }
 
@@ -184,54 +223,16 @@ public final class ToNeko extends JavaPlugin {
             }
         }
     }
-    //配置文件更新
-    private void updateConfig() {
-        //备份配置文件
-        File backupFile = new File("plugins/toNeko/config_old.yml");
 
-        //加载配置
-        File configFile = new File("plugins/toNeko/config.yml");
-        //判断旧配置是否存在
-        if(backupFile.exists()){
-            backupFile.delete();
-        }
-        try {
-            Files.copy(configFile.toPath(), backupFile.toPath());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        //使用默认配置文件替换旧的配置文件
-        InputStream defaultConfigStream = getResource("config.yml"); // 默认配置文件的输入流
-        try {
-            Files.copy(defaultConfigStream, configFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        File newConfigFile = new File("plugins/toNeko/config.yml");
-        YamlConfiguration newConfig = YamlConfiguration.loadConfiguration(newConfigFile);
-        //将新的配置项写入到配置文件中
-        newConfig.set("automatic-updates", ifConfig("automatic-updates"));
-        newConfig.set("language", ifConfig("language"));
-        newConfig.set("AI.enable", ifConfig("AI.enable"));
-        newConfig.set("Ai.API", ifConfig("AI.API"));
-        newConfig.set("Ai.prompt", ifConfig("AI.prompt"));
-        try {
-            newConfig.save(configFile);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-
-    }
-    private String ifConfig(String option){
+    private Object ifConfig(String option){
         File oldConfigFile = new File("plugins/toNeko/config_old.yml");
         YamlConfiguration oldConfig = YamlConfiguration.loadConfiguration(oldConfigFile);
-        if(oldConfig.getString(option) != null){
-            return oldConfig.getString(option);
+        if(oldConfig.get(option) != null){
+            return oldConfig.get(option);
         }else {
             File configFile = new File("plugins/toNeko/config.yml");
             YamlConfiguration config = YamlConfiguration.loadConfiguration(configFile);
-            return config.getString(option);
+            return config.get(option);
         }
     }
     //复制资源

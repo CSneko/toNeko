@@ -28,6 +28,8 @@ permissions:
     default: true
   toneko.command.aliases:
     default: true
+  toneko.command.reload:
+    default: op
   neko.command.jump:
     default: true
     description: 跳跃提升
