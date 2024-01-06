@@ -45,7 +45,7 @@ public class base {
             sqlite.addColumn(worldName+"Nekos","method");
             sqlite.addColumn(worldName+"Nekos","replace");
             sqlite.addColumn(worldName+"Nekos","xp");
-            ToNekoFabric.started = true;
+            sqlite.addColumn(worldName+"Nekos","type");
         }
     }
     //--------------------------------------------------------获取世界名称---------------------------------------------

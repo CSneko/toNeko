@@ -1,16 +1,21 @@
 package com.crystalneko.tonekofabric.mixins;
 
+import com.crystalneko.ctlibPublic.File.JsonConfiguration;
+import com.crystalneko.ctlibPublic.File.YamlConfiguration;
 import com.crystalneko.ctlibPublic.inGame.chatPrefix;
+import com.crystalneko.ctlibPublic.network.httpGet;
 import com.crystalneko.ctlibPublic.sql.sqlite;
 import com.crystalneko.tonekofabric.libs.base;
 import com.crystalneko.tonekofabric.libs.lp;
 import com.mojang.brigadier.ParseResults;
+import net.minecraft.command.argument.SignedArgumentList;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.encryption.PublicPlayerSession;
-import net.minecraft.network.message.SignedCommandArguments;
+import net.minecraft.network.message.*;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket;
+import net.minecraft.network.packet.c2s.play.CommandExecutionC2SPacket;
 import net.minecraft.network.packet.s2c.play.PositionFlag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
@@ -18,6 +23,7 @@ import net.minecraft.server.filter.FilteredMessage;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -25,10 +31,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.UnaryOperator;
@@ -53,6 +58,21 @@ public abstract class chat{
 
     @Shadow public abstract boolean accepts(Packet<?> packet);
 
+    @Shadow protected abstract Map<String, SignedMessage> collectArgumentMessages(CommandExecutionC2SPacket packet, SignedArgumentList<?> arguments, LastSeenMessageList lastSeenMessages) throws MessageChain.MessageChainException;
+
+    @Shadow
+    protected static boolean canPlace(ServerPlayerEntity player, ItemStack stack) {
+        return false;
+    }
+
+    @Shadow public abstract void sendChatMessage(SignedMessage message, MessageType.Parameters params);
+
+    @Shadow public abstract void sendProfilelessChatMessage(Text message, MessageType.Parameters params);
+
+    @Shadow public abstract void tick();
+
+    @Shadow public abstract void syncWithPlayerPosition();
+
     // 使用 @Inject 注解插入代码到原始的方法中
     @Inject(method = "onChatMessage", at = @At("HEAD"), cancellable = true)
     public void onChatMessage(ChatMessageC2SPacket packet, CallbackInfo info) {
@@ -62,34 +82,41 @@ public abstract class chat{
         // 对消息进行处理或者取消
         Text message = Text.of(packet.chatMessage());
         if (message != null) {
-            Text newMessage = modifyMessage(message,player);
+            //获取玩家信息
+            String worldName = base.getWorldName(player.getWorld());
+            String playerName = base.getPlayerName(player);
+            Text newMessage = modifyMessage(message,worldName,playerName,false,server);
             if (newMessage != null) {
                 // 发送消息给所有在线玩家
-                server.getPlayerManager().getPlayerList().forEach(player -> {
-                    player.sendMessage(newMessage);
-                });
-
+                sendMsg(newMessage,server);
             } else {
                 // 取消该消息
                 info.cancel();
             }
         }
     }
+    private void sendMsg(Text message,MinecraftServer server){
+        // 发送消息给所有在线玩家
+        server.getPlayerManager().getPlayerList().forEach(player -> {
+            player.sendMessage(message);
+        });
+    }
 
     // 用来修改聊天消息
-    private Text modifyMessage(Text message, PlayerEntity player) {
+    private Text modifyMessage(Text message, String worldName, String playerName, Boolean isAI,MinecraftServer server) {
         lp.build();
-        String worldName = base.getWorldName(player.getWorld());
         base.start(worldName);
         if (message == null || message.getString().isEmpty()) {
             return null;
         }
+
+        //猫娘列表
+        String[] nekoList = sqlite.readAllValueInAColumn(worldName + "Nekos", "neko");
+
         String stringMessage = message.getString();
-        String playerName = player.getName().getString();
-        playerName = playerName.replace("literal{", "").replace("}", "");
         // 判断是否有主人
         if (sqlite.checkValueExists(worldName + "Nekos", "neko", playerName)) {
-            String owner = sqlite.getColumnValue(worldName + "Nekos", "owner", "neko", player.getName().getString());
+            String owner = sqlite.getColumnValue(worldName + "Nekos", "owner", "neko", playerName);
             // 替换主人名称
             String ownerText = translatable("chat.neko.owner").getString();
             if (owner != null && !owner.isEmpty()) {
@@ -122,11 +149,63 @@ public abstract class chat{
             String prefix = libPrefix + libPublicPrefix;
             stringMessage = prefix  + playerName + "§b >> §7" + stringMessage;
 
-            return Text.of(stringMessage);
+
+            if(!isAI){
+                //读取配置文件
+                YamlConfiguration config = null;
+                try {
+                    config = new YamlConfiguration(Path.of("ctlib/toneko/config.yml"));
+                } catch (IOException e) {
+                    System.out.println("无法加载配置文件:" + e.getMessage());
+                }
+                //如果不启用AI,则不执行以下代码
+                if(config != null && config.getBoolean("AI.enable")) {
+                    //如果不是AI发送，则检测是否有提到AI的名称
+                    for (String str : nekoList) {
+                        if (stringMessage.contains(str)) {
+                            //对于存在的，进行处理
+                            String type = sqlite.getColumnValue(worldName + "Nekos", "type", "neko", str);
+                            if (base.getOwner(str, worldName).equalsIgnoreCase(playerName) && type != null && type.equalsIgnoreCase("AI")) {
+                                //猫娘为AI并且主人正确
+                                try {
+                                    //获取语言
+                                    String language = config.getString("language");
+                                    //获取API
+                                    String API = config.getString("AI.API");
+                                    //获取提示词
+                                    String prompt = config.getString("AI.prompt");
+                                    //替换用户输入中的&符号
+                                    String rightMsg = stringMessage.replaceAll("&", "and");
+                                    //构建链接
+                                    String url = API.replaceAll("%text%", rightMsg);
+                                    url = url.replaceAll("%prompt%", prompt);
+                                    //获取数据
+                                    JsonConfiguration response = httpGet.getJson(url, null);
+                                    String AIMsg;
+                                    //读取响应
+                                    if (language.equalsIgnoreCase("zh_cn")) {
+                                        AIMsg = response.getString("response");
+                                    } else {
+                                        AIMsg = response.getString("source_response");
+                                    }
+                                    //对AI的消息进行修改
+                                    Text textAIMsg = modifyMessage(Text.of(AIMsg), worldName, playerName, true, server);
+                                    //再次发送消息
+                                    sendMsg(textAIMsg, server);
+                                } catch (IOException e) {
+                                    //遇到错误，直接退出循环
+                                    System.out.println("加载配置文件时出错:" + e.getMessage());
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         } else {
             stringMessage = playerName + "§b >> §7" + stringMessage;
-            return Text.of(stringMessage);
         }
+        return Text.of(stringMessage);
     }
 
 

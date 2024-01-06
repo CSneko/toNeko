@@ -56,6 +56,8 @@ command:
     remove:
       confirm: "§c请再次执行该命令以确认"
       success: "§a成功删除猫娘 %d"
+  aineko:
+    help: "§b/aineko 帮助:\n§a/aineko help §b获取帮助\n§a/aineko add <名称> §b添加一个AI猫娘\n§a/aineko remove <名称> §b删除一个AI猫娘\n"
 folia:
   use:
     chatEvent: "检测到使用Paper/Folia，将使用Paper/Folia的聊天监听器"

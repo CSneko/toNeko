@@ -55,6 +55,8 @@ command:
     remove:
       confirm: "§cPlease run this command again to confirm."
       success: "§a Successfully deleted catgril %d"
+  aineko:
+    help: "§b/aineko help:\n§a/aineko help §b get help\n§a/aineko add <name> §b add an AI catgirl\n§a/aineko remove <name> §b remove an AI catgirl\n"
 folia:
   use:
     chatEvent: "Use of paper/Folia detected, Paper/Folia's chat listener will be used"

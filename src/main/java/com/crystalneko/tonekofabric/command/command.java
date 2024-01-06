@@ -146,6 +146,32 @@ public class command{
                              })
                      )
              );
+             //---------------------------------------------aineko-------------------------------------------------------
+            dispatcher.register(literal("aineko")
+                    //--------------------------------------help---------------------------------------------
+                    .then(literal("help")
+                            .executes(context -> {
+                                context.getSource().sendMessage(translatable("command.aineko.help"));
+                                return 1;
+                            })
+                    )
+                    //--------------------------------------add----------------------------------------------
+                    .then(literal("add")
+                            .then(argument("neko",StringArgumentType.string())
+                                    .executes(context -> {
+                                        return AINekoCommand.add(context);
+                                    })
+                            )
+                    )
+                    //----------------------------------------remove--------------------------------------------
+                    .then(literal("remove")
+                            .then(argument("neko",StringArgumentType.string())
+                                    .executes(context -> {
+                                        return AINekoCommand.remove(context);
+                                    })
+                            )
+                    )
+            );
         });
     }
 

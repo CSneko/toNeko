@@ -27,8 +27,9 @@ public class lp {
         Node.builder("toneko.command.item").value(true).build();
         Node.builder("toneko.command.block").value(true).build();
         Node.builder("toneko.command.xp").value(true).build();
-        Node.builder("toneko.command.jump").value(true).build();
-        Node.builder("toneko.command.vision").value(true).build();
+        Node.builder("neko.command.jump").value(true).build();
+        Node.builder("neko.command.vision").value(true).build();
+        Node.builder("aineko.command.add").value(true).build();
         return true;
     }
 
