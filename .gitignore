@@ -1,6 +1,5 @@
 run/*
 build/*
 /build/
-src/main/java/com/crystalneko/toneko/other/
 /.gradle/
 /run/
