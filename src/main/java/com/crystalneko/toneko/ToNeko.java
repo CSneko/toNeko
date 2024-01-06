@@ -1,6 +1,9 @@
 package com.crystalneko.toneko;
 
+import com.crystalneko.ctlibPublic.sql.sqlite;
 import com.crystalneko.toneko.bstats.Metrics;
+import com.crystalneko.toneko.chat.nekoed;
+import com.crystalneko.toneko.command.AINekoCommand;
 import com.crystalneko.toneko.command.NekoCommand;
 import com.crystalneko.toneko.command.TabCompleter;
 import com.crystalneko.toneko.command.ToNekoCommand;
@@ -9,12 +12,9 @@ import com.crystalneko.toneko.event.PlayerDeath;
 import com.crystalneko.toneko.event.PlayerJoin;
 import com.crystalneko.toneko.event.PlayerQuit;
 import com.crystalneko.toneko.files.create;
-import com.crystalneko.toneko.chat.nekoed;
 import com.crystalneko.toneko.files.downloadPlugin;
 import com.crystalneko.toneko.items.getStick;
-
 import com.crystalneko.toneko.items.stickLevel2;
-import net.minecraft.text.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -44,15 +44,14 @@ public final class ToNeko extends JavaPlugin {
     private PlayerQuit playerQuit;
     public stickLevel2 stickLevel;
     public static Logger logger;
+    public static YamlConfiguration config;
 
 
     @Override
     public void onEnable() {
         //温馨提示：代码中所有的判断是否为猫娘都是判断是否有主人，这意味着猫娘必须有主人，否则就不被判断为猫娘
-
         //获取logger
         logger = Logger.getLogger("toNeko");
-
         int pluginId = 19899;
         Metrics metrics = new Metrics(this, pluginId);
         //判断是否启用了ctLib
@@ -63,6 +62,8 @@ public final class ToNeko extends JavaPlugin {
         updateConfig();
         //复制文件
         copyResource();
+        //加载配置文件
+        config = YamlConfiguration.loadConfiguration(new File("plugins/config.yml"));
         //加载语言文件
         loadLanguageFile();
         //初始化下载类
@@ -78,10 +79,13 @@ public final class ToNeko extends JavaPlugin {
         //初始化厥猫棍获取器
         this.getstick = new getStick(this);
         //注册命令执行器
+        TabCompleter tabCompleter = new TabCompleter();
         getCommand("toneko").setExecutor(new ToNekoCommand(this,getstick));
+        getCommand("toneko").setTabCompleter(tabCompleter);
         getCommand("neko").setExecutor(new NekoCommand());
-        getCommand("toneko").setTabCompleter(new TabCompleter());
-        getCommand("neko").setTabCompleter(new TabCompleter());
+        getCommand("neko").setTabCompleter(tabCompleter);
+        getCommand("aineko").setExecutor(new AINekoCommand(this));
+        getCommand("aineko").setTabCompleter(tabCompleter);
         //注册玩家加入监听器
         this.playerJoin = new PlayerJoin(this);
         //注册玩家退出监听器
@@ -105,7 +109,6 @@ public final class ToNeko extends JavaPlugin {
     private void checkAndSaveResource(String filePath) {
         if (!isFileExists(filePath)) {
             saveResource(filePath, false);
-        } else {
         }
     }
     private boolean isFileExists(String filePath) {
@@ -208,8 +211,10 @@ public final class ToNeko extends JavaPlugin {
         YamlConfiguration newConfig = YamlConfiguration.loadConfiguration(newConfigFile);
         //将新的配置项写入到配置文件中
         newConfig.set("automatic-updates", ifConfig("automatic-updates"));
-        newConfig.set("online", ifConfig("online"));
         newConfig.set("language", ifConfig("language"));
+        newConfig.set("AI.enable", ifConfig("AI.enable"));
+        newConfig.set("Ai.API", ifConfig("AI.API"));
+        newConfig.set("Ai.prompt", ifConfig("AI.prompt"));
         try {
             newConfig.save(configFile);
         } catch (IOException e) {

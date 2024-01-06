@@ -1,5 +1,5 @@
 name: toNeko
-version: '0.1.6'
+version: '0.1.7'
 main: com.crystalneko.toneko.ToNeko
 api-version: '1.20'
 author: CrystalNeko
@@ -14,6 +14,9 @@ commands:
     usage: /neko help
     aliases: [cat]
     description: 猫娘命令
+  aineko:
+    usage: /aineko help
+    description: AI猫娘命令
 permissions:
   toneko.command.player:
     default: true
@@ -31,3 +34,9 @@ permissions:
   neko.command.vision:
     default: true
     description: 夜视
+  aineko.command.add:
+    default: true
+    description: 添加AI猫娘
+  aineko.command.remove:
+    default: true
+    description: 删除AI猫娘

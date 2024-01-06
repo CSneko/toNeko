@@ -2,7 +2,6 @@ package com.crystalneko.toneko.event;
 
 import com.crystalneko.toneko.ToNeko;
 import com.crystalneko.toneko.files.create;
-import com.crystalneko.toneko.other.APIs;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -156,26 +155,6 @@ public class PlayerAttack implements Listener {
             }
         }
     return false;
-    }
-    //添加统计信息
-    public static void addStatistics(String neko,String player,String type) {
-        try {
-            // 创建URL对象，指定要发送GET请求的URL地址
-            URL url = new URL(APIs.onlineService + APIs.addStick + "?neko="+neko+"&&player="+player+"&&type=" + type);
-
-            // 打开连接
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-            // 设置请求方法为GET
-            connection.setRequestMethod("GET");
-
-            // 发送GET请求
-            connection.getResponseCode();
-            // 关闭连接
-            connection.disconnect();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
 

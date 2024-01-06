@@ -14,7 +14,7 @@ import org.bukkit.potion.PotionEffectType;
 import java.io.File;
 import java.util.*;
 
-public class NekoCommand implements CommandExecutor, TabCompleter {
+public class NekoCommand implements CommandExecutor{
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -57,17 +57,6 @@ public class NekoCommand implements CommandExecutor, TabCompleter {
         return true;
     }
 
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        if (args.length == 1) {
-            List<String> completions = new ArrayList<>();
-            completions.add("help");
-            completions.add("jump");
-            completions.add("vision");
-            return completions;
-        }
-        return Collections.emptyList();
-    }
     // 给予玩家药水效果的方法
     private void givePlayerPotionEffect(Player player, PotionEffectType type, int duration, int amplifier) {
         PotionEffect effect = new PotionEffect(type, duration, amplifier);

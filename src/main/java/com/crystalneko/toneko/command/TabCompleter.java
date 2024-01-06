@@ -27,6 +27,8 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
             return completeToneko(args);
         } else if (command.getName().equalsIgnoreCase("neko")) {
             return completeNeko(args);
+        }else if(command.getName().equalsIgnoreCase("aineko")){
+            return completeAINeko(args);
         }
         return Collections.emptyList();
     }
@@ -79,6 +81,13 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
             complete.add("vision");
             complete.add("jump");
         }
+        return complete;
+    }
+    private List<String> completeAINeko(String[] args){
+        List<String> complete = new ArrayList<>();
+        complete.add("help");
+        complete.add("add");
+        complete.add("remove");
         return complete;
     }
     private List<String> catNames(){

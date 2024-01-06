@@ -10,7 +10,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
@@ -39,7 +38,7 @@ public class ToNekoCommand implements CommandExecutor {
         // 处理子命令
         if(args.length == 0){
             player.sendMessage(ToNeko.getMessage("command.toneko.help"));
-        } else if (args.length == 2 && args[0].equalsIgnoreCase("player")) {
+        } else if (args.length >= 2 && args[0].equalsIgnoreCase("player")) {
             if (player.hasPermission("toneko.command.player")) {
                 //创建数据文件实例
                 File dataFile = new File("plugins/toNeko/nekos.yml");
@@ -273,17 +272,17 @@ public class ToNekoCommand implements CommandExecutor {
 
 
     //祭献操作
-    private void killPlayer(Player player, String neko) {
+    public static void killPlayer(Player player, String neko) {
         //死亡提示
         Bukkit.getServer().broadcastMessage("§e玩家§6" + player.getName() + "§e为了使§6" + neko + "§e成为猫娘而祭献了自己");
         // 执行玩家死亡操作
         player.setHealth(0);
     }
-    public boolean isPlayerOnline(String playerName) {
+    public static boolean isPlayerOnline(String playerName) {
         Player player = Bukkit.getPlayer(playerName);
         return (player != null && player.isOnline());
     }
-    public String[] deleteIndex(String[] arr,int index){
+    public static String[] deleteIndex(String[] arr,int index){
         // 将目标索引后面的元素向前移动一位
         for (int i = index; i < arr.length - 1; i++) {
             arr[i] = arr[i + 1];

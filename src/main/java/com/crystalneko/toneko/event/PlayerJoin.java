@@ -31,6 +31,7 @@ public class PlayerJoin implements Listener {
             //添加前缀
             chatPrefix.addPrivatePrefix(player,ToNeko.getMessage("other.neko"));
         }
+
     }
 
 }

@@ -2,6 +2,8 @@ package com.crystalneko.toneko.chat;
 
 import com.crystalneko.ctlib.chat.chatPrefix;
 import com.crystalneko.ctlib.sql.sqlite;
+import com.crystalneko.ctlibPublic.File.JsonConfiguration;
+import com.crystalneko.ctlibPublic.network.httpGet;
 import com.crystalneko.toneko.ToNeko;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -11,19 +13,24 @@ import org.bukkit.event.player.PlayerChatEvent;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import org.bukkit.plugin.EventExecutor;
 
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import static com.crystalneko.toneko.ToNeko.config;
 import static com.crystalneko.toneko.ToNeko.logger;
 import static org.bukkit.Bukkit.getServer;
 
 public class nekoed implements Listener{
+    /*
+    代码逻辑：
+    玩家发送消息 -> 处理监听事件 -> 处理消息 -> 处理AI信息 -> AI发送消息
+     */
     private ToNeko plugin;
     public nekoed(ToNeko plugin) {
         this.plugin = plugin;
@@ -39,10 +46,10 @@ public class nekoed implements Listener{
                 }
             },plugin);
         } catch (ClassNotFoundException e) {
-            getServer().getPluginManager().registerEvent(PlayerChatEvent.class,this, EventPriority.NORMAL,new EventExecutor() {
+            getServer().getPluginManager().registerEvent(org.bukkit.event.player.AsyncPlayerChatEvent.class,this, EventPriority.NORMAL,new EventExecutor() {
                 @Override
                 public void execute(Listener listener, Event event) throws EventException {
-                    onPlayerChat((PlayerChatEvent) event);
+                    onPlayerChat((org.bukkit.event.player.AsyncPlayerChatEvent) event);
                 }
             },plugin);
         }
@@ -50,91 +57,105 @@ public class nekoed implements Listener{
 
     }
 
-    public void onPlayerChat(PlayerChatEvent event) {
-        //创建数据文件实例
-        File dataFile = new File( "plugins/toNeko/nekos.yml");
-        // 加载数据文件
+    public void sendMessage(String playerName, String prefix, String formattedMessage) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.sendMessage(prefix + playerName + " >> §7" + formattedMessage);
+        }
+    }
+
+    public void sendMessageToPlayers(String player, String prefix, String message, boolean isAI) {
+        File dataFile = new File("plugins/toNeko/nekos.yml");
         YamlConfiguration data = YamlConfiguration.loadConfiguration(dataFile);
+        if (data.getString(player + ".owner") != null) {
+            String owner = data.getString(player + ".owner");
+            List<String> aliases = new ArrayList<>();
+
+            if (data.getList(player + ".aliases") != null) {
+                aliases = data.getStringList(player + ".aliases");
+            } else {
+                aliases.add("Crystal_Neko");
+            }
+
+            String catMessage = catChatMessage(message, owner, aliases);
+            catMessage = replaceBlocks(catMessage, player);
+            message = catMessage;
+        }
+        sendMessage(player, prefix, message);
+        if(!isAI && config.getBoolean("AI.enable")){
+            // 创建一个List来存储所有type为AI的条目
+            List<String> nekoList = new ArrayList<>();
+
+            // 遍历所有键值对
+            for (String key : data.getKeys(false)) {
+                // 检查是否有"type"键以及是否为"AI"
+                if (data.contains(key + ".type") && data.getString(key + ".type").equals("AI")) {
+                    // 将符合条件的条目加入到List中
+                    nekoList.add(key);
+                }
+            }
+            for (String str : nekoList) {
+                if (message.contains(str)) {
+                    String owner = data.getString(str + ".owner");
+                    if(owner != null && owner.equalsIgnoreCase(player)){
+                        //获取语言
+                        String language = config.getString("language");
+                        //获取API
+                        String API = config.getString("AI.API");
+                        //获取提示词
+                        String prompt = config.getString("AI.prompt");
+                        //替换用户输入中的&符号
+                        String rightMsg = message.replaceAll("&", "and");
+                        //构建链接
+                        String url = API.replaceAll("%text%", rightMsg);
+                        url = url.replaceAll("%prompt%", prompt);
+                        //获取数据
+                        JsonConfiguration response = null;
+                        try {
+                            response = httpGet.getJson(url, null);
+                        } catch (IOException e) {
+                            logger.severe("无法获取json:"+e.getMessage());
+                        }
+                        String AIMsg;
+                        //读取响应
+                        if (language.equalsIgnoreCase("zh_cn")) {
+                            AIMsg = response.getString("response");
+                        } else {
+                            AIMsg = response.getString("source_response");
+                        }
+                        sendMessageToPlayers(str,"",AIMsg,true);
+                    }
+                }
+            }
+
+        }
+    }
+
+
+    public void onPlayerChat(org.bukkit.event.player.AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
         String message = event.getMessage();
-        //获取前缀
         String publicPrefix = chatPrefix.getAllPublicPrefixValues();
         String privatePrefix = chatPrefix.getPrivatePrefix(player);
-        //判断是否有私有前缀
-        if(privatePrefix.equalsIgnoreCase("[§a无前缀§f§r]")){
-            privatePrefix = "";
-        } else if (privatePrefix.equalsIgnoreCase("[§a无任何前缀§f§r]")) {
-            privatePrefix = "";
-        }
         String prefix = publicPrefix + privatePrefix;
-        //判断是否有主人
-        if(data.getString(player.getName() + ".owner") != null) {
-            //获取主人名称
-            String owner =data.getString(player.getName()+".owner");
-            List<String> aliases = new ArrayList<>();
-            //获取主人别名
-            if (data.getList(player.getName()+".aliases") !=null){
-                aliases = data.getStringList(player.getName() + ".aliases");
-            } else {
-                //算是夹带私货吧(ps:这是我的正版账户名称)
-                aliases.add("Crystal_Neko");
-            }
-            // 对消息进行处理
-            String catMessage = catChatMessage(message,owner,aliases);
-            //替换屏蔽词
-            catMessage = replaceBlocks(catMessage,player.getName());
-            // 修改消息的格式并重新发送
-            event.setFormat(prefix + player.getName() + " >> §7" + catMessage);
-        } else {
-            event.setFormat(prefix + player.getName() + " >> §7" + message);
+        if(prefix.equalsIgnoreCase("[§a无前缀§f§r]")){
+            prefix = "";
         }
-
+        sendMessageToPlayers(player.getName(), prefix, message, false);
     }
 
-    public void onPlayerChatPaper(AsyncChatEvent event){
+    public void onPlayerChatPaper(AsyncChatEvent event) {
         event.setCancelled(true);
-        //创建数据文件实例
-        File dataFile = new File( "plugins/toNeko/nekos.yml");
-        // 加载数据文件
-        YamlConfiguration data = YamlConfiguration.loadConfiguration(dataFile);
         Player player = event.getPlayer();
         String message = MiniMessage.miniMessage().serialize(event.message());
-        //获取前缀
         String publicPrefix = chatPrefix.getAllPublicPrefixValues();
         String privatePrefix = chatPrefix.getPrivatePrefix(player);
-        //判断是否有私有前缀
-        if(privatePrefix.equalsIgnoreCase("[§a无前缀§f§r]") || privatePrefix.equalsIgnoreCase("[§a无任何前缀§f§r]")){
-            privatePrefix = "";
-        }
         String prefix = publicPrefix + privatePrefix;
-        //判断是否有主人
-        if(data.getString(player.getName() + ".owner") != null) {
-            //获取主人名称
-            String owner =data.getString(player.getName()+".owner");
-            List<String> aliases = new ArrayList<>();
-            //获取主人别名
-            if (data.getList(player.getName()+".aliases") !=null){
-                aliases = data.getStringList(player.getName() + ".aliases");
-            } else {
-                //算是夹带私货吧(ps:这是我的正版账户名称)
-                aliases.add("Crystal_Neko");
-            }
-            // 对消息进行处理
-            String catMessage = catChatMessage(message,owner,aliases);
-            //替换屏蔽词
-            catMessage = replaceBlocks(catMessage,player.getName());
-            // 修改消息的格式并重新发送
-            for (Player players : Bukkit.getOnlinePlayers()) {
-                // 向每个玩家发送消息
-                players.sendMessage(prefix + player.getName() + " >> §7" + catMessage);
-            }
-        } else {
-            for (Player players : Bukkit.getOnlinePlayers()) {
-                // 向每个玩家发送消息
-                players.sendMessage(prefix + player.getName() + " >> §7" + message);
-            }
+        if(prefix.equalsIgnoreCase("[§a无前缀§f§r]")){
+            prefix = "";
         }
+        sendMessageToPlayers(player.getName(), prefix, message, false);
     }
+
 
 
 
@@ -149,10 +170,10 @@ public class nekoed implements Listener{
         message = replaceChar(message, ',',ToNeko.getMessage("other.nya"),0.4);
         message = replaceChar(message, '，',ToNeko.getMessage("other.nya"),0.4);
         //将最后替换成"喵~"
-        if(!toString().endsWith(ToNeko.getMessage("other.nya"))){
-            if (toString().endsWith(".")) {
-                message = replaceChar(message,'.',ToNeko.getMessage("other.nya"),1.0);
-            }else {
+        if (!message.endsWith(ToNeko.getMessage("other.nya"))) {
+            if (message.endsWith(".")) {
+                message = replaceChar(message, '.', ToNeko.getMessage("other.nya"), 1.0);
+            } else {
                 message = message + ToNeko.getMessage("other.nya");
             }
         }
