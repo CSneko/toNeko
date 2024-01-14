@@ -31,8 +31,5 @@
   },
     "suggests": {
     "luckperms": "*"
-  },
-  "mixins": [
-    "fabric/tonekofabric.mixins.json"
-  ]
+  }
 }

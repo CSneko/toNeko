@@ -12,8 +12,10 @@
           <platformType>SPIGOT</platformType>
           <platformType>FABRIC</platformType>
           <platformType>MIXIN</platformType>
+          <platformType>MCP</platformType>
           <platformType>ADVENTURE</platformType>
         </autoDetectTypes>
+        <projectReimportVersion>1</projectReimportVersion>
       </configuration>
     </facet>
   </component>

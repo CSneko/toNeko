@@ -7,13 +7,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="对Bukkit添加AI猫娘">
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="基本完成AI猫娘">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/event/playerChat.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/toNekoFabric.main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/toNekoFabric.main.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/toNekoFabric.test.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/toNekoFabric.test.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/ToNeko.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/ToNeko.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/chat/nekoed.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/chat/nekoed.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/command/TabCompleter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/command/TabCompleter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/command/ToNekoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/command/ToNekoCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/plugin.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/ToNekoFabric.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/ToNekoFabric.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fabric.mod.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fabric.mod.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,15 +83,17 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/media/crystalneko/BA106C158B1B58EF/javatest/clone/Folia&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Gradle.toNekoFabric build.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/media/crystalneko/BA106C158B1B58EF/javatest/mods/toNekoFabric",
+    "settings.editor.selected.configurable": "vcs.Git"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/main/resources/assets/tonekofabric" />
@@ -151,6 +156,13 @@
       </list>
     </recent_temporary>
   </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="jdk-17.0.9-corretto-17.0.9-f644763e9732-220112af" />
+      </set>
+    </attachedChunks>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="默认任务">
@@ -192,7 +204,15 @@
       <option name="project" value="LOCAL" />
       <updated>1704528608001</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="基本完成AI猫娘">
+      <option name="closed" value="true" />
+      <created>1704546680067</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1704546680067</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -209,6 +229,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="尝试添加AI猫娘" />
     <MESSAGE value="对Bukkit添加AI猫娘" />
-    <option name="LAST_COMMIT_MESSAGE" value="对Bukkit添加AI猫娘" />
+    <MESSAGE value="基本完成AI猫娘" />
+    <option name="LAST_COMMIT_MESSAGE" value="基本完成AI猫娘" />
   </component>
 </project>

@@ -36,6 +36,7 @@ public class ToNekoFabric implements ModInitializer {
             new playerAttack();
             new playerJoin();
             new playerLeave();
+            playerChat.init();
         });
     }
 }
