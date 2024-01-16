@@ -14,7 +14,7 @@
     "homepage": "https://github.com/CSNeko/toNeko"
   },
   "license": "GPL-3.0",
-  "icon": "assets/tonekofabric/essentials/icon.png",
+  "icon": "assets/toneko/essentials/icon.png",
   "environment": "*",
   "entrypoints": {
     "client": [

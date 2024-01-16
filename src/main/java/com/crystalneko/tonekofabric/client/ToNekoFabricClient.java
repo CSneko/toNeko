@@ -1,8 +1,11 @@
 package com.crystalneko.tonekofabric.client;
 
+import com.crystalneko.tonekofabric.ToNekoFabric;
 import com.crystalneko.tonekofabric.entity.nekoModel;
+import com.crystalneko.tonekofabric.entity.nekoRender;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.util.Identifier;
 
@@ -11,6 +14,9 @@ public class ToNekoFabricClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        EntityRendererRegistry.register(ToNekoFabric.NEKO, (context) -> {
+            return new nekoRender(context);
+        });
         EntityModelLayerRegistry.registerModelLayer(MODEL_NEKO_LAYER, nekoModel::getTexturedModelData);
     }
 

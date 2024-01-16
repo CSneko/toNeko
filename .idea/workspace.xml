@@ -7,14 +7,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="将聊天从mixin移动到FabricAPI">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/nekoEntity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/nekoModel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/nekoRender.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/tonekofabric/textures/entity/neko/neko.png" afterDir="false" />
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="尝试添加实体">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/ToNekoFabric.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/ToNekoFabric.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/client/ToNekoFabricClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/client/ToNekoFabricClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/nekoEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/nekoEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/tonekofabric/essentials/icon.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/essentials/icon.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/tonekofabric/lang/en_us.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/en_us.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/tonekofabric/lang/zh_cn.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/zh_cn.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/tonekofabric/textures/entity/neko/neko.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/entity/neko/neko.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fabric.mod.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fabric.mod.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -230,7 +231,15 @@
       <option name="project" value="LOCAL" />
       <updated>1705218461155</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="尝试添加实体">
+      <option name="closed" value="true" />
+      <created>1705330122928</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1705330122928</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -250,6 +259,7 @@
     <MESSAGE value="对Bukkit添加AI猫娘" />
     <MESSAGE value="基本完成AI猫娘" />
     <MESSAGE value="将聊天从mixin移动到FabricAPI" />
-    <option name="LAST_COMMIT_MESSAGE" value="将聊天从mixin移动到FabricAPI" />
+    <MESSAGE value="尝试添加实体" />
+    <option name="LAST_COMMIT_MESSAGE" value="尝试添加实体" />
   </component>
 </project>
