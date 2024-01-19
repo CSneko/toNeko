@@ -13,6 +13,10 @@ public class nekoModel extends EntityModel<nekoEntity> {
     private final ModelPart LeftArm;
     private final ModelPart RightLeg;
     private final ModelPart LeftLeg;
+    private final ModelPart Tail;
+    private ModelPart TailHead;
+    private ModelPart TailMedium;
+    private ModelPart TailTail;
 
     public nekoModel(ModelPart root) {
         this.Head = root.getChild("Head");
@@ -21,27 +25,48 @@ public class nekoModel extends EntityModel<nekoEntity> {
         this.LeftArm = root.getChild("LeftArm");
         this.RightLeg = root.getChild("RightLeg");
         this.LeftLeg = root.getChild("LeftLeg");
+        this.Tail = root.getChild("Tail");
     }
     public static TexturedModelData getTexturedModelData() {
         ModelData modelData = new ModelData();
         ModelPartData modelPartData = modelData.getRoot();
         ModelPartData Head = modelPartData.addChild("Head", ModelPartBuilder.create().uv(0, 0).cuboid(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new Dilation(0.0F))
-                .uv(32, 0).cuboid(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new Dilation(0.5F)), ModelTransform.of(0.0F, 0.0F, 0.0F, -0.1047F, 0.0873F, 0.0F));
+                .uv(32, 0).cuboid(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new Dilation(0.5F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
         ModelPartData Body = modelPartData.addChild("Body", ModelPartBuilder.create().uv(16, 16).cuboid(-4.0F, 0.0F, -2.0F, 8.0F, 12.0F, 4.0F, new Dilation(0.0F))
                 .uv(16, 32).cuboid(-4.0F, 0.0F, -2.0F, 8.0F, 12.0F, 4.0F, new Dilation(0.25F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
         ModelPartData RightArm = modelPartData.addChild("RightArm", ModelPartBuilder.create().uv(40, 16).cuboid(-3.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new Dilation(0.0F))
-                .uv(40, 32).cuboid(-3.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new Dilation(0.25F)), ModelTransform.of(-5.0F, 2.0F, 0.0F, -0.1745F, 0.0F, 0.0F));
+                .uv(40, 32).cuboid(-3.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new Dilation(0.25F)), ModelTransform.pivot(-5.0F, 2.0F, 0.0F));
 
         ModelPartData LeftArm = modelPartData.addChild("LeftArm", ModelPartBuilder.create().uv(32, 48).cuboid(-1.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new Dilation(0.0F))
-                .uv(48, 48).cuboid(-1.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new Dilation(0.25F)), ModelTransform.of(5.0F, 2.0F, 0.0F, 0.2094F, 0.0F, 0.0F));
+                .uv(48, 48).cuboid(-1.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new Dilation(0.25F)), ModelTransform.pivot(5.0F, 2.0F, 0.0F));
 
         ModelPartData RightLeg = modelPartData.addChild("RightLeg", ModelPartBuilder.create().uv(0, 16).cuboid(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new Dilation(0.0F))
-                .uv(0, 32).cuboid(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new Dilation(0.25F)), ModelTransform.of(-1.9F, 12.0F, 0.0F, 0.192F, 0.0F, 0.0349F));
+                .uv(0, 32).cuboid(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new Dilation(0.25F)), ModelTransform.pivot(-1.9F, 12.0F, 0.0F));
 
         ModelPartData LeftLeg = modelPartData.addChild("LeftLeg", ModelPartBuilder.create().uv(16, 48).cuboid(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new Dilation(0.0F))
-                .uv(0, 48).cuboid(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new Dilation(0.25F)), ModelTransform.of(1.9F, 12.0F, 0.0F, -0.1745F, 0.0F, -0.0349F));
+                .uv(0, 48).cuboid(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new Dilation(0.25F)), ModelTransform.pivot(1.9F, 12.0F, 0.0F));
+
+        ModelPartData Tail = modelPartData.addChild("Tail", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 12.0F, 3.0F));
+
+        ModelPartData TailHead = Tail.addChild("TailHead", ModelPartBuilder.create().uv(56, 33).cuboid(-1.0F, 1.0F, -5.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F))
+                .uv(56, 33).cuboid(-1.0F, 0.0F, -4.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F))
+                .uv(56, 33).cuboid(-1.0F, 0.0F, -2.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F))
+                .uv(57, 38).cuboid(-1.0F, -1.0F, -1.0F, 2.0F, 1.0F, 1.0F, new Dilation(0.0F))
+                .uv(56, 37).cuboid(-1.0F, -1.0F, 0.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -2.0F, 3.0F));
+
+        ModelPartData TailMedium = Tail.addChild("TailMedium", ModelPartBuilder.create().uv(57, 38).cuboid(-1.0F, -1.0F, 1.0F, 2.0F, 2.0F, 1.0F, new Dilation(0.0F))
+                .uv(55, 32).cuboid(-1.0F, -2.0F, 1.0F, 2.0F, 2.0F, 3.0F, new Dilation(0.0F))
+                .uv(56, 33).cuboid(-1.0F, -2.0F, 2.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F))
+                .uv(56, 33).cuboid(-1.0F, -4.0F, 2.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F))
+                .uv(56, 33).cuboid(-1.0F, -5.0F, 2.0F, 2.0F, 1.0F, 2.0F, new Dilation(0.0F))
+                .uv(56, 37).cuboid(-1.0F, -7.0F, 2.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F))
+                .uv(56, 37).cuboid(-1.0F, -8.0F, 3.0F, 2.0F, 1.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -2.0F, 4.0F));
+
+        ModelPartData TailTail = Tail.addChild("TailTail", ModelPartBuilder.create().uv(56, 33).cuboid(-1.0F, -10.0F, 7.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F))
+                .uv(56, 33).cuboid(-1.0F, -11.0F, 8.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F))
+                .uv(56, 33).cuboid(-1.0F, -13.0F, 8.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
         return TexturedModelData.of(modelData, 64, 64);
     }
 
@@ -58,5 +83,6 @@ public class nekoModel extends EntityModel<nekoEntity> {
         LeftArm.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
         RightLeg.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
         LeftLeg.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+        Tail.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
     }
 }
