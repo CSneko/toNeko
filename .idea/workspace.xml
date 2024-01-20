@@ -7,11 +7,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="修复模型无法正常显示">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/activity/nekoActivity.java" afterDir="false" />
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="修改实体模型">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/neko/nekoAnimation.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/neko/nekoMisc.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/nekoEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/nekoEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/nekoModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/nekoModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/ToNekoFabric.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/ToNekoFabric.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/activity/nekoActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/activity/nekoActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/client/ToNekoFabricClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/client/ToNekoFabricClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/nekoEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/neko/nekoEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/nekoModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/neko/nekoModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/nekoRender.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/neko/nekoRender.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/entity/neko/neko.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/entity/neko/neko.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -82,19 +87,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;Gradle.toNekoFabric build.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/media/crystalneko/BA106C158B1B58EF/javatest/mods/toNekoFabric&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "Gradle.toNekoFabric build.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/media/crystalneko/BA106C158B1B58EF/javatest/mods/toNekoFabric/src/main/resources/assets/toneko/textures/entity/neko",
+    "settings.editor.selected.configurable": "vcs.Git"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/entity/neko" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/main/resources/assets/tonekofabric" />
     </key>
@@ -244,7 +252,15 @@
       <option name="project" value="LOCAL" />
       <updated>1705417842657</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="修改实体模型">
+      <option name="closed" value="true" />
+      <created>1705659597179</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1705659597179</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -266,6 +282,7 @@
     <MESSAGE value="将聊天从mixin移动到FabricAPI" />
     <MESSAGE value="尝试添加实体" />
     <MESSAGE value="修复模型无法正常显示" />
-    <option name="LAST_COMMIT_MESSAGE" value="修复模型无法正常显示" />
+    <MESSAGE value="修改实体模型" />
+    <option name="LAST_COMMIT_MESSAGE" value="修改实体模型" />
   </component>
 </project>

@@ -1,8 +1,8 @@
 package com.crystalneko.tonekofabric.client;
 
 import com.crystalneko.tonekofabric.ToNekoFabric;
-import com.crystalneko.tonekofabric.entity.nekoModel;
-import com.crystalneko.tonekofabric.entity.nekoRender;
+import com.crystalneko.tonekofabric.entity.neko.nekoModel;
+import com.crystalneko.tonekofabric.entity.neko.nekoRender;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;

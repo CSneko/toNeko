@@ -1,6 +1,7 @@
-package com.crystalneko.tonekofabric.entity;
+package com.crystalneko.tonekofabric.entity.neko;
 
 import com.crystalneko.tonekofabric.client.ToNekoFabricClient;
+import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.util.Identifier;

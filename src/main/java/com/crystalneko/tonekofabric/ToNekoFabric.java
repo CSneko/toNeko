@@ -1,7 +1,7 @@
 package com.crystalneko.tonekofabric;
 
 import com.crystalneko.tonekofabric.command.command;
-import com.crystalneko.tonekofabric.entity.nekoEntity;
+import com.crystalneko.tonekofabric.entity.neko.nekoEntity;
 import com.crystalneko.tonekofabric.event.*;
 import com.crystalneko.tonekofabric.items.stick;
 import com.crystalneko.tonekofabric.libs.base;

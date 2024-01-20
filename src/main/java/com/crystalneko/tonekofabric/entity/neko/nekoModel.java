@@ -1,5 +1,6 @@
-package com.crystalneko.tonekofabric.entity;
+package com.crystalneko.tonekofabric.entity.neko;
 
+import com.crystalneko.tonekofabric.entity.neko.nekoEntity;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.EntityModel;
@@ -15,8 +16,13 @@ public class nekoModel extends EntityModel<nekoEntity> {
     private final ModelPart LeftLeg;
     private final ModelPart Tail;
     private ModelPart TailHead;
+    private ModelPart TH2_r1;
+    private ModelPart TH1_r1;
     private ModelPart TailMedium;
-    private ModelPart TailTail;
+    private ModelPart TM4_r1;
+    private ModelPart TM3_r1;
+    private ModelPart TM2_r1;
+    private ModelPart TM1_r1;
 
     public nekoModel(ModelPart root) {
         this.Head = root.getChild("Head");
@@ -50,23 +56,22 @@ public class nekoModel extends EntityModel<nekoEntity> {
 
         ModelPartData Tail = modelPartData.addChild("Tail", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 12.0F, 3.0F));
 
-        ModelPartData TailHead = Tail.addChild("TailHead", ModelPartBuilder.create().uv(56, 33).cuboid(-1.0F, 1.0F, -5.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F))
-                .uv(56, 33).cuboid(-1.0F, 0.0F, -4.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F))
-                .uv(56, 33).cuboid(-1.0F, 0.0F, -2.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F))
-                .uv(57, 38).cuboid(-1.0F, -1.0F, -1.0F, 2.0F, 1.0F, 1.0F, new Dilation(0.0F))
-                .uv(56, 37).cuboid(-1.0F, -1.0F, 0.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -2.0F, 3.0F));
+        ModelPartData TailHead = Tail.addChild("TailHead", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
-        ModelPartData TailMedium = Tail.addChild("TailMedium", ModelPartBuilder.create().uv(57, 38).cuboid(-1.0F, -1.0F, 1.0F, 2.0F, 2.0F, 1.0F, new Dilation(0.0F))
-                .uv(55, 32).cuboid(-1.0F, -2.0F, 1.0F, 2.0F, 2.0F, 3.0F, new Dilation(0.0F))
-                .uv(56, 33).cuboid(-1.0F, -2.0F, 2.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F))
-                .uv(56, 33).cuboid(-1.0F, -4.0F, 2.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F))
-                .uv(56, 33).cuboid(-1.0F, -5.0F, 2.0F, 2.0F, 1.0F, 2.0F, new Dilation(0.0F))
-                .uv(56, 37).cuboid(-1.0F, -7.0F, 2.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F))
-                .uv(56, 37).cuboid(-1.0F, -8.0F, 3.0F, 2.0F, 1.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -2.0F, 4.0F));
+        ModelPartData TH2_r1 = TailHead.addChild("TH2_r1", ModelPartBuilder.create().uv(55, 32).cuboid(-1.0F, -0.4163F, -0.6037F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -2.7121F, 1.8558F, -0.6981F, 0.0F, 0.0F));
 
-        ModelPartData TailTail = Tail.addChild("TailTail", ModelPartBuilder.create().uv(56, 33).cuboid(-1.0F, -10.0F, 7.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F))
-                .uv(56, 33).cuboid(-1.0F, -11.0F, 8.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F))
-                .uv(56, 33).cuboid(-1.0F, -13.0F, 8.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+        ModelPartData TH1_r1 = TailHead.addChild("TH1_r1", ModelPartBuilder.create().uv(54, 32).cuboid(-1.0F, -2.0F, -1.0F, 2.0F, 2.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.3054F, 0.0F, 0.0F));
+
+        ModelPartData TailMedium = TailHead.addChild("TailMedium", ModelPartBuilder.create().uv(56, 32).cuboid(-1.0F, -8.4497F, 1.0853F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F))
+                .uv(56, 35).cuboid(-1.0F, -10.4497F, 1.0853F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -4.0F, 3.0F));
+
+        ModelPartData TM4_r1 = TailMedium.addChild("TM4_r1", ModelPartBuilder.create().uv(56, 34).cuboid(-1.0F, -3.0F, -1.0F, 2.0F, 3.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -3.5483F, 1.8276F, -0.0873F, 0.0F, 0.0F));
+
+        ModelPartData TM3_r1 = TailMedium.addChild("TM3_r1", ModelPartBuilder.create().uv(56, 33).cuboid(-1.0F, 0.0323F, -0.5257F, 2.0F, 1.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -3.7489F, 1.3775F, -0.1745F, 0.0F, 0.0F));
+
+        ModelPartData TM2_r1 = TailMedium.addChild("TM2_r1", ModelPartBuilder.create().uv(56, 33).cuboid(-1.0F, -2.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -1.0863F, 0.8986F, -0.4363F, 0.0F, 0.0F));
+
+        ModelPartData TM1_r1 = TailMedium.addChild("TM1_r1", ModelPartBuilder.create().uv(54, 37).cuboid(-1.0F, -1.1421F, 0.9183F, 2.0F, 2.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 2.18F, -1.0239F, 1.0036F, 0.0F, 0.0F));
         return TexturedModelData.of(modelData, 64, 64);
     }
 
