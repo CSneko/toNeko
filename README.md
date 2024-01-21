@@ -1,9 +1,7 @@
 # toNeko
 [简体中文](README.md) | [English](README_en.md)
 ## 简单的介绍
-这是一个把玩家变成猫娘的模组/插件，为游戏增添一点乐趣,支持Folia
-
-它对聊天系统进行了修改，同时添加了一些增益效果已经游戏玩法
+喵喵喵~
 ### 下载:
 [插件版](https://modrinth.com/plugin/toneko/)
 [模组版](https://modrinth.com/mod/tonekomod/)
