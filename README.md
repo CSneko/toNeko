@@ -8,7 +8,11 @@
 [插件版](https://modrinth.com/plugin/toneko/)
 [模组版](https://modrinth.com/mod/tonekomod/)
 ## 使用方法
-放入服务器/客户端的`plugins`文件夹或`mods`文件夹。如果你没有安装[ctLib](https://modrinth.com/plugin/ctlib)前置插件/模组，请安装它
+放入服务器/客户端的`plugins`文件夹或`mods`文件夹。
+
+模组版需要的前置mod: [ctlib](https://modrinth.com/mod/ctlibmod),[geocklib](https://modrinth.com/mod/geckolib)
+
+插件版需要的前置插件: [ctlib](https://modrinth.com/plugin/ctlib)
 
 提供支持的版本(不代表它不能在其它版本运行):
 - Fabric >= 1.20
