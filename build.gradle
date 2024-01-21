@@ -8,7 +8,6 @@ buildscript {
 
 plugins {
     id 'fabric-loom' version '1.2-SNAPSHOT'
-    id 'maven-publish'
     id 'org.jetbrains.kotlin.jvm' version '1.8.0'
 }
 
@@ -30,6 +29,15 @@ repositories {
         name = 'papermc'
         url = 'https://repo.papermc.io/repository/maven-public/'
     }
+    maven {
+        name = 'GeckoLib'
+        url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+        content {
+            includeGroupByRegex("software\\.bernie.*")
+            includeGroup("com.eliotlash.mclib")
+        }
+    }
+
     mavenCentral()
 
 }
@@ -43,6 +51,7 @@ dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT'
     compileOnly 'net.luckperms:api:5.4'
     modImplementation "me.lucko:fabric-permissions-api:0.2-SNAPSHOT"
+    modImplementation 'software.bernie.geckolib:geckolib-fabric-1.20.4:4.4.1'
     //implementation 'com.fasterxml.jackson.core:jackson-core:2.12.5'
     //implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.5'
     //implementation 'com.fasterxml.jackson.core:jackson-annotations:2.12.5'
@@ -91,35 +100,6 @@ java {
     withSourcesJar()
 }
 
-jar {
-    from("LICENSE") {
-        rename { "${it}_${project.archivesBaseName}"}
-    }
-}
-
-// configure the maven publication
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-        }
-    }
-
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-    repositories {
-        // Add repositories to publish to here.
-        // Notice: This block does NOT have the same function as the block in the top level.
-        // The repositories here will be used for publishing your artifact, not for
-        // retrieving dependencies.
-        maven {
-            name = 'Spigot'
-            url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
-
-        }
-        maven { url = 'https://oss.sonatype.org/content/repositories/snapshots' }
-        maven { url = 'https://oss.sonatype.org/content/repositories/central' }
-    }
-}
 kotlin {
     jvmToolchain(17)
 }
