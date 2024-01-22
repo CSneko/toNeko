@@ -6,6 +6,7 @@ import com.crystalneko.tonekofabric.event.*;
 import com.crystalneko.tonekofabric.items.stick;
 import com.crystalneko.tonekofabric.libs.base;
 import com.crystalneko.tonekofabric.libs.lp;
+import com.crystalneko.tonekofabric.test.testItem;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
@@ -13,6 +14,7 @@ import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
+import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
@@ -46,6 +48,13 @@ public class ToNekoFabric implements ModInitializer {
 
         //注册权限组
         new lp();
+
+        try {
+            Class.forName("com.crystalneko.tonekofabric.test.testItem");
+            testItem testItemT = new testItem(new Item.Settings());
+            Item testItem = Registry.register(Registries.ITEM,new Identifier("toneko","empty"),testItemT);
+        }catch (ClassNotFoundException e) {}
+
     }
     //简易的监听事件
     private void event(){
@@ -54,6 +63,12 @@ public class ToNekoFabric implements ModInitializer {
             new playerJoin();
             new playerLeave();
             playerChat.init();
+
+            try {
+                Class.forName("com.crystalneko.tonekofabric.test.event");
+                System.out.println("成功启动测试版本");
+                new com.crystalneko.tonekofabric.test.event();
+            } catch (ClassNotFoundException e) {}
         });
     }
 }

@@ -46,6 +46,11 @@ public class base {
             sqlite.addColumn(worldName+"Nekos","replace");
             sqlite.addColumn(worldName+"Nekos","xp");
             sqlite.addColumn(worldName+"Nekos","type");
+            if(!sqlite.isTableExists(worldName+"NekoEnt")) {
+                sqlite.createTable(worldName + "NekoEnt");
+            }
+            sqlite.addColumn(worldName + "NekoEnt", "uuid");
+            sqlite.addColumn(worldName + "NekoEnt", "name");
         }
     }
     //--------------------------------------------------------获取世界名称---------------------------------------------

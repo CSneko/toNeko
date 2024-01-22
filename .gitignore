@@ -3,3 +3,4 @@ build/*
 /build/
 /.gradle/
 /run/
+/src/main/java/com/crystalneko/tonekofabric/test/
