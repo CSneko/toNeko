@@ -7,19 +7,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="修改readme">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/api/neko.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/models/item/empty.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/item/empty.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="修改模型">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/command/ToNekoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/command/ToNekoCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/ToNekoFabric.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/ToNekoFabric.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/client/nekoModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/client/nekoModel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/nekoEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/nekoEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/libs/base.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/libs/base.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/animations/entity/neko.animation.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/animations/entity/neko.animation.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/animations/neko/model.animation.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/geo/entity/neko.geo.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/geo/entity/neko.geo.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/en_us.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/en_us.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/zh_cn.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/zh_cn.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -294,7 +290,15 @@
       <option name="project" value="LOCAL" />
       <updated>1705823420577</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="修改模型">
+      <option name="closed" value="true" />
+      <created>1705900484470</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1705900484470</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -317,9 +321,9 @@
     <MESSAGE value="尝试添加实体" />
     <MESSAGE value="修复模型无法正常显示" />
     <MESSAGE value="修改实体模型" />
-    <MESSAGE value="修改模型" />
     <MESSAGE value="添加动画" />
     <MESSAGE value="修改readme" />
-    <option name="LAST_COMMIT_MESSAGE" value="修改readme" />
+    <MESSAGE value="修改模型" />
+    <option name="LAST_COMMIT_MESSAGE" value="修改模型" />
   </component>
 </project>

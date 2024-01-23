@@ -32,11 +32,11 @@ public class nekoModel extends GeoModel<nekoEntity>{
 
     @Override
     public void setCustomAnimations(nekoEntity animatable, long instanceId, AnimationState<nekoEntity> animationState) {
-        EntityModelData entityModelData = animationState.getData(DataTickets.ENTITY_MODEL_DATA);
+        /*EntityModelData entityModelData = animationState.getData(DataTickets.ENTITY_MODEL_DATA);
         CoreGeoBone head = getAnimationProcessor().getBone("Head");
         if(head != null){
             head.setRotX(entityModelData.headPitch() * MathHelper.RADIANS_PER_DEGREE);
             head.setRotY(entityModelData.netHeadYaw() * MathHelper.RADIANS_PER_DEGREE);
-        }
+        }*/
     }
 }

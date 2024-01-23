@@ -74,7 +74,7 @@
 							"vector": [0, 0, 0]
 						},
 						"1.25": {
-							"vector": [-20, 0, 0]
+							"vector": [20, 0, 0]
 						},
 						"1.7083": {
 							"vector": [0, 0, 0]
@@ -288,10 +288,10 @@
 							"vector": [0, 0, 0]
 						},
 						"0.5": {
-							"vector": [-105, 0, 0]
+							"vector": [-130, 0, 0]
 						},
 						"4.0": {
-							"vector": [-105, 0, 0]
+							"vector": [-130, 0, 0]
 						},
 						"5.0": {
 							"vector": [0, 0, 0]
@@ -304,10 +304,10 @@
 							"vector": [0, 0, 0]
 						},
 						"0.5": {
-							"vector": [-110, 0, 0]
+							"vector": [-130, 0, 0]
 						},
 						"4.0": {
-							"vector": [-110, 0, 0]
+							"vector": [-130, 0, 0]
 						},
 						"5.0": {
 							"vector": [0, 0, 0]
@@ -364,6 +364,282 @@
 						},
 						"5.0": {
 							"vector": [0, 0, 0]
+						}
+					}
+				},
+				"Head": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.5": {
+							"vector": [-12.5, 0, 0]
+						},
+						"4.0": {
+							"vector": [-12.5, 0, 0]
+						},
+						"5.0": {
+							"vector": [0, 0, 0]
+						}
+					}
+				}
+			}
+		},
+		"animation.neko.stay": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 3,
+			"bones": {
+				"TailHead": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.75": {
+							"vector": [0, 17.5, 0]
+						},
+						"1.5": {
+							"vector": [0, 0, 0]
+						},
+						"2.25": {
+							"vector": [0, -17.5, 0]
+						},
+						"3.0": {
+							"vector": [0, 0, 0]
+						}
+					}
+				}
+			}
+		},
+		"animation.neko.sit": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 1,
+			"bones": {
+				"Body": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"1.0": {
+							"vector": [87.5, 0, 0]
+						}
+					}
+				},
+				"LeftLeg": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"all": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.75": {
+							"vector": [-87.5, 0, 0]
+						}
+					}
+				}
+			}
+		},
+		"animation.neko.sit.stand": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 1,
+			"bones": {
+				"all": {
+					"rotation": {
+						"0.0": {
+							"vector": [-87.5, 0, 0]
+						},
+						"1.0": {
+							"vector": [0, 0, 0]
+						}
+					}
+				},
+				"Body": {
+					"rotation": {
+						"0.0": {
+							"vector": [87.5, 0, 0]
+						},
+						"1.0": {
+							"vector": [0, 0, 0]
+						}
+					}
+				}
+			}
+		},
+		"animation.neko.sit.lie": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 1,
+			"bones": {
+				"all": {
+					"rotation": {
+						"vector": [-87.5, 0, 0]
+					}
+				},
+				"Body": {
+					"rotation": {
+						"0.0": {
+							"vector": [87.5, 0, 0]
+						},
+						"1.0": {
+							"vector": [0, 0, 0]
+						}
+					}
+				}
+			}
+		},
+		"animation.neko.lie.sit": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 1,
+			"bones": {
+				"all": {
+					"rotation": {
+						"vector": [-87.5, 0, 0]
+					}
+				},
+				"Body": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"1.0": {
+							"vector": [87.5, 0, 0]
+						}
+					}
+				},
+				"LeftArm": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.5": {
+							"vector": [40, 0, 0]
+						},
+						"1.0": {
+							"vector": [0, 0, 0]
+						}
+					}
+				},
+				"RightArm": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.5": {
+							"vector": [40, 0, 0]
+						},
+						"1.0": {
+							"vector": [0, 0, 0]
+						}
+					}
+				}
+			}
+		},
+		"animation.neko.fly.begin": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 0.75,
+			"bones": {
+				"Body": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.75": {
+							"vector": [87.5, 0, 0]
+						}
+					}
+				},
+				"LeftArm": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.75": {
+							"vector": [-87.5, 0, 0]
+						}
+					}
+				},
+				"RightArm": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.75": {
+							"vector": [-87.5, 0, 0]
+						}
+					}
+				},
+				"Head": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.75": {
+							"vector": [-87.5, 0, 0]
+						}
+					}
+				},
+				"Tail": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.75": {
+							"vector": [-35, 0, 0]
+						}
+					}
+				},
+				"TailMedium": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.75": {
+							"vector": [32.5, 0, 0]
+						}
+					}
+				}
+			}
+		},
+		"animation.neko.fly": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 0.5,
+			"bones": {
+				"Body": {
+					"rotation": {
+						"vector": [87.5, 0, 0]
+					}
+				},
+				"LeftArm": {
+					"rotation": {
+						"vector": [-87.5, 0, 0]
+					}
+				},
+				"RightArm": {
+					"rotation": {
+						"vector": [-87.5, 0, 0]
+					}
+				},
+				"Head": {
+					"rotation": {
+						"vector": [-87.5, 0, 0]
+					}
+				},
+				"Tail": {
+					"rotation": {
+						"vector": [-35, 0, 0]
+					}
+				},
+				"TailMedium": {
+					"rotation": {
+						"0.0": {
+							"vector": [32.5, 0, 0]
+						},
+						"0.25": {
+							"vector": [-31.60659, 7.99365, -167.26585]
+						},
+						"0.5": {
+							"vector": [32.47761, 1.34734, -362.11248]
 						}
 					}
 				}
