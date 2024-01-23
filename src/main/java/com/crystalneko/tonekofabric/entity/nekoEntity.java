@@ -4,6 +4,7 @@ import com.crystalneko.ctlibPublic.sql.sqlite;
 import com.crystalneko.tonekofabric.libs.base;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.MovementType;
 import net.minecraft.entity.ai.brain.task.FollowCustomerTask;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -20,6 +21,7 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -39,7 +41,8 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
     }
     private PlayerEntity hugging;
     private PlayerEntity rider;
-    private boolean ready_ride;
+    //准备被骑的状态，0代表正常，1代表准备前置，2代表准备，3代表被骑前置，4代表被骑
+    private int ready_ride = 0;
     public final RawAnimation MOVE_ANIM = RawAnimation.begin().then("animation.neko.walk", Animation.LoopType.LOOP);
     public final RawAnimation RUN_ANIM = RawAnimation.begin().then("animation.neko.run", Animation.LoopType.LOOP);
     public final RawAnimation HUG_ANIM = RawAnimation.begin().then("animation.neko.hug", Animation.LoopType.LOOP);
@@ -62,14 +65,7 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
         Objects.requireNonNull(this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED)).setBaseValue(0.6D);
     }
 
-    //可否被骑行
-    public boolean isBeingRidden() {
-        return this.rider != null;
-    }
-    //设置骑行对象
-    public void setRider(PlayerEntity entity) {
-        this.rider = entity;
-    }
+
 
     public status setName(String name){
         String worldName = base.getWorldName(this.getWorld());
@@ -126,12 +122,20 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
         super.tick();
         //骑行时的逻辑
         if (this.rider != null && this.rider.isAlive()) {
-            // 更新骑乘实体的位置和行为
-            this.rider.setPosition(this.getX(), this.getY() + this.getHeight(), this.getZ());
-            //播放飞行动画
-            playAnim(FLY_ANIM);
-            //给予10tick的漂浮效果
-            this.addStatusEffect(new StatusEffectInstance(StatusEffects.LEVITATION,10));
+            //如果生物被骑着
+            if(this.hasPassengers()) {
+                // 更新骑乘实体的位置和行为
+                this.rider.setPosition(this.getX(), this.getY() + this.getHeight(), this.getZ());
+                //给予10tick的漂浮效果
+                this.addStatusEffect(new StatusEffectInstance(StatusEffects.LEVITATION, 10));
+                handleRiderInput(rider);
+            }else {
+                //否则清除骑行
+                rider = null;
+                if(ready_ride > 0) {
+                    ready_ride = 0;
+                }
+            }
         }
     }
     @Override
@@ -140,18 +144,49 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
         ItemStack itemStack = player.getMainHandStack();
         Item item = itemStack.getItem();
         //如果可以骑行且玩家主手物品为末地烛
-        if (!this.getWorld().isClient && !this.isBeingRidden() && item == Items.END_ROD) {
+        if (!this.getWorld().isClient && !this.isBeingRidden() && item == Items.END_ROD)  {
             //如果已经准备好被骑
-            if(ready_ride){
+            if(ready_ride == 2){
                 setRider(player);
                 player.startRiding(this);
-            }else {
+            }else if(ready_ride == 1){
+                //播放准备动画
                 playAnim(FLY_BEGIN_ANIM);
-                ready_ride = true;
+                ready_ride = 2;
+            }else if(ready_ride == 0){
+                playAnim(FLY_BEGIN_ANIM);
+                ready_ride = 1;
             }
             return ActionResult.SUCCESS;
         }
         return super.interactMob(player, hand);
+    }
+
+    private void handleRiderInput(PlayerEntity rider) {
+        // 处理骑乘者的输入
+        float forwardMovement = rider.forwardSpeed;
+        float sidewaysMovement = rider.sidewaysSpeed;
+
+        // 获取骑乘者的视角
+        Vec2f riderRotation = rider.getRotationClient();
+        double riderYaw = riderRotation.y;
+
+        // 将视角转换为世界坐标系下的方向向量
+        Vec3d forwardVector = this.getRotationVector();
+        forwardVector.rotateY((float) Math.toRadians(-riderYaw));
+        forwardVector = forwardVector.normalize();
+
+        // 根据方向向量和输入调整生物的位置
+        this.move(MovementType.SELF, forwardVector.multiply(forwardMovement).add(new Vec3d(sidewaysMovement, 0, 0)));
+
+    }
+    //可否被骑行
+    public boolean isBeingRidden() {
+        return this.rider != null;
+    }
+    //设置骑行对象
+    public void setRider(PlayerEntity entity) {
+        this.rider = entity;
     }
 
     //对玩家进行拥抱
@@ -159,6 +194,8 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
         //执行拥抱
         this.playAnim(HUG_ANIM);
     }
+
+
 
 
 
@@ -171,6 +208,38 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
     private Boolean canPlayAnim(RawAnimation rawAnimation){
         return can_play_anim.get(rawAnimation) != null && can_play_anim.get(rawAnimation);
     }
+    //判断行走动画执行时间是否已到
+    public boolean canPlayWalkAnim() {
+        long currentTimestamp = System.currentTimeMillis();
+        // 如果上一次调用的时间未初始化或者距离当前时间超过了1.7083秒，则重新初始化时间戳并返回true，代表可以播放动画
+        if (walkTimer == 0 || currentTimestamp - walkTimer > 1708) {
+            walkTimer = currentTimestamp;
+            return true;
+        }
+        // 如果时间差小于等于1.7083秒，则返回false,代表不能播放动画。
+        return false;
+    }
+    //判断能否播放跑步动画
+    public boolean canPlayRunAnim() {
+        long currentTimestamp = System.currentTimeMillis();
+        // 如果上一次调用的时间未初始化或者距离当前时间超过了1秒，则重新初始化时间戳并返回true，代表可以播放动画
+        if (runTimer == 0 || currentTimestamp - runTimer > 1000) {
+            runTimer = currentTimestamp;
+            return true;
+        }
+        // 如果时间差小于等于1秒，则返回false,代表不能播放动画。
+        return false;
+    }
+    public boolean canStopAnim(){
+        long currentTimestamp = System.currentTimeMillis();
+        // 如果时间差小于等于5秒，则返回false,代表不能停止动画。
+        return AnimTimer == 0 || currentTimestamp - AnimTimer > 5000;
+
+    }
+    public void setAnimTimer(){
+        AnimTimer = System.currentTimeMillis();
+    }
+
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
@@ -200,11 +269,15 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
                 }
             }
         }
+        if (this.rider != null) {
+            isStay = false;
+            //播放飞行动画
+            event.getController().setAnimation(FLY_ANIM);
+        }
         RawAnimation[] animations = new RawAnimation[]{
-                MOVE_ANIM,RUN_ANIM,HUG_ANIM,SIT_ANIM,SIT_LIE_ANIM,SIT_STAND_ANIM,LIE_STAND_ANIM,STAY_ANIM,FLY_ANIM,FLY_BEGIN_ANIM
+                FLY_ANIM,FLY_BEGIN_ANIM,HUG_ANIM,SIT_ANIM,SIT_LIE_ANIM,SIT_STAND_ANIM,LIE_STAND_ANIM,STAY_ANIM,MOVE_ANIM,RUN_ANIM
         };
         int i =0;
-
         while(i < animations.length) {
             if(canPlayAnim(animations[i])){
                 //如果可以播放动画就播放动画，并将可否播放设置为false
@@ -226,38 +299,6 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
         return this.geoCache;
     }
 
-    //判断行走动画执行时间是否已到
-    public boolean canPlayWalkAnim() {
-        long currentTimestamp = System.currentTimeMillis();
-        // 如果上一次调用的时间未初始化或者距离当前时间超过了1.7083秒，则重新初始化时间戳并返回true，代表可以播放动画
-        if (walkTimer == 0 || currentTimestamp - walkTimer > 1708) {
-            walkTimer = currentTimestamp;
-            return true;
-        }
-        // 如果时间差小于等于1.7083秒，则返回false,代表不能播放动画。
-        return false;
-    }
-    //判断能否播放跑步动画
-    public boolean canPlayRunAnim() {
-        long currentTimestamp = System.currentTimeMillis();
-        // 如果上一次调用的时间未初始化或者距离当前时间超过了1秒，则重新初始化时间戳并返回true，代表可以播放动画
-        if (runTimer == 0 || currentTimestamp - runTimer > 1000) {
-            runTimer = currentTimestamp;
-            return true;
-        }
-        // 如果时间差小于等于1秒，则返回false,代表不能播放动画。
-        return false;
-    }
-    public boolean canStopAnim(){
-        long currentTimestamp = System.currentTimeMillis();
-        // 如果上一次调用的时间未初始化或者距离当前时间超过了1秒，则重新初始化时间戳并返回true，代表可以停止动画
-        // 如果时间差小于等于5秒，则返回false,代表不能停止动画。
-        return AnimTimer == 0 || currentTimestamp - AnimTimer > 5000;
-
-    }
-    public void setAnimTimer(){
-        AnimTimer = System.currentTimeMillis();
-    }
 
     //--------------------------------------------------------------杂项------------------------------------------------
     static {
