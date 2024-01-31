@@ -9,6 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 public class FollowAndAttackPlayerGoal extends Goal {
     private final AnimalEntity mobEntity;
     private final PlayerEntity targetPlayer;
+    int waiting = 0;
     private final double speed;
     private final double minDistanceSq;
     private final double maxDistanceSq;
@@ -45,10 +46,22 @@ public class FollowAndAttackPlayerGoal extends Goal {
 
     @Override
     public void tick() {
+        //判断能否执行
+        if(waiting > 40) {
+            if (targetPlayer != null &&targetPlayer.isAlive()) {
+                // 如果攻击目标还活着，就判断距离目标的位置
+                double distance = mobEntity.distanceTo(targetPlayer);
+                if (distance <= 0.4) {
+                    targetPlayer.damage(mobEntity.getDamageSources().generic(),2.0F);
+                }
+            }
+        }else {
+            waiting++ ;
+        }
         // 更新实体的位置，使其朝向目标玩家并攻击
         mobEntity.getLookControl().lookAt(targetPlayer, 10.0F, mobEntity.getMaxLookPitchChange());
         mobEntity.getNavigation().startMovingTo(targetPlayer, speed);
-        mobEntity.tryAttack(targetPlayer);
+
     }
 
     @Override

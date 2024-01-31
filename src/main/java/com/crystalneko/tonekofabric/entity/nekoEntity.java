@@ -213,45 +213,11 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
     public void increaseHatred(LivingEntity target, int amount) {
         nekoEntity neko = this;
         int currentHatred = hatredMap.getOrDefault(target, 0);
-
-        //添加攻击目标
-        this.goalSelector.add(1,new Goal() {
-            LivingEntity attackTarget = target;
-            int waiting = 0;
-            @Override
-            public boolean canStart() {
-                return target instanceof PlayerEntity;
-            }
-
-            @Override
-            public void start() {
-                //让实体尝试跟随目标
-                PlayerEntity targetPlayer = (PlayerEntity) target;
-                neko.goalSelector.add(1,new FollowAndAttackPlayerGoal(neko,targetPlayer,1.0D,0.1F,100.0F));
-            }
-
-            @Override
-            public void stop() {
-                // 当这个 Goal 结束时，将攻击目标设为 null
-                attackTarget = null;
-            }
-
-            @Override
-            public void tick() {
-                //判断能否执行
-                if(waiting > 40) {
-                    if (attackTarget != null && attackTarget.isAlive()) {
-                        // 如果攻击目标还活着，就判断距离目标的位置
-                        double distance = neko.distanceTo(attackTarget);
-                        if (distance <= 0.4) {
-                            neko.attackLivingEntity(attackTarget);
-                        }
-                    }
-                }else {
-                    waiting++ ;
-                }
-            }
-        });
+        if(target instanceof PlayerEntity){
+            //让实体尝试跟随目标
+            PlayerEntity targetPlayer = (PlayerEntity) target;
+            neko.goalSelector.add(1,new FollowAndAttackPlayerGoal(neko,targetPlayer,1.0D,0.1F,100.0F));
+        }
         hatredMap.put(target, currentHatred + amount);
     }
 
@@ -409,7 +375,7 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
         }
         if(isStay && canStopAnim()){
             //停止播放动画
-            return PlayState.STOP;
+            playAnim(STAY_ANIM);
         }
         return PlayState.CONTINUE;
     }

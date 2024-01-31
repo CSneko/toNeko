@@ -14,6 +14,7 @@ import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Vec3d;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 import software.bernie.geckolib.renderer.GeoItemRenderer;
 
@@ -33,10 +34,14 @@ public class nekoRender extends GeoEntityRenderer<nekoEntity> {
         ItemStack mainHandStack = entity.getMainHandStack();
         if (!mainHandStack.isEmpty()) {
             poseStack.push();
-            poseStack.translate(0.2F, 1.5F, 0.5F); // 将物品栈的位置调整到合适的位置
-            this.heldItemRenderer.renderItem(entity ,mainHandStack, ModelTransformationMode.THIRD_PERSON_RIGHT_HAND, false, poseStack,buffSource, packedLight);
+            // 将物品平移至适当的位置
+            poseStack.translate(-0.4F, 0.6F, 0.0F);
+            this.heldItemRenderer.renderItem(entity, mainHandStack, ModelTransformationMode.GROUND, false, poseStack, buffSource, packedLight);
             poseStack.pop();
         }
+
+
+
         super.render(entity,entityYaw,partialTick,poseStack,buffSource,packedLight);
     }
 }
