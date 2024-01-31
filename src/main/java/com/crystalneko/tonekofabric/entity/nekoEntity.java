@@ -1,9 +1,10 @@
 package com.crystalneko.tonekofabric.entity;
 
 import com.crystalneko.ctlibPublic.sql.sqlite;
+import com.crystalneko.tonekofabric.entity.ai.FollowAndAttackPlayerGoal;
 import com.crystalneko.tonekofabric.libs.base;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MovementType;
 import net.minecraft.entity.ai.brain.task.FollowCustomerTask;
 import net.minecraft.entity.ai.goal.*;
@@ -11,6 +12,7 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -18,9 +20,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.registry.Registries;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -39,6 +44,7 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
     enum status{
         SUCCESS,FAILED,ALREADY_SET,USED,UNKNOWN
     }
+    private HashMap<LivingEntity, Integer> hatredMap = new HashMap<>();
     private PlayerEntity hugging;
     private PlayerEntity rider;
     //准备被骑的状态，0代表正常，1代表准备前置，2代表准备，3代表被骑前置，4代表被骑
@@ -114,7 +120,6 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
         //this.goalSelector.add(1, new EscapeDangerGoal(this, 0.8));
         this.goalSelector.add(2, temptGoal);
         //this.goalSelector.add(9, new AttackGoal(this));
-        //this.goalSelector.add(11, new WanderAroundFarGoal(this, 0.3, 1.0000001E-5F));
         this.goalSelector.add(12, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F));
     }
     @Override
@@ -143,6 +148,8 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
         //获取玩家主手物品
         ItemStack itemStack = player.getMainHandStack();
         Item item = itemStack.getItem();
+        //获取物品的id
+        Identifier itemId = Registries.ITEM.getId(item);
         //如果可以骑行且玩家主手物品为末地烛
         if (!this.getWorld().isClient && !this.isBeingRidden() && item == Items.END_ROD)  {
             //如果已经准备好被骑
@@ -159,6 +166,13 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
             }
             return ActionResult.SUCCESS;
         }
+        //如果物品为Better_end_rod的normal_rod
+        if(itemId.getPath().equalsIgnoreCase("normal_rod")){
+            //添加仇恨
+            increaseHatred(player,100);
+        }
+
+
         return super.interactMob(player, hand);
     }
 
@@ -195,8 +209,76 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
         this.playAnim(HUG_ANIM);
     }
 
+    //增加仇恨值
+    public void increaseHatred(LivingEntity target, int amount) {
+        nekoEntity neko = this;
+        int currentHatred = hatredMap.getOrDefault(target, 0);
 
+        //添加攻击目标
+        this.goalSelector.add(1,new Goal() {
+            LivingEntity attackTarget = target;
+            int waiting = 0;
+            @Override
+            public boolean canStart() {
+                return target instanceof PlayerEntity;
+            }
 
+            @Override
+            public void start() {
+                //让实体尝试跟随目标
+                PlayerEntity targetPlayer = (PlayerEntity) target;
+                neko.goalSelector.add(1,new FollowAndAttackPlayerGoal(neko,targetPlayer,1.0D,0.1F,100.0F));
+            }
+
+            @Override
+            public void stop() {
+                // 当这个 Goal 结束时，将攻击目标设为 null
+                attackTarget = null;
+            }
+
+            @Override
+            public void tick() {
+                //判断能否执行
+                if(waiting > 40) {
+                    if (attackTarget != null && attackTarget.isAlive()) {
+                        // 如果攻击目标还活着，就判断距离目标的位置
+                        double distance = neko.distanceTo(attackTarget);
+                        if (distance <= 0.4) {
+                            neko.attackLivingEntity(attackTarget);
+                        }
+                    }
+                }else {
+                    waiting++ ;
+                }
+            }
+        });
+        hatredMap.put(target, currentHatred + amount);
+    }
+
+    //减少仇恨值
+    public void decreaseHatred(LivingEntity target, int amount) {
+        int currentHatred = hatredMap.getOrDefault(target, 0);
+        int newHatred = Math.max(0, currentHatred - amount);
+        if (newHatred == 0) {
+            hatredMap.remove(target);
+        } else {
+            hatredMap.put(target, newHatred);
+        }
+    }
+
+    //获取当前仇恨值最高的目标
+    public LivingEntity getMostHatedTarget() {
+        LivingEntity mostHatedTarget = null;
+        int maxHatred = 0;
+        for (LivingEntity target : hatredMap.keySet()) {
+            int hatred = hatredMap.get(target);
+            if (hatred > maxHatred) {
+                mostHatedTarget = target;
+                maxHatred = hatred;
+            }
+        }
+        return mostHatedTarget;
+    }
 
 
     //------------------------------------------------------------动画-----------------------------------------------
@@ -239,7 +321,44 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
     public void setAnimTimer(){
         AnimTimer = System.currentTimeMillis();
     }
+    // 控制手臂摆动的进度
+    @Override
+    public float getHandSwingProgress(float tickDelta) {
+        ItemStack mainHandStack = this.getMainHandStack();
+        if (mainHandStack.isEmpty()) {
+            return 0.0F;
+        } else {
+            Hand activeHand = this.getActiveHand();
+            float swingProgress = this.handSwingProgress - this.lastHandSwingProgress;
+            if (this.isHolding(Items.BOW)) {
+                int useTicks = this.getActiveItem().getMaxUseTime() - this.getItemUseTimeLeft();
+                float bowCharge = (float)useTicks / 20.0F;
+                if (bowCharge > 1.0F) {
+                    bowCharge = 1.0F;
+                } else {
+                    bowCharge *= bowCharge;
+                }
 
+                swingProgress = 0.0F;
+                if (bowCharge >= 0.1F) {
+                    float f = MathHelper.sin((bowCharge - 0.1F) * 1.3F);
+                    float f1 = f * 0.01F;
+                    swingProgress = f1;
+                }
+            } else if (this.handSwinging) {
+                if (activeHand == Hand.MAIN_HAND) {
+                    swingProgress = MathHelper.clamp(swingProgress, 0.0F, 1.0F);
+                } else {
+                    swingProgress = MathHelper.clamp(swingProgress, 0.0F, 0.5F);
+                }
+            } else {
+                swingProgress = 0.0F;
+            }
+
+            this.lastHandSwingProgress += swingProgress;
+            return this.lastHandSwingProgress;
+        }
+    }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
