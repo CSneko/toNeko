@@ -26,14 +26,9 @@ public class playerAttack {
                 handlePlayerAttackEntity(player, attacker);
             }
             if(player.getHealth() <= 0){
-                if(entity instanceof LivingEntity){
-                    //实体是否为LivingEntity
-                    LivingEntity livingEntity = (LivingEntity) entity;
-                    ItemStack stack = livingEntity.getMainHandStack();
-                    //是否被normal_rod干死
-                    if(Registries.ITEM.getId(stack.getItem()).getPath().equalsIgnoreCase("normal_rod")){
-                        player.sendMessage(Text.translatable("attack.death.normal_rod"));
-                    }
+                //是否被猫娘干死
+                if(Registries.ENTITY_TYPE.getId(entity.getType()).getPath().equalsIgnoreCase("neko")){
+                    player.sendMessage(Text.translatable("attack.death.normal_rod"));
                 }
             }
             return ActionResult.PASS; // 允许其他mod处理该事件
