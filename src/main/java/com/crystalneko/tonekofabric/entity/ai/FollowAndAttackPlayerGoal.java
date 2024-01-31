@@ -5,6 +5,7 @@ import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.damage.DamageSources;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.text.Text;
 
 public class FollowAndAttackPlayerGoal extends Goal {
     private final AnimalEntity mobEntity;
@@ -47,20 +48,24 @@ public class FollowAndAttackPlayerGoal extends Goal {
     @Override
     public void tick() {
         //判断能否执行
-        if(waiting > 100) {
+        if(waiting > 70) {
             if (targetPlayer != null &&targetPlayer.isAlive()) {
                 // 如果攻击目标还活着，就判断距离目标的位置
                 double distance = mobEntity.distanceTo(targetPlayer);
                 if (distance <= 3) {
                     targetPlayer.damage(mobEntity.getDamageSources().generic(),3.0F);
+                    if(!targetPlayer.isAlive()){
+                        targetPlayer.sendMessage(Text.translatable("attack.death.normal_rod"));
+                    }
                 }
             }
+            // 更新实体的位置，使其朝向目标玩家并攻击
+            mobEntity.getLookControl().lookAt(targetPlayer, 10.0F, mobEntity.getMaxLookPitchChange());
+            mobEntity.getNavigation().startMovingTo(targetPlayer, speed);
         }else {
             waiting++ ;
         }
-        // 更新实体的位置，使其朝向目标玩家并攻击
-        mobEntity.getLookControl().lookAt(targetPlayer, 10.0F, mobEntity.getMaxLookPitchChange());
-        mobEntity.getNavigation().startMovingTo(targetPlayer, speed);
+
 
     }
 

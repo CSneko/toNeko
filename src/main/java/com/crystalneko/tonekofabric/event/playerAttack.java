@@ -25,12 +25,6 @@ public class playerAttack {
             if (entity instanceof PlayerEntity attacker) {
                 handlePlayerAttackEntity(player, attacker);
             }
-            if(!player.isAlive()){
-                //是否被猫娘干死
-                if(Registries.ENTITY_TYPE.getId(entity.getType()).getPath().equalsIgnoreCase("neko")){
-                    player.sendMessage(Text.translatable("attack.death.normal_rod"));
-                }
-            }
             return ActionResult.PASS; // 允许其他mod处理该事件
         });
     }
