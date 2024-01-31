@@ -52,8 +52,8 @@ public class FollowAndAttackPlayerGoal extends Goal {
             if (targetPlayer != null &&targetPlayer.isAlive()) {
                 // 如果攻击目标还活着，就判断距离目标的位置
                 double distance = mobEntity.distanceTo(targetPlayer);
-                if (distance <= 3) {
-                    targetPlayer.damage(mobEntity.getDamageSources().generic(),3.0F);
+                if (distance <= 1.2) {
+                    targetPlayer.damage(mobEntity.getDamageSources().generic(),2.0F);
                     if(!targetPlayer.isAlive()){
                         targetPlayer.sendMessage(Text.translatable("attack.death.normal_rod"));
                     }
