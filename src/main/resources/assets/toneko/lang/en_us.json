@@ -28,5 +28,6 @@
   "item.stick-level-2": "§9§oCat stick level 2",
   "item.stick-level-2-lore": "§9§oIP68!No water can damage it!",
   "item.toneko.empty": " ",
-  "attack.add-xp":"§6Your friendship experience with %d has increased by %c"
+  "attack.add-xp":"§6Your friendship experience with %d has increased by %c",
+  "attack.death.normal_rod": "You killed by fucking"
 }

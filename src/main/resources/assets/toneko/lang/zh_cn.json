@@ -28,6 +28,6 @@
   "item.stick-level-2": "§9§o二级撅猫棍",
   "item.stick-level-2-lore": "§9§oIP68级防水",
   "item.toneko.empty": " ",
-  "attack.add-xp": "§6你与%d的好感经验提升了%c"
-
+  "attack.add-xp": "§6你与%d的好感经验提升了%c",
+  "attack.death.normal_rod": "你被艹死了"
 }

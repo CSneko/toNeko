@@ -3,11 +3,14 @@ package com.crystalneko.tonekofabric.event;
 import com.crystalneko.ctlibPublic.sql.sqlite;
 import com.crystalneko.tonekofabric.libs.base;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.Registries;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 
 import java.util.Random;
@@ -22,10 +25,23 @@ public class playerAttack {
             if (entity instanceof PlayerEntity attacker) {
                 handlePlayerAttackEntity(player, attacker);
             }
+            if(player.getHealth() <= 0){
+                if(entity instanceof LivingEntity){
+                    //实体是否为LivingEntity
+                    LivingEntity livingEntity = (LivingEntity) entity;
+                    ItemStack stack = livingEntity.getMainHandStack();
+                    //是否被normal_rod干死
+                    if(Registries.ITEM.getId(stack.getItem()).getPath().equalsIgnoreCase("normal_rod")){
+                        player.sendMessage(Text.translatable("attack.death.normal_rod"));
+                    }
+                }
+            }
             return ActionResult.PASS; // 允许其他mod处理该事件
         });
     }
     private void handlePlayerAttackEntity(PlayerEntity player, PlayerEntity neko) {
+        //判断玩家是否死亡
+
         String nekoName = base.getPlayerName(neko);
         String playerName = base.getPlayerName(player);
         String worldName = base.getWorldName(player.getWorld());

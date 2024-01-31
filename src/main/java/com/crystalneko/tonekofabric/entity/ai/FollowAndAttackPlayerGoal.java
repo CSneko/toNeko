@@ -47,12 +47,12 @@ public class FollowAndAttackPlayerGoal extends Goal {
     @Override
     public void tick() {
         //判断能否执行
-        if(waiting > 40) {
+        if(waiting > 100) {
             if (targetPlayer != null &&targetPlayer.isAlive()) {
                 // 如果攻击目标还活着，就判断距离目标的位置
                 double distance = mobEntity.distanceTo(targetPlayer);
-                if (distance <= 0.4) {
-                    targetPlayer.damage(mobEntity.getDamageSources().generic(),2.0F);
+                if (distance <= 3) {
+                    targetPlayer.damage(mobEntity.getDamageSources().generic(),5.0F);
                 }
             }
         }else {
