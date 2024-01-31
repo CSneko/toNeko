@@ -216,7 +216,7 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
         if(target instanceof PlayerEntity){
             //让实体尝试跟随目标
             PlayerEntity targetPlayer = (PlayerEntity) target;
-            neko.goalSelector.add(1,new FollowAndAttackPlayerGoal(neko,targetPlayer,1.0D,0.1F,100.0F));
+            neko.goalSelector.add(1,new FollowAndAttackPlayerGoal(neko,targetPlayer,0.8D,0.1F,100.0F));
         }
         hatredMap.put(target, currentHatred + amount);
     }

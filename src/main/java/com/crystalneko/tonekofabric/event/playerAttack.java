@@ -25,7 +25,7 @@ public class playerAttack {
             if (entity instanceof PlayerEntity attacker) {
                 handlePlayerAttackEntity(player, attacker);
             }
-            if(player.getHealth() <= 0){
+            if(!player.isAlive()){
                 //是否被猫娘干死
                 if(Registries.ENTITY_TYPE.getId(entity.getType()).getPath().equalsIgnoreCase("neko")){
                     player.sendMessage(Text.translatable("attack.death.normal_rod"));
