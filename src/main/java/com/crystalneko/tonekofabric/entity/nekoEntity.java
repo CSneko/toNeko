@@ -23,6 +23,9 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
@@ -39,6 +42,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Random;
 
 
 public class nekoEntity extends AnimalEntity implements GeoEntity {
@@ -393,14 +397,23 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
         //添加仇恨
         increaseHatred(player,100);
         World world = player.getWorld();
-        //末地烛粒子效果
         double x = player.getX();
         double y = player.getY();
         double z = player.getZ();
+        //播放被伤害音频
+        world.playSound(this,this.lastNetherPortalPosition,SoundEvent.of(new Identifier("toneko","sounds.neko.hurt_0")),
+                SoundCategory.NEUTRAL,1.0F,1.0F);
+        //末地烛粒子效果
         int i = 0;
         while (i < 10) {
             world.addParticle(ParticleTypes.END_ROD, x, y, z, 0.0D, 0.0D, 0.0D);
             i ++;
         }
     }
+    @Override
+    protected SoundEvent getAmbientSound() {
+        int randomNum = new Random().nextInt(5);
+        return SoundEvent.of(new Identifier("toneko","sounds.neko.stay_"+randomNum));
+    }
+
 }

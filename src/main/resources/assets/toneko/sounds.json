@@ -1,0 +1,32 @@
+{
+  "entity.neko.stay_0": {
+    "sounds": [
+      "toneko:sounds/entity/neko/stay_0"
+    ]
+  },
+  "entity.neko.stay_1": {
+    "sounds": [
+      "toneko:sounds/entity/neko/stay_1"
+    ]
+  },
+  "entity.neko.stay_2": {
+    "sounds": [
+      "toneko:sounds/entity/neko/stay_2"
+    ]
+  },
+  "entity.neko.stay_3": {
+    "sounds": [
+      "toneko:sounds/entity/neko/stay_3"
+    ]
+  },
+  "entity.neko.stay_4": {
+    "sounds": [
+      "toneko:sounds/entity/neko/stay_4"
+    ]
+  },
+  "entity.neko.hurt_0": {
+    "sounds": [
+      "toneko:sounds/entity/neko/hurt_0"
+    ]
+  }
+}
