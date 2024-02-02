@@ -19,6 +19,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.world.ServerWorld;
@@ -168,8 +169,7 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
         }
         //如果物品为Better_end_rod的normal_rod
         if(itemId.getPath().equalsIgnoreCase("normal_rod")){
-            //添加仇恨
-            increaseHatred(player,100);
+            better_end_rod_interact(player,hand);
         }
 
 
@@ -388,5 +388,19 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
     //--------------------------------------------------------------杂项------------------------------------------------
     static {
         TAMING_INGREDIENT = Ingredient.ofItems(Items.TROPICAL_FISH,Items.END_ROD,Items.IRON_HOE,Items.IRON_INGOT);
+    }
+    public void better_end_rod_interact(PlayerEntity player,Hand hand){
+        //添加仇恨
+        increaseHatred(player,100);
+        World world = player.getWorld();
+        //末地烛粒子效果
+        double x = player.getX();
+        double y = player.getY();
+        double z = player.getZ();
+        int i = 0;
+        while (i < 10) {
+            world.addParticle(ParticleTypes.END_ROD, x, y, z, 0.0D, 0.0D, 0.0D);
+            i ++;
+        }
     }
 }

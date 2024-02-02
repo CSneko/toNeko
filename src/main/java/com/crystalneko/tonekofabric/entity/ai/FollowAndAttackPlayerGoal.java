@@ -5,7 +5,9 @@ import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.damage.DamageSources;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.text.Text;
+import net.minecraft.world.World;
 
 public class FollowAndAttackPlayerGoal extends Goal {
     private final AnimalEntity mobEntity;
@@ -65,7 +67,14 @@ public class FollowAndAttackPlayerGoal extends Goal {
         }else {
             waiting++ ;
         }
-
+        if(targetPlayer != null) {
+            double x = targetPlayer.getX();
+            double y = targetPlayer.getY();
+            double z = targetPlayer.getZ();
+            World world = targetPlayer.getWorld();
+            //播放爱心粒子效果
+            world.addParticle(ParticleTypes.HEART,x,y,z,0.0D,0.0D,0.0D);
+        }
 
     }
 
