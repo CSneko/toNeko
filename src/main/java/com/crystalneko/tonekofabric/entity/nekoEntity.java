@@ -397,23 +397,26 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
         //添加仇恨
         increaseHatred(player,100);
         World world = player.getWorld();
-        double x = player.getX();
-        double y = player.getY();
-        double z = player.getZ();
+        double x = this.getX();
+        double y = this.getY();
+        double z = this.getZ();
         //播放被伤害音频
-        world.playSound(this,this.lastNetherPortalPosition,SoundEvent.of(new Identifier("toneko","sounds.neko.hurt_0")),
+        world.playSound(this,this.getBlockPos(),SoundEvent.of(new Identifier("toneko","entity.neko.hurt_0")),
                 SoundCategory.NEUTRAL,1.0F,1.0F);
         //末地烛粒子效果
         int i = 0;
         while (i < 10) {
-            world.addParticle(ParticleTypes.END_ROD, x, y, z, 0.0D, 0.0D, 0.0D);
+            world.addParticle(ParticleTypes.FALLING_HONEY, x, y, z, 0.1D, 0.1D, 0.1D);
+            world.addParticle(ParticleTypes.DRIPPING_HONEY, x, y, z, 0.1D, 0.1D, 0.1D);
+            world.addParticle(ParticleTypes.FALLING_WATER, x, y, z, 0.1D, 0.1D, 0.1D);
+            world.addParticle(ParticleTypes.DRIPPING_WATER, x, y, z, 0.1D, 0.1D, 0.1D);
             i ++;
         }
     }
     @Override
     protected SoundEvent getAmbientSound() {
         int randomNum = new Random().nextInt(5);
-        return SoundEvent.of(new Identifier("toneko","sounds.neko.stay_"+randomNum));
+        return SoundEvent.of(new Identifier("toneko","entity.neko.stay_"+randomNum));
     }
 
 }

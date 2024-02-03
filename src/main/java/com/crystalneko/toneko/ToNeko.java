@@ -26,6 +26,8 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.logging.Logger;
 
@@ -56,7 +58,7 @@ public final class ToNeko extends JavaPlugin {
         //判断是否启用了ctLib
         downloadPlugin.checkAndDownloadPlugin("ctLib","https://w.csk.asia/res/plugins/ctLib.jar");
         //获取config.yml
-        checkAndSaveResource("config.yml");
+        checkAndSaveResource("assets/toneko/config.yml");
         //更新配置文件
         updateConfig();
         //复制文件
@@ -121,7 +123,7 @@ public final class ToNeko extends JavaPlugin {
             throw new RuntimeException(e);
         }
         //使用默认配置文件替换旧的配置文件
-        InputStream defaultConfigStream = getResource("config.yml"); // 默认配置文件的输入流
+        InputStream defaultConfigStream = getResource("assets/toneko/config.yml"); // 默认配置文件的输入流
         try {
             Files.copy(defaultConfigStream, configFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
@@ -135,6 +137,7 @@ public final class ToNeko extends JavaPlugin {
         newConfig.set("AI.enable", ifConfig("AI.enable"));
         newConfig.set("AI.API", ifConfig("AI.API"));
         newConfig.set("AI.prompt", ifConfig("AI.prompt"));
+        newConfig.set("chat.enable", ifConfig("chat.enable"));
         try {
             newConfig.save(configFile);
         } catch (IOException e) {
@@ -146,8 +149,15 @@ public final class ToNeko extends JavaPlugin {
 
     //保存资源文件
     private void checkAndSaveResource(String filePath) {
-        if (!isFileExists(filePath)) {
+        //如果文件目录without assets/toneko/
+        if (!isFileExists(filePath.replace("assets/toneko/",""))) {
             saveResource(filePath, false);
+            Path file = Path.of("plugins/toNeko/" + filePath);
+            try {
+                Files.move(file,Path.of("plugins/toNeko/config.yml"));
+            } catch (IOException e) {
+                System.out.println("无法移动文件");
+            }
         }
     }
     private boolean isFileExists(String filePath) {

@@ -6,6 +6,7 @@ import net.minecraft.entity.damage.DamageSources;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.world.World;
 
@@ -64,16 +65,15 @@ public class FollowAndAttackPlayerGoal extends Goal {
             // 更新实体的位置，使其朝向目标玩家并攻击
             mobEntity.getLookControl().lookAt(targetPlayer, 10.0F, mobEntity.getMaxLookPitchChange());
             mobEntity.getNavigation().startMovingTo(targetPlayer, speed);
+            double x = mobEntity.getX();
+            double y = mobEntity.getY();
+            double z = mobEntity.getZ();
+            World world =mobEntity.getWorld();
+            //播放爱心粒子效果
+            world.addParticle(ParticleTypes.HEART,true,x,y,z,0.1D,0.1D,0.1D);
+
         }else {
             waiting++ ;
-        }
-        if(targetPlayer != null) {
-            double x = targetPlayer.getX();
-            double y = targetPlayer.getY();
-            double z = targetPlayer.getZ();
-            World world = targetPlayer.getWorld();
-            //播放爱心粒子效果
-            world.addParticle(ParticleTypes.HEART,x,y,z,0.0D,0.0D,0.0D);
         }
 
     }
