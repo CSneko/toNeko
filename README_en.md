@@ -10,7 +10,7 @@ It revamps the chat system while adding some buffs and gameplay
 ## Instructions
 Place it in the server/client's `plugins` folder or `mods` folder.
 
-Pre-mods required for the modding version: [ctlib](https://modrinth.com/mod/ctlibmod), [geocklib](https://modrinth.com/mod/geckolib)
+Pre-mods required for the modding version: [ctlib](https://modrinth.com/mod/ctlibmod), [geckolib](https://modrinth.com/mod/geckolib)
 
 Pre-plugin required for the plug-in version: [ctlib](https://modrinth.com/plugin/ctlib)
 Supported versions (doesn't mean it can't run on other versions):

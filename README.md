@@ -8,7 +8,7 @@
 ## 使用方法
 放入服务器/客户端的`plugins`文件夹或`mods`文件夹。
 
-模组版需要的前置mod: [ctlib](https://modrinth.com/mod/ctlibmod),[geocklib](https://modrinth.com/mod/geckolib)
+模组版需要的前置mod: [ctlib](https://modrinth.com/mod/ctlibmod),[geckolib](https://modrinth.com/mod/geckolib)
 
 插件版需要的前置插件: [ctlib](https://modrinth.com/plugin/ctlib)
 
