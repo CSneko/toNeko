@@ -11,10 +11,8 @@ import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
 public class command{
-    private final String worldName;
     public command(){
         //获取世界名称
-        worldName = "world";
         //注册命令
         initCommand();
     }
@@ -30,9 +28,7 @@ public class command{
                     .then(literal("player")
                             .then(argument("neko", StringArgumentType.string())
                                     .suggests(getOnlinePlayers)  //获取玩家列表
-                                    .executes(context -> {
-                                        return ToNekoCommand.Player(context);
-                                    })
+                                    .executes(ToNekoCommand::Player)
                             )
                     )
                     //--------------------------------------------------aliases--------------------------------------
@@ -42,24 +38,18 @@ public class command{
                                     //-------------------------------------add---------------------------------------
                                     .then(literal("add")
                                             .then(argument("aliases", StringArgumentType.string())
-                                                    .executes(context -> {
-                                                        return ToNekoCommand.AliasesAdd(context);
-                                                    })
+                                                    .executes(ToNekoCommand::AliasesAdd)
                                             )
                                     ).then(literal("remove")
                                             .then(argument("aliases", StringArgumentType.string())
-                                                    .executes(context -> {
-                                                        return ToNekoCommand.AliasesRemove(context);
-                                                    })
+                                                    .executes(ToNekoCommand::AliasesRemove)
                                             )
                                      )
                             )
                     )
                     //--------------------------------------------------item-----------------------------------------
                     .then(literal("item")
-                            .executes(context -> {
-                                return ToNekoCommand.item(context);
-                            })
+                            .executes(ToNekoCommand::item)
                     )
                     //-----------------------------------------------block--------------------------------------------
                     .then(literal("block")
@@ -75,9 +65,7 @@ public class command{
                                                                         builder.suggest("word");
                                                                         return builder.buildFuture();
                                                                     })
-                                                                    .executes(context -> {
-                                                                        return ToNekoCommand.addBlock(context);
-                                                                    })
+                                                                    .executes(ToNekoCommand::addBlock)
                                                             )
                                                     )
                                             )
@@ -85,9 +73,7 @@ public class command{
                                     //----------------------------remove----------------------------------
                                     .then(literal("remove")
                                             .then(argument("block",StringArgumentType.string())
-                                                    .executes(context -> {
-                                                        return ToNekoCommand.removeBlock(context);
-                                                    })
+                                                    .executes(ToNekoCommand::removeBlock)
                                             )
                                     )
                             )
@@ -96,18 +82,14 @@ public class command{
                     .then(literal("xp")
                             .then(argument("neko",StringArgumentType.string())
                                     .suggests(getOnlinePlayers)
-                                    .executes(context -> {
-                                        return ToNekoCommand.xp(context);
-                                    })
+                                    .executes(ToNekoCommand::xp)
                             )
                     )
                     //-------------------------------------------remove--------------------------------------
                     .then(literal("remove")
                             .then(argument("neko",StringArgumentType.string())
                                     .suggests(getOnlinePlayers)
-                                    .executes(context -> {
-                                        return ToNekoCommand.remove(context);
-                                    })
+                                    .executes(ToNekoCommand::remove)
                             )
                     )
                     //-------------------------------------help---------------------------------------------------
@@ -135,15 +117,11 @@ public class command{
                      )
                      //----------------------------------------jump-------------------------------------
                      .then(literal("jump")
-                             .executes(context -> {
-                                 return NekoCommand.jump(context);
-                             })
+                             .executes(NekoCommand::jump)
                      )
                      //----------------------------------------vision---------------------------------
                      .then(literal("vision")
-                             .executes(context -> {
-                                 return NekoCommand.vision(context);
-                             })
+                             .executes(NekoCommand::vision)
                      )
              );
              //---------------------------------------------aineko-------------------------------------------------------
@@ -158,17 +136,13 @@ public class command{
                     //--------------------------------------add----------------------------------------------
                     .then(literal("add")
                             .then(argument("neko",StringArgumentType.string())
-                                    .executes(context -> {
-                                        return AINekoCommand.add(context);
-                                    })
+                                    .executes(AINekoCommand::add)
                             )
                     )
                     //----------------------------------------remove--------------------------------------------
                     .then(literal("remove")
                             .then(argument("neko",StringArgumentType.string())
-                                    .executes(context -> {
-                                        return AINekoCommand.remove(context);
-                                    })
+                                    .executes(AINekoCommand::remove)
                             )
                     )
             );

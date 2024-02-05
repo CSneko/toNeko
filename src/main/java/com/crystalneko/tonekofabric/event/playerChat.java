@@ -40,9 +40,11 @@ public class playerChat {
             MinecraftServer server = player.getServer();
             String worldName = base.getWorldName(player.getWorld());
             String playerName = base.getPlayerName(player);
-            Text newMessage = modifyMessage(message,worldName,playerName,false,server);
+            String newMessage = modifyMessage(message,worldName,playerName);
             // 发送消息给所有在线玩家
-            sendMsg(newMessage,server);
+            sendMsg(Text.of(newMessage),server);
+            //进行AI处理
+            AIMsg(newMessage,worldName,playerName,server);
         }
     }
     private static void sendMsg(Text message,MinecraftServer server){
@@ -51,15 +53,13 @@ public class playerChat {
             player.sendMessage(message);
         });
     }
-    private static Text modifyMessage(Text message, String worldName, String playerName, Boolean isAI,MinecraftServer server) {
+    private static String modifyMessage(Text message, String worldName, String playerName) {
         lp.build();
         base.start(worldName);
         if (message == null || message.getString().isEmpty()) {
             return null;
         }
 
-        //猫娘列表
-        String[] nekoList = sqlite.readAllValueInAColumn(worldName + "Nekos", "neko");
 
         String stringMessage = message.getString();
         // 判断是否有主人
@@ -97,68 +97,62 @@ public class playerChat {
             String prefix = libPrefix + libPublicPrefix;
             stringMessage = prefix  + "§e" + playerName + "§6 >> §f" + stringMessage;
 
-
-            if(!isAI){
-                //读取配置文件
-                YamlConfiguration config = null;
-                try {
-                    config = new YamlConfiguration(Path.of("ctlib/toneko/config.yml"));
-                } catch (IOException e) {
-                    System.out.println("无法加载配置文件:" + e.getMessage());
-                }
-                //如果不启用AI,则不执行以下代码
-                if(config != null && config.getBoolean("AI.enable")) {
-                    //如果不是AI发送，则检测是否有提到AI的名称
-                    for (String str : nekoList) {
-                        if (stringMessage.contains(str)) {
-                            //对于存在的，进行处理
-                            String type = sqlite.getColumnValue(worldName + "Nekos", "type", "neko", str);
-                            if (base.getOwner(str, worldName).equalsIgnoreCase(playerName) && type != null && type.equalsIgnoreCase("AI")) {
-                                //获取语言
-                                String language = config.getString("language");
-                                //获取API
-                                String API = config.getString("AI.API");
-                                //获取提示词
-                                String prompt = config.getString("AI.prompt");
-                                prompt = prompt.replaceAll("%name%",str);
-                                prompt = prompt.replaceAll("%owner%",owner);
-                                //替换用户输入中的&符号
-                                String rightMsg = stringMessage.replaceAll("&", "and");
-                                //构建链接
-                                String url = API.replaceAll("%text%", rightMsg);
-                                url = url.replaceAll("%prompt%", prompt);
-                                //获取数据
-                                JsonConfiguration response = null;
-                                try {
-                                    response = httpGet.getJson(url, null);
-                                } catch (IOException e) {
-                                    System.out.println("无法获取json:"+e.getMessage());
-                                }
-                                String AIMsg;
-                                //读取响应
-                                if(response != null) {
-                                    if (language.equalsIgnoreCase("zh_cn")) {
-                                        AIMsg = response.getString("response");
-                                    } else {
-                                        AIMsg = response.getString("source_response");
-                                    }
-                                    if (AIMsg != null) {
-                                        //对AI的消息进行修改
-                                        Text textAIMsg = modifyMessage(Text.of(AIMsg), worldName, playerName, true, server);
-                                        //再次发送消息
-                                        sendMsg(textAIMsg, server);
-                                    }
-                                }
-
-                            }
-                        }
-                    }
-                }
-            }
         } else {
             stringMessage = "§e" + playerName + "§6 >> §f" + stringMessage;
         }
-        return Text.of(stringMessage);
+        return stringMessage;
+    }
+    private static void AIMsg(String stringMessage,String worldName,String playerName,MinecraftServer server){
+        //读取配置文件
+        YamlConfiguration config = null;
+        try {
+            config = new YamlConfiguration(Path.of("ctlib/toneko/config.yml"));
+        } catch (IOException e) {
+            System.out.println("无法加载配置文件:" + e.getMessage());
+        }
+        //如果不启用AI,则不执行以下代码
+        if(config != null && config.getBoolean("AI.enable")) {
+            String[] nekoList = sqlite.readAllValueInAColumn(worldName + "Nekos", "neko");
+            //如果不是AI发送，则检测是否有提到AI的名称
+            for (String str : nekoList) {
+                if (stringMessage.contains(str)) {
+                    //对于存在的，进行处理
+                    String type = sqlite.getColumnValue(worldName + "Nekos", "type", "neko", str);
+                    if (base.getOwner(str, worldName).equalsIgnoreCase(playerName) && type != null && type.equalsIgnoreCase("AI")) {
+                        String owner = sqlite.getColumnValue(worldName + "Nekos", "owner", "neko", playerName);
+                        //获取API
+                        String API = config.getString("AI.API");
+                        //获取提示词
+                        String prompt = config.getString("AI.prompt");
+                        prompt = prompt.replaceAll("%name%",str);
+                        prompt = prompt.replaceAll("%owner%",owner);
+                        //替换用户输入中的&符号
+                        String rightMsg = stringMessage.replaceAll("&", "and");
+                        //构建链接
+                        String url = API.replaceAll("%text%", rightMsg);
+                        url = url.replaceAll("%prompt%", prompt);
+                        //获取数据
+                        JsonConfiguration response = null;
+                        try {
+                            response = httpGet.getJson(url, null);
+                        } catch (IOException e) {
+                            System.out.println("无法获取json:"+e.getMessage());
+                        }
+                        //读取响应
+                        if(response != null) {
+                            String AIMsg = response.getString("response");
+                            if (AIMsg != null) {
+                                //对AI的消息进行修改
+                                String textAIMsg = modifyMessage(Text.of(AIMsg), worldName, playerName);
+                                //再次发送消息
+                                sendMsg(Text.of(textAIMsg), server);
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
     }
 
 
