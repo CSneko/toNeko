@@ -5,7 +5,6 @@ import com.crystalneko.tonekofabric.entity.nekoEntity;
 import com.crystalneko.tonekofabric.libs.base;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-
 public class neko {
     public LivingEntity entity;
     public PlayerEntity player;
