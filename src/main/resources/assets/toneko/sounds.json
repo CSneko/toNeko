@@ -23,10 +23,5 @@
     "sounds": [
       "toneko:entity/neko/stay_4"
     ]
-  },
-  "entity.neko.hurt_0": {
-    "sounds": [
-      "toneko:entity/neko/hurt_0"
-    ]
   }
 }

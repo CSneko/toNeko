@@ -70,8 +70,11 @@ public class FollowAndAttackPlayerGoal extends Goal {
             double z = mobEntity.getZ();
             World world =mobEntity.getWorld();
             //播放爱心粒子效果
-            world.addParticle(ParticleTypes.HEART,true,x,y,z,0.1D,0.1D,0.1D);
-
+            int i = 0;
+            while (i<10) {
+                world.addParticle(ParticleTypes.HEART, true, x, y, z, 0.1D, 0.1D, 0.1D);
+                i++;
+            }
         }else {
             waiting++ ;
         }

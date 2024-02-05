@@ -58,7 +58,7 @@ public class nekoed implements Listener{
 
     public void sendMessage(String playerName, String prefix, String formattedMessage) {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            player.sendMessage(prefix + playerName + " >> §7" + formattedMessage);
+            player.sendMessage(prefix + "§e"+ playerName + " §6>> §f" + formattedMessage);
         }
     }
 

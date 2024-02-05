@@ -266,7 +266,7 @@ public class ToNekoCommand implements CommandExecutor {
                 }
         } else if (args[1].equalsIgnoreCase("reload")) {
             if(player.hasPermission("toneko.command.reload")){
-                ToNeko.config = YamlConfiguration.loadConfiguration(new File("plugins/toNeko/config.yml"));
+
             }else {
                 player.sendMessage(ToNeko.getMessage("command.no-permission"));
             }

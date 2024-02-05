@@ -95,7 +95,7 @@ public class playerChat {
                 libPrefix = "";
             }
             String prefix = libPrefix + libPublicPrefix;
-            stringMessage = prefix  + playerName + "§b >> §7" + stringMessage;
+            stringMessage = prefix  + "§e" + playerName + "§6 >> §f" + stringMessage;
 
 
             if(!isAI){
@@ -156,7 +156,7 @@ public class playerChat {
                 }
             }
         } else {
-            stringMessage = playerName + "§b >> §7" + stringMessage;
+            stringMessage = "§e" + playerName + "§6 >> §f" + stringMessage;
         }
         return Text.of(stringMessage);
     }

@@ -1,6 +1,7 @@
 package com.crystalneko.toneko.event;
 
 import com.crystalneko.ctlib.chat.chatPrefix;
+import com.crystalneko.ctlibPublic.sql.sqlite;
 import com.crystalneko.toneko.ToNeko;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -30,6 +31,9 @@ public class PlayerJoin implements Listener {
         if(data.getString(player.getName() + ".owner") != null) {
             //添加前缀
             chatPrefix.addPrivatePrefix(player,ToNeko.getMessage("other.neko"));
+        }
+        if(!sqlite.isTableExists("nekoblockword")){
+            sqlite.createTable("nekoblockword");
         }
 
     }

@@ -27,7 +27,9 @@
   "depends": {
     "fabricloader": "*",
     "fabric": "*",
-    "minecraft": ">=1.19.2"
+    "minecraft": ">=1.19",
+    "ctlib": "*",
+    "geckolib": "*"
   },
     "suggests": {
     "luckperms": "*"

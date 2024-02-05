@@ -413,10 +413,10 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
             i ++;
         }
     }
-    @Override
+    /*@Override
     protected SoundEvent getAmbientSound() {
         int randomNum = new Random().nextInt(5);
         return SoundEvent.of(new Identifier("toneko","entity.neko.stay_"+randomNum));
-    }
+    }*/
 
 }

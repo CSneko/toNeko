@@ -93,7 +93,7 @@ public class PlayerAttack implements Listener {
 
                             }
                         }
-                    } else if(itemMeta.getPersistentDataContainer().has(key2, PersistentDataType.INTEGER)){
+                    } else if(itemMeta != null && itemMeta.getPersistentDataContainer().has(key2, PersistentDataType.INTEGER)){
                         int nbtValue2 = itemMeta.getPersistentDataContainer().get(key2, PersistentDataType.INTEGER);
                         if(nbtValue2  == 2) {
                             PotionEffectType effectType = PotionEffectType.WEAKNESS; // 虚弱效果的类型
