@@ -39,9 +39,10 @@ public class nekoRender extends GeoEntityRenderer<nekoEntity> {
             this.heldItemRenderer.renderItem(entity, mainHandStack, ModelTransformationMode.GROUND, false, poseStack, buffSource, packedLight);
             poseStack.pop();
         }
-
-
-
+        if (entity.isBaby()){
+            poseStack.scale(0.5F, 0.5F, 0.5F); // 将幼年实体的尺寸缩小为原来的一半
+        }
         super.render(entity,entityYaw,partialTick,poseStack,buffSource,packedLight);
     }
+
 }

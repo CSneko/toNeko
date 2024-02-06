@@ -1,6 +1,7 @@
 package com.crystalneko.tonekofabric.entity;
 
 import com.crystalneko.ctlibPublic.sql.sqlite;
+import com.crystalneko.tonekofabric.ToNekoFabric;
 import com.crystalneko.tonekofabric.entity.ai.FollowAndAttackPlayerGoal;
 import com.crystalneko.tonekofabric.libs.base;
 import net.minecraft.entity.EntityType;
@@ -11,8 +12,6 @@ import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -25,7 +24,6 @@ import net.minecraft.registry.Registries;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
@@ -112,9 +110,14 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
 
     @Override
     public AnimalEntity createChild(ServerWorld world, PassiveEntity entity) {
-        return null;
+        nekoEntity child = new nekoEntity(ToNekoFabric.NEKO,world);
+        child.age = -48000;
+        return child;
     }
-
+   @Override
+    public boolean isBreedingItem(ItemStack stack) {
+        return stack.getItem() == Items.CAKE || stack.getItem() == Items.GOLDEN_APPLE || stack.getItem() == Items.ENCHANTED_GOLDEN_APPLE;
+    }
 
     //移动目标
     @Override
