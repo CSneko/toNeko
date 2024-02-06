@@ -40,3 +40,33 @@ public class nekoModel extends GeoModel<nekoEntity>{
         }*/
     }
 }
+/*
+{
+  "entity.neko.stay_0": {
+    "sounds": [
+      "toneko:entity/neko/stay_0"
+    ]
+  },
+  "entity.neko.stay_1": {
+    "sounds": [
+      "toneko:entity/neko/stay_1"
+    ]
+  },
+  "entity.neko.stay_2": {
+    "sounds": [
+      "toneko:entity/neko/stay_2"
+    ]
+  },
+  "entity.neko.stay_3": {
+    "sounds": [
+      "toneko:entity/neko/stay_3"
+    ]
+  },
+  "entity.neko.stay_4": {
+    "sounds": [
+      "toneko:entity/neko/stay_4"
+    ]
+  }
+}
+
+ */

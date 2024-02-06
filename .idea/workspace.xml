@@ -7,10 +7,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="修复AI聊天">
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="添加幼年实体">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/client/nekoModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/client/nekoModel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/nekoEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/nekoEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/sounds.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/sounds.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/sounds/entity/neko/hurt_0.ogg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/sounds/entity/neko/stay_0.ogg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/sounds/entity/neko/stay_1.ogg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/sounds/entity/neko/stay_2.ogg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/sounds/entity/neko/stay_3.ogg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/sounds/entity/neko/stay_4.ogg" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -438,7 +445,15 @@
       <option name="project" value="LOCAL" />
       <updated>1707117457114</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="添加幼年实体">
+      <option name="closed" value="true" />
+      <created>1707233906120</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1707233906120</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -473,6 +488,7 @@
     <MESSAGE value="添加更多可用API" />
     <MESSAGE value="修改readme" />
     <MESSAGE value="修复AI聊天" />
-    <option name="LAST_COMMIT_MESSAGE" value="修复AI聊天" />
+    <MESSAGE value="添加幼年实体" />
+    <option name="LAST_COMMIT_MESSAGE" value="添加幼年实体" />
   </component>
 </project>

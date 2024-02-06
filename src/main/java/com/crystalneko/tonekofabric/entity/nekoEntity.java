@@ -7,6 +7,7 @@ import com.crystalneko.tonekofabric.libs.base;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MovementType;
+import net.minecraft.entity.ai.brain.task.BreedTask;
 import net.minecraft.entity.ai.brain.task.FollowCustomerTask;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -129,6 +130,7 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
         this.goalSelector.add(2, temptGoal);
         //this.goalSelector.add(9, new AttackGoal(this));
         this.goalSelector.add(12, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F));
+        this.goalSelector.add(3, new AnimalMateGoal(this, 1.0));
     }
     @Override
     public void tick(){
