@@ -28,6 +28,15 @@
   "item.stick-level-2": "§9§o二级撅猫棍",
   "item.stick-level-2-lore": "§9§oIP68级防水",
   "item.toneko.empty": " ",
+  "item.toneko.neko_spawn_egg": "猫娘刷怪蛋",
   "attack.add-xp": "§6你与%d的好感经验提升了%c",
-  "attack.death.normal_rod": "你被艹死了"
+  "attack.death.normal_rod": "你被艹死了",
+  "entity.neko.loli.end_rod.use.0": "§a你...想干嘛",
+  "entity.neko.loli.end_rod.use.1": "§a请...不要...这么做",
+  "entity.neko.loli.end_rod.use.2": "§a你好变态",
+  "entity.neko.loli.end_rod.use.3": "§a你再这样...我就",
+  "entity.neko.loli.end_rod.use.sys.3": "§c系统提示:请停止你的变态行为",
+  "entity.neko.loli.end_rod.use.4": "§a快...停下",
+  "entity.neko.loli.end_rod.use.5": "§a最后提醒，你...快停下",
+  "entity.neko.loli.end_rod.use.kick": "§c反思一下你的行为，你个变态"
 }

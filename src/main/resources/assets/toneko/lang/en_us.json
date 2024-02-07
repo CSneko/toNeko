@@ -28,6 +28,15 @@
   "item.stick-level-2": "§9§oCat stick level 2",
   "item.stick-level-2-lore": "§9§oIP68!No water can damage it!",
   "item.toneko.empty": " ",
+  "item.toneko.neko_spawn_egg": "neko spawn egg",
   "attack.add-xp":"§6Your friendship experience with %d has increased by %c",
-  "attack.death.normal_rod": "You killed by fucking"
+  "attack.death.normal_rod": "You killed by fucking",
+  "entity.neko.loli.end_rod.use.0": "§aWhat do you...want to do",
+  "entity.neko.loli.end_rod.use.1": "§aPlease...don't...do this",
+  "entity.neko.loli.end_rod.use.2": "§aYou are so perverted",
+  "entity.neko.loli.end_rod.use.3": "§aIf you keep doing this...I will",
+  "entity.neko.loli.end_rod.use.sys.3": "§cSystem prompt: Please stop your perverted behavior",
+  "entity.neko.loli.end_rod.use.4": "§aQuick...stop",
+  "entity.neko.loli.end_rod.use.5": "§aLast reminder, you...stop",
+  "entity.neko.loli.end_rod.use.kick": "§cReflect on your behavior, heitai!"
 }

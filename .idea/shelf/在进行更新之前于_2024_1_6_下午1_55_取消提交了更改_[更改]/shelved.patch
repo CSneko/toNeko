@@ -1,0 +1,315 @@
+Index: build/loom-cache/mixin-map-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.main.tiny
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>v1\tnamed\tintermediary\nFIELD\tcom/crystalneko/tonekofabric/mixins/chat\tLnet/minecraft/server/network/ServerPlayerEntity;\tplayer\tfield_14140\nMETHOD\tcom/crystalneko/tonekofabric/mixins/chat\t(Lnet/minecraft/network/message/SignedCommandArguments;Lnet/minecraft/server/command/ServerCommandSource;)Lnet/minecraft/server/command/ServerCommandSource;\tmethod_45002\tmethod_45002\nMETHOD\tcom/crystalneko/tonekofabric/mixins/chat\t(DDDFF)V\trequestTeleport\tmethod_14363\nMETHOD\tcom/crystalneko/tonekofabric/mixins/chat\t(Lnet/minecraft/network/encryption/PublicPlayerSession;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;\tmethod_46366\tmethod_46366\nMETHOD\tcom/crystalneko/tonekofabric/mixins/chat\t(Ljava/util/List;Ljava/util/function/UnaryOperator;Lnet/minecraft/item/ItemStack;)V\tsetTextToBook\tmethod_33796\nMETHOD\tcom/crystalneko/tonekofabric/mixins/chat\t(DDDFFLjava/util/Set;)V\trequestTeleport\tmethod_14360\nMETHOD\tcom/crystalneko/tonekofabric/mixins/chat\t(Ljava/lang/String;)Lcom/mojang/brigadier/ParseResults;\tparse\tmethod_45003\nMETHOD\tcom/crystalneko/tonekofabric/mixins/chat\t(Lnet/minecraft/network/packet/Packet;)Z\taccepts\tmethod_52413\n
+===================================================================
+diff --git a/build/loom-cache/mixin-map-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.main.tiny b/build/loom-cache/mixin-map-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.main.tiny
+--- a/build/loom-cache/mixin-map-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.main.tiny	
++++ b/build/loom-cache/mixin-map-net.fabricmc.yarn.1_20_2.1.20.2+build.4-v2.main.tiny	
+@@ -7,3 +7,9 @@
+ METHOD	com/crystalneko/tonekofabric/mixins/chat	(DDDFFLjava/util/Set;)V	requestTeleport	method_14360
+ METHOD	com/crystalneko/tonekofabric/mixins/chat	(Ljava/lang/String;)Lcom/mojang/brigadier/ParseResults;	parse	method_45003
+ METHOD	com/crystalneko/tonekofabric/mixins/chat	(Lnet/minecraft/network/packet/Packet;)Z	accepts	method_52413
++METHOD	com/crystalneko/tonekofabric/mixins/chat	(Lnet/minecraft/network/packet/c2s/play/CommandExecutionC2SPacket;Lnet/minecraft/command/argument/SignedArgumentList;Lnet/minecraft/network/message/LastSeenMessageList;)Ljava/util/Map;	collectArgumentMessages	method_45006
++METHOD	com/crystalneko/tonekofabric/mixins/chat	(Lnet/minecraft/server/network/ServerPlayerEntity;Lnet/minecraft/item/ItemStack;)Z	canPlace	method_27913
++METHOD	com/crystalneko/tonekofabric/mixins/chat	(Lnet/minecraft/network/message/SignedMessage;Lnet/minecraft/network/message/MessageType$Parameters;)V	sendChatMessage	method_45170
++METHOD	com/crystalneko/tonekofabric/mixins/chat	(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageType$Parameters;)V	sendProfilelessChatMessage	method_45168
++METHOD	com/crystalneko/tonekofabric/mixins/chat	()V	tick	method_18784
++METHOD	com/crystalneko/tonekofabric/mixins/chat	()V	syncWithPlayerPosition	method_14372
+Index: build/resources/main/config.yml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>#语言选项（支持 zh_cn,en_us）\nlanguage: zh_cn\n#是否使用客户端语言（仅在Fabric生效）\nclient-language: false\n#是否开启自动更新\nautomatic-updates: false\n#是否接入在线网站(统计信息会被上传，详情见 https://w.csk.asia/toneko)\nonline: true\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n#下面没内容了\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n#下面没内容了\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n#下面没内容了\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n#我是胡桃的狗!!!!\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n#下面没内容了\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n#下面没内容了\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n#下面没内容了\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n#欢迎加群836602883
+===================================================================
+diff --git a/build/resources/main/config.yml b/build/resources/main/config.yml
+--- a/build/resources/main/config.yml	
++++ b/build/resources/main/config.yml	
+@@ -4,116 +4,14 @@
+ client-language: false
+ #是否开启自动更新
+ automatic-updates: false
+-#是否接入在线网站(统计信息会被上传，详情见 https://w.csk.asia/toneko)
+-online: true
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-#下面没内容了
+-
+-
++#Ai功能
++AI:
++  # 是否启用AI
++  enable: false
++  #AI的API,占位符 %text% = 用户输入, %prompt% = 提示词
++  API: "https://chat.ai.crystalneko.online?t=%text%&&p=%prompt%"
++  #提示词，占位符 %name% = 猫娘名称, %owner% = 主人
++  prompt: "你是一只可爱的猫娘，你的名字是%name%，你的主人是%owner%"
+ 
+ 
+ 
+@@ -238,9 +136,6 @@
+ 
+ 
+ 
+-
+-
+-
+ #下面没内容了
+ 
+ 
+@@ -279,34 +174,6 @@
+ 
+ 
+ 
+-#我是胡桃的狗!!!!
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+ 
+ 
+ 
+@@ -354,59 +221,7 @@
+ 
+ 
+ 
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-#下面没内容了
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
++# 猫羽雫好可爱啊
+ 
+ 
+ 
+@@ -446,7 +261,6 @@
+ 
+ 
+ 
+-#下面没内容了
+ 
+ 
+ 
+@@ -454,22 +268,7 @@
+ 
+ 
+ 
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
++#据说"1"+"1"="11"哦
+ 
+ 
+ 
+@@ -499,4 +298,4 @@
+ 
+ 
+ 
+-#欢迎加群836602883
+\ No newline at end of file
++# 诶嘿，被发现了ლ(╹◡╹ლ)
+\ No newline at end of file
+Index: build/resources/main/language/en_us.yml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>onEnable:\n  new-version: \"There is a new version available for download, please go to https://github.com/CSneko/toneko to download\"\n  up-to-date: \"Currently the latest version\"\n  unable-check-update: \"Unable to check for updates\"\nattack:\n  add-xp: \"§cYour favorable experience with §e%d§c has increased%c\"\nitem:\n  stick: \"§9§oCat stick\"\n  stick-lore: \"§9§oNo IP68\"\n  stick-level-2: \"§9§oCat stick level 2\"\n  stick-level-2-lore: \"§9§oIP68!No water can damage it!\"\ndeath:\n  sub-xp: \"§cYour favorable experience with §e%d§c has decreased%c\"\nother:\n  neko: \"§aneko\"\n  owner: \"owner\"\n  nya: \"-nya~\"\nbase:\n  null:\n    owner: \"no owner\"\nchat:\n  neko:\n    nya: \"-nya~\"\n    prefix: \"§aneko\"\n    owner: \"owner\"\ncommand:\n  only-player: \"§cThis command can only be executed by players\"\n  no-permission: \"§cYou do not have permission to execute this command!\"\n  neko:\n    not-neko: \"§cYou are not a neko lady and cannot execute this command\"\n    Invalid: \"§cInvalid subcommand, please enter §a/neko help§c to view the help\"\n    help: \"§b/neko help:\\n§a/neko help §bGet help\\n§a/neko jump §bGet jump boost\"\n  toneko:\n    help: \"§b/toneko Help:\\n§a/toneko help §bGet help\\n§a/toneko player <player name> §bTurn a player into a catgirl (but you will be sacrificed)\\n§a/ toneko item §bGet the cat stick\\n§a/toneko remove <cat girl name> §bDelete cat girl§c (This is a dangerous operation, please use it with caution)\\n§a/toneko xp <cat girl name> §bCheck the favorability Experience\\n§a/toneko aliases <cat girl name> add or remove <alias> §bAdd or remove aliases for you (a word that will be converted to 'owner')\\n§a/toneko block <cat girl name> add or remove <Blocking word> <Replacement word> word or all §bAdd a masking word (the masking word will be replaced with a replacement word, all means replacing the entire sentence, word replaces the word)\"\n    notOwner: \"§cYou are not %d's owner\"\n    player:\n      success: \"§aSuccessfully set player§6%d§a to be a neko girl, and you become its owner\"\n      nekoed: \"§bIt is already a neko girl, and its owner is§6%d\"\n      notOwner: \"§cYou are not %d's owner\"\n    aliases:\n      add:\n        true: \"§aAlias set successfully!\"\n        exists: \"§cAlias exists\"\n      remove:\n        no: \"§cAlias doesn't exists\"\n        true: \"§aRemove Alias successfully!\"\n    block:\n      exists: \"§cBlock Word was exists\"\n      no-exists: \"§cBlock Word isn't exists\"\n      add:\n        success: \"§aAdd Block Word successfully\"\n      remove:\n        success: \"§aRemove Block Word successfully\"\n    xp: \"§aYour experience of goodwill with %d is %c.\"\n    remove:\n      confirm: \"§cPlease run this command again to confirm.\"\n      success: \"§a Successfully deleted catgril %d\"\nfolia:\n  use:\n    chatEvent: \"Use of paper/Folia detected, Paper/Folia's chat listener will be used\"
+===================================================================
+diff --git a/build/resources/main/language/en_us.yml b/build/resources/main/language/en_us.yml
+--- a/build/resources/main/language/en_us.yml	
++++ b/build/resources/main/language/en_us.yml	
+@@ -55,6 +55,8 @@
+     remove:
+       confirm: "§cPlease run this command again to confirm."
+       success: "§a Successfully deleted catgril %d"
++  aineko:
++    help: "§b/aineko help:\n§a/aineko help §b get help\n§a/aineko add <name> §b add an AI catgirl\n§a/aineko remove <name> §b remove an AI catgirl\n"
+ folia:
+   use:
+     chatEvent: "Use of paper/Folia detected, Paper/Folia's chat listener will be used"
+\ No newline at end of file

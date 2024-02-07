@@ -10,16 +10,23 @@ import com.crystalneko.tonekofabric.libs.lp;
 import com.crystalneko.tonekofabric.test.testCommand;
 import com.crystalneko.tonekofabric.test.testItem;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
+import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
+import net.minecraft.entity.SpawnRestriction;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroups;
+import net.minecraft.item.SpawnEggItem;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.Heightmap;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -35,6 +42,7 @@ public class ToNekoFabric implements ModInitializer {
             new Identifier("toneko", "neko"),
             FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, nekoEntity::new).dimensions(EntityDimensions.fixed(0.75f, 0.75f)).build()
     );
+    public static final Item NEKO_SPAWN_EGG = new SpawnEggItem(NEKO, 0xc4c4c4, 0xadadad, new Item.Settings());
 
     /**
      * 运行模组 initializer.
@@ -50,9 +58,16 @@ public class ToNekoFabric implements ModInitializer {
 
         //注册物品
         new stick();
+        Registry.register(Registries.ITEM, new Identifier("toneko", "neko_spawn_egg"), NEKO_SPAWN_EGG);
 
         //注册实体
         FabricDefaultAttributeRegistry.register(NEKO, nekoEntity.createMobAttributes());
+
+        //设置实体刷新规则
+        SpawnRestriction.register(NEKO, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, nekoEntity::canMobSpawn);
+        BiomeModifications.addSpawn(BiomeSelectors.all(), SpawnGroup.CREATURE, NEKO, 2, 1,3);
+
+
 
         //注册权限组
         new lp();
@@ -72,6 +87,9 @@ public class ToNekoFabric implements ModInitializer {
     }
     //监听事件
     private void event(){
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.NATURAL).register(content -> {
+            content.add(NEKO_SPAWN_EGG);
+        });
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             new playerAttack();
             new playerJoin();
