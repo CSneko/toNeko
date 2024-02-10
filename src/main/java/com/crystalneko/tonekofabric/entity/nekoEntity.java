@@ -4,6 +4,7 @@ import com.crystalneko.ctlibPublic.sql.sqlite;
 import com.crystalneko.tonekofabric.ToNekoFabric;
 import com.crystalneko.tonekofabric.entity.ai.FollowAndAttackPlayerGoal;
 import com.crystalneko.tonekofabric.libs.base;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MovementType;
@@ -31,6 +32,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -76,6 +78,13 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
     public nekoEntity(EntityType<? extends AnimalEntity> entityType, World world) {
         super(entityType, world);
         Objects.requireNonNull(this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED)).setBaseValue(0.6D);
+        //设置碰撞箱
+        if (this.isBaby()){
+            //如果是baby,则为成体的一半
+            this.setBoundingBox(new Box(0, 0, 0, 1, 2, 1));
+        }else {
+            this.setBoundingBox(new Box(0, 0, 0, 2, 4, 2));
+        }
     }
 
 
@@ -99,6 +108,7 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
         }
 
     }
+
     public String getNekoName(){
         String worldName = base.getWorldName(this.getWorld());
         //获取uuid
@@ -118,10 +128,17 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
         child.age = -48000;
         return child;
     }
-   @Override
+    @Override
     public boolean isBreedingItem(ItemStack stack) {
         return stack.getItem() == Items.CAKE || stack.getItem() == Items.GOLDEN_APPLE || stack.getItem() == Items.ENCHANTED_GOLDEN_APPLE;
     }
+    @Override
+    public void growUp(int age, boolean overGrow){
+        super.growUp(age, overGrow);
+        //当生物长大时，设置体积为成体体积
+        this.setBoundingBox(new Box(0, 0, 0, 2, 4, 2));
+    }
+
 
     //移动目标
     @Override
