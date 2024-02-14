@@ -81,12 +81,16 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
         //设置碰撞箱
         if (this.isBaby()){
             //如果是baby,则为成体的一半
-            this.setBoundingBox(new Box(0, 0, 0, 1, 2, 1));
+            this.setBoundingBox(new Box(0, 0, 0, 2, 4, 10));
         }else {
-            this.setBoundingBox(new Box(0, 0, 0, 2, 4, 2));
+            this.setBoundingBox(new Box(0, 0, 0, 4, 8, 100));
         }
     }
 
+    @Override
+    public Box getHitbox() {
+        return super.getHitbox();
+    }
 
 
     public status setName(String name){
@@ -136,7 +140,7 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
     public void growUp(int age, boolean overGrow){
         super.growUp(age, overGrow);
         //当生物长大时，设置体积为成体体积
-        this.setBoundingBox(new Box(0, 0, 0, 2, 4, 2));
+        this.setBoundingBox(new Box(0, 0, 0, 4, 8, 4));
     }
 
 
