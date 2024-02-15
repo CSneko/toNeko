@@ -2,6 +2,7 @@ package com.crystalneko.tonekofabric.entity;
 
 import com.crystalneko.ctlibPublic.sql.sqlite;
 import com.crystalneko.tonekofabric.ToNekoFabric;
+import com.crystalneko.tonekofabric.api.NekoEntityEvents;
 import com.crystalneko.tonekofabric.entity.ai.FollowAndAttackPlayerGoal;
 import com.crystalneko.tonekofabric.libs.base;
 import net.minecraft.entity.EntityType;
@@ -20,17 +21,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.registry.Registries;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
@@ -45,19 +39,89 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import static com.crystalneko.tonekofabric.api.NekoEntityEnum.NameStatus;
 
+/**
+ <h2>代码目录:</h2>
+ <ol>
+ <li>构造函数
+ <ul>
+ <li><code>{@link nekoEntity#nekoEntity}</code></li>
+ </ul>
+ </li>
+ <li>繁殖
+ <ul>
+ <li>判断繁殖物品是否有效：<code>{@link nekoEntity#isBreedingItem(ItemStack)}</code></li>
+ <li>生成幼体：<code>{@link nekoEntity#createChild(ServerWorld, PassiveEntity)}</code></li>
+ <li>幼体长大：<code>{@link nekoEntity#growUp(int, boolean)}</code></li>
+ </ul>
+ </li>
+ <li>AI
+ <ul>
+ <li>注册初始AI：<code>{@link nekoEntity#initGoals()}</code></li>
+ </ul>
+ </li>
+ <li>玩家操作
+ <ul>
+ <li>右键点击操作：<code>{@link nekoEntity#interactMob(PlayerEntity, Hand)}</code></li>
+ <li>骑行：
+ <ul>
+ <li>控制骑行：<code>{@link nekoEntity#handleRiderInput(PlayerEntity)}</code></li>
+ <li>判断是否可以骑行：<code>{@link nekoEntity#isBeingRidden()}</code></li>
+ <li>设置骑手：<code>{@link nekoEntity#setRider(PlayerEntity)}</code></li>
+ </ul>
+ </li>
+ </ul>
+ </li>
+ <li>仇恨
+ <ul>
+ <li>增加仇恨值：<code>{@link nekoEntity#increaseHatred(LivingEntity, int)}</code></li>
+ <li>减少仇恨值：<code>{@link nekoEntity#decreaseHatred(LivingEntity, int)}</code></li>
+ <li>获取仇恨值最高的目标：<code>{@link nekoEntity#getMostHatedTarget()}</code></li>
+ </ul>
+ </li>
+ <li>动画
+ <ul>
+ <li>GeckoLib：
+ <ul>
+ <li>注册动画：<code>{@link nekoEntity#registerControllers(AnimatableManager.ControllerRegistrar)}</code></li>
+ <li>动画事件：<code>{@link nekoEntity#Anim(AnimationState)}</code></li>
+ <li>获取动画缓存：<code>{@link nekoEntity#getAnimatableInstanceCache()}</code></li>
+ </ul>
+ </li>
+ <li>动画执行：
+ <ul>
+ <li>播放动画：<code>{@link nekoEntity#playAnim(RawAnimation)}</code></li>
+ <li>判断是否可以播放某个动画：<code>{@link nekoEntity#canPlayAnim(RawAnimation)}</code></li>
+ <li>判断是否可以停止播放动画：<code>{@link nekoEntity#canStopAnim()}</code></li>
+ <li>判断是否可以播放跑动画：<code>{@link nekoEntity#canPlayRunAnim()}</code></li>
+ <li>判断是否可以播放行走动画：<code>{@link nekoEntity#canPlayWalkAnim()}</code></li>
+ <li>设置动画执行器：<code>{@link nekoEntity#setAnimTimer()}</code></li>
+ </ul>
+ </li>
+ </ul>
+ </li>
+ <li>体积
+ <ul>
+ <li>设置渲染缩放：<code>{@link nekoEntity#setScale}</code></li>
+ <li>获取渲染缩放：<code>{@link nekoEntity#getScale()}</code></li>
+ </ul>
+ </li>
+ <li>相关信息
+ <ul>
+ <li>获取猫娘名字：<code>{@link nekoEntity#getNekoName()}</code></li>
+ <li>设置猫娘名字：<code>{@link nekoEntity#setName(String)}</code></li>
+ </ul>
+ </li>
+ </ol>
+ */
 public class nekoEntity extends AnimalEntity implements GeoEntity {
-    enum status{
-        SUCCESS,FAILED,ALREADY_SET,USED,UNKNOWN
-    }
-    private HashMap<LivingEntity, Integer> hatredMap = new HashMap<>();
-    private PlayerEntity hugging;
+    private final HashMap<LivingEntity, Integer> hatredMap = new HashMap<>();
     private PlayerEntity rider;
     //准备被骑的状态，0代表正常，1代表准备前置，2代表准备，3代表被骑前置，4代表被骑
     private int ready_ride = 0;
     public final RawAnimation MOVE_ANIM = RawAnimation.begin().then("animation.neko.walk", Animation.LoopType.LOOP);
     public final RawAnimation RUN_ANIM = RawAnimation.begin().then("animation.neko.run", Animation.LoopType.LOOP);
-    public final RawAnimation HUG_ANIM = RawAnimation.begin().then("animation.neko.hug", Animation.LoopType.LOOP);
     public final RawAnimation SIT_ANIM = RawAnimation.begin().then("animation.neko.sit", Animation.LoopType.LOOP);
     public final RawAnimation SIT_STAND_ANIM = RawAnimation.begin().then("animation.neko.sit.stand", Animation.LoopType.LOOP);
     public final RawAnimation SIT_LIE_ANIM = RawAnimation.begin().then("animation.neko.sit.lie", Animation.LoopType.LOOP);
@@ -65,18 +129,19 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
     public final RawAnimation STAY_ANIM = RawAnimation.begin().then("animation.neko.stay", Animation.LoopType.LOOP);
     public final RawAnimation FLY_BEGIN_ANIM = RawAnimation.begin().then("animation.neko.fly.begin",Animation.LoopType.LOOP);
     public final RawAnimation FLY_ANIM = RawAnimation.begin().then("animation.neko.fly",Animation.LoopType.LOOP);
-    private Map<RawAnimation,Boolean> can_play_anim = new HashMap<>();
+    private final Map<RawAnimation,Boolean> can_play_anim = new HashMap<>();
     private long walkTimer = 0;
     private long runTimer = 0;
     private long AnimTimer = 0;
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
     private static final Ingredient TAMING_INGREDIENT;
-    public static Map<PlayerEntity,Integer> playerFuckLoli = new HashMap<>();
-    private boolean playerCanInteract = false;
+
     public Box boundingBox_Baby = new Box(0,0,0,0.5,1,0.5);
     public Box boundingBox = new Box(0,0,0,1,2,1);
     public Vec3d scale = new Vec3d(1,1,1);
+    
 
+    // --------------------------------------------------------构造函数--------------------------------------------------
     public nekoEntity(EntityType<? extends AnimalEntity> entityType, World world) {
         super(entityType, world);
         Objects.requireNonNull(this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED)).setBaseValue(0.6D);
@@ -89,55 +154,11 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
         }
     }
 
-    public void setScale(Vec3d scale){
-        this.scale = scale;
-    }
-    public void setScale(double x, double y, double z){
-        this.setScale(new Vec3d(x,y,z));
-    }
-    public Vec3d getScale() {
-        return scale;
-    }
-
-
+    // --------------------------------------------------------繁殖-----------------------------------------------------
     @Override
-    public Box getVisibilityBoundingBox() {
-        //这个方法一直在被调用
-        return super.getVisibilityBoundingBox();
+    public boolean isBreedingItem(ItemStack stack) {
+        return stack.getItem() == Items.CAKE || stack.getItem() == Items.GOLDEN_APPLE || stack.getItem() == Items.ENCHANTED_GOLDEN_APPLE;
     }
-    public status setName(String name){
-        String worldName = base.getWorldName(this.getWorld());
-        String uuid = this.getUuid().toString();
-        //判断是否已经设置名称
-        if(sqlite.checkValueExists(worldName + "NekoEnt", "uuid",uuid)){
-            //已经设置过名称了，不允许再次设置
-            return status.ALREADY_SET;
-        }else {
-            if(sqlite.checkValueExists(worldName + "Nekos","neko",name)){
-                //名称已经被占用
-                return status.USED;
-            }
-            //还没设置过名称，创建名称
-            sqlite.saveData(worldName + "NekoEnt", "uuid",uuid);
-            sqlite.saveDataWhere(worldName + "NekoEnt", "name","uuid",uuid,name);
-            return status.SUCCESS;
-        }
-
-    }
-
-    public String getNekoName(){
-        String worldName = base.getWorldName(this.getWorld());
-        //获取uuid
-        String uuid = this.getUuid().toString();
-        //判断名称是否存在
-        if(sqlite.checkValueExists(worldName + "NekoEnt", "uuid",uuid)){
-            //返回名称
-            return sqlite.getColumnValue(worldName + "NekoEnt", "name","uuid",uuid);
-        }else {
-            return "unnamed";
-        }
-    }
-
     @Override
     public AnimalEntity createChild(ServerWorld world, PassiveEntity entity) {
         nekoEntity child = new nekoEntity(ToNekoFabric.NEKO,world);
@@ -145,57 +166,37 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
         return child;
     }
     @Override
-    public boolean isBreedingItem(ItemStack stack) {
-        return stack.getItem() == Items.CAKE || stack.getItem() == Items.GOLDEN_APPLE || stack.getItem() == Items.ENCHANTED_GOLDEN_APPLE;
-    }
-    @Override
     public void growUp(int age, boolean overGrow){
         super.growUp(age, overGrow);
         //当生物长大时，设置体积为成体体积
         this.setBoundingBox(this.boundingBox);
+        //调用监听事件
+        NekoEntityEvents.GROW_UP.invoker().onGrowUp(this, age, overGrow);
     }
 
-
-    //移动目标
+    // ---------------------------------------------------------AI----------------------------------------------------
+    //注册AI
     @Override
     protected void initGoals() {
         //漫游目标
         TemptGoal temptGoal = new TemptGoal(this, 0.8, TAMING_INGREDIENT, true);
         this.goalSelector.add(1, new SwimGoal(this));
-        //this.goalSelector.add(1, new EscapeDangerGoal(this, 0.8));
         this.goalSelector.add(2, temptGoal);
-        //this.goalSelector.add(9, new AttackGoal(this));
         this.goalSelector.add(12, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F));
         this.goalSelector.add(3, new AnimalMateGoal(this, 0.8));
     }
-    @Override
-    public void tick(){
-        super.tick();
-        //骑行时的逻辑
-        if (this.rider != null && this.rider.isAlive()) {
-            //如果生物被骑着
-            if(this.hasPassengers()) {
-                // 更新骑乘实体的位置和行为
-                this.rider.setPosition(this.getX(), this.getY() + this.getHeight(), this.getZ());
-                //给予10tick的漂浮效果
-                this.addStatusEffect(new StatusEffectInstance(StatusEffects.LEVITATION, 10));
-                handleRiderInput(rider);
-            }else {
-                //否则清除骑行
-                rider = null;
-                if(ready_ride > 0) {
-                    ready_ride = 0;
-                }
-            }
-        }
-    }
+
+    // -----------------------------------------------------玩家操作----------------------------------------------------
+    // 玩家右键点击
     @Override
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
+        ActionResult result = NekoEntityEvents.ON_INTERACT.invoker().onInteract(this, player, hand);
+        if(result != ActionResult.PASS){
+            return result;
+        }
         //获取玩家主手物品
         ItemStack itemStack = player.getMainHandStack();
         Item item = itemStack.getItem();
-        //获取物品的id
-        Identifier itemId = Registries.ITEM.getId(item);
         //如果可以骑行且玩家主手物品为末地烛
         if (!this.getWorld().isClient && !this.isBeingRidden() && item == Items.END_ROD)  {
             //如果已经准备好被骑
@@ -212,15 +213,9 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
             }
             return ActionResult.SUCCESS;
         }
-        //如果物品为Better_end_rod的normal_rod
-        if(itemId.getPath().equalsIgnoreCase("normal_rod")){
-            better_end_rod_interact(player,hand);
-        }
-
-
         return super.interactMob(player, hand);
     }
-
+    // -------------------------------------------------------骑行------------------------------------------------
     private void handleRiderInput(PlayerEntity rider) {
         // 处理骑乘者的输入
         float forwardMovement = rider.forwardSpeed;
@@ -248,19 +243,13 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
         this.rider = entity;
     }
 
-    //对玩家进行拥抱
-    public void hug(PlayerEntity player){
-        //执行拥抱
-        this.playAnim(HUG_ANIM);
-    }
-
+    // ----------------------------------------------------------仇恨------------------------------------------------
     //增加仇恨值
     public void increaseHatred(LivingEntity target, int amount) {
         nekoEntity neko = this;
         int currentHatred = hatredMap.getOrDefault(target, 0);
-        if(target instanceof PlayerEntity){
+        if(target instanceof PlayerEntity targetPlayer){
             //让实体尝试跟随目标
-            PlayerEntity targetPlayer = (PlayerEntity) target;
             neko.goalSelector.add(1,new FollowAndAttackPlayerGoal(neko,targetPlayer,0.8D,0.1F,100.0F));
         }
         hatredMap.put(target, currentHatred + amount);
@@ -293,51 +282,11 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
 
 
     //------------------------------------------------------------动画-----------------------------------------------
-    //播放动画
-    public void playAnim(RawAnimation rawAnimation){
-        can_play_anim.put(rawAnimation,true);
-    }
-    //能否播放动画(动画是否在播放列表内)
-    private Boolean canPlayAnim(RawAnimation rawAnimation){
-        return can_play_anim.get(rawAnimation) != null && can_play_anim.get(rawAnimation);
-    }
-    //判断行走动画执行时间是否已到
-    public boolean canPlayWalkAnim() {
-        long currentTimestamp = System.currentTimeMillis();
-        // 如果上一次调用的时间未初始化或者距离当前时间超过了1.7083秒，则重新初始化时间戳并返回true，代表可以播放动画
-        if (walkTimer == 0 || currentTimestamp - walkTimer > 1708) {
-            walkTimer = currentTimestamp;
-            return true;
-        }
-        // 如果时间差小于等于1.7083秒，则返回false,代表不能播放动画。
-        return false;
-    }
-    //判断能否播放跑步动画
-    public boolean canPlayRunAnim() {
-        long currentTimestamp = System.currentTimeMillis();
-        // 如果上一次调用的时间未初始化或者距离当前时间超过了1秒，则重新初始化时间戳并返回true，代表可以播放动画
-        if (runTimer == 0 || currentTimestamp - runTimer > 1000) {
-            runTimer = currentTimestamp;
-            return true;
-        }
-        // 如果时间差小于等于1秒，则返回false,代表不能播放动画。
-        return false;
-    }
-    public boolean canStopAnim(){
-        long currentTimestamp = System.currentTimeMillis();
-        // 如果时间差小于等于5秒，则返回false,代表不能停止动画。
-        return AnimTimer == 0 || currentTimestamp - AnimTimer > 5000;
-
-    }
-    public void setAnimTimer(){
-        AnimTimer = System.currentTimeMillis();
-    }
-
+        // -------------------------------------------------------geckoLib------------------------------------------
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "animation.neko.walk", 34, this::Anim));
         controllerRegistrar.add(new AnimationController<>(this, "animation.neko.run", 20, this::Anim));
-        controllerRegistrar.add(new AnimationController<>(this, "animation.neko.hug", 100, this::Anim));
         controllerRegistrar.add(new AnimationController<>(this, "animation.neko.sit", 20, this::Anim));
         controllerRegistrar.add(new AnimationController<>(this, "animation.neko.sit.stand", 20, this::Anim));
         controllerRegistrar.add(new AnimationController<>(this, "animation.neko.sit.lie", 20, this::Anim));
@@ -367,7 +316,7 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
             event.getController().setAnimation(FLY_ANIM);
         }
         RawAnimation[] animations = new RawAnimation[]{
-                FLY_ANIM,FLY_BEGIN_ANIM,HUG_ANIM,SIT_ANIM,SIT_LIE_ANIM,SIT_STAND_ANIM,LIE_STAND_ANIM,STAY_ANIM,MOVE_ANIM,RUN_ANIM
+                FLY_ANIM,FLY_BEGIN_ANIM,SIT_ANIM,SIT_LIE_ANIM,SIT_STAND_ANIM,LIE_STAND_ANIM,STAY_ANIM,MOVE_ANIM,RUN_ANIM
         };
         int i =0;
         while(i < animations.length) {
@@ -390,80 +339,117 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.geoCache;
     }
+    // -----------------------------------------------------------动画执行-----------------------------------------------
+    //播放动画
+    public void playAnim(RawAnimation rawAnimation){
+        can_play_anim.put(rawAnimation,true);
+    }
+    //能否播放动画(动画是否在播放列表内)
+    private Boolean canPlayAnim(RawAnimation rawAnimation){
+        return can_play_anim.get(rawAnimation) != null && can_play_anim.get(rawAnimation);
+    }
+    //能否能停止播放动画
+    public boolean canStopAnim(){
+        long currentTimestamp = System.currentTimeMillis();
+        // 如果时间差小于等于5秒，则返回false,代表不能停止动画。
+        return AnimTimer == 0 || currentTimestamp - AnimTimer > 5000;
 
+    }
+    //判断行走动画执行时间是否已到
+    public boolean canPlayWalkAnim() {
+        long currentTimestamp = System.currentTimeMillis();
+        // 如果上一次调用的时间未初始化或者距离当前时间超过了1.7083秒，则重新初始化时间戳并返回true，代表可以播放动画
+        if (walkTimer == 0 || currentTimestamp - walkTimer > 1708) {
+            walkTimer = currentTimestamp;
+            return true;
+        }
+        // 如果时间差小于等于1.7083秒，则返回false,代表不能播放动画。
+        return false;
+    }
+    //判断能否播放跑步动画
+    public boolean canPlayRunAnim() {
+        long currentTimestamp = System.currentTimeMillis();
+        // 如果上一次调用的时间未初始化或者距离当前时间超过了1秒，则重新初始化时间戳并返回true，代表可以播放动画
+        if (runTimer == 0 || currentTimestamp - runTimer > 1000) {
+            runTimer = currentTimestamp;
+            return true;
+        }
+        // 如果时间差小于等于1秒，则返回false,代表不能播放动画。
+        return false;
+    }
+    // 设置动画计时器
+    public void setAnimTimer(){
+        AnimTimer = System.currentTimeMillis();
+    }
+
+    // ----------------------------------------------------------设置大小---------------------------------------------
+    //设置渲染缩放
+    public void setScale(Vec3d scale){
+        this.scale = scale;
+    }
+    public void setScale(double x, double y, double z){
+        this.setScale(new Vec3d(x,y,z));
+    }
+    //获取渲染缩放
+    public Vec3d getScale() {
+        return scale;
+    }
+
+    // ------------------------------------------------------相关信息------------------------------------------------
+    public String getNekoName(){
+        String worldName = base.getWorldName(this.getWorld());
+        //获取uuid
+        String uuid = this.getUuid().toString();
+        //判断名称是否存在
+        if(sqlite.checkValueExists(worldName + "NekoEnt", "uuid",uuid)){
+            //返回名称
+            return sqlite.getColumnValue(worldName + "NekoEnt", "name","uuid",uuid);
+        }else {
+            return "unnamed";
+        }
+    }
+    public NameStatus setName(String name){
+        String worldName = base.getWorldName(this.getWorld());
+        String uuid = this.getUuid().toString();
+        //判断是否已经设置名称
+        if(sqlite.checkValueExists(worldName + "NekoEnt", "uuid",uuid)){
+            //已经设置过名称了，不允许再次设置
+            return NameStatus.ALREADY_SET;
+        }else {
+            if(sqlite.checkValueExists(worldName + "Nekos","neko",name)){
+                //名称已经被占用
+                return NameStatus.USED;
+            }
+            //还没设置过名称，创建名称
+            sqlite.saveData(worldName + "NekoEnt", "uuid",uuid);
+            sqlite.saveDataWhere(worldName + "NekoEnt", "name","uuid",uuid,name);
+            return NameStatus.SUCCESS;
+        }
+    }
 
     //--------------------------------------------------------------杂项------------------------------------------------
+    @Override
+    public void tick(){
+        super.tick();
+        //骑行时的逻辑
+        if (this.rider != null && this.rider.isAlive()) {
+            //如果生物被骑着
+            if(this.hasPassengers()) {
+                // 更新骑乘实体的位置和行为
+                this.rider.setPosition(this.getX(), this.getY() + this.getHeight(), this.getZ());
+                //给予10tick的漂浮效果
+                this.addStatusEffect(new StatusEffectInstance(StatusEffects.LEVITATION, 10));
+                handleRiderInput(rider);
+            }else {
+                //否则清除骑行
+                rider = null;
+                if(ready_ride > 0) {
+                    ready_ride = 0;
+                }
+            }
+        }
+    }
     static {
         TAMING_INGREDIENT = Ingredient.ofItems(Items.TROPICAL_FISH,Items.END_ROD,Items.IRON_HOE,Items.IRON_INGOT);
     }
-
-    public void better_end_rod_interact(PlayerEntity player,Hand hand){
-        //每点击两次算一次
-        if(playerCanInteract){
-            playerCanInteract = false;
-            return;
-        }
-        this.setScale(scale.x+0.01,scale.y+0.01,scale.z+0.01);
-        playerCanInteract = true;
-        if(this.isBaby()){
-            int time = 0;
-            if(playerFuckLoli.containsKey(player)){
-                //如果保存过次数，则获取保存的次数
-                time = playerFuckLoli.get(player);
-            }
-            switch (time){
-                case 0:
-                case 1:
-                case 2:
-                case 4:
-                case 5:
-                    player.sendMessage(Text.translatable("entity.neko.loli.end_rod.use."+time));
-                    playerFuckLoli.put(player,time +1);
-                    break;
-                case 3:
-                    player.sendMessage(Text.translatable("entity.neko.loli.end_rod.use.3"));
-                    for (int i = 0;i<3;) {
-                        player.sendMessage(Text.translatable("entity.neko.loli.end_rod.use.sys.3"), true);
-                        i++;
-                    }
-                    playerFuckLoli.put(player,time +1);
-                    break;
-                case 6:
-                    //踢出玩家
-                    if (player instanceof ServerPlayerEntity serverPlayer) {
-                        serverPlayer.networkHandler.disconnect(Text.translatable("entity.neko.loli.end_rod.use.kick"));
-                    }
-                    playerFuckLoli.put(player,0);
-                    break;
-                default:
-                    playerFuckLoli.put(player,0);
-            }
-
-        }else {
-            //添加仇恨
-            increaseHatred(player, 100);
-            World world = player.getWorld();
-            double x = this.getX();
-            double y = this.getY();
-            double z = this.getZ();
-            //播放被伤害音频
-            world.playSound(this, this.getBlockPos(), SoundEvent.of(new Identifier("toneko", "entity.neko.hurt_0")),
-                    SoundCategory.NEUTRAL, 1.0F, 1.0F);
-            //末地烛粒子效果
-            int i = 0;
-            while (i < 10) {
-                world.addParticle(ParticleTypes.FALLING_HONEY, x, y, z, 0.1D, 0.1D, 0.1D);
-                world.addParticle(ParticleTypes.DRIPPING_HONEY, x, y, z, 0.1D, 0.1D, 0.1D);
-                world.addParticle(ParticleTypes.FALLING_WATER, x, y, z, 0.1D, 0.1D, 0.1D);
-                world.addParticle(ParticleTypes.DRIPPING_WATER, x, y, z, 0.1D, 0.1D, 0.1D);
-                i++;
-            }
-        }
-    }
-    /*@Override
-    protected SoundEvent getAmbientSound() {
-        int randomNum = new Random().nextInt(5);
-        return SoundEvent.of(new Identifier("toneko","entity.neko.stay_"+randomNum));
-    }*/
-
 }

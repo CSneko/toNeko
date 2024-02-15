@@ -4,7 +4,7 @@ import com.crystalneko.ctlibPublic.sql.sqlite;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 
-public class query {
+public class Query {
     /**
      * 获取猫娘的主人名称
      * @param neko 猫娘名称

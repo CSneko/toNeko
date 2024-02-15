@@ -103,3 +103,11 @@ java {
 kotlin {
     jvmToolchain(17)
 }
+
+// 配置Javadoc生成
+javadoc {
+    options {
+        encoding = 'UTF-8' // 设置编码格式
+        charset = 'UTF-8'
+    }
+}

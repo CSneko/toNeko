@@ -5,12 +5,12 @@ import com.crystalneko.tonekofabric.entity.nekoEntity;
 import com.crystalneko.tonekofabric.libs.base;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-public class neko {
+public class Neko {
     public LivingEntity entity;
     public PlayerEntity player;
     public nekoEntity nekoEnt;
     public String name;
-    public neko(LivingEntity entity){
+    public Neko(LivingEntity entity){
         //设置全局实体
         this.entity = entity;
         if(entity instanceof PlayerEntity){

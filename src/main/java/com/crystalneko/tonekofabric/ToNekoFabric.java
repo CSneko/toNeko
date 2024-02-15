@@ -1,6 +1,7 @@
 package com.crystalneko.tonekofabric;
 
 import com.crystalneko.ctlibPublic.File.YamlConfiguration;
+import com.crystalneko.tonekofabric.api.NekoEntityEvents;
 import com.crystalneko.tonekofabric.command.command;
 import com.crystalneko.tonekofabric.entity.nekoEntity;
 import com.crystalneko.tonekofabric.event.*;
@@ -25,7 +26,9 @@ import net.minecraft.item.ItemGroups;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Heightmap;
 
 import java.io.IOException;
