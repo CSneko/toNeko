@@ -42,6 +42,8 @@ public class nekoRender extends GeoEntityRenderer<nekoEntity> {
         if (entity.isBaby()){
             poseStack.scale(0.5F, 0.5F, 0.5F); // 将幼年实体的尺寸缩小为原来的一半
         }
+        Vec3d scale = entity.getScale();
+        poseStack.scale((float) scale.x, (float) scale.y, (float) scale.z);
         super.render(entity,entityYaw,partialTick,poseStack,buffSource,packedLight);
     }
 

@@ -40,7 +40,7 @@ public class ToNekoFabric implements ModInitializer {
     public static EntityType<nekoEntity> NEKO = Registry.register(
             Registries.ENTITY_TYPE,
             new Identifier("toneko", "neko"),
-            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, nekoEntity::new).dimensions(EntityDimensions.fixed(0.75f, 0.75f)).build()
+            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, nekoEntity::new).dimensions(EntityDimensions.fixed(0.6f, 2.0f)).build()
     );
     public static final Item NEKO_SPAWN_EGG = new SpawnEggItem(NEKO, 0xc4c4c4, 0xadadad, new Item.Settings());
 
@@ -65,7 +65,7 @@ public class ToNekoFabric implements ModInitializer {
 
         //设置实体刷新规则
         SpawnRestriction.register(NEKO, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, nekoEntity::canMobSpawn);
-        BiomeModifications.addSpawn(BiomeSelectors.all(), SpawnGroup.CREATURE, NEKO, 2, 1,3);
+        BiomeModifications.addSpawn(BiomeSelectors.all(), SpawnGroup.CREATURE, NEKO, 5, 1,3);
 
 
 

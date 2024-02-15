@@ -4,7 +4,6 @@ import com.crystalneko.ctlibPublic.sql.sqlite;
 import com.crystalneko.tonekofabric.ToNekoFabric;
 import com.crystalneko.tonekofabric.entity.ai.FollowAndAttackPlayerGoal;
 import com.crystalneko.tonekofabric.libs.base;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MovementType;
@@ -74,6 +73,9 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
     private static final Ingredient TAMING_INGREDIENT;
     public static Map<PlayerEntity,Integer> playerFuckLoli = new HashMap<>();
     private boolean playerCanInteract = false;
+    public Box boundingBox_Baby = new Box(0,0,0,0.5,1,0.5);
+    public Box boundingBox = new Box(0,0,0,1,2,1);
+    public Vec3d scale = new Vec3d(1,1,1);
 
     public nekoEntity(EntityType<? extends AnimalEntity> entityType, World world) {
         super(entityType, world);
@@ -81,18 +83,28 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
         //设置碰撞箱
         if (this.isBaby()){
             //如果是baby,则为成体的一半
-            this.setBoundingBox(new Box(0, 0, 0, 2, 4, 10));
+            this.setBoundingBox(this.boundingBox_Baby);
         }else {
-            this.setBoundingBox(new Box(0, 0, 0, 4, 8, 100));
+            this.setBoundingBox(this.boundingBox);
         }
     }
 
-    @Override
-    public Box getHitbox() {
-        return super.getHitbox();
+    public void setScale(Vec3d scale){
+        this.scale = scale;
+    }
+    public void setScale(double x, double y, double z){
+        this.setScale(new Vec3d(x,y,z));
+    }
+    public Vec3d getScale() {
+        return scale;
     }
 
 
+    @Override
+    public Box getVisibilityBoundingBox() {
+        //这个方法一直在被调用
+        return super.getVisibilityBoundingBox();
+    }
     public status setName(String name){
         String worldName = base.getWorldName(this.getWorld());
         String uuid = this.getUuid().toString();
@@ -140,7 +152,7 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
     public void growUp(int age, boolean overGrow){
         super.growUp(age, overGrow);
         //当生物长大时，设置体积为成体体积
-        this.setBoundingBox(new Box(0, 0, 0, 4, 8, 4));
+        this.setBoundingBox(this.boundingBox);
     }
 
 
@@ -384,12 +396,14 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
     static {
         TAMING_INGREDIENT = Ingredient.ofItems(Items.TROPICAL_FISH,Items.END_ROD,Items.IRON_HOE,Items.IRON_INGOT);
     }
+
     public void better_end_rod_interact(PlayerEntity player,Hand hand){
         //每点击两次算一次
         if(playerCanInteract){
             playerCanInteract = false;
             return;
         }
+        this.setScale(scale.x+0.01,scale.y+0.01,scale.z+0.01);
         playerCanInteract = true;
         if(this.isBaby()){
             int time = 0;
