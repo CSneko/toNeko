@@ -5,13 +5,12 @@ import com.crystalneko.tonekofabric.ToNekoFabric;
 import com.crystalneko.tonekofabric.api.NekoEntityEvents;
 import com.crystalneko.tonekofabric.entity.ai.FollowAndAttackPlayerGoal;
 import com.crystalneko.tonekofabric.libs.base;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MovementType;
-import net.minecraft.entity.ai.goal.AnimalMateGoal;
-import net.minecraft.entity.ai.goal.LookAtEntityGoal;
-import net.minecraft.entity.ai.goal.SwimGoal;
-import net.minecraft.entity.ai.goal.TemptGoal;
+import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -49,6 +48,11 @@ import static com.crystalneko.tonekofabric.api.NekoEntityEnum.NameStatus;
  <li><code>{@link nekoEntity#nekoEntity}</code></li>
  </ul>
  </li>
+ <li>实体属性
+ <ul>
+ <li><code>{@link nekoEntity#getAttributeValue}</code></li>
+ </ul>
+ </li>
  <li>繁殖
  <ul>
  <li>判断繁殖物品是否有效：<code>{@link nekoEntity#isBreedingItem(ItemStack)}</code></li>
@@ -63,6 +67,7 @@ import static com.crystalneko.tonekofabric.api.NekoEntityEnum.NameStatus;
  </li>
  <li>玩家操作
  <ul>
+ <li>攻击时的操作: <code>{@link nekoEntity#handleAttack(Entity)}</code></li>
  <li>右键点击操作：<code>{@link nekoEntity#interactMob(PlayerEntity, Hand)}</code></li>
  <li>骑行：
  <ul>
@@ -145,6 +150,7 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
     public nekoEntity(EntityType<? extends AnimalEntity> entityType, World world) {
         super(entityType, world);
         Objects.requireNonNull(this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED)).setBaseValue(0.6D);
+        this.speed = 0.6F;
         //设置碰撞箱
         if (this.isBaby()){
             //如果是baby,则为成体的一半
@@ -152,6 +158,15 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
         }else {
             this.setBoundingBox(this.boundingBox);
         }
+    }
+    // ---------------------------------------------------------属性-------------------------------------------------
+    @Override
+    public double getAttributeValue(EntityAttribute attribute) {
+        if(attribute == EntityAttributes.GENERIC_MAX_HEALTH){
+            // 最大生命值
+            return 15.0;
+        }
+        return this.getAttributes().getValue(attribute);
     }
 
     // --------------------------------------------------------繁殖-----------------------------------------------------
@@ -184,9 +199,26 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
         this.goalSelector.add(2, temptGoal);
         this.goalSelector.add(12, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F));
         this.goalSelector.add(3, new AnimalMateGoal(this, 0.8));
+        this.goalSelector.add(10,new EscapeDangerGoal(this, this.speed*0.5));
     }
 
     // -----------------------------------------------------玩家操作----------------------------------------------------
+    // 玩家攻击实体时
+    @Override
+    public boolean handleAttack(Entity entity){
+        // 注册监听事件
+        boolean result = NekoEntityEvents.ON_ATTACK.invoker().onAttack(this, entity);
+        if(result){
+            return true;
+        }
+        if (entity instanceof PlayerEntity player){
+            // 添加仇恨
+            this.increaseHatred(player,100);
+            return false;
+        }
+        return super.handleAttack(entity);
+    }
+
     // 玩家右键点击
     @Override
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
@@ -250,7 +282,7 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
         int currentHatred = hatredMap.getOrDefault(target, 0);
         if(target instanceof PlayerEntity targetPlayer){
             //让实体尝试跟随目标
-            neko.goalSelector.add(1,new FollowAndAttackPlayerGoal(neko,targetPlayer,0.8D,0.1F,100.0F));
+            neko.goalSelector.add(1,new FollowAndAttackPlayerGoal(neko,targetPlayer,this.speed*2,0.1F,100.0F,2.0F));
         }
         hatredMap.put(target, currentHatred + amount);
     }

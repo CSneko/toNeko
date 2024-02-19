@@ -108,6 +108,5 @@ kotlin {
 javadoc {
     options {
         encoding = 'UTF-8' // 设置编码格式
-        charset = 'UTF-8'
     }
 }

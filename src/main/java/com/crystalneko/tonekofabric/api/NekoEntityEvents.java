@@ -3,9 +3,12 @@ package com.crystalneko.tonekofabric.api;
 import com.crystalneko.tonekofabric.entity.nekoEntity;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import org.bukkit.event.world.EntitiesLoadEvent;
+
 public class NekoEntityEvents {
 
     /**
@@ -40,7 +43,27 @@ public class NekoEntityEvents {
                 for (GrowUpEvent listener : listeners) {
                     listener.onGrowUp(entity, age, overGrow);
                 }
-            });
+    });
+
+    /**
+     * 猫娘实体被攻击时的回调<br>
+     * 它会在执行原本的代码前被执行<br>
+     * 如果返回true,则不会继续往下执行，攻击将不会生效<br>
+     * 参数:<br>
+     * - neko: 猫腻实体<br>
+     * - attacker: 攻击者
+     */
+    public static Event<OnAttackEvent> ON_ATTACK = EventFactory.createArrayBacked(OnAttackEvent.class,
+            (listeners) -> (neko,attacker) -> {
+                for (OnAttackEvent listener : listeners) {
+                    listener.onAttack(neko,attacker);
+                    boolean result = listener.onAttack(neko,attacker);
+                    if(result){
+                       return true;
+                    }
+                }
+                return false;
+    });
 
     public interface InteractEvent {
         ActionResult onInteract(nekoEntity entity, PlayerEntity player, Hand hand);
@@ -48,5 +71,8 @@ public class NekoEntityEvents {
 
     public interface GrowUpEvent {
         void onGrowUp(nekoEntity entity, int age, boolean overGrow);
+    }
+    public interface OnAttackEvent {
+        boolean onAttack(nekoEntity entity, Entity attacker);
     }
 }

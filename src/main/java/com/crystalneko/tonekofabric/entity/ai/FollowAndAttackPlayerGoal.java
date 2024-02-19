@@ -17,13 +17,15 @@ public class FollowAndAttackPlayerGoal extends Goal {
     private final double speed;
     private final double minDistanceSq;
     private final double maxDistanceSq;
+    private float amount;
 
-    public FollowAndAttackPlayerGoal(AnimalEntity mobEntity, PlayerEntity targetPlayer, double speed, double minDistance, double maxDistance) {
+    public FollowAndAttackPlayerGoal(AnimalEntity mobEntity, PlayerEntity targetPlayer, double speed, double minDistance, double maxDistance, float amount) {
         this.mobEntity = mobEntity;
         this.targetPlayer = targetPlayer;
         this.speed = speed;
         this.minDistanceSq = minDistance * minDistance;
         this.maxDistanceSq = maxDistance * maxDistance;
+        this.amount = amount;
         this.setControls(EnumSet.of(Control.MOVE, Control.LOOK));
     }
 
@@ -56,7 +58,7 @@ public class FollowAndAttackPlayerGoal extends Goal {
                 // 如果攻击目标还活着，就判断距离目标的位置
                 double distance = mobEntity.distanceTo(targetPlayer);
                 if (distance <= 1.2) {
-                    targetPlayer.damage(mobEntity.getDamageSources().generic(),2.0F);
+                    targetPlayer.damage(mobEntity.getDamageSources().generic(),amount);
                     if(!targetPlayer.isAlive()){
                         targetPlayer.sendMessage(Text.translatable("attack.death.normal_rod"));
                     }
