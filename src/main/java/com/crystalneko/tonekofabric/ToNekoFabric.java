@@ -8,8 +8,8 @@ import com.crystalneko.tonekofabric.event.*;
 import com.crystalneko.tonekofabric.items.stick;
 import com.crystalneko.tonekofabric.libs.base;
 import com.crystalneko.tonekofabric.libs.lp;
-import com.crystalneko.tonekofabric.test.testCommand;
-import com.crystalneko.tonekofabric.test.testItem;
+/*import com.crystalneko.tonekofabric.test.testCommand;
+import com.crystalneko.tonekofabric.test.testItem;*/
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
@@ -75,12 +75,12 @@ public class ToNekoFabric implements ModInitializer {
         //注册权限组
         new lp();
 
-        try {
+        /*try {
             Class.forName("com.crystalneko.tonekofabric.test.testItem");
             new testCommand();
             testItem testItemT = new testItem(new Item.Settings());
             Registry.register(Registries.ITEM,new Identifier("toneko","empty"),testItemT);
-        }catch (ClassNotFoundException ignored) {}
+        }catch (ClassNotFoundException ignored) {}*/
         //加载配置文件
         try {
             config = new YamlConfiguration(Path.of("ctlib/toneko/config.yml"));
@@ -101,11 +101,11 @@ public class ToNekoFabric implements ModInitializer {
                 playerChat.init();
             }
 
-            try {
+            /*try {
                 Class.forName("com.crystalneko.tonekofabric.test.event");
                 System.out.println("成功启动测试版本");
                 new com.crystalneko.tonekofabric.test.event();
-            } catch (ClassNotFoundException ignored) {}
+            } catch (ClassNotFoundException ignored) {}*/
         });
     }
 }

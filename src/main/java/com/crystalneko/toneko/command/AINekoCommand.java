@@ -1,7 +1,6 @@
 package com.crystalneko.toneko.command;
 
-import com.crystalneko.toneko.ToNeko;
-import com.crystalneko.toneko.files.create;
+import com.crystalneko.toneko.utils.ConfigFileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -11,19 +10,16 @@ import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static com.crystalneko.toneko.ToNeko.getMessage;
 import static com.crystalneko.toneko.command.ToNekoCommand.killPlayer;
 
 public class AINekoCommand implements CommandExecutor {
-    private ToNeko toNeko;
-    private Map<Player, Boolean> confirmMap = new HashMap<>();
-    public AINekoCommand(ToNeko toNeko){
-        this.toNeko = toNeko;
-    }
+    private final Map<Player, Boolean> confirmMap = new ConcurrentHashMap<>(); //MT-Map for folia support
+
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
             sender.sendMessage(getMessage("command.only-player"));
@@ -40,12 +36,12 @@ public class AINekoCommand implements CommandExecutor {
                 // 加载数据文件
                 YamlConfiguration data = YamlConfiguration.loadConfiguration(dataFile);
                 //创建数据值
-                Boolean created = create.createNewKey(args[1] + ".owner", player.getName(), data, dataFile);
-                create.createNewKey(args[1] + ".xp", 0, data, dataFile);
+                Boolean created = ConfigFileUtils.createNewKey(args[1] + ".owner", player.getName(), data, dataFile);
+                ConfigFileUtils.createNewKey(args[1] + ".xp", 0, data, dataFile);
                 List<String> aliases = new ArrayList<>();
                 aliases.add("被你发现了");
-                create.createNewKey(args[1] + ".aliases", aliases, data, dataFile);
-                create.createNewKey(args[1] + ".type","AI",data,dataFile);
+                ConfigFileUtils.createNewKey(args[1] + ".aliases", aliases, data, dataFile);
+                ConfigFileUtils.createNewKey(args[1] + ".type","AI",data,dataFile);
                 if (created) {
                     killPlayer(player,args[1]);
                     player.sendMessage("§a成功将玩家§6" + args[1] + "§a设置成一个猫娘，你成为了它的主人");
@@ -69,10 +65,10 @@ public class AINekoCommand implements CommandExecutor {
                             //获取被删除的猫娘对象
                             Player neko = Bukkit.getPlayer(args[1]);
                             if (neko != null) {
-                                    create.setNullValue(dataFile, args[1] + ".owner");
-                                    create.setNullValue(dataFile, args[1] + ".aliases");
-                                    create.setNullValue(dataFile, args[1] + ".type");
-                                    create.setValue(args[1] + ".xp", 0, dataFile);
+                                    ConfigFileUtils.setNullValue(dataFile, args[1] + ".owner");
+                                    ConfigFileUtils.setNullValue(dataFile, args[1] + ".aliases");
+                                    ConfigFileUtils.setNullValue(dataFile, args[1] + ".type");
+                                    ConfigFileUtils.setValue(args[1] + ".xp", 0, dataFile);
                                 player.sendMessage("§a你已经成功删除了猫娘§6" + args[1]);
                             } else {
                                 player.sendMessage("§c猫娘不存在");

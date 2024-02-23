@@ -14,9 +14,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class TabCompleter implements org.bukkit.command.TabCompleter {
-
-
-
     /**
      * 处理命令补全
      */
@@ -74,6 +71,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
         complete.removeIf(option -> !option.toLowerCase().startsWith(prefix.toLowerCase()));
         return complete;
     }
+
     private List<String> completeNeko(String[] args){
         List<String> complete = new ArrayList<>();
         if(args.length == 1){
@@ -83,6 +81,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
         }
         return complete;
     }
+
     private List<String> completeAINeko(String[] args){
         List<String> complete = new ArrayList<>();
         complete.add("help");
@@ -90,6 +89,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
         complete.add("remove");
         return complete;
     }
+
     private List<String> catNames(){
         List<String> onlinePlayers = new ArrayList<>();
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -97,5 +97,4 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
         }
         return onlinePlayers;
     }
-
 }

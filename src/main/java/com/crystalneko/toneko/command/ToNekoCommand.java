@@ -2,8 +2,8 @@ package com.crystalneko.toneko.command;
 
 import com.crystalneko.ctlib.sql.sqlite;
 import com.crystalneko.toneko.ToNeko;
-import com.crystalneko.toneko.files.create;
-import com.crystalneko.toneko.items.getStick;
+import com.crystalneko.toneko.utils.ConfigFileUtils;
+import com.crystalneko.toneko.items.StickItemWrapper;
 import com.crystalneko.ctlib.chat.chatPrefix;
 
 import org.bukkit.Bukkit;
@@ -15,16 +15,10 @@ import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ToNekoCommand implements CommandExecutor {
-    private ToNeko toNeko;
-    private getStick getstick;
-    private Map<Player, Boolean> confirmMap = new HashMap<>();
-    public ToNekoCommand(ToNeko toNeko, getStick getstick){
-        this.toNeko = toNeko;
-        this.getstick = getstick;
-
-    }
+    private final Map<Player, Boolean> confirmMap = new ConcurrentHashMap<>(); //MT-Map for folia support
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -45,11 +39,11 @@ public class ToNekoCommand implements CommandExecutor {
                 // 加载数据文件
                 YamlConfiguration data = YamlConfiguration.loadConfiguration(dataFile);
                 //创建数据值
-                Boolean created = create.createNewKey(args[1] + "." + "owner", player.getName(), data, dataFile);
-                create.createNewKey(args[1] + "." + "xp", 0, data, dataFile);
+                Boolean created = ConfigFileUtils.createNewKey(args[1] + "." + "owner", player.getName(), data, dataFile);
+                ConfigFileUtils.createNewKey(args[1] + "." + "xp", 0, data, dataFile);
                 List<String> aliases = new ArrayList<>();
                 aliases.add("胡桃");//我是胡桃的狗!!!!
-                create.createNewKey(args[1] + "." + "aliases", aliases, data, dataFile);
+                ConfigFileUtils.createNewKey(args[1] + "." + "aliases", aliases, data, dataFile);
                 if (created) {
                     killPlayer(player,args[1]);
                     player.sendMessage("§a成功将玩家§6" + args[1] + "§a设置成一个猫娘，你成为了它的主人");
@@ -69,7 +63,7 @@ public class ToNekoCommand implements CommandExecutor {
             player.sendMessage("§b/toneko 帮助:\n§a/toneko help §b获取帮助\n§a/toneko player <玩家名> §b将一位玩家变成猫娘(但是你会被祭献)\n§a/toneko item §b获取撅猫棍\n§a/toneko remove <猫娘名称> §b删除猫娘§c（这是个危险操作，请谨慎使用）\n§a/toneko xp <猫娘名称> §b查看好感经验\n§a/toneko aliases <猫娘名称> add或remove <别名> §b为你添加或删除别名（会转换为'主人'的词）\n§a/toneko block <猫娘名称> add或remove <屏蔽词> <替换词> word或all §b添加屏蔽词（屏蔽词会被替换成替换词，all替换整句,word替换单词");
         } else if (args[0].equalsIgnoreCase("item")) {
             if (player.hasPermission("toneko.command.item")){
-                getstick.getStick(player);
+                StickItemWrapper.giveStickToPlayer(player);
             }else {
                 player.sendMessage(ToNeko.getMessage("command.no-permission"));
             }
@@ -87,9 +81,9 @@ public class ToNekoCommand implements CommandExecutor {
                             Player neko = Bukkit.getPlayer(args[1]);
                             if (neko != null) {
                                 chatPrefix.subPrivatePrefix(neko, "§a猫娘");
-                                create.setNullValue(dataFile, args[1] + ".owner");
-                                create.setNullValue(dataFile, args[1] + ".aliases");
-                                create.setValue(args[1] + ".xp", 0, dataFile);
+                                ConfigFileUtils.setNullValue(dataFile, args[1] + ".owner");
+                                ConfigFileUtils.setNullValue(dataFile, args[1] + ".aliases");
+                                ConfigFileUtils.setValue(args[1] + ".xp", 0, dataFile);
                                 player.sendMessage("§a你已经成功删除了猫娘§6" + args[1]);
                             } else {
                                 player.sendMessage("§c猫娘不存在或不在线");
@@ -126,7 +120,7 @@ public class ToNekoCommand implements CommandExecutor {
                 } else {
                     if (data.getString(args[1] + ".owner") != null) {
                         if (data.getString(args[1] + ".owner").equals(player.getName())) {
-                            create.createNewKey(args[1] + "." + "xp", player.getName(), data, dataFile);
+                            ConfigFileUtils.createNewKey(args[1] + "." + "xp", player.getName(), data, dataFile);
                         }
                     } else {
                         player.sendMessage("§c你不是" + args[1] + "的主人!");
@@ -151,13 +145,13 @@ public class ToNekoCommand implements CommandExecutor {
                                 List<String> aliases = data.getStringList(args[1] + ".aliases");
                                 //将新别名添加到别名
                                 aliases.add(args[3]);
-                                create.setValue(args[1] + ".aliases",aliases,dataFile);
+                                ConfigFileUtils.setValue(args[1] + ".aliases",aliases,dataFile);
                                 player.sendMessage("成功设置别名" + args[3]);
                             } else {
                                 //如果没有则创建值
                                 List<String> aliases = new ArrayList<>();
                                 aliases.add(args[3]);
-                                create.createNewKey(args[1]+".aliases",aliases,data,dataFile);
+                                ConfigFileUtils.createNewKey(args[1]+".aliases",aliases,data,dataFile);
                                 player.sendMessage("成功设置别名" + args[3]);
                             }
                         } else if(args[2].equalsIgnoreCase("remove")){
@@ -166,7 +160,7 @@ public class ToNekoCommand implements CommandExecutor {
                             //判断别名是否存在
                             if(aliases.contains(args[3])) {
                                 aliases.remove(args[3]);
-                                create.setValue(args[1] + ".aliases",aliases,dataFile);
+                                ConfigFileUtils.setValue(args[1] + ".aliases",aliases,dataFile);
                                 player.sendMessage("§a已成功删除别名"+args[3]);
                             }else {player.sendMessage("§c别名" + args[3] +"不存在");}
                         }else {player.sendMessage("§c你的命令/neko "+args[0]+" "+args[1]+"有误，请确认输入的是add或remove");}

@@ -62,6 +62,7 @@ public class NekoCommand implements CommandExecutor{
         PotionEffect effect = new PotionEffect(type, duration, amplifier);
         player.addPotionEffect(effect);
     }
+
     //判断玩家是否为猫娘(是否有主人)
     private Boolean isPlayerNeko(Player player){
         //创建数据文件实例
@@ -75,6 +76,7 @@ public class NekoCommand implements CommandExecutor{
             return false;
         }
     }
+
     //根据xp设置药水效果时间
     private int getAmplifier(Player player){
         //创建数据文件实例
@@ -98,6 +100,7 @@ public class NekoCommand implements CommandExecutor{
         }
         return duration;
     }
+
     //根据xp设置药水效果时间
     private int getDuration(Player player){
         //创建数据文件实例
