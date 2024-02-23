@@ -75,7 +75,7 @@ public final class ToNeko extends JavaPlugin {
         //注册玩家事件监听器
         Bukkit.getPluginManager().registerEvents(new PlayerEventListenerBase(),this);
         //注册物品
-        StickItemRecipeRegistry.INSTANCE.registerRecipe();
+        StickItemRecipeRegistry.registerRecipe();
 
     }
 
