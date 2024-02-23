@@ -1,19 +1,15 @@
 package com.crystalneko.toneko;
 
 import com.crystalneko.toneko.bstats.Metrics;
-import com.crystalneko.toneko.chat.nekoed;
+import com.crystalneko.toneko.chat.NekoChatListener;
 import com.crystalneko.toneko.command.AINekoCommand;
 import com.crystalneko.toneko.command.NekoCommand;
 import com.crystalneko.toneko.command.TabCompleter;
 import com.crystalneko.toneko.command.ToNekoCommand;
-import com.crystalneko.toneko.event.PlayerAttack;
-import com.crystalneko.toneko.event.PlayerDeath;
-import com.crystalneko.toneko.event.PlayerJoin;
-import com.crystalneko.toneko.event.PlayerQuit;
-import com.crystalneko.toneko.files.create;
-import com.crystalneko.toneko.files.downloadPlugin;
-import com.crystalneko.toneko.items.getStick;
-import com.crystalneko.toneko.items.stickLevel2;
+import com.crystalneko.toneko.event.*;
+import com.crystalneko.toneko.files.ConfigFileUtils;
+import com.crystalneko.toneko.files.LibraryDownloader;
+import com.crystalneko.toneko.items.StickItemRecipeRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -27,79 +23,62 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.logging.Logger;
 
 
 public final class ToNeko extends JavaPlugin {
-    private create createFile;
-    private nekoed catedChat;
-    private getStick getstick;
-    private PlayerDeath playerDeath;
-    private downloadPlugin DownloadPlugin;
-    private PlayerJoin playerJoin;
-    private PlayerAttack playerAttack;
+    private LibraryDownloader libraryDownloader;
     public static FileConfiguration languageConfig;
-    private String language;
-    private PlayerQuit playerQuit;
-    public stickLevel2 stickLevel;
     public static Logger logger;
     public static YamlConfiguration config;
+    public static ToNeko pluginInstance;
 
 
     @Override
     public void onEnable() {
+        pluginInstance = this;
         //温馨提示：代码中所有的判断是否为猫娘都是判断是否有主人，这意味着猫娘必须有主人，否则就不被判断为猫娘
         //获取logger
         logger = Logger.getLogger("toNeko");
         int pluginId = 19899;
         Metrics metrics = new Metrics(this, pluginId);
         //判断是否启用了ctLib
-        downloadPlugin.checkAndDownloadPlugin("ctLib","https://w.csk.asia/res/plugins/ctLib.jar");
+        LibraryDownloader.checkAndDownloadPlugin("ctLib","https://w.csk.asia/res/plugins/ctLib.jar");
         //获取config.yml
         checkAndSaveResource("assets/toneko/config.yml");
         //更新配置文件
         updateConfig();
         //复制文件
-        copyResource();
+        initResourceFilesIfNeed();
         //加载配置文件
         config = YamlConfiguration.loadConfiguration(new File("plugins/toNeko/config.yml"));
         //加载语言文件
         loadLanguageFile();
         //初始化下载类
-        this.DownloadPlugin = new downloadPlugin(this);
+        this.libraryDownloader = new LibraryDownloader(this);
         //检查更新和自动更新
-        automaticUpdates();
-        //初始化createFile
-        createFile = new create();
+        checkForUpdateIfNeed();
         //创建数据保存文件
-        createFile.createNewFile("plugins/toNeko/nekos.yml");
+        ConfigFileUtils.createNewFile("plugins/toNeko/nekos.yml");
         //初始化聊天监听器
-        this.catedChat = new nekoed(this);
+        new NekoChatListener().bootstrap();
         //初始化厥猫棍获取器
-        this.getstick = new getStick(this);
         //注册命令执行器
         TabCompleter tabCompleter = new TabCompleter();
-        getCommand("toneko").setExecutor(new ToNekoCommand(this,getstick));
+        getCommand("toneko").setExecutor(new ToNekoCommand());
         getCommand("toneko").setTabCompleter(tabCompleter);
         getCommand("neko").setExecutor(new NekoCommand());
         getCommand("neko").setTabCompleter(tabCompleter);
-        getCommand("aineko").setExecutor(new AINekoCommand(this));
+        getCommand("aineko").setExecutor(new AINekoCommand());
         getCommand("aineko").setTabCompleter(tabCompleter);
-        //注册玩家加入监听器
-        this.playerJoin = new PlayerJoin(this);
-        //注册玩家退出监听器
-        this.playerQuit = new PlayerQuit(this);
-        //注册玩家受到攻击监听器
-        this.playerAttack = new PlayerAttack(this);
-        //初始化死亡监听器
-        this.playerDeath = new PlayerDeath(this);
+        //注册玩家事件监听器
+        Bukkit.getPluginManager().registerEvents(new PlayerEventListenerBase(),this);
         //注册物品
-        stickLevel = new stickLevel2();
-        stickLevel.stickLevel2(this);
+        StickItemRecipeRegistry.INSTANCE.registerRecipe();
 
     }
+
 
     @Override
     public void onDisable() {
@@ -160,10 +139,12 @@ public final class ToNeko extends JavaPlugin {
             }
         }
     }
+
     private boolean isFileExists(String filePath) {
         File file = new File(getDataFolder(), filePath);
         return file.exists() && file.isFile();
     }
+
     //检查更新的方法
     public Boolean checkUpdates() {
         String remoteUrl = "https://w.csk.asia/res/version/toNeko.txt"; // 远程网站中存储版本号的文件地址
@@ -205,18 +186,18 @@ public final class ToNeko extends JavaPlugin {
             return false;
         }
     }
-    //检查更新和自动更新
-    public void automaticUpdates(){
 
+    //检查更新和自动更新
+    public void checkForUpdateIfNeed(){
         if(getConfig().getBoolean("automatic-updates")){
             Boolean needUpdate = checkUpdates();
             //判断是否需要更新
             if(needUpdate){
                 try {
                     //下载更新文件
-                    downloadPlugin.downloadFile("https://w.csk.asia/res/plugins/toNeko.jar","plugins/toNeko" + getDescription().getVersion() + "[+].jar");
+                    libraryDownloader.downloadFile("https://w.csk.asia/res/plugins/toNeko.jar","plugins/toNeko" + getDescription().getVersion() + "[+].jar");
                     //删除插件
-                    DownloadPlugin.deletePlugin();
+                    libraryDownloader.deletePlugin();
                     //启动插件
                     PluginManager pluginManager = Bukkit.getPluginManager();
                     try {
@@ -245,8 +226,9 @@ public final class ToNeko extends JavaPlugin {
             return config.get(option);
         }
     }
+
     //复制资源
-    private void copyResource(){
+    private void initResourceFilesIfNeed(){
         // 创建目标文件夹
         File targetFolder = new File(getDataFolder().getParentFile(), "toNeko");
         if (!targetFolder.exists()) {
@@ -255,9 +237,10 @@ public final class ToNeko extends JavaPlugin {
         saveResource("language/zh_cn.yml", true);
         saveResource("language/en_us.yml", true);
     }
+
     private void loadLanguageFile() {
         // 获取配置文件中的语言选项
-        language = getConfig().getString("language");
+        String language = getConfig().getString("language");
 
         // 根据语言选项加载对应的语言文件
         File languageFile = new File(getDataFolder(), "language/" + language + ".yml");
