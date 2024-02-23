@@ -1,4 +1,4 @@
-package com.crystalneko.toneko.files;
+package com.crystalneko.toneko.utils;
 
 import com.crystalneko.toneko.ToNeko;
 import org.bukkit.Bukkit;

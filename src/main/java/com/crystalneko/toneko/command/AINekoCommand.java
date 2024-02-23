@@ -1,6 +1,6 @@
 package com.crystalneko.toneko.command;
 
-import com.crystalneko.toneko.files.ConfigFileUtils;
+import com.crystalneko.toneko.utils.ConfigFileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

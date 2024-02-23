@@ -1,4 +1,4 @@
-package com.crystalneko.toneko.files;
+package com.crystalneko.toneko.utils;
 
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;

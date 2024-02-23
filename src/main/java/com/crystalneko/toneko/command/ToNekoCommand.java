@@ -2,7 +2,7 @@ package com.crystalneko.toneko.command;
 
 import com.crystalneko.ctlib.sql.sqlite;
 import com.crystalneko.toneko.ToNeko;
-import com.crystalneko.toneko.files.ConfigFileUtils;
+import com.crystalneko.toneko.utils.ConfigFileUtils;
 import com.crystalneko.toneko.items.StickItemWrapper;
 import com.crystalneko.ctlib.chat.chatPrefix;
 

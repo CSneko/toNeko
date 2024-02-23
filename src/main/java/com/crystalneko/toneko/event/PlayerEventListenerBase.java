@@ -3,7 +3,7 @@ package com.crystalneko.toneko.event;
 import com.crystalneko.ctlib.chat.chatPrefix;
 import com.crystalneko.ctlibPublic.sql.sqlite;
 import com.crystalneko.toneko.ToNeko;
-import com.crystalneko.toneko.files.ConfigFileUtils;
+import com.crystalneko.toneko.utils.ConfigFileUtils;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -20,7 +20,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
