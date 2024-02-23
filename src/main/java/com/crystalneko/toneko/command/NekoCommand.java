@@ -22,7 +22,14 @@ public class NekoCommand implements CommandExecutor{
             sender.sendMessage(ToNeko.getMessage("command.only-player"));
             return true;
         }
+
         Player player = (Player) sender;
+
+        if (args.length != 1){
+            player.sendMessage(ToNeko.getMessage("command.parameter.error"));
+            return false;
+        }
+
         // 处理子命令
         if (args[0].equalsIgnoreCase("help")) {
             player.sendMessage(ToNeko.getMessage("command.neko.help"));
