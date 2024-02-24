@@ -12,6 +12,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.*;
@@ -21,7 +22,7 @@ public class ToNekoCommand implements CommandExecutor {
     private final Map<Player, Boolean> confirmMap = new ConcurrentHashMap<>(); //MT-Map for folia support
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (!(sender instanceof Player)) {
             sender.sendMessage(ToNeko.getMessage("command.only-player"));
             return true;
@@ -76,13 +77,13 @@ public class ToNekoCommand implements CommandExecutor {
                     YamlConfiguration data = YamlConfiguration.loadConfiguration(dataFile);
                     //判断玩家是否为主人
                     if (data.getString(args[1] + ".owner") != null) {
-                        if (data.getString(args[1] + ".owner").equals(player.getName())) {
+                        if (data.getString(args[1] + ".owner").equalsIgnoreCase(player.getName())) {
                             //获取被删除的猫娘对象
                             Player neko = Bukkit.getPlayer(args[1]);
                             if (neko != null) {
                                 chatPrefix.subPrivatePrefix(neko, "§a猫娘");
-                                ConfigFileUtils.setNullValue(dataFile, args[1] + ".owner");
-                                ConfigFileUtils.setNullValue(dataFile, args[1] + ".aliases");
+                                data.set(args[1] + ".owner",null);
+                                data.set(args[1] + ".aliases",null);
                                 ConfigFileUtils.setValue(args[1] + ".xp", 0, dataFile);
                                 player.sendMessage("§a你已经成功删除了猫娘§6" + args[1]);
                             } else {
@@ -93,13 +94,12 @@ public class ToNekoCommand implements CommandExecutor {
                         }
                     }
                     confirmMap.remove(player);  // 执行完毕后移除确认状态
-                    return true;
                 } else {
                     // 发出确认提醒
                     player.sendMessage("§c请再次输入该命令以确认执行: /toneko remove " + args[1]);
                     confirmMap.put(player, true);
-                    return true;
                 }
+                return true;
             } else {
                 player.sendMessage(ToNeko.getMessage("command.no-permission"));
             }
@@ -111,7 +111,7 @@ public class ToNekoCommand implements CommandExecutor {
                 YamlConfiguration data = YamlConfiguration.loadConfiguration(dataFile);
                 //判断玩家是否为主人
                 if (data.getString(args[1] + ".owner") != null) {
-                    if (data.getString(args[1] + ".owner").equals(player.getName())) {
+                    if (data.getString(args[1] + ".owner").equalsIgnoreCase(player.getName())) {
                         int xp = data.getInt(args[1] + ".xp");
                         player.sendMessage("§a你与§e" + args[1] + "§b的好感经验为§e" + xp);
                     } else {
@@ -119,7 +119,7 @@ public class ToNekoCommand implements CommandExecutor {
                     }
                 } else {
                     if (data.getString(args[1] + ".owner") != null) {
-                        if (data.getString(args[1] + ".owner").equals(player.getName())) {
+                        if (data.getString(args[1] + ".owner").equalsIgnoreCase(player.getName())) {
                             ConfigFileUtils.createNewKey(args[1] + "." + "xp", player.getName(), data, dataFile);
                         }
                     } else {
@@ -137,7 +137,7 @@ public class ToNekoCommand implements CommandExecutor {
                 YamlConfiguration data = YamlConfiguration.loadConfiguration(dataFile);
                 //判断玩家是否为主人
                 if (data.getString(args[1] + ".owner") != null) {
-                    if (data.getString(args[1] + ".owner").equals(player.getName())) {
+                    if (data.getString(args[1] + ".owner").equalsIgnoreCase(player.getName())) {
                         //添加别名
                         if(args[2].equalsIgnoreCase("add")){
                             if(data.getList(args[1] + ".aliases") != null){
@@ -258,12 +258,6 @@ public class ToNekoCommand implements CommandExecutor {
                 } else {
                         player.sendMessage("§c你不是" + args[1] + "的主人!");
                 }
-        } else if (args[1].equalsIgnoreCase("reload")) {
-            if(player.hasPermission("toneko.command.reload")){
-
-            }else {
-                player.sendMessage(ToNeko.getMessage("command.no-permission"));
-            }
         } else {
             player.sendMessage("§c无效的子命令,请输入§a/toneko help§c查看帮助");
         }
@@ -288,8 +282,7 @@ public class ToNekoCommand implements CommandExecutor {
             arr[i] = arr[i + 1];
         }
         // 将数组的长度减一
-        String[] newArr = Arrays.copyOf(arr, arr.length - 1);
-        return newArr;
+        return Arrays.copyOf(arr, arr.length - 1);
     }
     //判断数组的某个值是否存在
     public static boolean contains(String[] array, String value) {
