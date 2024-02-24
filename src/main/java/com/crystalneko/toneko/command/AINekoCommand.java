@@ -65,10 +65,10 @@ public class AINekoCommand implements CommandExecutor {
                             //获取被删除的猫娘对象
                             Player neko = Bukkit.getPlayer(args[1]);
                             if (neko != null) {
-                                    ConfigFileUtils.setNullValue(dataFile, args[1] + ".owner");
-                                    ConfigFileUtils.setNullValue(dataFile, args[1] + ".aliases");
-                                    ConfigFileUtils.setNullValue(dataFile, args[1] + ".type");
-                                    ConfigFileUtils.setValue(args[1] + ".xp", 0, dataFile);
+                                data.set(args[1] + ".owner",null);
+                                data.set(args[1] + ".aliases",null);
+                                data.set(args[1] + ".type",null);
+                                data.set(args[1] + ".xp", 0);
                                 player.sendMessage("§a你已经成功删除了猫娘§6" + args[1]);
                             } else {
                                 player.sendMessage("§c猫娘不存在");

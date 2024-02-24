@@ -61,7 +61,7 @@ public class ConfigFileUtils {
             yamlConfiguration.load(file);
             yamlConfiguration.set(keyToSet, value);
             yamlConfiguration.save(file);
-        } catch (IOException | InvalidConfigurationException e) {
+        } catch (IOException | InvalidConfigurationException ignored) {
         }
     }
 
@@ -74,7 +74,6 @@ public class ConfigFileUtils {
             if (yamlConfiguration.contains(keyToSetNull)) {
                 yamlConfiguration.set(keyToSetNull, null);
                 yamlConfiguration.save(file);
-            } else {
             }
         } catch (IOException | InvalidConfigurationException e) {
             System.out.println(e.getMessage());

@@ -24,9 +24,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class PlayerEventListenerBase implements Listener {
+    private static final ExecutorService executorService = Executors.newCachedThreadPool();
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
@@ -221,9 +225,11 @@ public class PlayerEventListenerBase implements Listener {
         return false;
     }*/
     public void addStatistic(String neko,String player ){
+        CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
         try {
             httpGet.get("toneko.cneko.org/stick?neko="+neko+"player="+player,null);
         } catch (IOException ignored) {
         }
+        }, executorService);
     }
 }
