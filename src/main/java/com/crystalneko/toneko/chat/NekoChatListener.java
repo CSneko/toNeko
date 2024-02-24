@@ -194,7 +194,6 @@ public class NekoChatListener implements Listener{
 
     private String replaceBlocks(String message,String neko){
         //检查值是否存在
-        if(sqlite.checkValueExists("nekoblockword", "neko", neko)) {
             //读取数据
             String block = sqlite.getColumnValue("nekoblockword", "block", "neko", neko);
             String replace = sqlite.getColumnValue("nekoblockword", "replace", "neko", neko);
@@ -221,7 +220,7 @@ public class NekoChatListener implements Listener{
                     }
                 }
             }
-        }
+
         return message;
     }
 }

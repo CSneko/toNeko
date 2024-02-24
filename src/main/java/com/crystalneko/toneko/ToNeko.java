@@ -1,5 +1,6 @@
 package com.crystalneko.toneko;
 
+import com.crystalneko.ctlibPublic.sql.sqlite;
 import com.crystalneko.toneko.bstats.Metrics;
 import com.crystalneko.toneko.chat.NekoChatListener;
 import com.crystalneko.toneko.command.AINekoCommand;
@@ -44,7 +45,7 @@ public final class ToNeko extends JavaPlugin {
         int pluginId = 19899;
         Metrics metrics = new Metrics(this, pluginId);
         //判断是否启用了ctLib
-        LibraryDownloader.checkAndDownloadPlugin("ctLib","https://w.csk.asia/res/plugins/ctLib.jar");
+        LibraryDownloader.checkAndDownloadPlugin("ctLib","https://res.cneko.org/mc/plugins/ctlib.jar");
         //获取config.yml
         checkAndSaveResource("assets/toneko/config.yml");
         //更新配置文件
@@ -63,7 +64,8 @@ public final class ToNeko extends JavaPlugin {
         ConfigFileUtils.createNewFile("plugins/toNeko/nekos.yml");
         //初始化聊天监听器
         new NekoChatListener().bootstrap();
-        //初始化厥猫棍获取器
+        //检查数据库
+        checkDataBase();
         //注册命令执行器
         TabCompleter tabCompleter = new TabCompleter();
         getCommand("toneko").setExecutor(new ToNekoCommand());
@@ -79,6 +81,16 @@ public final class ToNeko extends JavaPlugin {
 
     }
 
+    private void checkDataBase(){
+        // 数据库检查
+        if(!sqlite.isTableExists("nekoblockword")){
+            sqlite.createTable("nekoblockword");
+            sqlite.addColumn("nekoblockword","block");
+            sqlite.addColumn("nekoblockword","replace");
+            sqlite.addColumn("nekoblockword","method");
+            sqlite.addColumn("nekoblockword","neko");
+        }
+    }
 
     @Override
     public void onDisable() {

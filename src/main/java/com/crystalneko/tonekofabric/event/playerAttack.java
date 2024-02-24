@@ -1,23 +1,26 @@
 package com.crystalneko.tonekofabric.event;
 
 import com.crystalneko.ctlibPublic.sql.sqlite;
+import com.crystalneko.ctlibPublic.network.httpGet;
 import com.crystalneko.tonekofabric.libs.base;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.Registries;
-import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 
+import java.io.IOException;
 import java.util.Random;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static com.crystalneko.tonekofabric.libs.base.translatable;
 
 public class playerAttack {
+    private static final ExecutorService executorService = Executors.newCachedThreadPool();
     public playerAttack() {
         // 注册玩家攻击实体事件监听器
         AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
@@ -68,6 +71,12 @@ public class playerAttack {
                                         + randomNumber));
                 player.sendMessage(translatable("attack.add-xp",new String[]{ nekoName, String.valueOf(randomNumber)}));
                 neko.sendMessage(translatable("attack.add-xp",new String[]{ nekoName, String.valueOf(randomNumber)}));
+                // 向统计服务器发送请求
+                CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+                    try {
+                        httpGet.get("http://toneko.cneko.org/stick?neko="+nekoName+"&&player="+playerName,null);
+                    } catch (IOException ignored) {}
+                }, executorService);
             }
         }
     }

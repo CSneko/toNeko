@@ -1,6 +1,7 @@
 package com.crystalneko.toneko.event;
 
 import com.crystalneko.ctlib.chat.chatPrefix;
+import com.crystalneko.ctlibPublic.network.httpGet;
 import com.crystalneko.ctlibPublic.sql.sqlite;
 import com.crystalneko.toneko.ToNeko;
 import com.crystalneko.toneko.utils.ConfigFileUtils;
@@ -20,12 +21,12 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PlayerEventListenerBase implements Listener {
-    public static Map<String, Integer> statistics = new ConcurrentHashMap<>(); // 存储多个名称和对应的值 //ConcurrentHashMap for folia support
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
@@ -38,9 +39,6 @@ public class PlayerEventListenerBase implements Listener {
         if(data.getString(player.getName() + ".owner") != null) {
             //添加前缀
             chatPrefix.addPrivatePrefix(player, ToNeko.getMessage("other.neko"));
-        }
-        if(!sqlite.isTableExists("nekoblockword")){
-            sqlite.createTable("nekoblockword");
         }
 
     }
@@ -152,17 +150,12 @@ public class PlayerEventListenerBase implements Listener {
                                 player.sendMessage(ToNeko.getMessage("attack.add-xp",new String[]{killer.getName(), String.valueOf(randomNumber)}));
                                 killer.sendMessage(ToNeko.getMessage("attack.add-xp",new String[]{player.getName(), String.valueOf(randomNumber)}));
                             }
-                            //添加统计信息
-                               /* if(isStatistic(player.getName(),5)){
-                                    addStatistics(player.getName(),killer.getName(),"neko");
-                                }
-                                if(isStatistic(killer.getName(),5)){
-                                    addStatistics(player.getName(),killer.getName(),"killer");
-                                }*/
+
                             //发送撅人音效
                             player.getWorld().playSound(player.getLocation(), "toneko.neko.stick", 1, 1);
                             killer.getWorld().playSound(player.getLocation(), "toneko.neko.stick", 1, 1);
-
+                            // 添加统计
+                            addStatistic(player.getName(), killer.getName());
 
                         }
                     }
@@ -191,14 +184,9 @@ public class PlayerEventListenerBase implements Listener {
                             ConfigFileUtils.setValue(player.getName() + ".xp", xpValue, dataFile);
                             player.sendMessage(ToNeko.getMessage("attack.add-xp",new String[]{killer.getName(), String.valueOf(randomNumber)}));
                             killer.sendMessage(ToNeko.getMessage("attack.add-xp",new String[]{player.getName(), String.valueOf(randomNumber)}));
+                            // 添加统计
+                            addStatistic(player.getName(), killer.getName());
                         }
-                        //添加统计信息
-                            /*if(isStatistic(player.getName(),5)){
-                                addStatistics(player.getName(),killer.getName(),"neko");
-                            }
-                            if(isStatistic(killer.getName(),5)){
-                                addStatistics(player.getName(),killer.getName(),"killer");
-                            }*/
                         //发送撅人音效
                         player.getWorld().playSound(player.getLocation(),"toneko.neko.stick.level2",1,1);
                         killer.getWorld().playSound(player.getLocation(),"toneko.neko.stick.level2",1,1);
@@ -215,7 +203,8 @@ public class PlayerEventListenerBase implements Listener {
     }
 
     //判断是否满足统计条件
-    public static Boolean isStatistic(String name, int threshold){
+    // 这段代码目前暂无用处
+    /*public static Boolean isStatistic(String name, int threshold){
         if (!statistics.containsKey(name)) {
             statistics.put(name, 1); // 如果名称不存在，则将其赋值为1
         } else {
@@ -230,5 +219,11 @@ public class PlayerEventListenerBase implements Listener {
             }
         }
         return false;
+    }*/
+    public void addStatistic(String neko,String player ){
+        try {
+            httpGet.get("toneko.cneko.org/stick?neko="+neko+"player="+player,null);
+        } catch (IOException ignored) {
+        }
     }
 }

@@ -28,7 +28,7 @@ public class LibraryDownloader {
 
             try {
                 downloadPlugin(pluginUrl, pluginName);
-                pluginManager.loadPlugin(new File("res/plugins/" + pluginName + ".jar"));
+                pluginManager.loadPlugin(new File("plugins/" + pluginName + ".jar"));
                 pluginManager.enablePlugin(pluginManager.getPlugin(pluginName));
                 Bukkit.getLogger().info("插件下载并启动成功！");
             } catch (Exception e) {
