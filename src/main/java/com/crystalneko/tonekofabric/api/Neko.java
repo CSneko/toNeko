@@ -1,6 +1,6 @@
 package com.crystalneko.tonekofabric.api;
 
-import com.crystalneko.ctlibPublic.sql.sqlite;
+import static org.cneko.ctlib.common.util.LocalDataBase.Connections.sqlite;
 import com.crystalneko.tonekofabric.entity.nekoEntity;
 import com.crystalneko.tonekofabric.libs.base;
 import net.minecraft.entity.LivingEntity;

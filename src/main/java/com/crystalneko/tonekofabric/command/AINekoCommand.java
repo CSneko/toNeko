@@ -1,6 +1,6 @@
 package com.crystalneko.tonekofabric.command;
 
-import com.crystalneko.ctlibPublic.sql.sqlite;
+import static org.cneko.ctlib.common.util.LocalDataBase.Connections.sqlite;
 import com.crystalneko.tonekofabric.libs.base;
 import com.crystalneko.tonekofabric.libs.lp;
 import com.mojang.brigadier.context.CommandContext;

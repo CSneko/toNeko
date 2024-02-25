@@ -1,6 +1,5 @@
 package com.crystalneko.tonekofabric.entity;
 
-import com.crystalneko.ctlibPublic.sql.sqlite;
 import com.crystalneko.tonekofabric.ToNekoFabric;
 import com.crystalneko.tonekofabric.api.NekoEntityEvents;
 import com.crystalneko.tonekofabric.entity.ai.FollowAndAttackPlayerGoal;
@@ -39,7 +38,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static com.crystalneko.tonekofabric.api.NekoEntityEnum.NameStatus;
-
+import static org.cneko.ctlib.common.util.LocalDataBase.Connections.sqlite;
 /**
  <h2>代码目录:</h2>
  <ol>

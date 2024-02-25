@@ -1,8 +1,6 @@
 package com.crystalneko.toneko.event;
 
-import com.crystalneko.ctlib.chat.chatPrefix;
-import com.crystalneko.ctlibPublic.network.httpGet;
-import com.crystalneko.ctlibPublic.sql.sqlite;
+
 import com.crystalneko.toneko.ToNeko;
 import com.crystalneko.toneko.utils.ConfigFileUtils;
 import org.bukkit.NamespacedKey;
@@ -19,6 +17,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.cneko.ctlib.common.network.HttpGet;
+import org.cneko.ctlib.common.util.ChatPrefix;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,7 +42,7 @@ public class PlayerEventListenerBase implements Listener {
         //判断是否有主人
         if(data.getString(player.getName() + ".owner") != null) {
             //添加前缀
-            chatPrefix.addPrivatePrefix(player, ToNeko.getMessage("other.neko"));
+            ChatPrefix.addPrivatePrefix(player.getName(), ToNeko.getMessage("other.neko"));
         }
 
     }
@@ -56,7 +56,7 @@ public class PlayerEventListenerBase implements Listener {
         Player player = event.getPlayer();
         if(data.getString(player.getName() + ".owner") != null){
             //删除前缀
-            chatPrefix.subPrivatePrefix(player, ToNeko.getMessage("other.neko"));
+            ChatPrefix.removePrivatePrefix(player.getName(), ToNeko.getMessage("other.neko"));
         }
     }
 
@@ -227,7 +227,7 @@ public class PlayerEventListenerBase implements Listener {
     public void addStatistic(String neko,String player ){
         CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
         try {
-            httpGet.get("toneko.cneko.org/stick?neko="+neko+"player="+player,null);
+            HttpGet.SimpleHttpGet.get("toneko.cneko.org/stick?neko="+neko+"player="+player,null);
         } catch (IOException ignored) {
         }
         }, executorService);

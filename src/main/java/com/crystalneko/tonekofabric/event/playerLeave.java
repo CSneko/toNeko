@@ -1,6 +1,6 @@
 package com.crystalneko.tonekofabric.event;
 
-import com.crystalneko.ctlibPublic.inGame.chatPrefix;
+import org.cneko.ctlib.common.util.ChatPrefix;
 import com.crystalneko.tonekofabric.libs.base;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -13,7 +13,7 @@ public class playerLeave {
             String prefix = base.translatable("chat.neko.prefix").getString();
             //判断玩家是否为猫娘
             if(base.isNekoHasOwner(playerName,worldName) != null){
-                chatPrefix.subPrivatePrefix(playerName,prefix);
+                ChatPrefix.removePrivatePrefix(playerName,prefix);
             }
         });
     }

@@ -1,15 +1,12 @@
 package com.crystalneko.tonekofabric;
 
-import com.crystalneko.ctlibPublic.File.YamlConfiguration;
-import com.crystalneko.tonekofabric.api.NekoEntityEvents;
+import org.cneko.ctlib.common.file.YamlConfiguration;
 import com.crystalneko.tonekofabric.command.command;
 import com.crystalneko.tonekofabric.entity.nekoEntity;
 import com.crystalneko.tonekofabric.event.*;
 import com.crystalneko.tonekofabric.items.stick;
 import com.crystalneko.tonekofabric.libs.base;
 import com.crystalneko.tonekofabric.libs.lp;
-/*import com.crystalneko.tonekofabric.test.testCommand;
-import com.crystalneko.tonekofabric.test.testItem;*/
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;

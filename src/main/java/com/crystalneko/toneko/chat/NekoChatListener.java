@@ -1,9 +1,7 @@
 package com.crystalneko.toneko.chat;
-
-import com.crystalneko.ctlib.chat.chatPrefix;
-import com.crystalneko.ctlib.sql.sqlite;
-import com.crystalneko.ctlibPublic.File.JsonConfiguration;
-import com.crystalneko.ctlibPublic.network.httpGet;
+import org.cneko.ctlib.common.util.ChatPrefix;
+import org.cneko.ctlib.common.file.JsonConfiguration;
+import org.cneko.ctlib.common.network.HttpGet.SimpleHttpGet;
 import com.crystalneko.toneko.ToNeko;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -23,6 +21,7 @@ import java.util.Random;
 
 import static com.crystalneko.toneko.ToNeko.*;
 import static org.bukkit.Bukkit.getServer;
+import static org.cneko.ctlib.common.util.LocalDataBase.Connections.sqlite;
 
 public class NekoChatListener implements Listener{
     /*
@@ -108,7 +107,7 @@ public class NekoChatListener implements Listener{
                         //获取数据
                         JsonConfiguration response = null;
                         try {
-                            response = httpGet.getJson(url, null);
+                            response = SimpleHttpGet.getJson(url, null);
                         } catch (IOException e) {
                             System.out.println("无法获取json:"+e.getMessage());
                         }
@@ -135,8 +134,8 @@ public class NekoChatListener implements Listener{
     public void onPlayerChat(org.bukkit.event.player.AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
         String message = event.getMessage();
-        String publicPrefix = chatPrefix.getAllPublicPrefixValues();
-        String privatePrefix = chatPrefix.getPrivatePrefix(player);
+        String publicPrefix = ChatPrefix.getAllPublicPrefixValues();
+        String privatePrefix = ChatPrefix.getPrivatePrefix(player.getName());
         String prefix = publicPrefix + privatePrefix;
         if(prefix.equalsIgnoreCase("[§a无前缀§f§r]")){
             prefix = "";
@@ -148,8 +147,8 @@ public class NekoChatListener implements Listener{
         event.setCancelled(true);
         Player player = event.getPlayer();
         String message = MiniMessage.miniMessage().serialize(event.message());
-        String publicPrefix = chatPrefix.getAllPublicPrefixValues();
-        String privatePrefix = chatPrefix.getPrivatePrefix(player);
+        String publicPrefix = ChatPrefix.getAllPublicPrefixValues();
+        String privatePrefix = ChatPrefix.getPrivatePrefix(player.getName());
         String prefix = publicPrefix + privatePrefix;
         if(prefix.equalsIgnoreCase("[§a无前缀§f§r]")){
             prefix = "";

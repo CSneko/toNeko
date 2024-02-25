@@ -7,13 +7,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="添加监听事件，设置猫娘生命值，修改基础信息">
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="添加异步统计">
+      <change afterPath="$PROJECT_DIR$/libs/ctLib-0.1.0.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/ToNeko.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/ToNeko.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/event/PlayerAttack.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/event/PlayerAttack.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/files/downloadPlugin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/files/downloadPlugin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/ctLibMod-0.0.15.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/chat/NekoChatListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/chat/NekoChatListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/command/ToNekoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/command/ToNekoCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/event/PlayerEventListenerBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/event/PlayerEventListenerBase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/ToNekoFabric.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/ToNekoFabric.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/api/Neko.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/api/Neko.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/api/Query.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/api/Query.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/command/AINekoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/command/AINekoCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/command/NekoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/command/NekoCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/command/ToNekoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/command/ToNekoCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/event/playerAttack.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/event/playerAttack.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/event/playerChat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/event/playerChat.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/libs/base.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/libs/base.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/mixins/chat.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/plugin.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -97,7 +109,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/media/crystalneko/BA106C158B1B58EF/javatest/mods/furry_bohe&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/media/crystalneko/BA106C158B1B58EF/javatest/mods/ctLibFabric&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;通义灵码&quot;
   }
 }</component>
@@ -498,7 +510,31 @@
       <option name="project" value="LOCAL" />
       <updated>1708354894437</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="修复了sql错误的bug">
+      <option name="closed" value="true" />
+      <created>1708758495217</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1708758495217</updated>
+    </task>
+    <task id="LOCAL-00041" summary="添加异步统计">
+      <option name="closed" value="true" />
+      <created>1708760338667</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1708760338667</updated>
+    </task>
+    <task id="LOCAL-00042" summary="添加异步统计">
+      <option name="closed" value="true" />
+      <created>1708760371421</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1708760371421</updated>
+    </task>
+    <option name="localTasksCounter" value="43" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -514,7 +550,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="尝试添加AI猫娘" />
     <MESSAGE value="对Bukkit添加AI猫娘" />
     <MESSAGE value="基本完成AI猫娘" />
     <MESSAGE value="将聊天从mixin移动到FabricAPI" />
@@ -538,6 +573,8 @@
     <MESSAGE value="修正碰撞箱，添加体积修改" />
     <MESSAGE value="添加更多API，添加更多javadoc" />
     <MESSAGE value="添加监听事件，设置猫娘生命值，修改基础信息" />
-    <option name="LAST_COMMIT_MESSAGE" value="添加监听事件，设置猫娘生命值，修改基础信息" />
+    <MESSAGE value="修复了sql错误的bug" />
+    <MESSAGE value="添加异步统计" />
+    <option name="LAST_COMMIT_MESSAGE" value="添加异步统计" />
   </component>
 </project>

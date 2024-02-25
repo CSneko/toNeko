@@ -1,6 +1,6 @@
 package com.crystalneko.tonekofabric.api;
 
-import com.crystalneko.ctlibPublic.sql.sqlite;
+import static org.cneko.ctlib.common.util.LocalDataBase.Connections.sqlite;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 

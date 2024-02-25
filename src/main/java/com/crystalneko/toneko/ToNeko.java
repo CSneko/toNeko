@@ -1,6 +1,5 @@
 package com.crystalneko.toneko;
 
-import com.crystalneko.ctlibPublic.sql.sqlite;
 import com.crystalneko.toneko.bstats.Metrics;
 import com.crystalneko.toneko.chat.NekoChatListener;
 import com.crystalneko.toneko.command.AINekoCommand;
@@ -27,6 +26,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.logging.Logger;
 
+import static org.cneko.ctlib.common.util.LocalDataBase.Connections.sqlite;
 
 public final class ToNeko extends JavaPlugin {
     private LibraryDownloader libraryDownloader;

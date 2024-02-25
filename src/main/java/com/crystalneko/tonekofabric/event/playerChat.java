@@ -1,10 +1,9 @@
 package com.crystalneko.tonekofabric.event;
 
-import com.crystalneko.ctlibPublic.File.JsonConfiguration;
-import com.crystalneko.ctlibPublic.File.YamlConfiguration;
-import com.crystalneko.ctlibPublic.inGame.chatPrefix;
-import com.crystalneko.ctlibPublic.network.httpGet;
-import com.crystalneko.ctlibPublic.sql.sqlite;
+import org.cneko.ctlib.common.util.ChatPrefix;
+import org.cneko.ctlib.common.file.YamlConfiguration;
+import org.cneko.ctlib.common.file.JsonConfiguration;
+import org.cneko.ctlib.common.network.HttpGet.SimpleHttpGet;
 import com.crystalneko.tonekofabric.libs.base;
 import com.crystalneko.tonekofabric.libs.lp;
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
@@ -21,6 +20,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static com.crystalneko.tonekofabric.libs.base.translatable;
+import static org.cneko.ctlib.common.util.LocalDataBase.Connections.sqlite;
 
 public class playerChat {
     private static final ExecutorService executorService = Executors.newCachedThreadPool();
@@ -89,8 +89,8 @@ public class playerChat {
             stringMessage = replaceBlocks(stringMessage,playerName,worldName);
 
             //获取聊天前缀
-            String libPublicPrefix = chatPrefix.getAllPublicPrefixValues();
-            String libPrefix = chatPrefix.getPrivatePrefix(playerName);
+            String libPublicPrefix = ChatPrefix.getAllPublicPrefixValues();
+            String libPrefix = ChatPrefix.getPrivatePrefix(playerName);
             if(libPrefix.equalsIgnoreCase("[§a无前缀§f§r]")){
                 libPrefix = "";
             }
@@ -134,7 +134,7 @@ public class playerChat {
                         //获取数据
                         JsonConfiguration response = null;
                         try {
-                            response = httpGet.getJson(url, null);
+                            response = SimpleHttpGet.getJson(url, null);
                         } catch (IOException e) {
                             System.out.println("无法获取json:"+e.getMessage());
                         }

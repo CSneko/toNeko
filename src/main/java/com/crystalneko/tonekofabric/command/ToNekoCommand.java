@@ -1,7 +1,7 @@
 package com.crystalneko.tonekofabric.command;
 
-import com.crystalneko.ctlibPublic.inGame.chatPrefix;
-import com.crystalneko.ctlibPublic.sql.sqlite;
+import org.cneko.ctlib.common.util.ChatPrefix;
+import static org.cneko.ctlib.common.util.LocalDataBase.Connections.sqlite;
 import com.crystalneko.tonekofabric.items.stick;
 import com.crystalneko.tonekofabric.libs.base;
 import com.crystalneko.tonekofabric.libs.lp;
@@ -35,7 +35,7 @@ public class ToNekoCommand {
             //设置玩家为猫娘
             base.setPlayerNeko(target, worldName, source.getName());
             //给予玩家前缀
-            chatPrefix.addPrivatePrefix(target,prefix);
+            ChatPrefix.addPrivatePrefix(target,prefix);
             //发送成功消息
             source.sendMessage(translatable("command.toneko.player.success", new String[]{target}));
         } else {
@@ -252,7 +252,7 @@ public class ToNekoCommand {
         }
         player.sendMessage(translatable("command.toneko.remove.success",new String[]{neko}));
         sqlite.deleteLine(worldName+"Nekos","neko",neko);
-        chatPrefix.subPrivatePrefix(neko,translatable("chat.neko.prefix").getString());
+        ChatPrefix.removePrivatePrefix(neko,translatable("chat.neko.prefix").getString());
         return 1;
     }
 

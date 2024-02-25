@@ -1,7 +1,6 @@
 package com.crystalneko.tonekofabric.libs;
 
-import com.crystalneko.ctlibPublic.File.YamlConfiguration;
-import com.crystalneko.ctlibPublic.sql.sqlite;
+import org.cneko.ctlib.common.file.YamlConfiguration;
 import com.crystalneko.tonekofabric.ToNekoFabric;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
@@ -13,6 +12,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+
+import static org.cneko.ctlib.common.util.LocalDataBase.Connections.sqlite;
 
 public class base {
     public static YamlConfiguration config;

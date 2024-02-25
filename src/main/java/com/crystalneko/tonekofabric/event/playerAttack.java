@@ -1,7 +1,6 @@
 package com.crystalneko.tonekofabric.event;
 
-import com.crystalneko.ctlibPublic.sql.sqlite;
-import com.crystalneko.ctlibPublic.network.httpGet;
+import org.cneko.ctlib.common.network.HttpGet.SimpleHttpGet;
 import com.crystalneko.tonekofabric.libs.base;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -18,6 +17,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static com.crystalneko.tonekofabric.libs.base.translatable;
+import static org.cneko.ctlib.common.util.LocalDataBase.Connections.sqlite;
 
 public class playerAttack {
     private static final ExecutorService executorService = Executors.newCachedThreadPool();
@@ -74,7 +74,7 @@ public class playerAttack {
                 // 向统计服务器发送请求
                 CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
                     try {
-                        httpGet.get("http://toneko.cneko.org/stick?neko="+nekoName+"&&player="+playerName,null);
+                        SimpleHttpGet.get("http://toneko.cneko.org/stick?neko="+nekoName+"&&player="+playerName,null);
                     } catch (IOException ignored) {}
                 }, executorService);
             }

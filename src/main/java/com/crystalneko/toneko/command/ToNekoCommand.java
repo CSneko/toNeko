@@ -1,10 +1,9 @@
 package com.crystalneko.toneko.command;
 
-import com.crystalneko.ctlib.sql.sqlite;
 import com.crystalneko.toneko.ToNeko;
 import com.crystalneko.toneko.utils.ConfigFileUtils;
 import com.crystalneko.toneko.items.StickItemWrapper;
-import com.crystalneko.ctlib.chat.chatPrefix;
+import org.cneko.ctlib.common.util.ChatPrefix;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -17,6 +16,8 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static org.cneko.ctlib.common.util.LocalDataBase.Connections.sqlite;
 
 public class ToNekoCommand implements CommandExecutor {
     private final Map<Player, Boolean> confirmMap = new ConcurrentHashMap<>(); //MT-Map for folia support
@@ -51,7 +52,7 @@ public class ToNekoCommand implements CommandExecutor {
                     //判断猫娘是否在线
                     if(isPlayerOnline(args[1])) {
                         Player neko = Bukkit.getPlayer(args[1]);
-                        chatPrefix.addPrivatePrefix(neko, "§a猫娘");
+                        ChatPrefix.addPrivatePrefix(neko.getName(), "§a猫娘");
                     }
                 } else {
                     player.sendMessage("§b它已经是一个猫娘了，它的主人是§6" + data.getString(args[1] + ".owner"));
@@ -81,7 +82,7 @@ public class ToNekoCommand implements CommandExecutor {
                             //获取被删除的猫娘对象
                             Player neko = Bukkit.getPlayer(args[1]);
                             if (neko != null) {
-                                chatPrefix.subPrivatePrefix(neko, "§a猫娘");
+                                ChatPrefix.removePrivatePrefix(neko.getName(), "§a猫娘");
                                 data.set(args[1] + ".owner",null);
                                 data.set(args[1] + ".aliases",null);
                                 ConfigFileUtils.setValue(args[1] + ".xp", 0, dataFile);
