@@ -38,5 +38,9 @@
   "entity.neko.loli.end_rod.use.sys.3": "§c系统提示:请停止你的变态行为",
   "entity.neko.loli.end_rod.use.4": "§a快...停下",
   "entity.neko.loli.end_rod.use.5": "§a最后提醒，你...快停下",
-  "entity.neko.loli.end_rod.use.kick": "§c反思一下你的行为，你个变态"
+  "entity.neko.loli.end_rod.use.kick": "§c反思一下你的行为，你个变态",
+  "client.screen.InstalledOptifine": "检测到安装了Optifine!",
+  "client.screen.InstalledOptifine.text": "和Optifine一起使用会导致崩溃等问题，如果是在与Optifine同时使用时出现了问题，请不要反馈。如果你需要优化和使用光影，请使用Sodium+Iris",
+  "client.screen.InstalledOptifine.button.sodium": "下载Sodium",
+  "client.screen.InstalledOptifine.button.iris": "下载Iris"
 }

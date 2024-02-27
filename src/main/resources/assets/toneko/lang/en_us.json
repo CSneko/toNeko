@@ -38,5 +38,9 @@
   "entity.neko.loli.end_rod.use.sys.3": "§cSystem prompt: Please stop your perverted behavior",
   "entity.neko.loli.end_rod.use.4": "§aQuick...stop",
   "entity.neko.loli.end_rod.use.5": "§aLast reminder, you...stop",
-  "entity.neko.loli.end_rod.use.kick": "§cReflect on your behavior, heitai!"
+  "entity.neko.loli.end_rod.use.kick": "§cReflect on your behavior, heitai!",
+  "client.screen.InstalledOptifine": "Found Optifine!",
+  "client.screen.InstalledOptifine.text": "Using it together with Optifine will cause crashes and other problems. If problems occur when using it at the same time as Optifine, please do not give feedback. If you need to optimize and use lights and shadows, use Sodium+Iris",
+  "client.screen.InstalledOptifine.button.sodium": "Download Sodium",
+  "client.screen.InstalledOptifine.button.iris": "Download Iris"
 }
