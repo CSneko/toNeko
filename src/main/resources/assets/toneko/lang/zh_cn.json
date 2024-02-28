@@ -40,7 +40,7 @@
   "entity.neko.loli.end_rod.use.5": "§a最后提醒，你...快停下",
   "entity.neko.loli.end_rod.use.kick": "§c反思一下你的行为，你个变态",
   "client.screen.InstalledOptifine": "检测到安装了Optifine!",
-  "client.screen.InstalledOptifine.text": "和Optifine一起使用会导致崩溃等问题，如果是在与Optifine同时使用时出现了问题，请不要反馈。如果你需要优化和使用光影，请使用Sodium+Iris",
+  "client.screen.InstalledOptifine.text": "ToNeko和Optifine一起使用会导致崩溃等问题，如果是在与Optifine同时使用时出现了问题，请不要反馈。如果你需要优化和使用光影，请使用Sodium+Iris",
   "client.screen.InstalledOptifine.button.sodium": "下载Sodium",
   "client.screen.InstalledOptifine.button.iris": "下载Iris"
 }

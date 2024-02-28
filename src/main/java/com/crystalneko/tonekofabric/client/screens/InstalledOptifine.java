@@ -15,8 +15,10 @@ import java.net.URISyntaxException;
 
 @Environment(EnvType.CLIENT)
 public class InstalledOptifine extends Screen {
-    public InstalledOptifine() {
+    Screen lastScreen;
+    public InstalledOptifine(Screen screen) {
         super(Text.translatable("client.screen.InstalledOptifine"));
+        lastScreen = screen;
     }
 
     public ButtonWidget installSodiumButton;
@@ -31,7 +33,7 @@ public class InstalledOptifine extends Screen {
                         System.out.println(e.getMessage());
                     }
                 })
-                .dimensions(width / 2 - 205, 20, 200, 20)
+                .dimensions(width / 2 - 205, height - 60, 200, 20)
                 .build();
         installIrisButton = ButtonWidget.builder(Text.translatable("client.screen.InstalledOptifine.button.iris"), button -> {
                     try {
@@ -40,7 +42,7 @@ public class InstalledOptifine extends Screen {
                         System.out.println(e.getMessage());
                     }
                 })
-                .dimensions(width / 2 + 5, 20, 200, 20)
+                .dimensions(width / 2 + 5, height - 60, 200, 20)
                 .build();
 
         addDrawableChild(installSodiumButton);
@@ -51,8 +53,13 @@ public class InstalledOptifine extends Screen {
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
-         final MultilineText multilineText = MultilineText.create(textRenderer, Text.translatable("client.screen.InstalledOptifine.text"), width - 20);
-        // 对于 1.20 及以下的版本
-        multilineText.drawWithShadow(context, 10, height / 2, 16, 0xffffff);
+        final MultilineText multilineText = MultilineText.create(textRenderer, Text.translatable("client.screen.InstalledOptifine.text"), width - 20);
+        multilineText.drawWithShadow(context, 10, height / 2 - 20, 16, 0xffffff);
+    }
+    @Override
+    public void close() {
+        if (this.client != null) {
+            this.client.setScreen(lastScreen);
+        }
     }
 }
