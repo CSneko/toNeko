@@ -479,8 +479,10 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
                 }
             }
         }
+        // 执行监听事件
+        NekoEntityEvents.TICK.invoker().onTick();
     }
     static {
-        TAMING_INGREDIENT = Ingredient.ofItems(Items.TROPICAL_FISH,Items.END_ROD,Items.IRON_HOE,Items.IRON_INGOT);
+        TAMING_INGREDIENT = Ingredient.ofItems(Items.END_ROD,Items.GOLDEN_APPLE,Items.ENCHANTED_GOLDEN_APPLE);
     }
 }

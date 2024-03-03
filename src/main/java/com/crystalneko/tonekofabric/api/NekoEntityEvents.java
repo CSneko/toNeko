@@ -7,7 +7,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import org.bukkit.event.world.EntitiesLoadEvent;
 
 public class NekoEntityEvents {
 
@@ -50,7 +49,7 @@ public class NekoEntityEvents {
      * 它会在执行原本的代码前被执行<br>
      * 如果返回true,则不会继续往下执行，攻击将不会生效<br>
      * 参数:<br>
-     * - neko: 猫腻实体<br>
+     * - neko: 猫娘实体<br>
      * - attacker: 攻击者
      */
     public static Event<OnAttackEvent> ON_ATTACK = EventFactory.createArrayBacked(OnAttackEvent.class,
@@ -65,6 +64,16 @@ public class NekoEntityEvents {
                 return false;
     });
 
+    /**
+     * 猫娘实体每tick的回调<br>
+     */
+    public static Event<OnTickEvent> TICK = EventFactory.createArrayBacked(OnTickEvent.class,
+            (listeners) -> () -> {
+                for (OnTickEvent listener : listeners) {
+                    listener.onTick();
+                }
+    });
+
     public interface InteractEvent {
         ActionResult onInteract(nekoEntity entity, PlayerEntity player, Hand hand);
     }
@@ -74,5 +83,8 @@ public class NekoEntityEvents {
     }
     public interface OnAttackEvent {
         boolean onAttack(nekoEntity entity, Entity attacker);
+    }
+    public interface OnTickEvent {
+        void onTick();
     }
 }
