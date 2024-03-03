@@ -66,11 +66,13 @@ public class NekoEntityEvents {
 
     /**
      * 猫娘实体每tick的回调<br>
+     * 参数:<br>
+     * - neko: 猫娘实体
      */
     public static Event<OnTickEvent> TICK = EventFactory.createArrayBacked(OnTickEvent.class,
-            (listeners) -> () -> {
+            (listeners) -> (neko) -> {
                 for (OnTickEvent listener : listeners) {
-                    listener.onTick();
+                    listener.onTick(neko);
                 }
     });
 
@@ -85,6 +87,6 @@ public class NekoEntityEvents {
         boolean onAttack(nekoEntity entity, Entity attacker);
     }
     public interface OnTickEvent {
-        void onTick();
+        void onTick(nekoEntity entity);
     }
 }

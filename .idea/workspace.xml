@@ -7,11 +7,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="添加禁止optifine提醒">
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="添加tick监听事件">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/client/ToNekoFabricClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/client/ToNekoFabricClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/client/screens/InstalledOptifine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/client/screens/InstalledOptifine.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -536,7 +535,23 @@
       <option name="project" value="LOCAL" />
       <updated>1709044497054</updated>
     </task>
-    <option name="localTasksCounter" value="45" />
+    <task id="LOCAL-00045" summary="添加禁止optifine提醒">
+      <option name="closed" value="true" />
+      <created>1709131536989</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1709131536989</updated>
+    </task>
+    <task id="LOCAL-00046" summary="添加tick监听事件">
+      <option name="closed" value="true" />
+      <created>1709432017149</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1709432017149</updated>
+    </task>
+    <option name="localTasksCounter" value="47" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -552,7 +567,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="将聊天从mixin移动到FabricAPI" />
     <MESSAGE value="尝试添加实体" />
     <MESSAGE value="修复模型无法正常显示" />
     <MESSAGE value="修改实体模型" />
@@ -577,6 +591,7 @@
     <MESSAGE value="添加异步统计" />
     <MESSAGE value="同步ctlib重构代码" />
     <MESSAGE value="添加禁止optifine提醒" />
-    <option name="LAST_COMMIT_MESSAGE" value="添加禁止optifine提醒" />
+    <MESSAGE value="添加tick监听事件" />
+    <option name="LAST_COMMIT_MESSAGE" value="添加tick监听事件" />
   </component>
 </project>

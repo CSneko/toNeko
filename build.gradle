@@ -52,11 +52,6 @@ dependencies {
     compileOnly 'net.luckperms:api:5.4'
     modImplementation "me.lucko:fabric-permissions-api:0.2-SNAPSHOT"
     modImplementation 'software.bernie.geckolib:geckolib-fabric-1.20.4:4.4.1'
-    //implementation 'com.fasterxml.jackson.core:jackson-core:2.12.5'
-    //implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.5'
-    //implementation 'com.fasterxml.jackson.core:jackson-annotations:2.12.5'
-
-
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
