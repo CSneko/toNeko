@@ -19,6 +19,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtDouble;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
@@ -156,6 +159,12 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
             this.setBoundingBox(this.boundingBox_Baby);
         }else {
             this.setBoundingBox(this.boundingBox);
+        }
+        NbtCompound nbt = new NbtCompound();
+        this.readNbt(nbt);
+        // 从nbt读取缩放
+        if(nbt.contains("scale.x") || nbt.contains("scale.y") || nbt.contains("scale.z")){
+            this.scale = new Vec3d(nbt.getDouble("scale.x"),nbt.getDouble("scale.y"),nbt.getDouble("scale.z"));
         }
     }
     // ---------------------------------------------------------属性-------------------------------------------------
@@ -417,6 +426,11 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
     //设置渲染缩放
     public void setScale(Vec3d scale){
         this.scale = scale;
+        NbtCompound nbt = new NbtCompound();
+        nbt.put("scale.x",NbtDouble.of(scale.x));
+        nbt.put("scale.y",NbtDouble.of(scale.y));
+        nbt.put("scale.z",NbtDouble.of(scale.z));
+        this.writeNbt(nbt);
     }
     public void setScale(double x, double y, double z){
         this.setScale(new Vec3d(x,y,z));
