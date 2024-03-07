@@ -7,7 +7,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="添加tick监听事件" />
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="添加nbt读取缩放">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/nekoEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/nekoEntity.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -555,7 +558,15 @@
       <option name="project" value="LOCAL" />
       <updated>1709435294726</updated>
     </task>
-    <option name="localTasksCounter" value="48" />
+    <task id="LOCAL-00048" summary="添加nbt读取缩放">
+      <option name="closed" value="true" />
+      <created>1709736829489</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1709736829489</updated>
+    </task>
+    <option name="localTasksCounter" value="49" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -571,7 +582,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="尝试添加实体" />
     <MESSAGE value="修复模型无法正常显示" />
     <MESSAGE value="修改实体模型" />
     <MESSAGE value="添加动画" />
@@ -596,6 +606,7 @@
     <MESSAGE value="同步ctlib重构代码" />
     <MESSAGE value="添加禁止optifine提醒" />
     <MESSAGE value="添加tick监听事件" />
-    <option name="LAST_COMMIT_MESSAGE" value="添加tick监听事件" />
+    <MESSAGE value="添加nbt读取缩放" />
+    <option name="LAST_COMMIT_MESSAGE" value="添加nbt读取缩放" />
   </component>
 </project>

@@ -162,9 +162,10 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
         }
         NbtCompound nbt = new NbtCompound();
         this.readNbt(nbt);
-        // 从nbt读取缩放
-        if(nbt.contains("scale.x") || nbt.contains("scale.y") || nbt.contains("scale.z")){
-            this.scale = new Vec3d(nbt.getDouble("scale.x"),nbt.getDouble("scale.y"),nbt.getDouble("scale.z"));
+        // 从nbt读取缩放（需检查"scale"是否为包含x, y, z键的嵌套NbtCompound）
+        if (nbt.contains("scale") && nbt.get("scale") instanceof NbtCompound) {
+            NbtCompound scaleNbt = nbt.getCompound("scale");
+            this.scale = new Vec3d(scaleNbt.getDouble("x"), scaleNbt.getDouble("y"), scaleNbt.getDouble("z"));
         }
     }
     // ---------------------------------------------------------属性-------------------------------------------------
@@ -425,11 +426,17 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
     // ----------------------------------------------------------设置大小---------------------------------------------
     //设置渲染缩放
     public void setScale(Vec3d scale){
-        this.scale = scale;
+        this.scale = scale; // 设置缩放比例
+        // 创建一个新的NbtCompound用于保存数据
         NbtCompound nbt = new NbtCompound();
-        nbt.put("scale.x",NbtDouble.of(scale.x));
-        nbt.put("scale.y",NbtDouble.of(scale.y));
-        nbt.put("scale.z",NbtDouble.of(scale.z));
+        // 创建一个嵌套的NbtCompound用于存储scale.x, scale.y, scale.z
+        NbtCompound scaleNbt = new NbtCompound();
+        scaleNbt.putDouble("x", scale.x);
+        scaleNbt.putDouble("y", scale.y);
+        scaleNbt.putDouble("z", scale.z);
+        // 将嵌套的scaleNbt放入主NbtCompound中
+        nbt.put("scale", scaleNbt);
+        // 将整个NbtCompound写入
         this.writeNbt(nbt);
     }
     public void setScale(double x, double y, double z){
