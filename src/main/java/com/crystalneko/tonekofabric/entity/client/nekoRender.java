@@ -31,14 +31,6 @@ public class nekoRender extends GeoEntityRenderer<nekoEntity> {
     }
     @Override
     public void render(nekoEntity entity, float entityYaw, float partialTick, MatrixStack poseStack, VertexConsumerProvider buffSource, int packedLight){
-        ItemStack mainHandStack = entity.getMainHandStack();
-        if (!mainHandStack.isEmpty()) {
-            poseStack.push();
-            // 将物品平移至适当的位置
-            poseStack.translate(-0.4F, 0.6F, 0.0F);
-            this.heldItemRenderer.renderItem(entity, mainHandStack, ModelTransformationMode.GROUND, false, poseStack, buffSource, packedLight);
-            poseStack.pop();
-        }
         if (entity.isBaby()){
             poseStack.scale(0.5F, 0.5F, 0.5F); // 将幼年实体的尺寸缩小为原来的一半
         }

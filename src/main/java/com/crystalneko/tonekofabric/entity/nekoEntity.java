@@ -4,13 +4,13 @@ import com.crystalneko.tonekofabric.ToNekoFabric;
 import com.crystalneko.tonekofabric.api.NekoEntityEvents;
 import com.crystalneko.tonekofabric.entity.ai.FollowAndAttackPlayerGoal;
 import com.crystalneko.tonekofabric.libs.base;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MovementType;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.passive.AnimalEntity;
@@ -20,8 +20,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtDouble;
-import net.minecraft.nbt.NbtElement;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
@@ -29,9 +27,13 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.LocalDifficulty;
+import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.*;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
@@ -55,7 +57,7 @@ import static org.cneko.ctlib.common.util.LocalDataBase.Connections.sqlite;
  <li><code>{@link nekoEntity#getAttributeValue}</code></li>
  </ul>
  </li>
- <li>繁殖
+ <li>游戏数据生成
  <ul>
  <li>判断繁殖物品是否有效：<code>{@link nekoEntity#isBreedingItem(ItemStack)}</code></li>
  <li>生成幼体：<code>{@link nekoEntity#createChild(ServerWorld, PassiveEntity)}</code></li>
@@ -123,6 +125,7 @@ import static org.cneko.ctlib.common.util.LocalDataBase.Connections.sqlite;
  </ol>
  */
 public class nekoEntity extends AnimalEntity implements GeoEntity {
+    private static final TrackedData<NbtCompound> SCALE_DATA;
     private final HashMap<LivingEntity, Integer> hatredMap = new HashMap<>();
     private PlayerEntity rider;
     //准备被骑的状态，0代表正常，1代表准备前置，2代表准备，3代表被骑前置，4代表被骑
@@ -160,13 +163,33 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
         }else {
             this.setBoundingBox(this.boundingBox);
         }
-        NbtCompound nbt = new NbtCompound();
-        this.readNbt(nbt);
-        // 从nbt读取缩放（需检查"scale"是否为包含x, y, z键的嵌套NbtCompound）
-        if (nbt.contains("scale") && nbt.get("scale") instanceof NbtCompound) {
-            NbtCompound scaleNbt = nbt.getCompound("scale");
-            this.scale = new Vec3d(scaleNbt.getDouble("x"), scaleNbt.getDouble("y"), scaleNbt.getDouble("z"));
+        try {
+            NbtCompound scaleNbt = this.getDataTracker().get(SCALE_DATA);
+            if(scaleNbt != null){
+                this.setScale(scaleNbt.getDouble("x"),scaleNbt.getDouble("y"),scaleNbt.getDouble("z"));
+            }
+        }catch (NullPointerException e){
+            this.setScale(1,1,1);
         }
+
+
+    }
+
+
+    @Override @Nullable
+    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
+        if(entityNbt != null){
+            NbtCompound scaleNbt = entityNbt.getCompound("scale");
+            if (!scaleNbt.toString().equalsIgnoreCase("{}")) {
+                this.setScale(scaleNbt.getDouble("x"),scaleNbt.getDouble("y"),scaleNbt.getDouble("z"));
+            }
+        }
+        return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
+    }
+
+    protected void initDataTracker() {
+        super.initDataTracker();
+        this.dataTracker.startTracking(SCALE_DATA, new NbtCompound());
     }
     // ---------------------------------------------------------属性-------------------------------------------------
     @Override
@@ -176,6 +199,24 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
             return 15.0;
         }
         return this.getAttributes().getValue(attribute);
+    }
+
+    @Override
+    public void readCustomDataFromNbt(NbtCompound nbt) {
+        super.readCustomDataFromNbt(nbt);
+        NbtCompound scaleNbt = new NbtCompound();
+        scaleNbt.putDouble("x",this.getScale().getX());
+        scaleNbt.putDouble("y",this.getScale().getY());
+        scaleNbt.putDouble("z",this.getScale().getZ());
+        nbt.put("scale",scaleNbt);
+    }
+    @Override
+    public void writeCustomDataToNbt(NbtCompound nbt) {
+        super.writeCustomDataToNbt(nbt);
+        if(!nbt.getCompound("scale").toString().equalsIgnoreCase("{}")) {
+            NbtCompound scaleNbt = nbt.getCompound("scale");
+            this.setScale(new Vec3d(scaleNbt.getDouble("x"), scaleNbt.getDouble("y"), scaleNbt.getDouble("z")));
+        }
     }
 
     // --------------------------------------------------------繁殖-----------------------------------------------------
@@ -434,17 +475,15 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
         scaleNbt.putDouble("x", scale.x);
         scaleNbt.putDouble("y", scale.y);
         scaleNbt.putDouble("z", scale.z);
-        // 将嵌套的scaleNbt放入主NbtCompound中
         nbt.put("scale", scaleNbt);
-        // 将整个NbtCompound写入
-        this.writeNbt(nbt);
+        this.dataTracker.set(SCALE_DATA, nbt);
     }
     public void setScale(double x, double y, double z){
         this.setScale(new Vec3d(x,y,z));
     }
     //获取渲染缩放
     public Vec3d getScale() {
-        return scale;
+        return this.scale;
     }
 
     // ------------------------------------------------------相关信息------------------------------------------------
@@ -505,5 +544,7 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
     }
     static {
         TAMING_INGREDIENT = Ingredient.ofItems(Items.END_ROD,Items.GOLDEN_APPLE,Items.ENCHANTED_GOLDEN_APPLE);
+        SCALE_DATA = DataTracker.registerData(nekoEntity.class, TrackedDataHandlerRegistry.NBT_COMPOUND);
     }
+
 }
