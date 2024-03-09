@@ -4,6 +4,7 @@ import com.crystalneko.tonekofabric.ToNekoFabric;
 import com.crystalneko.tonekofabric.api.NekoEntityEvents;
 import com.crystalneko.tonekofabric.entity.ai.FollowAndAttackPlayerGoal;
 import com.crystalneko.tonekofabric.libs.base;
+import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.EntityAttribute;
@@ -163,33 +164,21 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
         }else {
             this.setBoundingBox(this.boundingBox);
         }
-        try {
-            NbtCompound scaleNbt = this.getDataTracker().get(SCALE_DATA);
-            if(scaleNbt != null){
-                this.setScale(scaleNbt.getDouble("x"),scaleNbt.getDouble("y"),scaleNbt.getDouble("z"));
-            }
-        }catch (NullPointerException e){
-            this.setScale(1,1,1);
+
+        NbtCompound nbt = this.writeNbt(new NbtCompound());
+        NbtCompound scaleNbt = nbt.getCompound("scale");
+        if(!scaleNbt.toString().equalsIgnoreCase("{}")){
+            this.setScale(scaleNbt.getDouble("x"), scaleNbt.getDouble("y"), scaleNbt.getDouble("z"));
         }
-
-
-    }
-
-
-    @Override @Nullable
-    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
-        if(entityNbt != null){
-            NbtCompound scaleNbt = entityNbt.getCompound("scale");
-            if (!scaleNbt.toString().equalsIgnoreCase("{}")) {
-                this.setScale(scaleNbt.getDouble("x"),scaleNbt.getDouble("y"),scaleNbt.getDouble("z"));
-            }
-        }
-        return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
     }
 
     protected void initDataTracker() {
         super.initDataTracker();
-        this.dataTracker.startTracking(SCALE_DATA, new NbtCompound());
+        NbtCompound scaleNbt = new NbtCompound();
+        scaleNbt.putDouble("x",1.0);
+        scaleNbt.putDouble("y",1.0);
+        scaleNbt.putDouble("z",1.0);
+        this.dataTracker.startTracking(SCALE_DATA, scaleNbt);
     }
     // ---------------------------------------------------------属性-------------------------------------------------
     @Override
@@ -204,19 +193,21 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
-        NbtCompound scaleNbt = new NbtCompound();
-        scaleNbt.putDouble("x",this.getScale().getX());
-        scaleNbt.putDouble("y",this.getScale().getY());
-        scaleNbt.putDouble("z",this.getScale().getZ());
-        nbt.put("scale",scaleNbt);
-    }
-    @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        super.writeCustomDataToNbt(nbt);
         if(!nbt.getCompound("scale").toString().equalsIgnoreCase("{}")) {
             NbtCompound scaleNbt = nbt.getCompound("scale");
             this.setScale(new Vec3d(scaleNbt.getDouble("x"), scaleNbt.getDouble("y"), scaleNbt.getDouble("z")));
         }
+
+    }
+    @Override
+    public void writeCustomDataToNbt(NbtCompound nbt) {
+        NbtCompound scaleNbt = new NbtCompound();
+        Vec3d vec = this.getScale();
+        scaleNbt.putDouble("x",vec.getX());
+        scaleNbt.putDouble("y",vec.getY());
+        scaleNbt.putDouble("z",vec.getZ());
+        nbt.put("scale",scaleNbt);
+        super.writeCustomDataToNbt(nbt);
     }
 
     // --------------------------------------------------------繁殖-----------------------------------------------------
@@ -468,22 +459,21 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
     //设置渲染缩放
     public void setScale(Vec3d scale){
         this.scale = scale; // 设置缩放比例
-        // 创建一个新的NbtCompound用于保存数据
         NbtCompound nbt = new NbtCompound();
-        // 创建一个嵌套的NbtCompound用于存储scale.x, scale.y, scale.z
         NbtCompound scaleNbt = new NbtCompound();
-        scaleNbt.putDouble("x", scale.x);
-        scaleNbt.putDouble("y", scale.y);
-        scaleNbt.putDouble("z", scale.z);
-        nbt.put("scale", scaleNbt);
-        this.dataTracker.set(SCALE_DATA, nbt);
+        scaleNbt.putDouble("x", scale.getX());
+        scaleNbt.putDouble("y", scale.getY());
+        scaleNbt.putDouble("z", scale.getZ());
+        this.dataTracker.set(SCALE_DATA, scaleNbt);
     }
     public void setScale(double x, double y, double z){
         this.setScale(new Vec3d(x,y,z));
     }
     //获取渲染缩放
     public Vec3d getScale() {
-        return this.scale;
+        NbtCompound nbt = this.dataTracker.get(SCALE_DATA);
+        scale = new Vec3d(nbt.getDouble("x"),nbt.getDouble("y"),nbt.getDouble("z"));
+        return scale;
     }
 
     // ------------------------------------------------------相关信息------------------------------------------------
