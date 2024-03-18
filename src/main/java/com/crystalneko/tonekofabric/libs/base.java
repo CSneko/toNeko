@@ -23,17 +23,17 @@ public class base {
     public static Boolean clientLanguage;
     public base(){
         create();  //创建必要目录
-        Path configFile = Path.of("ctlib/toneko/config.yml");
+        Path configFile = Path.of( dataFolder +"/config.yml");
         if(!Files.exists(configFile)){copyResource("/assets/toneko/config.yml",dataFolder, "assets/toneko/config.yml");}  //如果配置文件不存在，则复制到文件夹中
         try {
             config = new YamlConfiguration(configFile);
         } catch (IOException e) {
             System.out.println("无法加载配置文件:"+e.getMessage());
         }
-        //读取语言文件
-        loadLanguageFile();
-        //是否使用客户端语言
-        clientLanguage = config.getBoolean("client-language");
+//        //读取语言文件
+//        loadLanguageFile();
+//        //是否使用客户端语言
+//        clientLanguage = config.getBoolean("client-language");
     }
     public static void start(String worldName){
         if(!ToNekoFabric.started){
@@ -124,7 +124,7 @@ public class base {
         return name;
     }
     public void create(){
-        Path path = Path.of("ctlib/toneko");
+        Path path = Path.of(dataFolder +"");
         if(!Files.exists(path)){
             try {
                 Files.createDirectory(path);
@@ -132,14 +132,14 @@ public class base {
                 System.out.println("can not create path:"+e.getMessage());
             }
         }
-        if(!Files.exists(Path.of("ctlib/toneko/language"))){
+        if(!Files.exists(Path.of(dataFolder +"/language"))){
             try {
-                Files.createDirectory(Path.of("ctlib/toneko/language"));
+                Files.createDirectory(Path.of(dataFolder +"/language"));
             } catch (IOException e) {
                 System.out.println("无法创建文件夹:" +e.getMessage());
             }
         }
-        Path assetsPath =  Path.of("ctlib/toneko/assets");
+        Path assetsPath =  Path.of(dataFolder +"/assets");
         if(!Files.exists(assetsPath)){
             try {
                 Files.createDirectory(assetsPath);
@@ -147,7 +147,7 @@ public class base {
                 System.out.println("can not create path:"+e.getMessage());
             }
         }
-        Path assetsTonekoPath =  Path.of("ctlib/toneko/assets/toneko");
+        Path assetsTonekoPath =  Path.of(dataFolder +"/assets/toneko");
         if(!Files.exists(assetsTonekoPath)){
             try {
                 Files.createDirectory(assetsTonekoPath);
@@ -156,7 +156,7 @@ public class base {
             }
         }
         //删除语言文件
-        Path zh_cnPath = Path.of("ctlib/toneko/language/zh_cn.yml");
+        Path zh_cnPath = Path.of(dataFolder +"/language/zh_cn.yml");
         if (Files.exists(zh_cnPath)){
             try {
                 Files.delete(zh_cnPath);
@@ -164,7 +164,7 @@ public class base {
                 System.out.println("无法删除语言文件:"+e.getMessage());
             }
         }
-        Path en_usPath = Path.of("ctlib/toneko/language/en_us.yml");
+        Path en_usPath = Path.of(dataFolder +"/language/en_us.yml");
         if (Files.exists(zh_cnPath)){
             try {
                 Files.delete(en_usPath);
@@ -187,7 +187,7 @@ public class base {
             Files.copy(in, outputPath, StandardCopyOption.REPLACE_EXISTING);
             System.out.println("资源文件复制成功");
             //移动到ctlib/toneko/config.yml
-            Files.move(Path.of("ctlib/toneko/assets/toneko/config.yml"),Path.of("ctlib/toneko/config.yml"));
+            Files.move(Path.of(dataFolder +"/assets/toneko/config.yml"),Path.of(dataFolder +"/config.yml"));
         } catch (IOException e) {
             System.out.println("无法复制资源文件" + e);
         }
@@ -196,7 +196,7 @@ public class base {
         // 获取配置文件中的语言选项
         language = config.getString("language");
         // 根据语言选项加载对应的语言文件
-        Path languageFile = Path.of("ctlib/toneko/language/" + language + ".yml");
+        Path languageFile = Path.of(dataFolder +"/language/" + language + ".yml");
         if (!Files.exists(languageFile)) {
             copyResource("/language/" + language + ".yml", dataFolder+"/language",language + ".yml");
         }

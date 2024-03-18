@@ -1,5 +1,7 @@
 package com.crystalneko.tonekofabric;
 
+import com.crystalneko.tonekofabric.api.NekoEntityEvents;
+import com.crystalneko.tonekofabric.entity.EntityRegister;
 import org.cneko.ctlib.common.file.YamlConfiguration;
 import com.crystalneko.tonekofabric.command.command;
 import com.crystalneko.tonekofabric.entity.nekoEntity;
@@ -36,13 +38,9 @@ public class ToNekoFabric implements ModInitializer {
     private command command;
     public static YamlConfiguration config;
 
-
-    public static EntityType<nekoEntity> NEKO = Registry.register(
-            Registries.ENTITY_TYPE,
-            new Identifier("toneko", "neko"),
-            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, nekoEntity::new).dimensions(EntityDimensions.fixed(0.6f, 2.0f)).build()
-    );
-    public static final Item NEKO_SPAWN_EGG = new SpawnEggItem(NEKO, 0xc4c4c4, 0xadadad, new Item.Settings());
+    public static EntityType<nekoEntity> NEKO;
+    public static Item NEKO_SPAWN_EGG;
+    public static boolean isNewVersion = false;
 
     /**
      * 运行模组 initializer.
@@ -58,17 +56,14 @@ public class ToNekoFabric implements ModInitializer {
 
         //注册物品
         new stick();
-        Registry.register(Registries.ITEM, new Identifier("toneko", "neko_spawn_egg"), NEKO_SPAWN_EGG);
 
-        //注册实体
-        FabricDefaultAttributeRegistry.register(NEKO, nekoEntity.createMobAttributes());
-
-        //设置实体刷新规则
-        SpawnRestriction.register(NEKO, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, nekoEntity::canMobSpawn);
-        BiomeModifications.addSpawn(BiomeSelectors.all(), SpawnGroup.CREATURE, NEKO, 5, 1,3);
-
-
-
+        //判断是否是新版本
+        try{
+            Class.forName("com.crystalneko.tonekofabric.entity.nekoEntity");
+            isNewVersion = true;
+            EntityRegister.register();
+            NekoEntityEvents.register();
+        }catch (ClassNotFoundException ignored){}
         //注册权限组
         new lp();
 
@@ -87,8 +82,10 @@ public class ToNekoFabric implements ModInitializer {
     }
     //监听事件
     private void event(){
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.NATURAL).register(content -> {
-            content.add(NEKO_SPAWN_EGG);
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(content -> {
+            if(isNewVersion) {
+                content.add(NEKO_SPAWN_EGG);
+            }
         });
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             new playerAttack();

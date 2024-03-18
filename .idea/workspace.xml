@@ -7,9 +7,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="添加nbt读取缩放">
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="更改nbt读取">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/nekoEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/nekoEntity.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -182,22 +181,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-    </task>
-    <task id="LOCAL-00001" summary="尝试添加AI猫娘">
-      <option name="closed" value="true" />
-      <created>1704520373704</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1704520373704</updated>
-    </task>
-    <task id="LOCAL-00002" summary="尝试添加AI猫娘">
-      <option name="closed" value="true" />
-      <created>1704520401227</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1704520401227</updated>
     </task>
     <task id="LOCAL-00003" summary="尝试添加AI猫娘">
       <option name="closed" value="true" />
@@ -575,7 +558,23 @@
       <option name="project" value="LOCAL" />
       <updated>1709821972874</updated>
     </task>
-    <option name="localTasksCounter" value="50" />
+    <task id="LOCAL-00050" summary="更改nbt读取">
+      <option name="closed" value="true" />
+      <created>1709976475751</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1709976475752</updated>
+    </task>
+    <task id="LOCAL-00051" summary="更改nbt读取">
+      <option name="closed" value="true" />
+      <created>1709983406330</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1709983406330</updated>
+    </task>
+    <option name="localTasksCounter" value="52" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -591,7 +590,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="修复模型无法正常显示" />
     <MESSAGE value="修改实体模型" />
     <MESSAGE value="添加动画" />
     <MESSAGE value="修改模型" />
@@ -616,6 +614,7 @@
     <MESSAGE value="添加禁止optifine提醒" />
     <MESSAGE value="添加tick监听事件" />
     <MESSAGE value="添加nbt读取缩放" />
-    <option name="LAST_COMMIT_MESSAGE" value="添加nbt读取缩放" />
+    <MESSAGE value="更改nbt读取" />
+    <option name="LAST_COMMIT_MESSAGE" value="更改nbt读取" />
   </component>
 </project>

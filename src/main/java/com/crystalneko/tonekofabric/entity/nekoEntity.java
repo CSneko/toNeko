@@ -172,7 +172,7 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
         }
     }
 
-    protected void initDataTracker() {
+    public void initDataTracker() {
         super.initDataTracker();
         NbtCompound scaleNbt = new NbtCompound();
         scaleNbt.putDouble("x",1.0);
@@ -459,7 +459,6 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
     //设置渲染缩放
     public void setScale(Vec3d scale){
         this.scale = scale; // 设置缩放比例
-        NbtCompound nbt = new NbtCompound();
         NbtCompound scaleNbt = new NbtCompound();
         scaleNbt.putDouble("x", scale.getX());
         scaleNbt.putDouble("y", scale.getY());

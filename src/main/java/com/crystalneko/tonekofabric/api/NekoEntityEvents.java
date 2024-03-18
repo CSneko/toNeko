@@ -8,7 +8,46 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 
+import static com.crystalneko.tonekofabric.ToNekoFabric.isNewVersion;
+
 public class NekoEntityEvents {
+    public static void register(){
+        if(isNewVersion){
+            ON_INTERACT = EventFactory.createArrayBacked(InteractEvent.class,
+                    (listeners) -> (entity, player, hand) -> {
+                        for (InteractEvent listener : listeners) {
+                            ActionResult result = listener.onInteract(entity, player, hand);
+                            if (result != ActionResult.PASS) {
+                                return result;
+                            }
+                        }
+                        return ActionResult.PASS;
+                    });
+            GROW_UP = EventFactory.createArrayBacked(GrowUpEvent.class,
+                    (listeners) -> (entity, age, overGrow) -> {
+                        for (GrowUpEvent listener : listeners) {
+                            listener.onGrowUp(entity, age, overGrow);
+                        }
+                    });
+            ON_ATTACK = EventFactory.createArrayBacked(OnAttackEvent.class,
+                    (listeners) -> (neko,attacker) -> {
+                        for (OnAttackEvent listener : listeners) {
+                            listener.onAttack(neko,attacker);
+                            boolean result = listener.onAttack(neko,attacker);
+                            if(result){
+                                return true;
+                            }
+                        }
+                        return false;
+                    });
+            TICK  = EventFactory.createArrayBacked(OnTickEvent.class,
+                    (listeners) -> (neko) -> {
+                        for (OnTickEvent listener : listeners) {
+                            listener.onTick(neko);
+                        }
+                    });
+        }
+    }
 
     /**
      * 玩家右键猫娘实体时的回调<br>
@@ -18,16 +57,7 @@ public class NekoEntityEvents {
      * - player: 玩家<br>
      * - hand: 玩家使用的手
      */
-    public static Event<InteractEvent> ON_INTERACT = EventFactory.createArrayBacked(InteractEvent.class,
-            (listeners) -> (entity, player, hand) -> {
-                for (InteractEvent listener : listeners) {
-                    ActionResult result = listener.onInteract(entity, player, hand);
-                    if (result != ActionResult.PASS) {
-                        return result;
-                    }
-                }
-                return ActionResult.PASS;
-            });
+    public static Event<InteractEvent> ON_INTERACT;
 
     /**
      * 猫娘实体成长时的回调<br>
@@ -37,12 +67,7 @@ public class NekoEntityEvents {
      * - age: 猫娘的年龄<br>
      * - overGrow: 是否过度生长
      */
-    public static Event<GrowUpEvent> GROW_UP = EventFactory.createArrayBacked(GrowUpEvent.class,
-            (listeners) -> (entity, age, overGrow) -> {
-                for (GrowUpEvent listener : listeners) {
-                    listener.onGrowUp(entity, age, overGrow);
-                }
-    });
+    public static Event<GrowUpEvent> GROW_UP;
 
     /**
      * 猫娘实体被攻击时的回调<br>
@@ -52,29 +77,14 @@ public class NekoEntityEvents {
      * - neko: 猫娘实体<br>
      * - attacker: 攻击者
      */
-    public static Event<OnAttackEvent> ON_ATTACK = EventFactory.createArrayBacked(OnAttackEvent.class,
-            (listeners) -> (neko,attacker) -> {
-                for (OnAttackEvent listener : listeners) {
-                    listener.onAttack(neko,attacker);
-                    boolean result = listener.onAttack(neko,attacker);
-                    if(result){
-                       return true;
-                    }
-                }
-                return false;
-    });
+    public static Event<OnAttackEvent> ON_ATTACK;
 
     /**
      * 猫娘实体每tick的回调<br>
      * 参数:<br>
      * - neko: 猫娘实体
      */
-    public static Event<OnTickEvent> TICK = EventFactory.createArrayBacked(OnTickEvent.class,
-            (listeners) -> (neko) -> {
-                for (OnTickEvent listener : listeners) {
-                    listener.onTick(neko);
-                }
-    });
+    public static Event<OnTickEvent> TICK;
 
     public interface InteractEvent {
         ActionResult onInteract(nekoEntity entity, PlayerEntity player, Hand hand);
