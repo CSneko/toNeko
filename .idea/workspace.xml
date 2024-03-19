@@ -7,9 +7,33 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="更改nbt读取">
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="初步尝试兼容旧版本">
+      <change beforePath="$PROJECT_DIR$/.idea/modules/mods.toNekoFabric.main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/mods.toNekoFabric.main.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/ToNeko.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/ToNeko.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/bstats/Metrics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/bstats/Metrics.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/chat/NekoChatListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/chat/NekoChatListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/command/NekoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/command/NekoCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/command/ToNekoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/command/ToNekoCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/event/PlayerEventListenerBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/event/PlayerEventListenerBase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/utils/ConfigFileUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/utils/ConfigFileUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/ToNekoFabric.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/ToNekoFabric.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/api/Neko.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/api/Neko.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/api/Query.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/api/Query.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/client/ToNekoFabricClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/client/ToNekoFabricClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/client/screens/InstalledOptifine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/client/screens/InstalledOptifine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/command/AINekoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/command/AINekoCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/command/NekoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/command/NekoCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/command/ToNekoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/command/ToNekoCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/EntityRegister.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/EntityRegister.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/ai/FollowAndAttackPlayerGoal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/ai/FollowAndAttackPlayerGoal.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/client/nekoModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/client/nekoModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/client/nekoRender.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/client/nekoRender.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/nekoEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/nekoEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/event/playerAttack.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/event/playerAttack.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/event/playerChat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/event/playerChat.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/event/playerLeave.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/event/playerLeave.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/libs/base.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/libs/base.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -181,14 +205,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-    </task>
-    <task id="LOCAL-00003" summary="尝试添加AI猫娘">
-      <option name="closed" value="true" />
-      <created>1704520551716</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1704520551716</updated>
     </task>
     <task id="LOCAL-00004" summary="对Bukkit添加AI猫娘">
       <option name="closed" value="true" />
@@ -574,7 +590,15 @@
       <option name="project" value="LOCAL" />
       <updated>1709983406330</updated>
     </task>
-    <option name="localTasksCounter" value="52" />
+    <task id="LOCAL-00052" summary="初步尝试兼容旧版本">
+      <option name="closed" value="true" />
+      <created>1710773025506</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1710773025507</updated>
+    </task>
+    <option name="localTasksCounter" value="53" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -590,7 +614,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="修改实体模型" />
     <MESSAGE value="添加动画" />
     <MESSAGE value="修改模型" />
     <MESSAGE value="添加飞行逻辑" />
@@ -615,6 +638,7 @@
     <MESSAGE value="添加tick监听事件" />
     <MESSAGE value="添加nbt读取缩放" />
     <MESSAGE value="更改nbt读取" />
-    <option name="LAST_COMMIT_MESSAGE" value="更改nbt读取" />
+    <MESSAGE value="初步尝试兼容旧版本" />
+    <option name="LAST_COMMIT_MESSAGE" value="初步尝试兼容旧版本" />
   </component>
 </project>

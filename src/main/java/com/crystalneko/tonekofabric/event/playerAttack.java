@@ -1,6 +1,5 @@
 package com.crystalneko.tonekofabric.event;
 
-import org.cneko.ctlib.common.network.HttpGet.SimpleHttpGet;
 import com.crystalneko.tonekofabric.libs.base;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -9,6 +8,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.ActionResult;
+import org.cneko.ctlib.common.network.HttpGet.SimpleHttpGet;
 
 import java.io.IOException;
 import java.util.Random;

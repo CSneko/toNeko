@@ -1,14 +1,13 @@
 package com.crystalneko.tonekofabric.entity.ai;
 
-import java.util.EnumSet;
 import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.damage.DamageSources;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.world.World;
+
+import java.util.EnumSet;
 
 public class FollowAndAttackPlayerGoal extends Goal {
     private final AnimalEntity mobEntity;

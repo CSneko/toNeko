@@ -1,34 +1,21 @@
 package com.crystalneko.tonekofabric;
 
 import com.crystalneko.tonekofabric.api.NekoEntityEvents;
-import com.crystalneko.tonekofabric.entity.EntityRegister;
-import org.cneko.ctlib.common.file.YamlConfiguration;
 import com.crystalneko.tonekofabric.command.command;
+import com.crystalneko.tonekofabric.entity.EntityRegister;
 import com.crystalneko.tonekofabric.entity.nekoEntity;
-import com.crystalneko.tonekofabric.event.*;
+import com.crystalneko.tonekofabric.event.playerAttack;
+import com.crystalneko.tonekofabric.event.playerChat;
+import com.crystalneko.tonekofabric.event.playerJoin;
+import com.crystalneko.tonekofabric.event.playerLeave;
 import com.crystalneko.tonekofabric.items.stick;
 import com.crystalneko.tonekofabric.libs.base;
 import com.crystalneko.tonekofabric.libs.lp;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
-import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
-import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnGroup;
-import net.minecraft.entity.SpawnRestriction;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroups;
-import net.minecraft.item.SpawnEggItem;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.Heightmap;
+import org.cneko.ctlib.common.file.YamlConfiguration;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -82,11 +69,6 @@ public class ToNekoFabric implements ModInitializer {
     }
     //监听事件
     private void event(){
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(content -> {
-            if(isNewVersion) {
-                content.add(NEKO_SPAWN_EGG);
-            }
-        });
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             new playerAttack();
             new playerJoin();

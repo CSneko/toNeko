@@ -5,14 +5,12 @@ import com.crystalneko.toneko.ToNeko;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.io.File;
-import java.util.*;
 
 public class NekoCommand implements CommandExecutor{
 

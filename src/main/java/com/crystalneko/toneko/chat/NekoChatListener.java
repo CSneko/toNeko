@@ -1,16 +1,18 @@
 package com.crystalneko.toneko.chat;
-import org.cneko.ctlib.common.util.ChatPrefix;
-import org.cneko.ctlib.common.file.JsonConfiguration;
-import org.cneko.ctlib.common.network.HttpGet.SimpleHttpGet;
+
 import com.crystalneko.toneko.ToNeko;
+import io.papermc.paper.event.player.AsyncChatEvent;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.*;
-import io.papermc.paper.event.player.AsyncChatEvent;
+import org.bukkit.event.Event;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.EventExecutor;
-
-import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.cneko.ctlib.common.file.JsonConfiguration;
+import org.cneko.ctlib.common.network.HttpGet.SimpleHttpGet;
+import org.cneko.ctlib.common.util.ChatPrefix;
 
 import java.io.File;
 import java.io.IOException;

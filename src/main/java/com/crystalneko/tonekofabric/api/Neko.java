@@ -1,10 +1,11 @@
 package com.crystalneko.tonekofabric.api;
 
-import static org.cneko.ctlib.common.util.LocalDataBase.Connections.sqlite;
 import com.crystalneko.tonekofabric.entity.nekoEntity;
 import com.crystalneko.tonekofabric.libs.base;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+
+import static org.cneko.ctlib.common.util.LocalDataBase.Connections.sqlite;
 public class Neko {
     public LivingEntity entity;
     public PlayerEntity player;

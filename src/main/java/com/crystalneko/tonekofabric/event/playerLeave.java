@@ -1,9 +1,9 @@
 package com.crystalneko.tonekofabric.event;
 
-import org.cneko.ctlib.common.util.ChatPrefix;
 import com.crystalneko.tonekofabric.libs.base;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.server.network.ServerPlayerEntity;
+import org.cneko.ctlib.common.util.ChatPrefix;
 public class playerLeave {
     public playerLeave(){
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {

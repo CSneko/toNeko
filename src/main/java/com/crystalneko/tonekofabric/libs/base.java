@@ -1,10 +1,10 @@
 package com.crystalneko.tonekofabric.libs;
 
-import org.cneko.ctlib.common.file.YamlConfiguration;
 import com.crystalneko.tonekofabric.ToNekoFabric;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.world.World;
+import org.cneko.ctlib.common.file.YamlConfiguration;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,7 +20,7 @@ public class base {
     public static String dataFolder = "ctlib/toneko";
     public static String language;
     public static YamlConfiguration languageConfig;
-    public static Boolean clientLanguage;
+    //public static Boolean clientLanguage;
     public base(){
         create();  //创建必要目录
         Path configFile = Path.of( dataFolder +"/config.yml");
@@ -214,27 +214,27 @@ public class base {
     }
     public static Text translatable(String key){
         //如果使用客户端语言，则返回客户端语言,否则返回服务端语言
-        if(clientLanguage){
+        //if(clientLanguage){
             return Text.translatable(key);
-        }else {
-            String text = getMessage(key);
-            Text text1 = Text.of(text);
-            return  text1;
-        }
+//        }else {
+//            String text = getMessage(key);
+//            Text text1 = Text.of(text);
+//            return  text1;
+//        }
     }
     public static Text translatable(String key,String[] replace){
         //如果使用客户端语言，则返回客户端语言,否则返回服务端语言
-        if(clientLanguage){
+        //if(clientLanguage){
             return Text.translatable(key, (Object[]) replace);
-        }else {
-            String text = getMessage(key);
-            text = text.replace("%d",replace[0]);
-            if(replace.length ==2){
-                text = text.replace("%c",replace[1]);
-            }
-            Text text1 = Text.of(text);
-            return  text1;
-        }
+//        }else {
+//            String text = getMessage(key);
+//            text = text.replace("%d",replace[0]);
+//            if(replace.length ==2){
+//                text = text.replace("%c",replace[1]);
+//            }
+//            Text text1 = Text.of(text);
+//            return  text1;
+//        }
     }
 
 

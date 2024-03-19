@@ -1,7 +1,5 @@
 package com.crystalneko.tonekofabric.command;
 
-import org.cneko.ctlib.common.util.ChatPrefix;
-import static org.cneko.ctlib.common.util.LocalDataBase.Connections.sqlite;
 import com.crystalneko.tonekofabric.items.stick;
 import com.crystalneko.tonekofabric.libs.base;
 import com.crystalneko.tonekofabric.libs.lp;
@@ -11,6 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.cneko.ctlib.common.util.ChatPrefix;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -18,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.crystalneko.tonekofabric.libs.base.translatable;
+import static org.cneko.ctlib.common.util.LocalDataBase.Connections.sqlite;
 
 public class ToNekoCommand {
     private static Map<String,Boolean> remove = new HashMap();

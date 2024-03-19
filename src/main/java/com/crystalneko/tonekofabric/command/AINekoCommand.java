@@ -1,6 +1,5 @@
 package com.crystalneko.tonekofabric.command;
 
-import static org.cneko.ctlib.common.util.LocalDataBase.Connections.sqlite;
 import com.crystalneko.tonekofabric.libs.base;
 import com.crystalneko.tonekofabric.libs.lp;
 import com.mojang.brigadier.context.CommandContext;
@@ -12,6 +11,7 @@ import java.util.Map;
 
 import static com.crystalneko.tonekofabric.command.ToNekoCommand.noPS;
 import static com.crystalneko.tonekofabric.libs.base.translatable;
+import static org.cneko.ctlib.common.util.LocalDataBase.Connections.sqlite;
 
 public class AINekoCommand {
     private static Map<String,Boolean> remove = new HashMap();
