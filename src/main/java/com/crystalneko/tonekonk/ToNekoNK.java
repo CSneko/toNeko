@@ -1,14 +1,16 @@
 package com.crystalneko.tonekonk;
 
-import cn.nukkit.command.CommandExecutor;
 import cn.nukkit.command.PluginCommand;
 import cn.nukkit.plugin.PluginBase;
-import static org.cneko.ctlib.common.util.LocalDataBase.Connections.sqlite;
 import com.crystalneko.tonekonk.commands.ToNekoCommand;
+import com.crystalneko.tonekonk.bstats.Metrics;
+import static org.cneko.ctlib.common.util.LocalDataBase.Connections.sqlite;
 
 public class ToNekoNK extends PluginBase {
     @Override
     public void onEnable() {
+        // 运行bStats
+        new Metrics(this,19899);
         // 创建必要的sqlite
         sqlite.createTable("neko");
         sqlite.addColumn("neko", "name");

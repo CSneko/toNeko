@@ -14,8 +14,11 @@ public class Events implements Listener {
         String name = player.getName();
         String message = event.getMessage();
         if(NekoSet.isNeko(name)){
+            message = message + "喵~";
             message = "[§a猫娘§f§r]"+ name + "§6>> §f" + message;
-
+        }else {
+            message = name + "§6>> §f";
         }
+        event.setMessage(message);
     }
 }
