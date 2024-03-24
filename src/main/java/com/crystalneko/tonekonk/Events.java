@@ -5,6 +5,11 @@ import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerChatEvent;
 import com.crystalneko.tonekonk.api.NekoSet;
+import cn.nukkit.Player;
+import cn.nukkit.Server;
+
+import java.util.Map;
+import java.util.UUID;
 
 
 public class Events implements Listener {
@@ -17,8 +22,17 @@ public class Events implements Listener {
             message = message + "喵~";
             message = "[§a猫娘§f§r]"+ name + "§6>> §f" + message;
         }else {
-            message = name + "§6>> §f";
+            message = name + "§6>> §f" + message;
         }
-        event.setMessage(message);
+        event.setCancelled(true);
+
+        // 获取当前服务器实例
+        Server server = Server.getInstance();
+        // 获取当前所有在线玩家数组
+        Map<UUID, Player> onlinePlayers = server.getOnlinePlayers();
+        // 遍历在线玩家数组并进行相应操作
+        for (Player p : onlinePlayers.values()) {
+            p.sendMessage(message);
+        }
     }
 }
