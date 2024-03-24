@@ -38,6 +38,11 @@ repositories {
         }
     }
 
+    maven {
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
+    }
+
     mavenCentral()
 
 }
@@ -56,6 +61,8 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     compileOnly 'dev.folia:folia-api:1.20.2-R0.1-SNAPSHOT'
+    implementation "net.neoforged:neoforge:20.4.210"
+    modImplementation "maven.modrinth:ctlibmod:0.1.1"
 }
 
 processResources {

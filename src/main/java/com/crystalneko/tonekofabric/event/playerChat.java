@@ -19,7 +19,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static com.crystalneko.tonekofabric.libs.base.translatable;
+
 import static org.cneko.ctlib.common.util.LocalDataBase.Connections.sqlite;
 
 public class playerChat {
@@ -66,7 +66,7 @@ public class playerChat {
         if (sqlite.checkValueExists(worldName + "Nekos", "neko", playerName)) {
             String owner = sqlite.getColumnValue(worldName + "Nekos", "owner", "neko", playerName);
             // 替换主人名称
-            String ownerText = translatable("chat.neko.owner").getString();
+            String ownerText = Text.translatable("chat.neko.owner").getString();
             if (owner != null && !owner.isEmpty()) {
                 stringMessage = stringMessage.replaceAll(owner,ownerText);
             }
@@ -80,7 +80,7 @@ public class playerChat {
                 }
             }
             // 随机将",，"替换为"喵~"
-            String nya = translatable("chat.neko.nya").getString();
+            String nya = Text.translatable("chat.neko.nya").getString();
             stringMessage = replaceChar(stringMessage, ',', nya, 0.4);
             stringMessage = replaceChar(stringMessage, '，', nya, 0.4);
             stringMessage = stringMessage + nya;

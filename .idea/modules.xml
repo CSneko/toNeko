@@ -5,6 +5,8 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.crystalneko.toNekoFabric.test.iml" filepath="$PROJECT_DIR$/.idea/modules/com.crystalneko.toNekoFabric.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/mods.toNekoFabric.main.iml" filepath="$PROJECT_DIR$/.idea/modules/mods.toNekoFabric.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/mods.toNekoFabric.test.iml" filepath="$PROJECT_DIR$/.idea/modules/mods.toNekoFabric.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/toNeko.main.iml" filepath="$PROJECT_DIR$/.idea/modules/toNeko.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/toNeko.test.iml" filepath="$PROJECT_DIR$/.idea/modules/toNeko.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/toNekoFabric.test.iml" filepath="$PROJECT_DIR$/.idea/modules/toNekoFabric.test.iml" />
     </modules>
   </component>
