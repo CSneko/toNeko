@@ -16,6 +16,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import org.cneko.ctlib.common.file.YamlConfiguration;
+import org.cneko.ctlib.mod.common.util.bstats.Metrics;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -70,6 +71,9 @@ public class ToNekoFabric implements ModInitializer {
     //监听事件
     private void event(){
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+            Meta meta = new Meta();
+            meta.setServer(server);
+            new Metrics(meta, 19899);
             new playerAttack();
             new playerJoin();
             new playerLeave();
