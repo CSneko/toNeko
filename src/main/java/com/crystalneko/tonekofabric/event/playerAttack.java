@@ -1,5 +1,6 @@
 package com.crystalneko.tonekofabric.event;
 
+import com.crystalneko.tonekocommon.Stats;
 import com.crystalneko.tonekofabric.libs.base;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -72,11 +73,7 @@ public class playerAttack {
                 player.sendMessage(translatable("attack.add-xp",new String[]{ nekoName, String.valueOf(randomNumber)}));
                 neko.sendMessage(translatable("attack.add-xp",new String[]{ nekoName, String.valueOf(randomNumber)}));
                 // 向统计服务器发送请求
-                CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
-                    try {
-                        SimpleHttpGet.get("http://toneko.cneko.org/stick?neko="+nekoName+"&&player="+playerName,null);
-                    } catch (IOException ignored) {}
-                }, executorService);
+                Stats.stick(playerName, nekoName);
             }
         }
     }

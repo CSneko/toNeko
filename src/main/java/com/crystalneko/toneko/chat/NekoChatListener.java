@@ -1,6 +1,7 @@
 package com.crystalneko.toneko.chat;
 
 import com.crystalneko.toneko.ToNeko;
+import com.crystalneko.tonekocommon.Stats;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
@@ -143,6 +144,8 @@ public class NekoChatListener implements Listener{
             prefix = "";
         }
         sendMessageToPlayers(player.getName(), prefix, message, false);
+        // 发送统计信息
+        Stats.meowInChat(player.getName(), message);
     }
 
     public void onPlayerChatPaper(AsyncChatEvent event) {
@@ -156,6 +159,8 @@ public class NekoChatListener implements Listener{
             prefix = "";
         }
         sendMessageToPlayers(player.getName(), prefix, message, false);
+        // 发送统计信息
+        Stats.meowInChat(player.getName(), message);
     }
 
     public String catChatMessage(String message, String owner, List<String> aliases){

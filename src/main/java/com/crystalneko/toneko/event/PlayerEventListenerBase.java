@@ -3,6 +3,7 @@ package com.crystalneko.toneko.event;
 
 import com.crystalneko.toneko.ToNeko;
 import com.crystalneko.toneko.utils.ConfigFileUtils;
+import com.crystalneko.tonekocommon.Stats;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -28,7 +29,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class PlayerEventListenerBase implements Listener {
-    private static final ExecutorService executorService = Executors.newCachedThreadPool();
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
@@ -223,11 +223,6 @@ public class PlayerEventListenerBase implements Listener {
         return false;
     }*/
     public void addStatistic(String neko,String player ){
-        CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
-        try {
-            HttpGet.SimpleHttpGet.get("toneko.cneko.org/stick?neko="+neko+"player="+player,null);
-        } catch (IOException ignored) {
-        }
-        }, executorService);
+        Stats.stick(player,neko);
     }
 }

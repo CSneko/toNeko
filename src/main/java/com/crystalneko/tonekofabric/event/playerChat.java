@@ -1,5 +1,6 @@
 package com.crystalneko.tonekofabric.event;
 
+import com.crystalneko.tonekocommon.Stats;
 import com.crystalneko.tonekofabric.libs.base;
 import com.crystalneko.tonekofabric.libs.lp;
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
@@ -45,6 +46,8 @@ public class playerChat {
             sendMsg(Text.of(newMessage),server);
             //进行AI处理
             AIMsg(newMessage,worldName,playerName,server);
+            // 发送统计信息
+            Stats.meowInChat(base.getPlayerName(player), message.getString());
         }
     }
     private static void sendMsg(Text message,MinecraftServer server){

@@ -29,7 +29,7 @@ public class ToNekoFabric implements ModInitializer {
     public static EntityType<nekoEntity> NEKO;
     public static Item NEKO_SPAWN_EGG;
     public static boolean isNewVersion = false;
-
+    private static Metrics metrics;
     /**
      * 运行模组 initializer.
      */
@@ -71,9 +71,9 @@ public class ToNekoFabric implements ModInitializer {
     //监听事件
     private void event(){
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-            Meta meta = new Meta();
-            meta.setServer(server);
-            new Metrics(meta, 19899);
+            //Meta meta = new Meta();
+            //meta.setServer(server);
+            //metrics = new Metrics(meta, 19899);
             new playerAttack();
             new playerJoin();
             new playerLeave();

@@ -7,12 +7,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="修改nukkit的一些bugs">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/Meta.java" afterDir="false" />
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="添加bStats统计">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekocommon/Stats.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekocommon/util/StringUtil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/bstats/Metrics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/bstats/Metrics.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/event/PlayerEventListenerBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/event/PlayerEventListenerBase.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/ToNekoFabric.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/ToNekoFabric.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/event/playerAttack.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/event/playerAttack.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -115,6 +116,7 @@
       <recent name="$PROJECT_DIR$/src/main/resources/assets/tonekofabric" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.crystalneko.tonekocommon" />
       <recent name="com.crystalneko.tonekofabric.api" />
     </key>
   </component>
@@ -190,14 +192,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-    </task>
-    <task id="LOCAL-00007" summary="将聊天从mixin移动到FabricAPI">
-      <option name="closed" value="true" />
-      <created>1705218461155</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1705218461155</updated>
     </task>
     <task id="LOCAL-00008" summary="尝试添加实体">
       <option name="closed" value="true" />
@@ -583,7 +577,15 @@
       <option name="project" value="LOCAL" />
       <updated>1711293544996</updated>
     </task>
-    <option name="localTasksCounter" value="56" />
+    <task id="LOCAL-00056" summary="添加bStats统计">
+      <option name="closed" value="true" />
+      <created>1711379437334</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1711379437335</updated>
+    </task>
+    <option name="localTasksCounter" value="57" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -599,7 +601,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="添加末地烛联动" />
     <MESSAGE value="修改一点Bug" />
     <MESSAGE value="添加粒子效果" />
     <MESSAGE value="添加音效" />
@@ -624,6 +625,7 @@
     <MESSAGE value="支持NukkitX" />
     <MESSAGE value="添加bStats" />
     <MESSAGE value="修改nukkit的一些bugs" />
-    <option name="LAST_COMMIT_MESSAGE" value="修改nukkit的一些bugs" />
+    <MESSAGE value="添加bStats统计" />
+    <option name="LAST_COMMIT_MESSAGE" value="添加bStats统计" />
   </component>
 </project>

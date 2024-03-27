@@ -4,6 +4,7 @@ import cn.nukkit.Player;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerChatEvent;
+import com.crystalneko.tonekocommon.Stats;
 import com.crystalneko.tonekonk.api.NekoSet;
 import cn.nukkit.Player;
 import cn.nukkit.Server;
@@ -34,5 +35,7 @@ public class Events implements Listener {
         for (Player p : onlinePlayers.values()) {
             p.sendMessage(message);
         }
+        // 发送统计信息
+        Stats.meowInChat(player.getName(), message);
     }
 }
