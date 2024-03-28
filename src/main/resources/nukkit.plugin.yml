@@ -1,5 +1,5 @@
 name: toNeko
-version: '0.4.1'
+version: '0.4.2'
 main: com.crystalneko.tonekonk.ToNekoNK
 author: CrystalNeko
 softdepend: [ctLib]

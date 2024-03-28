@@ -3,6 +3,7 @@ package com.crystalneko.tonekofabric.event;
 import com.crystalneko.tonekocommon.Stats;
 import com.crystalneko.tonekofabric.libs.base;
 import com.crystalneko.tonekofabric.libs.lp;
+import com.crystalneko.tonekofabric.util.TextUtil;
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
@@ -39,15 +40,15 @@ public class playerChat {
         if (message != null) {
             //获取玩家信息
             MinecraftServer server = player.getServer();
-            String worldName = base.getWorldName(player.getWorld());
-            String playerName = base.getPlayerName(player);
+            String worldName = TextUtil.getWorldName(player.getWorld());
+            String playerName = TextUtil.getPlayerName(player);
             String newMessage = modifyMessage(message,worldName,playerName);
             // 发送消息给所有在线玩家
             sendMsg(Text.of(newMessage),server);
             //进行AI处理
             AIMsg(newMessage,worldName,playerName,server);
             // 发送统计信息
-            Stats.meowInChat(base.getPlayerName(player), message.getString());
+            Stats.meowInChat(TextUtil.getPlayerName(player), message.getString());
         }
     }
     private static void sendMsg(Text message,MinecraftServer server){

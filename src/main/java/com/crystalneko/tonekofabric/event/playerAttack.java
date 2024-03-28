@@ -1,7 +1,8 @@
 package com.crystalneko.tonekofabric.event;
 
 import com.crystalneko.tonekocommon.Stats;
-import com.crystalneko.tonekofabric.libs.base;
+import com.crystalneko.tonekofabric.api.Query;
+import com.crystalneko.tonekofabric.util.TextUtil;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -9,7 +10,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.ActionResult;
-import org.cneko.ctlib.common.network.HttpGet.SimpleHttpGet;
 
 import java.io.IOException;
 import java.util.Random;
@@ -17,9 +17,10 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static com.crystalneko.tonekofabric.libs.base.translatable;
+import static com.crystalneko.tonekofabric.api.Messages.translatable;
 import static org.cneko.ctlib.common.util.LocalDataBase.Connections.sqlite;
-
+import static com.crystalneko.tonekofabric.util.TextUtil.getPlayerName;
+import static com.crystalneko.tonekofabric.util.TextUtil.getWorldName;
 public class playerAttack {
     private static final ExecutorService executorService = Executors.newCachedThreadPool();
     public playerAttack() {
@@ -35,9 +36,9 @@ public class playerAttack {
     private void handlePlayerAttackEntity(PlayerEntity player, PlayerEntity neko) {
         //判断玩家是否死亡
 
-        String nekoName = base.getPlayerName(neko);
-        String playerName = base.getPlayerName(player);
-        String worldName = base.getWorldName(player.getWorld());
+        String nekoName = getPlayerName(neko);
+        String playerName = getPlayerName(player);
+        String worldName = getWorldName(player.getWorld());
         if(!sqlite.isTableExists(worldName + "Nekos")){
             sqlite.createTable(worldName + "Nekos");
             sqlite.addColumn(worldName + "Nekos","neko");
@@ -59,7 +60,7 @@ public class playerAttack {
             //给予效果
             neko.addStatusEffect(weakness);
             //判断是否为主人
-            if(base.getOwner(nekoName,worldName).equalsIgnoreCase(playerName)){
+            if(Query.getOwner(nekoName,worldName).equalsIgnoreCase(playerName)){
                 //生成随机数
                 Random random = new Random();
                 int randomNumber = random.nextInt(6) - 2;

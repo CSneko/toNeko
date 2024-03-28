@@ -2,6 +2,7 @@ package com.crystalneko.tonekofabric.command;
 
 import com.crystalneko.tonekofabric.libs.base;
 import com.crystalneko.tonekofabric.libs.lp;
+import com.crystalneko.tonekofabric.util.TextUtil;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.command.ServerCommandSource;
@@ -10,16 +11,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.crystalneko.tonekofabric.command.ToNekoCommand.noPS;
-import static com.crystalneko.tonekofabric.libs.base.translatable;
+import static com.crystalneko.tonekofabric.api.Messages.translatable;
 import static org.cneko.ctlib.common.util.LocalDataBase.Connections.sqlite;
 
 public class AINekoCommand {
     private static Map<String,Boolean> remove = new HashMap();
     public static int add(CommandContext<ServerCommandSource> context){
         final ServerCommandSource source = context.getSource();
-        final String worldName = base.getWorldName(source.getWorld());
+        final String worldName = TextUtil.getWorldName(source.getWorld());
         final PlayerEntity player = source.getPlayer();
-        final String owner = base.getPlayerName(player);
+        final String owner = TextUtil.getPlayerName(player);
         if(!lp.hasPermission(player, "aineko.command.add")){return noPS(player);}
         // 使用 getArgument 方法获取玩家名称
         String target = context.getArgument("neko", String.class);
@@ -43,10 +44,10 @@ public class AINekoCommand {
     public static int remove(CommandContext<ServerCommandSource> context){
         final ServerCommandSource source = context.getSource();
         final PlayerEntity player = source.getPlayer();
-        final String worldName = base.getWorldName(player.getWorld());
+        final String worldName = TextUtil.getWorldName(player.getWorld());
         if(!lp.hasPermission(player, "toneko.command.remove")){return noPS(player);}
         //获取关键信息
-        String playerName = base.getPlayerName(player); //玩家名称
+        String playerName = TextUtil.getPlayerName(player); //玩家名称
         String neko = context.getArgument("neko", String.class); //猫娘的名称
         if (!base.getOwner(neko, worldName).equalsIgnoreCase(playerName)) {
             player.sendMessage(translatable("command.toneko.notOwner",new String[]{neko}));

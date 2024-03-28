@@ -1,8 +1,10 @@
 package com.crystalneko.tonekofabric.command;
 
+import com.crystalneko.tonekofabric.api.CommandEvents;
 import com.crystalneko.tonekofabric.items.stick;
 import com.crystalneko.tonekofabric.libs.base;
 import com.crystalneko.tonekofabric.libs.lp;
+import com.crystalneko.tonekofabric.util.TextUtil;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -16,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.crystalneko.tonekofabric.libs.base.translatable;
+import static com.crystalneko.tonekofabric.api.Messages.translatable;
 import static org.cneko.ctlib.common.util.LocalDataBase.Connections.sqlite;
 
 public class ToNekoCommand {
@@ -24,7 +26,7 @@ public class ToNekoCommand {
     //toneko player <neko>
     public static int Player(CommandContext<ServerCommandSource> context){
         final ServerCommandSource source = context.getSource();
-        final String worldName = base.getWorldName(source.getWorld());
+        final String worldName = TextUtil.getWorldName(source.getWorld());
         final PlayerEntity player = source.getPlayer();
         String prefix = translatable("chat.neko.prefix").getString();
         if(!lp.hasPermission(player, "toneko.command.player")){return noPS(player);}
@@ -41,16 +43,16 @@ public class ToNekoCommand {
         } else {
             source.sendMessage(base.getStringLanguage("command.toneko.player.nekoed", new String[]{base.isNekoHasOwner(target, worldName)}));
         }
-        return 1;
+        return CommandEvents.TONEKO_PLAYER.invoker().toneko_player(context);
     }
     //toneko aliases <neko> add <aliases>
     public static int AliasesAdd(CommandContext<ServerCommandSource> context){
         final ServerCommandSource source = context.getSource();
         final PlayerEntity player = source.getPlayer();
-        final String worldName = base.getWorldName(player.getWorld());
+        final String worldName = TextUtil.getWorldName(player.getWorld());
         if(!lp.hasPermission(player, "toneko.command.aliases")){return noPS(player);}
         sqlite.addColumn(worldName+"Nekos","aliases");
-        String playerName = base.getPlayerName(player); //玩家名称
+        String playerName = TextUtil.getPlayerName(player); //玩家名称
         String neko = context.getArgument("neko", String.class); //猫娘的名称
         String aliases = context.getArgument("aliases", String.class); //别名
         if (!base.getOwner(neko, worldName).equalsIgnoreCase(playerName)) {
@@ -86,10 +88,10 @@ public class ToNekoCommand {
     public static int AliasesRemove(CommandContext<ServerCommandSource> context){
         final ServerCommandSource source = context.getSource();
         final PlayerEntity player = source.getPlayer();
-        final String worldName = base.getWorldName(player.getWorld());
+        final String worldName = TextUtil.getWorldName(player.getWorld());
         if(!lp.hasPermission(player, "toneko.command.aliases")){return noPS(player);}
         sqlite.addColumn(worldName+"Nekos","aliases");
-        String playerName = base.getPlayerName(player); //玩家名称
+        String playerName = TextUtil.getPlayerName(player); //玩家名称
         String neko = context.getArgument("neko", String.class); //猫娘的名称
         String aliases = context.getArgument("aliases", String.class); //别名
         if (!base.getOwner(neko, worldName).equalsIgnoreCase(playerName)) {
@@ -133,11 +135,11 @@ public class ToNekoCommand {
     public static int addBlock(CommandContext<ServerCommandSource> context){
         final ServerCommandSource source = context.getSource();
         final PlayerEntity player = source.getPlayer();
-        final String worldName = base.getWorldName(player.getWorld());
+        final String worldName = TextUtil.getWorldName(player.getWorld());
         if(!lp.hasPermission(player, "toneko.command.block")){return noPS(player);}
 
         //获取关键信息
-        String playerName = base.getPlayerName(player); //玩家名称
+        String playerName = TextUtil.getPlayerName(player); //玩家名称
         String neko = context.getArgument("neko", String.class); //猫娘的名称
         String block = context.getArgument("block", String.class); //屏蔽词
         String replace = context.getArgument("replace", String.class); //替换词
@@ -174,11 +176,11 @@ public class ToNekoCommand {
     public static int removeBlock(CommandContext<ServerCommandSource> context){
         final ServerCommandSource source = context.getSource();
         final PlayerEntity player = source.getPlayer();
-        final String worldName = base.getWorldName(player.getWorld());
+        final String worldName = TextUtil.getWorldName(player.getWorld());
         if(!lp.hasPermission(player, "toneko.command.block")){return noPS(player);}
 
         //获取关键信息
-        String playerName = base.getPlayerName(player); //玩家名称
+        String playerName = TextUtil.getPlayerName(player); //玩家名称
         String neko = context.getArgument("neko", String.class); //猫娘的名称
         String block = context.getArgument("block", String.class); //屏蔽词
 
@@ -218,10 +220,10 @@ public class ToNekoCommand {
     public static int xp(CommandContext<ServerCommandSource> context){
         final ServerCommandSource source = context.getSource();
         final PlayerEntity player = source.getPlayer();
-        final String worldName = base.getWorldName(player.getWorld());
+        final String worldName = TextUtil.getWorldName(player.getWorld());
         if(!lp.hasPermission(player, "toneko.command.xp")){return noPS(player);}
         //获取关键信息
-        String playerName = base.getPlayerName(player); //玩家名称
+        String playerName = TextUtil.getPlayerName(player); //玩家名称
         String neko = context.getArgument("neko", String.class); //猫娘的名称
         if (!base.getOwner(neko, worldName).equalsIgnoreCase(playerName)) {
             player.sendMessage(translatable("command.toneko.notOwner",new String[]{neko}));
@@ -235,10 +237,10 @@ public class ToNekoCommand {
     public static int remove(CommandContext<ServerCommandSource> context){
         final ServerCommandSource source = context.getSource();
         final PlayerEntity player = source.getPlayer();
-        final String worldName = base.getWorldName(player.getWorld());
+        final String worldName = TextUtil.getWorldName(player.getWorld());
         if(!lp.hasPermission(player, "toneko.command.remove")){return noPS(player);}
         //获取关键信息
-        String playerName = base.getPlayerName(player); //玩家名称
+        String playerName = TextUtil.getPlayerName(player); //玩家名称
         String neko = context.getArgument("neko", String.class); //猫娘的名称
         if (!base.getOwner(neko, worldName).equalsIgnoreCase(playerName)) {
             player.sendMessage(translatable("command.toneko.notOwner",new String[]{neko}));
@@ -253,7 +255,7 @@ public class ToNekoCommand {
         player.sendMessage(translatable("command.toneko.remove.success",new String[]{neko}));
         sqlite.deleteLine(worldName+"Nekos","neko",neko);
         ChatPrefix.removePrivatePrefix(neko,translatable("chat.neko.prefix").getString());
-        return 1;
+        return CommandEvents.TONEKO_REMOVE.invoker().toneko_remove(context);
     }
 
     public static int noPS(PlayerEntity player){

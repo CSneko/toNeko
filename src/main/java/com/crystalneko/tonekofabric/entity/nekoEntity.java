@@ -3,7 +3,7 @@ package com.crystalneko.tonekofabric.entity;
 import com.crystalneko.tonekofabric.ToNekoFabric;
 import com.crystalneko.tonekofabric.api.NekoEntityEvents;
 import com.crystalneko.tonekofabric.entity.ai.FollowAndAttackPlayerGoal;
-import com.crystalneko.tonekofabric.libs.base;
+import com.crystalneko.tonekofabric.util.TextUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -475,7 +475,7 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
 
     // ------------------------------------------------------相关信息------------------------------------------------
     public String getNekoName(){
-        String worldName = base.getWorldName(this.getWorld());
+        String worldName = TextUtil.getWorldName(this.getWorld());
         //获取uuid
         String uuid = this.getUuid().toString();
         //判断名称是否存在
@@ -487,7 +487,7 @@ public class nekoEntity extends AnimalEntity implements GeoEntity {
         }
     }
     public NameStatus setName(String name){
-        String worldName = base.getWorldName(this.getWorld());
+        String worldName = TextUtil.getWorldName(this.getWorld());
         String uuid = this.getUuid().toString();
         //判断是否已经设置名称
         if(sqlite.checkValueExists(worldName + "NekoEnt", "uuid",uuid)){

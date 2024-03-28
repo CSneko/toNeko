@@ -7,7 +7,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtString;
 import net.minecraft.text.Text;
 
-import static com.crystalneko.tonekofabric.libs.base.translatable;
+import static com.crystalneko.tonekofabric.api.Messages.translatable;
 
 
 public class stick {

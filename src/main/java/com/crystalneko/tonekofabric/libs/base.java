@@ -124,7 +124,7 @@ public class base {
         return name;
     }
     public void create(){
-        Path path = Path.of(dataFolder +"");
+        Path path = Path.of(dataFolder);
         if(!Files.exists(path)){
             try {
                 Files.createDirectory(path);

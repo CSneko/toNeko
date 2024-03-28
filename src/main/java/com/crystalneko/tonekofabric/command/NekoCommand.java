@@ -1,6 +1,7 @@
 package com.crystalneko.tonekofabric.command;
 
 import com.crystalneko.tonekofabric.libs.base;
+import com.crystalneko.tonekofabric.util.TextUtil;
 import com.crystalneko.tonekofabric.libs.lp;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -9,16 +10,16 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.command.ServerCommandSource;
 
 import static com.crystalneko.tonekofabric.command.ToNekoCommand.noPS;
-import static com.crystalneko.tonekofabric.libs.base.translatable;
+import static com.crystalneko.tonekofabric.api.Messages.translatable;
 import static org.cneko.ctlib.common.util.LocalDataBase.Connections.sqlite;
 
 public class NekoCommand {
     public static int jump(CommandContext<ServerCommandSource> context){
         final ServerCommandSource source = context.getSource();
         final PlayerEntity player = source.getPlayer();
-        final String worldName = base.getWorldName(player.getWorld());
+        final String worldName = TextUtil.getWorldName(player.getWorld());
         if(!lp.hasPermission(player, "neko.command.jump")){return noPS(player);}
-        String playerName = base.getPlayerName(player); //玩家名称
+        String playerName = TextUtil.getPlayerName(player); //玩家名称
         if(!isNeko(playerName,worldName,player)){
             return 1; //不是猫娘，直接返回
         }
@@ -33,9 +34,9 @@ public class NekoCommand {
     public static int vision(CommandContext<ServerCommandSource> context){
         final ServerCommandSource source = context.getSource();
         final PlayerEntity player = source.getPlayer();
-        final String worldName = base.getWorldName(player.getWorld());
+        final String worldName = TextUtil.getWorldName(player.getWorld());
         if(!lp.hasPermission(player, "neko.command.vision")){return noPS(player);}
-        String playerName = base.getPlayerName(player); //玩家名称
+        String playerName = TextUtil.getPlayerName(player); //玩家名称
         if(!isNeko(playerName,worldName,player)){
             return 1; //不是猫娘，直接返回
         }
