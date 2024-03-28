@@ -42,5 +42,20 @@
   "client.screen.InstalledOptifine": "检测到安装了Optifine!",
   "client.screen.InstalledOptifine.text": "ToNeko和Optifine一起使用会导致崩溃等问题，如果是在与Optifine同时使用时出现了问题，请不要反馈。如果你需要优化和使用光影，请使用Sodium+Iris",
   "client.screen.InstalledOptifine.button.sodium": "下载Sodium",
-  "client.screen.InstalledOptifine.button.iris": "下载Iris"
+  "client.screen.InstalledOptifine.button.iris": "下载Iris",
+
+  "msg.toneko.join": "♡吶吶，欧尼酱♡，欢迎加入游戏~",
+  "msg.toneko.join.trash": "哟哟，♡杂鱼酱♡，你怎么来了?",
+  "msg.toneko.leave": "♡欧尼酱♡，再见喵~",
+  "msg.toneko.leave.trash": "快走吧，♡杂鱼酱♡",
+  "msg.toneko.hurt": "你没事吧，欧尼酱，有受伤吗？",
+  "msg.toneko.hurt.trash": "这都躲不过，真是个杂鱼呢~♡",
+  "msg.toneko.low-heart": "坚持住，欧尼酱，我相信你可以的♡",
+  "msg.toneko.low-heart.trash": "杂鱼酱可真是菜呢~♡",
+  "msg.toneko.fight": "欧尼酱，加油哦，你一定可以的♡",
+  "msg.toneko.fight.trash": "看样子你很自信呢♡但是我还是劝你放弃吧~",
+  "msg.toneko.death": "欧尼酱可真是个杂鱼呢♡，这都打不过~",
+  "msg.toneko.death.trash": "这就是你的实力吗，也不过如此嘛~",
+  "msg.toneko.win": "好耶！欧尼酱，你赢了!",
+  "msg.toneko.win.trash": "杂鱼酱的运气可真是好呢~♡"
 }

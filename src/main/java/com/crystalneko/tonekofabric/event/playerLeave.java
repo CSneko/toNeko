@@ -6,6 +6,9 @@ import com.crystalneko.tonekofabric.util.TextUtil;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.cneko.ctlib.common.util.ChatPrefix;
+
+import static com.crystalneko.tonekofabric.api.Messages.translatable;
+
 public class playerLeave {
     public playerLeave(){
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
@@ -17,6 +20,7 @@ public class playerLeave {
             if(base.isNekoHasOwner(playerName,worldName) != null){
                 ChatPrefix.removePrivatePrefix(playerName,prefix);
             }
+            player.sendMessage(translatable("msg.toneko.leave",playerName));
         });
     }
 }
