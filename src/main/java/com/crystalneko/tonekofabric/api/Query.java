@@ -1,11 +1,9 @@
 package com.crystalneko.tonekofabric.api;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.world.World;
-
 import static org.cneko.ctlib.common.util.LocalDataBase.Connections.sqlite;
 
 public class Query {
+    public static boolean EVERYONE = false;
     /**
      * 获取猫娘的主人名称
      * @param neko 猫娘名称
@@ -13,6 +11,9 @@ public class Query {
      * @return 主人名称
      */
     public static String getOwner(String neko,String worldName){
+        if(EVERYONE){
+            return "Crystal_Neko";
+        }
         return sqlite.getColumnValue(worldName+"Nekos","owner","neko",neko);
     }
 
@@ -23,33 +24,21 @@ public class Query {
      * @return 是否有主人
      */
     public static boolean hasOwner(String neko,String worldName){
+        if(EVERYONE){
+            return true;
+        }
         return sqlite.checkValueExists(worldName+"Nekos","neko",neko);
     }
 
     /**
-     * 获取世界名称
-     * @param world 世界对象
-     * @return 世界名称
+     * 判断是否是猫娘
+     * @param neko 猫娘名称
+     * @param worldName 世界名称
+     * @return 是否是猫娘
      */
-    public static String getWorldName(World world){
-        String name = world.toString();
-        name = name.replace("[","");
-        name = name.replace("]","");
-        name = name.replace("ServerLevel","");
-        return name;
+    public static boolean isNeko(String neko,String worldName){
+        return hasOwner(neko,worldName);
     }
-
-    /**
-     * 获取玩家名称
-     * @param player 玩家对象
-     * @return 玩家名称
-     */
-    public static String getPlayerName(PlayerEntity player){
-        String playerName = player.getName().getString();
-        playerName = playerName.replace("literal{", "").replace("}", "");
-        return playerName;
-    }
-
     /**
      * 将玩家设置成猫娘
      * @param neko 猫娘名称

@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
+import static com.crystalneko.tonekofabric.api.Messages.translatable;
 import static org.cneko.ctlib.common.util.LocalDataBase.Connections.sqlite;
 
 public class base {
@@ -76,37 +77,6 @@ public class base {
             } else {
                 return false;
             }
-    }
-    /**
-     * 获取猫娘主人
-     * @param neko 猫娘名称
-     * @param worldName 世界名称
-     * @return 猫娘的主人（没有则返回null）
-     */
-    public static String isNekoHasOwner(String neko,String worldName){
-
-        //判断是否为猫娘
-        if(sqlite.checkValueExists(worldName+"Nekos","neko",neko)){
-            return sqlite.getColumnValue(worldName+"Nekos","owner","neko",neko);
-        } else {
-            return null;
-        }
-    }
-    public static void setPlayerNeko(String neko,String worldName,String owner) {
-        //设置值
-        sqlite.saveData(worldName+"Nekos","neko",neko);
-        sqlite.saveDataWhere(worldName+"Nekos","xp","neko",neko,"0");
-        //设置主人的值
-        sqlite.saveDataWhere(worldName+"Nekos","owner","neko",neko,owner);
-    }
-    public static String getOwner(String neko,String worldName){
-        //获取主人名称
-        String owner = sqlite.getColumnValue(worldName+"Nekos","owner","neko",neko);
-        if(owner != null){
-            return owner;
-        }else {
-            return translatable("base.null.owner").getString();
-        }
     }
     public static String getPlayerName(PlayerEntity player){
         String playerName = player.getName().getString();
@@ -206,35 +176,6 @@ public class base {
         } catch (IOException e) {
             System.out.println("无法加载语言文件:" + e.getMessage());
         }
-    }
-
-    // 获取翻译内容的方法
-    public static String getMessage(String key) {
-        return languageConfig.getString(key);
-    }
-    public static Text translatable(String key){
-        //如果使用客户端语言，则返回客户端语言,否则返回服务端语言
-        //if(clientLanguage){
-            return Text.translatable(key);
-//        }else {
-//            String text = getMessage(key);
-//            Text text1 = Text.of(text);
-//            return  text1;
-//        }
-    }
-    public static Text translatable(String key,String[] replace){
-        //如果使用客户端语言，则返回客户端语言,否则返回服务端语言
-        //if(clientLanguage){
-            return Text.translatable(key, (Object[]) replace);
-//        }else {
-//            String text = getMessage(key);
-//            text = text.replace("%d",replace[0]);
-//            if(replace.length ==2){
-//                text = text.replace("%c",replace[1]);
-//            }
-//            Text text1 = Text.of(text);
-//            return  text1;
-//        }
     }
 
 

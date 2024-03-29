@@ -1,5 +1,6 @@
 package com.crystalneko.tonekofabric.command;
 
+import com.crystalneko.tonekofabric.api.Query;
 import com.crystalneko.tonekofabric.libs.base;
 import com.crystalneko.tonekofabric.util.TextUtil;
 import com.crystalneko.tonekofabric.libs.lp;
@@ -49,7 +50,7 @@ public class NekoCommand {
         return 1;
     }
     public static Boolean isNeko(String neko,String worldName,PlayerEntity player){
-        if(base.isNekoHasOwner(neko,worldName)== null){
+        if(!Query.hasOwner(neko,worldName)){
             player.sendMessage(translatable("command.neko.not-neko"));
             return false;
         }

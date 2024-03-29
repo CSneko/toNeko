@@ -92,6 +92,9 @@ public class command{
                                     .executes(ToNekoCommand::remove)
                             )
                     )
+                    .then(literal("everyone")
+                            .executes(ToNekoCommand::everyone)
+                    )
                     //-------------------------------------help---------------------------------------------------
                     .then(literal("help")
                                     .executes(context -> {

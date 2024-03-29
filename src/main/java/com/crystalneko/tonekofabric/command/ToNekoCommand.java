@@ -1,6 +1,7 @@
 package com.crystalneko.tonekofabric.command;
 
 import com.crystalneko.tonekofabric.api.CommandEvents;
+import com.crystalneko.tonekofabric.api.Query;
 import com.crystalneko.tonekofabric.items.stick;
 import com.crystalneko.tonekofabric.libs.base;
 import com.crystalneko.tonekofabric.libs.lp;
@@ -33,15 +34,15 @@ public class ToNekoCommand {
         // 使用 getArgument 方法获取玩家名称
         String target = context.getArgument("neko", String.class);
         //判断是否有主人
-        if (base.isNekoHasOwner(target, worldName) == null) {
+        if (!Query.isNeko(target, worldName)) {
             //设置玩家为猫娘
-            base.setPlayerNeko(target, worldName, source.getName());
+            Query.setPlayerToNeko(target, worldName, source.getName());
             //给予玩家前缀
             ChatPrefix.addPrivatePrefix(target,prefix);
             //发送成功消息
             source.sendMessage(translatable("command.toneko.player.success", new String[]{target}));
         } else {
-            source.sendMessage(base.getStringLanguage("command.toneko.player.nekoed", new String[]{base.isNekoHasOwner(target, worldName)}));
+            source.sendMessage(base.getStringLanguage("command.toneko.player.nekoed", new String[]{Query.getOwner(target, worldName)}));
         }
         return CommandEvents.TONEKO_PLAYER.invoker().toneko_player(context);
     }
@@ -55,7 +56,7 @@ public class ToNekoCommand {
         String playerName = TextUtil.getPlayerName(player); //玩家名称
         String neko = context.getArgument("neko", String.class); //猫娘的名称
         String aliases = context.getArgument("aliases", String.class); //别名
-        if (!base.getOwner(neko, worldName).equalsIgnoreCase(playerName)) {
+        if (!Query.getOwner(neko, worldName).equalsIgnoreCase(playerName)) {
             player.sendMessage(translatable("command.toneko.notOwner",new String[]{neko}));
             return 1; //不是主人，直接结束
         }
@@ -94,7 +95,7 @@ public class ToNekoCommand {
         String playerName = TextUtil.getPlayerName(player); //玩家名称
         String neko = context.getArgument("neko", String.class); //猫娘的名称
         String aliases = context.getArgument("aliases", String.class); //别名
-        if (!base.getOwner(neko, worldName).equalsIgnoreCase(playerName)) {
+        if (!Query.getOwner(neko, worldName).equalsIgnoreCase(playerName)) {
             player.sendMessage(translatable("command.toneko.notOwner",new String[]{neko}));
             return 1; //不是主人，直接结束
         }
@@ -147,7 +148,7 @@ public class ToNekoCommand {
 
         blockTable(worldName,neko);
 
-        if (!base.getOwner(neko, worldName).equalsIgnoreCase(playerName)) {
+        if (!Query.getOwner(neko, worldName).equalsIgnoreCase(playerName)) {
             player.sendMessage(translatable("command.toneko.notOwner",new String[]{neko}));
             return 1; //不是主人，直接结束
         }
@@ -186,7 +187,7 @@ public class ToNekoCommand {
 
         blockTable(worldName,neko);
 
-        if (!base.getOwner(neko, worldName).equalsIgnoreCase(playerName)) {
+        if (!Query.getOwner(neko, worldName).equalsIgnoreCase(playerName)) {
             player.sendMessage(translatable("command.toneko.notOwner",new String[]{neko}));
             return 1; //不是主人，直接结束
         }
@@ -225,7 +226,7 @@ public class ToNekoCommand {
         //获取关键信息
         String playerName = TextUtil.getPlayerName(player); //玩家名称
         String neko = context.getArgument("neko", String.class); //猫娘的名称
-        if (!base.getOwner(neko, worldName).equalsIgnoreCase(playerName)) {
+        if (!Query.getOwner(neko, worldName).equalsIgnoreCase(playerName)) {
             player.sendMessage(translatable("command.toneko.notOwner",new String[]{neko}));
             return 1; //不是主人，直接结束
         }
@@ -242,7 +243,7 @@ public class ToNekoCommand {
         //获取关键信息
         String playerName = TextUtil.getPlayerName(player); //玩家名称
         String neko = context.getArgument("neko", String.class); //猫娘的名称
-        if (!base.getOwner(neko, worldName).equalsIgnoreCase(playerName)) {
+        if (!Query.getOwner(neko, worldName).equalsIgnoreCase(playerName)) {
             player.sendMessage(translatable("command.toneko.notOwner",new String[]{neko}));
             return 1; //不是主人，直接结束
         }
@@ -256,6 +257,18 @@ public class ToNekoCommand {
         sqlite.deleteLine(worldName+"Nekos","neko",neko);
         ChatPrefix.removePrivatePrefix(neko,translatable("chat.neko.prefix").getString());
         return CommandEvents.TONEKO_REMOVE.invoker().toneko_remove(context);
+    }
+
+    public static int everyone(CommandContext<ServerCommandSource> context){
+        final ServerCommandSource source = context.getSource();
+        final PlayerEntity player = source.getPlayer();
+        if(!lp.hasPermission(player, "toneko.command.everyone") || !player.hasPermissionLevel(3)){
+            assert player != null;
+            return noPS(player);
+        }
+        Query.EVERYONE = true;
+        player.sendMessage(translatable("command.toneko.everyone"));
+        return 1;
     }
 
     public static int noPS(PlayerEntity player){

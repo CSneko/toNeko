@@ -1,6 +1,7 @@
 package com.crystalneko.tonekofabric.event;
 
 import com.crystalneko.tonekocommon.Stats;
+import com.crystalneko.tonekofabric.api.Query;
 import com.crystalneko.tonekofabric.libs.base;
 import com.crystalneko.tonekofabric.libs.lp;
 import com.crystalneko.tonekofabric.util.TextUtil;
@@ -48,7 +49,7 @@ public class playerChat {
             //进行AI处理
             AIMsg(newMessage,worldName,playerName,server);
             // 发送统计信息
-            Stats.meowInChat(TextUtil.getPlayerName(player), message.getString());
+            Stats.meowInChat(TextUtil.getPlayerName(player), newMessage);
         }
     }
     private static void sendMsg(Text message,MinecraftServer server){
@@ -122,7 +123,7 @@ public class playerChat {
                 if (stringMessage.contains(str)) {
                     //对于存在的，进行处理
                     String type = sqlite.getColumnValue(worldName + "Nekos", "type", "neko", str);
-                    if (base.getOwner(str, worldName).equalsIgnoreCase(playerName) && type != null && type.equalsIgnoreCase("AI")) {
+                    if (Query.getOwner(str, worldName).equalsIgnoreCase(playerName) && type != null && type.equalsIgnoreCase("AI")) {
                         String owner = sqlite.getColumnValue(worldName + "Nekos", "owner", "neko", playerName);
                         //获取API
                         String API = config.getString("AI.API");
