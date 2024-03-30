@@ -3,7 +3,7 @@
   "id": "toneko",
   "version": "${version}",
   "name": "toNeko",
-  "description": "喵喵喵~",
+  "description": "可爱即是正义!",
   "authors": [
     "CrystalNeko"
   ],
@@ -14,7 +14,7 @@
     "homepage": "https://github.com/CSNeko/toNeko"
   },
   "license": "MIT",
-  "icon": "assets/toneko/essentials/icon.png",
+  "icon": "assets/toneko/icon.png",
   "environment": "*",
   "entrypoints": {
     "client": [

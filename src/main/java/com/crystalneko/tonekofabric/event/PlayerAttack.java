@@ -3,7 +3,6 @@ package com.crystalneko.tonekofabric.event;
 import com.crystalneko.tonekocommon.Stats;
 import com.crystalneko.tonekofabric.api.Messages;
 import com.crystalneko.tonekofabric.api.Query;
-import com.crystalneko.tonekofabric.util.TextUtil;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -12,25 +11,21 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.ActionResult;
 
-import java.io.IOException;
 import java.util.Random;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import static com.crystalneko.tonekofabric.api.Messages.translatable;
 import static org.cneko.ctlib.common.util.LocalDataBase.Connections.sqlite;
 import static com.crystalneko.tonekofabric.util.TextUtil.getPlayerName;
 import static com.crystalneko.tonekofabric.util.TextUtil.getWorldName;
-public class playerAttack {
+public class PlayerAttack {
 
-    public playerAttack() {
+    public PlayerAttack() {
         // 注册玩家攻击实体事件监听器
-        AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
+        AttackEntityCallback.EVENT.register((player, world, hand, neko, hitResult) -> {
             String playerName = getPlayerName(player);
-            player.sendMessage(translatable("msg.toneko.fight",playerName));
+            player.sendMessage(translatable("msg.toneko.fight",playerName),true);
             // 判断被攻击的实体是否为生物实体
-            if (entity instanceof PlayerEntity attacker) {
+            if (neko instanceof PlayerEntity attacker) {
                 handlePlayerAttackEntity(player, attacker);
             }
 
@@ -48,16 +43,7 @@ public class playerAttack {
         }
         sqlite.addColumn(worldName + "Nekos","xp");
 
-        neko.sendMessage(translatable("msg.toneko.hurt",nekoName));
 
-        if(neko.getHealth() <= 5 && neko.getHealth() > 0 ){
-            neko.sendMessage(translatable("msg.toneko.low-heart",nekoName));
-        }
-        if(neko.getHealth() <= 0){
-            Messages.setTrash(nekoName,true);
-            player.sendMessage(translatable("msg.toneko.win",playerName));
-            neko.sendMessage(translatable("msg.toneko.death",nekoName));
-        }
         //如果没有使用物品或nbt对不上，直接返回
         if(player.getMainHandStack() == null){return;}else{
             ItemStack stack =  player.getMainHandStack(); //获取主手物品

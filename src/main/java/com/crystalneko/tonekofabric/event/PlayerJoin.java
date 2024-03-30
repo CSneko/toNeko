@@ -8,8 +8,8 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.cneko.ctlib.common.util.ChatPrefix;
 import static com.crystalneko.tonekofabric.api.Messages.translatable;
-public class playerJoin {
-    public playerJoin(){
+public class PlayerJoin {
+    public PlayerJoin(){
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             ServerPlayerEntity player = handler.player;
             String playerName = TextUtil.getPlayerName(player);
@@ -21,7 +21,7 @@ public class playerJoin {
             }
 
             // 发送欢迎消息
-            player.sendMessage(translatable("msg.toneko.join",playerName));
+            player.sendMessage(translatable("msg.toneko.join",playerName),true);
 
             base.start(worldName);
         });

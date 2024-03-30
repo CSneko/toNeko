@@ -1,6 +1,7 @@
 package com.crystalneko.tonekofabric.event;
 
 import com.crystalneko.tonekocommon.Stats;
+import com.crystalneko.tonekocommon.util.ThreadFactories;
 import com.crystalneko.tonekofabric.api.Query;
 import com.crystalneko.tonekofabric.libs.base;
 import com.crystalneko.tonekofabric.libs.lp;
@@ -25,8 +26,8 @@ import java.util.concurrent.Executors;
 
 import static org.cneko.ctlib.common.util.LocalDataBase.Connections.sqlite;
 
-public class playerChat {
-    private static final ExecutorService executorService = Executors.newCachedThreadPool();
+public class PlayerChat {
+    private static final ExecutorService executorService = Executors.newCachedThreadPool(new ThreadFactories.ChatThreadFactory());
     public static void init(){
         ServerMessageEvents.ALLOW_CHAT_MESSAGE.register((message, sender, params) -> {
             // 使用 CompletableFuture 异步处理聊天消息
