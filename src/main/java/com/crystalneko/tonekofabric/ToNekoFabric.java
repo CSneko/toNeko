@@ -4,10 +4,11 @@ import com.crystalneko.tonekofabric.api.NekoEntityEvents;
 import com.crystalneko.tonekofabric.command.command;
 import com.crystalneko.tonekofabric.entity.EntityRegister;
 import com.crystalneko.tonekofabric.entity.nekoEntity;
-import com.crystalneko.tonekofabric.event.playerAttack;
-import com.crystalneko.tonekofabric.event.playerChat;
-import com.crystalneko.tonekofabric.event.playerJoin;
-import com.crystalneko.tonekofabric.event.playerLeave;
+import com.crystalneko.tonekofabric.event.PlayerAttack;
+import com.crystalneko.tonekofabric.event.PlayerChat;
+import com.crystalneko.tonekofabric.event.PlayerJoin;
+import com.crystalneko.tonekofabric.event.PlayerLeave;
+import com.crystalneko.tonekofabric.event.PlayerDamage;
 import com.crystalneko.tonekofabric.items.stick;
 import com.crystalneko.tonekofabric.libs.base;
 import com.crystalneko.tonekofabric.libs.lp;
@@ -16,7 +17,6 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import org.cneko.ctlib.common.file.YamlConfiguration;
-
 import java.io.IOException;
 import java.nio.file.Path;
 
@@ -69,11 +69,12 @@ public class ToNekoFabric implements ModInitializer {
     //监听事件
     private void event(){
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-            new playerAttack();
-            new playerJoin();
-            new playerLeave();
+            new PlayerAttack();
+            new PlayerJoin();
+            new PlayerLeave();
+            PlayerDamage.init();
             if (config.getBoolean("chat.enable")) {
-                playerChat.init();
+                PlayerChat.init();
             }
 
             /*try {

@@ -1,6 +1,8 @@
 package com.crystalneko.tonekofabric.event;
 
 import com.crystalneko.tonekocommon.Stats;
+import com.crystalneko.tonekocommon.util.ThreadFactories;
+import com.crystalneko.tonekofabric.api.Query;
 import com.crystalneko.tonekofabric.libs.base;
 import com.crystalneko.tonekofabric.libs.lp;
 import com.crystalneko.tonekofabric.util.TextUtil;
@@ -24,8 +26,8 @@ import java.util.concurrent.Executors;
 
 import static org.cneko.ctlib.common.util.LocalDataBase.Connections.sqlite;
 
-public class playerChat {
-    private static final ExecutorService executorService = Executors.newCachedThreadPool();
+public class PlayerChat {
+    private static final ExecutorService executorService = Executors.newCachedThreadPool(new ThreadFactories.ChatThreadFactory());
     public static void init(){
         ServerMessageEvents.ALLOW_CHAT_MESSAGE.register((message, sender, params) -> {
             // 使用 CompletableFuture 异步处理聊天消息
@@ -48,7 +50,7 @@ public class playerChat {
             //进行AI处理
             AIMsg(newMessage,worldName,playerName,server);
             // 发送统计信息
-            Stats.meowInChat(TextUtil.getPlayerName(player), message.getString());
+            Stats.meowInChat(TextUtil.getPlayerName(player), newMessage);
         }
     }
     private static void sendMsg(Text message,MinecraftServer server){
@@ -122,7 +124,7 @@ public class playerChat {
                 if (stringMessage.contains(str)) {
                     //对于存在的，进行处理
                     String type = sqlite.getColumnValue(worldName + "Nekos", "type", "neko", str);
-                    if (base.getOwner(str, worldName).equalsIgnoreCase(playerName) && type != null && type.equalsIgnoreCase("AI")) {
+                    if (Query.getOwner(str, worldName).equalsIgnoreCase(playerName) && type != null && type.equalsIgnoreCase("AI")) {
                         String owner = sqlite.getColumnValue(worldName + "Nekos", "owner", "neko", playerName);
                         //获取API
                         String API = config.getString("AI.API");

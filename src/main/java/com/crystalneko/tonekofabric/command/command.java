@@ -20,7 +20,6 @@ public class command{
      //--------------------------------------------------------注册命令---------------------------------------------------
 
     public void initCommand() {
-
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             //------------------------------------------------toneko-----------------------------------------------
             dispatcher.register(literal("toneko")
@@ -92,6 +91,9 @@ public class command{
                                     .executes(ToNekoCommand::remove)
                             )
                     )
+                    .then(literal("everyone")
+                            .executes(ToNekoCommand::everyone)
+                    )
                     //-------------------------------------help---------------------------------------------------
                     .then(literal("help")
                                     .executes(context -> {
@@ -146,6 +148,12 @@ public class command{
                             )
                     )
             );
+            // -------------------------------------------trash-------------------------------------------------
+            dispatcher.register(literal("totrash")
+                    //------------------------------------------set------------------------------------------
+                    .then(literal("set")
+                            .executes(TrashCommand::set)
+                    ));
         });
     }
 

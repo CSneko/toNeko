@@ -54,7 +54,7 @@ public class Meta extends ModMeta{
     public class Description extends ModMeta.Description{
         @Override
         public String getName() {
-            return "ToNeko";
+            return "toNeko";
         }
 
         @Override

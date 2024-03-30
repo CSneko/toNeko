@@ -7,9 +7,9 @@ import com.crystalneko.tonekofabric.util.TextUtil;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.cneko.ctlib.common.util.ChatPrefix;
-
-public class playerJoin {
-    public playerJoin(){
+import static com.crystalneko.tonekofabric.api.Messages.translatable;
+public class PlayerJoin {
+    public PlayerJoin(){
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             ServerPlayerEntity player = handler.player;
             String playerName = TextUtil.getPlayerName(player);
@@ -19,6 +19,10 @@ public class playerJoin {
             if(Query.hasOwner(playerName,worldName)){
                 ChatPrefix.addPrivatePrefix(playerName,prefix);
             }
+
+            // 发送欢迎消息
+            player.sendMessage(translatable("msg.toneko.join",playerName),true);
+
             base.start(worldName);
         });
     }
