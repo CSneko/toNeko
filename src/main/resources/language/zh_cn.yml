@@ -36,8 +36,10 @@ command:
     help: "§b/toneko 帮助:\n§a/toneko help §b获取帮助\n§a/toneko player <玩家名> §b将一位玩家变成猫娘(但是你会被祭献)\n§a/toneko item §b获取撅猫棍\n§a/toneko remove <猫娘名称> §b删除猫娘§c（这是个危险操作，请谨慎使用）\n§a/toneko xp <猫娘名称> §b查看好感经验\n§a/toneko aliases <猫娘名称> add或remove <别名> §b为你添加或删除别名（会转换为'主人'的词）\n§a/toneko block <猫娘名称> add或remove <屏蔽词> <替换词> word或all §b添加屏蔽词（屏蔽词会被替换成替换词，all代表替换整句,word替换单词)"
     notOwner: "§c你不是%d的主人"
     player:
+      notOwner: "§c你不是%d的主人"
       success: "§a成功将玩家§6%d§a设置成一个猫娘，你成为了它的主人"
       nekoed: "§b它已经是一个猫娘了，它的主人是§6%d"
+      death: "§e玩家§6%d§e为了使§6%c§e成为猫娘而祭献了自己"
     aliases:
       add:
         true: "§a成功设置别名!"

@@ -37,14 +37,18 @@ public class StickItemWrapper {
         ItemMeta itemMeta = itemStack.getItemMeta();
         //设置物品的展示名称
         itemMeta.setDisplayName(ToNeko.getMessage("item.stick"));
-        // 原始的String类型的lore
-        String loreString = ToNeko.getMessage("item.stick-lore");
-        // 将String类型的lore转换为Component类型
-        Component loreComponent = Component.text(loreString);
-        // 创建一个List<Component>并加入转换后的lore
-        List<Component> lore = new ArrayList<>();
-        lore.add(loreComponent);
-        itemMeta.lore(lore);
+        try{
+            Class.forName("net.kyori.adventure.text.Component");
+            // 原始的String类型的lore
+            String loreString = ToNeko.getMessage("item.stick-lore");
+            // 将String类型的lore转换为Component类型
+            Component loreComponent = Component.text(loreString);
+            // 创建一个List<Component>并加入转换后的lore
+            List<Component> lore = new ArrayList<>();
+            lore.add(loreComponent);
+            itemMeta.lore(lore);
+        } catch (ClassNotFoundException ignored) {
+        }
         //为物品添加附魔特效
         itemMeta.addEnchant(Enchantment.DURABILITY, 1, true);
         //设置物品的自定义材质

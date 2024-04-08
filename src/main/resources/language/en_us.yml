@@ -37,6 +37,7 @@ command:
       success: "§aSuccessfully set player§6%d§a to be a neko girl, and you become its owner"
       nekoed: "§bIt is already a neko girl, and its owner is§6%d"
       notOwner: "§cYou are not %d's owner"
+      death: "§ePlayer§6%d§e sacrificed himself to make §6%c§e a catgirl"
     aliases:
       add:
         true: "§aAlias set successfully!"
