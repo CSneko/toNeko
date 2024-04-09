@@ -44,9 +44,9 @@ public class AINekoCommand implements CommandExecutor {
                 ConfigFileUtils.createNewKey(args[1] + ".type","AI",data,dataFile);
                 if (created) {
                     killPlayer(player,args[1]);
-                    player.sendMessage("§a成功将玩家§6" + args[1] + "§a设置成一个猫娘，你成为了它的主人");
+                    player.sendMessage(getMessage("command.toneko.player.success",new String[]{args[1]}));
                 } else {
-                    player.sendMessage("§b它已经是一个猫娘了，它的主人是§6" + data.getString(args[1] + ".owner"));
+                    player.sendMessage(getMessage("command.toneko.player.nekoed",new String[]{data.getString(args[1] + ".owner")}));
                 }
 
             }else {
@@ -69,19 +69,19 @@ public class AINekoCommand implements CommandExecutor {
                                 data.set(args[1] + ".aliases",null);
                                 data.set(args[1] + ".type",null);
                                 data.set(args[1] + ".xp", 0);
-                                player.sendMessage("§a你已经成功删除了猫娘§6" + args[1]);
+                                player.sendMessage(getMessage("command.toneko.remove.success",new String[]{args[1]}));
                             } else {
                                 player.sendMessage("§c猫娘不存在");
                             }
                         } else {
-                            player.sendMessage("§c你不是" + args[1] + "的主人!");
+                            player.sendMessage(getMessage("command.toneko.player.notOwner",new String[]{args[1]}));
                         }
                     }
                     confirmMap.remove(player);  // 执行完毕后移除确认状态
                     return true;
                 } else {
                     // 发出确认提醒
-                    player.sendMessage("§c请再次输入该命令以确认执行: /toneko remove " + args[1]);
+                    player.sendMessage(getMessage("command.toneko.remove.confirm") +": /toneko remove " + args[1]);
                     confirmMap.put(player, true);
                     return true;
                 }

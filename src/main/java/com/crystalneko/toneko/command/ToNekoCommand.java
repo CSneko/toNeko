@@ -64,7 +64,7 @@ public class ToNekoCommand implements CommandExecutor {
             }
 
         } else if (args[0].equalsIgnoreCase("help")) {
-            player.sendMessage("§b/toneko 帮助:\n§a/toneko help §b获取帮助\n§a/toneko player <玩家名> §b将一位玩家变成猫娘(但是你会被祭献)\n§a/toneko item §b获取撅猫棍\n§a/toneko remove <猫娘名称> §b删除猫娘§c（这是个危险操作，请谨慎使用）\n§a/toneko xp <猫娘名称> §b查看好感经验\n§a/toneko aliases <猫娘名称> add或remove <别名> §b为你添加或删除别名（会转换为'主人'的词）\n§a/toneko block <猫娘名称> add或remove <屏蔽词> <替换词> word或all §b添加屏蔽词（屏蔽词会被替换成替换词，all替换整句,word替换单词");
+            player.sendMessage(getMessage("command.toneko.help"));
         } else if (args[0].equalsIgnoreCase("item")) {
             if (player.hasPermission("toneko.command.item")){
                 StickItemWrapper.giveStickToPlayer(player);
@@ -84,22 +84,22 @@ public class ToNekoCommand implements CommandExecutor {
                             //获取被删除的猫娘对象
                             Player neko = Bukkit.getPlayer(args[1]);
                             if (neko != null) {
-                                ChatPrefix.removePrivatePrefix(neko.getName(), "§a猫娘");
+                                ChatPrefix.removePrivatePrefix(neko.getName(), getMessage("chat.neko.prefix"));
                                 data.set(args[1] + ".owner",null);
                                 data.set(args[1] + ".aliases",null);
                                 ConfigFileUtils.setValue(args[1] + ".xp", 0, dataFile);
-                                player.sendMessage("§a你已经成功删除了猫娘§6" + args[1]);
+                                player.sendMessage(getMessage("command.toneko.remove.confirm") +args[1]);
                             } else {
                                 player.sendMessage("§c猫娘不存在或不在线");
                             }
                         } else {
-                            player.sendMessage("§c你不是" + args[1] + "的主人!");
+                            player.sendMessage(getMessage("command.toneko.notOwner",new String[]{args[1]}));
                         }
                     }
                     confirmMap.remove(player);  // 执行完毕后移除确认状态
                 } else {
                     // 发出确认提醒
-                    player.sendMessage("§c请再次输入该命令以确认执行: /toneko remove " + args[1]);
+                    player.sendMessage(getMessage("command.toneko.remove.confirm") +": /toneko remove " + args[1]);
                     confirmMap.put(player, true);
                 }
                 return true;
@@ -118,7 +118,7 @@ public class ToNekoCommand implements CommandExecutor {
                         int xp = data.getInt(args[1] + ".xp");
                         player.sendMessage("§a你与§e" + args[1] + "§b的好感经验为§e" + xp);
                     } else {
-                        player.sendMessage("§c你不是" + args[1] + "的主人!");
+                        player.sendMessage(getMessage("command.toneko.notOwner",new String[]{args[1]}));
                     }
                 } else {
                     if (data.getString(args[1] + ".owner") != null) {
@@ -126,11 +126,11 @@ public class ToNekoCommand implements CommandExecutor {
                             ConfigFileUtils.createNewKey(args[1] + "." + "xp", player.getName(), data, dataFile);
                         }
                     } else {
-                        player.sendMessage("§c你不是" + args[1] + "的主人!");
+                        player.sendMessage(getMessage("command.toneko.notOwner",new String[]{args[1]}));
                     }
                 }
             }else {
-                player.sendMessage("§c你没有执行该命令的权限!");
+                player.sendMessage(getMessage("command.no-permission"));
             }
         }else if(args.length == 4 && args[0].equalsIgnoreCase("aliases")){
             if(player.hasPermission("toneko.command.aliases")){
@@ -149,13 +149,13 @@ public class ToNekoCommand implements CommandExecutor {
                                 //将新别名添加到别名
                                 aliases.add(args[3]);
                                 ConfigFileUtils.setValue(args[1] + ".aliases",aliases,dataFile);
-                                player.sendMessage("成功设置别名" + args[3]);
+                                player.sendMessage(getMessage("command.toneko.aliases.add.true") + args[3]);
                             } else {
                                 //如果没有则创建值
                                 List<String> aliases = new ArrayList<>();
                                 aliases.add(args[3]);
                                 ConfigFileUtils.createNewKey(args[1]+".aliases",aliases,data,dataFile);
-                                player.sendMessage("成功设置别名" + args[3]);
+                                player.sendMessage(getMessage("command.toneko.aliases.add.true") + args[3]);
                             }
                         } else if(args[2].equalsIgnoreCase("remove")){
                             //获取别名
@@ -164,14 +164,14 @@ public class ToNekoCommand implements CommandExecutor {
                             if(aliases.contains(args[3])) {
                                 aliases.remove(args[3]);
                                 ConfigFileUtils.setValue(args[1] + ".aliases",aliases,dataFile);
-                                player.sendMessage("§a已成功删除别名"+args[3]);
-                            }else {player.sendMessage("§c别名" + args[3] +"不存在");}
+                                player.sendMessage(getMessage("command.toneko.aliases.remove.true"));
+                            }else {player.sendMessage(getMessage("command.toneko.aliases.remove.no"));}
                         }else {player.sendMessage("§c你的命令/neko "+args[0]+" "+args[1]+"有误，请确认输入的是add或remove");}
                     } else {
-                        player.sendMessage("§c你不是" + args[1] + "的主人!");
+                        player.sendMessage(getMessage("command.toneko.notOwner",new String[]{args[1]}));
                     }
                 } else {
-                        player.sendMessage("§c你不是" + args[1] + "的主人!");
+                        player.sendMessage(getMessage("command.toneko.notOwner",new String[]{args[1]}));
                 }
             }else {
                 player.sendMessage(getMessage("command.no-permission"));

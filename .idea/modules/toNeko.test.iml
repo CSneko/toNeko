@@ -5,10 +5,9 @@
       <configuration>
         <autoDetectTypes>
           <platformType>FORGE</platformType>
-          <platformType>FABRIC</platformType>
           <platformType>MIXIN</platformType>
-          <platformType>NEOFORGE</platformType>
           <platformType>MCP</platformType>
+          <platformType>FABRIC</platformType>
         </autoDetectTypes>
         <projectReimportVersion>1</projectReimportVersion>
       </configuration>
