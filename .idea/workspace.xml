@@ -186,14 +186,6 @@
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
     </task>
-    <task id="LOCAL-00010" summary="修改实体模型">
-      <option name="closed" value="true" />
-      <created>1705659597179</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1705659597179</updated>
-    </task>
     <task id="LOCAL-00011" summary="修改模型">
       <option name="closed" value="true" />
       <created>1705753902273</created>
@@ -578,7 +570,15 @@
       <option name="project" value="LOCAL" />
       <updated>1712587087170</updated>
     </task>
-    <option name="localTasksCounter" value="59" />
+    <task id="LOCAL-00059" summary="完善多语言支持">
+      <option name="closed" value="true" />
+      <created>1712673957682</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1712673957683</updated>
+    </task>
+    <option name="localTasksCounter" value="60" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
