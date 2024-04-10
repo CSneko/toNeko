@@ -1,7 +1,7 @@
 # toNeko
 [简体中文](README.md) | [English](README_en.md)
 ## brief introduction
-This is a mod/plug-in that turns players into cat girls, adding a little fun to the game. Supports Folia
+This is a mod/plugin that turns players into cat girls, adding a little fun to the game. Supports Folia
 
 It revamps the chat system while adding some buffs and gameplay
 ### download:
