@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 public class TabCompleter implements org.bukkit.command.TabCompleter {
     /**
      * 处理命令补全
+     * @Date 10/2/2024
      */
     @Nullable
     @Override
@@ -67,7 +68,8 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
             //block,player,block,replace,all
         }
         // 根据用户输入筛选出符合条件的补全字符串
-        String prefix = args[args.length - 1]; // 获取最后一个参数，作为前缀进行匹配
+        String prefix = args[args.length - 1]; 
+        // 获取最后一个参数，作为前缀进行匹配
         complete.removeIf(option -> !option.toLowerCase().startsWith(prefix.toLowerCase()));
         return complete;
     }
