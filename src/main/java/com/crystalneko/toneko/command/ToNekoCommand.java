@@ -1,6 +1,5 @@
 package com.crystalneko.toneko.command;
 
-import com.crystalneko.toneko.ToNeko;
 import com.crystalneko.toneko.items.StickItemWrapper;
 import com.crystalneko.toneko.utils.ConfigFileUtils;
 import org.bukkit.Bukkit;

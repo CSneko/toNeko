@@ -16,3 +16,5 @@ AI:
 chat:
   # 是否启用聊天修改 （开启后会对MCDr造成一定影响）
   enable: true
+  # 聊天格式，占位符 ${name} = 玩家名称, ${msg} = 玩家消息, ${prefix} = 前缀
+  format: "${prefix}§e${name} §6>> §f${msg}"

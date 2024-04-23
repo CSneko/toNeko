@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.crystalneko.toNeko.main.iml" filepath="$PROJECT_DIR$/.idea/modules/com.crystalneko.toNeko.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.crystalneko.toNeko.test.iml" filepath="$PROJECT_DIR$/.idea/modules/com.crystalneko.toNeko.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.crystalneko.toNekoFabric.test.iml" filepath="$PROJECT_DIR$/.idea/modules/com.crystalneko.toNekoFabric.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/mods.toNekoFabric.main.iml" filepath="$PROJECT_DIR$/.idea/modules/mods.toNekoFabric.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/mods.toNekoFabric.test.iml" filepath="$PROJECT_DIR$/.idea/modules/mods.toNekoFabric.test.iml" />

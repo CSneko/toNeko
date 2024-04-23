@@ -30,7 +30,7 @@ import static org.cneko.ctlib.common.util.LocalDataBase.Connections.sqlite;
 
 public final class ToNeko extends JavaPlugin {
     private LibraryDownloader libraryDownloader;
-    public static FileConfiguration languageConfig;
+    public static YamlConfiguration languageConfig;
     public static Logger logger;
     public static YamlConfiguration config;
     public static ToNeko pluginInstance;
@@ -45,7 +45,7 @@ public final class ToNeko extends JavaPlugin {
         int pluginId = 19899;
         Metrics metrics = new Metrics(this, pluginId);
         //判断是否启用了ctLib
-        LibraryDownloader.checkAndDownloadPlugin("ctLib","https://res.cneko.org/mc/plugins/ctlib.jar");
+        LibraryDownloader.checkAndDownloadPlugin("ctLib","https://res.cneko.org/mc/plugins/ctlib/ctlib-latest.jar");
         //获取config.yml
         checkAndSaveResource("assets/toneko/config.yml");
         //更新配置文件
@@ -129,6 +129,7 @@ public final class ToNeko extends JavaPlugin {
         newConfig.set("AI.API", ifConfig("AI.API"));
         newConfig.set("AI.prompt", ifConfig("AI.prompt"));
         newConfig.set("chat.enable", ifConfig("chat.enable"));
+        newConfig.set("chat.format", ifConfig("chat.format"));
         try {
             newConfig.save(configFile);
         } catch (IOException e) {

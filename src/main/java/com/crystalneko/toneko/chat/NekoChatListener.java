@@ -25,7 +25,7 @@ import java.util.Random;
 import static com.crystalneko.toneko.ToNeko.*;
 import static org.bukkit.Bukkit.getServer;
 import static org.cneko.ctlib.common.util.LocalDataBase.Connections.sqlite;
-
+import static com.crystalneko.toneko.ToNeko.config;
 public class NekoChatListener implements Listener{
     /*
     代码逻辑：
@@ -54,8 +54,10 @@ public class NekoChatListener implements Listener{
     }
 
     public void sendMessage(String playerName, String prefix, String formattedMessage) {
+        String format = config.getString("chat.format");
+        if(format == null)return;
         for (Player player : Bukkit.getOnlinePlayers()) {
-            player.sendMessage(prefix + "§e"+ playerName + " §6>> §f" + formattedMessage);
+            player.sendMessage(format.replace("${prefix}", prefix).replace("${name}",playerName).replace("${msg}", formattedMessage));
         }
     }
 

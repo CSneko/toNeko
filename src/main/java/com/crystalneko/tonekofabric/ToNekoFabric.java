@@ -12,6 +12,7 @@ import com.crystalneko.tonekofabric.event.PlayerDamage;
 import com.crystalneko.tonekofabric.items.stick;
 import com.crystalneko.tonekofabric.libs.base;
 import com.crystalneko.tonekofabric.libs.lp;
+import com.crystalneko.tonekofabric.util.ConfigUtils;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.entity.EntityType;
@@ -34,6 +35,12 @@ public class ToNekoFabric implements ModInitializer {
     @Override
     public void onInitialize() {
         new base();
+        // 加载配置
+        try {
+            ConfigUtils.updateConfig();
+        } catch (IOException e) {
+            System.out.println("加载配置文件失败:"+e.getMessage());
+        }
         //注册命令
         this.command = new command();
 

@@ -94,56 +94,37 @@ public class base {
         return name;
     }
     public void create(){
-        Path path = Path.of(dataFolder);
-        if(!Files.exists(path)){
-            try {
-                Files.createDirectory(path);
-            } catch (IOException e) {
-                System.out.println("can not create path:"+e.getMessage());
-            }
-        }
-        if(!Files.exists(Path.of(dataFolder +"/language"))){
-            try {
-                Files.createDirectory(Path.of(dataFolder +"/language"));
-            } catch (IOException e) {
-                System.out.println("无法创建文件夹:" +e.getMessage());
-            }
-        }
-        Path assetsPath =  Path.of(dataFolder +"/assets");
-        if(!Files.exists(assetsPath)){
-            try {
-                Files.createDirectory(assetsPath);
-            } catch (IOException e) {
-                System.out.println("can not create path:"+e.getMessage());
-            }
-        }
-        Path assetsTonekoPath =  Path.of(dataFolder +"/assets/toneko");
-        if(!Files.exists(assetsTonekoPath)){
-            try {
-                Files.createDirectory(assetsTonekoPath);
-            } catch (IOException e) {
-                System.out.println("can not create path:"+e.getMessage());
-            }
-        }
+        createDirectoryIfNotExists(Path.of(dataFolder));
+        createDirectoryIfNotExists(Path.of(dataFolder + "/language"));
+        createDirectoryIfNotExists(Path.of(dataFolder + "/assets"));
+        createDirectoryIfNotExists(Path.of(dataFolder + "/assets/toneko"));
         //删除语言文件
-        Path zh_cnPath = Path.of(dataFolder +"/language/zh_cn.yml");
-        if (Files.exists(zh_cnPath)){
-            try {
-                Files.delete(zh_cnPath);
-            } catch (IOException e) {
-                System.out.println("无法删除语言文件:"+e.getMessage());
-            }
-        }
-        Path en_usPath = Path.of(dataFolder +"/language/en_us.yml");
-        if (Files.exists(zh_cnPath)){
-            try {
-                Files.delete(en_usPath);
-            } catch (IOException e) {
-                System.out.println("无法删除语言文件:"+e.getMessage());
-            }
-        }
+        deleteFileIfExists(Path.of(dataFolder + "/language/zh_cn.yml"));
+        deleteFileIfExists(Path.of(dataFolder + "/language/en_us.yml"));
 
     }
+
+    private void deleteFileIfExists(Path filePath) {
+        if (Files.exists(filePath)) {
+            try {
+                Files.delete(filePath);
+            } catch (IOException e) {
+                System.out.println("无法删除语言文件: " + e.getMessage());
+            }
+        }
+    }
+
+
+    private void createDirectoryIfNotExists(Path directoryPath) {
+        if (!Files.exists(directoryPath)) {
+            try {
+                Files.createDirectory(directoryPath);
+            } catch (IOException e) {
+                System.out.println("Can not create path: " + e.getMessage());
+            }
+        }
+    }
+
     public void copyResource(String resourcePath,String dataFolder,String fileName){
         try (InputStream in = getClass().getResourceAsStream(resourcePath)) {
             if (in == null) {
