@@ -14,8 +14,15 @@ public class NekoQuery {
     public NekoQuery(String name){
         File dataFile = new File("plugins/toNeko/nekos.yml");
         data = YamlConfiguration.loadConfiguration(dataFile);
+        this.name = name;
     }
 
+    /**
+     * 判断是否为Neko
+     */
+    public boolean isNeko(){
+        return hasOwner();
+    }
 
     /**
      * 获取猫娘是否有主人

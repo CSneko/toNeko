@@ -1,5 +1,6 @@
 package com.crystalneko.toneko.api.events;
 
+import com.crystalneko.toneko.api.NekoQuery;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -50,6 +51,16 @@ public class ChatEvents {
         @Override
         public @NotNull HandlerList getHandlers() {
             return handlers;
+        }
+
+        public Player getPlayer() {
+            return this.player;
+        }
+        public String getMessage() {
+            return this.message;
+        }
+        public NekoQuery getQuery() {
+            return new NekoQuery(this.player.getName());
         }
 
     }
