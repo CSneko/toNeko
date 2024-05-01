@@ -29,7 +29,6 @@ public class ToNekoCommand implements CommandExecutor {
         }
 
         Player player = (Player) sender;
-
         // 处理子命令
         if(args.length == 0){
             player.sendMessage(getMessage("command.toneko.help"));

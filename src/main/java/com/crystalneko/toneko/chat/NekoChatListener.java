@@ -1,6 +1,8 @@
 package com.crystalneko.toneko.chat;
 
 import com.crystalneko.toneko.ToNeko;
+import com.crystalneko.toneko.api.NekoQuery;
+import com.crystalneko.toneko.api.events.ChatEvents;
 import com.crystalneko.tonekocommon.Stats;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -62,17 +64,10 @@ public class NekoChatListener implements Listener{
     }
 
     public void sendMessageToPlayers(String player, String prefix, String message, boolean isAI) {
-        File dataFile = new File("plugins/toNeko/nekos.yml");
-        YamlConfiguration data = YamlConfiguration.loadConfiguration(dataFile);
-        if (data.getString(player + ".owner") != null) {
-            String owner = data.getString(player + ".owner");
-            List<String> aliases = new ArrayList<>();
-
-            if (data.getList(player + ".aliases") != null) {
-                aliases = data.getStringList(player + ".aliases");
-            } else {
-                aliases.add("Crystal_Neko");
-            }
+        NekoQuery data = new NekoQuery(player);
+        if (data.hasOwner()) {
+            String owner = data.getOwner();
+            List<String> aliases = data.getAlias();
 
             String catMessage = catChatMessage(message, owner, aliases);
             catMessage = replaceBlocks(catMessage, player);
@@ -82,11 +77,11 @@ public class NekoChatListener implements Listener{
         if(!isAI && config.getBoolean("AI.enable")){
             // 创建一个List来存储所有type为AI的条目
             List<String> nekoList = new ArrayList<>();
-
+            YamlConfiguration yData = data.getData();
             // 遍历所有键值对
-            for (String key : data.getKeys(false)) {
+            for (String key : yData.getKeys(false)) {
                 // 检查是否有"type"键以及是否为"AI"
-                if (data.contains(key + ".type") && data.getString(key + ".type").equals("AI")) {
+                if (yData.contains(key + ".type") && yData.getString(key + ".type").equals("AI")) {
                     // 将符合条件的条目加入到List中
                     nekoList.add(key);
                 }
@@ -94,7 +89,8 @@ public class NekoChatListener implements Listener{
 
             for (String str : nekoList) {
                 if (message.contains(str)) {
-                    String owner = data.getString(str + ".owner");
+                    NekoQuery aiData = new NekoQuery(str);
+                    String owner = aiData.getOwner();
                     if(owner != null && owner.equalsIgnoreCase(player)){
                         //获取语言
                         String language = config.getString("language");
@@ -139,6 +135,8 @@ public class NekoChatListener implements Listener{
     public void onPlayerChat(org.bukkit.event.player.AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
         String message = event.getMessage();
+        ChatEvents.OnChat onChatEvents = new ChatEvents.OnChat(player, message, event);
+        if(onChatEvents.isCancelled())return;
         String publicPrefix = ChatPrefix.getAllPublicPrefixValues();
         String privatePrefix = ChatPrefix.getPrivatePrefix(player.getName());
         String prefix = publicPrefix + privatePrefix;
@@ -154,6 +152,8 @@ public class NekoChatListener implements Listener{
         event.setCancelled(true);
         Player player = event.getPlayer();
         String message = MiniMessage.miniMessage().serialize(event.message());
+        ChatEvents.OnChat onChatEvents = new ChatEvents.OnChat(player, message, event);
+        if(onChatEvents.isCancelled())return;
         String publicPrefix = ChatPrefix.getAllPublicPrefixValues();
         String privatePrefix = ChatPrefix.getPrivatePrefix(player.getName());
         String prefix = publicPrefix + privatePrefix;
