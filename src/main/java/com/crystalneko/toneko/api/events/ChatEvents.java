@@ -62,6 +62,9 @@ public class ChatEvents {
         public NekoQuery getQuery() {
             return new NekoQuery(this.player.getName());
         }
+        public static HandlerList getHandlerList() {
+            return handlers;
+        }
 
     }
 }
