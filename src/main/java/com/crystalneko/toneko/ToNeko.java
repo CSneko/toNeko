@@ -41,7 +41,7 @@ public final class ToNeko extends JavaPlugin {
         pluginInstance = this;
         //温馨提示：代码中所有的判断是否为猫娘都是判断是否有主人，这意味着猫娘必须有主人，否则就不被判断为猫娘
         //获取logger
-        logger = Logger.getLogger("toNeko");
+        logger = this.getLogger();
         Metrics metrics = new Metrics(this, 19899);
         //判断是否启用了ctLib
         LibraryDownloader.checkAndDownloadPlugin("ctLib","https://res.cneko.org/mc/plugins/ctlib/ctlib-latest.jar");
