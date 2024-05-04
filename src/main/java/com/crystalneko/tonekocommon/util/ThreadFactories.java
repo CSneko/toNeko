@@ -17,9 +17,11 @@ public class ThreadFactories {
         @Override
         public Thread newThread(@NotNull Runnable r) {
             Thread t = new Thread(r, namePrefix + "-pool-" + count.getAndIncrement());
+            t.setPriority(3);
             return t;
         }
     }
+
     public static class ChatThreadFactory implements ThreadFactory {
         private final String namePrefix;
         private final AtomicInteger count = new AtomicInteger(1);
@@ -31,9 +33,8 @@ public class ThreadFactories {
         @Override
         public Thread newThread(@NotNull Runnable r) {
             Thread t = new Thread(r, namePrefix + "-pool-" + count.getAndIncrement());
+            t.setPriority(3);
             return t;
         }
     }
-
-
 }
