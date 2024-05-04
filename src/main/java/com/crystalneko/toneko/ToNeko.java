@@ -24,6 +24,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.cneko.ctlib.common.util.LocalDataBase.Connections.sqlite;
@@ -41,9 +42,8 @@ public final class ToNeko extends JavaPlugin {
         pluginInstance = this;
         //温馨提示：代码中所有的判断是否为猫娘都是判断是否有主人，这意味着猫娘必须有主人，否则就不被判断为猫娘
         //获取logger
-        logger = Logger.getLogger("toNeko");
-        int pluginId = 19899;
-        Metrics metrics = new Metrics(this, pluginId);
+        logger = this.getLogger();
+        Metrics metrics = new Metrics(this, 19899);
         //判断是否启用了ctLib
         LibraryDownloader.checkAndDownloadPlugin("ctLib","https://res.cneko.org/mc/plugins/ctlib/ctlib-latest.jar");
         //获取config.yml
@@ -99,44 +99,39 @@ public final class ToNeko extends JavaPlugin {
 
     //配置文件更新
     private void updateConfig() {
-        //备份配置文件
-        File backupFile = new File("plugins/toNeko/config_old.yml");
-
-        //加载配置
-        File configFile = new File("plugins/toNeko/config.yml");
-        //判断旧配置是否存在
-        if(backupFile.exists()){
-            backupFile.delete();
-        }
         try {
+            //备份配置文件
+            File backupFile = new File("plugins/toNeko/config_old.yml");
+            //加载配置
+            File configFile = new File("plugins/toNeko/config.yml");
+            //判断旧配置是否存在
+            if(backupFile.exists()){
+                backupFile.delete();
+            }
+
             Files.copy(configFile.toPath(), backupFile.toPath());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        //使用默认配置文件替换旧的配置文件
-        InputStream defaultConfigStream = getResource("assets/toneko/config.yml"); // 默认配置文件的输入流
-        try {
+
+            //使用默认配置文件替换旧的配置文件
+            InputStream defaultConfigStream = getResource("assets/toneko/config.yml"); // 默认配置文件的输入流
+
             Files.copy(defaultConfigStream, configFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        File newConfigFile = new File("plugins/toNeko/config.yml");
-        YamlConfiguration newConfig = YamlConfiguration.loadConfiguration(newConfigFile);
-        //将新的配置项写入到配置文件中
-        newConfig.set("automatic-updates", ifConfig("automatic-updates"));
-        newConfig.set("language", ifConfig("language"));
-        newConfig.set("AI.enable", ifConfig("AI.enable"));
-        newConfig.set("AI.API", ifConfig("AI.API"));
-        newConfig.set("AI.prompt", ifConfig("AI.prompt"));
-        newConfig.set("chat.enable", ifConfig("chat.enable"));
-        newConfig.set("chat.format", ifConfig("chat.format"));
-        try {
+
+            File newConfigFile = new File("plugins/toNeko/config.yml");
+            YamlConfiguration newConfig = YamlConfiguration.loadConfiguration(newConfigFile);
+            //将新的配置项写入到配置文件中
+            newConfig.set("automatic-updates", ifConfig("automatic-updates"));
+            newConfig.set("language", ifConfig("language"));
+            newConfig.set("AI.enable", ifConfig("AI.enable"));
+            newConfig.set("AI.API", ifConfig("AI.API"));
+            newConfig.set("AI.prompt", ifConfig("AI.prompt"));
+            newConfig.set("chat.enable", ifConfig("chat.enable"));
+            newConfig.set("chat.format", ifConfig("chat.format"));
+
             newConfig.save(configFile);
-        } catch (IOException e) {
+        }catch (Exception e){
+            logger.log(Level.SEVERE,"Failed to update config file!",e);
             throw new RuntimeException(e);
         }
-
-
     }
 
     //保存资源文件
@@ -148,7 +143,7 @@ public final class ToNeko extends JavaPlugin {
             try {
                 Files.move(file,Path.of("plugins/toNeko/config.yml"));
             } catch (IOException e) {
-                System.out.println("无法移动文件");
+                logger.log(Level.SEVERE,"Failed to move resource file!",e);
             }
         }
     }
@@ -178,24 +173,24 @@ public final class ToNeko extends JavaPlugin {
                 String pluginVersion = getDescription().getVersion(); // 获取插件的版本号
                 if (!pluginVersion.equals(remoteVersion)) {
                     // 版本不同，发出更新提醒
-                    System.out.println(getMessage("onEnable.new-version"));
+                    logger.info(getMessage("onEnable.new-version"));
                     connection.disconnect();
                     return true;
                 } else {
                     // 版本相同，无需更新
-                    System.out.println(getMessage("onEnable.up-to-date"));
+                    logger.info(getMessage("onEnable.up-to-date"));
                     connection.disconnect();
                     return false;
                 }
             } else {
                 // 请求失败
-                System.out.println(getMessage("onEnable.unable-check-update"));
+                logger.info(getMessage("onEnable.unable-check-update"));
                 connection.disconnect();
                 return false;
             }
         } catch (IOException e) {
             // 发生异常
-            System.out.println(getMessage("onEnable.unable-check-update")+":" + e);
+            logger.info(getMessage("onEnable.unable-check-update")+":" + e);
             return false;
         }
     }
@@ -213,16 +208,10 @@ public final class ToNeko extends JavaPlugin {
                     libraryDownloader.deletePlugin();
                     //启动插件
                     PluginManager pluginManager = Bukkit.getPluginManager();
-                    try {
-                        pluginManager.loadPlugin(new File("plugins/toNeko" + getDescription().getVersion() + "[+].jar"));
-                    } catch (InvalidPluginException e) {
-                        throw new RuntimeException(e);
-                    } catch (InvalidDescriptionException e) {
-                        throw new RuntimeException(e);
-                    }
+                    pluginManager.loadPlugin(new File("plugins/toNeko" + getDescription().getVersion() + "[+].jar"));
                     pluginManager.enablePlugin(pluginManager.getPlugin("toNeko"));
-                } catch (IOException e) {
-                    System.out.println(e);
+                } catch (Exception e) {
+                    logger.log(Level.SEVERE,"Failed to update plugin!",e);
                 }
             }
         }
@@ -268,6 +257,7 @@ public final class ToNeko extends JavaPlugin {
     public static String getMessage(String key) {
         return languageConfig.getString(key);
     }
+
     public static String getMessage(String key,String[] replace) {
         String text = getMessage(key);
         text = text.replace("%d",replace[0]);

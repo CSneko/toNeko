@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Random;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -27,17 +26,15 @@ import java.util.concurrent.Executors;
 import static org.cneko.ctlib.common.util.LocalDataBase.Connections.sqlite;
 
 public class PlayerChat {
-    private static final ExecutorService executorService = Executors.newCachedThreadPool(new ThreadFactories.ChatThreadFactory());
+    private static final ExecutorService chatProcessor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors(),new ThreadFactories.ChatThreadFactory());
+    
     public static void init(){
         ServerMessageEvents.ALLOW_CHAT_MESSAGE.register((message, sender, params) -> {
-            // 使用 CompletableFuture 异步处理聊天消息
-            CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
-                // 执行耗时操作
-                onChatMessage(sender,message.getContent());
-            }, executorService);
+            chatProcessor.execute(() -> onChatMessage(sender,message.getContent()));
             return false;
         });
     }
+
     public static void onChatMessage(PlayerEntity player, Text message) {
         if (message != null) {
             //获取玩家信息
