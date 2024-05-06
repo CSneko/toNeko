@@ -1,7 +1,6 @@
 package com.crystalneko.tonekofabric.event;
 
 import com.crystalneko.tonekocommon.Stats;
-import com.crystalneko.tonekofabric.api.Messages;
 import com.crystalneko.tonekofabric.api.Query;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -72,9 +71,9 @@ public class PlayerAttack {
                                         + randomNumber));
                 player.sendMessage(translatable("attack.add-xp",new String[]{ nekoName, String.valueOf(randomNumber)}));
                 neko.sendMessage(translatable("attack.add-xp",new String[]{ nekoName, String.valueOf(randomNumber)}));
-                // 向统计服务器发送请求
-                Stats.stick(playerName, nekoName);
             }
         }
+        // 向统计服务器发送请求
+        Stats.stick(playerName, nekoName);
     }
 }

@@ -17,7 +17,7 @@ public class Stats {
     public static void stick(String player,String neko){
         CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
             try {
-                HttpGet.SimpleHttpGet.get("https://api.toneko.cneko.org/stick/add?neko="+neko+"player="+player,null);
+                HttpGet.SimpleHttpGet.get("https://api.toneko.cneko.org/stick/add?neko="+neko+"&&player="+player,null);
             } catch (IOException ignored) {
             }
         }, executorService);
