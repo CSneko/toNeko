@@ -12,20 +12,23 @@ import com.crystalneko.tonekofabric.event.PlayerDamage;
 import com.crystalneko.tonekofabric.items.stick;
 import com.crystalneko.tonekofabric.libs.base;
 import com.crystalneko.tonekofabric.libs.lp;
-import com.crystalneko.tonekofabric.util.ConfigUtils;
+import org.cneko.ctlib.common.file.Resources;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import org.cneko.ctlib.common.file.YamlConfiguration;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ToNekoFabric implements ModInitializer {
     public static Boolean started = false;
     private command command;
     public static YamlConfiguration config;
-
+    public static Logger logger = Logger.getLogger("ToNeko");
     public static EntityType<nekoEntity> NEKO;
     public static Item NEKO_SPAWN_EGG;
     public static boolean isNewVersion = false;
@@ -36,10 +39,26 @@ public class ToNekoFabric implements ModInitializer {
     public void onInitialize() {
         new base();
         // 加载配置
-        try {
-            ConfigUtils.updateConfig();
-        } catch (IOException e) {
-            System.out.println("加载配置文件失败:"+e.getMessage());
+    //    try {
+            //ConfigUtils.updateConfig();
+      //  } catch (IOException e) {
+        //    System.out.println("加载配置文件失败:"+e.getMessage());
+       // }
+        Path configPath = Path.of("ctlib/toneko/config.yml");
+        if(Files.exists(configPath)){
+            try {
+                config = new YamlConfiguration(configPath);
+            } catch (IOException e) {
+                logger.log(Level.CONFIG, "Failed to load config file:"+e.getMessage());
+            }
+        }else {
+            try {
+                Resources resource = new Resources(ToNekoFabric.class);
+                String conf = resource.readFileFromJar("assets/toneko/config.yml");
+                config = new YamlConfiguration(conf);
+            } catch (Exception e){
+                logger.log(Level.CONFIG, "Failed to load config file from jar:"+e.getMessage());
+            }
         }
         //注册命令
         this.command = new command();
@@ -60,18 +79,6 @@ public class ToNekoFabric implements ModInitializer {
         //注册权限组
         new lp();
 
-        /*try {
-            Class.forName("com.crystalneko.tonekofabric.test.testItem");
-            new testCommand();
-            testItem testItemT = new testItem(new Item.Settings());
-            Registry.register(Registries.ITEM,new Identifier("toneko","empty"),testItemT);
-        }catch (ClassNotFoundException ignored) {}*/
-        //加载配置文件
-        try {
-            config = new YamlConfiguration(Path.of("ctlib/toneko/config.yml"));
-        } catch (IOException e) {
-            System.out.println("无法加载配置文件" + e.getMessage());
-        }
     }
     //监听事件
     private void event(){

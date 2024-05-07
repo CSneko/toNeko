@@ -1,15 +1,15 @@
 #语言选项（支持 zh_cn,en_us）,可自定义语言，详细查看 https://github.com/CSneko/toNeko/docs/CUSTOM_LANGUAGE.md
 language: zh_cn
-#使用客户端语言，启用后语言选项无效，且要求玩家必须在客户端安装mod,否则无法正常显示消息（仅在Fabric生效）
+#使用客户端语言，启用后语言选项无效，且要求玩家必须在客户端安装mod,否则无法正常显示消息（已经无效）
 client-language: false
 #是否开启自动更新
 automatic-updates: false
-#Ai功能
+#AI功能
 AI:
   # 是否启用AI,推荐在Folia启用该选项
-  enable: false
+  enable: true
   #AI的API,占位符 %text% = 用户输入, %prompt% = 提示词
-  API: "https://chat.ai.crystalneko.online?t=%text%&&p=%prompt%"
+  API: "https://chat.ai.cneko.org?t=%text%&&p=%prompt%"
   #提示词，请勿输入&&符号 占位符 %name% = 猫娘名称, %owner% = 主人
   prompt: "你是一只可爱的猫娘，你的名字是%name%，你的主人是%owner%"
 # 聊天相关设置
