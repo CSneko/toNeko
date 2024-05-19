@@ -1,4 +1,12 @@
 {
+  "command.toneko.player.success": "§a你现在成为了 §6%d §a的主人喵~",
+  "command.toneko.player.notNeko": "§c玩家 %d 不是猫娘喵~",
+  "command.toneko.player.alreadyOwner": "§a已经是 §6%d §a的主人了喵~",
+
+
+
+
+
   "command.toneko.player.success": "§a成功将玩家§6%d§a设置成一个猫娘，你成为了它的主人",
   "command.toneko.player.nekoed": "§b它已经是一个猫娘了，它的主人是§6%d",
   "command.toneko.help": "§b/toneko 帮助:\n§a/toneko help §b获取帮助\n§a/toneko player <玩家名> §b将一位玩家变成猫娘\n§a/toneko item §b获取撅猫棍\n §a/toneko aliases <猫娘名称> add或remove <别名> §b为你添加或删除别名（会转换为'主人'的词）\n§a/toneko block <猫娘名称> add或remove <屏蔽词> <替换词> word或all §b添加屏蔽词（屏蔽词会被替换成替换词)",

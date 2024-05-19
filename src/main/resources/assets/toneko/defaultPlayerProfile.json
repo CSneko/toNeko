@@ -1,0 +1,13 @@
+{
+  "uuid": "default",
+  "is": false,
+  "blockWords": [
+    {"b": "default","r": "default"}
+  ],
+  "owners": [
+    {
+      "uuid": "default",
+      "xp": 0
+    }
+  ]
+}

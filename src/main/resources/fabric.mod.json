@@ -5,7 +5,9 @@
   "name": "toNeko",
   "description": "可爱即是正义!",
   "authors": [
-    "CrystalNeko",
+    "CrystalNeko"
+  ],
+  "contributors": [
     "MrHua269/Lora4967"
   ],
   "contact": {
