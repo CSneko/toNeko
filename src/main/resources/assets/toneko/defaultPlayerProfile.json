@@ -1,13 +1,16 @@
 {
-  "uuid": "default",
+  "uuid": "96b0c1302fd449b0adf5a9dc70dfb4d1",
   "is": false,
   "blockWords": [
-    {"b": "default","r": "default"}
+    {"b": "default","r": "default","type": "word"}
   ],
   "owners": [
     {
-      "uuid": "default",
-      "xp": 0
+      "uuid": "13309540fcc14d54884b55433f1f431f",
+      "xp": 0,
+      "aliases": [
+        "Crystal_Neko"
+      ]
     }
   ]
 }

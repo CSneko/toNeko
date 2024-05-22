@@ -7,11 +7,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="修复重大bug">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fabric.mod.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fabric.mod.json" afterDir="false" />
-    </list>
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="重构部分代码" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -181,14 +177,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-    </task>
-    <task id="LOCAL-00019" summary="修改一点Bug">
-      <option name="closed" value="true" />
-      <created>1706685208341</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1706685208341</updated>
     </task>
     <task id="LOCAL-00020" summary="修改一点Bug">
       <option name="closed" value="true" />
@@ -574,7 +562,15 @@
       <option name="project" value="LOCAL" />
       <updated>1715093487577</updated>
     </task>
-    <option name="localTasksCounter" value="68" />
+    <task id="LOCAL-00068" summary="重构部分代码">
+      <option name="closed" value="true" />
+      <created>1716096732549</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1716096732549</updated>
+    </task>
+    <option name="localTasksCounter" value="69" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -590,7 +586,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="添加幼年实体" />
     <MESSAGE value="修改碰撞箱" />
     <MESSAGE value="修正碰撞箱，添加体积修改" />
     <MESSAGE value="添加更多API，添加更多javadoc" />
@@ -615,6 +610,7 @@
     <MESSAGE value="修复bug" />
     <MESSAGE value="修复统计无效bug" />
     <MESSAGE value="修复重大bug" />
-    <option name="LAST_COMMIT_MESSAGE" value="修复重大bug" />
+    <MESSAGE value="重构部分代码" />
+    <option name="LAST_COMMIT_MESSAGE" value="重构部分代码" />
   </component>
 </project>

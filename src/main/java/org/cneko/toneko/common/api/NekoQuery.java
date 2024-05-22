@@ -18,7 +18,7 @@ public class NekoQuery {
      * @return 是否是猫娘
      */
     public static boolean isNeko(UUID uuid){
-        return getProfile(uuid).getBoolean("is", false);
+        return new Neko(uuid).isNeko();
     }
 
     /**
@@ -27,10 +27,7 @@ public class NekoQuery {
      * @param isNeko 是否是猫娘
      */
     public static void setNeko(UUID uuid, boolean isNeko){
-        createProfile(uuid);
-        JsonConfiguration profile = getProfile(uuid);
-        profile.set("is", isNeko);
-        FileUtil.WriteFile(getProfilePath(uuid), profile.toString());
+        new Neko(uuid).setNeko(isNeko);
     }
 
     /**
@@ -49,12 +46,7 @@ public class NekoQuery {
      * @return 是否是猫娘的主人
      */
     public static boolean hasOwner(UUID uuid, UUID owner){
-        for (JsonConfiguration o : getOwners(uuid).toJsonList()){
-            if(o.getString("uuid").equalsIgnoreCase(owner.toString())){
-                return true;
-            }
-        }
-        return false;
+        return new Neko(uuid).hasOwner(owner);
     }
 
     /**
@@ -63,25 +55,7 @@ public class NekoQuery {
      * @param owner 主人UUID
      */
     public static void addOwner(UUID uuid, UUID owner){
-        createProfile(uuid);
-        if(!hasOwner(uuid, owner)){
-            // 读取主任列表
-            JsonConfiguration owners = getOwners(uuid);
-            List<JsonConfiguration> o = owners.toJsonList();
-            // 获取默认数据
-            JsonConfiguration j = DEFAULT_OWNER_PROFILE;
-            j.set("uuid", owner.toString());
-            // 添加数据
-            o.add(j);
-            JsonConfiguration p = getProfile(uuid);
-            p.set("owners", o);
-            // 写入文件
-            try {
-                p.save();
-            } catch (IOException e) {
-                LOGGER.log(Level.SEVERE, "Failed to save profile", e);
-            }
-        }
+        new Neko(uuid).addOwner(owner);
     }
 
     /**
@@ -116,15 +90,7 @@ public class NekoQuery {
      * @return 猫娘数据文件，不存在则返回默认的
      */
     public static JsonConfiguration getProfile(UUID uuid){
-        // 如果数据文件不存在，则返回默认
-        if(FileUtil.FileExists(getProfilePath(uuid))){
-            try {
-                return JsonConfiguration.fromFile(Path.of(getProfilePath(uuid)));
-            } catch (IOException e) {
-                LOGGER.log(Level.SEVERE,e.getMessage());
-            }
-        }
-        return DEFAULT_PLAYER_PROFILE;
+        return new Neko(uuid).getProfile();
     }
 
     public static Neko getNeko(UUID uuid){
@@ -140,12 +106,23 @@ public class NekoQuery {
             profile = NekoQuery.getProfile(uuid);
         }
 
+        public String getProfilePath(){
+            return NekoQuery.getProfilePath(uuid);
+        }
+
         public JsonConfiguration getProfile(){
             return profile;
         }
 
         public boolean isNeko(){
             return profile.getBoolean("is", false);
+        }
+        public void setNeko(boolean isNeko){
+            createProfile(uuid);
+            JsonConfiguration profile = getProfile();
+            profile.set("is", isNeko);
+            FileUtil.WriteFile(getProfilePath(), profile.toString());
+            save();
         }
 
         public boolean hasOwner(UUID owner){
@@ -164,7 +141,7 @@ public class NekoQuery {
         public void addOwner(UUID owner){
             createProfile(uuid);
             if(!hasOwner(owner)){
-                // 读取主任列表
+                // 读取主人列表
                 JsonConfiguration owners = getOwners();
                 List<JsonConfiguration> o = owners.toJsonList();
                 // 获取默认数据
@@ -174,6 +151,22 @@ public class NekoQuery {
                 o.add(j);
                 getProfile().set("owners", o);
             }
+        }
+
+        public void addAlias(UUID owner, String alias){
+            createProfile(uuid);
+            JsonConfiguration ownerProfile = getProfile().getJsonConfiguration("owners");
+            for (JsonConfiguration o : ownerProfile.toJsonList()){
+                if(o.getString("uuid").equalsIgnoreCase(owner.toString())){
+                    List<String> aliases = o.getStringList("aliases");
+                    if(!aliases.contains(alias)){
+                        aliases.add(alias);
+                        o.set("aliases", aliases);
+                    }
+                }
+            }
+            getProfile().set("owners", ownerProfile);
+            save();
         }
 
         public void save(){

@@ -10,13 +10,11 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.fabric.util.PlayerUtil;
 
-import java.util.UUID;
-
-import static net.minecraft.text.Text.translatable;
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
 import static org.cneko.toneko.fabric.util.CommandUtil.*;
+import static org.cneko.toneko.fabric.util.TextUtil.translatable;
 public class ToNekoCommand {
     public static void init(){
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
@@ -100,17 +98,21 @@ public class ToNekoCommand {
                                 return 1;
                             })
                     )
+            );
 
                     //----------------------------------------无参数-----------------------------------------
-                    .executes(context -> {
-                        context.getSource().sendMessage(translatable("command.toneko.help"));
-                        return 1;
-                    })
         });
     }
 
     private static int AliasesAdd(CommandContext<ServerCommandSource> context) {
-
+        NekoQuery.Neko neko = NekoQuery.getNeko(PlayerUtil.getPlayerByName(StringArgumentType.getString(context, "neko")).getUuid());
+        if(neko.hasOwner(context.getSource().getPlayer().getUuid())){
+            String aliases = StringArgumentType.getString(context, "aliases");
+            neko.addAlias(context.getSource().getPlayer().getUuid(), aliases);
+        }else {
+            context.getSource().sendMessage(translatable("messages.toneko.notOwner"));
+        }
+        return 1;
     }
 
     private static int playerCommand(CommandContext<ServerCommandSource> context) {

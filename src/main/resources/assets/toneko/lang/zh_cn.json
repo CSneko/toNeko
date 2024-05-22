@@ -2,6 +2,7 @@
   "command.toneko.player.success": "§a你现在成为了 §6%d §a的主人喵~",
   "command.toneko.player.notNeko": "§c玩家 %d 不是猫娘喵~",
   "command.toneko.player.alreadyOwner": "§a已经是 §6%d §a的主人了喵~",
+  "messages.toneko.notOwner": "§c你不是 %d 的主人喵~",
 
 
 

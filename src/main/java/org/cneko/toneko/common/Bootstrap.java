@@ -21,7 +21,8 @@ public class Bootstrap {
     public static JsonConfiguration DEFAULT_OWNER_PROFILE = JsonConfiguration.of("""
             {
                 "uuid": "default",
-                "xp": 0
+                "xp": 0,
+                "aliases": []
             }""");
     public static void bootstrap() {
         // 创建必要的文件夹
