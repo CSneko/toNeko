@@ -4,9 +4,10 @@ import org.cneko.ctlib.common.file.JsonConfiguration;
 import org.cneko.toneko.common.util.FileUtil;
 
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 
 import static org.cneko.toneko.common.Bootstrap.*;
@@ -27,7 +28,9 @@ public class NekoQuery {
      * @param isNeko 是否是猫娘
      */
     public static void setNeko(UUID uuid, boolean isNeko){
-        new Neko(uuid).setNeko(isNeko);
+        Neko neko = new Neko(uuid);
+        neko.setNeko(isNeko);
+        neko.save();
     }
 
     /**
@@ -55,7 +58,9 @@ public class NekoQuery {
      * @param owner 主人UUID
      */
     public static void addOwner(UUID uuid, UUID owner){
-        new Neko(uuid).addOwner(owner);
+        Neko neko =  new Neko(uuid);
+        neko.addOwner(owner);
+        neko.save();
     }
 
     /**
@@ -113,10 +118,17 @@ public class NekoQuery {
         public JsonConfiguration getProfile(){
             return profile;
         }
-
+        /**
+         * 查询是否是猫娘
+         * @return 是否是猫娘
+         */
         public boolean isNeko(){
             return profile.getBoolean("is", false);
         }
+        /**
+         * 将玩家设为猫娘
+         * @param isNeko 是否是猫娘
+         */
         public void setNeko(boolean isNeko){
             createProfile(uuid);
             JsonConfiguration profile = getProfile();
@@ -126,18 +138,24 @@ public class NekoQuery {
         }
 
         public boolean hasOwner(UUID owner){
-            for (JsonConfiguration o : getOwners().toJsonList()){
-                if(o.getString("uuid").equalsIgnoreCase(owner.toString())){
-                    return true;
-                }
-            }
-            return false;
+            AtomicBoolean hasOwner = new AtomicBoolean(false);
+            processOwners(owner, o -> {
+                hasOwner.set(true);
+            });
+            return hasOwner.get();
         }
-
+        /**
+         * 获取猫娘的所有主人
+         * @return 主人列表，默认请见resources/defaultPlayerProfile.json
+         */
         public JsonConfiguration getOwners(){
             return getProfile().getJsonConfiguration("owners");
         }
 
+        /**
+         * 添加主人
+         * @param owner 主人UUID
+         */
         public void addOwner(UUID owner){
             createProfile(uuid);
             if(!hasOwner(owner)){
@@ -154,19 +172,27 @@ public class NekoQuery {
         }
 
         public void addAlias(UUID owner, String alias){
-            createProfile(uuid);
-            JsonConfiguration ownerProfile = getProfile().getJsonConfiguration("owners");
-            for (JsonConfiguration o : ownerProfile.toJsonList()){
-                if(o.getString("uuid").equalsIgnoreCase(owner.toString())){
+            processOwners(owner, o -> {
                     List<String> aliases = o.getStringList("aliases");
                     if(!aliases.contains(alias)){
                         aliases.add(alias);
                         o.set("aliases", aliases);
                     }
+                });
+        }
+        public void removeAlias(UUID owner, String alias){
+            processOwners(owner, o -> {
+                List<String> aliases = o.getStringList("aliases");
+                if (aliases.contains(alias)) {
+                    aliases.remove(alias);
+                    o.set("aliases", aliases);
                 }
-            }
-            getProfile().set("owners", ownerProfile);
-            save();
+            });
+        }
+        public int getXp(UUID owner){
+            AtomicInteger xp = new AtomicInteger(0);
+            processOwners(owner, o -> xp.set(o.getInt("xp")));
+            return xp.get();
         }
 
         public void save(){
@@ -177,6 +203,20 @@ public class NekoQuery {
             }
         }
 
+        @FunctionalInterface
+        private interface OwnerAction {
+            void apply(JsonConfiguration ownerConfig);
+        }
+        private void processOwners(UUID uuid, OwnerAction action) {
+            createProfile(uuid);
+            List<JsonConfiguration> owners = getOwners().toJsonList();
+            for (JsonConfiguration o : owners) {
+                if (o.getString("uuid").equalsIgnoreCase(uuid.toString())) {
+                    action.apply(o); // 执行Lambda定义的操作
+                }
+            }
+            getProfile().set("owners", owners);
+        }
 
 
     }

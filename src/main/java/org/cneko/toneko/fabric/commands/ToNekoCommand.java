@@ -38,7 +38,7 @@ public class ToNekoCommand {
                                             )
                                     ).then(literal("remove")
                                             .then(argument("aliases", StringArgumentType.string())
-                                                    .executes(com.crystalneko.tonekofabric.command.ToNekoCommand::AliasesRemove)
+                                                    .executes(ToNekoCommand::AliasesRemove)
                                             )
                                     )
                             )
@@ -78,7 +78,7 @@ public class ToNekoCommand {
                     .then(literal("xp")
                             .then(argument("neko",StringArgumentType.string())
                                     .suggests(getOnlinePlayers)
-                                    .executes(com.crystalneko.tonekofabric.command.ToNekoCommand::xp)
+                                    .executes(ToNekoCommand::xp)
                             )
                     )
                     //-------------------------------------------remove--------------------------------------
@@ -104,14 +104,43 @@ public class ToNekoCommand {
         });
     }
 
-    private static int AliasesAdd(CommandContext<ServerCommandSource> context) {
-        NekoQuery.Neko neko = NekoQuery.getNeko(PlayerUtil.getPlayerByName(StringArgumentType.getString(context, "neko")).getUuid());
-        if(neko.hasOwner(context.getSource().getPlayer().getUuid())){
-            String aliases = StringArgumentType.getString(context, "aliases");
-            neko.addAlias(context.getSource().getPlayer().getUuid(), aliases);
+    private static int xp(CommandContext<ServerCommandSource> context) {
+        ServerPlayerEntity player = context.getSource().getPlayer();
+        String nekoName = StringArgumentType.getString(context, "neko");
+        NekoQuery.Neko neko = NekoQuery.getNeko(PlayerUtil.getPlayerByName(nekoName).getUuid());
+        if(neko.hasOwner(player.getUuid())){
+            player.sendMessage(translatable("command.toneko.xp", nekoName, neko.getXp(player.getUuid())));
         }else {
-            context.getSource().sendMessage(translatable("messages.toneko.notOwner"));
+            player.sendMessage(translatable("messages.toneko.notOwner"));
         }
+        return 1;
+    }
+
+    private static int AliasesRemove(CommandContext<ServerCommandSource> context) {
+        ServerPlayerEntity player = context.getSource().getPlayer();
+        NekoQuery.Neko neko = NekoQuery.getNeko(PlayerUtil.getPlayerByName(StringArgumentType.getString(context, "neko")).getUuid());
+        if(neko.hasOwner(player.getUuid())){
+            String aliases = StringArgumentType.getString(context, "aliases");
+            neko.removeAlias(player.getUuid(), aliases);
+            player.sendMessage(translatable("command.toneko.aliases.add", aliases));
+        }else {
+            player.sendMessage(translatable("messages.toneko.notOwner"));
+        }
+        neko.save();
+        return 1;
+    }
+
+    private static int AliasesAdd(CommandContext<ServerCommandSource> context) {
+        ServerPlayerEntity player = context.getSource().getPlayer();
+        NekoQuery.Neko neko = NekoQuery.getNeko(PlayerUtil.getPlayerByName(StringArgumentType.getString(context, "neko")).getUuid());
+        if(neko.hasOwner(player.getUuid())){
+            String aliases = StringArgumentType.getString(context, "aliases");
+            neko.addAlias(player.getUuid(), aliases);
+            player.sendMessage(translatable("command.toneko.aliases.add", aliases));
+        }else {
+            player.sendMessage(translatable("messages.toneko.notOwner"));
+        }
+        neko.save();
         return 1;
     }
 
