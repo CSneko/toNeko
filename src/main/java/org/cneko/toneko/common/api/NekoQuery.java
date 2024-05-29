@@ -1,6 +1,7 @@
 package org.cneko.toneko.common.api;
 
 import org.cneko.ctlib.common.file.JsonConfiguration;
+import org.cneko.toneko.common.Bootstrap;
 import org.cneko.toneko.common.util.FileUtil;
 
 import java.io.IOException;
@@ -193,6 +194,24 @@ public class NekoQuery {
             AtomicInteger xp = new AtomicInteger(0);
             processOwners(owner, o -> xp.set(o.getInt("xp")));
             return xp.get();
+        }
+
+        public void addBlock(String block, String replace, String method){
+            createProfile(uuid);
+            List<JsonConfiguration> blockWords = getProfile().getJsonList("blockWords");
+            JsonConfiguration BW = DEFAULT_BLOCK_WORDS;
+            BW.set("replace", replace);
+            BW.set("method", method);
+            BW.set("block", block);
+            blockWords.add(BW);
+            getProfile().set("blockWords", blockWords);
+        }
+
+        public void removeBlock(String block){
+            createProfile(uuid);
+            List<JsonConfiguration> blockWords = getProfile().getJsonList("blockWords");
+            blockWords.removeIf(o -> o.getString("block").equalsIgnoreCase(block));
+            getProfile().set("blockWords", blockWords);
         }
 
         public void save(){

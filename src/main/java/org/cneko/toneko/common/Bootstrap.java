@@ -1,6 +1,5 @@
 package org.cneko.toneko.common;
 
-import io.netty.handler.ssl.JdkSslContext;
 import org.cneko.ctlib.common.file.JsonConfiguration;
 import org.cneko.toneko.common.util.FileUtil;
 
@@ -23,6 +22,12 @@ public class Bootstrap {
                 "uuid": "default",
                 "xp": 0,
                 "aliases": []
+            }""");
+    public static JsonConfiguration DEFAULT_BLOCK_WORDS = JsonConfiguration.of("""
+            {
+                "block": "default",
+                "replace": "default",
+                "method": "word"
             }""");
     public static void bootstrap() {
         // 创建必要的文件夹

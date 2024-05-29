@@ -10,6 +10,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.fabric.util.PlayerUtil;
 
+import java.util.Arrays;
+
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
@@ -43,10 +45,6 @@ public class ToNekoCommand {
                                     )
                             )
                     )
-                    //--------------------------------------------------item-----------------------------------------
-                    .then(literal("item")
-                            .executes(com.crystalneko.tonekofabric.command.ToNekoCommand::item)
-                    )
                     //-----------------------------------------------block--------------------------------------------
                     .then(literal("block")
                             .then(argument("neko", StringArgumentType.string())
@@ -61,7 +59,7 @@ public class ToNekoCommand {
                                                                         builder.suggest("word");
                                                                         return builder.buildFuture();
                                                                     })
-                                                                    .executes(com.crystalneko.tonekofabric.command.ToNekoCommand::addBlock)
+                                                                    .executes(ToNekoCommand::addBlock)
                                                             )
                                                     )
                                             )
@@ -102,6 +100,42 @@ public class ToNekoCommand {
 
                     //----------------------------------------无参数-----------------------------------------
         });
+    }
+
+    private static int addBlock(CommandContext<ServerCommandSource> context) {
+        final ServerCommandSource source = context.getSource();
+        final PlayerEntity player = source.getPlayer();
+        //获取关键信息
+        String nekoName = context.getArgument("neko", String.class); //猫娘的名称
+        String block = context.getArgument("block", String.class); //屏蔽词
+        String replace = context.getArgument("replace", String.class); //替换词
+        String method = context.getArgument("method", String.class); //all or word
+
+        NekoQuery.Neko neko = NekoQuery.getNeko(PlayerUtil.getPlayerByName(nekoName).getUuid());
+
+        if(!neko.hasOwner(player.getUuid())){
+            player.sendMessage(translatable("messages.toneko.notOwner"));
+            return 1;
+        }
+        // 添加屏蔽词
+        neko.addBlock(block, replace, method);
+
+        return 1;
+    }
+
+    private static int removeBlock(CommandContext<ServerCommandSource> context) {
+        final ServerCommandSource source = context.getSource();
+        final PlayerEntity player = source.getPlayer();
+        String nekoName = context.getArgument("neko", String.class); //猫娘的名称
+        String block = context.getArgument("block", String.class); //屏蔽词
+
+        NekoQuery.Neko neko = NekoQuery.getNeko(PlayerUtil.getPlayerByName(nekoName).getUuid());
+        if(!neko.hasOwner(player.getUuid())){
+            player.sendMessage(translatable("messages.toneko.notOwner"));
+            return 1;
+        }
+        neko.removeBlock(block);
+        return 1;
     }
 
     private static int xp(CommandContext<ServerCommandSource> context) {

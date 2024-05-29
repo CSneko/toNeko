@@ -2,7 +2,7 @@
   "uuid": "96b0c1302fd449b0adf5a9dc70dfb4d1",
   "is": false,
   "blockWords": [
-    {"b": "default","r": "default","type": "word"}
+    {"b": "default","r": "default","method": "word"}
   ],
   "owners": [
     {
