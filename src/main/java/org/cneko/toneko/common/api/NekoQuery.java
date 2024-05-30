@@ -64,6 +64,26 @@ public class NekoQuery {
         neko.save();
     }
 
+    public static void removeOwner(UUID uuid,UUID owner){
+        Neko neko =  new Neko(uuid);
+        neko.addOwner(owner);
+        neko.save();
+    }
+
+    public static void addBlock(UUID uuid,String block, String replace, String method){
+        Neko neko =  new Neko(uuid);
+        neko.addBlock(block,replace,method);
+        neko.save();
+    }
+
+    public void removeBlock(UUID uuid,String block){
+        Neko neko =  new Neko(uuid);
+        neko.removeBlock(block);
+        neko.save();
+    }
+
+
+
     /**
      * 获取猫娘数据文件路径
      * @param uuid 玩家UUID
