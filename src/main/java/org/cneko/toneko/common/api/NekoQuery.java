@@ -172,6 +172,14 @@ public class NekoQuery {
             }
         }
 
+        public void removeOwner(UUID owner){
+            processOwners(owner, o -> {
+                List<JsonConfiguration> owners = getOwners().toJsonList();
+                owners.remove(o);
+                getProfile().set("owners", owners);
+            });
+        }
+
         public void addAlias(UUID owner, String alias){
             processOwners(owner, o -> {
                     List<String> aliases = o.getStringList("aliases");

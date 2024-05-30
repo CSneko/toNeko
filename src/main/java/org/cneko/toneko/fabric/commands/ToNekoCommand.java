@@ -6,11 +6,8 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.fabric.util.PlayerUtil;
-
-import java.util.Arrays;
 
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
@@ -67,7 +64,7 @@ public class ToNekoCommand {
                                     //----------------------------remove----------------------------------
                                     .then(literal("remove")
                                             .then(argument("block",StringArgumentType.string())
-                                                    .executes(com.crystalneko.tonekofabric.command.ToNekoCommand::removeBlock)
+                                                    .executes(ToNekoCommand::removeBlock)
                                             )
                                     )
                             )
@@ -83,23 +80,38 @@ public class ToNekoCommand {
                     .then(literal("remove")
                             .then(argument("neko",StringArgumentType.string())
                                     .suggests(getOnlinePlayers)
-                                    .executes(com.crystalneko.tonekofabric.command.ToNekoCommand::remove)
+                                    .executes(ToNekoCommand::remove)
                             )
-                    )
-                    .then(literal("everyone")
-                            .executes(com.crystalneko.tonekofabric.command.ToNekoCommand::everyone)
                     )
                     //-------------------------------------help---------------------------------------------------
                     .then(literal("help")
-                            .executes(context -> {
-                                context.getSource().sendMessage(translatable("command.toneko.help"));
-                                return 1;
-                            })
+                            .executes(ToNekoCommand::help)
                     )
-            );
 
                     //----------------------------------------无参数-----------------------------------------
+                    .executes(ToNekoCommand::help)
+            );
         });
+    }
+
+    private static int help(CommandContext<ServerCommandSource> context) {
+        final ServerCommandSource source = context.getSource();
+        source.sendMessage(translatable("command.toneko.help"));
+        return 1;
+    }
+
+    private static int remove(CommandContext<ServerCommandSource> context) {
+        final PlayerEntity player = context.getSource().getPlayer();
+        String nekoName = context.getArgument("neko", String.class);
+        NekoQuery.Neko neko = NekoQuery.getNeko(PlayerUtil.getPlayerByName(nekoName).getUuid());
+        if(!neko.hasOwner(player.getUuid())){
+            player.sendMessage(translatable("messages.toneko.notOwner"));
+            return 1;
+        }
+        neko.removeOwner(player.getUuid());
+        player.sendMessage(translatable("messages.toneko.remove"));
+        neko.save();
+        return 1;
     }
 
     private static int addBlock(CommandContext<ServerCommandSource> context) {
@@ -119,7 +131,8 @@ public class ToNekoCommand {
         }
         // 添加屏蔽词
         neko.addBlock(block, replace, method);
-
+        neko.save();
+        player.sendMessage(translatable("messages.toneko.block.add"));
         return 1;
     }
 
@@ -135,6 +148,8 @@ public class ToNekoCommand {
             return 1;
         }
         neko.removeBlock(block);
+        neko.save();
+        player.sendMessage(translatable("messages.toneko.block.remove"));
         return 1;
     }
 
@@ -156,7 +171,7 @@ public class ToNekoCommand {
         if(neko.hasOwner(player.getUuid())){
             String aliases = StringArgumentType.getString(context, "aliases");
             neko.removeAlias(player.getUuid(), aliases);
-            player.sendMessage(translatable("command.toneko.aliases.add", aliases));
+            player.sendMessage(translatable("command.toneko.aliases.remove", aliases));
         }else {
             player.sendMessage(translatable("messages.toneko.notOwner"));
         }
