@@ -3,13 +3,11 @@ package org.cneko.toneko.common;
 import org.cneko.ctlib.common.file.JsonConfiguration;
 import org.cneko.toneko.common.util.FileUtil;
 
-import java.util.logging.Logger;
-
 public class Bootstrap {
     public static String DATA_PATH = "ctlib/toneko/";
     public static String PLAYER_DATA_PATH = DATA_PATH + "data/";
     public static String CONFIG_FILE = "config/toneko.yml";
-    public static Logger LOGGER = Logger.getLogger("ToNeko");
+    public static org.apache.logging.log4j.Logger LOGGER = org.apache.logging.log4j.LogManager.getLogger("Toneko");
     public static JsonConfiguration DEFAULT_PLAYER_PROFILE = JsonConfiguration.of("""
             {
               "uuid": "default",

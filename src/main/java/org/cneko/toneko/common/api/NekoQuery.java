@@ -5,6 +5,7 @@ import org.cneko.toneko.common.Bootstrap;
 import org.cneko.toneko.common.util.FileUtil;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -116,7 +117,16 @@ public class NekoQuery {
      * @return 猫娘数据文件，不存在则返回默认的
      */
     public static JsonConfiguration getProfile(UUID uuid){
-        return new Neko(uuid).getProfile();
+        String profilePath = getProfilePath(uuid);
+        if(!FileUtil.FileExists(profilePath)){
+            createProfile(uuid);
+        }
+        try {
+            return JsonConfiguration.fromFile(Path.of(profilePath));
+        } catch (IOException e) {
+            LOGGER.error("Failed to read file:", e);
+            return null;
+        }
     }
 
     public static Neko getNeko(UUID uuid){
@@ -246,7 +256,7 @@ public class NekoQuery {
             try {
                 getProfile().save();
             }catch (IOException e){
-                LOGGER.log(Level.SEVERE, "Failed to save profile", e);
+                LOGGER.error("Failed to save profile", e);
             }
         }
 

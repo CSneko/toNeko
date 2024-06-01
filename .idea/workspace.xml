@@ -7,7 +7,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="重构toneko命令" />
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="添加更多static方法到api">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -202,30 +204,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-    </task>
-    <task id="LOCAL-00024" summary="修改一点Bug">
-      <option name="closed" value="true" />
-      <created>1706687437403</created>
-      <option name="number" value="00024" />
-      <option name="presentableId" value="LOCAL-00024" />
-      <option name="project" value="LOCAL" />
-      <updated>1706687437403</updated>
-    </task>
-    <task id="LOCAL-00025" summary="添加粒子效果">
-      <option name="closed" value="true" />
-      <created>1706869310778</created>
-      <option name="number" value="00025" />
-      <option name="presentableId" value="LOCAL-00025" />
-      <option name="project" value="LOCAL" />
-      <updated>1706869310778</updated>
-    </task>
-    <task id="LOCAL-00026" summary="添加音效">
-      <option name="closed" value="true" />
-      <created>1706871645198</created>
-      <option name="number" value="00026" />
-      <option name="presentableId" value="LOCAL-00026" />
-      <option name="project" value="LOCAL" />
-      <updated>1706871645198</updated>
     </task>
     <task id="LOCAL-00027" summary="修复MCDr的Bug">
       <option name="closed" value="true" />
@@ -595,7 +573,31 @@
       <option name="project" value="LOCAL" />
       <updated>1717081739362</updated>
     </task>
-    <option name="localTasksCounter" value="73" />
+    <task id="LOCAL-00073" summary="重构toneko命令">
+      <option name="closed" value="true" />
+      <created>1717081767690</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1717081767690</updated>
+    </task>
+    <task id="LOCAL-00074" summary="重构toneko命令">
+      <option name="closed" value="true" />
+      <created>1717081893578</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1717081893578</updated>
+    </task>
+    <task id="LOCAL-00075" summary="添加更多static方法到api">
+      <option name="closed" value="true" />
+      <created>1717082326696</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1717082326696</updated>
+    </task>
+    <option name="localTasksCounter" value="76" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -611,7 +613,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="修正碰撞箱，添加体积修改" />
     <MESSAGE value="添加更多API，添加更多javadoc" />
     <MESSAGE value="添加监听事件，设置猫娘生命值，修改基础信息" />
     <MESSAGE value="修复了sql错误的bug" />
@@ -636,6 +637,7 @@
     <MESSAGE value="修复重大bug" />
     <MESSAGE value="重构部分代码" />
     <MESSAGE value="重构toneko命令" />
-    <option name="LAST_COMMIT_MESSAGE" value="重构toneko命令" />
+    <MESSAGE value="添加更多static方法到api" />
+    <option name="LAST_COMMIT_MESSAGE" value="添加更多static方法到api" />
   </component>
 </project>
