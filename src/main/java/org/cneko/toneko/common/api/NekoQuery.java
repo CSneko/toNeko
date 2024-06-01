@@ -264,7 +264,12 @@ public class NekoQuery {
         private interface OwnerAction {
             void apply(JsonConfiguration ownerConfig);
         }
-        private void processOwners(UUID uuid, OwnerAction action) {
+
+        /**
+         * 遍历所有主人直到找到匹配的
+         * @param uuid 主人UUID
+         */
+        public void processOwners(UUID uuid, OwnerAction action) {
             createProfile(uuid);
             List<JsonConfiguration> owners = getOwners().toJsonList();
             for (JsonConfiguration o : owners) {

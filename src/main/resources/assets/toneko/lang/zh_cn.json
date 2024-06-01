@@ -10,7 +10,8 @@
   "command.toneko.remove": "§a你现在不是 %d 的主人了喵~",
   "command.toneko.help": "§b/toneko 帮助:\n§a/toneko help §b获取帮助\n§a/toneko player <玩家名> §b成为一位猫娘的主人\n§a/toneko aliases <猫娘名称> add或remove <别名> §b为你添加或删除别名（会转换为'主人'的词）\n§a/toneko block <猫娘名称> add或remove <屏蔽词> <替换词> word或all §b添加屏蔽词（屏蔽词会被替换成替换词)",
   "messages.toneko.notOwner": "§c你不是 %d 的主人喵~",
-
+  "misc.toneko.owner": "主人",
+  "misc.toneko.nya": "喵~",
 
 
 

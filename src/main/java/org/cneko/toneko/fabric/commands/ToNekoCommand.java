@@ -94,13 +94,13 @@ public class ToNekoCommand {
         });
     }
 
-    private static int help(CommandContext<ServerCommandSource> context) {
+    public static int help(CommandContext<ServerCommandSource> context) {
         final ServerCommandSource source = context.getSource();
         source.sendMessage(translatable("command.toneko.help"));
         return 1;
     }
 
-    private static int remove(CommandContext<ServerCommandSource> context) {
+    public static int remove(CommandContext<ServerCommandSource> context) {
         final PlayerEntity player = context.getSource().getPlayer();
         String nekoName = context.getArgument("neko", String.class);
         NekoQuery.Neko neko = NekoQuery.getNeko(PlayerUtil.getPlayerByName(nekoName).getUuid());
@@ -114,7 +114,7 @@ public class ToNekoCommand {
         return 1;
     }
 
-    private static int addBlock(CommandContext<ServerCommandSource> context) {
+    public static int addBlock(CommandContext<ServerCommandSource> context) {
         final ServerCommandSource source = context.getSource();
         final PlayerEntity player = source.getPlayer();
         //获取关键信息
@@ -136,7 +136,7 @@ public class ToNekoCommand {
         return 1;
     }
 
-    private static int removeBlock(CommandContext<ServerCommandSource> context) {
+    public static int removeBlock(CommandContext<ServerCommandSource> context) {
         final ServerCommandSource source = context.getSource();
         final PlayerEntity player = source.getPlayer();
         String nekoName = context.getArgument("neko", String.class); //猫娘的名称
@@ -153,7 +153,7 @@ public class ToNekoCommand {
         return 1;
     }
 
-    private static int xp(CommandContext<ServerCommandSource> context) {
+    public static int xp(CommandContext<ServerCommandSource> context) {
         ServerPlayerEntity player = context.getSource().getPlayer();
         String nekoName = StringArgumentType.getString(context, "neko");
         NekoQuery.Neko neko = NekoQuery.getNeko(PlayerUtil.getPlayerByName(nekoName).getUuid());
@@ -165,7 +165,7 @@ public class ToNekoCommand {
         return 1;
     }
 
-    private static int AliasesRemove(CommandContext<ServerCommandSource> context) {
+    public static int AliasesRemove(CommandContext<ServerCommandSource> context) {
         ServerPlayerEntity player = context.getSource().getPlayer();
         NekoQuery.Neko neko = NekoQuery.getNeko(PlayerUtil.getPlayerByName(StringArgumentType.getString(context, "neko")).getUuid());
         if(neko.hasOwner(player.getUuid())){
@@ -179,7 +179,7 @@ public class ToNekoCommand {
         return 1;
     }
 
-    private static int AliasesAdd(CommandContext<ServerCommandSource> context) {
+    public static int AliasesAdd(CommandContext<ServerCommandSource> context) {
         ServerPlayerEntity player = context.getSource().getPlayer();
         NekoQuery.Neko neko = NekoQuery.getNeko(PlayerUtil.getPlayerByName(StringArgumentType.getString(context, "neko")).getUuid());
         if(neko.hasOwner(player.getUuid())){
@@ -193,7 +193,7 @@ public class ToNekoCommand {
         return 1;
     }
 
-    private static int playerCommand(CommandContext<ServerCommandSource> context) {
+    public static int playerCommand(CommandContext<ServerCommandSource> context) {
         ServerPlayerEntity player = context.getSource().getPlayer(); // 命令发送者
         String nekoName = StringArgumentType.getString(context, "neko"); // 猫娘名称
         PlayerEntity nekoPlayer = PlayerUtil.getPlayerByName(nekoName);
