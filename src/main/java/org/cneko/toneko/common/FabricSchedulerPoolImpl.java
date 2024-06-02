@@ -24,6 +24,12 @@ public class FabricSchedulerPoolImpl implements ISchedulerPool {
         return wrapped;
     }
 
+    //TODO: Should we complete it?
+    @Override
+    public ScheduledTask scheduleSync(@NotNull Runnable task, long delayedTicks, int chunkX, int chunkZ,Object level) {
+        throw new UnsupportedOperationException("TO DO");
+    }
+
     @Override
     public void cancelTask(@NotNull Object taskMaker) {
         ((Future<?>) taskMaker).cancel(true);
