@@ -21,12 +21,11 @@ public class AINekoCommand implements CommandExecutor {
     private final Map<Player, Boolean> confirmMap = new ConcurrentHashMap<>(); //MT-Map for folia support
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player player)) {
             sender.sendMessage(getMessage("command.only-player"));
             return true;
         }
 
-        Player player = (Player) sender;
         if(args.length == 0){
             player.sendMessage(getMessage("command.toneko.help"));
         }else if(args.length >= 2 && args[0].equalsIgnoreCase("add")){
@@ -78,13 +77,12 @@ public class AINekoCommand implements CommandExecutor {
                         }
                     }
                     confirmMap.remove(player);  // 执行完毕后移除确认状态
-                    return true;
                 } else {
                     // 发出确认提醒
                     player.sendMessage(getMessage("command.toneko.remove.confirm") +": /toneko remove " + args[1]);
                     confirmMap.put(player, true);
-                    return true;
                 }
+                return true;
             }else {
                 player.sendMessage(getMessage("command.no-permission"));
             }
