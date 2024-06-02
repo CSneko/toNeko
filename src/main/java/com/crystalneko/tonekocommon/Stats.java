@@ -1,19 +1,16 @@
 package com.crystalneko.tonekocommon;
 
 import com.crystalneko.tonekocommon.util.StringUtil;
-import com.crystalneko.tonekocommon.util.ThreadFactories;
 import org.cneko.ctlib.common.network.HttpGet;
+import org.cneko.toneko.common.SchedulerPoolProvider;
 
 import java.io.IOException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class Stats {
-    private static final ExecutorService httpExecutor = Executors.newCachedThreadPool(new ThreadFactories.StatsThreadFactory());
 
     // 猫娘被撅统计
     public static void stick(String player,String neko){
-        httpExecutor.execute(() -> {
+        SchedulerPoolProvider.getINSTANCE().executeAsync(() -> {
             try {
                 HttpGet.SimpleHttpGet.get("https://api.toneko.cneko.org/stick/add?neko="+neko+"&&player="+player,null);
             } catch (IOException ignored) {
@@ -28,7 +25,7 @@ public class Stats {
         int nya = StringUtil.getCount(message,"nya");
         int total = count + nya;
 
-        httpExecutor.execute(() -> {
+        SchedulerPoolProvider.getINSTANCE().executeAsync(() -> {
             try {
                 HttpGet.SimpleHttpGet.get("https://api.toneko.cneko.org/meow/add?name="+neko+"&&meow="+total,null);
             } catch (IOException ignored) {
