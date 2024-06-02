@@ -4,6 +4,7 @@ import com.crystalneko.toneko.ToNeko;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
+import org.cneko.toneko.common.SchedulerPoolProvider;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -56,7 +57,7 @@ public class LibraryDownloader {
 
     //删除插件
     public void deletePlugin() {
-        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+        SchedulerPoolProvider.getINSTANCE().scheduleSync(() -> {
             // 获取插件文件的路径
             File pluginFile = new File(plugin.getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
             try {
@@ -72,7 +73,7 @@ public class LibraryDownloader {
             } catch (Exception e) {
                 plugin.getLogger().severe("卸载插件失败：" + e.getMessage());
             }
-        });
+        },1,0,0,null);
     }
 
     //下载文件的方法
