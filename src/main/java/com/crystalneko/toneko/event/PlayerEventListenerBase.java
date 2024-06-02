@@ -20,17 +20,24 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.cneko.ctlib.common.util.ChatPrefix;
+import org.cneko.toneko.common.SchedulerPoolProvider;
 
 import java.io.File;
 import java.util.Objects;
 import java.util.Random;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 public class PlayerEventListenerBase implements Listener {
+    private final File dataFile = new File( "plugins/toNeko/nekos.yml");
+    private final YamlConfiguration data = YamlConfiguration.loadConfiguration(dataFile);
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        NekoQuery query = new NekoQuery(event.getPlayer().getName());
-        Player player = event.getPlayer();
+        final Player player = event.getPlayer();
+        final String playerName = player.getName();
+        final NekoQuery query = new NekoQuery(playerName,this.data);
+
         if(query.hasOwner()) {
             //添加前缀
             ChatPrefix.addPrivatePrefix(player.getName(), ToNeko.getMessage("other.neko"));
@@ -39,8 +46,10 @@ public class PlayerEventListenerBase implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event){
-        NekoQuery query = new NekoQuery(event.getPlayer().getName());
-        Player player = event.getPlayer();
+        final Player player = event.getPlayer();
+        final String playerName = player.getName();
+        final NekoQuery query = new NekoQuery(playerName,this.data);
+
         if(query.hasOwner()) {
             //删除前缀
             ChatPrefix.removePrivatePrefix(player.getName(), ToNeko.getMessage("other.neko"));
@@ -49,9 +58,6 @@ public class PlayerEventListenerBase implements Listener {
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
-        File dataFile = new File( "plugins/toNeko/nekos.yml");
-        // 加载数据文件
-        YamlConfiguration data = YamlConfiguration.loadConfiguration(dataFile);
         // 处理玩家死亡事件的逻辑
         Player player = event.getEntity();
         if (player.getKiller() instanceof Player) {
@@ -69,23 +75,29 @@ public class PlayerEventListenerBase implements Listener {
                 String nbtValue = itemMeta.getPersistentDataContainer().get(key, PersistentDataType.STRING);
                 //判断NBT是否正确
                 if (Objects.equals(nbtValue, "true")){
+                    final String playerName = player.getName();
+                    final String killerName = killer.getName();
+
+                    // 加载数据文件
                     //判断玩家是否为猫娘
-                    if(data.getString(player.getName() + ".owner") != null) {
+                    if(this.data.getString(playerName + ".owner") != null) {
                         //发送死亡提示
-                        String deathMessage = "猫娘 " + player.getName() + " 被 " + killer.getName() + " §f撅死了！";
+                        String deathMessage = "猫娘 " + playerName + " 被 " + killerName + " §f撅死了！";
                         event.setDeathMessage(deathMessage);
                         //判断是否为主人
-                        if(killer.getName().equals(data.getString(player.getName() + ".owner"))){
+                        if(killerName.equals(this.data.getString(playerName + ".owner"))){
                             //生成随机数
                             Random random = new Random();
                             int randomNumber = random.nextInt(7) + 3;
-                            //检查配置是否存在
-                            ConfigFileUtils.createNewKey(player.getName() + "." + "xp", 0, data, dataFile);
-                            //减去值
-                            int xpValue = data.getInt(player.getName() + ".xp") - randomNumber;
-                            ConfigFileUtils.setValue(player.getName() + ".xp",xpValue,dataFile);
-                            player.sendMessage(ToNeko.getMessage("death.sub-xp",new String[]{killer.getName(), String.valueOf(randomNumber)}));
-                            killer.sendMessage(ToNeko.getMessage("death.sub-xp",new String[]{player.getName(), String.valueOf(randomNumber)}));
+                            player.sendMessage(ToNeko.getMessage("death.sub-xp",new String[]{killerName, String.valueOf(randomNumber)}));
+                            killer.sendMessage(ToNeko.getMessage("death.sub-xp",new String[]{playerName, String.valueOf(randomNumber)}));
+                            SchedulerPoolProvider.getINSTANCE().executeAsync(() -> {
+                                //检查配置是否存在
+                                ConfigFileUtils.createNewKey(playerName + "." + "xp", 0, this.data, this.dataFile);
+                                //减去值
+                                int xpValue = this.data.getInt(playerName + ".xp") - randomNumber;
+                                ConfigFileUtils.setValue(playerName + ".xp",xpValue,this.dataFile);
+                            });
                         }
                     }
                 }
@@ -99,10 +111,6 @@ public class PlayerEventListenerBase implements Listener {
             // 检查是否是玩家被攻击
             if (event.getEntity() instanceof Player player) {
                 if (event.getDamager() instanceof Player killer) {
-                    //创建数据文件实例
-                    File dataFile = new File("plugins/toNeko/nekos.yml");
-                    // 加载数据文件
-                    YamlConfiguration data = YamlConfiguration.loadConfiguration(dataFile);
                     // 获取击杀者
                     // 检查击杀者手中的物品是否为空或非武器
                     ItemStack itemStack = killer.getInventory().getItemInMainHand();
@@ -114,29 +122,34 @@ public class PlayerEventListenerBase implements Listener {
                     //定义NBT标签
                     NamespacedKey key = new NamespacedKey(ToNeko.pluginInstance, "neko");
                     NamespacedKey key2 = new NamespacedKey(ToNeko.pluginInstance, "nekolevel");
+                    Consumer<YamlConfiguration> callback = null;
                     // 检查物品是否含有该自定义NBT标签
                     if (itemMeta != null && itemMeta.getPersistentDataContainer().has(key, PersistentDataType.STRING)) {
                         // 读取NBT标签的值
                         String nbtValue = itemMeta.getPersistentDataContainer().get(key, PersistentDataType.STRING);
                         //判断NBT是否正确
                         if (Objects.requireNonNull(nbtValue).equalsIgnoreCase("true")) {
-                            if (data.getString(player.getName() + ".owner") != null) {
+                            if (this.data.getString(player.getName() + ".owner") != null) {
                                 PotionEffectType effectType = PotionEffectType.WEAKNESS; // 虚弱效果的类型
                                 int duration = 200; // 持续时间
                                 int amplifier = 0; // 效果强度
                                 givePlayerPotionEffect(player, effectType, duration, amplifier);
                                 //判断是否为主人
-                                if (killer.getName().equals(data.getString(player.getName() + ".owner"))) {
+                                if (killer.getName().equals(this.data.getString(player.getName() + ".owner"))) {
                                     //生成随机数
                                     Random random = new Random();
                                     int randomNumber = random.nextInt(6) - 2;
-                                    //检查配置是否存在
-                                    ConfigFileUtils.createNewKey(player.getName() + "." + "xp", 0, data, dataFile);
-                                    //加上值
-                                    int xpValue = data.getInt(player.getName() + ".xp") + randomNumber;
-                                    ConfigFileUtils.setValue(player.getName() + ".xp", xpValue, dataFile);
+
                                     player.sendMessage(ToNeko.getMessage("attack.add-xp", new String[]{killer.getName(), String.valueOf(randomNumber)}));
                                     killer.sendMessage(ToNeko.getMessage("attack.add-xp", new String[]{player.getName(), String.valueOf(randomNumber)}));
+
+                                    SchedulerPoolProvider.getINSTANCE().executeAsync(() -> {
+                                        //检查配置是否存在
+                                        ConfigFileUtils.createNewKey(player.getName() + "." + "xp", 0, this.data, this.dataFile);
+                                        //加上值
+                                        int xpValue = this.data.getInt(player.getName() + ".xp") + randomNumber;
+                                        ConfigFileUtils.setValue(player.getName() + ".xp", xpValue, this.dataFile);
+                                    });
                                 }
 
                                 //发送撅人音效
@@ -144,7 +157,6 @@ public class PlayerEventListenerBase implements Listener {
                                 killer.getWorld().playSound(player.getLocation(), "toneko.neko.stick", 1, 1);
                                 // 添加统计
                                 addStatistic(player.getName(), killer.getName());
-
                             }
                         }
                     } else if (itemMeta != null && itemMeta.getPersistentDataContainer().has(key2, PersistentDataType.INTEGER)) {
@@ -161,19 +173,23 @@ public class PlayerEventListenerBase implements Listener {
                             givePlayerPotionEffect(player, effectType3, duration, amplifier);
                             givePlayerPotionEffect(player, effectType4, duration, amplifier);
                             //判断是否为主人
-                            if (killer.getName().equals(data.getString(player.getName() + ".owner"))) {
+                            if (killer.getName().equals(this.data.getString(player.getName() + ".owner"))) {
                                 //生成随机数
                                 Random random = new Random();
                                 int randomNumber = random.nextInt(14) + 2;
-                                //检查配置是否存在
-                                ConfigFileUtils.createNewKey(player.getName() + "." + "xp", 0, data, dataFile);
-                                //加上值
-                                int xpValue = data.getInt(player.getName() + ".xp") + randomNumber + 10;
-                                ConfigFileUtils.setValue(player.getName() + ".xp", xpValue, dataFile);
+
                                 player.sendMessage(ToNeko.getMessage("attack.add-xp", new String[]{killer.getName(), String.valueOf(randomNumber)}));
                                 killer.sendMessage(ToNeko.getMessage("attack.add-xp", new String[]{player.getName(), String.valueOf(randomNumber)}));
                                 // 添加统计
                                 addStatistic(player.getName(), killer.getName());
+
+                                SchedulerPoolProvider.getINSTANCE().executeAsync(() -> {
+                                    //检查配置是否存在
+                                    ConfigFileUtils.createNewKey(player.getName() + "." + "xp", 0, this.data, this.dataFile);
+                                    //加上值
+                                    int xpValue = this.data.getInt(player.getName() + ".xp") + randomNumber + 10;
+                                    ConfigFileUtils.setValue(player.getName() + ".xp", xpValue, this.dataFile);
+                                });
                             }
                             //发送撅人音效
                             player.getWorld().playSound(player.getLocation(), "toneko.neko.stick.level2", 1, 1);

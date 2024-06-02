@@ -16,6 +16,7 @@ import org.bukkit.plugin.EventExecutor;
 import org.cneko.ctlib.common.file.JsonConfiguration;
 import org.cneko.ctlib.common.network.HttpGet.SimpleHttpGet;
 import org.cneko.ctlib.common.util.ChatPrefix;
+import org.cneko.toneko.common.SchedulerPoolProvider;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,12 +24,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CompletableFuture;
 
 import static com.crystalneko.toneko.ToNeko.*;
 import static org.bukkit.Bukkit.getServer;
 import static org.cneko.ctlib.common.util.LocalDataBase.Connections.sqlite;
 import static com.crystalneko.toneko.ToNeko.config;
 public class NekoChatListener implements Listener{
+    private final File dataFile = new File( "plugins/toNeko/nekos.yml");
+    private final YamlConfiguration data = YamlConfiguration.loadConfiguration(dataFile);
+
     /*
     代码逻辑：
     玩家发送消息 -> 处理监听事件 -> 处理消息 -> 处理AI信息 -> AI发送消息
@@ -39,19 +44,9 @@ public class NekoChatListener implements Listener{
             //使用Paper的聊天监听器
             Class.forName("io.papermc.paper.event.player.AsyncChatEvent");
             logger.info(ToNeko.getMessage("folia.use.chatEvent"));
-            getServer().getPluginManager().registerEvent(AsyncChatEvent.class,this, EventPriority.NORMAL,new EventExecutor() {
-                @Override
-                public void execute(Listener listener, Event event) {
-                    onPlayerChatPaper((AsyncChatEvent) event);
-                }
-            }, pluginInstance);
+            getServer().getPluginManager().registerEvent(AsyncChatEvent.class,this, EventPriority.NORMAL, (listener, event) -> onPlayerChatPaper((AsyncChatEvent) event), pluginInstance);
         } catch (ClassNotFoundException e) {
-            getServer().getPluginManager().registerEvent(org.bukkit.event.player.AsyncPlayerChatEvent.class,this, EventPriority.NORMAL,new EventExecutor() {
-                @Override
-                public void execute(Listener listener, Event event) {
-                    onPlayerChat((org.bukkit.event.player.AsyncPlayerChatEvent) event);
-                }
-            },pluginInstance);
+            getServer().getPluginManager().registerEvent(org.bukkit.event.player.AsyncPlayerChatEvent.class,this, EventPriority.NORMAL, (listener, event) -> onPlayerChat((org.bukkit.event.player.AsyncPlayerChatEvent) event),pluginInstance);
         }
     }
 
@@ -64,7 +59,8 @@ public class NekoChatListener implements Listener{
     }
 
     public void sendMessageToPlayers(String player, String prefix, String message, boolean isAI) {
-        NekoQuery data = new NekoQuery(player);
+        NekoQuery data = new NekoQuery(player,this.data);
+
         if (data.hasOwner()) {
             String owner = data.getOwner();
             List<String> aliases = data.getAlias();
@@ -73,11 +69,14 @@ public class NekoChatListener implements Listener{
             catMessage = replaceBlocks(catMessage, player);
             message = catMessage;
         }
+
         sendMessage(player, prefix, message);
+
         if(!isAI && config.getBoolean("AI.enable")){
             // 创建一个List来存储所有type为AI的条目
             List<String> nekoList = new ArrayList<>();
             YamlConfiguration yData = data.getData();
+
             // 遍历所有键值对
             for (String key : yData.getKeys(false)) {
                 // 检查是否有"type"键以及是否为"AI"
@@ -89,42 +88,48 @@ public class NekoChatListener implements Listener{
 
             for (String str : nekoList) {
                 if (message.contains(str)) {
-                    NekoQuery aiData = new NekoQuery(str);
-                    String owner = aiData.getOwner();
-                    if(owner != null && owner.equalsIgnoreCase(player)){
-                        //获取语言
-                        String language = config.getString("language");
-                        //获取API
-                        String API = config.getString("AI.API");
-                        //获取提示词
-                        String prompt = config.getString("AI.prompt");
-                        prompt = prompt.replaceAll("%name%",str);
-                        prompt = prompt.replaceAll("%owner%",owner);
-                        //替换用户输入中的&符号
-                        String rightMsg = message.replaceAll("&", "and");
-                        //构建链接
-                        String url = API.replaceAll("%text%", rightMsg);
-                        url = url.replaceAll("%prompt%", prompt);
-                        //获取数据
-                        JsonConfiguration response = null;
-                        try {
-                            response = SimpleHttpGet.getJson(url, null);
-                        } catch (IOException e) {
-                            System.out.println("无法获取json:"+e.getMessage());
-                        }
-                        String AIMsg;
-                        //读取响应
-                        if(response != null) {
-                            if (language.equalsIgnoreCase("zh_cn")) {
-                                AIMsg = response.getString("response");
-                            } else {
-                                AIMsg = response.getString("source_response");
+                    final String tempMessageFinalCopy = message;
+                    SchedulerPoolProvider.getINSTANCE().executeAsync(() -> {
+                        NekoQuery aiData = new NekoQuery(str,this.data);
+                        String owner = aiData.getOwner();
+                        if(owner != null && owner.equalsIgnoreCase(player)){
+                            //获取语言
+                            String language = config.getString("language");
+                            //获取API
+                            String API = config.getString("AI.API");
+                            //获取提示词
+                            String prompt = config.getString("AI.prompt")
+                                    .replaceAll("%name%",str)
+                                    .replaceAll("%owner%",owner);
+                            //替换用户输入中的&符号
+                            String rightMsg = tempMessageFinalCopy.replaceAll("&", "and");
+                            //构建链接
+                            final String url = API.replaceAll("%text%", rightMsg).replaceAll("%prompt%", prompt);
+
+                            JsonConfiguration response = null;
+
+                            try {
+                                response = SimpleHttpGet.getJson(url, null);
+                            } catch (Exception e) {
+                                ToNeko.pluginInstance.getLogger().warning("无法获取json:" + e.getMessage());
                             }
-                            if (AIMsg != null) {
-                                sendMessageToPlayers(str,"["+getMessage("chat.neko.prefix")+"]", AIMsg, true);
+
+                            //读取响应
+                            if(response != null) {
+                                String finalMessage;
+
+                                if (language.equalsIgnoreCase("zh_cn")) {
+                                    finalMessage = response.getString("response");
+                                } else {
+                                    finalMessage = response.getString("source_response");
+                                }
+
+                                if (finalMessage != null) {
+                                    sendMessageToPlayers(str,"["+getMessage("chat.neko.prefix")+"]", finalMessage, true);
+                                }
                             }
                         }
-                    }
+                    });
                 }
             }
 
