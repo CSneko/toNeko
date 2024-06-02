@@ -11,10 +11,16 @@ import java.util.List;
 public class NekoQuery {
     YamlConfiguration data;
     String name;
+
     public NekoQuery(String name){
         File dataFile = new File("plugins/toNeko/nekos.yml");
         data = YamlConfiguration.loadConfiguration(dataFile);
         this.name = name;
+    }
+
+    public NekoQuery(String playerName,YamlConfiguration configuration){
+        this.name = playerName;
+        this.data = configuration;
     }
 
     /**

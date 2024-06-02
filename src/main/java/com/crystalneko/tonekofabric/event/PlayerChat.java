@@ -1,7 +1,6 @@
 package com.crystalneko.tonekofabric.event;
 
 import com.crystalneko.tonekocommon.Stats;
-import com.crystalneko.tonekocommon.util.ThreadFactories;
 import com.crystalneko.tonekofabric.api.Query;
 import com.crystalneko.tonekofabric.libs.base;
 import com.crystalneko.tonekofabric.libs.lp;
@@ -14,23 +13,21 @@ import org.cneko.ctlib.common.file.JsonConfiguration;
 import org.cneko.ctlib.common.file.YamlConfiguration;
 import org.cneko.ctlib.common.network.HttpGet.SimpleHttpGet;
 import org.cneko.ctlib.common.util.ChatPrefix;
+import org.cneko.toneko.common.SchedulerPoolProvider;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Random;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 
 import static org.cneko.ctlib.common.util.LocalDataBase.Connections.sqlite;
 
 public class PlayerChat {
-    private static final ExecutorService chatProcessor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors(),new ThreadFactories.ChatThreadFactory());
-    
+
     public static void init(){
         ServerMessageEvents.ALLOW_CHAT_MESSAGE.register((message, sender, params) -> {
-            chatProcessor.execute(() -> onChatMessage(sender,message.getContent()));
+            SchedulerPoolProvider.getINSTANCE().executeAsync(() -> onChatMessage(sender,message.getContent()));
             return false;
         });
     }
