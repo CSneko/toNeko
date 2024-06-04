@@ -1,8 +1,16 @@
 package org.cneko.toneko.fabric.events;
 
 
+import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.message.MessageType;
+import net.minecraft.network.message.SignedMessage;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 import org.cneko.ctlib.common.file.JsonConfiguration;
+import org.cneko.toneko.common.Stats;
+import org.cneko.toneko.common.util.ConfigUtil;
+import org.cneko.toneko.common.util.SchedulerPoolProvider;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.util.LanguageUtil;
 import org.cneko.toneko.common.util.Messaging;
@@ -11,12 +19,32 @@ import org.cneko.toneko.fabric.util.TextUtil;
 
 import java.util.List;
 import java.util.UUID;
-
 import static org.cneko.toneko.common.util.LanguageUtil.translatable;
 public class ChatEvent {
     public static void init() {
-
+        ServerMessageEvents.ALLOW_CHAT_MESSAGE.register((message, sender, params) -> {
+            SchedulerPoolProvider.getINSTANCE().executeAsync(() -> onChatMessage(message,sender,params));
+            return false;
+        });
     }
+
+    public static void onChatMessage(SignedMessage message, ServerPlayerEntity sender, MessageType.Parameters params) {
+        NekoQuery.Neko neko = NekoQuery.getNeko(sender.getUuid());
+        String msg = message.getContent().getString();
+        String playerName = TextUtil.getPlayerName(sender);
+        // 修改消息
+        msg = modify(msg, neko);
+        // 格式化消息
+        msg = Messaging.format(msg,playerName);
+        if(ConfigUtil.STATS) Stats.meowInChat(playerName,msg);
+        sendMessage(Text.of(msg));
+    }
+    public static void sendMessage(Text message){
+        for (PlayerEntity player : PlayerUtil.getPlayerList()){
+            player.sendMessage(message);
+        }
+    }
+
 
     /**
      * 通用的聊天消息处理，具体的聊天消息处理逻辑由各个端的监听器实现

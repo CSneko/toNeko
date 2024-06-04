@@ -9,22 +9,18 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.plugin.EventExecutor;
 import org.cneko.ctlib.common.file.JsonConfiguration;
 import org.cneko.ctlib.common.network.HttpGet.SimpleHttpGet;
 import org.cneko.ctlib.common.util.ChatPrefix;
-import org.cneko.toneko.common.SchedulerPoolProvider;
+import org.cneko.toneko.common.util.SchedulerPoolProvider;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.CompletableFuture;
 
 import static com.crystalneko.toneko.ToNeko.*;
 import static org.bukkit.Bukkit.getServer;

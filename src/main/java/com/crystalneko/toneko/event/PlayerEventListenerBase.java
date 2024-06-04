@@ -20,12 +20,11 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.cneko.ctlib.common.util.ChatPrefix;
-import org.cneko.toneko.common.SchedulerPoolProvider;
+import org.cneko.toneko.common.util.SchedulerPoolProvider;
 
 import java.io.File;
 import java.util.Objects;
 import java.util.Random;
-import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public class PlayerEventListenerBase implements Listener {

@@ -1,4 +1,4 @@
-package com.crystalneko.tonekocommon;
+package org.cneko.toneko.common;
 
 import com.crystalneko.tonekocommon.util.StringUtil;
 import org.cneko.ctlib.common.network.HttpGet;

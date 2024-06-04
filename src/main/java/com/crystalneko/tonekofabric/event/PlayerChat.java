@@ -13,7 +13,7 @@ import org.cneko.ctlib.common.file.JsonConfiguration;
 import org.cneko.ctlib.common.file.YamlConfiguration;
 import org.cneko.ctlib.common.network.HttpGet.SimpleHttpGet;
 import org.cneko.ctlib.common.util.ChatPrefix;
-import org.cneko.toneko.common.SchedulerPoolProvider;
+import org.cneko.toneko.common.util.SchedulerPoolProvider;
 
 import java.io.IOException;
 import java.nio.file.Path;

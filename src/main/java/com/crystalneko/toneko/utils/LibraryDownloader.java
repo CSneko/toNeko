@@ -4,7 +4,7 @@ import com.crystalneko.toneko.ToNeko;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
-import org.cneko.toneko.common.SchedulerPoolProvider;
+import org.cneko.toneko.common.util.SchedulerPoolProvider;
 
 import java.io.BufferedInputStream;
 import java.io.File;

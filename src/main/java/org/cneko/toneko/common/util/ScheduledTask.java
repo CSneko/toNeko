@@ -1,4 +1,4 @@
-package org.cneko.toneko.common;
+package org.cneko.toneko.common.util;
 
 public class ScheduledTask implements Runnable{
     private final Runnable task;

@@ -1,10 +1,16 @@
 package org.cneko.toneko.common.util;
 
 import java.util.HashSet;
-
+import java.util.UUID;
+import org.cneko.ctlib.common.util.ChatPrefix;
 public class Messaging {
 
-
+    public static String format(String msg, String player){
+        // 从config读取格式
+        String format = ConfigUtil.CHAT_FORMAT;
+        String prefix = ChatPrefix.getPrivatePrefix(player) + ChatPrefix.getAllPublicPrefixValues();
+        return format.replace("${prefix}",prefix).replace("${msg}",msg).replace("${name}",player);
+    }
     public static class PetPhrase{
 
         //有可能需要将它和后缀一起合并到PetPhrase里面

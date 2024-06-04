@@ -1,13 +1,15 @@
-package org.cneko.toneko.common;
+package org.cneko.toneko.bukkit.util;
 
 import com.crystalneko.toneko.ToNeko;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.cneko.toneko.common.util.ISchedulerPool;
+import org.cneko.toneko.common.util.ScheduledTask;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;
 
-public class FoliaSchedulerPoolImpl implements ISchedulerPool{
+public class FoliaSchedulerPoolImpl implements ISchedulerPool {
     @Override
     public ScheduledTask scheduleAsync(@NotNull Runnable task, long delayedTicks) {
         final ScheduledTask wrapped = new ScheduledTask(task,this);

@@ -1,3 +1,6 @@
+# 是否启用仅服务端安装，启用后客户端可以不用安装该模组，但是会缺失一部分功能（建议在使用此项时将client-language设置为false）
+# Whether to enable only server installation, after enabling, the client will not need to install the mod, but will miss some functions (it is recommended to set client-language to false when using this item)
+only-server: false
 # 语言选项（支持 zh_cn,en_us）,可自定义语言，详细查看 https://github.com/CSneko/toNeko/docs/CUSTOM_LANGUAGE.md
 # Language Option (Supported zh_cn,en_us), you can customize the language, see https://github.com/CSneko/toNeko/docs/CUSTOM_LANGUAGE.md
 language: zh_cn
@@ -16,3 +19,6 @@ chat:
   # 猫娘口癖，通常会加在聊天末尾，可填写翻译键（即自定义语言文件中的键）或文本，例如："misc.toneko.nya"和"喵~"
   # Catgirl tone, usually added at the end of the chat, can be filled in with the translation key (that is, the key in the custom language file) or text, such as "misc.toneko.nya" and "Miao~"
   tone: "misc.toneko.nya"
+# 启用统计功能，统计数据将发送到 toneko API，如何使用api请查看 https://github.com/CSneko/toNeko/blob/main/docs/TONEKO_ONLINE_API.md
+# Enable statistics, statistics data will be sent to the toneko API, how to use the api please see https://github.com/CSneko/toNeko/blob/main/docs/TONEKO_ONLINE_API.md
+stats: true

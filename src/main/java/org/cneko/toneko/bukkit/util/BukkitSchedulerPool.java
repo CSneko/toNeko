@@ -1,8 +1,10 @@
-package org.cneko.toneko.common;
+package org.cneko.toneko.bukkit.util;
 
 import com.crystalneko.toneko.ToNeko;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
+import org.cneko.toneko.common.util.ISchedulerPool;
+import org.cneko.toneko.common.util.ScheduledTask;
 import org.jetbrains.annotations.NotNull;
 
 public class BukkitSchedulerPool implements ISchedulerPool {
