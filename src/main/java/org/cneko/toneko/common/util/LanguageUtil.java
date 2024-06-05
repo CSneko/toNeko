@@ -16,6 +16,7 @@ public class LanguageUtil {
     public static String language = "en_us";
     public static JsonConfiguration LANG;
     public static String phrase = "";
+    public static String prefix = "";
     public static void load(){
         try {
             language = CONFIG.getString("language");
@@ -28,6 +29,7 @@ public class LanguageUtil {
             LOGGER.error("Failed to load language file",e);
         }
         phrase = translatable(CONFIG.getString("misc.toneko.nya"));
+        prefix = translatable(CONFIG.getString("misc.toneko.prefix"));
     }
 
     public static String translatable(String key){

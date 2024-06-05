@@ -140,6 +140,7 @@ public class NekoQuery {
         public Neko(UUID uuid){
             this.uuid = uuid;
             profile = NekoQuery.getProfile(uuid);
+            createProfile(uuid);
         }
 
         public String getProfilePath(){
@@ -161,7 +162,6 @@ public class NekoQuery {
          * @param isNeko 是否是猫娘
          */
         public void setNeko(boolean isNeko){
-            createProfile(uuid);
             JsonConfiguration profile = getProfile();
             profile.set("is", isNeko);
             FileUtil.WriteFile(getProfilePath(), profile.toString());
@@ -188,7 +188,6 @@ public class NekoQuery {
          * @param owner 主人UUID
          */
         public void addOwner(UUID owner){
-            createProfile(uuid);
             if(!hasOwner(owner)){
                 // 读取主人列表
                 JsonConfiguration owners = getOwners();
@@ -235,7 +234,6 @@ public class NekoQuery {
         }
 
         public void addBlock(String block, String replace, String method){
-            createProfile(uuid);
             List<JsonConfiguration> blockWords = getProfile().getJsonList("blockWords");
             JsonConfiguration BW = DEFAULT_BLOCK_WORDS;
             BW.set("replace", replace);
@@ -246,7 +244,6 @@ public class NekoQuery {
         }
 
         public void removeBlock(String block){
-            createProfile(uuid);
             List<JsonConfiguration> blockWords = getProfile().getJsonList("blockWords");
             blockWords.removeIf(o -> o.getString("block").equalsIgnoreCase(block));
             getProfile().set("blockWords", blockWords);
@@ -270,7 +267,6 @@ public class NekoQuery {
          * @param uuid 主人UUID
          */
         public void processOwners(UUID uuid, OwnerAction action) {
-            createProfile(uuid);
             List<JsonConfiguration> owners = getOwners().toJsonList();
             for (JsonConfiguration o : owners) {
                 if (o.getString("uuid").equalsIgnoreCase(uuid.toString())) {
@@ -279,7 +275,14 @@ public class NekoQuery {
             }
             getProfile().set("owners", owners);
         }
-
-
+    }
+    public static class Owner {
+        private JsonConfiguration ownerConfig;
+        public Owner(JsonConfiguration ownerConfig){
+            this.ownerConfig = ownerConfig;
+        }
+        public UUID getUUID(){
+            return UUID.fromString(ownerConfig.getString("uuid"));
+        }
     }
 }

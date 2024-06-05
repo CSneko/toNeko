@@ -6,6 +6,7 @@ import org.cneko.toneko.common.Bootstrap;
 import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.fabric.commands.ToNekoCommand;
 import org.cneko.toneko.fabric.events.ChatEvent;
+import org.cneko.toneko.fabric.events.PlayerConnectionEvents;
 
 public class ToNeko implements ModInitializer {
     @Override
@@ -18,6 +19,8 @@ public class ToNeko implements ModInitializer {
             ModMeta.instance.setServer(server);
             // 启动聊天监听器
             if(ConfigUtil.CHAT_ENABLE) ChatEvent.init();
+            // 启动玩家连接监听器
+            PlayerConnectionEvents.init();
         });
     }
 }

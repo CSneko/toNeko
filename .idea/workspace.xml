@@ -7,27 +7,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="添加ConfigUtil和LanguageUtil，添加部分聊天修改&#10;&#10;重构好麻烦哦qwq">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/Stats.java" afterDir="false" />
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="终于重构完成聊天监听事件啦(´・ω・｀)">
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/ToNekoClient.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/events/PlayerConnectionEvents.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/bstats/Metrics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/bstats/Metrics.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/chat/NekoChatListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/chat/NekoChatListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/event/PlayerEventListenerBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/event/PlayerEventListenerBase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/utils/LibraryDownloader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/utils/LibraryDownloader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekocommon/Stats.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekocommon/Stats.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/event/PlayerChat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/event/PlayerChat.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/BukkitSchedulerPool.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/bukkit/util/BukkitSchedulerPool.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/FabricSchedulerPoolImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/util/FabricSchedulerPoolImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/FoliaSchedulerPoolImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/bukkit/util/FoliaSchedulerPoolImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/ISchedulerPool.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/ISchedulerPool.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/ScheduledTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/ScheduledTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/SchedulerPoolProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/SchedulerPoolProvider.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/ConfigUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/ConfigUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/Messaging.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/Messaging.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/ToNeko.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/ToNeko.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/events/ChatEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/events/ChatEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/util/PlayerUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/util/PlayerUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/config.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/api/NekoQuery.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/api/NekoQuery.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/zh_cn.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/zh_cn.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fabric.mod.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fabric.mod.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -226,14 +212,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-    </task>
-    <task id="LOCAL-00029" summary="添加更多可用API">
-      <option name="closed" value="true" />
-      <created>1707113359113</created>
-      <option name="number" value="00029" />
-      <option name="presentableId" value="LOCAL-00029" />
-      <option name="project" value="LOCAL" />
-      <updated>1707113359113</updated>
     </task>
     <task id="LOCAL-00030" summary="修改readme">
       <option name="closed" value="true" />
@@ -619,7 +597,15 @@
       <option name="project" value="LOCAL" />
       <updated>1717240863993</updated>
     </task>
-    <option name="localTasksCounter" value="78" />
+    <task id="LOCAL-00078" summary="终于重构完成聊天监听事件啦(´・ω・｀)">
+      <option name="closed" value="true" />
+      <created>1717512907413</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1717512907413</updated>
+    </task>
+    <option name="localTasksCounter" value="79" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -635,7 +621,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="修复了sql错误的bug" />
     <MESSAGE value="添加异步统计" />
     <MESSAGE value="同步ctlib重构代码" />
     <MESSAGE value="添加禁止optifine提醒" />
@@ -660,6 +645,7 @@
     <MESSAGE value="添加更多static方法到api" />
     <MESSAGE value="修改logger，避免递归" />
     <MESSAGE value="添加ConfigUtil和LanguageUtil，添加部分聊天修改&#10;&#10;重构好麻烦哦qwq" />
-    <option name="LAST_COMMIT_MESSAGE" value="添加ConfigUtil和LanguageUtil，添加部分聊天修改&#10;&#10;重构好麻烦哦qwq" />
+    <MESSAGE value="终于重构完成聊天监听事件啦(´・ω・｀)" />
+    <option name="LAST_COMMIT_MESSAGE" value="终于重构完成聊天监听事件啦(´・ω・｀)" />
   </component>
 </project>

@@ -21,10 +21,10 @@
   "environment": "*",
   "entrypoints": {
     "client": [
-      "com.crystalneko.tonekofabric.client.ToNekoFabricClient"
+      "org.cneko.toneko.fabric.client.ToNekoClient"
     ],
     "main": [
-      "com.crystalneko.tonekofabric.ToNekoFabric"
+      "org.cneko.toneko.fabric.ToNeko"
     ]
   },
   "depends": {
