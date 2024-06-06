@@ -2,7 +2,7 @@ package com.crystalneko.tonekocommon;
 
 import com.crystalneko.tonekocommon.util.StringUtil;
 import org.cneko.ctlib.common.network.HttpGet;
-import org.cneko.toneko.common.util.SchedulerPoolProvider;
+import org.cneko.toneko.common.util.scheduled.SchedulerPoolProvider;
 
 import java.io.IOException;
 

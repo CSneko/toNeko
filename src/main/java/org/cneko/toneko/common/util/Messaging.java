@@ -1,7 +1,6 @@
 package org.cneko.toneko.common.util;
 
 import java.util.HashSet;
-import java.util.UUID;
 import org.cneko.ctlib.common.util.ChatPrefix;
 public class Messaging {
 

@@ -1,4 +1,4 @@
-package org.cneko.toneko.common.util;
+package org.cneko.toneko.common.util.scheduled;
 
 import org.cneko.toneko.bukkit.util.BukkitSchedulerPool;
 import org.cneko.toneko.bukkit.util.FoliaSchedulerPoolImpl;

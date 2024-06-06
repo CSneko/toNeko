@@ -14,7 +14,7 @@ import org.bukkit.event.Listener;
 import org.cneko.ctlib.common.file.JsonConfiguration;
 import org.cneko.ctlib.common.network.HttpGet.SimpleHttpGet;
 import org.cneko.ctlib.common.util.ChatPrefix;
-import org.cneko.toneko.common.util.SchedulerPoolProvider;
+import org.cneko.toneko.common.util.scheduled.SchedulerPoolProvider;
 
 import java.io.File;
 import java.util.ArrayList;

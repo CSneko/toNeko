@@ -46,7 +46,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.cneko.toneko.common.util.SchedulerPoolProvider;
+import org.cneko.toneko.common.util.scheduled.SchedulerPoolProvider;
 
 public class Metrics {
 

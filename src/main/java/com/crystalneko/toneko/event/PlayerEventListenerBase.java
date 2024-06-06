@@ -20,7 +20,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.cneko.ctlib.common.util.ChatPrefix;
-import org.cneko.toneko.common.util.SchedulerPoolProvider;
+import org.cneko.toneko.common.util.scheduled.SchedulerPoolProvider;
 
 import java.io.File;
 import java.util.Objects;

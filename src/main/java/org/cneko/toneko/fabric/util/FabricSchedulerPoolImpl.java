@@ -1,7 +1,7 @@
 package org.cneko.toneko.fabric.util;
 
-import org.cneko.toneko.common.util.ISchedulerPool;
-import org.cneko.toneko.common.util.ScheduledTask;
+import org.cneko.toneko.common.util.scheduled.ISchedulerPool;
+import org.cneko.toneko.common.util.scheduled.ScheduledTask;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.Executors;

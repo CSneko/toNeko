@@ -7,6 +7,7 @@ import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.fabric.commands.ToNekoCommand;
 import org.cneko.toneko.fabric.events.ChatEvent;
 import org.cneko.toneko.fabric.events.PlayerConnectionEvents;
+import org.cneko.toneko.fabric.util.PermissionUtil;
 
 public class ToNeko implements ModInitializer {
     @Override
@@ -21,6 +22,8 @@ public class ToNeko implements ModInitializer {
             if(ConfigUtil.CHAT_ENABLE) ChatEvent.init();
             // 启动玩家连接监听器
             PlayerConnectionEvents.init();
+            // 注册权限
+            PermissionUtil.init();
         });
     }
 }

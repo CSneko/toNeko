@@ -10,7 +10,7 @@ import net.minecraft.text.Text;
 import org.cneko.ctlib.common.file.JsonConfiguration;
 import org.cneko.toneko.common.Stats;
 import org.cneko.toneko.common.util.ConfigUtil;
-import org.cneko.toneko.common.util.SchedulerPoolProvider;
+import org.cneko.toneko.common.util.scheduled.SchedulerPoolProvider;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.util.LanguageUtil;
 import org.cneko.toneko.common.util.Messaging;
@@ -89,7 +89,9 @@ public class ChatEvent {
         }
 
         //添加口癖
-        Messaging.PetPhrase petPhrase = new Messaging.PetPhrase(LanguageUtil.phrase, false, LanguageUtil.phrase.length());
+        String phrase = LanguageUtil.phrase;
+        phrase = translatable(phrase);
+        Messaging.PetPhrase petPhrase = new Messaging.PetPhrase(phrase, false, LanguageUtil.phrase.length());
         message = petPhrase.addPhrase(message);
         return message;
     }

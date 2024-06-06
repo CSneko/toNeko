@@ -1,4 +1,4 @@
-package org.cneko.toneko.common.util;
+package org.cneko.toneko.common.util.scheduled;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
