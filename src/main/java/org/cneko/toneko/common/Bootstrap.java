@@ -7,6 +7,7 @@ import org.cneko.toneko.common.util.LanguageUtil;
 
 
 public class Bootstrap {
+    public static String MODID = "toneko";
     public static String DATA_PATH = "ctlib/toneko/";
     public static String PLAYER_DATA_PATH = DATA_PATH + "data/";
     public static org.apache.logging.log4j.Logger LOGGER = org.apache.logging.log4j.LogManager.getLogger("ToNeko");

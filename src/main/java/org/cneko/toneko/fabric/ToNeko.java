@@ -7,6 +7,7 @@ import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.fabric.commands.ToNekoCommand;
 import org.cneko.toneko.fabric.events.ChatEvent;
 import org.cneko.toneko.fabric.events.PlayerConnectionEvents;
+import org.cneko.toneko.fabric.items.ToNekoItems;
 import org.cneko.toneko.fabric.util.PermissionUtil;
 
 public class ToNeko implements ModInitializer {
@@ -15,7 +16,8 @@ public class ToNeko implements ModInitializer {
         Bootstrap.bootstrap();
         // 注册命令
         ToNekoCommand.init();
-
+        // 注册物品
+        ToNekoItems.register();
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             ModMeta.instance.setServer(server);
             // 启动聊天监听器

@@ -112,3 +112,7 @@ javadoc {
         encoding = 'UTF-8' // 设置编码格式
     }
 }
+
+fabricApi {
+    configureDataGeneration()
+}

@@ -7,9 +7,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="添加权限组，可以使用luckperms自定义权限组啦! 唔，怎么改动了这么多文件&#10;o(///▽///)q">
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="简单完善了一下管理员命令(◕‿◕✿)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/ToNekoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/ToNekoCommand.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -111,6 +110,9 @@
       <recent name="$PROJECT_DIR$/src/main/resources/assets/toneko" />
       <recent name="$PROJECT_DIR$/src/main/resources/assets/tonekofabric" />
     </key>
+    <key name="MoveMembersDialog.RECENTS_KEY">
+      <recent name="org.cneko.toneko.common.api.Permissions" />
+    </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="com.crystalneko.toneko.api" />
       <recent name="com.crystalneko.tonekocommon" />
@@ -209,14 +211,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-    </task>
-    <task id="LOCAL-00032" summary="修复AI聊天">
-      <option name="closed" value="true" />
-      <created>1707117457114</created>
-      <option name="number" value="00032" />
-      <option name="presentableId" value="LOCAL-00032" />
-      <option name="project" value="LOCAL" />
-      <updated>1707117457114</updated>
     </task>
     <task id="LOCAL-00033" summary="添加幼年实体">
       <option name="closed" value="true" />
@@ -602,7 +596,15 @@
       <option name="project" value="LOCAL" />
       <updated>1717684339593</updated>
     </task>
-    <option name="localTasksCounter" value="81" />
+    <task id="LOCAL-00081" summary="简单完善了一下管理员命令(◕‿◕✿)">
+      <option name="closed" value="true" />
+      <created>1717770109648</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1717770109649</updated>
+    </task>
+    <option name="localTasksCounter" value="82" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -618,7 +620,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="添加禁止optifine提醒" />
     <MESSAGE value="添加tick监听事件" />
     <MESSAGE value="添加nbt读取缩放" />
     <MESSAGE value="更改nbt读取" />
@@ -643,6 +644,7 @@
     <MESSAGE value="终于重构完成聊天监听事件啦(´・ω・｀)" />
     <MESSAGE value="什么时候才能发布1.0.0呢(￣□￣)" />
     <MESSAGE value="添加权限组，可以使用luckperms自定义权限组啦! 唔，怎么改动了这么多文件&#10;o(///▽///)q" />
-    <option name="LAST_COMMIT_MESSAGE" value="添加权限组，可以使用luckperms自定义权限组啦! 唔，怎么改动了这么多文件&#10;o(///▽///)q" />
+    <MESSAGE value="简单完善了一下管理员命令(◕‿◕✿)" />
+    <option name="LAST_COMMIT_MESSAGE" value="简单完善了一下管理员命令(◕‿◕✿)" />
   </component>
 </project>
