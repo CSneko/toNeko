@@ -1,14 +1,13 @@
-buildscript {
+/*buildscript {
     repositories {
         gradlePluginPortal()
     }
     dependencies {
     }
 }
-
+*/
 plugins {
-    id 'fabric-loom' version '1.2-SNAPSHOT'
-    id 'org.jetbrains.kotlin.jvm' version '1.8.0'
+    id 'fabric-loom' version '1.6-SNAPSHOT'
 }
 
 version = project.mod_version
@@ -59,7 +58,7 @@ dependencies {
     modImplementation 'software.bernie.geckolib:geckolib-fabric-1.20.4:4.4.1'
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    //implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     compileOnly 'dev.folia:folia-api:1.20.2-R0.1-SNAPSHOT'
     //implementation "net.neoforged:neoforge:20.4.210"
     //modImplementation "maven.modrinth:ctlib:aftzbFe4"
@@ -102,9 +101,6 @@ java {
     withSourcesJar()
 }
 
-kotlin {
-    jvmToolchain(17)
-}
 
 // 配置Javadoc生成
 javadoc {

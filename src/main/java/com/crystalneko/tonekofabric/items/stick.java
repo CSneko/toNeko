@@ -24,7 +24,6 @@ public class stick {
         nbt.put("neko",nbtValue);
         // 创建描述文本对象
         Text description = translatable("item.stick-lore");
-        nbt.putString("display",Text.Serializer.toJson(description));
         stack1.setNbt(nbt);
         //设置名称
         stack1.setCustomName(translatable("item.stick"));

@@ -12,10 +12,9 @@ import org.cneko.toneko.fabric.items.ToNekoItems;
 import java.util.function.Consumer;
 
 import static org.cneko.toneko.fabric.util.TextUtil.translatable;
+import static org.cneko.toneko.fabric.advancements.ToNekoAdvancements.*;
 import static org.cneko.toneko.common.Bootstrap.MODID;
 public class AdvancementsProvider extends FabricAdvancementProvider {
-    static AdvancementEntry GOT_NEKO_POTION;
-    static AdvancementEntry BECOME_NEKO;
 
 
     protected AdvancementsProvider(FabricDataOutput output) {
@@ -48,7 +47,7 @@ public class AdvancementsProvider extends FabricAdvancementProvider {
                         true, // 获得发送到聊天
                         false // 不隐藏进度
                 )
-                .criterion("become_neko", InventoryChangedCriterion.)
+                .criterion("become_neko", BecomeByPotionCriterion.get())
                 .parent(GOT_NEKO_POTION)
                 .build(consumer, MODID+"/become_neko");*/
 

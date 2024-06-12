@@ -13,6 +13,7 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
 import net.minecraft.world.World;
 import org.cneko.toneko.common.api.NekoQuery;
+
 import static org.cneko.toneko.fabric.util.TextUtil.translatable;
 public class NekoPotion extends Item {
     public static final String ID = "neko_potion";
