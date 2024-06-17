@@ -59,7 +59,7 @@ public class ChatEvent {
         return message;
     }
     public static String nekoModify(String message, NekoQuery.Neko neko){
-        List<JsonConfiguration> owners= neko.getOwners().toJsonList();
+        List<JsonConfiguration> owners= neko.getOwners();
 
         // 替换屏蔽词
         for (JsonConfiguration block : neko.getProfile().getJsonList("blockWords")){

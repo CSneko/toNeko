@@ -1,8 +1,11 @@
 package org.cneko.toneko.common.api;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import org.cneko.ctlib.common.file.JsonConfiguration;
 import org.cneko.toneko.common.Bootstrap;
 import org.cneko.toneko.common.util.FileUtil;
+import org.cneko.toneko.common.util.JsonUtil;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -67,7 +70,7 @@ public class NekoQuery {
 
     public static void removeOwner(UUID uuid,UUID owner){
         Neko neko =  new Neko(uuid);
-        neko.addOwner(owner);
+        neko.removeOwner(owner);
         neko.save();
     }
 
@@ -179,8 +182,8 @@ public class NekoQuery {
          * 获取猫娘的所有主人
          * @return 主人列表，默认请见resources/defaultPlayerProfile.json
          */
-        public JsonConfiguration getOwners(){
-            return getProfile().getJsonConfiguration("owners");
+        public List<JsonConfiguration> getOwners(){
+            return getProfile().getJsonList("owners");
         }
 
         /**
@@ -190,20 +193,19 @@ public class NekoQuery {
         public void addOwner(UUID owner){
             if(!hasOwner(owner)){
                 // 读取主人列表
-                JsonConfiguration owners = getOwners();
-                List<JsonConfiguration> o = owners.toJsonList();
+                List<JsonConfiguration> o = getOwners();
                 // 获取默认数据
                 JsonConfiguration j = DEFAULT_OWNER_PROFILE;
                 j.set("uuid", owner.toString());
                 // 添加数据
                 o.add(j);
-                getProfile().set("owners", o);
+                getProfile().set("owners", JsonUtil.jsonListToJsonList(o));
             }
         }
 
         public void removeOwner(UUID owner){
             processOwners(owner, o -> {
-                List<JsonConfiguration> owners = getOwners().toJsonList();
+                List<JsonConfiguration> owners = getOwners();
                 owners.remove(o);
                 getProfile().set("owners", owners);
             });
@@ -267,13 +269,17 @@ public class NekoQuery {
          * @param uuid 主人UUID
          */
         public void processOwners(UUID uuid, OwnerAction action) {
-            List<JsonConfiguration> owners = getOwners().toJsonList();
+            List<JsonConfiguration> owners = getOwners();
             for (JsonConfiguration o : owners) {
                 if (o.getString("uuid").equalsIgnoreCase(uuid.toString())) {
                     action.apply(o); // 执行Lambda定义的操作
                 }
+                // 遍历结束后，将修改后的ownerConfig重新设置到owners中
+                owners.set(owners.indexOf(o), o);
+                break;
             }
-            getProfile().set("owners", owners);
+            List<JsonObject> strOwners = JsonUtil.jsonListToJsonList(owners);
+            getProfile().set("owners", strOwners);
         }
     }
     public static class Owner {

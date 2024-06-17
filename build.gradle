@@ -76,6 +76,17 @@ processResources {
                 "loader_version": project.loader_version
     }
 }
+loom {
+    splitEnvironmentSourceSets()
+
+    mods {
+        "toneko" {
+            sourceSet sourceSets.main
+            sourceSet sourceSets.client
+        }
+    }
+
+}
 
 def targetJavaVersion = 17
 tasks.withType(JavaCompile).configureEach {

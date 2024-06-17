@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
+import org.cneko.toneko.common.Bootstrap;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.api.Permissions;
 import org.cneko.toneko.fabric.util.PlayerUtil;
@@ -203,26 +204,30 @@ public class ToNekoCommand {
     }
 
     public static int playerCommand(CommandContext<ServerCommandSource> context) {
-        ServerPlayerEntity player = context.getSource().getPlayer(); // 命令发送者
-        player.sendMessage(translatable("command.toneko.player.help"));
-        String nekoName = StringArgumentType.getString(context, "neko"); // 猫娘名称
-        if(!has(player, Permissions.COMMAND_TONEKO_PLAYER)) return noPS(player);
-        PlayerEntity nekoPlayer = PlayerUtil.getPlayerByName(nekoName);
-        NekoQuery.Neko neko = NekoQuery.getNeko(nekoPlayer.getUuid());
-        assert player != null;
-        if(!neko.isNeko()){
-            // 不是猫娘
-            player.sendMessage(translatable("command.toneko.player.notNeko", nekoName));
+        try {
+            ServerPlayerEntity player = context.getSource().getPlayer(); // 命令发送者
+            String nekoName = StringArgumentType.getString(context, "neko"); // 猫娘名称
+            if (!has(player, Permissions.COMMAND_TONEKO_PLAYER)) return noPS(player);
+            PlayerEntity nekoPlayer = PlayerUtil.getPlayerByName(nekoName);
+            NekoQuery.Neko neko = NekoQuery.getNeko(nekoPlayer.getUuid());
+            assert player != null;
+            if (!neko.isNeko()) {
+                // 不是猫娘
+                player.sendMessage(translatable("command.toneko.player.notNeko", nekoName));
+                return 1;
+            }
+            if (neko.hasOwner(player.getUuid())) {
+                // 已经是主人
+                player.sendMessage(translatable("command.toneko.player.alreadyOwner", nekoName));
+                return 1;
+            }
+            neko.addOwner(player.getUuid());
+            neko.save();
+            player.sendMessage(translatable("command.toneko.player.success", nekoName));
+            return 1;
+        }catch (Exception e){
+            Bootstrap.LOGGER.error(e);
             return 1;
         }
-        if(neko.hasOwner(player.getUuid())){
-            // 已经是主人
-            player.sendMessage(translatable("command.toneko.player.alreadyOwner", nekoName));
-            return 1;
-        }
-        neko.addOwner(player.getUuid());
-        neko.save();
-        player.sendMessage(translatable("command.toneko.player.success", nekoName));
-        return 1;
     }
 }

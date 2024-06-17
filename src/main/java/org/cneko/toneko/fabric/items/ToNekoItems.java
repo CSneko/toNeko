@@ -1,5 +1,7 @@
 package org.cneko.toneko.fabric.items;
 
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.minecraft.item.ItemGroups;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
@@ -19,5 +21,9 @@ public class ToNekoItems {
      */
     public static void registerWithOutConfig() {
         Registry.register(Registries.ITEM, new Identifier(MODID,NekoPotion.ID), NEKO_POTION);
+        // 注册到物品组
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.FOOD_AND_DRINK).register(content -> {
+            content.add(NEKO_POTION);
+        });
     }
 }

@@ -21,6 +21,9 @@ public class LanguageUtil {
         try {
             language = CONFIG.getString("language");
             Resources resources = new Resources(Bootstrap.class);
+            // 删除旧语言文件
+            FileUtil.DeleteFile(LANG_PATH+"en_us.json");
+            FileUtil.DeleteFile(LANG_PATH+"zh_cn.json");
             // 复制语言文件
             resources.copyDirectoryFromJar("assets/toneko/lang", LANG_PATH);
             // 读取语言文件

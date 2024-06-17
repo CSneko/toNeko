@@ -47,4 +47,15 @@ public class FileUtil {
         }catch(Exception ignored){
         }
     }
+
+    // 删除文件
+    public static void DeleteFile(String file){
+        try{
+            java.io.File f = new java.io.File(file);
+            if(f.exists()){
+                f.delete();
+            }
+        }catch(Exception ignored){
+        }
+    }
 }

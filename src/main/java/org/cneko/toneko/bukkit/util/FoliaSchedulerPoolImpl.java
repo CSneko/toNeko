@@ -1,8 +1,8 @@
 package org.cneko.toneko.bukkit.util;
 
-import com.crystalneko.toneko.ToNeko;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.cneko.toneko.bukkit.ToNeko;
 import org.cneko.toneko.common.util.scheduled.ISchedulerPool;
 import org.cneko.toneko.common.util.scheduled.ScheduledTask;
 import org.jetbrains.annotations.NotNull;
