@@ -34,8 +34,7 @@
     "fabricloader": "*",
     "fabric": "*",
     "minecraft": ">=1.19",
-    "ctlib": "*",
-    "geckolib": "*"
+    "ctlib": "*"
   },
     "suggests": {
     "luckperms": "*"

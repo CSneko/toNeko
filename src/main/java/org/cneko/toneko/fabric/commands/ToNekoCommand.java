@@ -21,7 +21,7 @@ public class ToNekoCommand {
     public static void init(){
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             //------------------------------------------------toneko-----------------------------------------------
-            dispatcher.register(literal("toneko")
+            dispatcher.register(literal("data/minecraft/advancements/toneko")
                     //----------------------------------------player-------------------------------------
                     .then(literal("player")
                             .then(argument("neko", StringArgumentType.string())

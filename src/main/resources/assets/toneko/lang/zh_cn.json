@@ -1,4 +1,5 @@
 {
+  "item.toneko.neko_potion.effect.empty": "猫娘药水",
   "command.toneko.player.success": "§a你现在成为了 §6%d §a的主人喵~",
   "command.toneko.player.notNeko": "§c玩家 %d 不是猫娘喵~",
   "command.toneko.player.alreadyOwner": "§a已经是 §6%d §a的主人了喵~",
@@ -15,11 +16,11 @@
   "command.tonekoadmin.reload": "§a成功重载了配置文件和语言文件了喵",
   "command.tonekoadmin.help": "§b/tonekoadmin 帮助:\n§a/tonekoadmin help §b获取帮助\n§a/tonekoadmin set <玩家名称> §b将玩家设置为猫娘或取消设置\n§a/tonekoadmin reload §b重新加载配置文件和语言文件",
   "messages.toneko.notOwner": "§c你不是 %d 的主人喵~",
-  "title.toneko.become": "§a你变成一只猫娘了喵~",
-  "subtitle.toneko.become": "§6来体验猫猫的快乐吧",
+  "title.toneko.become": "§d你变成一只猫娘啦",
+  "subtitle.toneko.become": "§a来体验猫猫的快乐吧",
   "advancements.toneko.root.title": "§a成为一只猫猫吧",
-  "advancements.toneko.root.description": "§b获取猫娘药水",
+  "advancements.toneko.root.description": "§d获取猫娘药水",
   "misc.toneko.owner": "主人",
   "misc.toneko.nya": "喵~",
-  "misc.toneko.prefix": "猫娘"
+  "misc.toneko.prefix": "§a猫娘"
 }

@@ -2,12 +2,15 @@ package org.cneko.toneko.fabric.items;
 
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.PotionItem;
 import net.minecraft.network.packet.s2c.play.SubtitleS2CPacket;
 import net.minecraft.network.packet.s2c.play.TitleS2CPacket;
+import net.minecraft.potion.PotionUtil;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
@@ -19,13 +22,17 @@ import net.minecraft.world.event.GameEvent;
 import org.cneko.toneko.common.api.NekoQuery;
 
 
+import java.util.Iterator;
+import java.util.List;
+
 import static org.cneko.toneko.fabric.util.TextUtil.translatable;
 public class NekoPotion extends PotionItem {
     public static final String ID = "neko_potion";
 
     public NekoPotion() {
-        super(new Settings());
+        super(new Settings().maxCount(1));
     }
+
 
     public void toneko(World world, PlayerEntity user, Hand hand) {
         // 如果食物被成功吃掉并且玩家还不是猫猫，则把玩家变成猫猫
@@ -46,16 +53,13 @@ public class NekoPotion extends PotionItem {
         }
     }
 
-
+    @Override
     public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
         PlayerEntity playerEntity = user instanceof PlayerEntity ? (PlayerEntity)user : null;
         if (playerEntity instanceof ServerPlayerEntity) {
             Criteria.CONSUME_ITEM.trigger((ServerPlayerEntity)playerEntity, stack);
         }
 
-        if (!world.isClient) {
-            toneko(world, playerEntity, user.getActiveHand());
-        }
 
         if (playerEntity != null) {
             playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
@@ -72,8 +76,10 @@ public class NekoPotion extends PotionItem {
             if (playerEntity != null) {
                 playerEntity.getInventory().insertStack(new ItemStack(Items.GLASS_BOTTLE));
             }
-        }
 
+        }
+        // 把玩家变成猫猫
+        toneko(world, playerEntity, user.getActiveHand());
         user.emitGameEvent(GameEvent.DRINK);
         return stack;
     }

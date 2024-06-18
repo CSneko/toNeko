@@ -23,7 +23,8 @@ public class Stats {
         // 获取喵字数量
         int count = StringUtil.getCount(message,"喵");
         int nya = StringUtil.getCount(message,"nya");
-        int total = count + nya;
+        int meow = StringUtil.getCount(message,"meow");
+        int total = count + nya + meow;
 
         SchedulerPoolProvider.getINSTANCE().executeAsync(() -> {
             try {

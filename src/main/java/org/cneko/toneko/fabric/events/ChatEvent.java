@@ -20,10 +20,12 @@ import org.cneko.toneko.fabric.util.TextUtil;
 import java.util.List;
 import java.util.UUID;
 import static org.cneko.toneko.common.util.LanguageUtil.translatable;
+import static org.cneko.toneko.common.util.StringUtil.replaceChar;
+
 public class ChatEvent {
     public static void init() {
         ServerMessageEvents.ALLOW_CHAT_MESSAGE.register((message, sender, params) -> {
-            SchedulerPoolProvider.getINSTANCE().executeAsync(() -> onChatMessage(message,sender,params));
+            onChatMessage(message,sender,params);
             return false;
         });
     }
@@ -91,8 +93,7 @@ public class ChatEvent {
         //添加口癖
         String phrase = LanguageUtil.phrase;
         phrase = translatable(phrase);
-        Messaging.PetPhrase petPhrase = new Messaging.PetPhrase(phrase, false, LanguageUtil.phrase.length());
-        message = petPhrase.addPhrase(message);
+        message = Messaging.replacePhrase(message,phrase);
         return message;
     }
 

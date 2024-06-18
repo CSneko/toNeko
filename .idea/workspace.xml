@@ -7,127 +7,36 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="I feel sad now :(">
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/toneko/ToNeko.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/toneko/api/NekoQuery.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/toneko/api/events/ChatEvents.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/toneko/bstats/Metrics.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/toneko/chat/NekoChatListener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/toneko/command/AINekoCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/toneko/command/NekoCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/toneko/command/TabCompleter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/toneko/command/ToNekoCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/toneko/event/PlayerEventListenerBase.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/toneko/items/StickItemRecipeRegistry.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/toneko/items/StickItemWrapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/toneko/utils/ConfigFileUtils.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/toneko/utils/LibraryDownloader.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekocommon/Stats.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekocommon/util/StringUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekocommon/util/ThreadFactories.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/ToNekoFabric.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/api/CommandEvents.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/api/Messages.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/api/Neko.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/api/NekoEntityEnum.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/api/NekoEntityEvents.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/api/Query.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/client/ToNekoFabricClient.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/client/screens/InstalledOptifine.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/command/AINekoCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/command/NekoCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/command/ToNekoCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/command/TrashCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/command/command.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/entity/EntityRegister.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/entity/ai/FollowAndAttackPlayerGoal.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/entity/client/nekoModel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/entity/client/nekoRender.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/entity/nekoEntity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/event/PlayerAttack.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/event/PlayerChat.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/event/PlayerDamage.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/event/PlayerJoin.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/event/PlayerLeave.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/items/stick.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/libs/base.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/libs/lp.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/util/ConfigUtils.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/util/TextUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekonk/Events.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekonk/ToNekoNK.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekonk/api/NekoSet.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekonk/bstats/Metrics.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekonk/commands/ToNekoCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/bukkit/ToNeko.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/Minecraft_Client.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/Minecraft_Server.xml" beforeDir="false" />
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="移除掉com.crystalneko啦&#10;&#10;呼呼，修复了一点Bug，开心~^_^~">
+      <change afterPath="$PROJECT_DIR$/.github/workflows/releases.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/libs/ctlib-latest.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/generated/.cache/38810f236586ec4e8cec515209521c84c76d5471" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/generated/data/minecraft/advancements/toneko/root.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/StringUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/build.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/build.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/ToNeko.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/api/NekoQuery.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/api/events/ChatEvents.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/bstats/Metrics.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/chat/NekoChatListener.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/command/AINekoCommand.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/command/NekoCommand.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/command/TabCompleter.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/command/ToNekoCommand.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/event/PlayerEventListenerBase.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/items/StickItemRecipeRegistry.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/items/StickItemWrapper.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/utils/ConfigFileUtils.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/toneko/utils/LibraryDownloader.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekocommon/Stats.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekocommon/util/StringUtil.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekocommon/util/ThreadFactories.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/ToNekoFabric.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/api/CommandEvents.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/api/Messages.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/api/Neko.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/api/NekoEntityEnum.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/api/NekoEntityEvents.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/api/Query.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/client/ToNekoFabricClient.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/client/screens/InstalledOptifine.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/command/AINekoCommand.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/command/NekoCommand.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/command/ToNekoCommand.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/command/TrashCommand.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/command/command.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/EntityRegister.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/ai/FollowAndAttackPlayerGoal.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/client/nekoModel.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/client/nekoRender.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/entity/nekoEntity.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/event/PlayerAttack.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/event/PlayerChat.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/event/PlayerDamage.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/event/PlayerJoin.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/event/PlayerLeave.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/items/stick.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/libs/base.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/libs/lp.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/util/ConfigUtils.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekofabric/util/TextUtil.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekonk/Events.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekonk/ToNekoNK.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekonk/api/NekoSet.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekonk/bstats/Metrics.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/crystalneko/tonekonk/commands/ToNekoCommand.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/bukkit/util/BukkitSchedulerPool.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/bukkit/util/BukkitSchedulerPool.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/bukkit/util/FoliaSchedulerPoolImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/bukkit/util/FoliaSchedulerPoolImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/ctLib-0.1.7.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/nukkit-1.0-SNAPSHOT.jar" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/Stats.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/Stats.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/api/NekoQuery.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/api/NekoQuery.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/FileUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/FileUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/ConfigUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/ConfigUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/JsonUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/JsonUtil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/LanguageUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/LanguageUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/ToNeko.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/ToNeko.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/Messaging.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/Messaging.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/ModMeta.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/ModMeta.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/ToNekoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/ToNekoCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/events/ChatEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/events/ChatEvent.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoPotion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoPotion.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/ToNekoItems.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/ToNekoItems.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/config.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/en_us.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/en_us.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/zh_cn.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/zh_cn.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fabric.mod.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fabric.mod.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/plugin.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -211,13 +120,14 @@
     "Gradle.toNeko Server.executor": "Run",
     "Gradle.toNeko [javadoc].executor": "Run",
     "Gradle.toNeko build.executor": "Run",
+    "Gradle.toNeko datagen.executor": "Run",
     "Gradle.toNekoFabric build.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
     "jdk.selected.com.intellij.ui.dsl.builder.impl.RowImpl.sdk": "17",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/media/crystalneko/BA106C158B1B58EF/libs/gradle/gradle-8.7",
+    "last_opened_file_path": "/media/crystalneko/BA106C158B1B58EF/javatest/mods/toNeko/src/main/resources",
     "project.structure.last.edited": "项目",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.0",
@@ -232,9 +142,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources" />
       <recent name="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/entity/neko" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources/data/minecraft/advancements" />
       <recent name="$PROJECT_DIR$/src/main/resources/assets/toneko" />
       <recent name="$PROJECT_DIR$/src/main/resources/assets/tonekofabric" />
     </key>
@@ -251,7 +163,7 @@
       <recent name="org.cneko.toneko.common" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.toNeko build">
+  <component name="RunManager" selected="Gradle.toNeko datagen">
     <configuration name="toNeko Client" type="GradleRunConfiguration" factoryName="Gradle">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -318,10 +230,36 @@
       <RunAsTest>false</RunAsTest>
       <method v="2" />
     </configuration>
+    <configuration name="toNeko datagen" type="GradleRunConfiguration" factoryName="Gradle">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="runDatagen" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
     <list>
+      <item itemvalue="Gradle.toNeko datagen" />
       <item itemvalue="Gradle.toNeko Client" />
       <item itemvalue="Gradle.toNeko Server" />
       <item itemvalue="Gradle.toNeko build" />
+      <item itemvalue="应用程序.Data Generation" />
+      <item itemvalue="应用程序.Minecraft Client" />
+      <item itemvalue="应用程序.Minecraft Server" />
     </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
@@ -332,14 +270,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-    </task>
-    <task id="LOCAL-00035" summary="修改碰撞箱">
-      <option name="closed" value="true" />
-      <created>1707575716929</created>
-      <option name="number" value="00035" />
-      <option name="presentableId" value="LOCAL-00035" />
-      <option name="project" value="LOCAL" />
-      <updated>1707575716929</updated>
     </task>
     <task id="LOCAL-00036" summary="修改碰撞箱">
       <option name="closed" value="true" />
@@ -725,7 +655,15 @@
       <option name="project" value="LOCAL" />
       <updated>1718208349814</updated>
     </task>
-    <option name="localTasksCounter" value="84" />
+    <task id="LOCAL-00084" summary="移除掉com.crystalneko啦&#10;&#10;呼呼，修复了一点Bug，开心~^_^~">
+      <option name="closed" value="true" />
+      <created>1718638331956</created>
+      <option name="number" value="00084" />
+      <option name="presentableId" value="LOCAL-00084" />
+      <option name="project" value="LOCAL" />
+      <updated>1718638331957</updated>
+    </task>
+    <option name="localTasksCounter" value="85" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -741,7 +679,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="更改nbt读取" />
     <MESSAGE value="初步尝试兼容旧版本" />
     <MESSAGE value="支持NukkitX" />
     <MESSAGE value="添加bStats" />
@@ -766,6 +703,7 @@
     <MESSAGE value="简单完善了一下管理员命令(◕‿◕✿)" />
     <MESSAGE value="添加进度~~~" />
     <MESSAGE value="I feel sad now :(" />
-    <option name="LAST_COMMIT_MESSAGE" value="I feel sad now :(" />
+    <MESSAGE value="移除掉com.crystalneko啦&#10;&#10;呼呼，修复了一点Bug，开心~^_^~" />
+    <option name="LAST_COMMIT_MESSAGE" value="移除掉com.crystalneko啦&#10;&#10;呼呼，修复了一点Bug，开心~^_^~" />
   </component>
 </project>

@@ -29,10 +29,11 @@ public class LanguageUtil {
             // 读取语言文件
             LANG = JsonConfiguration.fromFile(Path.of(LANG_PATH+language+".json"));
         } catch (URISyntaxException | IOException e) {
+            LANG = JsonConfiguration.of("{}");
             LOGGER.error("Failed to load language file",e);
         }
-        phrase = translatable(CONFIG.getString("misc.toneko.nya"));
-        prefix = translatable(CONFIG.getString("misc.toneko.prefix"));
+        phrase = translatable(LANG.getString("misc.toneko.nya"));
+        prefix = translatable(LANG.getString("misc.toneko.prefix"));
     }
 
     public static String translatable(String key){
