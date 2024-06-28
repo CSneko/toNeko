@@ -7,36 +7,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="移除掉com.crystalneko啦&#10;&#10;呼呼，修复了一点Bug，开心~^_^~">
-      <change afterPath="$PROJECT_DIR$/.github/workflows/releases.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/ctlib-latest.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/generated/.cache/38810f236586ec4e8cec515209521c84c76d5471" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/generated/data/minecraft/advancements/toneko/root.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/StringUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/workflows/build.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/build.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="终于弄好dataGen啦(・∀・)&#10;&#10;1.0-pre可以发布了呢(｡◕‿◕｡)">
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/datagen/ChestLootTablesProvider.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/releases.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/releases.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/ctLib-0.1.7.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/nukkit-1.0-SNAPSHOT.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/Stats.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/Stats.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/ConfigUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/ConfigUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/JsonUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/JsonUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/LanguageUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/LanguageUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/Messaging.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/Messaging.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/ModMeta.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/ModMeta.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/ToNekoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/ToNekoCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/events/ChatEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/events/ChatEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoPotion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoPotion.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/config.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/en_us.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/en_us.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/zh_cn.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/zh_cn.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fabric.mod.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fabric.mod.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/plugin.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -112,34 +87,34 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "Gradle.toNeko Client.executor": "Run",
-    "Gradle.toNeko Datagen.executor": "Run",
-    "Gradle.toNeko Server.executor": "Run",
-    "Gradle.toNeko [javadoc].executor": "Run",
-    "Gradle.toNeko build.executor": "Run",
-    "Gradle.toNeko datagen.executor": "Run",
-    "Gradle.toNekoFabric build.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "jdk.selected.com.intellij.ui.dsl.builder.impl.RowImpl.sdk": "17",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/media/crystalneko/BA106C158B1B58EF/javatest/mods/toNeko/src/main/resources",
-    "project.structure.last.edited": "项目",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
-    "应用程序.Data Generation.executor": "Run"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;Gradle.toNeko Client.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.toNeko Datagen.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.toNeko Server.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.toNeko [javadoc].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.toNeko build.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.toNeko datagen.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.toNekoFabric build.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;jdk.selected.com.intellij.ui.dsl.builder.impl.RowImpl.sdk&quot;: &quot;17&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/media/crystalneko/BA106C158B1B58EF/javatest/mods/toNeko/src/main/resources&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;项目&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.gradle&quot;,
+    &quot;应用程序.Data Generation.executor&quot;: &quot;Run&quot;
   },
-  "keyToStringList": {
-    "jdk.preference.com.intellij.ui.dsl.builder.impl.RowImpl.sdk": [
-      "17=/usr/lib/jvm/java-1.17.0-openjdk-amd64"
+  &quot;keyToStringList&quot;: {
+    &quot;jdk.preference.com.intellij.ui.dsl.builder.impl.RowImpl.sdk&quot;: [
+      &quot;17=/usr/lib/jvm/java-1.17.0-openjdk-amd64&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/main/resources" />
@@ -270,14 +245,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-    </task>
-    <task id="LOCAL-00036" summary="修改碰撞箱">
-      <option name="closed" value="true" />
-      <created>1707925126406</created>
-      <option name="number" value="00036" />
-      <option name="presentableId" value="LOCAL-00036" />
-      <option name="project" value="LOCAL" />
-      <updated>1707925126409</updated>
     </task>
     <task id="LOCAL-00037" summary="修正碰撞箱，添加体积修改">
       <option name="closed" value="true" />
@@ -663,7 +630,15 @@
       <option name="project" value="LOCAL" />
       <updated>1718638331957</updated>
     </task>
-    <option name="localTasksCounter" value="85" />
+    <task id="LOCAL-00085" summary="终于弄好dataGen啦(・∀・)&#10;&#10;1.0-pre可以发布了呢(｡◕‿◕｡)">
+      <option name="closed" value="true" />
+      <created>1718705607397</created>
+      <option name="number" value="00085" />
+      <option name="presentableId" value="LOCAL-00085" />
+      <option name="project" value="LOCAL" />
+      <updated>1718705607397</updated>
+    </task>
+    <option name="localTasksCounter" value="86" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -679,7 +654,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="初步尝试兼容旧版本" />
     <MESSAGE value="支持NukkitX" />
     <MESSAGE value="添加bStats" />
     <MESSAGE value="修改nukkit的一些bugs" />
@@ -704,6 +678,7 @@
     <MESSAGE value="添加进度~~~" />
     <MESSAGE value="I feel sad now :(" />
     <MESSAGE value="移除掉com.crystalneko啦&#10;&#10;呼呼，修复了一点Bug，开心~^_^~" />
-    <option name="LAST_COMMIT_MESSAGE" value="移除掉com.crystalneko啦&#10;&#10;呼呼，修复了一点Bug，开心~^_^~" />
+    <MESSAGE value="终于弄好dataGen啦(・∀・)&#10;&#10;1.0-pre可以发布了呢(｡◕‿◕｡)" />
+    <option name="LAST_COMMIT_MESSAGE" value="终于弄好dataGen啦(・∀・)&#10;&#10;1.0-pre可以发布了呢(｡◕‿◕｡)" />
   </component>
 </project>

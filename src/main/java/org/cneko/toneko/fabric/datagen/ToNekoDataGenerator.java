@@ -6,7 +6,10 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 public class ToNekoDataGenerator implements DataGeneratorEntrypoint {
     @Override
     public void onInitializeDataGenerator(FabricDataGenerator generator) {
+        FabricDataGenerator.Pack pack = generator.createPack();
         // 进度生成
-        generator.createPack().addProvider(AdvancementsProvider::new);
+        pack.addProvider(AdvancementsProvider::new);
+        // 战利品生成
+        pack.addProvider(ChestLootTablesProvider::new);
     }
 }

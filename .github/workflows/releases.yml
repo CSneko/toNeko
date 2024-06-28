@@ -24,7 +24,7 @@ jobs:
       - name: Run DataGenera
         run: ./gradlew runDatagen
 
-      - name: Build Mod
+      - name: Build
         run: ./gradlew build
 
       - name: Upload Release Assets
@@ -32,8 +32,9 @@ jobs:
         with:
             token: ${{ secrets.GITHUB_TOKEN }}
             tag_name: ${{ github.event.release.tag_name }}
-            name: ${{ github.event.repository.name }}
-            body: publish ${{ github.event.release.tag_name }}
+            name: ${{ github.event.release.tag_name }} 更新
+            body: 发布 ${{ github.event.release.tag_name }}
             files: |
               build/libs/*
+            generate_notes: true
 
