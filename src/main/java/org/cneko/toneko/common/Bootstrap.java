@@ -15,6 +15,7 @@ public class Bootstrap {
             {
               "uuid": "default",
               "is": false,
+              "level": 0.00,
               "blockWords": [],
               "owners": []
             }""");

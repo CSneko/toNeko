@@ -14,4 +14,8 @@ public class Permissions {
     public static String COMMAND_TONEKO_XP = "command.toneko.xp";
     public static String COMMAND_TONEKO_REMOVE = "command.toneko.remove";
     public static String COMMAND_TONEKO_HELP = "command.toneko.help";
+    public static String COMMAND_NEKO_HELP = "command.neko.help";
+    public static String COMMAND_NEKO_JUMP = "command.neko.jump";
+    public static String COMMAND_NEKO_VISION = "command.neko.vision";
+    public static String COMMAND_NEKO_SPEED = "command.neko.speed";
 }

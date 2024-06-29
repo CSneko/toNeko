@@ -1,9 +1,7 @@
 package org.cneko.toneko.common.api;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.cneko.ctlib.common.file.JsonConfiguration;
-import org.cneko.toneko.common.Bootstrap;
 import org.cneko.toneko.common.util.FileUtil;
 import org.cneko.toneko.common.util.JsonUtil;
 
@@ -13,7 +11,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
 
 import static org.cneko.toneko.common.Bootstrap.*;
 
@@ -24,7 +21,7 @@ public class NekoQuery {
      * @return 是否是猫娘
      */
     public static boolean isNeko(UUID uuid){
-        return new Neko(uuid).isNeko();
+        return getNeko(uuid).isNeko();
     }
 
     /**
@@ -33,7 +30,7 @@ public class NekoQuery {
      * @param isNeko 是否是猫娘
      */
     public static void setNeko(UUID uuid, boolean isNeko){
-        Neko neko = new Neko(uuid);
+        Neko neko = getNeko(uuid);
         neko.setNeko(isNeko);
         neko.save();
     }
@@ -54,7 +51,7 @@ public class NekoQuery {
      * @return 是否是猫娘的主人
      */
     public static boolean hasOwner(UUID uuid, UUID owner){
-        return new Neko(uuid).hasOwner(owner);
+        return getNeko(uuid).hasOwner(owner);
     }
 
     /**
@@ -63,25 +60,25 @@ public class NekoQuery {
      * @param owner 主人UUID
      */
     public static void addOwner(UUID uuid, UUID owner){
-        Neko neko =  new Neko(uuid);
+        Neko neko =  getNeko(uuid);
         neko.addOwner(owner);
         neko.save();
     }
 
     public static void removeOwner(UUID uuid,UUID owner){
-        Neko neko =  new Neko(uuid);
+        Neko neko =  getNeko(uuid);
         neko.removeOwner(owner);
         neko.save();
     }
 
     public static void addBlock(UUID uuid,String block, String replace, String method){
-        Neko neko =  new Neko(uuid);
+        Neko neko =  getNeko(uuid);
         neko.addBlock(block,replace,method);
         neko.save();
     }
 
     public void removeBlock(UUID uuid,String block){
-        Neko neko =  new Neko(uuid);
+        Neko neko =  getNeko(uuid);
         neko.removeBlock(block);
         neko.save();
     }
@@ -229,10 +226,42 @@ public class NekoQuery {
                 }
             });
         }
+        public void addXp(UUID owner, int xp){
+            addLevel((double) xp /100.00d);
+            processOwners(owner, o -> {
+                int oxp = o.getInt("xp");
+                oxp += xp;
+                o.set("xp", oxp);
+            });
+        }
+        public void removeXp(UUID owner, int xp){
+            processOwners(owner, o -> {
+                int oxp = o.getInt("xp");
+                oxp -= xp;
+                if(oxp < 0) oxp = 0;
+                o.set("xp", oxp);
+            });
+        }
+        public void setXp(UUID owner, int xp){
+            processOwners(owner, o -> {
+                o.set("xp", xp);
+            });
+        }
         public int getXp(UUID owner){
             AtomicInteger xp = new AtomicInteger(0);
             processOwners(owner, o -> xp.set(o.getInt("xp")));
             return xp.get();
+        }
+
+        public void addLevel(double level){
+            double l = getLevel() + level;
+            setLevel(l);
+        }
+        public void setLevel(double level){
+            getProfile().set("level", level);
+        }
+        public double getLevel(){
+            return getProfile().getDouble("level");
         }
 
         public void addBlock(String block, String replace, String method){

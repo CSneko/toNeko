@@ -7,10 +7,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="终于弄好dataGen啦(・∀・)&#10;&#10;1.0-pre可以发布了呢(｡◕‿◕｡)">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/datagen/ChestLootTablesProvider.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/workflows/releases.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/releases.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="添加战利品生成~~─=≡Σ((( つ•̀ω•́)つ">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -245,14 +242,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-    </task>
-    <task id="LOCAL-00037" summary="修正碰撞箱，添加体积修改">
-      <option name="closed" value="true" />
-      <created>1707983187817</created>
-      <option name="number" value="00037" />
-      <option name="presentableId" value="LOCAL-00037" />
-      <option name="project" value="LOCAL" />
-      <updated>1707983187817</updated>
     </task>
     <task id="LOCAL-00038" summary="添加更多API，添加更多javadoc">
       <option name="closed" value="true" />
@@ -638,7 +627,15 @@
       <option name="project" value="LOCAL" />
       <updated>1718705607397</updated>
     </task>
-    <option name="localTasksCounter" value="86" />
+    <task id="LOCAL-00086" summary="添加战利品生成~~─=≡Σ((( つ•̀ω•́)つ">
+      <option name="closed" value="true" />
+      <created>1719572331230</created>
+      <option name="number" value="00086" />
+      <option name="presentableId" value="LOCAL-00086" />
+      <option name="project" value="LOCAL" />
+      <updated>1719572331231</updated>
+    </task>
+    <option name="localTasksCounter" value="87" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -654,7 +651,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="支持NukkitX" />
     <MESSAGE value="添加bStats" />
     <MESSAGE value="修改nukkit的一些bugs" />
     <MESSAGE value="添加bStats统计" />
@@ -679,6 +675,7 @@
     <MESSAGE value="I feel sad now :(" />
     <MESSAGE value="移除掉com.crystalneko啦&#10;&#10;呼呼，修复了一点Bug，开心~^_^~" />
     <MESSAGE value="终于弄好dataGen啦(・∀・)&#10;&#10;1.0-pre可以发布了呢(｡◕‿◕｡)" />
-    <option name="LAST_COMMIT_MESSAGE" value="终于弄好dataGen啦(・∀・)&#10;&#10;1.0-pre可以发布了呢(｡◕‿◕｡)" />
+    <MESSAGE value="添加战利品生成~~─=≡Σ((( つ•̀ω•́)つ" />
+    <option name="LAST_COMMIT_MESSAGE" value="添加战利品生成~~─=≡Σ((( つ•̀ω•́)つ" />
   </component>
 </project>

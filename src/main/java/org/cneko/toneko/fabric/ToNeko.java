@@ -4,6 +4,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import org.cneko.toneko.common.Bootstrap;
 import org.cneko.toneko.common.util.ConfigUtil;
+import org.cneko.toneko.fabric.commands.NekoCommand;
 import org.cneko.toneko.fabric.commands.ToNekoAdminCommand;
 import org.cneko.toneko.fabric.commands.ToNekoCommand;
 import org.cneko.toneko.fabric.events.ChatEvent;
@@ -18,6 +19,7 @@ public class ToNeko implements ModInitializer {
         // 注册命令
         ToNekoCommand.init();
         ToNekoAdminCommand.init();
+        NekoCommand.init();
         // 注册物品
         ToNekoItems.register();
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
