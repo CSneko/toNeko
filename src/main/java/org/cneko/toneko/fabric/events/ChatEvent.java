@@ -38,8 +38,13 @@ public class ChatEvent {
         msg = modify(msg, neko);
         // 格式化消息
         msg = Messaging.format(msg,playerName);
-        if(ConfigUtil.STATS) Stats.meowInChat(playerName,msg);
+        // 消息中喵的数量
+        int count = Stats.getMeow(msg);
+        // 根据喵的数量增加经验
+        neko.addLevel((double) count / 1000.00);
+        if(ConfigUtil.STATS) Stats.meowInChat(playerName,count);
         sendMessage(Text.of(msg));
+        neko.save();
     }
     public static void sendMessage(Text message){
         for (PlayerEntity player : PlayerUtil.getPlayerList()){

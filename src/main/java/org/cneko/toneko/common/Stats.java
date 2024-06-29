@@ -20,18 +20,24 @@ public class Stats {
 
     // 聊天中包含喵字数量统计
     public static void meowInChat(String neko,String message){
+        int total = getMeow(message);
+        meowInChat(neko,total);
+    }
+    public static void meowInChat(String neko,int count){
+        SchedulerPoolProvider.getINSTANCE().executeAsync(() -> {
+            try {
+                HttpGet.SimpleHttpGet.get("https://api.toneko.cneko.org/meow/add?name="+neko+"&&meow="+count,null);
+            } catch (IOException ignored) {
+            }
+        });
+    }
+
+    public static int getMeow(String message){
         // 获取喵字数量
         int count = StringUtil.getCount(message,"喵");
         int nya = StringUtil.getCount(message,"nya");
         int meow = StringUtil.getCount(message,"meow");
-        int total = count + nya + meow;
-
-        SchedulerPoolProvider.getINSTANCE().executeAsync(() -> {
-            try {
-                HttpGet.SimpleHttpGet.get("https://api.toneko.cneko.org/meow/add?name="+neko+"&&meow="+total,null);
-            } catch (IOException ignored) {
-            }
-        });
+        return count + nya + meow;
     }
 
 }

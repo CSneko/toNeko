@@ -57,13 +57,14 @@ public class NekoCommand {
         NekoQuery.Neko neko = NekoQuery.getNeko(player.getUuid());
         if(!neko.isNeko()){
             player.sendMessage(translatable("command.neko.not_neko"));
+            return 1;
         }
         // 获取玩家等级来计算效果
         double level = neko.getLevel();
         // 等级开方/2
         int effectLevel = (int) (Math.sqrt(level)/2.00);
-        // 对(((等级的开方)乘以(玩家的经验值的开方))/(玩家生命值))*20来计算效果时间
-        int time = ((int) (((Math.sqrt(level)) * (Math.sqrt(neko.getXp(player.getUuid())))) / player.getHealth()))*20;
+        // 对((((等级+1)的开方)乘以(玩家的经验值的开方))/(玩家生命值/4))*20来计算效果时间
+        int time = ((int) (((Math.sqrt(level+1)) * (Math.sqrt(player.totalExperience+1))) / (player.getHealth()/4)))*100;
         player.addStatusEffect(new StatusEffectInstance(effect, time, effectLevel));
         return 1;
     }
