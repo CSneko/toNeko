@@ -6,6 +6,7 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.command.ServerCommandSource;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.api.Permissions;
@@ -52,7 +53,7 @@ public class NekoCommand {
         return giveEffect(context, StatusEffects.JUMP_BOOST);
     }
 
-    public static int giveEffect(CommandContext<ServerCommandSource> context, StatusEffect effect) {
+    public static int giveEffect(CommandContext<ServerCommandSource> context, RegistryEntry<StatusEffect> effect) {
         PlayerEntity player = context.getSource().getPlayer();
         NekoQuery.Neko neko = NekoQuery.getNeko(player.getUuid());
         if(!neko.isNeko()){

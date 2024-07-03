@@ -20,7 +20,7 @@ public class ToNekoItems {
      * 强制注册物品，无论配置文件如何设置
      */
     public static void registerWithOutConfig() {
-        Registry.register(Registries.ITEM, new Identifier(MODID,NekoPotion.ID), NEKO_POTION);
+        Registry.register(Registries.ITEM, Identifier.of(MODID,NekoPotion.ID), NEKO_POTION);
         // 注册到物品组
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.FOOD_AND_DRINK).register(content -> {
             content.add(NEKO_POTION);
