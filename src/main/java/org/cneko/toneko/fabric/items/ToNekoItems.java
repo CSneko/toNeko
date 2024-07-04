@@ -10,7 +10,7 @@ import org.cneko.toneko.common.util.ConfigUtil;
 import static org.cneko.toneko.common.Bootstrap.MODID;
 
 public class ToNekoItems {
-    public static NekoPotion NEKO_POTION = new NekoPotion();
+    public static NekoPotion NEKO_POTION;
     public static void register() {
         // 如果启用了仅服务器端，则不注册物品
         if (!ConfigUtil.ONLY_SERVER) registerWithOutConfig();
@@ -20,6 +20,7 @@ public class ToNekoItems {
      * 强制注册物品，无论配置文件如何设置
      */
     public static void registerWithOutConfig() {
+        NEKO_POTION = new NekoPotion();
         Registry.register(Registries.ITEM, new Identifier(MODID,NekoPotion.ID), NEKO_POTION);
         // 注册到物品组
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.FOOD_AND_DRINK).register(content -> {

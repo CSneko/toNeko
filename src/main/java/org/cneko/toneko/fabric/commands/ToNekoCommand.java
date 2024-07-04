@@ -21,7 +21,7 @@ public class ToNekoCommand {
     public static void init(){
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             //------------------------------------------------toneko-----------------------------------------------
-            dispatcher.register(literal("data/minecraft/advancements/toneko")
+            dispatcher.register(literal("toneko")
                     //----------------------------------------player-------------------------------------
                     .then(literal("player")
                             .then(argument("neko", StringArgumentType.string())
@@ -105,75 +105,96 @@ public class ToNekoCommand {
     }
 
     public static int remove(CommandContext<ServerCommandSource> context) {
-        final PlayerEntity player = context.getSource().getPlayer();
-        if(!has(player, Permissions.COMMAND_TONEKO_REMOVE)) return noPS(player);
-        String nekoName = context.getArgument("neko", String.class);
-        NekoQuery.Neko neko = NekoQuery.getNeko(PlayerUtil.getPlayerByName(nekoName).getUuid());
-        if(!neko.hasOwner(player.getUuid())){
-            player.sendMessage(translatable("messages.toneko.notOwner"));
+        try {
+            final PlayerEntity player = context.getSource().getPlayer();
+            if (!has(player, Permissions.COMMAND_TONEKO_REMOVE)) return noPS(player);
+            String nekoName = context.getArgument("neko", String.class);
+            NekoQuery.Neko neko = NekoQuery.getNeko(PlayerUtil.getPlayerByName(nekoName).getUuid());
+            if (!neko.hasOwner(player.getUuid())) {
+                player.sendMessage(translatable("messages.toneko.notOwner"));
+                return 1;
+            }
+            neko.removeOwner(player.getUuid());
+            player.sendMessage(translatable("messages.toneko.remove"));
+            neko.save();
+            return 1;
+        }catch (Exception e){
+            Bootstrap.LOGGER.error(e);
             return 1;
         }
-        neko.removeOwner(player.getUuid());
-        player.sendMessage(translatable("messages.toneko.remove"));
-        neko.save();
-        return 1;
     }
 
     public static int addBlock(CommandContext<ServerCommandSource> context) {
-        final ServerCommandSource source = context.getSource();
-        final PlayerEntity player = source.getPlayer();
-        if(!has(player, Permissions.COMMAND_TONEKO_BLOCK)) return noPS(source);
-        //获取关键信息
-        String nekoName = context.getArgument("neko", String.class); //猫娘的名称
-        String block = context.getArgument("block", String.class); //屏蔽词
-        String replace = context.getArgument("replace", String.class); //替换词
-        String method = context.getArgument("method", String.class); //all or word
+        try {
+            final ServerCommandSource source = context.getSource();
+            final PlayerEntity player = source.getPlayer();
+            if (!has(player, Permissions.COMMAND_TONEKO_BLOCK)) return noPS(source);
+            //获取关键信息
+            String nekoName = context.getArgument("neko", String.class); //猫娘的名称
+            String block = context.getArgument("block", String.class); //屏蔽词
+            String replace = context.getArgument("replace", String.class); //替换词
+            String method = context.getArgument("method", String.class); //all or word
 
-        NekoQuery.Neko neko = NekoQuery.getNeko(PlayerUtil.getPlayerByName(nekoName).getUuid());
+            NekoQuery.Neko neko = NekoQuery.getNeko(PlayerUtil.getPlayerByName(nekoName).getUuid());
 
-        if(!neko.hasOwner(player.getUuid())){
-            player.sendMessage(translatable("messages.toneko.notOwner"));
+            if (!neko.hasOwner(player.getUuid())) {
+                player.sendMessage(translatable("messages.toneko.notOwner"));
+                return 1;
+            }
+            // 添加屏蔽词
+            neko.addBlock(block, replace, method);
+            neko.save();
+            player.sendMessage(translatable("messages.toneko.block.add"));
+            return 1;
+        }catch (Exception e){
+            Bootstrap.LOGGER.error(e);
             return 1;
         }
-        // 添加屏蔽词
-        neko.addBlock(block, replace, method);
-        neko.save();
-        player.sendMessage(translatable("messages.toneko.block.add"));
-        return 1;
     }
 
     public static int removeBlock(CommandContext<ServerCommandSource> context) {
-        final ServerCommandSource source = context.getSource();
-        final PlayerEntity player = source.getPlayer();
-        if(!has(player, Permissions.COMMAND_TONEKO_BLOCK)) return noPS(source);
-        String nekoName = context.getArgument("neko", String.class); //猫娘的名称
-        String block = context.getArgument("block", String.class); //屏蔽词
+        try {
+            final ServerCommandSource source = context.getSource();
+            final PlayerEntity player = source.getPlayer();
+            if (!has(player, Permissions.COMMAND_TONEKO_BLOCK)) return noPS(source);
+            String nekoName = context.getArgument("neko", String.class); //猫娘的名称
+            String block = context.getArgument("block", String.class); //屏蔽词
 
-        NekoQuery.Neko neko = NekoQuery.getNeko(PlayerUtil.getPlayerByName(nekoName).getUuid());
-        if(!neko.hasOwner(player.getUuid())){
-            player.sendMessage(translatable("messages.toneko.notOwner"));
+            NekoQuery.Neko neko = NekoQuery.getNeko(PlayerUtil.getPlayerByName(nekoName).getUuid());
+            if (!neko.hasOwner(player.getUuid())) {
+                player.sendMessage(translatable("messages.toneko.notOwner"));
+                return 1;
+            }
+            neko.removeBlock(block);
+            neko.save();
+            player.sendMessage(translatable("messages.toneko.block.remove"));
+            return 1;
+        }catch (Exception e){
+            Bootstrap.LOGGER.error(e);
             return 1;
         }
-        neko.removeBlock(block);
-        neko.save();
-        player.sendMessage(translatable("messages.toneko.block.remove"));
-        return 1;
     }
 
     public static int xp(CommandContext<ServerCommandSource> context) {
-        ServerPlayerEntity player = context.getSource().getPlayer();
-        if(!has(player, Permissions.COMMAND_TONEKO_BLOCK)) return noPS(player);
-        String nekoName = StringArgumentType.getString(context, "neko");
-        NekoQuery.Neko neko = NekoQuery.getNeko(PlayerUtil.getPlayerByName(nekoName).getUuid());
-        if(neko.hasOwner(player.getUuid())){
-            player.sendMessage(translatable("command.toneko.xp", nekoName, neko.getXp(player.getUuid())));
-        }else {
-            player.sendMessage(translatable("messages.toneko.notOwner"));
+        try {
+            ServerPlayerEntity player = context.getSource().getPlayer();
+            if (!has(player, Permissions.COMMAND_TONEKO_BLOCK)) return noPS(player);
+            String nekoName = StringArgumentType.getString(context, "neko");
+            NekoQuery.Neko neko = NekoQuery.getNeko(PlayerUtil.getPlayerByName(nekoName).getUuid());
+            if (neko.hasOwner(player.getUuid())) {
+                player.sendMessage(translatable("command.toneko.xp", nekoName, neko.getXp(player.getUuid())));
+            } else {
+                player.sendMessage(translatable("messages.toneko.notOwner"));
+            }
+            return 1;
+        }catch (Exception e){
+            Bootstrap.LOGGER.error(e);
+            return 1;
         }
-        return 1;
     }
 
     public static int AliasesRemove(CommandContext<ServerCommandSource> context) {
+        try{
         ServerPlayerEntity player = context.getSource().getPlayer();
         if(!has(player, Permissions.COMMAND_TONEKO_ALIAS)) return noPS(player);
         NekoQuery.Neko neko = NekoQuery.getNeko(PlayerUtil.getPlayerByName(StringArgumentType.getString(context, "neko")).getUuid());
@@ -186,21 +207,30 @@ public class ToNekoCommand {
         }
         neko.save();
         return 1;
+        }catch (Exception e){
+            Bootstrap.LOGGER.error(e);
+            return 1;
+        }
     }
 
     public static int AliasesAdd(CommandContext<ServerCommandSource> context) {
-        ServerPlayerEntity player = context.getSource().getPlayer();
-        if(!has(player, Permissions.COMMAND_TONEKO_ALIAS)) return noPS(player);
-        NekoQuery.Neko neko = NekoQuery.getNeko(PlayerUtil.getPlayerByName(StringArgumentType.getString(context, "neko")).getUuid());
-        if(neko.hasOwner(player.getUuid())){
-            String aliases = StringArgumentType.getString(context, "aliases");
-            neko.addAlias(player.getUuid(), aliases);
-            player.sendMessage(translatable("command.toneko.aliases.add", aliases));
-        }else {
-            player.sendMessage(translatable("messages.toneko.notOwner"));
+        try {
+            ServerPlayerEntity player = context.getSource().getPlayer();
+            if (!has(player, Permissions.COMMAND_TONEKO_ALIAS)) return noPS(player);
+            NekoQuery.Neko neko = NekoQuery.getNeko(PlayerUtil.getPlayerByName(StringArgumentType.getString(context, "neko")).getUuid());
+            if (neko.hasOwner(player.getUuid())) {
+                String aliases = StringArgumentType.getString(context, "aliases");
+                neko.addAlias(player.getUuid(), aliases);
+                player.sendMessage(translatable("command.toneko.aliases.add", aliases));
+            } else {
+                player.sendMessage(translatable("messages.toneko.notOwner"));
+            }
+            neko.save();
+            return 1;
+        }catch (Exception e){
+            Bootstrap.LOGGER.error(e);
+            return 1;
         }
-        neko.save();
-        return 1;
     }
 
     public static int playerCommand(CommandContext<ServerCommandSource> context) {

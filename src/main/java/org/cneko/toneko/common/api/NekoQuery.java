@@ -196,7 +196,7 @@ public class NekoQuery {
                 j.set("uuid", owner.toString());
                 // 添加数据
                 o.add(j);
-                getProfile().set("owners", JsonUtil.jsonListToJsonList(o));
+                getProfile().set("owners", o);
             }
         }
 
@@ -209,12 +209,15 @@ public class NekoQuery {
         }
 
         public void addAlias(UUID owner, String alias){
+            //System.out.println(owner);
             processOwners(owner, o -> {
                     List<String> aliases = o.getStringList("aliases");
                     if(!aliases.contains(alias)){
                         aliases.add(alias);
+                        //System.out.println(alias);
                         o.set("aliases", aliases);
                     }
+                    //System.out.println("aaa "+alias);
                 });
         }
         public void removeAlias(UUID owner, String alias){
@@ -298,17 +301,21 @@ public class NekoQuery {
          * @param uuid 主人UUID
          */
         public void processOwners(UUID uuid, OwnerAction action) {
-            List<JsonConfiguration> owners = getOwners();
+            /* 都是你害的,为什么这么难搞啊
+                我要崩溃了 (☍﹏⁰。)
+             */
+            List<JsonConfiguration> owners = getOwners(); // 获取当前的主人列表
+            boolean updated = false; // 标记是否进行了修改
             for (JsonConfiguration o : owners) {
                 if (o.getString("uuid").equalsIgnoreCase(uuid.toString())) {
                     action.apply(o); // 执行Lambda定义的操作
+                    updated = true; // 标记已修改
+                    break;
                 }
-                // 遍历结束后，将修改后的ownerConfig重新设置到owners中
-                owners.set(owners.indexOf(o), o);
-                break;
             }
-            List<JsonObject> strOwners = JsonUtil.jsonListToJsonList(owners);
-            getProfile().set("owners", strOwners);
+            if (updated) { // 如果有修改，则更新profile中的owners
+                getProfile().set("owners", owners);
+            }
         }
     }
     public static class Owner {

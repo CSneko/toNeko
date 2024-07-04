@@ -7,8 +7,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="添加战利品生成~~─=≡Σ((( つ•̀ω•́)つ">
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="唔...修正一点Bug,刚才发的太急了哇(〒︿〒)">
+      <change afterPath="$PROJECT_DIR$/libs/ctLibMod-0.1.10.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README_en.md" beforeDir="false" afterPath="$PROJECT_DIR$/README_en.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/ctlib-latest.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/api/NekoQuery.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/api/NekoQuery.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/ToNekoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/ToNekoCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/ToNekoItems.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/ToNekoItems.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,6 +57,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="1.21" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -135,7 +147,7 @@
       <recent name="org.cneko.toneko.common" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.toNeko datagen">
+  <component name="RunManager" selected="Gradle.toNeko Client">
     <configuration name="toNeko Client" type="GradleRunConfiguration" factoryName="Gradle">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -242,22 +254,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-    </task>
-    <task id="LOCAL-00038" summary="添加更多API，添加更多javadoc">
-      <option name="closed" value="true" />
-      <created>1708010376156</created>
-      <option name="number" value="00038" />
-      <option name="presentableId" value="LOCAL-00038" />
-      <option name="project" value="LOCAL" />
-      <updated>1708010376157</updated>
-    </task>
-    <task id="LOCAL-00039" summary="添加监听事件，设置猫娘生命值，修改基础信息">
-      <option name="closed" value="true" />
-      <created>1708354894437</created>
-      <option name="number" value="00039" />
-      <option name="presentableId" value="LOCAL-00039" />
-      <option name="project" value="LOCAL" />
-      <updated>1708354894437</updated>
     </task>
     <task id="LOCAL-00040" summary="修复了sql错误的bug">
       <option name="closed" value="true" />
@@ -635,7 +631,23 @@
       <option name="project" value="LOCAL" />
       <updated>1719572331231</updated>
     </task>
-    <option name="localTasksCounter" value="87" />
+    <task id="LOCAL-00087" summary="芜湖,Fabric的主要内容完成啦=└(┐卍^o^)卍">
+      <option name="closed" value="true" />
+      <created>1719622885592</created>
+      <option name="number" value="00087" />
+      <option name="presentableId" value="LOCAL-00087" />
+      <option name="project" value="LOCAL" />
+      <updated>1719622885592</updated>
+    </task>
+    <task id="LOCAL-00088" summary="唔...修正一点Bug,刚才发的太急了哇(〒︿〒)">
+      <option name="closed" value="true" />
+      <created>1719627275579</created>
+      <option name="number" value="00088" />
+      <option name="presentableId" value="LOCAL-00088" />
+      <option name="project" value="LOCAL" />
+      <updated>1719627275579</updated>
+    </task>
+    <option name="localTasksCounter" value="89" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -651,9 +663,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="添加bStats" />
-    <MESSAGE value="修改nukkit的一些bugs" />
-    <MESSAGE value="添加bStats统计" />
     <MESSAGE value="添加喵字数量统计" />
     <MESSAGE value="完善多语言支持" />
     <MESSAGE value="移除无用代码" />
@@ -676,6 +685,9 @@
     <MESSAGE value="移除掉com.crystalneko啦&#10;&#10;呼呼，修复了一点Bug，开心~^_^~" />
     <MESSAGE value="终于弄好dataGen啦(・∀・)&#10;&#10;1.0-pre可以发布了呢(｡◕‿◕｡)" />
     <MESSAGE value="添加战利品生成~~─=≡Σ((( つ•̀ω•́)つ" />
-    <option name="LAST_COMMIT_MESSAGE" value="添加战利品生成~~─=≡Σ((( つ•̀ω•́)つ" />
+    <MESSAGE value="芜湖,Fabric的主要内容完成啦=└(┐卍^o^)卍" />
+    <MESSAGE value="唔...修正一点Bug,刚才发的太急了哇" />
+    <MESSAGE value="唔...修正一点Bug,刚才发的太急了哇(〒︿〒)" />
+    <option name="LAST_COMMIT_MESSAGE" value="唔...修正一点Bug,刚才发的太急了哇(〒︿〒)" />
   </component>
 </project>
