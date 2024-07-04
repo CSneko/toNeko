@@ -1,16 +1,18 @@
 package org.cneko.toneko.common.api;
 
-import com.google.gson.JsonObject;
 import org.cneko.ctlib.common.file.JsonConfiguration;
+import org.cneko.toneko.common.api.quirk.Quirk;
+import org.cneko.toneko.common.api.quirk.QuirkRegister;
 import org.cneko.toneko.common.util.FileUtil;
-import org.cneko.toneko.common.util.JsonUtil;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import static org.cneko.toneko.common.Bootstrap.*;
 
@@ -281,6 +283,30 @@ public class NekoQuery {
             List<JsonConfiguration> blockWords = getProfile().getJsonList("blockWords");
             blockWords.removeIf(o -> o.getString("block").equalsIgnoreCase(block));
             getProfile().set("blockWords", blockWords);
+        }
+
+        public List<Quirk> getQuirks(){
+            List<Quirk> quirks = new ArrayList<>();
+            getProfile().getStringList("quirks").forEach(s -> {
+                quirks.add(QuirkRegister.getById(s));
+            });
+            return quirks;
+        }
+        public boolean hasQuirk(Quirk quirk){
+            return getQuirks().contains(quirk);
+        }
+        public void addQuirk(Quirk quirk){
+            if(!getQuirks().contains(quirk)){
+                List<String> quirks = getProfile().getStringList("quirks");
+                quirks.add(quirk.getId());
+                getProfile().set("quirks", quirks);
+            }
+        }
+        public void removeQuirk(Quirk quirk){
+            getProfile().getStringList("quirks").removeIf(s -> s.equalsIgnoreCase(quirk.getId()));
+        }
+        public void setQuirks(List<Quirk> quirks){
+            getProfile().set("quirks", quirks.stream().map(Quirk::getId).collect(Collectors.toList()));
         }
 
         public void save(){

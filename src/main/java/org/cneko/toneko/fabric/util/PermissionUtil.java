@@ -2,6 +2,7 @@ package org.cneko.toneko.fabric.util;
 
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.entity.Entity;
+import net.minecraft.server.command.ServerCommandSource;
 
 import static org.cneko.toneko.common.api.Permissions.*;
 
@@ -35,6 +36,11 @@ public class PermissionUtil {
         register(COMMAND_TONEKO_XP);
         register(COMMAND_TONEKO_REMOVE);
         register(COMMAND_TONEKO_HELP);
+        register(COMMAND_NEKO_SPEED);
+        register(COMMAND_NEKO_VISION);
+        register(COMMAND_NEKO_JUMP);
+        register(COMMAND_QUIRK);
+        register(COMMAND_QUIRK_HELP);
     }
     // 是否拥有权限
     public static boolean has(Entity entity, String perm){
@@ -50,5 +56,9 @@ public class PermissionUtil {
     // 权限是否属于管理员权限
     public static boolean isAdminPerm(String perm){
         return perm.startsWith("command.tonekoadmin");
+    }
+
+    public static boolean has(String commandQuirk, ServerCommandSource source) {
+        return has(source.getEntity(), commandQuirk);
     }
 }

@@ -7,16 +7,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="唔...修正一点Bug,刚才发的太急了哇(〒︿〒)">
-      <change afterPath="$PROJECT_DIR$/libs/ctLibMod-0.1.10.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README_en.md" beforeDir="false" afterPath="$PROJECT_DIR$/README_en.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/ctlib-latest.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/api/NekoQuery.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/api/NekoQuery.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/ToNekoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/ToNekoCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/ToNekoItems.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/ToNekoItems.java" afterDir="false" />
-    </list>
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="我崩溃了,这个别名为什么就是修不好哇(╥﹏╥)" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -254,14 +245,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-    </task>
-    <task id="LOCAL-00040" summary="修复了sql错误的bug">
-      <option name="closed" value="true" />
-      <created>1708758495217</created>
-      <option name="number" value="00040" />
-      <option name="presentableId" value="LOCAL-00040" />
-      <option name="project" value="LOCAL" />
-      <updated>1708758495217</updated>
     </task>
     <task id="LOCAL-00041" summary="添加异步统计">
       <option name="closed" value="true" />
@@ -647,7 +630,15 @@
       <option name="project" value="LOCAL" />
       <updated>1719627275579</updated>
     </task>
-    <option name="localTasksCounter" value="89" />
+    <task id="LOCAL-00089" summary="我崩溃了,这个别名为什么就是修不好哇(╥﹏╥)">
+      <option name="closed" value="true" />
+      <created>1720071806977</created>
+      <option name="number" value="00089" />
+      <option name="presentableId" value="LOCAL-00089" />
+      <option name="project" value="LOCAL" />
+      <updated>1720071806979</updated>
+    </task>
+    <option name="localTasksCounter" value="90" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -663,7 +654,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="添加喵字数量统计" />
     <MESSAGE value="完善多语言支持" />
     <MESSAGE value="移除无用代码" />
     <MESSAGE value="添加聊天格式修改，更新Fabric配置文件" />
@@ -688,6 +678,7 @@
     <MESSAGE value="芜湖,Fabric的主要内容完成啦=└(┐卍^o^)卍" />
     <MESSAGE value="唔...修正一点Bug,刚才发的太急了哇" />
     <MESSAGE value="唔...修正一点Bug,刚才发的太急了哇(〒︿〒)" />
-    <option name="LAST_COMMIT_MESSAGE" value="唔...修正一点Bug,刚才发的太急了哇(〒︿〒)" />
+    <MESSAGE value="我崩溃了,这个别名为什么就是修不好哇(╥﹏╥)" />
+    <option name="LAST_COMMIT_MESSAGE" value="我崩溃了,这个别名为什么就是修不好哇(╥﹏╥)" />
   </component>
 </project>

@@ -17,7 +17,8 @@ public class Bootstrap {
               "is": false,
               "level": 0.00,
               "blockWords": [],
-              "owners": []
+              "owners": [],
+              "quirks":[]
             }""");
     public static JsonConfiguration DEFAULT_OWNER_PROFILE = JsonConfiguration.of("""
             {

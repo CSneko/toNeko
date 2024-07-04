@@ -36,7 +36,10 @@
     "minecraft": ">=1.19",
     "ctlib": "*"
   },
-    "suggests": {
+  "suggests": {
     "luckperms": "*"
-  }
+  },
+  "mixins": [
+    "mixin.toneko.json"
+  ]
 }
