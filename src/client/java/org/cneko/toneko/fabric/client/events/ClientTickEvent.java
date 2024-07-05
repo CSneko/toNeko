@@ -14,7 +14,6 @@ public class ClientTickEvent {
             PlayerEntity player = client.player;
             if (poses.containsKey(player)) {
                 player.setPose(poses.get(player));
-                poses.remove(player);
             }
         }
     }
