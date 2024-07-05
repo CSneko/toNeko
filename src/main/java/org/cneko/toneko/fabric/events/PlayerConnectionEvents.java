@@ -8,6 +8,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import org.cneko.ctlib.common.util.ChatPrefix;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.util.LanguageUtil;
+import org.cneko.toneko.fabric.api.PlayerInstallToNeko;
 import org.cneko.toneko.fabric.util.TextUtil;
 
 public class PlayerConnectionEvents {
@@ -30,6 +31,7 @@ public class PlayerConnectionEvents {
             String name = TextUtil.getPlayerName(player);
             ChatPrefix.removePrivatePrefix(name, LanguageUtil.prefix);
         }
+        PlayerInstallToNeko.remove(TextUtil.getPlayerName(player));
     }
 
 

@@ -5,16 +5,14 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import org.cneko.toneko.common.Bootstrap;
 import org.cneko.toneko.common.util.ConfigUtil;
-import org.cneko.toneko.fabric.commands.NekoCommand;
-import org.cneko.toneko.fabric.commands.QuirkCommand;
-import org.cneko.toneko.fabric.commands.ToNekoAdminCommand;
-import org.cneko.toneko.fabric.commands.ToNekoCommand;
+import org.cneko.toneko.fabric.commands.*;
 import org.cneko.toneko.fabric.events.ChatEvent;
 import org.cneko.toneko.fabric.events.PlayerConnectionEvents;
 import org.cneko.toneko.fabric.events.PlayerInteractionEvent;
 import org.cneko.toneko.fabric.events.PlayerTickEvent;
 import org.cneko.toneko.fabric.items.ToNekoItems;
 import org.cneko.toneko.fabric.network.packets.EntityPosePayload;
+import org.cneko.toneko.fabric.network.packets.ToNekoModCheckPayload;
 import org.cneko.toneko.fabric.util.PermissionUtil;
 
 public class ToNeko implements ModInitializer {
@@ -26,10 +24,12 @@ public class ToNeko implements ModInitializer {
         ToNekoAdminCommand.init();
         NekoCommand.init();
         QuirkCommand.init();
+        TwwdfCommand.init();
         // 注册物品
         ToNekoItems.register();
         // 注册网络数据包
         PayloadTypeRegistry.playS2C().register(EntityPosePayload.ID, EntityPosePayload.CODEC);
+        // PayloadTypeRegistry.playC2S().register(ToNekoModCheckPayload.ID, ToNekoModCheckPayload.CODEC);
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             ModMeta.instance.setServer(server);
             // 启动聊天监听器

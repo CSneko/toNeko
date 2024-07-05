@@ -7,8 +7,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="修复一点Bug(我为什么会在客户端注册服务器tick)">
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="我为什么要和有病一样加remove?">
+      <change afterPath="$PROJECT_DIR$/src/client/java/org/cneko/toneko/fabric/client/events/ClientPlayerJoinEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/network/packets/ToNekoModCheckPayload.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/ToNeko.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/ToNeko.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/network/packets/EntityPosePayload.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/network/packets/EntityPosePayload.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/network/packets/EntitySetPoseContents.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -276,14 +281,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-    </task>
-    <task id="LOCAL-00050" summary="更改nbt读取">
-      <option name="closed" value="true" />
-      <created>1709976475751</created>
-      <option name="number" value="00050" />
-      <option name="presentableId" value="LOCAL-00050" />
-      <option name="project" value="LOCAL" />
-      <updated>1709976475752</updated>
     </task>
     <task id="LOCAL-00051" summary="更改nbt读取">
       <option name="closed" value="true" />
@@ -669,7 +666,15 @@
       <option name="project" value="LOCAL" />
       <updated>1720189570995</updated>
     </task>
-    <option name="localTasksCounter" value="99" />
+    <task id="LOCAL-00099" summary="我为什么要和有病一样加remove?">
+      <option name="closed" value="true" />
+      <created>1720189937860</created>
+      <option name="number" value="00099" />
+      <option name="presentableId" value="LOCAL-00099" />
+      <option name="project" value="LOCAL" />
+      <updated>1720189937860</updated>
+    </task>
+    <option name="localTasksCounter" value="100" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -685,7 +690,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="重构部分代码" />
     <MESSAGE value="重构toneko命令" />
     <MESSAGE value="添加更多static方法到api" />
     <MESSAGE value="修改logger，避免递归" />
@@ -710,6 +714,7 @@
     <MESSAGE value="嗯...1.20的最后一次提交了,再见了" />
     <MESSAGE value="1.21的首次提交,迎接新版本٩(｡・ω・｡)﻿و" />
     <MESSAGE value="修复一点Bug(我为什么会在客户端注册服务器tick)" />
-    <option name="LAST_COMMIT_MESSAGE" value="修复一点Bug(我为什么会在客户端注册服务器tick)" />
+    <MESSAGE value="我为什么要和有病一样加remove?" />
+    <option name="LAST_COMMIT_MESSAGE" value="我为什么要和有病一样加remove?" />
   </component>
 </project>

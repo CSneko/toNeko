@@ -21,9 +21,11 @@ import net.minecraft.text.Text;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.api.Permissions;
 import org.cneko.toneko.common.util.ConfigUtil;
+import org.cneko.toneko.fabric.api.PlayerInstallToNeko;
 import org.cneko.toneko.fabric.events.PlayerTickEvent;
 import org.cneko.toneko.fabric.network.packets.EntityPosePayload;
 import org.cneko.toneko.fabric.util.PermissionUtil;
+import org.cneko.toneko.fabric.util.TextUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -120,13 +122,14 @@ public class NekoCommand {
 
     public static int lieCommand(CommandContext<ServerCommandSource> context) {
         ServerPlayerEntity player = context.getSource().getPlayer();
+        String playerName = TextUtil.getPlayerName(player);
         // 如果玩家没有躺下,把玩家设置为躺下,否则把玩家设置为正常
         if(PlayerTickEvent.lyingPlayers.contains(player)){
             PlayerTickEvent.lyingPlayers.remove(player);
-            if(!ConfigUtil.ONLY_SERVER) ServerPlayNetworking.send(player, new EntityPosePayload(EntityPose.SLEEPING,false));
+            if(!ConfigUtil.ONLY_SERVER && PlayerInstallToNeko.get(playerName)) ServerPlayNetworking.send(player, new EntityPosePayload(EntityPose.SLEEPING,false));
         }else{
             PlayerTickEvent.lyingPlayers.add(player);
-            if(!ConfigUtil.ONLY_SERVER) ServerPlayNetworking.send(player, new EntityPosePayload(EntityPose.SLEEPING,true));
+            if(!ConfigUtil.ONLY_SERVER && PlayerInstallToNeko.get(playerName)) ServerPlayNetworking.send(player, new EntityPosePayload(EntityPose.SLEEPING,true));
         }
         return 1;
     }
