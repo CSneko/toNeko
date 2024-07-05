@@ -114,10 +114,10 @@ public class NekoCommand {
         // 如果玩家没有躺下,把玩家设置为躺下,否则把玩家设置为正常
         if(PlayerTickEvent.lyingPlayers.contains(player)){
             PlayerTickEvent.lyingPlayers.remove(player);
-            if(!ConfigUtil.ONLY_SERVER) player.networkHandler.sendPacket(new EntitySetPoseS2CPacket(EntityPose.SLEEPING,false));
+            //if(!ConfigUtil.ONLY_SERVER) player.networkHandler.sendPacket(new EntitySetPoseS2CPacket(EntityPose.SLEEPING,false));
         }else{
             PlayerTickEvent.lyingPlayers.add(player);
-            if(!ConfigUtil.ONLY_SERVER) player.networkHandler.sendPacket(new EntitySetPoseS2CPacket(EntityPose.SLEEPING,true));
+            //if(!ConfigUtil.ONLY_SERVER) player.networkHandler.sendPacket(new EntitySetPoseS2CPacket(EntityPose.SLEEPING,true));
         }
         return 1;
     }

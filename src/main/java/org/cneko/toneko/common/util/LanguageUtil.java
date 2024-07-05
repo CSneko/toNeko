@@ -28,7 +28,7 @@ public class LanguageUtil {
             resources.copyDirectoryFromJar("assets/toneko/lang", LANG_PATH);
             // 读取语言文件
             LANG = JsonConfiguration.fromFile(Path.of(LANG_PATH+language+".json"));
-        } catch (URISyntaxException | IOException e) {
+        } catch (IOException | URISyntaxException e) {
             LANG = JsonConfiguration.of("{}");
             LOGGER.error("Failed to load language file",e);
         }

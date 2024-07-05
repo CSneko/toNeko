@@ -8,22 +8,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="更新了亿点点东西,要累死啦(&gt;_&lt;)">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/event/ClientNetworkPacketEvent.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/event/ClientTickEvent.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/network/packets/EntitySetPoseS2CPacket.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/api/Permissions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/api/Permissions.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/quirks/QuirkRegister.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/quirks/QuirkRegister.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/LanguageUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/LanguageUtil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/Messaging.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/Messaging.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/ToNekoClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/ToNekoClient.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/NekoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/NekoCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/QuirkCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/QuirkCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/events/ChatEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/events/ChatEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/events/PlayerInteractionEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/events/PlayerInteractionEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/mixin/EntityMixin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/mixin/EntityMixin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/util/CommandUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/util/CommandUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/en_us.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/en_us.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/zh_cn.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/zh_cn.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -111,7 +100,7 @@
     &quot;Gradle.toNeko Datagen.executor&quot;: &quot;Run&quot;,
     &quot;Gradle.toNeko Server.executor&quot;: &quot;Run&quot;,
     &quot;Gradle.toNeko [javadoc].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.toNeko build.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.toNeko build.executor&quot;: &quot;Debug&quot;,
     &quot;Gradle.toNeko datagen.executor&quot;: &quot;Run&quot;,
     &quot;Gradle.toNekoFabric build.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
@@ -247,13 +236,13 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Gradle.toNeko datagen" />
       <item itemvalue="Gradle.toNeko Client" />
       <item itemvalue="Gradle.toNeko Server" />
       <item itemvalue="Gradle.toNeko build" />
+      <item itemvalue="Gradle.toNeko datagen" />
+      <item itemvalue="应用程序.Minecraft Server" />
       <item itemvalue="应用程序.Data Generation" />
       <item itemvalue="应用程序.Minecraft Client" />
-      <item itemvalue="应用程序.Minecraft Server" />
     </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
@@ -264,22 +253,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-    </task>
-    <task id="LOCAL-00044" summary="添加禁止optifine提醒">
-      <option name="closed" value="true" />
-      <created>1709044497054</created>
-      <option name="number" value="00044" />
-      <option name="presentableId" value="LOCAL-00044" />
-      <option name="project" value="LOCAL" />
-      <updated>1709044497054</updated>
-    </task>
-    <task id="LOCAL-00045" summary="添加禁止optifine提醒">
-      <option name="closed" value="true" />
-      <created>1709131536989</created>
-      <option name="number" value="00045" />
-      <option name="presentableId" value="LOCAL-00045" />
-      <option name="project" value="LOCAL" />
-      <updated>1709131536989</updated>
     </task>
     <task id="LOCAL-00046" summary="添加tick监听事件">
       <option name="closed" value="true" />
@@ -657,7 +630,23 @@
       <option name="project" value="LOCAL" />
       <updated>1720159774391</updated>
     </task>
-    <option name="localTasksCounter" value="93" />
+    <task id="LOCAL-00093" summary="更新了亿点点东西,要累死啦(&gt;_&lt;)">
+      <option name="closed" value="true" />
+      <created>1720168963151</created>
+      <option name="number" value="00093" />
+      <option name="presentableId" value="LOCAL-00093" />
+      <option name="project" value="LOCAL" />
+      <updated>1720168963152</updated>
+    </task>
+    <task id="LOCAL-00094" summary="更新了亿点点东西,要累死啦(&gt;_&lt;)">
+      <option name="closed" value="true" />
+      <created>1720169012035</created>
+      <option name="number" value="00094" />
+      <option name="presentableId" value="LOCAL-00094" />
+      <option name="project" value="LOCAL" />
+      <updated>1720169012035</updated>
+    </task>
+    <option name="localTasksCounter" value="95" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

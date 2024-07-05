@@ -1,8 +1,8 @@
 package org.cneko.toneko.fabric.client;
 
 import net.fabricmc.api.ClientModInitializer;
-import org.cneko.toneko.fabric.client.event.ClientNetworkPacketEvent;
-import org.cneko.toneko.fabric.client.event.ClientTickEvent;
+import org.cneko.toneko.fabric.client.events.ClientNetworkPacketEvent;
+import org.cneko.toneko.fabric.client.events.ClientTickEvent;
 
 public class ToNekoClient implements ClientModInitializer {
     @Override
@@ -10,5 +10,7 @@ public class ToNekoClient implements ClientModInitializer {
         // 客户端启动完成后
         ClientNetworkPacketEvent.init();
         ClientTickEvent.init();
+
+
     }
 }

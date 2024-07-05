@@ -1,4 +1,4 @@
-package org.cneko.toneko.fabric.client.event;
+package org.cneko.toneko.fabric.client.events;
 
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;

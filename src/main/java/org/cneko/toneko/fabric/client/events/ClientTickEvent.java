@@ -1,8 +1,8 @@
-package org.cneko.toneko.fabric.client.event;
+package org.cneko.toneko.fabric.client.events;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.MinecraftServer;
 
-import static org.cneko.toneko.fabric.client.event.ClientNetworkPacketEvent.poses;
+import static org.cneko.toneko.fabric.client.events.ClientNetworkPacketEvent.poses;
 public class ClientTickEvent {
     public static void init(){
         ServerTickEvents.START_SERVER_TICK.register(ClientTickEvent::onTick);
