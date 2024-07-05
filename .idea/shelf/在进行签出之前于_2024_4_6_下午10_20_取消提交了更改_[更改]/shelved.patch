@@ -1,0 +1,31 @@
+Index: src/main/java/com/crystalneko/tonekonf/ToNekoNF.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.crystalneko.tonekonf;\n\nimport net.neoforged.bus.api.IEventBus;\nimport net.neoforged.fml.common.Mod;\n\n\n@Mod(ToNekoNF.MOD_ID)\npublic class ToNekoNF {\n    public static final String MOD_ID = \"toneko\";\n    public ToNekoNF() {\n\n    }\n}\n
+===================================================================
+diff --git a/src/main/java/com/crystalneko/tonekonf/ToNekoNF.java b/src/main/java/com/crystalneko/tonekonf/ToNekoNF.java
+--- a/src/main/java/com/crystalneko/tonekonf/ToNekoNF.java	
++++ b/src/main/java/com/crystalneko/tonekonf/ToNekoNF.java	
+@@ -1,6 +1,5 @@
+ package com.crystalneko.tonekonf;
+ 
+-import net.neoforged.bus.api.IEventBus;
+ import net.neoforged.fml.common.Mod;
+ 
+ 
+Index: .idea/modules/toNeko.main.iml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<module version=\"4\">\n  <component name=\"FacetManager\">\n    <facet type=\"minecraft\" name=\"Minecraft\">\n      <configuration>\n        <autoDetectTypes>\n          <platformType>SPIGOT</platformType>\n          <platformType>FORGE</platformType>\n          <platformType>FABRIC</platformType>\n          <platformType>MIXIN</platformType>\n          <platformType>NEOFORGE</platformType>\n          <platformType>MCP</platformType>\n          <platformType>ADVENTURE</platformType>\n        </autoDetectTypes>\n        <projectReimportVersion>1</projectReimportVersion>\n      </configuration>\n    </facet>\n  </component>\n  <component name=\"McpModuleSettings\">\n    <option name=\"srgType\" value=\"SRG\" />\n  </component>\n</module>
+===================================================================
+diff --git a/.idea/modules/toNeko.main.iml b/.idea/modules/toNeko.main.iml
+--- a/.idea/modules/toNeko.main.iml	
++++ b/.idea/modules/toNeko.main.iml	
+@@ -10,7 +10,6 @@
+           <platformType>MIXIN</platformType>
+           <platformType>NEOFORGE</platformType>
+           <platformType>MCP</platformType>
+-          <platformType>ADVENTURE</platformType>
+         </autoDetectTypes>
+         <projectReimportVersion>1</projectReimportVersion>
+       </configuration>

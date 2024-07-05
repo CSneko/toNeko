@@ -8,17 +8,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="添加一个客户端验证~">
-      <change afterPath="$PROJECT_DIR$/src/client/java/org/cneko/toneko/fabric/client/events/ClientPlayerJoinEvent.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/api/PlayerInstallToNeko.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/TwwdfCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/network/packets/ToNekoModCheckPayload.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/client/java/org/cneko/toneko/fabric/client/ToNekoClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/client/java/org/cneko/toneko/fabric/client/ToNekoClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/ToNeko.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/ToNeko.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/NekoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/NekoCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/events/PlayerConnectionEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/events/PlayerConnectionEvents.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/network/packets/EntityPosePayload.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/network/packets/EntityPosePayload.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/network/packets/EntitySetPoseContents.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -286,14 +276,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-    </task>
-    <task id="LOCAL-00052" summary="初步尝试兼容旧版本">
-      <option name="closed" value="true" />
-      <created>1710773025506</created>
-      <option name="number" value="00052" />
-      <option name="presentableId" value="LOCAL-00052" />
-      <option name="project" value="LOCAL" />
-      <updated>1710773025507</updated>
     </task>
     <task id="LOCAL-00053" summary="支持NukkitX">
       <option name="closed" value="true" />
@@ -679,7 +661,15 @@
       <option name="project" value="LOCAL" />
       <updated>1720192492557</updated>
     </task>
-    <option name="localTasksCounter" value="101" />
+    <task id="LOCAL-00101" summary="添加一个客户端验证~">
+      <option name="closed" value="true" />
+      <created>1720192821997</created>
+      <option name="number" value="00101" />
+      <option name="presentableId" value="LOCAL-00101" />
+      <option name="project" value="LOCAL" />
+      <updated>1720192821997</updated>
+    </task>
+    <option name="localTasksCounter" value="102" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

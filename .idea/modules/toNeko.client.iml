@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module version="4">
+  <component name="AdditionalModuleElements">
+    <content url="file://$MODULE_DIR$/../../src/client" dumb="true">
+      <sourceFolder url="file://$MODULE_DIR$/../../src/client/java" isTestSource="false" />
+    </content>
+  </component>
+  <component name="FacetManager">
+    <facet type="minecraft" name="Minecraft">
+      <configuration>
+        <autoDetectTypes>
+          <platformType>SPIGOT</platformType>
+          <platformType>FABRIC</platformType>
+          <platformType>MIXIN</platformType>
+          <platformType>MCP</platformType>
+          <platformType>ADVENTURE</platformType>
+        </autoDetectTypes>
+        <projectReimportVersion>1</projectReimportVersion>
+      </configuration>
+    </facet>
+  </component>
+  <component name="McpModuleSettings">
+    <option name="srgType" value="SRG" />
+  </component>
+</module>
