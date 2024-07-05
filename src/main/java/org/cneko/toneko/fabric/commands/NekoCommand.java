@@ -1,5 +1,6 @@
 package org.cneko.toneko.fabric.commands;
 
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.entity.EntityPose;
@@ -42,8 +43,25 @@ public class NekoCommand {
                             .requires(source -> PermissionUtil.has(source.getPlayer(), Permissions.COMMAND_NEKO_LIE))
                             .executes(NekoCommand::lieCommand)
                     )
+                    .then(literal("nickname")
+                            .requires(source -> PermissionUtil.has(source.getPlayer(), Permissions.COMMAND_NEKO_NICKNAME))
+                            .then(argument("nickname", StringArgumentType.string())
+                                    .executes(NekoCommand::nicknameCommand)
+                            )
+                    )
             );
         });
+    }
+
+    public static int nicknameCommand(CommandContext<ServerCommandSource> context) {
+        PlayerEntity player = context.getSource().getPlayer();
+        NekoQuery.Neko neko = NekoQuery.getNeko(player.getUuid());
+        String nickname = StringArgumentType.getString(context, "nickname");
+        // 设置昵称
+        neko.setNickName(nickname);
+        neko.save();
+        player.sendMessage(translatable("command.neko.nickname.success", nickname));
+        return 1;
     }
 
     public static int lieCommand(CommandContext<ServerCommandSource> context) {

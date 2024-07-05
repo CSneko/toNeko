@@ -1,4 +1,4 @@
-package org.cneko.toneko.common.api.quirk;
+package org.cneko.toneko.common.quirks;
 
 public abstract class Quirk {
     private final String id;

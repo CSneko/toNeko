@@ -2,7 +2,7 @@ package org.cneko.toneko.common.util;
 
 import org.cneko.ctlib.common.util.ChatPrefix;
 
-import java.util.Locale;
+import java.util.Random;
 
 import static org.cneko.toneko.common.util.StringUtil.replaceChar;
 
@@ -20,10 +20,55 @@ public class Messaging {
     }
 
     public static String replacePhrase(String message, String phrase){
-        // TODO: 完善口癖
-        // 随机将",，"替换为"喵~"
-        message = replaceChar(message, ',', phrase, 0.4);
-        message = replaceChar(message, '，', phrase, 0.4);
-        return message + phrase;
+        message = runPetPhrases(message, phrase);
+        return message;
+    }
+
+    /*
+     以下代码来源于
+     https://github.com/CSneko/kawai-text/blob/main/js/petPhrase.js
+     */
+
+    public static String replaceCharWithRandom(String text, char chr, String target, double probability) {
+        String result = text;
+        Random random = new Random();
+        double rand = random.nextDouble();
+        if (rand < probability) {
+            int index = text.indexOf(chr);
+            if (index != -1) {
+                result = text.substring(0, index) + target + text.substring(index + 1);
+            }
+        }
+        return result;
+    }
+
+    public static String runPetPhrases(String text, String petPhrase) {
+        char[] punctuation = {'.', ',', '?', '!', '。', '，', '？', '！'};
+
+        // Check and add petPhrase at the end if needed
+        if (!text.endsWith(petPhrase)) {
+            boolean add = true;
+            for (char punct : punctuation) {
+                if (text.endsWith(String.valueOf(punct))) {
+                    add = false;
+                    // Remove the last character
+                    text = text.substring(0, text.length() - 1);
+                    break;
+                }
+            }
+            if (add) {
+                text = text + petPhrase;
+            }
+        }
+
+        // Add petPhrase before punctuation marks
+        for (char punct : punctuation) {
+            // If petPhrase does not end with punctuation mark, add it before
+            if (!petPhrase.endsWith(String.valueOf(punct))) {
+                text = replaceCharWithRandom(text, punct, petPhrase + punct, 0.4);
+            }
+        }
+
+        return text;
     }
 }

@@ -7,7 +7,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="我崩溃了,这个别名为什么就是修不好哇(╥﹏╥)" />
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="添加了性癖功能,目前还没做完哦">
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/quirks/CaressQuirk.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/quirks/Quirks.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/events/PlayerInteractionEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/Bootstrap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/Bootstrap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/api/NekoQuery.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/api/NekoQuery.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/api/Permissions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/api/Permissions.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/api/quirk/Quirk.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/quirks/Quirk.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/api/quirk/QuirkRegister.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/quirks/QuirkRegister.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/ToNeko.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/ToNeko.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/NekoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/NekoCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/QuirkCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/QuirkCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/events/ChatEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/events/ChatEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/defaultPlayerProfile.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/defaultPlayerProfile.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/en_us.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/en_us.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/zh_cn.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/zh_cn.json" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -121,6 +138,7 @@
       <recent name="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/entity/neko" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources" />
       <recent name="$PROJECT_DIR$/src/main/resources/data/minecraft/advancements" />
       <recent name="$PROJECT_DIR$/src/main/resources/assets/toneko" />
       <recent name="$PROJECT_DIR$/src/main/resources/assets/tonekofabric" />
@@ -138,7 +156,7 @@
       <recent name="org.cneko.toneko.common" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.toNeko Client">
+  <component name="RunManager" selected="Gradle.toNeko build">
     <configuration name="toNeko Client" type="GradleRunConfiguration" factoryName="Gradle">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -245,14 +263,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-    </task>
-    <task id="LOCAL-00041" summary="添加异步统计">
-      <option name="closed" value="true" />
-      <created>1708760338667</created>
-      <option name="number" value="00041" />
-      <option name="presentableId" value="LOCAL-00041" />
-      <option name="project" value="LOCAL" />
-      <updated>1708760338667</updated>
     </task>
     <task id="LOCAL-00042" summary="添加异步统计">
       <option name="closed" value="true" />
@@ -638,7 +648,15 @@
       <option name="project" value="LOCAL" />
       <updated>1720071806979</updated>
     </task>
-    <option name="localTasksCounter" value="90" />
+    <task id="LOCAL-00090" summary="添加了性癖功能,目前还没做完哦">
+      <option name="closed" value="true" />
+      <created>1720090839906</created>
+      <option name="number" value="00090" />
+      <option name="presentableId" value="LOCAL-00090" />
+      <option name="project" value="LOCAL" />
+      <updated>1720090839907</updated>
+    </task>
+    <option name="localTasksCounter" value="91" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -654,7 +672,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="完善多语言支持" />
     <MESSAGE value="移除无用代码" />
     <MESSAGE value="添加聊天格式修改，更新Fabric配置文件" />
     <MESSAGE value="添加API" />
@@ -679,6 +696,7 @@
     <MESSAGE value="唔...修正一点Bug,刚才发的太急了哇" />
     <MESSAGE value="唔...修正一点Bug,刚才发的太急了哇(〒︿〒)" />
     <MESSAGE value="我崩溃了,这个别名为什么就是修不好哇(╥﹏╥)" />
-    <option name="LAST_COMMIT_MESSAGE" value="我崩溃了,这个别名为什么就是修不好哇(╥﹏╥)" />
+    <MESSAGE value="添加了性癖功能,目前还没做完哦" />
+    <option name="LAST_COMMIT_MESSAGE" value="添加了性癖功能,目前还没做完哦" />
   </component>
 </project>

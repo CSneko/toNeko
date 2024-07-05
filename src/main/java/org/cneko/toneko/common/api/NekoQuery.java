@@ -1,8 +1,8 @@
 package org.cneko.toneko.common.api;
 
 import org.cneko.ctlib.common.file.JsonConfiguration;
-import org.cneko.toneko.common.api.quirk.Quirk;
-import org.cneko.toneko.common.api.quirk.QuirkRegister;
+import org.cneko.toneko.common.quirks.Quirk;
+import org.cneko.toneko.common.quirks.QuirkRegister;
 import org.cneko.toneko.common.util.FileUtil;
 
 import java.io.IOException;
@@ -307,6 +307,16 @@ public class NekoQuery {
         }
         public void setQuirks(List<Quirk> quirks){
             getProfile().set("quirks", quirks.stream().map(Quirk::getId).collect(Collectors.toList()));
+        }
+
+        public boolean hasNickName(){
+            return getProfile().getString("nickname") != null;
+        }
+        public String getNickName(){
+            return getProfile().getString("nickname");
+        }
+        public void setNickName(String nickName){
+            getProfile().set("nickname", nickName);
         }
 
         public void save(){

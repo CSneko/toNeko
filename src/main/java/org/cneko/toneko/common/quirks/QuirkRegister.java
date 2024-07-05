@@ -1,4 +1,4 @@
-package org.cneko.toneko.common.api.quirk;
+package org.cneko.toneko.common.quirks;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

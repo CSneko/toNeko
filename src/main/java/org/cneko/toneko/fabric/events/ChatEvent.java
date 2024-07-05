@@ -34,6 +34,10 @@ public class ChatEvent {
         NekoQuery.Neko neko = NekoQuery.getNeko(sender.getUuid());
         String msg = message.getContent().getString();
         String playerName = TextUtil.getPlayerName(sender);
+        // 获取昵称
+        if(neko.hasNickName()){
+            playerName = neko.getNickName();
+        }
         // 修改消息
         msg = modify(msg, neko);
         // 格式化消息

@@ -19,7 +19,10 @@ public class Permissions {
     public static String COMMAND_NEKO_VISION = "command.neko.vision";
     public static String COMMAND_NEKO_SPEED = "command.neko.speed";
     public static String COMMAND_NEKO_LIE = "command.neko.lie";
+    public static String COMMAND_NEKO_NICKNAME = "command.neko.nickname";
     public static String COMMAND_QUIRK = "command.quirk";
     public static String COMMAND_QUIRK_HELP = "command.quirk.help";
     public static String COMMAND_QUIRK_ADD = "command.quirk.add";
+    public static String COMMAND_QUIRK_REMOVE = "command.quirk.remove";
+    public static String COMMAND_QUIRK_LIST = "command.quirk.list";
 }
