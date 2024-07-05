@@ -8,10 +8,15 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.network.ServerPlayerEntity;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.api.Permissions;
+import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.fabric.events.PlayerTickEvent;
+import org.cneko.toneko.fabric.network.packets.EntitySetPoseS2CPacket;
 import org.cneko.toneko.fabric.util.PermissionUtil;
 
 import static net.minecraft.server.command.CommandManager.argument;
@@ -49,8 +54,48 @@ public class NekoCommand {
                                     .executes(NekoCommand::nicknameCommand)
                             )
                     )
+                    .then(literal("level")
+                            .requires(source -> PermissionUtil.has(source.getPlayer(), Permissions.COMMAND_NEKO_LEVEL))
+                            .executes(NekoCommand::levelCommand)
+                    )
+                    .then(literal("lore")
+                            .requires(source -> PermissionUtil.has(source.getPlayer(), Permissions.COMMAND_NEKO_LORE))
+                            .then(argument("lore", StringArgumentType.string())
+                                    .executes(NekoCommand::loreCommand)
+                            )
+                    )
             );
         });
+    }
+
+    public static int loreCommand(CommandContext<ServerCommandSource> context) {
+        ServerPlayerEntity player = context.getSource().getPlayer();
+        if (!NekoQuery.isNeko(player.getUuid())){
+            context.getSource().getPlayer().sendMessage(translatable("command.neko.not_neko"));
+        }else {
+            // 获取玩家手中的物品
+            ItemStack stack = player.getMainHandStack();
+            if (stack.isEmpty()) {
+                context.getSource().getPlayer().sendMessage(translatable("command.neko.lore.no_item"));
+                return 1;
+            }
+            String lore = StringArgumentType.getString(context, "lore");
+            // 给物品添加lore
+            NbtCompound nbt = new NbtCompound();
+            nbt.putString("display", lore);
+            stack.setNbt(nbt);
+        }
+        return 1;
+    }
+
+    public static int levelCommand(CommandContext<ServerCommandSource> context) {
+        NekoQuery.Neko neko = NekoQuery.getNeko(context.getSource().getPlayer().getUuid());
+        if(neko.isNeko()){
+            context.getSource().getPlayer().sendMessage(translatable("command.neko.level.success", neko.getLevel()));
+        }else{
+            context.getSource().getPlayer().sendMessage(translatable("command.neko.not_neko"));
+        }
+        return 1;
     }
 
     public static int nicknameCommand(CommandContext<ServerCommandSource> context) {
@@ -65,12 +110,14 @@ public class NekoCommand {
     }
 
     public static int lieCommand(CommandContext<ServerCommandSource> context) {
-        PlayerEntity player = context.getSource().getPlayer();
+        ServerPlayerEntity player = context.getSource().getPlayer();
         // 如果玩家没有躺下,把玩家设置为躺下,否则把玩家设置为正常
         if(PlayerTickEvent.lyingPlayers.contains(player)){
             PlayerTickEvent.lyingPlayers.remove(player);
+            if(!ConfigUtil.ONLY_SERVER) player.networkHandler.sendPacket(new EntitySetPoseS2CPacket(EntityPose.SLEEPING,false));
         }else{
             PlayerTickEvent.lyingPlayers.add(player);
+            if(!ConfigUtil.ONLY_SERVER) player.networkHandler.sendPacket(new EntitySetPoseS2CPacket(EntityPose.SLEEPING,true));
         }
         return 1;
     }

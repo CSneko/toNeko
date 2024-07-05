@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public class QuirkRegister {
-    private static Map<String, Quirk> quirks  = new HashMap<>();
+    private static final Map<String, Quirk> quirks = new HashMap<>();
 
     /**
      * 注册一个性癖

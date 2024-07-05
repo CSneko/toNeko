@@ -10,7 +10,6 @@ import net.minecraft.text.Text;
 import org.cneko.ctlib.common.file.JsonConfiguration;
 import org.cneko.toneko.common.Stats;
 import org.cneko.toneko.common.util.ConfigUtil;
-import org.cneko.toneko.common.util.scheduled.SchedulerPoolProvider;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.util.LanguageUtil;
 import org.cneko.toneko.common.util.Messaging;
@@ -20,7 +19,6 @@ import org.cneko.toneko.fabric.util.TextUtil;
 import java.util.List;
 import java.util.UUID;
 import static org.cneko.toneko.common.util.LanguageUtil.translatable;
-import static org.cneko.toneko.common.util.StringUtil.replaceChar;
 
 public class ChatEvent {
     public static void init() {
@@ -35,13 +33,11 @@ public class ChatEvent {
         String msg = message.getContent().getString();
         String playerName = TextUtil.getPlayerName(sender);
         // 获取昵称
-        if(neko.hasNickName()){
-            playerName = neko.getNickName();
-        }
+        String nickname = neko.getNickName();
         // 修改消息
         msg = modify(msg, neko);
         // 格式化消息
-        msg = Messaging.format(msg,playerName);
+        msg = Messaging.format(msg,playerName,nickname);
         // 消息中喵的数量
         int count = Stats.getMeow(msg);
         // 根据喵的数量增加经验

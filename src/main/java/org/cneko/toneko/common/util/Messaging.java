@@ -8,14 +8,20 @@ import static org.cneko.toneko.common.util.StringUtil.replaceChar;
 
 public class Messaging {
 
-    public static String format(String msg, String player){
+    public static String format(String msg, String player, String nickname){
+        // 修改昵称
+        if(nickname != null){
+            nickname = player;
+        }else {
+            nickname = "§6~"+nickname;
+        }
         // 从config读取格式
         String format = ConfigUtil.CHAT_FORMAT;
         String prefix = ChatPrefix.getPrivatePrefix(player) + ChatPrefix.getAllPublicPrefixValues();
         return format.
                 replace("${prefix}",prefix).
                 replace("${msg}",msg).
-                replace("${name}",player).
+                replace("${name}",nickname).
                 replace("${c}","§");
     }
 

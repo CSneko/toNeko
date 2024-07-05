@@ -9,10 +9,9 @@ import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.api.Permissions;
 import org.cneko.toneko.common.quirks.Quirk;
 import org.cneko.toneko.common.quirks.QuirkRegister;
+import org.cneko.toneko.fabric.util.CommandUtil;
 import org.cneko.toneko.fabric.util.PermissionUtil;
-import org.w3c.dom.stylesheets.LinkStyle;
 
-import java.io.File;
 import java.util.List;
 
 import static net.minecraft.server.command.CommandManager.argument;
@@ -20,31 +19,31 @@ import static net.minecraft.server.command.CommandManager.literal;
 import static org.cneko.toneko.fabric.util.TextUtil.translatable;
 public class QuirkCommand {
     public static void init(){
-        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-            dispatcher.register(literal("quirk")
-                    .requires(source -> PermissionUtil.has(Permissions.COMMAND_QUIRK, source))
-                    .then(literal("help")
-                            .requires(source -> PermissionUtil.has(Permissions.COMMAND_QUIRK_HELP, source))
-                            .executes(QuirkCommand::helpCommand)
-                    )
-                    .then(literal("add")
-                            .requires(source -> PermissionUtil.has(Permissions.COMMAND_QUIRK_ADD, source))
-                            .then(argument("quirk", StringArgumentType.string())
-                                    .executes(QuirkCommand::addOrRemoveQuirk)
-                            )
-                    )
-                    .then(literal("remove")
-                            .requires(source -> PermissionUtil.has(Permissions.COMMAND_QUIRK_REMOVE, source))
-                            .then(argument("quirk", StringArgumentType.string())
-                                    .executes(QuirkCommand::addOrRemoveQuirk)
-                            )
-                    )
-                    .then(literal("list")
-                            .requires(source -> PermissionUtil.has(Permissions.COMMAND_QUIRK_LIST, source))
-                            .executes(QuirkCommand::listQuirks)
-                    )
-            );
-        });
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> dispatcher.register(literal("quirk")
+                .requires(source -> PermissionUtil.has(Permissions.COMMAND_QUIRK, source))
+                .then(literal("help")
+                        .requires(source -> PermissionUtil.has(Permissions.COMMAND_QUIRK_HELP, source))
+                        .executes(QuirkCommand::helpCommand)
+                )
+                .then(literal("add")
+                        .requires(source -> PermissionUtil.has(Permissions.COMMAND_QUIRK_ADD, source))
+                        .then(argument("quirk", StringArgumentType.string())
+                                .suggests(CommandUtil::getQuirksSuggestions)
+                                .executes(QuirkCommand::addOrRemoveQuirk)
+                        )
+                )
+                .then(literal("remove")
+                        .requires(source -> PermissionUtil.has(Permissions.COMMAND_QUIRK_REMOVE, source))
+                        .then(argument("quirk", StringArgumentType.string())
+                                .suggests(CommandUtil::getQuirksSuggestions)
+                                .executes(QuirkCommand::addOrRemoveQuirk)
+                        )
+                )
+                .then(literal("list")
+                        .requires(source -> PermissionUtil.has(Permissions.COMMAND_QUIRK_LIST, source))
+                        .executes(QuirkCommand::listQuirks)
+                )
+        ));
     }
 
     public static int listQuirks(CommandContext<ServerCommandSource> context) {

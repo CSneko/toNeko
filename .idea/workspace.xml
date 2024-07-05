@@ -7,8 +7,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="稍微完善了一下性癖功能,添加昵称,还有...完善口癖!">
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="更新了亿点点东西,要累死啦(&gt;_&lt;)">
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/event/ClientNetworkPacketEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/event/ClientTickEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/network/packets/EntitySetPoseS2CPacket.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/api/Permissions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/api/Permissions.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/quirks/QuirkRegister.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/quirks/QuirkRegister.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/Messaging.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/Messaging.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/ToNekoClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/ToNekoClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/NekoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/NekoCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/QuirkCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/QuirkCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/events/ChatEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/events/ChatEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/events/PlayerInteractionEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/events/PlayerInteractionEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/mixin/EntityMixin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/mixin/EntityMixin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/util/CommandUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/util/CommandUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/en_us.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/en_us.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/zh_cn.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/zh_cn.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -129,6 +144,7 @@
       <recent name="$PROJECT_DIR$/src/main/resources/assets/tonekofabric" />
     </key>
     <key name="MoveMembersDialog.RECENTS_KEY">
+      <recent name="org.cneko.toneko.fabric.util.CommandUtil" />
       <recent name="org.cneko.toneko.common.api.Permissions" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
@@ -248,14 +264,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-    </task>
-    <task id="LOCAL-00043" summary="同步ctlib重构代码">
-      <option name="closed" value="true" />
-      <created>1708846946428</created>
-      <option name="number" value="00043" />
-      <option name="presentableId" value="LOCAL-00043" />
-      <option name="project" value="LOCAL" />
-      <updated>1708846946428</updated>
     </task>
     <task id="LOCAL-00044" summary="添加禁止optifine提醒">
       <option name="closed" value="true" />
@@ -641,7 +649,15 @@
       <option name="project" value="LOCAL" />
       <updated>1720158863197</updated>
     </task>
-    <option name="localTasksCounter" value="92" />
+    <task id="LOCAL-00092" summary="这么重要的事情我居然忘记了(┙&gt;∧&lt;)┙へ┻┻">
+      <option name="closed" value="true" />
+      <created>1720159774390</created>
+      <option name="number" value="00092" />
+      <option name="presentableId" value="LOCAL-00092" />
+      <option name="project" value="LOCAL" />
+      <updated>1720159774391</updated>
+    </task>
+    <option name="localTasksCounter" value="93" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -657,8 +673,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="添加聊天格式修改，更新Fabric配置文件" />
-    <MESSAGE value="添加API" />
     <MESSAGE value="修复bug" />
     <MESSAGE value="修复统计无效bug" />
     <MESSAGE value="修复重大bug" />
@@ -682,6 +696,8 @@
     <MESSAGE value="我崩溃了,这个别名为什么就是修不好哇(╥﹏╥)" />
     <MESSAGE value="添加了性癖功能,目前还没做完哦" />
     <MESSAGE value="稍微完善了一下性癖功能,添加昵称,还有...完善口癖!" />
-    <option name="LAST_COMMIT_MESSAGE" value="稍微完善了一下性癖功能,添加昵称,还有...完善口癖!" />
+    <MESSAGE value="这么重要的事情我居然忘记了(┙&gt;∧&lt;)┙へ┻┻" />
+    <MESSAGE value="更新了亿点点东西,要累死啦(&gt;_&lt;)" />
+    <option name="LAST_COMMIT_MESSAGE" value="更新了亿点点东西,要累死啦(&gt;_&lt;)" />
   </component>
 </project>

@@ -9,8 +9,10 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.world.World;
 import org.cneko.toneko.common.api.NekoQuery;
+import org.cneko.toneko.fabric.util.TextUtil;
 
 import static org.cneko.toneko.common.quirks.Quirks.CARESS;
+import static org.cneko.toneko.fabric.util.TextUtil.translatable;
 
 public class PlayerInteractionEvent {
     public static void init(){
@@ -26,9 +28,12 @@ public class PlayerInteractionEvent {
                 // 如果有抚摸癖好且为玩家空手
                 if(neko.hasQuirk(CARESS) && player.getMainHandStack().isEmpty()){
                     // 播放爱心粒子
-                    nekoPlayer.getWorld().addParticle(ParticleTypes.HEART,nekoPlayer.getX(), nekoPlayer.getY(), nekoPlayer.getZ(),1,1,1);
+                    nekoPlayer.getWorld().addParticle(ParticleTypes.HEART,nekoPlayer.getX()+1.8, nekoPlayer.getY(), nekoPlayer.getZ(),1,1,1);
                     // 增加互动值
                     neko.addXp(player.getUuid(), CARESS.getInteractionValue());
+                    // 发送消息文本
+                    player.sendMessage(translatable("quirk.toneko.caress.use", TextUtil.getPlayerName(player)), true);
+                    nekoPlayer.sendMessage(translatable("quirk.toneko.caress.be_used", TextUtil.getPlayerName(player)),true);
                     return ActionResult.SUCCESS;
                 }
             }
