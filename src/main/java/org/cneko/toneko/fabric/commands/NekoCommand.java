@@ -3,9 +3,11 @@ package org.cneko.toneko.fabric.commands;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.component.Component;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
+import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -18,7 +20,9 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.api.Permissions;
+import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.fabric.events.PlayerTickEvent;
+import org.cneko.toneko.fabric.network.packets.EntityPosePayload;
 import org.cneko.toneko.fabric.util.PermissionUtil;
 
 import java.util.ArrayList;
@@ -119,10 +123,10 @@ public class NekoCommand {
         // 如果玩家没有躺下,把玩家设置为躺下,否则把玩家设置为正常
         if(PlayerTickEvent.lyingPlayers.contains(player)){
             PlayerTickEvent.lyingPlayers.remove(player);
-            //if(!ConfigUtil.ONLY_SERVER) player.networkHandler.sendPacket(new EntitySetPoseS2CPacket(EntityPose.SLEEPING,false));
+            if(!ConfigUtil.ONLY_SERVER) ServerPlayNetworking.send(player, new EntityPosePayload(EntityPose.SLEEPING,false));
         }else{
             PlayerTickEvent.lyingPlayers.add(player);
-            //if(!ConfigUtil.ONLY_SERVER) player.networkHandler.sendPacket(new EntitySetPoseS2CPacket(EntityPose.SLEEPING,true));
+            if(!ConfigUtil.ONLY_SERVER) ServerPlayNetworking.send(player, new EntityPosePayload(EntityPose.SLEEPING,true));
         }
         return 1;
     }
