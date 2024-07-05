@@ -2,7 +2,6 @@ package org.cneko.toneko.fabric.client.events;
 
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.player.PlayerEntity;
 import org.cneko.toneko.fabric.network.packets.EntityPosePayload;

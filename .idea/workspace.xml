@@ -7,73 +7,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="嗯...1.20的最后一次提交了,再见了">
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/bukkit/ToNeko.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/bukkit/util/BukkitSchedulerPool.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/bukkit/util/FoliaSchedulerPoolImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/common/Bootstrap.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/common/Stats.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/common/api/NekoQuery.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/common/api/Permissions.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/common/quirks/CaressQuirk.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/common/quirks/Quirk.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/common/quirks/QuirkRegister.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/common/quirks/Quirks.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/common/util/ConfigUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/common/util/FileUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/common/util/JsonUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/common/util/LanguageUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/common/util/Messaging.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/common/util/StringUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/common/util/scheduled/ISchedulerPool.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/common/util/scheduled/ScheduledTask.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/common/util/scheduled/SchedulerPoolProvider.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/fabric/ModMeta.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/fabric/ToNeko.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/fabric/advancements/ToNekoAdvancements.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/fabric/client/ToNekoClient.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/fabric/commands/NekoCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/fabric/commands/QuirkCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/fabric/commands/ToNekoAdminCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/fabric/commands/ToNekoCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/fabric/datagen/AdvancementsProvider.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/fabric/datagen/ChestLootTablesProvider.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/fabric/datagen/ToNekoDataGenerator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/fabric/events/ChatEvent.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/fabric/events/PlayerConnectionEvents.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/fabric/events/PlayerInteractionEvent.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/fabric/events/PlayerTickEvent.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/fabric/items/NekoPotion.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/fabric/items/ToNekoItems.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/fabric/mixin/EntityMixin.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/fabric/network/packets/EntityPosePayload.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/fabric/network/packets/EntitySetPoseContents.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/fabric/util/CommandUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/fabric/util/FabricSchedulerPoolImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/fabric/util/PermissionUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/fabric/util/PlayerUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/fabric/util/TextUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/client/java/org/cneko/toneko/fabric/client/ToNekoClient.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/client/java/org/cneko/toneko/fabric/client/events/ClientNetworkPacketEvent.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/client/java/org/cneko/toneko/fabric/client/events/ClientTickEvent.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/network/packets/EntityPosePayload.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="1.21的首次提交,迎接新版本٩(｡・ω・｡)﻿و">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/ToNeko.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/ToNeko.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/ToNekoClient.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/events/ClientNetworkPacketEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/fabric/client/events/ClientNetworkPacketEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/events/ClientTickEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/remappedSrc/org/cneko/toneko/fabric/client/events/ClientTickEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/NekoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/NekoCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/datagen/AdvancementsProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/datagen/AdvancementsProvider.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/datagen/ChestLootTablesProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/datagen/ChestLootTablesProvider.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/datagen/ToNekoDataGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/datagen/ToNekoDataGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoPotion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoPotion.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/ToNekoItems.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/ToNekoItems.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/mixin/EntityMixin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/mixin/EntityMixin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/network/packets/EntitySetPoseS2CPacket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/network/packets/EntitySetPoseContents.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -341,22 +276,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-    </task>
-    <task id="LOCAL-00047" summary="添加tick监听事件">
-      <option name="closed" value="true" />
-      <created>1709435294726</created>
-      <option name="number" value="00047" />
-      <option name="presentableId" value="LOCAL-00047" />
-      <option name="project" value="LOCAL" />
-      <updated>1709435294726</updated>
-    </task>
-    <task id="LOCAL-00048" summary="添加nbt读取缩放">
-      <option name="closed" value="true" />
-      <created>1709736829489</created>
-      <option name="number" value="00048" />
-      <option name="presentableId" value="LOCAL-00048" />
-      <option name="project" value="LOCAL" />
-      <updated>1709736829489</updated>
     </task>
     <task id="LOCAL-00049" summary="添加nbt读取缩放">
       <option name="closed" value="true" />
@@ -734,7 +653,23 @@
       <option name="project" value="LOCAL" />
       <updated>1720175011498</updated>
     </task>
-    <option name="localTasksCounter" value="96" />
+    <task id="LOCAL-00096" summary="1.21的首次提交,迎接新版本٩(｡・ω・｡)﻿و">
+      <option name="closed" value="true" />
+      <created>1720188593057</created>
+      <option name="number" value="00096" />
+      <option name="presentableId" value="LOCAL-00096" />
+      <option name="project" value="LOCAL" />
+      <updated>1720188593058</updated>
+    </task>
+    <task id="LOCAL-00097" summary="1.21的首次提交,迎接新版本٩(｡・ω・｡)﻿و">
+      <option name="closed" value="true" />
+      <created>1720188764875</created>
+      <option name="number" value="00097" />
+      <option name="presentableId" value="LOCAL-00097" />
+      <option name="project" value="LOCAL" />
+      <updated>1720188764876</updated>
+    </task>
+    <option name="localTasksCounter" value="98" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -750,7 +685,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="修复统计无效bug" />
     <MESSAGE value="修复重大bug" />
     <MESSAGE value="重构部分代码" />
     <MESSAGE value="重构toneko命令" />
@@ -775,6 +709,7 @@
     <MESSAGE value="这么重要的事情我居然忘记了(┙&gt;∧&lt;)┙へ┻┻" />
     <MESSAGE value="更新了亿点点东西,要累死啦(&gt;_&lt;)" />
     <MESSAGE value="嗯...1.20的最后一次提交了,再见了" />
-    <option name="LAST_COMMIT_MESSAGE" value="嗯...1.20的最后一次提交了,再见了" />
+    <MESSAGE value="1.21的首次提交,迎接新版本٩(｡・ω・｡)﻿و" />
+    <option name="LAST_COMMIT_MESSAGE" value="1.21的首次提交,迎接新版本٩(｡・ω・｡)﻿و" />
   </component>
 </project>
