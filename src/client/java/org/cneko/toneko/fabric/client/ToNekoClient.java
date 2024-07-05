@@ -7,10 +7,7 @@ import org.cneko.toneko.fabric.client.events.ClientTickEvent;
 public class ToNekoClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        // 客户端启动完成后
         ClientNetworkPacketEvent.init();
         ClientTickEvent.init();
-
-
     }
 }

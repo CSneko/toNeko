@@ -16,7 +16,7 @@ import org.cneko.toneko.fabric.items.ToNekoItems;
 import java.util.function.BiConsumer;
 
 import static org.cneko.toneko.common.Bootstrap.MODID;
-
+/*
 public class ChestLootTablesProvider extends SimpleFabricLootTableProvider {
     public static final Identifier NEKO_CHEST = new Identifier(MODID, "chests/neko_loot");
     public ChestLootTablesProvider(FabricDataOutput dataGenerator) {
@@ -35,3 +35,4 @@ public class ChestLootTablesProvider extends SimpleFabricLootTableProvider {
         );
     }
 }
+*/

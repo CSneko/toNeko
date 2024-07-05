@@ -5,3 +5,4 @@ build/*
 /run/
 /src/main/java/com/crystalneko/tonekofabric/test/
 /src/main/generated/
+/remappedSrc/
