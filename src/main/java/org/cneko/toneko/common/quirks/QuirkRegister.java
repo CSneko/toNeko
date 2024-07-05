@@ -3,11 +3,12 @@ package org.cneko.toneko.common.quirks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class QuirkRegister {
-    private static Map<String, Quirk> quirks;
+    private static Map<String, Quirk> quirks  = new HashMap<>();
 
     /**
      * 注册一个性癖
