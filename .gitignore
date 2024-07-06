@@ -6,3 +6,4 @@ build/*
 /src/main/java/com/crystalneko/tonekofabric/test/
 /src/main/generated/
 /remappedSrc/
+/.idea/
