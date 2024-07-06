@@ -1,5 +1,9 @@
 package org.cneko.toneko.common.util;
 
+import java.io.FileWriter;
+import java.nio.charset.StandardCharsets;
+
+@SuppressWarnings("all")
 public class FileUtil {
     // 创建文件及文件夹，文件已存在则不创建
     public static void CreateFile(String file){
@@ -41,7 +45,7 @@ public class FileUtil {
                 f.getParentFile().mkdirs();
                 f.createNewFile();
             }
-            java.io.FileWriter fw = new java.io.FileWriter(f);
+            FileWriter fw = new FileWriter(f, StandardCharsets.UTF_8);  // Fix issue#44
             fw.write(content);
             fw.close();
         }catch(Exception ignored){
