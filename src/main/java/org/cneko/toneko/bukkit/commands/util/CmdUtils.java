@@ -21,4 +21,8 @@ public class CmdUtils {
         ctx.getSender().sendMessage(get("command.toneko.player.alreadyOwner",ctx.getArgument("neko")));
         return true;
     }
+    public static boolean playerNotNekoOwner(CmdContext ctx){
+        ctx.getSender().sendMessage(get("messages.toneko.notOwner",ctx.getArgument("neko")));
+        return true;
+    }
 }

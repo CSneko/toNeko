@@ -115,7 +115,7 @@ public class ToNekoCommand {
                 return 1;
             }
             neko.removeOwner(player.getUuid());
-            player.sendMessage(translatable("messages.toneko.remove"));
+            player.sendMessage(translatable("command.toneko.remove"));
             neko.save();
             return 1;
         }catch (Exception e){

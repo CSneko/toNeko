@@ -32,10 +32,29 @@ public class ToNekoCommand implements CommandExecutor {
                 return playerCommand(ctx);
             }
         }
+        // ----------------------------------- remove -----------------------------------
+        if (ctx.first("remove", Permissions.COMMAND_TONEKO_REMOVE)){
+            if (ctx.aSecond("neko")){
+                return removeCommand(ctx);
+            }
+        }
         return true;
     }
 
-    private static boolean playerCommand(CmdContext ctx) {
+    public boolean removeCommand(CmdContext ctx) {
+        UUID player = ctx.getPlayer().getUniqueId();
+        String nekoName = ctx.getArgument("neko");
+        Player nekoPlayer = Bukkit.getPlayer(nekoName);
+        if (nekoPlayer == null) return playerNotFound(ctx);
+        NekoQuery.Neko neko = NekoQuery.getNeko(nekoPlayer.getUniqueId());
+        if (!neko.hasOwner(player)) return playerNotNekoOwner(ctx);
+        neko.removeOwner(player);
+        neko.save();
+        ctx.getSender().sendMessage(get("command.toneko.remove.success",nekoName));
+        return true;
+    }
+
+    public static boolean playerCommand(CmdContext ctx) {
         UUID player = ctx.getPlayer().getUniqueId();
         String nekoName = ctx.getArgument("neko");
         Player nekoPlayer = Bukkit.getPlayer(nekoName);
