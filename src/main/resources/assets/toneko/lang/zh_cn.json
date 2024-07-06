@@ -3,6 +3,8 @@
   "quirk.toneko.caress": "抚摸",
   "quirk.toneko.caress.use": "§d你轻轻抚摸了 %d §d喵~",
   "quirk.toneko.caress.be_used": "§d你被 %d §d轻轻地抚摸了一下喵~",
+  "command.toneko.not_player": "§c命令执行者只能是玩家哦",
+  "command.toneko.not_found": "§c没找到这个玩家哦",
   "command.toneko.player.success": "§a你现在成为了 §6%d §a的主人喵~",
   "command.toneko.player.notNeko": "§c玩家 %d 不是猫娘喵~",
   "command.toneko.player.alreadyOwner": "§a已经是 §6%d §a的主人了喵~",

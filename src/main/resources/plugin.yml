@@ -36,9 +36,3 @@ permissions:
   neko.command.vision:
     default: true
     description: 夜视
-  aineko.command.add:
-    default: true
-    description: 添加AI猫娘
-  aineko.command.remove:
-    default: true
-    description: 删除AI猫娘

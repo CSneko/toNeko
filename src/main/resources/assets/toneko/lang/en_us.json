@@ -3,6 +3,8 @@
   "quirk.toneko.caress": "caress",
   "quirk.toneko.caress.use": "§dYou gently stroked %d.",
   "quirk.toneko.caress.be_used": "§dYou were gently petted by %d",
+  "command.toneko.not_player": "§cOnly player can be command executor",
+  "command.toneko.not_found": "§cUnable to find the player.",
   "command.toneko.player.success": "§aYou become §6%d §a's owner now-nya",
   "command.toneko.player.notNeko": "§cPlayer %d §cisn't a neko~",
   "command.toneko.player.alreadyOwner": "§aYou have already been §6%d §a's owner~",

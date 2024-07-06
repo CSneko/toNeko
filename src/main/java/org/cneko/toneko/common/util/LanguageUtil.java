@@ -42,4 +42,8 @@ public class LanguageUtil {
         }
         return key;
     }
+
+    public static String translatable(String key, Object[] args) {
+        return String.format(translatable(key), args);
+    }
 }
