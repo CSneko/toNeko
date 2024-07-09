@@ -44,21 +44,39 @@ public class PermissionUtil {
     }
     // 是否拥有权限
     public static boolean has(Entity entity, String perm){
-        if(installed){
-            return Permissions.check(entity, perm);
+        try {
+            if (installed) {
+                return Permissions.check(entity, perm);
+            }
+            // 没有权限API，默认拥有非管理员权限，3级默认拥有管理员权限
+            if (entity.hasPermissionLevel(3)) {
+                return true;
+            }
+            return !isAdminPerm(perm);
+        }catch (Exception e){
+            return false;
         }
-        // 没有权限API，默认拥有非管理员权限，3级默认拥有管理员权限
-        if(entity.hasPermissionLevel(3)){
-            return true;
-        }
-        return !isAdminPerm(perm);
     }
     // 权限是否属于管理员权限
     public static boolean isAdminPerm(String perm){
         return perm.startsWith("command.tonekoadmin");
     }
 
-    public static boolean has(String commandQuirk, ServerCommandSource source) {
-        return has(source.getEntity(), commandQuirk);
+    public static boolean has(ServerCommandSource source, String permission){
+        return has(permission,source);
+    }
+    public static boolean has(String permission, ServerCommandSource source) {
+        try {
+            if (installed) {
+                return Permissions.check(source, permission);
+            }
+            // 没有权限API，默认拥有非管理员权限，3级默认拥有管理员权限
+            if (source.hasPermissionLevel(3)) {
+                return true;
+            }
+            return !isAdminPerm(permission);
+        }catch (Exception e){
+            return false;
+        }
     }
 }

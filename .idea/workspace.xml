@@ -7,8 +7,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="添加一个客户端验证~">
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="完善水龙头~">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/client/java/org/cneko/toneko/fabric/client/events/ClientPlayerJoinEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/client/java/org/cneko/toneko/fabric/client/events/ClientPlayerJoinEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/NekoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/NekoCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/ToNekoAdminCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/ToNekoAdminCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/ToNekoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/ToNekoCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/util/PermissionUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/util/PermissionUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/en_us.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/en_us.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/zh_cn.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/zh_cn.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,6 +39,11 @@
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="toNeko" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="toNeko" type="f1a62948:ProjectNode" />
+                <item name="运行配置" type="7b0102dc:RunConfigurationsNode" />
               </path>
             </expand>
             <select />
@@ -82,7 +94,7 @@
   &quot;associatedIndex&quot;: 3
 }</component>
   <component name="ProjectId" id="2WNhK1bh31MB7aG6iREJMeGNeVN" />
-  <component name="ProjectLevelVcsManager">
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
   <component name="ProjectViewState">
@@ -107,7 +119,7 @@
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;jdk.selected.com.intellij.ui.dsl.builder.impl.RowImpl.sdk&quot;: &quot;21&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/media/crystalneko/BA106C158B1B58EF/javatest/mods/toNeko/src/main/resources&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/media/crystalneko/BA106C158B1B58EF/javatest/mods/toNeko&quot;,
     &quot;project.structure.last.edited&quot;: &quot;项目&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
@@ -259,8 +271,8 @@
     </configuration>
     <list>
       <item itemvalue="Gradle.toNeko Client" />
-      <item itemvalue="Gradle.toNeko [clean]" />
       <item itemvalue="Gradle.toNeko Server" />
+      <item itemvalue="Gradle.toNeko [clean]" />
       <item itemvalue="Gradle.toNeko build" />
       <item itemvalue="Gradle.toNeko datagen" />
       <item itemvalue="应用程序.Minecraft Server" />
@@ -276,14 +288,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-    </task>
-    <task id="LOCAL-00053" summary="支持NukkitX">
-      <option name="closed" value="true" />
-      <created>1711268324405</created>
-      <option name="number" value="00053" />
-      <option name="presentableId" value="LOCAL-00053" />
-      <option name="project" value="LOCAL" />
-      <updated>1711268324406</updated>
     </task>
     <task id="LOCAL-00054" summary="添加bStats">
       <option name="closed" value="true" />
@@ -669,7 +673,15 @@
       <option name="project" value="LOCAL" />
       <updated>1720192821997</updated>
     </task>
-    <option name="localTasksCounter" value="102" />
+    <task id="LOCAL-00102" summary="完善水龙头~">
+      <option name="closed" value="true" />
+      <created>1720280021833</created>
+      <option name="number" value="00102" />
+      <option name="presentableId" value="LOCAL-00102" />
+      <option name="project" value="LOCAL" />
+      <updated>1720280021833</updated>
+    </task>
+    <option name="localTasksCounter" value="103" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -685,7 +697,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="添加更多static方法到api" />
     <MESSAGE value="修改logger，避免递归" />
     <MESSAGE value="添加ConfigUtil和LanguageUtil，添加部分聊天修改&#10;&#10;重构好麻烦哦qwq" />
     <MESSAGE value="终于重构完成聊天监听事件啦(´・ω・｀)" />
@@ -710,6 +721,7 @@
     <MESSAGE value="修复一点Bug(我为什么会在客户端注册服务器tick)" />
     <MESSAGE value="我为什么要和有病一样加remove?" />
     <MESSAGE value="添加一个客户端验证~" />
-    <option name="LAST_COMMIT_MESSAGE" value="添加一个客户端验证~" />
+    <MESSAGE value="完善水龙头~" />
+    <option name="LAST_COMMIT_MESSAGE" value="完善水龙头~" />
   </component>
 </project>

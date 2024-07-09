@@ -6,6 +6,7 @@ public class Permissions {
 
     public static UUID uuid = UUID.fromString("bf6bd75f-333b-459b-b9dd-f38b57fb82e3");
     public static String COMMAND_TONEKOADMIN = "command.tonekoadmin";
+    public static String COMMAND_TONEKOADMIN_HELP = "command.tonekoadmin.help";
     public static String COMMAND_TONEKOADMIN_SET = "command.tonekoadmin.set";
     public static String COMMAND_TONEKOADMIN_RELOAD = "command.tonekoadmin.reload";
     public static String COMMAND_TONEKO_PLAYER = "command.toneko.player";

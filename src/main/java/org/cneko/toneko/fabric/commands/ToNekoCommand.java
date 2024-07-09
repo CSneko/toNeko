@@ -99,7 +99,7 @@ public class ToNekoCommand {
 
     public static int help(CommandContext<ServerCommandSource> context) {
         final ServerCommandSource source = context.getSource();
-        if(!has(source.getEntity(), Permissions.COMMAND_TONEKO_HELP)) return noPS(source);
+        if(!has(source, Permissions.COMMAND_TONEKO_HELP)) return noPS(source);
         source.sendMessage(translatable("command.toneko.help"));
         return 1;
     }

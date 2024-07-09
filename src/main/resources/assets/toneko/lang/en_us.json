@@ -34,6 +34,7 @@
   "messages.toneko.notOwner": "§cYou are not %d 's owner~",
   "messages.toneko.block.remove": "§aRemove the blocked word succeed!",
   "messages.toneko.block.add": "§aAdd the blocked word succeed",
+  "messages.toneko.client.join": "§aTips: If there is any error in chat, you don't need to care about it.",
   "title.toneko.become": "§dYou become a neko now!",
   "subtitle.toneko.become": "§aCome and experience the happiness of neko!",
   "advancements.toneko.root.title": "§aBecome a neko!",

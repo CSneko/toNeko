@@ -21,9 +21,9 @@ public class ToNekoAdminCommand {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             //------------------------------------------------toneko-----------------------------------------------
             dispatcher.register(literal("tonekoadmin")
-                    .requires(source -> PermissionUtil.has(source.getPlayer(), Permissions.COMMAND_TONEKOADMIN))
+                    .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_TONEKOADMIN))
                     .then(literal("set")
-                            .requires(source -> PermissionUtil.has(source.getPlayer(), Permissions.COMMAND_TONEKOADMIN_SET))
+                            .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_TONEKOADMIN_SET))
                             .then(argument("neko", StringArgumentType.string())
                                     .suggests(getOnlinePlayers)
                                     .executes(ToNekoAdminCommand::set)
@@ -31,10 +31,11 @@ public class ToNekoAdminCommand {
 
                     )
                     .then(literal("reload")
-                            .requires(source -> PermissionUtil.has(source.getPlayer(), Permissions.COMMAND_TONEKOADMIN_RELOAD))
+                            .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_TONEKOADMIN_RELOAD))
                             .executes(ToNekoAdminCommand::reload)
                     )
                     .then(literal("help")
+                            .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_TONEKOADMIN_HELP))
                             .executes(ToNekoAdminCommand::help)
                     )
             );
