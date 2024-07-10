@@ -299,7 +299,8 @@ public class NekoQuery {
             if(!getQuirks().contains(quirk)){
                 List<String> quirks = getProfile().getStringList("quirks");
                 quirks.add(quirk.getId());
-                getProfile().set("quirks", quirks);
+                String[] qs = quirks.toArray(new String[quirks.size()]);
+                getProfile().set("quirks", qs);
             }
         }
         public void removeQuirk(Quirk quirk){
