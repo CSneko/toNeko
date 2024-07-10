@@ -7,9 +7,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="修复了Fabric那边一些的bug,顺便完善水龙头~">
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="添加ko_kr">
       <change afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/ko_kr.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/config.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/fabric.mod.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fabric.mod.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -283,14 +284,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-    </task>
-    <task id="LOCAL-00055" summary="修改nukkit的一些bugs">
-      <option name="closed" value="true" />
-      <created>1711293544996</created>
-      <option name="number" value="00055" />
-      <option name="presentableId" value="LOCAL-00055" />
-      <option name="project" value="LOCAL" />
-      <updated>1711293544996</updated>
     </task>
     <task id="LOCAL-00056" summary="添加bStats统计">
       <option name="closed" value="true" />
@@ -676,7 +669,15 @@
       <option name="project" value="LOCAL" />
       <updated>1720537815803</updated>
     </task>
-    <option name="localTasksCounter" value="104" />
+    <task id="LOCAL-00104" summary="添加ko_kr">
+      <option name="closed" value="true" />
+      <created>1720605993165</created>
+      <option name="number" value="00104" />
+      <option name="presentableId" value="LOCAL-00104" />
+      <option name="project" value="LOCAL" />
+      <updated>1720605993166</updated>
+    </task>
+    <option name="localTasksCounter" value="105" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -692,7 +693,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="添加ConfigUtil和LanguageUtil，添加部分聊天修改&#10;&#10;重构好麻烦哦qwq" />
     <MESSAGE value="终于重构完成聊天监听事件啦(´・ω・｀)" />
     <MESSAGE value="什么时候才能发布1.0.0呢(￣□￣)" />
     <MESSAGE value="添加权限组，可以使用luckperms自定义权限组啦! 唔，怎么改动了这么多文件&#10;o(///▽///)q" />
@@ -717,6 +717,7 @@
     <MESSAGE value="添加一个客户端验证~" />
     <MESSAGE value="完善水龙头~" />
     <MESSAGE value="修复了Fabric那边一些的bug,顺便完善水龙头~" />
-    <option name="LAST_COMMIT_MESSAGE" value="修复了Fabric那边一些的bug,顺便完善水龙头~" />
+    <MESSAGE value="添加ko_kr" />
+    <option name="LAST_COMMIT_MESSAGE" value="添加ko_kr" />
   </component>
 </project>
