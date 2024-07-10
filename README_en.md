@@ -12,7 +12,10 @@ Pre-mod required for the module version (must be added): [ctlib](https://modrint
 
 Pre-plugin required for the plugin version: [ctlib](https://modrinth.com/plugin/ctlib)
 
-Supported versions (but it does not mean that it cannot run on other versions):
+## Tips
+If you found that some text isn't your language, just modify [the config file](#configuration) to your language. 
+
+## Supported versions (but it does not mean that it cannot run on other versions):
 - Fabric 1.21
 - Spigot/Paper/Folia 1.17~latest
 ### Linkage
