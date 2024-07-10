@@ -7,15 +7,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="完善水龙头~">
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="修复了Fabric那边一些的bug,顺便完善水龙头~">
+      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/ko_kr.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/client/java/org/cneko/toneko/fabric/client/events/ClientPlayerJoinEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/client/java/org/cneko/toneko/fabric/client/events/ClientPlayerJoinEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/NekoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/NekoCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/ToNekoAdminCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/ToNekoAdminCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/ToNekoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/ToNekoCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/util/PermissionUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/util/PermissionUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/en_us.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/en_us.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/zh_cn.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/zh_cn.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fabric.mod.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fabric.mod.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -288,14 +283,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-    </task>
-    <task id="LOCAL-00054" summary="添加bStats">
-      <option name="closed" value="true" />
-      <created>1711289242010</created>
-      <option name="number" value="00054" />
-      <option name="presentableId" value="LOCAL-00054" />
-      <option name="project" value="LOCAL" />
-      <updated>1711289242011</updated>
     </task>
     <task id="LOCAL-00055" summary="修改nukkit的一些bugs">
       <option name="closed" value="true" />
@@ -681,7 +668,15 @@
       <option name="project" value="LOCAL" />
       <updated>1720280021833</updated>
     </task>
-    <option name="localTasksCounter" value="103" />
+    <task id="LOCAL-00103" summary="修复了Fabric那边一些的bug,顺便完善水龙头~">
+      <option name="closed" value="true" />
+      <created>1720537815801</created>
+      <option name="number" value="00103" />
+      <option name="presentableId" value="LOCAL-00103" />
+      <option name="project" value="LOCAL" />
+      <updated>1720537815803</updated>
+    </task>
+    <option name="localTasksCounter" value="104" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -697,7 +692,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="修改logger，避免递归" />
     <MESSAGE value="添加ConfigUtil和LanguageUtil，添加部分聊天修改&#10;&#10;重构好麻烦哦qwq" />
     <MESSAGE value="终于重构完成聊天监听事件啦(´・ω・｀)" />
     <MESSAGE value="什么时候才能发布1.0.0呢(￣□￣)" />
@@ -722,6 +716,7 @@
     <MESSAGE value="我为什么要和有病一样加remove?" />
     <MESSAGE value="添加一个客户端验证~" />
     <MESSAGE value="完善水龙头~" />
-    <option name="LAST_COMMIT_MESSAGE" value="完善水龙头~" />
+    <MESSAGE value="修复了Fabric那边一些的bug,顺便完善水龙头~" />
+    <option name="LAST_COMMIT_MESSAGE" value="修复了Fabric那边一些的bug,顺便完善水龙头~" />
   </component>
 </project>

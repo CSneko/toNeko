@@ -1,21 +1,28 @@
 # 是否启用仅服务端安装，启用后客户端可以不用安装该模组，但是会缺失一部分功能（建议在使用此项时将client-language设置为false）
 # Whether to enable only server installation, after enabling, the client will not need to install the mod, but will miss some functions (it is recommended to set client-language to false when using this item)
+# 서버 측 설치만 활성화할지 여부. 활성화한 후에는 클라이언트에서 모드를 설치할 필요가 없지만 일부 기능이 누락됩니다. (이 옵션을 사용할 경우 클라이언트 언어를 false로 설정하는 것이 좋습니다.)
 only-server: false
-# 语言选项（支持 zh_cn,en_us）,可自定义语言，详细查看 https://github.com/CSneko/toNeko/docs/CUSTOM_LANGUAGE.md
-# Language Option (Supported zh_cn,en_us), you can customize the language, see https://github.com/CSneko/toNeko/docs/CUSTOM_LANGUAGE.md
+# 语言选项（支持 zh_cn,en_us,ko_kr）,可自定义语言，详细查看 https://github.com/CSneko/toNeko/docs/CUSTOM_LANGUAGE.md
+# Language Option (Supported zh_cn,en_us,ko_kr), you can customize the language, see https://github.com/CSneko/toNeko/docs/CUSTOM_LANGUAGE.md
+# 언어 옵션(zh_cn, en_us, ko_kr 지원), 언어를 사용자 설정할 수 있습니다. 자세한 내용은 https://github.com/CSneko/toNeko/docs/CUSTOM_LANGUAGE.md를 참조하세요.
 language: zh_cn
 # 使用客户端语言，启用后语言选项部分无效，且要求玩家必须在客户端安装mod或者材质包才能正常显示消息
 # Use client language, enable this option, the language option part is invalid, and the player must install the mod or the material package on the client to display the message normally
+# 클라이언트 언어를 사용합니다. 활성화한 후에는 언어 옵션이 부분적으로 유효하지 않으며 플레이어가 메시지를 정상적으로 표시하려면 클라이언트에 모드나 텍스처 팩을 설치해야 합니다.
 client-language: true
 # 聊天相关设置
 # Chat related settings
+# 채팅 관련 설정
 chat:
   # 是否启用聊天修改 （开启后会对MCDr造成一定影响）
   # Whether to enable chat modification (it will cause some effects on MCDr)
+  # 채팅 수정 활성화 여부(활성화하면 MCDR에 일정한 영향을 미칩니다)
   enable: true
   # 聊天格式，占位符 ${name} = 玩家名称, ${msg} = 玩家消息, ${prefix} = 前缀
   # Chat format, placeholder ${name} = player name, ${msg} = player message, ${prefix} = prefix
+  # 채팅 형식, 자리 표시자 ${name} = 플레이어 이름, ${msg} = 플레이어 메시지, ${prefix} = 접두사
   format: "${prefix}§e${name} §d>> §f${msg}"
 # 启用统计功能，统计数据将发送到 toneko API，如何使用api请查看 https://github.com/CSneko/toNeko/blob/main/docs/TONEKO_ONLINE_API.md
 # Enable statistics, statistics data will be sent to the toneko API, how to use the api please see https://github.com/CSneko/toNeko/blob/main/docs/TONEKO_ONLINE_API.md
+# 통계 기능을 활성화하면 통계 데이터가 TONEKO API로 전송됩니다. API 사용 방법은 https://github.com/CSneko/toNeko/blob/main/docs/TONEKO_ONLINE_API.md를 참조하세요.
 stats: true
