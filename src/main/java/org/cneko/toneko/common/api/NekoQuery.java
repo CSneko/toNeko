@@ -110,7 +110,7 @@ public class NekoQuery {
         JsonConfiguration j = DEFAULT_PLAYER_PROFILE;
         j.set("uuid", uuid.toString());
         // 写入文件
-        FileUtil.WriteFile(profilePath, j.toString());
+        j.save(Path.of(profilePath));
     }
 
     /**
@@ -323,7 +323,7 @@ public class NekoQuery {
         public void save(){
             try {
                 getProfile().save();
-            }catch (IOException e){
+            }catch (Exception e){
                 LOGGER.error("Failed to save profile", e);
             }
         }
