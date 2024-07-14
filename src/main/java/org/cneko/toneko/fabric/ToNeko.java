@@ -23,7 +23,7 @@ public class ToNeko implements ModInitializer {
         ToNekoCommand.init();
         ToNekoAdminCommand.init();
         NekoCommand.init();
-        QuirkCommand.init();
+        // QuirkCommand.init();
         TwwdfCommand.init();
         // 注册物品
         ToNekoItems.register();

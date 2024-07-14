@@ -9,7 +9,7 @@ public class Messaging {
 
     public static String format(String msg, String player, String nickname){
         // 修改昵称
-        if(nickname == null){
+        if(nickname.isEmpty()){
             nickname = player;
         }else {
             nickname = "§6~§f"+nickname;

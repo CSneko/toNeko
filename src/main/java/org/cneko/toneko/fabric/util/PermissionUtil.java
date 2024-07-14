@@ -3,17 +3,17 @@ package org.cneko.toneko.fabric.util;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.command.ServerCommandSource;
-
+import net.fabricmc.loader.api.FabricLoader;
 import static org.cneko.toneko.common.api.Permissions.*;
 
 public class PermissionUtil {
     public static boolean installed = false;
 
     public static void init() {
-        // 是否有permissions API
+        // 是否有permissions API 且安装了luckperms
         try {
             Class.forName("me.lucko.fabric.api.permissions.v0.Permissions");
-            installed = true;
+            installed = FabricLoader.getInstance().isModLoaded("luckperms");
             registerAll();
         }catch (Exception e){
             installed = false;

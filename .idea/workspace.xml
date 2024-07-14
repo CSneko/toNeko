@@ -7,13 +7,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="修复了一些API调用与语言支持">
-      <change afterPath="$PROJECT_DIR$/libs/ctLibMod-0.1.11.jar" afterDir="false" />
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="修复一些有关Json的Bug,把ctlib更新到0.1.11">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/ctLibMod-0.1.10.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/api/NekoQuery.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/api/NekoQuery.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoPotion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoPotion.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fabric.mod.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fabric.mod.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/Messaging.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/Messaging.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/ToNeko.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/ToNeko.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/util/PermissionUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/util/PermissionUtil.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -286,14 +284,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-    </task>
-    <task id="LOCAL-00059" summary="完善多语言支持">
-      <option name="closed" value="true" />
-      <created>1712673957682</created>
-      <option name="number" value="00059" />
-      <option name="presentableId" value="LOCAL-00059" />
-      <option name="project" value="LOCAL" />
-      <updated>1712673957683</updated>
     </task>
     <task id="LOCAL-00060" summary="移除无用代码">
       <option name="closed" value="true" />
@@ -679,7 +669,15 @@
       <option name="project" value="LOCAL" />
       <updated>1720619839168</updated>
     </task>
-    <option name="localTasksCounter" value="108" />
+    <task id="LOCAL-00108" summary="修复一些有关Json的Bug,把ctlib更新到0.1.11">
+      <option name="closed" value="true" />
+      <created>1720867937007</created>
+      <option name="number" value="00108" />
+      <option name="presentableId" value="LOCAL-00108" />
+      <option name="project" value="LOCAL" />
+      <updated>1720867937008</updated>
+    </task>
+    <option name="localTasksCounter" value="109" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -695,7 +693,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="什么时候才能发布1.0.0呢(￣□￣)" />
     <MESSAGE value="添加权限组，可以使用luckperms自定义权限组啦! 唔，怎么改动了这么多文件&#10;o(///▽///)q" />
     <MESSAGE value="简单完善了一下管理员命令(◕‿◕✿)" />
     <MESSAGE value="添加进度~~~" />
@@ -720,6 +717,7 @@
     <MESSAGE value="修复了Fabric那边一些的bug,顺便完善水龙头~" />
     <MESSAGE value="添加ko_kr" />
     <MESSAGE value="修复了一些API调用与语言支持" />
-    <option name="LAST_COMMIT_MESSAGE" value="修复了一些API调用与语言支持" />
+    <MESSAGE value="修复一些有关Json的Bug,把ctlib更新到0.1.11" />
+    <option name="LAST_COMMIT_MESSAGE" value="修复一些有关Json的Bug,把ctlib更新到0.1.11" />
   </component>
 </project>
