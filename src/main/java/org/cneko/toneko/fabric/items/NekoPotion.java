@@ -42,7 +42,6 @@ public class NekoPotion extends PotionItem {
         if(result.getResult() == ActionResult.CONSUME && !neko.isNeko()){
             neko.setNeko(true);
             if(user instanceof ServerPlayerEntity player){
-
                 //哼!哼!喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵!
                 // 向猫猫显示标题
                 TitleS2CPacket title = new TitleS2CPacket(translatable("title.toneko.become"));

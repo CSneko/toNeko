@@ -10,9 +10,9 @@ import org.cneko.toneko.fabric.events.ChatEvent;
 import org.cneko.toneko.fabric.events.PlayerConnectionEvents;
 import org.cneko.toneko.fabric.events.PlayerInteractionEvent;
 import org.cneko.toneko.fabric.events.PlayerTickEvent;
+import org.cneko.toneko.fabric.items.ToNekoArmorMaterials;
 import org.cneko.toneko.fabric.items.ToNekoItems;
 import org.cneko.toneko.fabric.network.packets.EntityPosePayload;
-import org.cneko.toneko.fabric.network.packets.ToNekoModCheckPayload;
 import org.cneko.toneko.fabric.util.PermissionUtil;
 
 public class ToNeko implements ModInitializer {
@@ -25,11 +25,12 @@ public class ToNeko implements ModInitializer {
         NekoCommand.init();
         // QuirkCommand.init();
         TwwdfCommand.init();
+        // 注册装备
+        ToNekoArmorMaterials.init();
         // 注册物品
-        ToNekoItems.register();
+        ToNekoItems.init();
         // 注册网络数据包
         PayloadTypeRegistry.playS2C().register(EntityPosePayload.ID, EntityPosePayload.CODEC);
-        // PayloadTypeRegistry.playC2S().register(ToNekoModCheckPayload.ID, ToNekoModCheckPayload.CODEC);
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             ModMeta.instance.setServer(server);
             // 启动聊天监听器
