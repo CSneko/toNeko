@@ -30,7 +30,7 @@ public class ToNekoArmorMaterials {
      * 强制注册物品，无论配置文件如何设置
      */
     public static void registerWithOutConfig() {
-        NEKO = register(
+        /*NEKO = register(
                 "neko_tail",
                 Map.of(
                         ArmorItem.Type.LEGGINGS, 0 // 猫尾巴要啥防御点呀
@@ -42,6 +42,8 @@ public class ToNekoArmorMaterials {
                 0.0F, // 猫尾巴还能抵御击退吗?肯定不能啦
                 false // 猫尾巴可以染色吗?当然可以啦,但是现在技术还不够呢,求原谅
         );
+
+         */
     }
 
     /**

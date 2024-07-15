@@ -7,8 +7,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="修复权限Bug">
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="添加猫尾巴代码~~">
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoTail.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/data/c/tags/items/iron_nuggets.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/data/toneko/repice/neko_tail.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/ToNekoArmorMaterials.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/ToNekoArmorMaterials.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/ToNekoItems.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/ToNekoItems.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,6 +80,9 @@
     &quot;accountId&quot;: &quot;2ed95e2a-c14a-417d-835b-4eee59706e09&quot;
   }
 }</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="jar://$USER_HOME$/.gradle/caches/fabric-loom/1.21/net.fabricmc.yarn.1_21.1.21+build.7-v2/mappings.jar!/mappings/mappings.tiny" root0="FORCE_HIGHLIGHTING" />
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -281,14 +290,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-    </task>
-    <task id="LOCAL-00061" summary="添加聊天格式修改，更新Fabric配置文件">
-      <option name="closed" value="true" />
-      <created>1713881490252</created>
-      <option name="number" value="00061" />
-      <option name="presentableId" value="LOCAL-00061" />
-      <option name="project" value="LOCAL" />
-      <updated>1713881490253</updated>
     </task>
     <task id="LOCAL-00062" summary="添加聊天格式修改，更新Fabric配置文件">
       <option name="closed" value="true" />
@@ -674,7 +675,15 @@
       <option name="project" value="LOCAL" />
       <updated>1720939644673</updated>
     </task>
-    <option name="localTasksCounter" value="110" />
+    <task id="LOCAL-00110" summary="添加猫尾巴代码~~">
+      <option name="closed" value="true" />
+      <created>1720973382694</created>
+      <option name="number" value="00110" />
+      <option name="presentableId" value="LOCAL-00110" />
+      <option name="project" value="LOCAL" />
+      <updated>1720973382694</updated>
+    </task>
+    <option name="localTasksCounter" value="111" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -690,7 +699,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="简单完善了一下管理员命令(◕‿◕✿)" />
     <MESSAGE value="添加进度~~~" />
     <MESSAGE value="I feel sad now :(" />
     <MESSAGE value="移除掉com.crystalneko啦&#10;&#10;呼呼，修复了一点Bug，开心~^_^~" />
@@ -715,6 +723,7 @@
     <MESSAGE value="修复了一些API调用与语言支持" />
     <MESSAGE value="修复一些有关Json的Bug,把ctlib更新到0.1.11" />
     <MESSAGE value="修复权限Bug" />
-    <option name="LAST_COMMIT_MESSAGE" value="修复权限Bug" />
+    <MESSAGE value="添加猫尾巴代码~~" />
+    <option name="LAST_COMMIT_MESSAGE" value="添加猫尾巴代码~~" />
   </component>
 </project>
