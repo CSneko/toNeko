@@ -32,5 +32,8 @@ public class ToNekoItems {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.FOOD_AND_DRINK).register(content -> {
             content.add(NEKO_POTION);
         });
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(content -> {
+            content.add(NEKO_TAIL);
+        });
     }
 }

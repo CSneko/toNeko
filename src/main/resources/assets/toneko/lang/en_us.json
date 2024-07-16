@@ -1,5 +1,6 @@
 {
-  "item.toneko.neko_potion.effect.empty": "neko potion",
+  "item.toneko.neko_potion.effect.empty": "Neko Potion",
+  "item.toneko.neko_tail": "Neko Tail",
   "quirk.toneko.caress": "caress",
   "quirk.toneko.caress.use": "§dYou gently stroked %d.",
   "quirk.toneko.caress.be_used": "§dYou were gently petted by %d",

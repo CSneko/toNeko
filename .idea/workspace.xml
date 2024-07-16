@@ -8,13 +8,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="添加猫尾巴代码~~">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoTail.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/data/c/tags/items/iron_nuggets.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/data/toneko/repice/neko_tail.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/models/item/neko_tail.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/item/neko_tail.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/ToNekoArmorMaterials.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/ToNekoArmorMaterials.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/ToNekoItems.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/ToNekoItems.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/zh_cn.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/zh_cn.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/c/tag/item/iron_nuggets.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/c/tag/item/tails.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/toneko/tag/item/tails.json" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -141,6 +142,7 @@
       <recent name="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/entity/neko" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources/data/c/tags/items" />
       <recent name="$PROJECT_DIR$/src/main/resources" />
       <recent name="$PROJECT_DIR$/src/main/resources/data/minecraft/advancements" />
       <recent name="$PROJECT_DIR$/src/main/resources/assets/toneko" />
@@ -290,14 +292,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-    </task>
-    <task id="LOCAL-00062" summary="添加聊天格式修改，更新Fabric配置文件">
-      <option name="closed" value="true" />
-      <created>1714313235364</created>
-      <option name="number" value="00062" />
-      <option name="presentableId" value="LOCAL-00062" />
-      <option name="project" value="LOCAL" />
-      <updated>1714313235365</updated>
     </task>
     <task id="LOCAL-00063" summary="添加API">
       <option name="closed" value="true" />
@@ -683,7 +677,15 @@
       <option name="project" value="LOCAL" />
       <updated>1720973382694</updated>
     </task>
-    <option name="localTasksCounter" value="111" />
+    <task id="LOCAL-00111" summary="添加猫尾巴代码~~">
+      <option name="closed" value="true" />
+      <created>1721060111995</created>
+      <option name="number" value="00111" />
+      <option name="presentableId" value="LOCAL-00111" />
+      <option name="project" value="LOCAL" />
+      <updated>1721060111997</updated>
+    </task>
+    <option name="localTasksCounter" value="112" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
