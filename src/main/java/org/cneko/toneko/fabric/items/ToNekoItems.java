@@ -3,7 +3,6 @@ package org.cneko.toneko.fabric.items;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
-import net.minecraft.item.ArmorItem;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
@@ -25,14 +24,18 @@ public class ToNekoItems {
     public static void registerWithOutConfig() {
         NEKO_POTION = new NekoPotion();
         Registry.register(Registries.ITEM, Identifier.of(MODID,NekoPotion.ID), NEKO_POTION);
-        // NEKO_TAIL = new ArmorItem(ToNekoArmorMaterials.NEKO, ArmorItem.Type.LEGGINGS, new Item.Settings());
-        NEKO_TAIL = new NekoTail();
-        Registry.register(Registries.ITEM, Identifier.of(MODID,NekoTail.ID), NEKO_TAIL);
+        // 如果安装了geckolib，则注册为ArmorItem
+        try {
+            Class.forName("software.bernie.geckolib.animatable.GeoItem");
+            NEKO_TAIL = new NekoTail();
+            Registry.register(Registries.ITEM, Identifier.of(MODID, NekoTail.ID), NEKO_TAIL);
+        }catch (ClassNotFoundException ignored){
+        }
         // 注册到物品组
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.FOOD_AND_DRINK).register(content -> {
             content.add(NEKO_POTION);
         });
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(content -> {
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(content -> {
             content.add(NEKO_TAIL);
         });
     }

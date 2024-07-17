@@ -32,8 +32,7 @@ repositories {
         name = 'GeckoLib'
         url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
         content {
-            includeGroupByRegex("software\\.bernie.*")
-            includeGroup("com.eliotlash.mclib")
+            includeGroup("software.bernie.geckolib")
         }
     }
 
@@ -54,7 +53,7 @@ dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT'
     compileOnly 'net.luckperms:api:5.4'
     modCompileOnly "me.lucko:fabric-permissions-api:0.2-SNAPSHOT"
-    //modImplementation 'software.bernie.geckolib:geckolib-fabric-1.20.4:4.4.1'
+    modImplementation "software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     compileOnly 'dev.folia:folia-api:1.20.2-R0.1-SNAPSHOT'
     modImplementation fileTree("libs")
@@ -70,17 +69,6 @@ processResources {
     filesMatching("plugin.yml") {
         expand "version": project.version
     }
-}
-loom {
-    splitEnvironmentSourceSets()
-
-    mods {
-        "toneko" {
-            sourceSet sourceSets.main
-            sourceSet sourceSets.client
-        }
-    }
-
 }
 
 def targetJavaVersion = 17
