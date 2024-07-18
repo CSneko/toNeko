@@ -7,17 +7,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="添加猫尾巴~~">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/renders/items/NekoTailRenderer.java" afterDir="false" />
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="稍微完善了下猫尾巴的代码呢">
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/items/NekoTailModel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/animations/neko_armor.animation.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/geo/neko_armor.geo.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/armor/neko_armor.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/client/java/org/cneko/toneko/fabric/client/ToNekoClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/ToNekoClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/client/java/org/cneko/toneko/fabric/client/events/ClientNetworkPacketEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/events/ClientNetworkPacketEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/client/java/org/cneko/toneko/fabric/client/events/ClientPlayerJoinEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/events/ClientPlayerJoinEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/client/java/org/cneko/toneko/fabric/client/events/ClientTickEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/events/ClientTickEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoTail.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoTail.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/renders/items/NekoTailRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/items/NekoTailRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoPotion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoPotionItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoTail.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoTailItem.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/ToNekoItems.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/ToNekoItems.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/entity/neko.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/item/neko_tail.png" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -294,14 +295,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-    </task>
-    <task id="LOCAL-00064" summary="添加API">
-      <option name="closed" value="true" />
-      <created>1714540490236</created>
-      <option name="number" value="00064" />
-      <option name="presentableId" value="LOCAL-00064" />
-      <option name="project" value="LOCAL" />
-      <updated>1714540490236</updated>
     </task>
     <task id="LOCAL-00065" summary="修复bug">
       <option name="closed" value="true" />
@@ -687,7 +680,15 @@
       <option name="project" value="LOCAL" />
       <updated>1721112560506</updated>
     </task>
-    <option name="localTasksCounter" value="113" />
+    <task id="LOCAL-00113" summary="稍微完善了下猫尾巴的代码呢">
+      <option name="closed" value="true" />
+      <created>1721231876935</created>
+      <option name="number" value="00113" />
+      <option name="presentableId" value="LOCAL-00113" />
+      <option name="project" value="LOCAL" />
+      <updated>1721231876936</updated>
+    </task>
+    <option name="localTasksCounter" value="114" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -703,7 +704,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="I feel sad now :(" />
     <MESSAGE value="移除掉com.crystalneko啦&#10;&#10;呼呼，修复了一点Bug，开心~^_^~" />
     <MESSAGE value="终于弄好dataGen啦(・∀・)&#10;&#10;1.0-pre可以发布了呢(｡◕‿◕｡)" />
     <MESSAGE value="添加战利品生成~~─=≡Σ((( つ•̀ω•́)つ" />
@@ -728,6 +728,7 @@
     <MESSAGE value="修复权限Bug" />
     <MESSAGE value="添加猫尾巴代码~~" />
     <MESSAGE value="添加猫尾巴~~" />
-    <option name="LAST_COMMIT_MESSAGE" value="添加猫尾巴~~" />
+    <MESSAGE value="稍微完善了下猫尾巴的代码呢" />
+    <option name="LAST_COMMIT_MESSAGE" value="稍微完善了下猫尾巴的代码呢" />
   </component>
 </project>

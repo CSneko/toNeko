@@ -1,21 +1,16 @@
 package org.cneko.toneko.fabric.items;
 
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.PotionItem;
 import net.minecraft.network.packet.s2c.play.SubtitleS2CPacket;
 import net.minecraft.network.packet.s2c.play.TitleS2CPacket;
-import net.minecraft.server.command.TitleCommand;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
-import net.minecraft.text.Texts;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
@@ -23,14 +18,11 @@ import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import org.cneko.toneko.common.api.NekoQuery;
 
-import java.util.Iterator;
-import java.util.List;
-
 import static org.cneko.toneko.fabric.util.TextUtil.translatable;
-public class NekoPotion extends PotionItem {
+public class NekoPotionItem extends PotionItem {
     public static final String ID = "neko_potion";
 
-    public NekoPotion() {
+    public NekoPotionItem() {
         super(new Settings().maxCount(1));
     }
 

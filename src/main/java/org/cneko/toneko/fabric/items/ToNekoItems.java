@@ -11,7 +11,7 @@ import org.cneko.toneko.common.util.ConfigUtil;
 import static org.cneko.toneko.common.Bootstrap.MODID;
 
 public class ToNekoItems {
-    public static NekoPotion NEKO_POTION;
+    public static NekoPotionItem NEKO_POTION;
     public static Item NEKO_TAIL;
     public static void init() {
         // 如果启用了仅服务器端，则不注册物品
@@ -22,13 +22,13 @@ public class ToNekoItems {
      * 强制注册物品，无论配置文件如何设置
      */
     public static void registerWithOutConfig() {
-        NEKO_POTION = new NekoPotion();
-        Registry.register(Registries.ITEM, Identifier.of(MODID,NekoPotion.ID), NEKO_POTION);
+        NEKO_POTION = new NekoPotionItem();
+        Registry.register(Registries.ITEM, Identifier.of(MODID, NekoPotionItem.ID), NEKO_POTION);
         // 如果安装了geckolib，则注册为ArmorItem
         try {
             Class.forName("software.bernie.geckolib.animatable.GeoItem");
-            NEKO_TAIL = new NekoTail();
-            Registry.register(Registries.ITEM, Identifier.of(MODID, NekoTail.ID), NEKO_TAIL);
+            NEKO_TAIL = new NekoTailItem();
+            Registry.register(Registries.ITEM, Identifier.of(MODID, NekoTailItem.ID), NEKO_TAIL);
         }catch (ClassNotFoundException ignored){
         }
         // 注册到物品组
@@ -39,4 +39,5 @@ public class ToNekoItems {
             content.add(NEKO_TAIL);
         });
     }
+
 }

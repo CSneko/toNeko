@@ -1,11 +1,10 @@
 package org.cneko.toneko.fabric.items;
 
-import net.fabricmc.api.Environment;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
-import org.cneko.toneko.fabric.client.renders.items.NekoTailRenderer;
+import org.cneko.toneko.fabric.client.items.NekoTailRenderer;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.client.GeoRenderProvider;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -17,10 +16,10 @@ import net.minecraft.client.render.entity.model.BipedEntityModel;
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
 
-public class NekoTail extends ArmorItem implements GeoItem {
+public class NekoTailItem extends ArmorItem implements GeoItem {
     public static final String ID = "neko_tail";
     public AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    public NekoTail() {
+    public NekoTailItem() {
         super(ToNekoArmorMaterials.NEKO,Type.LEGGINGS,new Settings().maxCount(1));
     }
 
