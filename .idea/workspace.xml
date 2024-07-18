@@ -7,18 +7,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="稍微完善了下猫尾巴的代码呢">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/items/NekoTailModel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/animations/neko_armor.animation.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/geo/neko_armor.geo.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/armor/neko_armor.png" afterDir="false" />
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="简单添加了猫尾巴模型~">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/renders/items/NekoTailRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/items/NekoTailRenderer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoPotion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoPotionItem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoTail.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoTailItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/ToNekoClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/ToNekoClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/items/NekoTailRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/items/NekoTailRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoTailItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoTailItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/ToNekoArmorMaterials.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/ToNekoArmorMaterials.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/ToNekoItems.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/ToNekoItems.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/entity/neko.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/item/neko_tail.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/animations/neko_armor.animation.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/animations/item/armor/neko_armor.animation.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/geo/neko_armor.geo.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/geo/item/neko_armor.geo.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -145,11 +143,11 @@
       <recent name="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/entity/neko" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources/assets/toneko/animations/item/armor" />
+      <recent name="$PROJECT_DIR$/src/main/resources/assets/toneko/geo/item" />
       <recent name="$PROJECT_DIR$/src/main/resources/data/c/tags/items" />
       <recent name="$PROJECT_DIR$/src/main/resources" />
       <recent name="$PROJECT_DIR$/src/main/resources/data/minecraft/advancements" />
-      <recent name="$PROJECT_DIR$/src/main/resources/assets/toneko" />
-      <recent name="$PROJECT_DIR$/src/main/resources/assets/tonekofabric" />
     </key>
     <key name="MoveMembersDialog.RECENTS_KEY">
       <recent name="org.cneko.toneko.fabric.util.CommandUtil" />
@@ -295,14 +293,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-    </task>
-    <task id="LOCAL-00065" summary="修复bug">
-      <option name="closed" value="true" />
-      <created>1714639763573</created>
-      <option name="number" value="00065" />
-      <option name="presentableId" value="LOCAL-00065" />
-      <option name="project" value="LOCAL" />
-      <updated>1714639763574</updated>
     </task>
     <task id="LOCAL-00066" summary="修复统计无效bug">
       <option name="closed" value="true" />
@@ -688,7 +678,15 @@
       <option name="project" value="LOCAL" />
       <updated>1721231876936</updated>
     </task>
-    <option name="localTasksCounter" value="114" />
+    <task id="LOCAL-00114" summary="简单添加了猫尾巴模型~">
+      <option name="closed" value="true" />
+      <created>1721316844444</created>
+      <option name="number" value="00114" />
+      <option name="presentableId" value="LOCAL-00114" />
+      <option name="project" value="LOCAL" />
+      <updated>1721316844444</updated>
+    </task>
+    <option name="localTasksCounter" value="115" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -704,7 +702,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="移除掉com.crystalneko啦&#10;&#10;呼呼，修复了一点Bug，开心~^_^~" />
     <MESSAGE value="终于弄好dataGen啦(・∀・)&#10;&#10;1.0-pre可以发布了呢(｡◕‿◕｡)" />
     <MESSAGE value="添加战利品生成~~─=≡Σ((( つ•̀ω•́)つ" />
     <MESSAGE value="芜湖,Fabric的主要内容完成啦=└(┐卍^o^)卍" />
@@ -729,6 +726,7 @@
     <MESSAGE value="添加猫尾巴代码~~" />
     <MESSAGE value="添加猫尾巴~~" />
     <MESSAGE value="稍微完善了下猫尾巴的代码呢" />
-    <option name="LAST_COMMIT_MESSAGE" value="稍微完善了下猫尾巴的代码呢" />
+    <MESSAGE value="简单添加了猫尾巴模型~" />
+    <option name="LAST_COMMIT_MESSAGE" value="简单添加了猫尾巴模型~" />
   </component>
 </project>

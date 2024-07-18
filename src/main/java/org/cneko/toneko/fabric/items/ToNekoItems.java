@@ -36,7 +36,9 @@ public class ToNekoItems {
             content.add(NEKO_POTION);
         });
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(content -> {
-            content.add(NEKO_TAIL);
+            if (NEKO_TAIL != null) {
+                content.add(NEKO_TAIL);
+            }
         });
     }
 
