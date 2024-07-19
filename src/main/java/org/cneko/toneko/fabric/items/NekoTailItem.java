@@ -4,10 +4,10 @@ import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import org.bukkit.entity.ArmorStand;
 import org.cneko.toneko.fabric.client.items.NekoTailRenderer;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
@@ -48,7 +48,7 @@ public class NekoTailItem extends ArmorItem implements GeoItem {
             if (! (e instanceof LivingEntity entity)) return PlayState.STOP;
 
             // We'll just have ArmorStands always animate, so we can return here
-            if (entity instanceof ArmorStand)
+            if (entity instanceof ArmorStandEntity)
                 return PlayState.CONTINUE;
 
             // For this example, we only want the animation to play if the entity is wearing all pieces of the armor
