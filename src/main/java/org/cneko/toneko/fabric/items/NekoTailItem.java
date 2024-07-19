@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import org.bukkit.entity.ArmorStand;
 import org.cneko.toneko.fabric.client.items.NekoTailRenderer;
 import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
 import software.bernie.geckolib.animatable.client.GeoRenderProvider;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -27,9 +28,10 @@ import java.util.function.Consumer;
 
 public class NekoTailItem extends ArmorItem implements GeoItem {
     public static final String ID = "neko_tail";
-    public AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    public final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public NekoTailItem() {
         super(ToNekoArmorMaterials.NEKO,Type.LEGGINGS,new Settings().maxCount(1));
+        SingletonGeoAnimatable.registerSyncedAnimatable(this);
     }
 
     @Override
@@ -67,6 +69,8 @@ public class NekoTailItem extends ArmorItem implements GeoItem {
             // Play the animation if the full set is being worn, otherwise stop
             return isFullSet ? PlayState.CONTINUE : PlayState.STOP;
         }));
+
+
     }
 
     @Override

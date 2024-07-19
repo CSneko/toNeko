@@ -7,16 +7,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="简单添加了猫尾巴模型~">
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="哎~我真是个笨蛋,怎么忘记注册材料了呀,算啦,剩下的今天下午再做吧">
+      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/item/neko_tail.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/ToNekoClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/ToNekoClient.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/items/NekoTailRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/items/NekoTailRenderer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoTailItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoTailItem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/ToNekoArmorMaterials.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/ToNekoArmorMaterials.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/ToNekoItems.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/ToNekoItems.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/animations/neko_armor.animation.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/animations/item/armor/neko_armor.animation.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/geo/neko_armor.geo.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/geo/item/neko_armor.geo.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/geo/item/neko_armor.geo.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/geo/item/armor/neko_armor.geo.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/models/item/neko_tail.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/models/item/neko_tail.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/armor/neko_armor.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/item/armor/neko_armor.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -105,49 +103,50 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;Gradle.toNeko Client.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.toNeko Datagen.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.toNeko Server.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.toNeko [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.toNeko [dependencies].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.toNeko [javadoc].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.toNeko build.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.toNeko datagen.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.toNekoFabric build.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.加载 Gradle 依赖项.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;jdk.selected.com.intellij.ui.dsl.builder.impl.RowImpl.sdk&quot;: &quot;21&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/media/crystalneko/BA106C158B1B58EF/javatest/mods/toNeko&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;项目&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.gradle&quot;,
-    &quot;应用程序.Data Generation.executor&quot;: &quot;Run&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "Gradle.toNeko Client.executor": "Run",
+    "Gradle.toNeko Datagen.executor": "Run",
+    "Gradle.toNeko Server.executor": "Run",
+    "Gradle.toNeko [clean].executor": "Run",
+    "Gradle.toNeko [dependencies].executor": "Run",
+    "Gradle.toNeko [javadoc].executor": "Run",
+    "Gradle.toNeko build.executor": "Run",
+    "Gradle.toNeko datagen.executor": "Run",
+    "Gradle.toNekoFabric build.executor": "Run",
+    "Gradle.加载 Gradle 依赖项.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "jdk.selected.com.intellij.ui.dsl.builder.impl.RowImpl.sdk": "21",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/media/crystalneko/BA106C158B1B58EF/javatest/mods/toNeko/src/main/resources/assets/toneko/textures/item",
+    "project.structure.last.edited": "项目",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
+    "应用程序.Data Generation.executor": "Run"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;jdk.preference.com.intellij.ui.dsl.builder.impl.RowImpl.sdk&quot;: [
-      &quot;17=/usr/lib/jvm/java-1.17.0-openjdk-amd64&quot;,
-      &quot;21=/usr/lib/jvm/java-21-openjdk-amd64&quot;
+  "keyToStringList": {
+    "jdk.preference.com.intellij.ui.dsl.builder.impl.RowImpl.sdk": [
+      "17=/usr/lib/jvm/java-1.17.0-openjdk-amd64",
+      "21=/usr/lib/jvm/java-21-openjdk-amd64"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/item" />
       <recent name="$PROJECT_DIR$/src/main/resources" />
       <recent name="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/entity/neko" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/item" />
+      <recent name="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/" />
+      <recent name="$PROJECT_DIR$/src/main/resources/assets/toneko/geo/item/armor" />
       <recent name="$PROJECT_DIR$/src/main/resources/assets/toneko/animations/item/armor" />
       <recent name="$PROJECT_DIR$/src/main/resources/assets/toneko/geo/item" />
-      <recent name="$PROJECT_DIR$/src/main/resources/data/c/tags/items" />
-      <recent name="$PROJECT_DIR$/src/main/resources" />
-      <recent name="$PROJECT_DIR$/src/main/resources/data/minecraft/advancements" />
     </key>
     <key name="MoveMembersDialog.RECENTS_KEY">
       <recent name="org.cneko.toneko.fabric.util.CommandUtil" />
@@ -293,14 +292,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-    </task>
-    <task id="LOCAL-00066" summary="修复统计无效bug">
-      <option name="closed" value="true" />
-      <created>1715004440127</created>
-      <option name="number" value="00066" />
-      <option name="presentableId" value="LOCAL-00066" />
-      <option name="project" value="LOCAL" />
-      <updated>1715004440128</updated>
     </task>
     <task id="LOCAL-00067" summary="修复重大bug">
       <option name="closed" value="true" />
@@ -686,7 +677,15 @@
       <option name="project" value="LOCAL" />
       <updated>1721316844444</updated>
     </task>
-    <option name="localTasksCounter" value="115" />
+    <task id="LOCAL-00115" summary="哎~我真是个笨蛋,怎么忘记注册材料了呀,算啦,剩下的今天下午再做吧">
+      <option name="closed" value="true" />
+      <created>1721322259698</created>
+      <option name="number" value="00115" />
+      <option name="presentableId" value="LOCAL-00115" />
+      <option name="project" value="LOCAL" />
+      <updated>1721322259698</updated>
+    </task>
+    <option name="localTasksCounter" value="116" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -702,7 +701,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="终于弄好dataGen啦(・∀・)&#10;&#10;1.0-pre可以发布了呢(｡◕‿◕｡)" />
     <MESSAGE value="添加战利品生成~~─=≡Σ((( つ•̀ω•́)つ" />
     <MESSAGE value="芜湖,Fabric的主要内容完成啦=└(┐卍^o^)卍" />
     <MESSAGE value="唔...修正一点Bug,刚才发的太急了哇" />
@@ -727,6 +725,7 @@
     <MESSAGE value="添加猫尾巴~~" />
     <MESSAGE value="稍微完善了下猫尾巴的代码呢" />
     <MESSAGE value="简单添加了猫尾巴模型~" />
-    <option name="LAST_COMMIT_MESSAGE" value="简单添加了猫尾巴模型~" />
+    <MESSAGE value="哎~我真是个笨蛋,怎么忘记注册材料了呀,算啦,剩下的今天下午再做吧" />
+    <option name="LAST_COMMIT_MESSAGE" value="哎~我真是个笨蛋,怎么忘记注册材料了呀,算啦,剩下的今天下午再做吧" />
   </component>
 </project>

@@ -1,7 +1,7 @@
 {
 	"format_version": "1.8.0",
 	"animations": {
-		"animation.neko_armor.idle": {
+		"misc.idle": {
 			"loop": true,
 			"animation_length": 3,
 			"bones": {
@@ -31,7 +31,7 @@
 				}
 			}
 		},
-		"animation.neko_armor.walk": {
+		"move.walk": {
 			"loop": true,
 			"animation_length": 3,
 			"bones": {
@@ -61,8 +61,7 @@
 				}
 			}
 		},
-		"animation.neko_armor.run": {
-			"loop": true,
+		"move.run": {
 			"animation_length": 2,
 			"bones": {
 				"tail_head": {
