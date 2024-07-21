@@ -30,7 +30,7 @@ public class NekoTailItem extends ArmorItem implements GeoItem {
     public static final String ID = "neko_tail";
     public final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public NekoTailItem() {
-        super(ToNekoArmorMaterials.NEKO,Type.LEGGINGS,new Settings().maxCount(1));
+        super(ToNekoArmorMaterials.NEKO,Type.CHESTPLATE,new Settings().maxCount(1));
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
     }
 
@@ -51,23 +51,13 @@ public class NekoTailItem extends ArmorItem implements GeoItem {
             if (entity instanceof ArmorStandEntity)
                 return PlayState.CONTINUE;
 
-            // For this example, we only want the animation to play if the entity is wearing all pieces of the armor
-            // Let's collect the armor pieces the entity is currently wearing
-            Set<Item> wornArmor = new ObjectOpenHashSet<>();
 
             for (ItemStack stack : entity.getArmorItems()) {
-                // We can stop immediately if any of the slots are empty
-                if (stack.isEmpty())
-                    return PlayState.STOP;
-
-                wornArmor.add(stack.getItem());
+                // 只要有任意一件穿了就播放
+                if (!stack.isEmpty())
+                    return PlayState.CONTINUE;
             }
-
-            // Check each of the pieces match our set
-            boolean isFullSet = wornArmor.contains(ToNekoItems.NEKO_TAIL);
-
-            // Play the animation if the full set is being worn, otherwise stop
-            return isFullSet ? PlayState.CONTINUE : PlayState.STOP;
+            return PlayState.STOP;
         }));
 
 
