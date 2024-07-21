@@ -7,11 +7,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="没注意到调用了Bukkit的类">
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="提交一个有Bug的版本~">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoTailItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoTailItem.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/geo/item/armor/neko_armor.geo.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/geo/item/armor/neko_armor.geo.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/item/armor/neko_armor.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/item/armor/neko_armor.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -289,14 +287,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-    </task>
-    <task id="LOCAL-00069" summary="重构部分代码">
-      <option name="closed" value="true" />
-      <created>1716391363098</created>
-      <option name="number" value="00069" />
-      <option name="presentableId" value="LOCAL-00069" />
-      <option name="project" value="LOCAL" />
-      <updated>1716391363099</updated>
     </task>
     <task id="LOCAL-00070" summary="重构部分代码">
       <option name="closed" value="true" />
@@ -682,7 +672,15 @@
       <option name="project" value="LOCAL" />
       <updated>1721405615424</updated>
     </task>
-    <option name="localTasksCounter" value="118" />
+    <task id="LOCAL-00118" summary="提交一个有Bug的版本~">
+      <option name="closed" value="true" />
+      <created>1721546329324</created>
+      <option name="number" value="00118" />
+      <option name="presentableId" value="LOCAL-00118" />
+      <option name="project" value="LOCAL" />
+      <updated>1721546329324</updated>
+    </task>
+    <option name="localTasksCounter" value="119" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -698,7 +696,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="唔...修正一点Bug,刚才发的太急了哇" />
     <MESSAGE value="唔...修正一点Bug,刚才发的太急了哇(〒︿〒)" />
     <MESSAGE value="我崩溃了,这个别名为什么就是修不好哇(╥﹏╥)" />
     <MESSAGE value="添加了性癖功能,目前还没做完哦" />
@@ -723,6 +720,7 @@
     <MESSAGE value="哎~我真是个笨蛋,怎么忘记注册材料了呀,算啦,剩下的今天下午再做吧" />
     <MESSAGE value="简单的完成了一点东西呢" />
     <MESSAGE value="没注意到调用了Bukkit的类" />
-    <option name="LAST_COMMIT_MESSAGE" value="没注意到调用了Bukkit的类" />
+    <MESSAGE value="提交一个有Bug的版本~" />
+    <option name="LAST_COMMIT_MESSAGE" value="提交一个有Bug的版本~" />
   </component>
 </project>

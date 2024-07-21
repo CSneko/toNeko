@@ -35,7 +35,7 @@
   "messages.toneko.block.remove": "§a成功删除了这个屏蔽词喵",
   "messages.toneko.block.add": "§a成功添加屏蔽词了喵",
   "messages.toneko.notOwner": "§c你不是 %d 的主人喵~",
-  "messages.toneko.client.join": "§a小提示: 如果聊天栏出现了一堆错误代码,你可以不应管它哦",
+  "messages.toneko.client.join": "§a小提示: 如果聊天栏出现了一堆错误代码,你可以不用管它哦",
   "title.toneko.become": "§d你变成一只猫娘啦",
   "subtitle.toneko.become": "§a来体验猫猫的快乐吧",
   "advancements.toneko.root.title": "§a成为一只猫猫吧",
