@@ -36,22 +36,52 @@ public class NekoTailItem extends ArmorItem implements GeoItem {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, 20, state -> {
-            // Apply our generic idle animation.
-            // Whether it plays or not is decided down below.
+        // 待机动画
+        controllers.add(new AnimationController<>(this, 60, state -> {
             state.getController().setAnimation(DefaultAnimations.IDLE);
-
-            // Let's gather some data from the state to use below
-            // This is the entity that is currently wearing/holding the item
+            if (state.isMoving())
+                return PlayState.STOP;
             Entity e = state.getData(DataTickets.ENTITY);
-
             if (! (e instanceof LivingEntity entity)) return PlayState.STOP;
-
-            // We'll just have ArmorStands always animate, so we can return here
             if (entity instanceof ArmorStandEntity)
                 return PlayState.CONTINUE;
+            for (ItemStack stack : entity.getArmorItems()) {
+                // 只要有任意一件穿了就播放
+                if (!stack.isEmpty())
+                    return PlayState.CONTINUE;
+            }
+            return PlayState.STOP;
+        }));
 
+        // 走路动画
+        controllers.add(new AnimationController<>(this, 40, state -> {
+            state.getController().setAnimation(DefaultAnimations.WALK);
+            Entity e = state.getData(DataTickets.ENTITY);
+             // 如果没有移动或速度过快就停止播放
+             if (!state.isMoving() || e.getVelocity().lengthSquared() > 1)
+                 return PlayState.STOP;
+             if (! (e instanceof LivingEntity entity)) return PlayState.STOP;
+             if (entity instanceof ArmorStandEntity)
+                 return PlayState.CONTINUE;
+             for (ItemStack stack : entity.getArmorItems()) {
+                 // 只要有任意一件穿了就播放
+                 if (!stack.isEmpty())
+                     return PlayState.CONTINUE;
+             }
+             return PlayState.STOP;
 
+        }));
+
+        // 跑步动画
+        controllers.add(new AnimationController<>(this, 40, state -> {
+            state.getController().setAnimation(DefaultAnimations.RUN);
+            Entity e = state.getData(DataTickets.ENTITY);
+            // 如果没有移动或速度过慢就停止播放
+            if (!state.isMoving() || e.getVelocity().lengthSquared() <= 1)
+                return PlayState.STOP;
+            if (! (e instanceof LivingEntity entity)) return PlayState.STOP;
+            if (entity instanceof ArmorStandEntity)
+                return PlayState.CONTINUE;
             for (ItemStack stack : entity.getArmorItems()) {
                 // 只要有任意一件穿了就播放
                 if (!stack.isEmpty())
