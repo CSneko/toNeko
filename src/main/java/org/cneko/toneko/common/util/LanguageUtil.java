@@ -22,16 +22,18 @@ public class LanguageUtil {
         try {
             language = CONFIG.getString("language");
             Resources resources = new Resources(Bootstrap.class);
+            // 创建文件夹如果不存在
+            FileUtil.CreatePath(LANG_PATH);
             // 删除旧语言文件
             FileUtil.DeleteFile(LANG_PATH+"en_us.json");
             FileUtil.DeleteFile(LANG_PATH+"zh_cn.json");
             FileUtil.DeleteFile(LANG_PATH+"ko_kr.json");
             // 复制语言文件
-            resources.copyDirectoryFromJar("assets/toneko/lang", LANG_PATH);
+            resources.copyDirectoryFromJar("assets/toneko/lang",LANG_PATH);
             // 读取语言文件
             LANG = JsonConfiguration.fromFile(Path.of(LANG_PATH+language+".json"));
             EN_US_LANG = JsonConfiguration.fromFile(Path.of(LANG_PATH+"en_us.json"));
-        } catch (IOException | URISyntaxException e) {
+        } catch (Exception e) {
             LANG = JsonConfiguration.of("{}");
             LOGGER.error("Failed to load language file",e);
         }
