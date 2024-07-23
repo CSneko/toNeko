@@ -36,7 +36,6 @@ public abstract class NekoArmor<N extends Item & GeoItem> extends ArmorItem impl
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, 60, state -> {
-            state.getController().setAnimation(DefaultAnimations.IDLE);
             Entity e = state.getData(DataTickets.ENTITY);
             // 正在移动
             if (state.isMoving()) {
@@ -45,7 +44,7 @@ public abstract class NekoArmor<N extends Item & GeoItem> extends ArmorItem impl
                     state.getController().setAnimation(DefaultAnimations.WALK);
                 // 跑动动画
                 else state.getController().setAnimation(DefaultAnimations.RUN);
-            }
+            }else state.getController().setAnimation(DefaultAnimations.IDLE);
             if (! (e instanceof LivingEntity entity)) return PlayState.STOP;
             if (entity instanceof ArmorStandEntity)
                 return PlayState.CONTINUE;
