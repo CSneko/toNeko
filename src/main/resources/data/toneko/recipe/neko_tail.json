@@ -10,7 +10,7 @@
       "tag": "c:iron_nuggets"
     },
     "W": {
-      "tag" : "minecraft:wool"
+      "tag" : "c:wool"
     }
   },
   "result": {

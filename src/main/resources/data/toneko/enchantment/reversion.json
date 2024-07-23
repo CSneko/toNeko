@@ -1,0 +1,22 @@
+{
+  "anvil_cost": 1,
+  "weight": 5,
+  "description": {
+    "type": "translatable",
+    "translate": "enchantment.toneko.reversion.description"
+  },
+  "supported_items": "#toneko:neko_armors",
+  "primary_items": "#toneko:neko_armors",
+  "min_cost": {
+    "base": 1,
+    "per_level_above_first": 1
+  },
+  "max_cost": {
+    "base": 1,
+    "per_level_above_first": 1
+  },
+  "max_level": 1,
+  "slots": [
+    "armor"
+  ]
+}
