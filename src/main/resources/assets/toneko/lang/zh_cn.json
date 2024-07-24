@@ -1,6 +1,7 @@
 {
   "item.toneko.neko_potion.effect.empty": "猫娘药水",
   "item.toneko.neko_tail": "猫尾巴",
+  "enchantment.toneko.reversion": "反转",
   "quirk.toneko.caress": "抚摸",
   "quirk.toneko.caress.use": "§d你轻轻抚摸了 %d §d喵~",
   "quirk.toneko.caress.be_used": "§d你被 %d §d轻轻地抚摸了一下喵~",

@@ -7,14 +7,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="啊?原来我一直没把配方上版本管理???">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/enchanments/ToNekoEnchantments.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/util/EnchantmentUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/data/toneko/enchantment/reversion.json" afterDir="false" />
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="添加新附魔~">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/items/NekoTailRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/items/NekoTailRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/en_us.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/en_us.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/zh_cn.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/zh_cn.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/toneko/enchantment/reversion.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data/toneko/enchantment/reversion.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/data/toneko/recipe/neko_tail.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data/toneko/recipe/neko_tail.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/data/toneko/tags/item/neko_armor.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data/toneko/tags/item/neko_armors.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -292,14 +291,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-    </task>
-    <task id="LOCAL-00075" summary="添加更多static方法到api">
-      <option name="closed" value="true" />
-      <created>1717082326696</created>
-      <option name="number" value="00075" />
-      <option name="presentableId" value="LOCAL-00075" />
-      <option name="project" value="LOCAL" />
-      <updated>1717082326696</updated>
     </task>
     <task id="LOCAL-00076" summary="修改logger，避免递归">
       <option name="closed" value="true" />
@@ -685,7 +676,15 @@
       <option name="project" value="LOCAL" />
       <updated>1721746921939</updated>
     </task>
-    <option name="localTasksCounter" value="124" />
+    <task id="LOCAL-00124" summary="添加新附魔~">
+      <option name="closed" value="true" />
+      <created>1721752974279</created>
+      <option name="number" value="00124" />
+      <option name="presentableId" value="LOCAL-00124" />
+      <option name="project" value="LOCAL" />
+      <updated>1721752974279</updated>
+    </task>
+    <option name="localTasksCounter" value="125" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -701,7 +700,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="这么重要的事情我居然忘记了(┙&gt;∧&lt;)┙へ┻┻" />
     <MESSAGE value="更新了亿点点东西,要累死啦(&gt;_&lt;)" />
     <MESSAGE value="嗯...1.20的最后一次提交了,再见了" />
     <MESSAGE value="1.21的首次提交,迎接新版本٩(｡・ω・｡)﻿و" />
@@ -726,6 +724,7 @@
     <MESSAGE value="添加动画注册" />
     <MESSAGE value="修复动画注册,微调语言文件" />
     <MESSAGE value="啊?原来我一直没把配方上版本管理???" />
-    <option name="LAST_COMMIT_MESSAGE" value="啊?原来我一直没把配方上版本管理???" />
+    <MESSAGE value="添加新附魔~" />
+    <option name="LAST_COMMIT_MESSAGE" value="添加新附魔~" />
   </component>
 </project>

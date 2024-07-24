@@ -30,7 +30,7 @@ public class NekoTailRenderer extends GeoArmorRenderer<NekoTailItem> {
     public void actuallyRender(MatrixStack poseStack, NekoTailItem item, BakedGeoModel model, @Nullable RenderLayer renderType,
                                VertexConsumerProvider bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick,
                                int packedLight, int packedOverlay, int colour) {
-        super.actuallyRender(poseStack, item, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
+        poseStack.push();
         // 如果有反转附魔,就将其旋转180度后向前移动4个单位
         if (EnchantmentUtil.hasEnchantment(ToNekoEnchantments.REVERSION.getValue(),this.currentStack)){
             // 旋转180度
@@ -39,5 +39,7 @@ public class NekoTailRenderer extends GeoArmorRenderer<NekoTailItem> {
             // 前进4个单位
             poseStack.translate(0,0,-4);
         }
+        poseStack.pop();
+        super.actuallyRender(poseStack, item, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
     }
 }

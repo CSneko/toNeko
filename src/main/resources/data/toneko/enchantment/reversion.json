@@ -3,7 +3,7 @@
   "weight": 5,
   "description": {
     "type": "translatable",
-    "translate": "enchantment.toneko.reversion.description"
+    "translate": "enchantment.toneko.reversion"
   },
   "supported_items": "#toneko:neko_armors",
   "primary_items": "#toneko:neko_armors",
