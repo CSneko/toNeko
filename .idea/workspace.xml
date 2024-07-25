@@ -7,13 +7,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="添加新附魔~">
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="修改合成配方">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/items/NekoTailRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/items/NekoTailRenderer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/en_us.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/en_us.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/zh_cn.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/zh_cn.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/data/toneko/enchantment/reversion.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data/toneko/enchantment/reversion.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/data/toneko/recipe/neko_tail.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data/toneko/recipe/neko_tail.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -291,14 +287,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-    </task>
-    <task id="LOCAL-00076" summary="修改logger，避免递归">
-      <option name="closed" value="true" />
-      <created>1717227866473</created>
-      <option name="number" value="00076" />
-      <option name="presentableId" value="LOCAL-00076" />
-      <option name="project" value="LOCAL" />
-      <updated>1717227866473</updated>
     </task>
     <task id="LOCAL-00077" summary="添加ConfigUtil和LanguageUtil，添加部分聊天修改&#10;&#10;重构好麻烦哦qwq">
       <option name="closed" value="true" />
@@ -684,7 +672,15 @@
       <option name="project" value="LOCAL" />
       <updated>1721752974279</updated>
     </task>
-    <option name="localTasksCounter" value="125" />
+    <task id="LOCAL-00125" summary="修改合成配方">
+      <option name="closed" value="true" />
+      <created>1721833838370</created>
+      <option name="number" value="00125" />
+      <option name="presentableId" value="LOCAL-00125" />
+      <option name="project" value="LOCAL" />
+      <updated>1721833838370</updated>
+    </task>
+    <option name="localTasksCounter" value="126" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -700,7 +696,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="更新了亿点点东西,要累死啦(&gt;_&lt;)" />
     <MESSAGE value="嗯...1.20的最后一次提交了,再见了" />
     <MESSAGE value="1.21的首次提交,迎接新版本٩(｡・ω・｡)﻿و" />
     <MESSAGE value="修复一点Bug(我为什么会在客户端注册服务器tick)" />
@@ -725,6 +720,7 @@
     <MESSAGE value="修复动画注册,微调语言文件" />
     <MESSAGE value="啊?原来我一直没把配方上版本管理???" />
     <MESSAGE value="添加新附魔~" />
-    <option name="LAST_COMMIT_MESSAGE" value="添加新附魔~" />
+    <MESSAGE value="修改合成配方" />
+    <option name="LAST_COMMIT_MESSAGE" value="修改合成配方" />
   </component>
 </project>

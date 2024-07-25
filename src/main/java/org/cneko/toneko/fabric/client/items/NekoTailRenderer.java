@@ -6,6 +6,8 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.RotationAxis;
 import org.cneko.toneko.fabric.enchanments.ToNekoEnchantments;
 import org.cneko.toneko.fabric.items.NekoTailItem;
 import org.cneko.toneko.fabric.util.EnchantmentUtil;
@@ -27,19 +29,16 @@ public class NekoTailRenderer extends GeoArmorRenderer<NekoTailItem> {
 
 
     @Override
-    public void actuallyRender(MatrixStack poseStack, NekoTailItem item, BakedGeoModel model, @Nullable RenderLayer renderType,
-                               VertexConsumerProvider bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick,
-                               int packedLight, int packedOverlay, int colour) {
-        poseStack.push();
-        // 如果有反转附魔,就将其旋转180度后向前移动4个单位
+    public void preRender(MatrixStack poseStack, NekoTailItem item, BakedGeoModel model, @Nullable VertexConsumerProvider bufferSource,
+                          @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight,
+                          int packedOverlay, int colour) {
+        super.preRender(poseStack,item,model,bufferSource,buffer,isReRender,partialTick,packedLight,packedOverlay,colour);
+        // 如果有反转附魔
         if (EnchantmentUtil.hasEnchantment(ToNekoEnchantments.REVERSION.getValue(),this.currentStack)){
             // 旋转180度
-            Vector3f axis = new Vector3f(1, 0, 0);
-            poseStack.multiply(new Quaternionf().rotateAxis((float) Math.toRadians(180), axis));
-            // 前进4个单位
-            poseStack.translate(0,0,-4);
+            poseStack.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(180));
+            // 前进1/16个单位并下移动1单位
+            poseStack.translate(0,-1.5,-0.0625);
         }
-        poseStack.pop();
-        super.actuallyRender(poseStack, item, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
     }
 }
