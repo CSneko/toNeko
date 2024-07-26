@@ -37,4 +37,3 @@ jobs:
             files: |
               build/libs/*
             generate_notes: true
-
