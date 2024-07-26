@@ -1,8 +1,6 @@
 package org.cneko.toneko.fabric.enchanments;
 
-import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.item.Item;
 import net.minecraft.registry.*;
 import net.minecraft.util.Identifier;
 

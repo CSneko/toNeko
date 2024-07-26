@@ -23,8 +23,7 @@ import static org.cneko.toneko.common.Bootstrap.MODID;
 
 public class NekoTailRenderer extends GeoArmorRenderer<NekoTailItem> {
     public NekoTailRenderer() {
-        super(new DefaultedItemGeoModel<>(Identifier.of(MODID, "armor/neko_armor"))); // Using DefaultedItemGeoModel like this puts our 'location' as item/armor/example armor in the assets folders.
-        //addRenderLayer(new AutoGlowingGeoLayer<>(this));
+        super(new DefaultedItemGeoModel<>(Identifier.of(MODID, "armor/neko_armor")));
     }
 
 

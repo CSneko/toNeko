@@ -1,5 +1,6 @@
 package org.cneko.toneko.common.util;
 
+import net.luckperms.api.cacheddata.CachedPermissionData;
 import org.cneko.ctlib.common.file.YamlConfiguration;
 
 import java.io.IOException;
@@ -40,6 +41,7 @@ public class ConfigUtil {
     public static String CHAT_FORMAT = "${prefix}§e${name} §6>> §f${msg}";
     public static String CHAT_TONE = "misc.toneko.nya";
     public static boolean STATS = true;
+    public static Config INSTANCE;
 
     public static void load(){
         // 判断config文件是否存在
@@ -61,5 +63,9 @@ public class ConfigUtil {
         CHAT_FORMAT = CONFIG.getString("chat.format");
         CHAT_TONE = CONFIG.getString("chat.tone");
         STATS = CONFIG.getBoolean("stats",true);
+    }
+
+    public static interface Config {
+        void load();
     }
 }

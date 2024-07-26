@@ -3,7 +3,7 @@ package org.cneko.toneko.fabric;
 import net.minecraft.server.MinecraftServer;
 
 public class ModMeta {
-    public static ModMeta instance = new ModMeta();
+    public static ModMeta INSTANCE = new ModMeta();
     public static final String MOD_ID = "toneko";
     public static final String MOD_NAME = "ToNeko";
     private MinecraftServer server;

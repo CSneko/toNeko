@@ -9,12 +9,12 @@ import java.util.UUID;
 
 public class PlayerUtil {
     public static PlayerEntity getPlayerByName(String name) {
-        return ModMeta.instance.getServer().getPlayerManager().getPlayer(name);
+        return ModMeta.INSTANCE.getServer().getPlayerManager().getPlayer(name);
     }
     public static PlayerEntity getPlayerByUUID(UUID uuid) {
-        return ModMeta.instance.getServer().getPlayerManager().getPlayer(uuid);
+        return ModMeta.INSTANCE.getServer().getPlayerManager().getPlayer(uuid);
     }
     public static List<ServerPlayerEntity> getPlayerList() {
-        return ModMeta.instance.getServer().getPlayerManager().getPlayerList();
+        return ModMeta.INSTANCE.getServer().getPlayerManager().getPlayerList();
     }
 }

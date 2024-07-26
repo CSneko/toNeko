@@ -7,9 +7,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="修改合成配方">
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="完善render啦">
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/impl/FabricConfigImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/impl/FabricLanguageImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/ConfigUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/ConfigUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/LanguageUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/LanguageUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/ModMeta.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/ModMeta.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/ToNeko.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/ToNeko.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/items/NekoTailRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/items/NekoTailRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/enchanments/ToNekoEnchantments.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/enchanments/ToNekoEnchantments.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/util/PlayerUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/util/PlayerUtil.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -111,6 +120,7 @@
     "Gradle.toNeko datagen.executor": "Run",
     "Gradle.toNekoFabric build.executor": "Run",
     "Gradle.加载 Gradle 依赖项.executor": "Run",
+    "Gradle.构建 toNeko.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
@@ -287,14 +297,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-    </task>
-    <task id="LOCAL-00077" summary="添加ConfigUtil和LanguageUtil，添加部分聊天修改&#10;&#10;重构好麻烦哦qwq">
-      <option name="closed" value="true" />
-      <created>1717240863993</created>
-      <option name="number" value="00077" />
-      <option name="presentableId" value="LOCAL-00077" />
-      <option name="project" value="LOCAL" />
-      <updated>1717240863993</updated>
     </task>
     <task id="LOCAL-00078" summary="终于重构完成聊天监听事件啦(´・ω・｀)">
       <option name="closed" value="true" />
@@ -680,7 +682,15 @@
       <option name="project" value="LOCAL" />
       <updated>1721833838370</updated>
     </task>
-    <option name="localTasksCounter" value="126" />
+    <task id="LOCAL-00126" summary="完善render啦">
+      <option name="closed" value="true" />
+      <created>1721893644177</created>
+      <option name="number" value="00126" />
+      <option name="presentableId" value="LOCAL-00126" />
+      <option name="project" value="LOCAL" />
+      <updated>1721893644177</updated>
+    </task>
+    <option name="localTasksCounter" value="127" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -696,7 +706,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="嗯...1.20的最后一次提交了,再见了" />
     <MESSAGE value="1.21的首次提交,迎接新版本٩(｡・ω・｡)﻿و" />
     <MESSAGE value="修复一点Bug(我为什么会在客户端注册服务器tick)" />
     <MESSAGE value="我为什么要和有病一样加remove?" />
@@ -721,6 +730,7 @@
     <MESSAGE value="啊?原来我一直没把配方上版本管理???" />
     <MESSAGE value="添加新附魔~" />
     <MESSAGE value="修改合成配方" />
-    <option name="LAST_COMMIT_MESSAGE" value="修改合成配方" />
+    <MESSAGE value="完善render啦" />
+    <option name="LAST_COMMIT_MESSAGE" value="完善render啦" />
   </component>
 </project>
