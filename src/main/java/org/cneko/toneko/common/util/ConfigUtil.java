@@ -44,25 +44,24 @@ public class ConfigUtil {
     public static Config INSTANCE;
 
     public static void load(){
-        // 判断config文件是否存在
-        if (!FileUtil.FileExists(CONFIG_FILE)) {
-            // 创建config文件
-            FileUtil.CreateFile(CONFIG_FILE);
-            // 写入默认配置
-            FileUtil.WriteFile(CONFIG_FILE, DEFAULT_CONFIG);
-        }else {
-            try {
-                CONFIG = YamlConfiguration.fromFile(Path.of(CONFIG_FILE));
-            } catch (IOException e) {
-                LOGGER.error("Failed to load config file",e);
-            }
-        }
+        INSTANCE.load();
         language = CONFIG.getString("language");
         ONLY_SERVER = CONFIG.getBoolean("only-server",false);
         CHAT_ENABLE = CONFIG.getBoolean("chat.enable",true);
         CHAT_FORMAT = CONFIG.getString("chat.format");
         CHAT_TONE = CONFIG.getString("chat.tone");
         STATS = CONFIG.getBoolean("stats",true);
+    }
+
+    // 预加载
+    public static void preload(){
+        if (FileUtil.FileExists(CONFIG_FILE)) {
+            try {
+                CONFIG = YamlConfiguration.fromFile(Path.of(CONFIG_FILE));
+            } catch (IOException e) {
+                LOGGER.error("Failed to load config file",e);
+            }
+        }
     }
 
     public static interface Config {

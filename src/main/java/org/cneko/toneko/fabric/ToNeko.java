@@ -21,28 +21,25 @@ import org.cneko.toneko.fabric.util.PermissionUtil;
 public class ToNeko implements ModInitializer {
     @Override
     public void onInitialize() {
+        // 初始化语言和配置
+        LanguageUtil.INSTANCE = new FabricLanguageImpl();
+        ConfigUtil.INSTANCE = new FabricConfigImpl();
+        ConfigUtil.preload();
         // 注册命令
         ToNekoCommand.init();
         ToNekoAdminCommand.init();
         NekoCommand.init();
         // QuirkCommand.init();
+        // 注册装备
+        ToNekoArmorMaterials.init();
+        // 注册物品
+        ToNekoItems.init();
         TwwdfCommand.init();
-        ServerLifecycleEvents.SERVER_STARTING.register(server -> {
-            // 初始化语言和配置
-            LanguageUtil.INSTANCE = new FabricLanguageImpl();
-            ConfigUtil.INSTANCE = new FabricConfigImpl();
-            // 通用的启动
-            Bootstrap.bootstrap();
-            ModMeta.INSTANCE.setServer(server);
-            // 注册装备
-            ToNekoArmorMaterials.init();
-            // 注册物品
-            ToNekoItems.init();
-            // 注册网络数据包
-            PayloadTypeRegistry.playS2C().register(EntityPosePayload.ID, EntityPosePayload.CODEC);
-        });
+        // 注册网络数据包
+        PayloadTypeRegistry.playS2C().register(EntityPosePayload.ID, EntityPosePayload.CODEC);
         // 启动事件
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+            ModMeta.INSTANCE.setServer(server);
             // 启动聊天监听器
             if(ConfigUtil.CHAT_ENABLE) ChatEvent.init();
             // 启动玩家连接监听器
@@ -53,6 +50,8 @@ public class ToNeko implements ModInitializer {
             PlayerInteractionEvent.init();
             // 注册权限
             PermissionUtil.init();
+            // 通用的启动
+            Bootstrap.bootstrap();
         });
     }
 }

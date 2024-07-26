@@ -36,7 +36,7 @@ public class FabricLanguageImpl implements Language{
             // 复制语言文件
             ResourceManager resourceManager = ModMeta.INSTANCE.getServer().getResourceManager();
             for (String lang : languages) {
-                Identifier id = Identifier.of(MODID, "lang/"+lang);
+                Identifier id = Identifier.of(MODID, "lang/"+lang+".json");
                 try {
                     // 使用ResourceManager获取资源
                     Resource resource = resourceManager.getResource(id).orElseThrow(() -> new RuntimeException("Resource not found"));
