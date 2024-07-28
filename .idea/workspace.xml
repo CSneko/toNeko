@@ -7,19 +7,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="修缮语言和配置,更好的兼容Quilt">
-      <change afterPath="$PROJECT_DIR$/libs/.fuse_hidden0000047b00000013" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/.fuse_hidden00000c1000000014" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/ctLibMod-0.1.12.jar" afterDir="false" />
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="完善语言和配置文件，嵌入ctlib">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/ctLibMod-0.1.11.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/ConfigUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/ConfigUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/FileUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/FileUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/LanguageUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/LanguageUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/impl/FabricConfigImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/impl/FabricConfigImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/impl/FabricLanguageImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/impl/FabricLanguageImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fabric.mod.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fabric.mod.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoArmor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoArmor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/ToNekoItems.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/ToNekoItems.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -298,14 +290,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-    </task>
-    <task id="LOCAL-00079" summary="什么时候才能发布1.0.0呢(￣□￣)">
-      <option name="closed" value="true" />
-      <created>1717599141714</created>
-      <option name="number" value="00079" />
-      <option name="presentableId" value="LOCAL-00079" />
-      <option name="project" value="LOCAL" />
-      <updated>1717599141714</updated>
     </task>
     <task id="LOCAL-00080" summary="添加权限组，可以使用luckperms自定义权限组啦! 唔，怎么改动了这么多文件&#10;o(///▽///)q">
       <option name="closed" value="true" />
@@ -691,7 +675,15 @@
       <option name="project" value="LOCAL" />
       <updated>1722007421940</updated>
     </task>
-    <option name="localTasksCounter" value="128" />
+    <task id="LOCAL-00128" summary="完善语言和配置文件，嵌入ctlib">
+      <option name="closed" value="true" />
+      <created>1722152424463</created>
+      <option name="number" value="00128" />
+      <option name="presentableId" value="LOCAL-00128" />
+      <option name="project" value="LOCAL" />
+      <updated>1722152424464</updated>
+    </task>
+    <option name="localTasksCounter" value="129" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -707,7 +699,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="修复一点Bug(我为什么会在客户端注册服务器tick)" />
     <MESSAGE value="我为什么要和有病一样加remove?" />
     <MESSAGE value="添加一个客户端验证~" />
     <MESSAGE value="完善水龙头~" />
@@ -732,6 +723,7 @@
     <MESSAGE value="修改合成配方" />
     <MESSAGE value="完善render啦" />
     <MESSAGE value="修缮语言和配置,更好的兼容Quilt" />
-    <option name="LAST_COMMIT_MESSAGE" value="修缮语言和配置,更好的兼容Quilt" />
+    <MESSAGE value="完善语言和配置文件，嵌入ctlib" />
+    <option name="LAST_COMMIT_MESSAGE" value="完善语言和配置文件，嵌入ctlib" />
   </component>
 </project>

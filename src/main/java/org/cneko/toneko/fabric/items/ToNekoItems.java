@@ -1,7 +1,6 @@
 package org.cneko.toneko.fabric.items;
 
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -12,7 +11,7 @@ import static org.cneko.toneko.common.Bootstrap.MODID;
 
 public class ToNekoItems {
     public static NekoPotionItem NEKO_POTION;
-    public static Item NEKO_TAIL;
+    public static NekoTailItem NEKO_TAIL;
     public static void init() {
         // 如果启用了仅服务器端，则不注册物品
         if (!ConfigUtil.ONLY_SERVER) registerWithOutConfig();

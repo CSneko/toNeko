@@ -37,12 +37,11 @@ public abstract class NekoArmor<N extends Item & GeoItem> extends ArmorItem impl
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, 60, state -> {
             Entity e = state.getData(DataTickets.ENTITY);
-            // 正在移动
-            if (state.isMoving()) {
+            if (e.getMovement().lengthSquared() > 0) {
                 // 行走动画
-                if (e.getVelocity().lengthSquared() <= 1)
+                if (e.getVelocity().lengthSquared() <= 0.025)
                     state.getController().setAnimation(DefaultAnimations.WALK);
-                // 跑动动画
+                    // 跑动动画
                 else state.getController().setAnimation(DefaultAnimations.RUN);
             }else state.getController().setAnimation(DefaultAnimations.IDLE);
             if (! (e instanceof LivingEntity entity)) return PlayState.STOP;
@@ -55,6 +54,19 @@ public abstract class NekoArmor<N extends Item & GeoItem> extends ArmorItem impl
             }
             return PlayState.STOP;
         }));
+        /*
+        controllers.add(new AnimationController<>(this, 40, state -> {
+            Entity e = state.getData(DataTickets.ENTITY);
+            // 正在移动
+            if (! (e instanceof LivingEntity entity)) return PlayState.STOP;
+            for (ItemStack stack : entity.getArmorItems()) {
+                // 只要有任意一件穿了就播放
+                if (!stack.isEmpty())
+                    return PlayState.CONTINUE;
+            }
+            return PlayState.STOP;
+        }));
+         */
 
     }
 
