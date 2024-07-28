@@ -41,6 +41,10 @@ repositories {
         url = "https://api.modrinth.com/maven"
     }
 
+    flatDir {
+        dirs 'libs'
+    }
+
     mavenCentral()
 
 }
@@ -56,7 +60,9 @@ dependencies {
     modImplementation "software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     compileOnly 'dev.folia:folia-api:1.20.2-R0.1-SNAPSHOT'
-    modImplementation fileTree("libs")
+    modImplementation(name: "ctLibMod-0.1.12", ext: "jar")
+    // 把本地目录下的libs/ctLibMod-0.1.12.jar嵌入
+    include(name: "ctLibMod-0.1.12", ext: "jar")
 }
 
 processResources {

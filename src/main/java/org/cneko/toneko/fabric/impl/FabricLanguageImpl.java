@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.cneko.toneko.common.Bootstrap.LOGGER;
-import static org.cneko.toneko.common.Bootstrap.MODID;
 import static org.cneko.toneko.common.util.ConfigUtil.CONFIG;
 import static org.cneko.toneko.common.util.LanguageUtil.*;
 
@@ -34,25 +33,10 @@ public class FabricLanguageImpl implements Language{
             }
 
             // 复制语言文件
-            ResourceManager resourceManager = ModMeta.INSTANCE.getServer().getResourceManager();
             for (String lang : languages) {
-                Identifier id = Identifier.of(MODID, "lang/"+lang+".json");
-                try {
-                    // 使用ResourceManager获取资源
-                    Resource resource = resourceManager.getResource(id).orElseThrow(() -> new RuntimeException("Resource not found"));
-                    // 创建一个BufferedReader来读取资源
-                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8))) {
-                        String line;
-                        StringBuilder content = new StringBuilder();
-                        while ((line = reader.readLine()) != null) {
-                            content.append(line).append("\n");
-                        }
-                        // 将读取到的内容写入文件
-                        FileUtil.WriteFile(LANG_PATH+lang+".json", content.toString());
-                    }
-                } catch (IOException e) {
-                    LOGGER.error(e);
-                }
+                String file = LANG_PATH+lang+".json";
+                FileUtil.CreateFile(file);
+               FileUtil.copyResource("assets/toneko/lang/"+lang+".json", file);
             }
             // 读取语言文件
             LANG = JsonConfiguration.fromFile(Path.of(LANG_PATH+language+".json"));

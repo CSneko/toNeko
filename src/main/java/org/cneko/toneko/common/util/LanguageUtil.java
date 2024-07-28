@@ -18,7 +18,9 @@ public class LanguageUtil {
     public static String prefix = "";
     public static Language INSTANCE;
     public static void load(){
-        INSTANCE.load();
+        if (INSTANCE != null) {
+            INSTANCE.load();
+        }
     }
 
     public static String translatable(String key){
@@ -39,8 +41,8 @@ public class LanguageUtil {
         default String translatable(String key){
             if(LANG.contains(key)){
                 return LANG.getString(key);
-            }else if(EN_US_LANG != null && !language.equals("en_us") && LANG.contains("en_us."+key)){
-                return EN_US_LANG.getString("en_us."+key);
+            }else if(EN_US_LANG != null && !language.equals("en_us") && EN_US_LANG.contains(key)){
+                return EN_US_LANG.getString(key);
             }
             return key;
         }

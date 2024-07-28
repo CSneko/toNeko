@@ -8,11 +8,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="修缮语言和配置,更好的兼容Quilt">
+      <change afterPath="$PROJECT_DIR$/libs/.fuse_hidden0000047b00000013" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/libs/.fuse_hidden00000c1000000014" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/libs/ctLibMod-0.1.12.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/ctLibMod-0.1.11.jar" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/ConfigUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/ConfigUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/ToNeko.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/ToNeko.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/FileUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/FileUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/LanguageUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/LanguageUtil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/impl/FabricConfigImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/impl/FabricConfigImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/impl/FabricLanguageImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/impl/FabricLanguageImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fabric.mod.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fabric.mod.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,8 +81,8 @@
 }</component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;git@github.com:CSneko/toNeko.git&quot;,
-    &quot;accountId&quot;: &quot;2ed95e2a-c14a-417d-835b-4eee59706e09&quot;
+    &quot;url&quot;: &quot;https://github.com/CSneko/toNeko.git&quot;,
+    &quot;accountId&quot;: &quot;c85b6ef7-ef34-430b-85f7-0b45d6c0367e&quot;
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
@@ -101,39 +108,39 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "Gradle.toNeko Client.executor": "Run",
-    "Gradle.toNeko Datagen.executor": "Run",
-    "Gradle.toNeko Server.executor": "Run",
-    "Gradle.toNeko [clean].executor": "Run",
-    "Gradle.toNeko [dependencies].executor": "Run",
-    "Gradle.toNeko [javadoc].executor": "Run",
-    "Gradle.toNeko build.executor": "Run",
-    "Gradle.toNeko datagen.executor": "Run",
-    "Gradle.toNekoFabric build.executor": "Run",
-    "Gradle.加载 Gradle 依赖项.executor": "Run",
-    "Gradle.构建 toNeko.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "jdk.selected.com.intellij.ui.dsl.builder.impl.RowImpl.sdk": "21",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/media/crystalneko/BA106C158B1B58EF/javatest/mods/toNeko/src/main/resources/assets/toneko/textures/item",
-    "project.structure.last.edited": "库",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
-    "应用程序.Data Generation.executor": "Run"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;Gradle.toNeko Client.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.toNeko Datagen.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.toNeko Server.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.toNeko [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.toNeko [dependencies].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.toNeko [javadoc].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.toNeko build.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.toNeko datagen.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.toNekoFabric build.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.加载 Gradle 依赖项.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.构建 toNeko.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;jdk.selected.com.intellij.ui.dsl.builder.impl.RowImpl.sdk&quot;: &quot;21&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/media/crystalneko/00053615000A874B/java/libs/gradle/gradle-8.8&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;库&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.gradle&quot;,
+    &quot;应用程序.Data Generation.executor&quot;: &quot;Run&quot;
   },
-  "keyToStringList": {
-    "jdk.preference.com.intellij.ui.dsl.builder.impl.RowImpl.sdk": [
-      "17=/usr/lib/jvm/java-1.17.0-openjdk-amd64",
-      "21=/usr/lib/jvm/java-21-openjdk-amd64"
+  &quot;keyToStringList&quot;: {
+    &quot;jdk.preference.com.intellij.ui.dsl.builder.impl.RowImpl.sdk&quot;: [
+      &quot;17=/usr/lib/jvm/java-1.17.0-openjdk-amd64&quot;,
+      &quot;21=/usr/lib/jvm/java-21-openjdk-amd64&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/item" />
@@ -278,9 +285,9 @@
       <item itemvalue="Gradle.toNeko [clean]" />
       <item itemvalue="Gradle.toNeko build" />
       <item itemvalue="Gradle.toNeko datagen" />
-      <item itemvalue="应用程序.Minecraft Server" />
       <item itemvalue="应用程序.Data Generation" />
       <item itemvalue="应用程序.Minecraft Client" />
+      <item itemvalue="应用程序.Minecraft Server" />
     </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />

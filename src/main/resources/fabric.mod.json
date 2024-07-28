@@ -39,7 +39,8 @@
     "ctlib": "*"
   },
   "suggests": {
-    "luckperms": "*"
+    "luckperms": "*",
+    "geckolib": "*"
   },
   "mixins": [
     "mixin.toneko.json"

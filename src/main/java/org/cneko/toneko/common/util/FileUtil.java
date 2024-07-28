@@ -1,7 +1,11 @@
 package org.cneko.toneko.common.util;
 
-import java.io.FileWriter;
+import org.cneko.toneko.fabric.impl.FabricConfigImpl;
+
+import java.io.*;
 import java.nio.charset.StandardCharsets;
+
+import static org.cneko.toneko.common.Bootstrap.LOGGER;
 
 @SuppressWarnings("all")
 public class FileUtil {
@@ -60,6 +64,30 @@ public class FileUtil {
                 f.delete();
             }
         }catch(Exception ignored){
+        }
+    }
+
+    public static void copyResource(String resourcePath,String targetPath) {
+        try {
+            // 使用ClassLoader读取资源文件
+            InputStream inputStream = FabricConfigImpl.class.getClassLoader().getResourceAsStream(resourcePath);
+
+            if (inputStream != null) {
+                // 读取资源文件内容，指定编码为UTF-8
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+                StringBuilder content = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    content.append(line).append("\n");
+                }
+                reader.close();
+                // 将读取到的内容写入文件
+                FileUtil.WriteFile(targetPath, content.toString());
+            } else {
+                LOGGER.error("Cannot find resource: {}", resourcePath);
+            }
+        } catch (IOException e) {
+            LOGGER.error("Cannot copy resource: ", e);
         }
     }
 }

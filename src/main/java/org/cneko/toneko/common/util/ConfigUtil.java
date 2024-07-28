@@ -3,6 +3,7 @@ package org.cneko.toneko.common.util;
 import net.luckperms.api.cacheddata.CachedPermissionData;
 import org.cneko.ctlib.common.file.YamlConfiguration;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
@@ -44,7 +45,9 @@ public class ConfigUtil {
     public static Config INSTANCE;
 
     public static void load(){
-        INSTANCE.load();
+        if (INSTANCE != null) {
+            INSTANCE.load();
+        }
         language = CONFIG.getString("language");
         ONLY_SERVER = CONFIG.getBoolean("only-server",false);
         CHAT_ENABLE = CONFIG.getBoolean("chat.enable",true);
