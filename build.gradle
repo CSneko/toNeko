@@ -41,6 +41,15 @@ repositories {
         url = "https://api.modrinth.com/maven"
     }
 
+    maven {
+        name = "TerraformersMC"
+        url = "https://maven.terraformersmc.com/"
+    }
+    maven {
+        name = "Ladysnake Libs"
+        url = 'https://maven.ladysnake.org/releases'
+    }
+
     flatDir {
         dirs 'libs'
     }
@@ -59,6 +68,7 @@ dependencies {
     modCompileOnly "me.lucko:fabric-permissions-api:0.2-SNAPSHOT"
     modImplementation "software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    modImplementation "dev.emi:trinkets:${trinkets_version}"
     compileOnly 'dev.folia:folia-api:1.20.2-R0.1-SNAPSHOT'
     modImplementation(name: "ctLibMod-0.1.12", ext: "jar")
     // 把本地目录下的libs/ctLibMod-0.1.12.jar嵌入

@@ -1,5 +1,6 @@
 package org.cneko.toneko.fabric.items;
 
+import dev.emi.trinkets.api.Trinket;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
@@ -25,7 +26,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
 
-public abstract class NekoArmor<N extends Item & GeoItem> extends ArmorItem implements GeoItem {
+public abstract class NekoArmor<N extends Item & GeoItem> extends ArmorItem implements GeoItem, Trinket {
     public final AnimatableInstanceCache cache;
     public NekoArmor(RegistryEntry<ArmorMaterial> material, Type type, Settings settings) {
         super(material, type, settings);
@@ -35,7 +36,7 @@ public abstract class NekoArmor<N extends Item & GeoItem> extends ArmorItem impl
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, 60, state -> {
+        controllers.add(new AnimationController<>(this, 50, state -> {
             Entity e = state.getData(DataTickets.ENTITY);
             if (e.getMovement().lengthSquared() > 0) {
                 // 行走动画
@@ -70,6 +71,9 @@ public abstract class NekoArmor<N extends Item & GeoItem> extends ArmorItem impl
 
     }
 
+    public boolean canEquipFromUse(ItemStack stack, LivingEntity entity) {
+        return true;
+    }
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
