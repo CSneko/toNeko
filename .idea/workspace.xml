@@ -7,17 +7,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="添加trinkets API支持，虽然我不知道为啥无法用">
-      <change afterPath="$PROJECT_DIR$/libs/fml-loader-4.0.22.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/neoforge/ToNeko.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/META-INF/neoforge.mods.toml" afterDir="false" />
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="修复一点Bug，以及NeoForge?">
+      <change afterPath="$PROJECT_DIR$/src/main/resources/data/trinkets/tags/items/head/hat.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/impl/FabricLanguageImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/impl/FabricLanguageImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/ToNekoClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/ToNekoClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/items/NekoTailRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/items/NekoArmorRenderer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoArmor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoArmor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoTailItem.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/ToNekoItems.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/ToNekoItems.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/config.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fabric.mod.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fabric.mod.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/geo/item/armor/neko_armor.geo.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/geo/item/armor/neko_armor.geo.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/zh_cn.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/zh_cn.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/zh_tw.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/zh_tw.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/item/armor/neko_armor.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/item/armor/neko_armor.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/trinkets/entities/toneko.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data/trinkets/entities/toneko.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -297,14 +299,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-    </task>
-    <task id="LOCAL-00082" summary="添加进度~~~">
-      <option name="closed" value="true" />
-      <created>1718117895553</created>
-      <option name="number" value="00082" />
-      <option name="presentableId" value="LOCAL-00082" />
-      <option name="project" value="LOCAL" />
-      <updated>1718117895554</updated>
     </task>
     <task id="LOCAL-00083" summary="I feel sad now :(">
       <option name="closed" value="true" />
@@ -690,7 +684,15 @@
       <option name="project" value="LOCAL" />
       <updated>1722266835499</updated>
     </task>
-    <option name="localTasksCounter" value="131" />
+    <task id="LOCAL-00131" summary="修复一点Bug，以及NeoForge?">
+      <option name="closed" value="true" />
+      <created>1722350579330</created>
+      <option name="number" value="00131" />
+      <option name="presentableId" value="LOCAL-00131" />
+      <option name="project" value="LOCAL" />
+      <updated>1722350579331</updated>
+    </task>
+    <option name="localTasksCounter" value="132" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -706,7 +708,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="完善水龙头~" />
     <MESSAGE value="修复了Fabric那边一些的bug,顺便完善水龙头~" />
     <MESSAGE value="添加ko_kr" />
     <MESSAGE value="修复了一些API调用与语言支持" />
@@ -731,6 +732,7 @@
     <MESSAGE value="完善语言和配置文件，嵌入ctlib" />
     <MESSAGE value="简单修改动画" />
     <MESSAGE value="添加trinkets API支持，虽然我不知道为啥无法用" />
-    <option name="LAST_COMMIT_MESSAGE" value="添加trinkets API支持，虽然我不知道为啥无法用" />
+    <MESSAGE value="修复一点Bug，以及NeoForge?" />
+    <option name="LAST_COMMIT_MESSAGE" value="修复一点Bug，以及NeoForge?" />
   </component>
 </project>

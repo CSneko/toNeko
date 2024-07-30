@@ -19,6 +19,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Identifier;
+import org.cneko.toneko.fabric.client.items.NekoArmorRenderer;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
 import software.bernie.geckolib.animatable.client.GeoRenderProvider;
@@ -33,7 +34,6 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.UUID;
 import java.util.function.Consumer;
 
 public abstract class NekoArmor<N extends Item & GeoItem> extends ArmorItem implements GeoItem, Trinket {
@@ -110,11 +110,43 @@ public abstract class NekoArmor<N extends Item & GeoItem> extends ArmorItem impl
     public boolean canUnequip(ItemStack stack, SlotReference slot, LivingEntity entity) {
         return true;
     }
-    @Override
-    public Multimap<RegistryEntry<EntityAttribute>, EntityAttributeModifier> getModifiers(ItemStack stack, SlotReference slot, LivingEntity entity, Identifier slotIdentifier) {
-        Multimap<RegistryEntry<EntityAttribute>, EntityAttributeModifier> modifiers = Multimaps.newMultimap(Maps.newLinkedHashMap(), ArrayList::new);
-        SlotAttributes.addSlotModifier(modifiers, "chest/back", slotIdentifier, 1, EntityAttributeModifier.Operation.ADD_VALUE);
-        return modifiers;
-    }
     public abstract GeoArmorRenderer<N> getRenderer();
+
+    public static class NekoTailItem extends NekoArmor<NekoTailItem> {
+        public static final String ID = "neko_tail";
+        public NekoTailItem() {
+            super(ToNekoArmorMaterials.NEKO,Type.CHESTPLATE,new Settings().maxCount(1));
+        }
+
+        @Override
+        public GeoArmorRenderer<NekoTailItem> getRenderer() {
+            return new NekoArmorRenderer.NekoTailRenderer();
+        }
+
+        @Override
+        public Multimap<RegistryEntry<EntityAttribute>, EntityAttributeModifier> getModifiers(ItemStack stack, SlotReference slot, LivingEntity entity, Identifier slotIdentifier) {
+            Multimap<RegistryEntry<EntityAttribute>, EntityAttributeModifier> modifiers = Multimaps.newMultimap(Maps.newLinkedHashMap(), ArrayList::new);
+            SlotAttributes.addSlotModifier(modifiers, "chest/back", slotIdentifier, 1, EntityAttributeModifier.Operation.ADD_VALUE);
+            return modifiers;
+        }
+    }
+
+    public static class NekoEarsItem extends NekoArmor<NekoEarsItem> {
+        public static final String ID = "neko_ears";
+        public NekoEarsItem() {
+            super(ToNekoArmorMaterials.NEKO,Type.HELMET,new Settings().maxCount(1));
+        }
+
+        @Override
+        public GeoArmorRenderer<NekoEarsItem> getRenderer() {
+            return new NekoArmorRenderer.NekoEarsRenderer();
+        }
+
+        @Override
+        public Multimap<RegistryEntry<EntityAttribute>, EntityAttributeModifier> getModifiers(ItemStack stack, SlotReference slot, LivingEntity entity, Identifier slotIdentifier) {
+            Multimap<RegistryEntry<EntityAttribute>, EntityAttributeModifier> modifiers = Multimaps.newMultimap(Maps.newLinkedHashMap(), ArrayList::new);
+            SlotAttributes.addSlotModifier(modifiers, "head/hat", slotIdentifier, 1, EntityAttributeModifier.Operation.ADD_VALUE);
+            return modifiers;
+        }
+    }
 }

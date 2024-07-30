@@ -14,7 +14,8 @@ import static org.cneko.toneko.common.Bootstrap.MODID;
 
 public class ToNekoItems {
     public static NekoPotionItem NEKO_POTION;
-    public static NekoTailItem NEKO_TAIL;
+    public static NekoArmor.NekoEarsItem NEKO_EARS;
+    public static NekoArmor.NekoTailItem NEKO_TAIL;
     public static void init() {
         // 如果启用了仅服务器端，则不注册物品
         if (!ConfigUtil.ONLY_SERVER) registerWithOutConfig();
@@ -40,13 +41,16 @@ public class ToNekoItems {
 
         // 如果安装了geckolib，则注册为ArmorItem
         if (isGeckolibInstalled) {
-            NEKO_TAIL = new NekoTailItem();
+            NEKO_EARS = new NekoArmor.NekoEarsItem();
+            NEKO_TAIL = new NekoArmor.NekoTailItem();
             // 如果安装了trinkets，则注册为TrinketItem
             if (isTrinketsInstalled){
                 LOGGER.info("Trinkets detected, registering Neko Armors as TrinketItem");
+                TrinketsApi.registerTrinket(NEKO_EARS,NEKO_EARS);
                 TrinketsApi.registerTrinket(NEKO_TAIL,NEKO_TAIL);
             }
-            Registry.register(Registries.ITEM, Identifier.of(MODID, NekoTailItem.ID), NEKO_TAIL);
+            Registry.register(Registries.ITEM, Identifier.of(MODID, NekoArmor.NekoEarsItem.ID), NEKO_EARS);
+            Registry.register(Registries.ITEM, Identifier.of(MODID, NekoArmor.NekoTailItem.ID), NEKO_TAIL);
         }
 
         // 注册到物品组

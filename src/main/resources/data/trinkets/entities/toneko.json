@@ -3,6 +3,7 @@
     "player"
   ],
   "slots": [
+    "head/hat",
     "chest/back"
   ]
 }
