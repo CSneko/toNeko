@@ -41,12 +41,12 @@ public class ToNekoItems {
         // 如果安装了geckolib，则注册为ArmorItem
         if (isGeckolibInstalled) {
             NEKO_TAIL = new NekoTailItem();
-            Registry.register(Registries.ITEM, Identifier.of(MODID, NekoTailItem.ID), NEKO_TAIL);
             // 如果安装了trinkets，则注册为TrinketItem
             if (isTrinketsInstalled){
                 LOGGER.info("Trinkets detected, registering Neko Armors as TrinketItem");
                 TrinketsApi.registerTrinket(NEKO_TAIL,NEKO_TAIL);
             }
+            Registry.register(Registries.ITEM, Identifier.of(MODID, NekoTailItem.ID), NEKO_TAIL);
         }
 
         // 注册到物品组

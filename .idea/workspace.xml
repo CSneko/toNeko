@@ -7,14 +7,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="简单修改动画">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/data/trinkets/entities/toneko.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/data/trinkets/tags/items/chest/back.json" afterDir="false" />
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="添加trinkets API支持，虽然我不知道为啥无法用">
+      <change afterPath="$PROJECT_DIR$/libs/fml-loader-4.0.22.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/neoforge/ToNeko.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/META-INF/neoforge.mods.toml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/impl/FabricLanguageImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/impl/FabricLanguageImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoArmor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoArmor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/ToNekoItems.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/ToNekoItems.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/config.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fabric.mod.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fabric.mod.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,6 +64,7 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="PUSH_AUTO_UPDATE" value="true" />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
         <entry key="$PROJECT_DIR$" value="1.21" />
@@ -126,7 +130,7 @@
     &quot;project.structure.last.edited&quot;: &quot;库&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;http.proxy&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;应用程序.Data Generation.executor&quot;: &quot;Run&quot;
   },
   &quot;keyToStringList&quot;: {
@@ -293,14 +297,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-    </task>
-    <task id="LOCAL-00081" summary="简单完善了一下管理员命令(◕‿◕✿)">
-      <option name="closed" value="true" />
-      <created>1717770109648</created>
-      <option name="number" value="00081" />
-      <option name="presentableId" value="LOCAL-00081" />
-      <option name="project" value="LOCAL" />
-      <updated>1717770109649</updated>
     </task>
     <task id="LOCAL-00082" summary="添加进度~~~">
       <option name="closed" value="true" />
@@ -686,7 +682,15 @@
       <option name="project" value="LOCAL" />
       <updated>1722178981955</updated>
     </task>
-    <option name="localTasksCounter" value="130" />
+    <task id="LOCAL-00130" summary="添加trinkets API支持，虽然我不知道为啥无法用">
+      <option name="closed" value="true" />
+      <created>1722266835498</created>
+      <option name="number" value="00130" />
+      <option name="presentableId" value="LOCAL-00130" />
+      <option name="project" value="LOCAL" />
+      <updated>1722266835499</updated>
+    </task>
+    <option name="localTasksCounter" value="131" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -702,7 +706,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="添加一个客户端验证~" />
     <MESSAGE value="完善水龙头~" />
     <MESSAGE value="修复了Fabric那边一些的bug,顺便完善水龙头~" />
     <MESSAGE value="添加ko_kr" />
@@ -727,6 +730,7 @@
     <MESSAGE value="修缮语言和配置,更好的兼容Quilt" />
     <MESSAGE value="完善语言和配置文件，嵌入ctlib" />
     <MESSAGE value="简单修改动画" />
-    <option name="LAST_COMMIT_MESSAGE" value="简单修改动画" />
+    <MESSAGE value="添加trinkets API支持，虽然我不知道为啥无法用" />
+    <option name="LAST_COMMIT_MESSAGE" value="添加trinkets API支持，虽然我不知道为啥无法用" />
   </component>
 </project>

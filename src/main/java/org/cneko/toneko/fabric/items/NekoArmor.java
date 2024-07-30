@@ -1,16 +1,24 @@
 package org.cneko.toneko.fabric.items;
 
+import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
+import dev.emi.trinkets.api.SlotAttributes;
+import dev.emi.trinkets.api.SlotReference;
 import dev.emi.trinkets.api.Trinket;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.EntityAttribute;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.util.Identifier;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
 import software.bernie.geckolib.animatable.client.GeoRenderProvider;
@@ -24,6 +32,8 @@ import software.bernie.geckolib.renderer.GeoArmorRenderer;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 public abstract class NekoArmor<N extends Item & GeoItem> extends ArmorItem implements GeoItem, Trinket {
@@ -71,9 +81,6 @@ public abstract class NekoArmor<N extends Item & GeoItem> extends ArmorItem impl
 
     }
 
-    public boolean canEquipFromUse(ItemStack stack, LivingEntity entity) {
-        return true;
-    }
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
@@ -94,5 +101,20 @@ public abstract class NekoArmor<N extends Item & GeoItem> extends ArmorItem impl
         });
     }
 
+    // --------------------- Trinket ---------------------
+    @Override
+    public boolean canEquipFromUse(ItemStack stack, LivingEntity entity) {
+        return true;
+    }
+    @Override
+    public boolean canUnequip(ItemStack stack, SlotReference slot, LivingEntity entity) {
+        return true;
+    }
+    @Override
+    public Multimap<RegistryEntry<EntityAttribute>, EntityAttributeModifier> getModifiers(ItemStack stack, SlotReference slot, LivingEntity entity, Identifier slotIdentifier) {
+        Multimap<RegistryEntry<EntityAttribute>, EntityAttributeModifier> modifiers = Multimaps.newMultimap(Maps.newLinkedHashMap(), ArrayList::new);
+        SlotAttributes.addSlotModifier(modifiers, "chest/back", slotIdentifier, 1, EntityAttributeModifier.Operation.ADD_VALUE);
+        return modifiers;
+    }
     public abstract GeoArmorRenderer<N> getRenderer();
 }
