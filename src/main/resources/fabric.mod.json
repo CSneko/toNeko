@@ -43,6 +43,9 @@
     "luckperms": "*",
     "geckolib": "*"
   },
+  "breaks": {
+    "optifabric": "*"
+  },
   "mixins": [
     "mixin.toneko.json"
   ]

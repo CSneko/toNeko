@@ -1,14 +1,13 @@
 package org.cneko.toneko.fabric.items;
 
-import dev.emi.trinkets.api.TrinketsApi;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import org.cneko.toneko.common.util.ConfigUtil;
 
-import static org.cneko.toneko.common.Bootstrap.LOGGER;
 import static org.cneko.toneko.common.Bootstrap.MODID;
 
 
@@ -16,6 +15,8 @@ public class ToNekoItems {
     public static NekoPotionItem NEKO_POTION;
     public static NekoArmor.NekoEarsItem NEKO_EARS;
     public static NekoArmor.NekoTailItem NEKO_TAIL;
+    public static boolean isGeckolibInstalled = FabricLoader.getInstance().isModLoaded("geckolib");
+    public static boolean isTrinketsInstalled = FabricLoader.getInstance().isModLoaded("trinkets");
     public static void init() {
         // 如果启用了仅服务器端，则不注册物品
         if (!ConfigUtil.ONLY_SERVER) registerWithOutConfig();
@@ -28,26 +29,14 @@ public class ToNekoItems {
         NEKO_POTION = new NekoPotionItem();
         Registry.register(Registries.ITEM, Identifier.of(MODID, NekoPotionItem.ID), NEKO_POTION);
 
-        boolean isGeckolibInstalled = false;
-        boolean isTrinketsInstalled = false;
-        try {
-            Class.forName("software.bernie.geckolib.animatable.GeoItem");
-            isGeckolibInstalled = true;
-        } catch (Exception ignored){}
-        try{
-            Class.forName("dev.emi.trinkets.api.TrinketItem");
-            isTrinketsInstalled = true;
-        }catch (Exception ignored){}
-
         // 如果安装了geckolib，则注册为ArmorItem
         if (isGeckolibInstalled) {
-            NEKO_EARS = new NekoArmor.NekoEarsItem();
-            NEKO_TAIL = new NekoArmor.NekoTailItem();
             // 如果安装了trinkets，则注册为TrinketItem
             if (isTrinketsInstalled){
-                LOGGER.info("Trinkets detected, registering Neko Armors as TrinketItem");
-                TrinketsApi.registerTrinket(NEKO_EARS,NEKO_EARS);
-                TrinketsApi.registerTrinket(NEKO_TAIL,NEKO_TAIL);
+                NekoArmorTrinkets.init();
+            }else {
+                NEKO_EARS = new NekoArmor.NekoEarsItem();
+                NEKO_TAIL = new NekoArmor.NekoTailItem();
             }
             Registry.register(Registries.ITEM, Identifier.of(MODID, NekoArmor.NekoEarsItem.ID), NEKO_EARS);
             Registry.register(Registries.ITEM, Identifier.of(MODID, NekoArmor.NekoTailItem.ID), NEKO_TAIL);
@@ -58,7 +47,8 @@ public class ToNekoItems {
             content.add(NEKO_POTION);
         });
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(content -> {
-            if (NEKO_TAIL != null) {
+            if (isGeckolibInstalled) {
+                content.add(NEKO_EARS);
                 content.add(NEKO_TAIL);
             }
         });
