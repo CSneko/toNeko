@@ -95,9 +95,6 @@ processResources {
     filesMatching("plugin.yml") {
         expand "version": project.version
     }
-    filesMatching("META-INF/neoforge.mods.toml") {
-        expand "version": project.version
-    }
 }
 
 def targetJavaVersion = 21

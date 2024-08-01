@@ -7,13 +7,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="添加饰品栏可以被渲染">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/data/toneko/recipe/neko_collector.json" afterDir="false" />
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="添加NekoCollector物品">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/ToNeko.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/ToNeko.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/misc/ToNekoAttributes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/misc/ToNekoAttributes.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/data/c/tags/item/iron_nuggets.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data/c/tags/item/nuggets/iron_nuggets.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/data/toneko/recipe/neko_tail.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data/toneko/recipe/neko_tail.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/items/NekoArmorTrinketsRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/items/NekoArmorTrinketsRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/neoforge.mods.toml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -293,14 +291,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-    </task>
-    <task id="LOCAL-00086" summary="添加战利品生成~~─=≡Σ((( つ•̀ω•́)つ">
-      <option name="closed" value="true" />
-      <created>1719572331230</created>
-      <option name="number" value="00086" />
-      <option name="presentableId" value="LOCAL-00086" />
-      <option name="project" value="LOCAL" />
-      <updated>1719572331231</updated>
     </task>
     <task id="LOCAL-00087" summary="芜湖,Fabric的主要内容完成啦=└(┐卍^o^)卍">
       <option name="closed" value="true" />
@@ -686,7 +676,15 @@
       <option name="project" value="LOCAL" />
       <updated>1722492149133</updated>
     </task>
-    <option name="localTasksCounter" value="135" />
+    <task id="LOCAL-00135" summary="添加NekoCollector物品">
+      <option name="closed" value="true" />
+      <created>1722515753797</created>
+      <option name="number" value="00135" />
+      <option name="presentableId" value="LOCAL-00135" />
+      <option name="project" value="LOCAL" />
+      <updated>1722515753798</updated>
+    </task>
+    <option name="localTasksCounter" value="136" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -702,7 +700,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="修复一些有关Json的Bug,把ctlib更新到0.1.11" />
     <MESSAGE value="修复权限Bug" />
     <MESSAGE value="添加猫尾巴代码~~" />
     <MESSAGE value="添加猫尾巴~~" />
@@ -727,6 +724,7 @@
     <MESSAGE value="添加猫耳朵" />
     <MESSAGE value="完善猫耳朵" />
     <MESSAGE value="添加饰品栏可以被渲染" />
-    <option name="LAST_COMMIT_MESSAGE" value="添加饰品栏可以被渲染" />
+    <MESSAGE value="添加NekoCollector物品" />
+    <option name="LAST_COMMIT_MESSAGE" value="添加NekoCollector物品" />
   </component>
 </project>
