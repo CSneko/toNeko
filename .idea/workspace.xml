@@ -8,22 +8,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="添加饰品栏可以被渲染">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/codecs/CountCodecs.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoCollectorItem.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/misc/ToNekoAttributes.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/misc/ToNekoComponents.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/models/item/neko_collector.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/item/neko_collector.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/data/toneko/recipe/neko_collector.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/datagen/ChestLootTablesProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/datagen/ChestLootTablesProvider.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/datagen/ToNekoDataGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/datagen/ToNekoDataGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoArmor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoArmor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoArmorTrinkets.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoArmorTrinkets.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/ToNekoItems.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/ToNekoItems.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/en_us.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/en_us.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/zh_cn.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/zh_cn.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/zh_tw.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/zh_tw.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/ToNeko.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/ToNeko.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/misc/ToNekoAttributes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/misc/ToNekoAttributes.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/c/tags/item/iron_nuggets.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data/c/tags/item/nuggets/iron_nuggets.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/toneko/recipe/neko_tail.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data/toneko/recipe/neko_tail.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -153,11 +143,11 @@
       <recent name="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/entity/neko" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources/data/c/tags/item/nuggests" />
       <recent name="$PROJECT_DIR$/src/main/resources/data/toneko" />
       <recent name="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/item" />
       <recent name="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/" />
       <recent name="$PROJECT_DIR$/src/main/resources/assets/toneko/geo/item/armor" />
-      <recent name="$PROJECT_DIR$/src/main/resources/assets/toneko/animations/item/armor" />
     </key>
     <key name="MoveMembersDialog.RECENTS_KEY">
       <recent name="org.cneko.toneko.fabric.util.CommandUtil" />

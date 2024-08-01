@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "R R",
+    "G G",
+    "GGG"
+  ],
+  "key": {
+    "R": {
+      "tag" : "c:rods"
+    },
+    "G": {
+      "tag" : "c:glass_blocks"
+    }
+  },
+  "result": {
+    "id": "toneko:neko_collector",
+    "count": 1
+  }
+}

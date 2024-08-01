@@ -2,8 +2,8 @@ package org.cneko.toneko.fabric.misc;
 
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.*;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -18,12 +18,9 @@ public class ToNekoAttributes {
         1.0, 0.0, 100.0
         ).setTracked(true)
     );
-    public static final DefaultAttributeContainer NEKO_DEGREE_CONTAINER = DefaultAttributeContainer.builder()
-        .add(NEKO_DEGREE)
-        .build();
 
     public static void init(){
-        FabricDefaultAttributeRegistry.register(EntityType.PLAYER,NEKO_DEGREE_CONTAINER);
+        FabricDefaultAttributeRegistry.register(EntityType.PLAYER,PlayerEntity.createPlayerAttributes().add(NEKO_DEGREE));
     }
 
     public static RegistryEntry<EntityAttribute> register(Identifier id, EntityAttribute attribute) {

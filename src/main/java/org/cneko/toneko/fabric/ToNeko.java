@@ -15,6 +15,7 @@ import org.cneko.toneko.fabric.impl.FabricConfigImpl;
 import org.cneko.toneko.fabric.impl.FabricLanguageImpl;
 import org.cneko.toneko.fabric.items.ToNekoArmorMaterials;
 import org.cneko.toneko.fabric.items.ToNekoItems;
+import org.cneko.toneko.fabric.misc.ToNekoAttributes;
 import org.cneko.toneko.fabric.network.packets.EntityPosePayload;
 import org.cneko.toneko.fabric.util.PermissionUtil;
 
@@ -35,6 +36,8 @@ public class ToNeko implements ModInitializer {
         // 注册物品
         ToNekoItems.init();
         TwwdfCommand.init();
+        // 注册属性
+        ToNekoAttributes.init();
         // 注册网络数据包
         PayloadTypeRegistry.playS2C().register(EntityPosePayload.ID, EntityPosePayload.CODEC);
         // 启动事件
