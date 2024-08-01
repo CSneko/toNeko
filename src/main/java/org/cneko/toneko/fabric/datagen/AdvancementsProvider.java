@@ -27,7 +27,7 @@ public class AdvancementsProvider extends FabricAdvancementProvider {
     public void generateAdvancement(RegistryWrapper.WrapperLookup registryLookup, Consumer<AdvancementEntry> consumer) {
         GOT_NEKO_POTION = Advancement.Builder.create()
                 .display(
-                        ToNekoItems.NEKO_POTION, // 以猫娘药水作为图标
+                        ToNekoItems.NEKO_EARS, // 以猫耳朵作为图标
                         translatable("advancements.toneko.root.title"),
                         translatable("advancements.toneko.root.description"),
                         Identifier.of("textures/gui/advancements/backgrounds/adventure.png"),

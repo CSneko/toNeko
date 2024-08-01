@@ -43,19 +43,19 @@ public class NekoArmorTrinketsRenderer {
         @Override
         public void render(ItemStack item, SlotReference slotReference, EntityModel<? extends LivingEntity> model, MatrixStack poseStack, VertexConsumerProvider vertexConsumers, int light, LivingEntity entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
             try {
-                if (renderer == null){
+                //if (renderer == null){
                     renderer = NEKO_TAIL.getRenderer();
                     renderer.setItemStack(item);
                     renderer.setEntity(entity);
                     renderer.setBaseModel((BipedEntityModel<?>) model);
                     renderer.setSlot(EquipmentSlot.CHEST);
-                    renderer.setAnimatable(NEKO_TAIL);
-                }
+                //}
+                renderer.setAnimatable(NEKO_TAIL);
                 // 保存当前矩阵状态
                 poseStack.push();
 
                 // 执行渲染
-                renderer.render(poseStack, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(Registries.ITEM.getId(NEKO_EARS))), light, OverlayTexture.DEFAULT_UV, 1);
+                renderer.render(poseStack, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(Registries.ITEM.getId(NEKO_TAIL))), light, OverlayTexture.DEFAULT_UV, 1);
             } catch (Exception ignored) {} finally {
                 // 恢复之前的矩阵状态
                 poseStack.pop();
@@ -69,15 +69,14 @@ public class NekoArmorTrinketsRenderer {
         @Override
         public void render(ItemStack item, SlotReference slotReference, EntityModel<? extends LivingEntity> model, MatrixStack poseStack, VertexConsumerProvider vertexConsumers, int light, LivingEntity entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
             try {
-                if (renderer == null){
+                //if (renderer == null){
                     renderer = NEKO_EARS.getRenderer();
                     renderer.setItemStack(item);
                     renderer.setEntity(entity);
                     renderer.setBaseModel((BipedEntityModel<?>) model);
                     renderer.setSlot(EquipmentSlot.HEAD);
-                    renderer.setAnimatable(NEKO_EARS);
-                }
-                poseStack.push();
+                //}
+                renderer.setAnimatable(NEKO_EARS);
                 // 保存当前矩阵状态
                 poseStack.push();
 
