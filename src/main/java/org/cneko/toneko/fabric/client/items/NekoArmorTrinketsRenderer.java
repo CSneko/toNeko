@@ -7,67 +7,81 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
+import software.bernie.geckolib.renderer.GeoRenderer;
 
+import static org.cneko.toneko.common.Bootstrap.LOGGER;
 import static org.cneko.toneko.fabric.items.ToNekoItems.*;
 public class NekoArmorTrinketsRenderer {
     public static NekoTailTrinketRenderer NEKO_TAIL_TRINKET_RENDERER;
     public static NekoEarsTrinketRenderer NEKO_EARS_TRINKET_RENDERER;
     public static void init(){
+        LOGGER.info("Registering NekoArmorTrinketsRenderer");
         NEKO_TAIL_TRINKET_RENDERER = new NekoTailTrinketRenderer();
         NEKO_EARS_TRINKET_RENDERER = new NekoEarsTrinketRenderer();
         TrinketRendererRegistry.registerRenderer(NEKO_TAIL,NEKO_TAIL_TRINKET_RENDERER);
         TrinketRendererRegistry.registerRenderer(NEKO_EARS,NEKO_EARS_TRINKET_RENDERER);
     }
 
-    public static class NekoTailTrinketRenderer extends NekoArmorRenderer.NekoTailRenderer implements TrinketRenderer {
+    public static class NekoTailTrinketRenderer implements TrinketRenderer {
         @Override
         public void render(ItemStack item, SlotReference slotReference, EntityModel<? extends LivingEntity> model, MatrixStack poseStack, VertexConsumerProvider vertexConsumers, int light, LivingEntity entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
-            // 使用 GeckoLib 渲染模型
             try {
-                PlayerEntityModel<AbstractClientPlayerEntity> playerModel = (PlayerEntityModel<AbstractClientPlayerEntity>) model;
-                AbstractClientPlayerEntity player = (AbstractClientPlayerEntity) entity;
-                TrinketRenderer.translateToChest(poseStack,playerModel,player);
-                super.render(poseStack, vertexConsumers.getBuffer(RenderLayer.getEntitySolid(Registries.ITEM.getId(item.getItem()))), light,
-                        OverlayTexture.DEFAULT_UV, 1);
-                ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
-                itemRenderer.renderItem(player,this.currentStack, ModelTransformationMode.FIXED, false, poseStack, vertexConsumers,player.getWorld(),light,OverlayTexture.DEFAULT_UV,123);
-            }catch (Exception ignored){}
+                NekoArmorRenderer.NekoTailRenderer render = NEKO_TAIL.getRenderer();
+                render.setItemStack(item);
+                render.setEntity(entity);
+                render.setBaseModel((BipedEntityModel<?>) model);
+                render.setSlot(EquipmentSlot.CHEST);
+                render.setAnimatable(NEKO_TAIL);
+
+                // 保存当前矩阵状态
+                poseStack.push();
+
+                // 执行渲染
+                render.render(poseStack, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(Registries.ITEM.getId(NEKO_EARS))), light, OverlayTexture.DEFAULT_UV, 1);
+
+            } catch (Exception ignored) {} finally {
+                // 恢复之前的矩阵状态
+                poseStack.pop();
+            }
         }
 
-        @Override
-        public void setAngles(Entity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
-            try {
-                super.setAngles((LivingEntity) entity, limbAngle, limbDistance, animationProgress, headYaw, headPitch);
-            }catch (Exception ignored){}
-        }
     }
 
-    public static class NekoEarsTrinketRenderer extends NekoArmorRenderer.NekoEarsRenderer implements TrinketRenderer {
+    public static class NekoEarsTrinketRenderer implements TrinketRenderer {
         @Override
-        public void render(ItemStack item, SlotReference slotReference, EntityModel<? extends LivingEntity> contextModel, MatrixStack poseStack, VertexConsumerProvider vertexConsumers, int light, LivingEntity entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
-            // 使用 GeckoLib 渲染模型
+        public void render(ItemStack item, SlotReference slotReference, EntityModel<? extends LivingEntity> model, MatrixStack poseStack, VertexConsumerProvider vertexConsumers, int light, LivingEntity entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
             try {
-                super.render(poseStack, vertexConsumers.getBuffer(RenderLayer.getEntitySolid(Registries.ITEM.getId(item.getItem()))), light,
-                        OverlayTexture.DEFAULT_UV, 1);
-            }catch (Exception ignored){}
-        }
+                NekoArmorRenderer.NekoEarsRenderer render = NEKO_EARS.getRenderer();
+                render.setItemStack(item);
+                render.setEntity(entity);
+                render.setBaseModel((BipedEntityModel<?>) model);
+                render.setSlot(EquipmentSlot.HEAD);
+                render.setAnimatable(NEKO_EARS);
 
-        @Override
-        public void setAngles(Entity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
-            try {
-                super.setAngles((LivingEntity) entity, limbAngle, limbDistance, animationProgress, headYaw, headPitch);
-            }catch (Exception ignored){}
+                // 保存当前矩阵状态
+                poseStack.push();
+
+                // 执行渲染
+                render.render(poseStack, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(Registries.ITEM.getId(NEKO_EARS))), light, OverlayTexture.DEFAULT_UV, 1);
+
+            } catch (Exception ignored) {} finally {
+                // 恢复之前的矩阵状态
+                poseStack.pop();
+            }
         }
     }
 }

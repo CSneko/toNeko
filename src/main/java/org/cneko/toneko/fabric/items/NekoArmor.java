@@ -88,7 +88,7 @@ public abstract class NekoArmor<N extends Item & GeoItem> extends ArmorItem impl
         }
 
         @Override
-        public GeoArmorRenderer<NekoTailItem> getRenderer() {
+        public NekoArmorRenderer.NekoTailRenderer getRenderer() {
             return new NekoArmorRenderer.NekoTailRenderer();
         }
 
@@ -101,7 +101,7 @@ public abstract class NekoArmor<N extends Item & GeoItem> extends ArmorItem impl
         }
 
         @Override
-        public GeoArmorRenderer<NekoEarsItem> getRenderer() {
+        public NekoArmorRenderer.NekoEarsRenderer getRenderer() {
             return new NekoArmorRenderer.NekoEarsRenderer();
         }
 
