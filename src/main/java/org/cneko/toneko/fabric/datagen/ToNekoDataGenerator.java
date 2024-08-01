@@ -3,6 +3,8 @@ package org.cneko.toneko.fabric.datagen;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 
+import static org.cneko.toneko.common.Bootstrap.LOGGER;
+
 public class ToNekoDataGenerator implements DataGeneratorEntrypoint {
     public static FabricDataGenerator generator;
     @Override
@@ -12,6 +14,7 @@ public class ToNekoDataGenerator implements DataGeneratorEntrypoint {
         // 进度生成
         pack.addProvider(AdvancementsProvider::new);
         // 战利品生成
-        //pack.addProvider(ChestLootTablesProvider::new);
+        pack.addProvider(ChestLootTablesProvider::new);
+
     }
 }

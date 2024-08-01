@@ -2,6 +2,7 @@ package org.cneko.toneko.fabric.items;
 
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -13,6 +14,7 @@ import static org.cneko.toneko.common.Bootstrap.MODID;
 
 public class ToNekoItems {
     public static NekoPotionItem NEKO_POTION;
+    public static NekoCollectorItem NEKO_COLLECTOR;
     public static NekoArmor.NekoEarsItem NEKO_EARS;
     public static NekoArmor.NekoTailItem NEKO_TAIL;
     public static boolean isGeckolibInstalled = FabricLoader.getInstance().isModLoaded("geckolib");
@@ -27,7 +29,9 @@ public class ToNekoItems {
      */
     public static void registerWithOutConfig() {
         NEKO_POTION = new NekoPotionItem();
+        NEKO_COLLECTOR = new NekoCollectorItem();
         Registry.register(Registries.ITEM, Identifier.of(MODID, NekoPotionItem.ID), NEKO_POTION);
+        Registry.register(Registries.ITEM, Identifier.of(MODID, NekoCollectorItem.ID), NEKO_COLLECTOR);
 
         // 如果安装了geckolib，则注册为ArmorItem
         if (isGeckolibInstalled) {
@@ -45,6 +49,9 @@ public class ToNekoItems {
         // 注册到物品组
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.FOOD_AND_DRINK).register(content -> {
             content.add(NEKO_POTION);
+        });
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(content -> {
+            content.add(NEKO_COLLECTOR);
         });
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(content -> {
             if (isGeckolibInstalled) {

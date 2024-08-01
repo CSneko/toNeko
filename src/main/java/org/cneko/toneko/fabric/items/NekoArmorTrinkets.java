@@ -10,6 +10,7 @@ import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Identifier;
+import org.cneko.toneko.fabric.misc.ToNekoAttributes;
 
 import java.util.ArrayList;
 
@@ -37,6 +38,13 @@ public class NekoArmorTrinkets {
         public boolean canUnequip(ItemStack stack, SlotReference slot, LivingEntity entity) {
             return true;
         }
+        @Override
+        public Multimap<RegistryEntry<EntityAttribute>, EntityAttributeModifier> getModifiers(ItemStack stack, SlotReference slot, LivingEntity entity, Identifier slotIdentifier) {
+            Multimap<RegistryEntry<EntityAttribute>, EntityAttributeModifier> modifiers = Multimaps.newMultimap(Maps.newLinkedHashMap(), ArrayList::new);
+            // 添加 10 的neko_degree
+            modifiers.put(ToNekoAttributes.NEKO_DEGREE, new EntityAttributeModifier(ToNekoAttributes.NEKO_DEGREE_ID, 10.0, EntityAttributeModifier.Operation.ADD_VALUE));
+            return modifiers;
+        }
     }
 
     public static class NekoEarsTrinketItem extends NekoArmor.NekoEarsItem implements Trinket{
@@ -50,6 +58,13 @@ public class NekoArmorTrinkets {
         @Override
         public boolean canUnequip(ItemStack stack, SlotReference slot, LivingEntity entity) {
             return true;
+        }
+        @Override
+        public Multimap<RegistryEntry<EntityAttribute>, EntityAttributeModifier> getModifiers(ItemStack stack, SlotReference slot, LivingEntity entity, Identifier slotIdentifier) {
+            Multimap<RegistryEntry<EntityAttribute>, EntityAttributeModifier> modifiers = Multimaps.newMultimap(Maps.newLinkedHashMap(), ArrayList::new);
+            // 添加 10 的neko_degree
+            modifiers.put(ToNekoAttributes.NEKO_DEGREE, new EntityAttributeModifier(ToNekoAttributes.NEKO_DEGREE_ID, 10.0, EntityAttributeModifier.Operation.ADD_VALUE));
+            return modifiers;
         }
     }
 

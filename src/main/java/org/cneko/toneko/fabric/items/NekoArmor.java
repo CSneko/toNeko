@@ -71,15 +71,15 @@ public abstract class NekoArmor<N extends Item & GeoItem> extends ArmorItem impl
             @Override
             public <T extends LivingEntity> BipedEntityModel<?> getGeoArmorRenderer(@Nullable T livingEntity, ItemStack itemStack, @Nullable EquipmentSlot equipmentSlot, @Nullable BipedEntityModel<T> original) {
                 if(this.renderer == null) // Important that we do this. If we just instantiate  it directly in the field it can cause incompatibilities with some mods.
-                    this.renderer = NekoArmor.this.getRenderer();
+                    this.renderer = (GeoArmorRenderer<N>)NekoArmor.this.getRenderer();
 
                 return this.renderer;
             }
         });
     }
 
-
-    public abstract GeoArmorRenderer<N> getRenderer();
+    // 这里返回Object的原因是它会导致服务器没法启动 T_T
+    public abstract Object getRenderer();
 
     public static class NekoTailItem extends NekoArmor<NekoTailItem> {
         public static final String ID = "neko_tail";
