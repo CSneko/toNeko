@@ -2,7 +2,6 @@ package org.cneko.toneko.fabric.items;
 
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -17,6 +16,7 @@ public class ToNekoItems {
     public static NekoCollectorItem NEKO_COLLECTOR;
     public static NekoArmor.NekoEarsItem NEKO_EARS;
     public static NekoArmor.NekoTailItem NEKO_TAIL;
+    public static NekoArmor.NekoPawsItem NEKO_PAWS;
     public static boolean isGeckolibInstalled = FabricLoader.getInstance().isModLoaded("geckolib");
     public static boolean isTrinketsInstalled = FabricLoader.getInstance().isModLoaded("trinkets");
     public static void init() {
@@ -41,9 +41,11 @@ public class ToNekoItems {
             }else {
                 NEKO_EARS = new NekoArmor.NekoEarsItem();
                 NEKO_TAIL = new NekoArmor.NekoTailItem();
+                NEKO_PAWS = new NekoArmor.NekoPawsItem();
             }
             Registry.register(Registries.ITEM, Identifier.of(MODID, NekoArmor.NekoEarsItem.ID), NEKO_EARS);
             Registry.register(Registries.ITEM, Identifier.of(MODID, NekoArmor.NekoTailItem.ID), NEKO_TAIL);
+            Registry.register(Registries.ITEM, Identifier.of(MODID, NekoArmor.NekoPawsItem.ID), NEKO_PAWS);
         }
 
         // 注册到物品组

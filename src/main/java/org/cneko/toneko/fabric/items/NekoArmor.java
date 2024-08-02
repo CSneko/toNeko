@@ -5,11 +5,15 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.decoration.ArmorStandEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.util.Hand;
+import net.minecraft.util.TypedActionResult;
+import net.minecraft.world.World;
 import org.cneko.toneko.fabric.client.items.NekoArmorRenderer;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
@@ -92,6 +96,16 @@ public abstract class NekoArmor<N extends Item & GeoItem> extends ArmorItem impl
             return new NekoArmorRenderer.NekoTailRenderer();
         }
 
+        @Override
+        public TypedActionResult<ItemStack> equipAndSwap(Item item, World world, PlayerEntity user, Hand hand) {
+            TypedActionResult<ItemStack> result = super.equipAndSwap(item, world, user, hand);
+            // 如果成功，则扣除玩家0.5血量
+            if (result.getResult().isAccepted()) {
+                user.damage(user.getDamageSources().generic(), 0.5f);
+            }
+            return result;
+        }
+
     }
 
     public static class NekoEarsItem extends NekoArmor<NekoEarsItem> {
@@ -105,6 +119,18 @@ public abstract class NekoArmor<N extends Item & GeoItem> extends ArmorItem impl
             return new NekoArmorRenderer.NekoEarsRenderer();
         }
 
+    }
+
+    public static class NekoPawsItem extends NekoArmor<NekoPawsItem> {
+        public static final String ID = "neko_paws";
+        public NekoPawsItem() {
+            super(ToNekoArmorMaterials.NEKO,Type.BOOTS,new Settings().maxCount(1));
+        }
+
+        @Override
+        public NekoArmorRenderer.NekoPawsRenderer getRenderer() {
+            return new NekoArmorRenderer.NekoPawsRenderer();
+        }
     }
 
 

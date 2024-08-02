@@ -19,6 +19,10 @@ public class ToNeko {
         所以
         我还是放弃吧¯\_(ツ)_/¯
          */
-        new org.cneko.toneko.fabric.ToNeko().onInitialize();
+        // 游戏启动后初始化
+        bus.addListener((e) -> {
+            new org.cneko.toneko.fabric.ToNeko().onInitialize();
+        });
+
     }
 }

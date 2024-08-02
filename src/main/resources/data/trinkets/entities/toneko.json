@@ -4,6 +4,7 @@
   ],
   "slots": [
     "head/hat",
-    "chest/back"
+    "chest/back",
+    "feet/shoes"
   ]
 }

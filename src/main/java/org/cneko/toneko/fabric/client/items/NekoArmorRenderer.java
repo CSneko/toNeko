@@ -6,7 +6,6 @@ import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
@@ -17,7 +16,6 @@ import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.model.DefaultedItemGeoModel;
 import software.bernie.geckolib.renderer.GeoArmorRenderer;
-
 
 import static org.cneko.toneko.common.Bootstrap.MODID;
 
@@ -39,6 +37,7 @@ public class NekoArmorRenderer<T extends NekoArmor<T>> extends GeoArmorRenderer<
             // 前进1/16个单位并下移动1单位
             poseStack.translate(0,-1.5,-0.0625);
         }
+
     }
 
     public void setItemStack(ItemStack stack){
@@ -65,6 +64,12 @@ public class NekoArmorRenderer<T extends NekoArmor<T>> extends GeoArmorRenderer<
 
     public static class NekoEarsRenderer extends NekoArmorRenderer<NekoArmor.NekoEarsItem> {
         public NekoEarsRenderer() {
+            super();
+        }
+    }
+
+    public static class NekoPawsRenderer extends NekoArmorRenderer<NekoArmor.NekoPawsItem> {
+        public NekoPawsRenderer() {
             super();
         }
     }

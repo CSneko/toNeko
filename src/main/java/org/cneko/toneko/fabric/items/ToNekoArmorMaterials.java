@@ -2,10 +2,8 @@ package org.cneko.toneko.fabric.items;
 
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
-import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.BuiltinRegistries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.TagKey;
@@ -39,8 +37,8 @@ public class ToNekoArmorMaterials {
                 15, // 嗯...还是让你们可以附魔吧
                 RegistryEntry.of(SoundEvents.ENTITY_CAT_AMBIENT), // 喵喵喵~
                 () -> Ingredient.fromTag(TagKey.of(Registries.ITEM.getKey(), Identifier.of("c","wool"))), //wooooooooool
-                0.0F, // 猫尾巴可以吸收什么伤害呢
-                0.0F, // 猫尾巴还能抵御击退吗?肯定不能啦
+                0.5F, // 猫尾巴可以吸收什么伤害呢
+                0.5F, // 猫尾巴还能抵御击退吗?肯定不能啦
                 false // 猫尾巴可以染色吗?当然可以啦,但是现在技术还不够呢,求原谅
         );
 

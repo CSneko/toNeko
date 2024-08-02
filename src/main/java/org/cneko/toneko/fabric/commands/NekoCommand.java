@@ -4,7 +4,6 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.component.Component;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
 import net.minecraft.entity.EntityPose;
@@ -13,7 +12,6 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -22,7 +20,7 @@ import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.api.Permissions;
 import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.fabric.api.PlayerInstallToNeko;
-import org.cneko.toneko.fabric.events.PlayerTickEvent;
+import org.cneko.toneko.fabric.api.PlayerPoseAPI;
 import org.cneko.toneko.fabric.network.packets.EntityPosePayload;
 import org.cneko.toneko.fabric.util.PermissionUtil;
 import org.cneko.toneko.fabric.util.TextUtil;
@@ -58,6 +56,10 @@ public class NekoCommand {
                             .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_NEKO_LIE))
                             .executes(NekoCommand::lieCommand)
                     )
+                    .then(literal("sit")
+                            .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_NEKO_SIT))
+                            .executes(NekoCommand::sitCommand)
+                    )
                     .then(literal("nickname")
                             .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_NEKO_NICKNAME))
                             .then(argument("nickname", StringArgumentType.string())
@@ -76,6 +78,20 @@ public class NekoCommand {
                     )
             );
         });
+    }
+
+    public static int sitCommand(CommandContext<ServerCommandSource> context) {
+        ServerPlayerEntity player = context.getSource().getPlayer();
+        String playerName = TextUtil.getPlayerName(player);
+        // 如果玩家没有坐下,把玩家设置为坐下,否则把玩家设置为正常
+        if(PlayerPoseAPI.contains(player)){
+            PlayerPoseAPI.remove(player);
+            if(!ConfigUtil.ONLY_SERVER || PlayerInstallToNeko.get(playerName)) ServerPlayNetworking.send(player, new EntityPosePayload(EntityPose.SITTING,false));
+        }else{
+            PlayerPoseAPI.setPose(player, EntityPose.SITTING);
+            if(!ConfigUtil.ONLY_SERVER || PlayerInstallToNeko.get(playerName)) ServerPlayNetworking.send(player, new EntityPosePayload(EntityPose.SITTING,true));
+        }
+        return 1;
     }
 
     public static int loreCommand(CommandContext<ServerCommandSource> context) {
@@ -124,11 +140,11 @@ public class NekoCommand {
         ServerPlayerEntity player = context.getSource().getPlayer();
         String playerName = TextUtil.getPlayerName(player);
         // 如果玩家没有躺下,把玩家设置为躺下,否则把玩家设置为正常
-        if(PlayerTickEvent.lyingPlayers.contains(player)){
-            PlayerTickEvent.lyingPlayers.remove(player);
+        if(PlayerPoseAPI.contains(player)){
+            PlayerPoseAPI.remove(player);
             if(!ConfigUtil.ONLY_SERVER || PlayerInstallToNeko.get(playerName)) ServerPlayNetworking.send(player, new EntityPosePayload(EntityPose.SLEEPING,false));
         }else{
-            PlayerTickEvent.lyingPlayers.add(player);
+            PlayerPoseAPI.setPose(player, EntityPose.SLEEPING);
             if(!ConfigUtil.ONLY_SERVER || PlayerInstallToNeko.get(playerName)) ServerPlayNetworking.send(player, new EntityPosePayload(EntityPose.SLEEPING,true));
         }
         return 1;
