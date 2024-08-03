@@ -39,7 +39,7 @@ public class ToNekoArmorMaterials {
                 () -> Ingredient.fromTag(TagKey.of(Registries.ITEM.getKey(), Identifier.of("c","wool"))), //wooooooooool
                 0.5F, // 猫尾巴可以吸收什么伤害呢
                 0.5F, // 猫尾巴还能抵御击退吗?肯定不能啦
-                false // 猫尾巴可以染色吗?当然可以啦,但是现在技术还不够呢,求原谅
+                true // 猫尾巴可以染色吗?当然可以啦,但是现在技术还不够呢,求原谅
         );
 
 
