@@ -12,6 +12,7 @@ Pre-mod required for the module version (must be added): [ctlib](https://modrint
 
 Pre-plugin required for the plugin version: [ctlib](https://modrinth.com/plugin/ctlib)
 
+**Currently the plugin version is temporarily suspended**
 ## Tips
 If you found that some text isn't your language, just modify [the config file](#configuration) to your language. 
 

@@ -4,6 +4,7 @@
   "item.toneko.neko_ears": "猫耳朵",
   "item.toneko.neko_collector": "喵喵吸收器",
   "item.toneko.neko_collector.info": "已经吸收 %d / %d 猫猫能量啦",
+  "itemGroup.toneko": "猫猫",
   "attribute.name.neko.degree": "猫猫等级",
   "enchantment.toneko.reversion": "反转",
   "quirk.toneko.caress": "抚摸",

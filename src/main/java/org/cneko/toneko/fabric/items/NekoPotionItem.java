@@ -65,6 +65,10 @@ public class NekoPotionItem extends PotionItem {
         }
 
         if (playerEntity == null || !playerEntity.getAbilities().creativeMode) {
+            // 把玩家变成猫猫
+            if (!world.isClient) {
+                toneko(world, playerEntity, user.getActiveHand());
+            }
             if (stack.isEmpty()) {
                 return new ItemStack(Items.GLASS_BOTTLE);
             }
@@ -75,7 +79,9 @@ public class NekoPotionItem extends PotionItem {
 
         }
         // 把玩家变成猫猫
-        toneko(world, playerEntity, user.getActiveHand());
+        if (!world.isClient) {
+            toneko(world, playerEntity, user.getActiveHand());
+        }
         user.emitGameEvent(GameEvent.DRINK);
         return stack;
     }
