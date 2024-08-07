@@ -1,17 +1,18 @@
 package org.cneko.toneko.fabric.misc;
 
-import net.minecraft.component.ComponentType;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
 import org.cneko.toneko.fabric.codecs.CountCodecs;
 
 import static org.cneko.toneko.common.Bootstrap.MODID;
 
+import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+
 public class ToNekoComponents {
-    public static final ComponentType<CountCodecs.FloatCountCodec> NEKO_PROGRESS_COMPONENT = Registry.register(
-            Registries.DATA_COMPONENT_TYPE,
-            Identifier.of(MODID, "neko_progress"),
-            ComponentType.<CountCodecs.FloatCountCodec>builder().codec(CountCodecs.FLOAT_COUNT_CODEC).build()
+    public static final DataComponentType<CountCodecs.FloatCountCodec> NEKO_PROGRESS_COMPONENT = Registry.register(
+            BuiltInRegistries.DATA_COMPONENT_TYPE,
+            ResourceLocation.fromNamespaceAndPath(MODID, "neko_progress"),
+            DataComponentType.<CountCodecs.FloatCountCodec>builder().persistent(CountCodecs.FLOAT_COUNT_CODEC).build()
     );
 }

@@ -1,14 +1,16 @@
 package org.cneko.toneko.fabric.enchanments;
 
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.registry.*;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.enchantment.Enchantment;
 
 import static org.cneko.toneko.common.Bootstrap.MODID;
 
 public class ToNekoEnchantments {
 
-    public static final RegistryKey<Enchantment> REVERSION = of("reversion"); // 反转
+    public static final ResourceKey<Enchantment> REVERSION = of("reversion"); // 反转
 
     public static void init(){
 
@@ -20,8 +22,8 @@ public class ToNekoEnchantments {
      * @param key RegistryKey
      * @param builder Enchantment.Builder
      */
-    public static void register(Registerable<Enchantment> registry, RegistryKey<Enchantment> key, Enchantment.Builder builder) {
-        registry.register(key, builder.build(key.getValue()));
+    public static void register(BootstrapContext<Enchantment> registry, ResourceKey<Enchantment> key, Enchantment.Builder builder) {
+        registry.register(key, builder.build(key.location()));
     }
 
     /**
@@ -29,7 +31,7 @@ public class ToNekoEnchantments {
      * @param id 附魔id
      * @return RegistryKey
      */
-    public static RegistryKey<Enchantment> of(String id) {
-        return RegistryKey.of(RegistryKeys.ENCHANTMENT, Identifier.of(MODID,id));
+    public static ResourceKey<Enchantment> of(String id) {
+        return ResourceKey.create(Registries.ENCHANTMENT, ResourceLocation.fromNamespaceAndPath(MODID,id));
     }
 }

@@ -3,8 +3,8 @@ package org.cneko.toneko.fabric.commands;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.Text;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.Component;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.api.Permissions;
 import org.cneko.toneko.common.quirks.Quirk;
@@ -14,8 +14,8 @@ import org.cneko.toneko.fabric.util.PermissionUtil;
 
 import java.util.List;
 
-import static net.minecraft.server.command.CommandManager.argument;
-import static net.minecraft.server.command.CommandManager.literal;
+import static net.minecraft.commands.Commands.argument;
+import static net.minecraft.commands.Commands.literal;
 import static org.cneko.toneko.fabric.util.TextUtil.translatable;
 public class QuirkCommand {
     public static void init(){
@@ -46,10 +46,10 @@ public class QuirkCommand {
         ));
     }
 
-    public static int listQuirks(CommandContext<ServerCommandSource> context) {
-        NekoQuery.Neko neko = NekoQuery.getNeko(context.getSource().getPlayer().getUuid());
+    public static int listQuirks(CommandContext<CommandSourceStack> context) {
+        NekoQuery.Neko neko = NekoQuery.getNeko(context.getSource().getPlayer().getUUID());
         if(neko.getQuirks().isEmpty()){
-            context.getSource().sendMessage(translatable("command.quirk.no_quirk"));
+            context.getSource().sendSystemMessage(translatable("command.quirk.no_quirk"));
             return 1;
         }
         // 列出quirks
@@ -57,46 +57,46 @@ public class QuirkCommand {
         // 转换为id
         List<String> quirkIds = quirks.stream().map(Quirk::getId).toList();
         // 翻译
-        List<Text> quirkTexts = quirkIds.stream().map(id -> translatable("quirk.toneko" + id)).toList();
+        List<Component> quirkTexts = quirkIds.stream().map(id -> translatable("quirk.toneko" + id)).toList();
         // 全部发送
-        context.getSource().sendMessage(translatable("command.quirk.list"));
-        for (Text text : quirkTexts) {
-            context.getSource().sendMessage(text);
+        context.getSource().sendSystemMessage(translatable("command.quirk.list"));
+        for (Component text : quirkTexts) {
+            context.getSource().sendSystemMessage(text);
         }
         return 1;
     }
 
-    public static int addOrRemoveQuirk(CommandContext<ServerCommandSource> context) {
-        NekoQuery.Neko neko = NekoQuery.getNeko(context.getSource().getPlayer().getUuid());
+    public static int addOrRemoveQuirk(CommandContext<CommandSourceStack> context) {
+        NekoQuery.Neko neko = NekoQuery.getNeko(context.getSource().getPlayer().getUUID());
         String quirk = StringArgumentType.getString(context, "quirk");
         if(!QuirkRegister.hasQuirk(quirk)){
-            context.getSource().sendMessage(translatable("command.quirk.not_quirk"));
+            context.getSource().sendSystemMessage(translatable("command.quirk.not_quirk"));
             return 1;
         }
         // 如果是添加
         context.getNodes().stream().filter(node -> node.getNode().getName().equals("add")).findFirst().ifPresent(node -> {
             if(neko.hasQuirk(QuirkRegister.getById(quirk))){
-                context.getSource().sendMessage(translatable("command.quirk.already_quirk"));
+                context.getSource().sendSystemMessage(translatable("command.quirk.already_quirk"));
             }else {
                 neko.addQuirk(QuirkRegister.getById(quirk));
-                context.getSource().sendMessage(translatable("command.quirk.add", quirk));
+                context.getSource().sendSystemMessage(translatable("command.quirk.add", quirk));
             }
         });
         // 删除
         context.getNodes().stream().filter(node -> node.getNode().getName().equals("remove")).findFirst().ifPresent(node -> {
             if(!neko.hasQuirk(QuirkRegister.getById(quirk))){
-                context.getSource().sendMessage(translatable("command.quirk.not_has_quirk"));
+                context.getSource().sendSystemMessage(translatable("command.quirk.not_has_quirk"));
             }else {
                 neko.removeQuirk(QuirkRegister.getById(quirk));
-                context.getSource().sendMessage(translatable("command.quirk.remove", quirk));
+                context.getSource().sendSystemMessage(translatable("command.quirk.remove", quirk));
             }
         });
         neko.save();
         return 1;
     }
 
-    public static int helpCommand(CommandContext<ServerCommandSource> context) {
-        context.getSource().sendMessage(translatable("command.quirk.help"));
+    public static int helpCommand(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSystemMessage(translatable("command.quirk.help"));
         return 1;
     }
 }

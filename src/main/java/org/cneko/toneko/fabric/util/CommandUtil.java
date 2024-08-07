@@ -4,19 +4,19 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
 import org.cneko.toneko.common.quirks.Quirk;
 import org.cneko.toneko.common.quirks.QuirkRegister;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 
 import static org.cneko.toneko.fabric.util.TextUtil.translatable;
 public class CommandUtil {
-    public static final SuggestionProvider<ServerCommandSource> getOnlinePlayers = (context, builder) -> {
-        for (ServerPlayerEntity player : context.getSource().getServer().getPlayerManager().getPlayerList()) {
+    public static final SuggestionProvider<CommandSourceStack> getOnlinePlayers = (context, builder) -> {
+        for (ServerPlayer player : context.getSource().getServer().getPlayerList().getPlayers()) {
             String playerTabList = player.getName().toString();
             //替换字符
             String output = playerTabList.replace("literal{", "").replace("}", "");
@@ -26,17 +26,17 @@ public class CommandUtil {
     };
 
     // 没有权限
-    public static int noPS(ServerCommandSource player){
-        player.sendMessage(translatable("command.toneko.noPermission"));
+    public static int noPS(CommandSourceStack player){
+        player.sendSystemMessage(translatable("command.toneko.noPermission"));
         return 1;
     }
     // 没有权限
-    public static int noPS(PlayerEntity player){
-        player.sendMessage(translatable("command.toneko.noPermission"));
+    public static int noPS(Player player){
+        player.sendSystemMessage(translatable("command.toneko.noPermission"));
         return 1;
     }
 
-    public static CompletableFuture<Suggestions> getQuirksSuggestions(CommandContext<ServerCommandSource> source, SuggestionsBuilder builder) {
+    public static CompletableFuture<Suggestions> getQuirksSuggestions(CommandContext<CommandSourceStack> source, SuggestionsBuilder builder) {
         // 获取quirks
         List<Quirk> quirks = QuirkRegister.getQuirks();
         for (Quirk quirk : quirks) {

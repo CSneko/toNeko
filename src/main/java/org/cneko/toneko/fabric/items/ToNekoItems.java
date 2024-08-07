@@ -3,13 +3,13 @@ package org.cneko.toneko.fabric.items;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 import org.cneko.toneko.common.util.ConfigUtil;
 
 import static org.cneko.toneko.common.Bootstrap.MODID;
@@ -21,8 +21,8 @@ public class ToNekoItems {
     public static NekoArmor.NekoEarsItem NEKO_EARS;
     public static NekoArmor.NekoTailItem NEKO_TAIL;
     public static NekoArmor.NekoPawsItem NEKO_PAWS;
-    public static RegistryKey<ItemGroup> TONEKO_ITEM_GROUP_KEY;
-    public static ItemGroup TONEKO_ITEM_GROUP;
+    public static ResourceKey<CreativeModeTab> TONEKO_ITEM_GROUP_KEY;
+    public static CreativeModeTab TONEKO_ITEM_GROUP;
     public static boolean isGeckolibInstalled = FabricLoader.getInstance().isModLoaded("geckolib");
     public static boolean isTrinketsInstalled = FabricLoader.getInstance().isModLoaded("trinkets");
     public static void init() {
@@ -36,8 +36,8 @@ public class ToNekoItems {
     public static void registerWithOutConfig() {
         NEKO_POTION = new NekoPotionItem();
         NEKO_COLLECTOR = new NekoCollectorItem();
-        Registry.register(Registries.ITEM, Identifier.of(MODID, NekoPotionItem.ID), NEKO_POTION);
-        Registry.register(Registries.ITEM, Identifier.of(MODID, NekoCollectorItem.ID), NEKO_COLLECTOR);
+        Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, NekoPotionItem.ID), NEKO_POTION);
+        Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, NekoCollectorItem.ID), NEKO_COLLECTOR);
         // 如果安装了geckolib，则注册为ArmorItem
         if (isGeckolibInstalled) {
             // 如果安装了trinkets，则注册为TrinketItem
@@ -48,29 +48,29 @@ public class ToNekoItems {
                 NEKO_TAIL = new NekoArmor.NekoTailItem();
                 NEKO_PAWS = new NekoArmor.NekoPawsItem();
             }
-            Registry.register(Registries.ITEM, Identifier.of(MODID, NekoArmor.NekoEarsItem.ID), NEKO_EARS);
-            Registry.register(Registries.ITEM, Identifier.of(MODID, NekoArmor.NekoTailItem.ID), NEKO_TAIL);
-            Registry.register(Registries.ITEM, Identifier.of(MODID, NekoArmor.NekoPawsItem.ID), NEKO_PAWS);
+            Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, NekoArmor.NekoEarsItem.ID), NEKO_EARS);
+            Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, NekoArmor.NekoTailItem.ID), NEKO_TAIL);
+            Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, NekoArmor.NekoPawsItem.ID), NEKO_PAWS);
             TONEKO_ITEM_GROUP = FabricItemGroup.builder()
                     .icon(() -> new ItemStack(NEKO_EARS))
-                    .displayName(Text.translatable("itemGroup.toneko"))
+                    .title(Component.translatable("itemGroup.toneko"))
                     .build();
         }else {
             TONEKO_ITEM_GROUP = FabricItemGroup.builder()
                     .icon(() -> new ItemStack(NEKO_POTION))
-                    .displayName(Text.translatable("itemGroup.toneko"))
+                    .title(Component.translatable("itemGroup.toneko"))
                     .build();
         }
         // 注册物品组
-        TONEKO_ITEM_GROUP_KEY = RegistryKey.of(Registries.ITEM_GROUP.getKey(), Identifier.of(MODID, "item_group"));
-        Registry.register(Registries.ITEM_GROUP, TONEKO_ITEM_GROUP_KEY,TONEKO_ITEM_GROUP);
+        TONEKO_ITEM_GROUP_KEY = ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), ResourceLocation.fromNamespaceAndPath(MODID, "item_group"));
+        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, TONEKO_ITEM_GROUP_KEY,TONEKO_ITEM_GROUP);
 
         ItemGroupEvents.modifyEntriesEvent(TONEKO_ITEM_GROUP_KEY).register(content -> {
-            content.add(NEKO_POTION);
-            content.add(NEKO_COLLECTOR);
+            content.accept(NEKO_POTION);
+            content.accept(NEKO_COLLECTOR);
             if (isGeckolibInstalled) {
-                content.add(NEKO_EARS);
-                content.add(NEKO_TAIL);
+                content.accept(NEKO_EARS);
+                content.accept(NEKO_TAIL);
             }
         });
     }

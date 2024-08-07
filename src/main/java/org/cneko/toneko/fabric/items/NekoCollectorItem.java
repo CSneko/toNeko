@@ -1,46 +1,46 @@
 package org.cneko.toneko.fabric.items;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.passive.CatEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.math.Box;
-import net.minecraft.world.World;
 import org.cneko.toneko.fabric.codecs.CountCodecs;
 import org.cneko.toneko.fabric.misc.ToNekoAttributes;
 import org.cneko.toneko.fabric.misc.ToNekoComponents;
 
 import java.util.List;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.animal.Cat;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 
 public class NekoCollectorItem extends Item {
     public static String ID = "neko_collector";
     public static CountCodecs.FloatCountCodec DEFAULT_NEKO_PROGRESS_COMPONENT = new CountCodecs.FloatCountCodec(0.0f, 5000.0f);
     public NekoCollectorItem() {
-        super(new Settings().maxCount(1).component(ToNekoComponents.NEKO_PROGRESS_COMPONENT, DEFAULT_NEKO_PROGRESS_COMPONENT));
+        super(new Properties().stacksTo(1).component(ToNekoComponents.NEKO_PROGRESS_COMPONENT, DEFAULT_NEKO_PROGRESS_COMPONENT));
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
         float count = stack.getOrDefault(ToNekoComponents.NEKO_PROGRESS_COMPONENT, DEFAULT_NEKO_PROGRESS_COMPONENT).getCount();
         float maxCount = stack.getOrDefault(ToNekoComponents.NEKO_PROGRESS_COMPONENT, DEFAULT_NEKO_PROGRESS_COMPONENT).getMaxCount();
-        tooltip.add(Text.translatable("item.toneko.neko_collector.info", count, maxCount).formatted(Formatting.GREEN));
+        tooltip.add(Component.translatable("item.toneko.neko_collector.info", count, maxCount).withStyle(ChatFormatting.GREEN));
     }
 
-    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        if (! (entity instanceof PlayerEntity player)) return;
+    public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
+        if (! (entity instanceof Player player)) return;
         // 获取玩家3格方块内的猫猫数量
         float radius = 3.0f;
         int catCount = 0;
         // 创建一个包围盒，它代表了以 centerEntity 为中心、半径为 radius 的区域
-        Box box = new Box(entity.getX() - radius, entity.getY() - radius, entity.getZ() - radius,
+        AABB box = new AABB(entity.getX() - radius, entity.getY() - radius, entity.getZ() - radius,
                 entity.getX() + radius, entity.getY() + radius, entity.getZ() + radius);
-        List<Entity> entities = world.getOtherEntities(entity, box);
+        List<Entity> entities = world.getEntities(entity, box);
         for (Entity entity1 : entities) {
-            if (entity1 instanceof CatEntity) {
+            if (entity1 instanceof Cat) {
                 catCount++;
             }
         }
@@ -54,7 +54,7 @@ public class NekoCollectorItem extends Item {
         // 如果count >= maxCount，则清零并掉落一瓶猫娘药水
         if (count >= maxCount) {
             stack.set(ToNekoComponents.NEKO_PROGRESS_COMPONENT, new CountCodecs.FloatCountCodec(0.0f, maxCount));
-            entity.dropItem(ToNekoItems.NEKO_POTION);
+            entity.spawnAtLocation(ToNekoItems.NEKO_POTION);
         }else {
             stack.set(ToNekoComponents.NEKO_PROGRESS_COMPONENT, new CountCodecs.FloatCountCodec(count, maxCount));
         }

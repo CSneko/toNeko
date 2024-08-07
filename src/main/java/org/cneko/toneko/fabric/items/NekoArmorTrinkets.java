@@ -4,15 +4,15 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 import dev.emi.trinkets.api.*;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.Identifier;
 import org.cneko.toneko.fabric.misc.ToNekoAttributes;
 
 import java.util.ArrayList;
+import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.item.ItemStack;
 
 import static org.cneko.toneko.common.Bootstrap.LOGGER;
 import static org.cneko.toneko.fabric.items.ToNekoItems.*;
@@ -42,10 +42,10 @@ public class NekoArmorTrinkets {
             return true;
         }
         @Override
-        public Multimap<RegistryEntry<EntityAttribute>, EntityAttributeModifier> getModifiers(ItemStack stack, SlotReference slot, LivingEntity entity, Identifier slotIdentifier) {
-            Multimap<RegistryEntry<EntityAttribute>, EntityAttributeModifier> modifiers = Multimaps.newMultimap(Maps.newLinkedHashMap(), ArrayList::new);
+        public Multimap<Holder<Attribute>, AttributeModifier> getModifiers(ItemStack stack, SlotReference slot, LivingEntity entity, ResourceLocation slotIdentifier) {
+            Multimap<Holder<Attribute>, AttributeModifier> modifiers = Multimaps.newMultimap(Maps.newLinkedHashMap(), ArrayList::new);
             // 添加 10 的neko_degree
-            modifiers.put(ToNekoAttributes.NEKO_DEGREE, new EntityAttributeModifier(ToNekoAttributes.NEKO_DEGREE_ID, 10.0, EntityAttributeModifier.Operation.ADD_VALUE));
+            modifiers.put(ToNekoAttributes.NEKO_DEGREE, new AttributeModifier(ToNekoAttributes.NEKO_DEGREE_ID, 10.0, AttributeModifier.Operation.ADD_VALUE));
             return modifiers;
         }
     }
@@ -63,10 +63,10 @@ public class NekoArmorTrinkets {
             return true;
         }
         @Override
-        public Multimap<RegistryEntry<EntityAttribute>, EntityAttributeModifier> getModifiers(ItemStack stack, SlotReference slot, LivingEntity entity, Identifier slotIdentifier) {
-            Multimap<RegistryEntry<EntityAttribute>, EntityAttributeModifier> modifiers = Multimaps.newMultimap(Maps.newLinkedHashMap(), ArrayList::new);
+        public Multimap<Holder<Attribute>, AttributeModifier> getModifiers(ItemStack stack, SlotReference slot, LivingEntity entity, ResourceLocation slotIdentifier) {
+            Multimap<Holder<Attribute>, AttributeModifier> modifiers = Multimaps.newMultimap(Maps.newLinkedHashMap(), ArrayList::new);
             // 添加 10 的neko_degree
-            modifiers.put(ToNekoAttributes.NEKO_DEGREE, new EntityAttributeModifier(ToNekoAttributes.NEKO_DEGREE_ID, 10.0, EntityAttributeModifier.Operation.ADD_VALUE));
+            modifiers.put(ToNekoAttributes.NEKO_DEGREE, new AttributeModifier(ToNekoAttributes.NEKO_DEGREE_ID, 10.0, AttributeModifier.Operation.ADD_VALUE));
             return modifiers;
         }
     }
@@ -83,10 +83,10 @@ public class NekoArmorTrinkets {
             return true;
         }
         @Override
-        public Multimap<RegistryEntry<EntityAttribute>, EntityAttributeModifier> getModifiers(ItemStack stack, SlotReference slot, LivingEntity entity, Identifier slotIdentifier) {
-            Multimap<RegistryEntry<EntityAttribute>, EntityAttributeModifier> modifiers = Multimaps.newMultimap(Maps.newLinkedHashMap(), ArrayList::new);
+        public Multimap<Holder<Attribute>, AttributeModifier> getModifiers(ItemStack stack, SlotReference slot, LivingEntity entity, ResourceLocation slotIdentifier) {
+            Multimap<Holder<Attribute>, AttributeModifier> modifiers = Multimaps.newMultimap(Maps.newLinkedHashMap(), ArrayList::new);
             // 添加 10 的neko_degree
-            modifiers.put(ToNekoAttributes.NEKO_DEGREE, new EntityAttributeModifier(ToNekoAttributes.NEKO_DEGREE_ID, 10.0, EntityAttributeModifier.Operation.ADD_VALUE));
+            modifiers.put(ToNekoAttributes.NEKO_DEGREE, new AttributeModifier(ToNekoAttributes.NEKO_DEGREE_ID, 10.0, AttributeModifier.Operation.ADD_VALUE));
             return modifiers;
         }
     }
