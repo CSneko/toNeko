@@ -7,17 +7,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="尾巴和耳朵支持染色">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README_en.md" beforeDir="false" afterPath="$PROJECT_DIR$/README_en.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoPotionItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoPotionItem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/ToNekoItems.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/ToNekoItems.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/en_us.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/en_us.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/zh_cn.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/zh_cn.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/zh_tw.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/zh_tw.json" afterDir="false" />
-    </list>
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="修复一点小Bug" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -299,14 +289,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-    </task>
-    <task id="LOCAL-00091" summary="稍微完善了一下性癖功能,添加昵称,还有...完善口癖!">
-      <option name="closed" value="true" />
-      <created>1720158863197</created>
-      <option name="number" value="00091" />
-      <option name="presentableId" value="LOCAL-00091" />
-      <option name="project" value="LOCAL" />
-      <updated>1720158863197</updated>
     </task>
     <task id="LOCAL-00092" summary="这么重要的事情我居然忘记了(┙&gt;∧&lt;)┙へ┻┻">
       <option name="closed" value="true" />
@@ -692,7 +674,15 @@
       <option name="project" value="LOCAL" />
       <updated>1722697538739</updated>
     </task>
-    <option name="localTasksCounter" value="140" />
+    <task id="LOCAL-00140" summary="修复一点小Bug">
+      <option name="closed" value="true" />
+      <created>1722745368008</created>
+      <option name="number" value="00140" />
+      <option name="presentableId" value="LOCAL-00140" />
+      <option name="project" value="LOCAL" />
+      <updated>1722745368009</updated>
+    </task>
+    <option name="localTasksCounter" value="141" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -708,7 +698,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="添加猫尾巴~~" />
     <MESSAGE value="稍微完善了下猫尾巴的代码呢" />
     <MESSAGE value="简单添加了猫尾巴模型~" />
     <MESSAGE value="哎~我真是个笨蛋,怎么忘记注册材料了呀,算啦,剩下的今天下午再做吧" />
@@ -733,6 +722,7 @@
     <MESSAGE value="添加NekoCollector物品" />
     <MESSAGE value="修复一点小问题，添加NekoPaws" />
     <MESSAGE value="尾巴和耳朵支持染色" />
-    <option name="LAST_COMMIT_MESSAGE" value="尾巴和耳朵支持染色" />
+    <MESSAGE value="修复一点小Bug" />
+    <option name="LAST_COMMIT_MESSAGE" value="修复一点小Bug" />
   </component>
 </project>

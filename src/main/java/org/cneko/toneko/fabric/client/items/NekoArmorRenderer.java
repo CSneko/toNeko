@@ -6,6 +6,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.DyedColorComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
@@ -66,6 +67,11 @@ public class NekoArmorRenderer<T extends NekoArmor<T>> extends GeoArmorRenderer<
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
     }
 
+    @Override
+    public Color getRenderColor(T animatable, float partialTick, int packedLight) {
+        // 默认为浅蓝色
+        return Color.ofOpaque(DyedColorComponent.getColor(this.currentStack, 6463722));
+    }
     public void setItemStack(ItemStack stack){
         this.currentStack = stack;
     }
