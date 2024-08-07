@@ -4,16 +4,16 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.impl.dimension.TaggedChoiceExtension;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.Text;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
 import org.cneko.toneko.common.api.Permissions;
 import org.cneko.toneko.fabric.api.PlayerInstallToNeko;
 import org.cneko.toneko.fabric.util.PermissionUtil;
 import org.cneko.toneko.fabric.util.TextUtil;
 
-import static net.minecraft.server.command.CommandManager.literal;
-import static net.minecraft.server.command.CommandManager.argument;
+import static net.minecraft.commands.Commands.literal;
+import static net.minecraft.commands.Commands.argument;
 
 public class TwwdfCommand {
     public static void init(){
@@ -32,9 +32,9 @@ public class TwwdfCommand {
 
     }
 
-    public static int cCommand(CommandContext<ServerCommandSource> context) {
+    public static int cCommand(CommandContext<CommandSourceStack> context) {
         String name = StringArgumentType.getString(context, "name");
-        context.getSource().sendMessage(Text.of(PlayerInstallToNeko.get(name)+""));
+        context.getSource().sendSystemMessage(Component.nullToEmpty(PlayerInstallToNeko.get(name)+""));
         return 1;
     }
 
@@ -43,8 +43,8 @@ public class TwwdfCommand {
      * @param context
      * @return
      */
-    public static int twwdfCommand(CommandContext<ServerCommandSource> context) {
-        PlayerEntity player = context.getSource().getPlayer();
+    public static int twwdfCommand(CommandContext<CommandSourceStack> context) {
+        Player player = context.getSource().getPlayer();
         PlayerInstallToNeko.set(TextUtil.getPlayerName(player), true);
         return 1;
     }

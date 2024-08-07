@@ -1,19 +1,5 @@
 package org.cneko.toneko.fabric.items;
 
-import net.minecraft.client.render.entity.model.BipedEntityModel;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.decoration.ArmorStandEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.ArmorMaterial;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.world.World;
 import org.cneko.toneko.fabric.client.items.NekoArmorRenderer;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
@@ -28,11 +14,25 @@ import software.bernie.geckolib.renderer.GeoArmorRenderer;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.core.Holder;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import java.util.function.Consumer;
 
 public abstract class NekoArmor<N extends Item & GeoItem> extends ArmorItem implements GeoItem {
     public final AnimatableInstanceCache cache;
-    public NekoArmor(RegistryEntry<ArmorMaterial> material, Type type, Settings settings) {
+    public NekoArmor(Holder<ArmorMaterial> material, Type type, Properties settings) {
         super(material, type, settings);
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
         this.cache = GeckoLibUtil.createInstanceCache(this);
@@ -51,9 +51,9 @@ public abstract class NekoArmor<N extends Item & GeoItem> extends ArmorItem impl
             }else*/
             state.getController().setAnimation(DefaultAnimations.IDLE);
             if (! (e instanceof LivingEntity entity)) return PlayState.STOP;
-            if (entity instanceof ArmorStandEntity)
+            if (entity instanceof ArmorStand)
                 return PlayState.CONTINUE;
-            for (ItemStack stack : entity.getArmorItems()) {
+            for (ItemStack stack : entity.getArmorSlots()) {
                 // 只要有任意一件穿了就播放
                 if (!stack.isEmpty())
                     return PlayState.CONTINUE;
@@ -74,7 +74,7 @@ public abstract class NekoArmor<N extends Item & GeoItem> extends ArmorItem impl
             private GeoArmorRenderer<N> renderer;
 
             @Override
-            public <T extends LivingEntity> BipedEntityModel<?> getGeoArmorRenderer(@Nullable T livingEntity, ItemStack itemStack, @Nullable EquipmentSlot equipmentSlot, @Nullable BipedEntityModel<T> original) {
+            public <T extends LivingEntity> HumanoidModel<?> getGeoArmorRenderer(@Nullable T livingEntity, ItemStack itemStack, @Nullable EquipmentSlot equipmentSlot, @Nullable HumanoidModel<T> original) {
                 if(this.renderer == null) // Important that we do this. If we just instantiate  it directly in the field it can cause incompatibilities with some mods.
                     this.renderer = (GeoArmorRenderer<N>)NekoArmor.this.getRenderer();
 
@@ -89,7 +89,7 @@ public abstract class NekoArmor<N extends Item & GeoItem> extends ArmorItem impl
     public static class NekoTailItem extends NekoArmor<NekoTailItem> {
         public static final String ID = "neko_tail";
         public NekoTailItem() {
-            super(ToNekoArmorMaterials.NEKO,Type.CHESTPLATE,new Settings().maxCount(1));
+            super(ToNekoArmorMaterials.NEKO,Type.CHESTPLATE,new Properties().stacksTo(1));
         }
 
         @Override
@@ -98,11 +98,11 @@ public abstract class NekoArmor<N extends Item & GeoItem> extends ArmorItem impl
         }
 
         @Override
-        public TypedActionResult<ItemStack> equipAndSwap(Item item, World world, PlayerEntity user, Hand hand) {
-            TypedActionResult<ItemStack> result = super.equipAndSwap(item, world, user, hand);
+        public InteractionResultHolder<ItemStack> swapWithEquipmentSlot(Item item, Level world, Player user, InteractionHand hand) {
+            InteractionResultHolder<ItemStack> result = super.swapWithEquipmentSlot(item, world, user, hand);
             // 如果成功，则扣除玩家0.5血量
-            if (result.getResult().isAccepted()) {
-                user.damage(user.getDamageSources().generic(), 0.5f);
+            if (result.getResult().consumesAction()) {
+                user.hurt(user.damageSources().generic(), 0.5f);
             }
             return result;
         }
@@ -112,7 +112,7 @@ public abstract class NekoArmor<N extends Item & GeoItem> extends ArmorItem impl
     public static class NekoEarsItem extends NekoArmor<NekoEarsItem> {
         public static final String ID = "neko_ears";
         public NekoEarsItem() {
-            super(ToNekoArmorMaterials.NEKO,Type.HELMET,new Settings().maxCount(1));
+            super(ToNekoArmorMaterials.NEKO,Type.HELMET,new Properties().stacksTo(1));
         }
 
         @Override
@@ -125,7 +125,7 @@ public abstract class NekoArmor<N extends Item & GeoItem> extends ArmorItem impl
     public static class NekoPawsItem extends NekoArmor<NekoPawsItem> {
         public static final String ID = "neko_paws";
         public NekoPawsItem() {
-            super(ToNekoArmorMaterials.NEKO,Type.BOOTS,new Settings().maxCount(1));
+            super(ToNekoArmorMaterials.NEKO,Type.BOOTS,new Properties().stacksTo(1));
         }
 
         @Override

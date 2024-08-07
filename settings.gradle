@@ -5,6 +5,10 @@ pluginManagement {
             url = 'https://maven.fabricmc.net/'
         }
         maven {
+            name = 'ParchmentMC'
+            url = 'https://maven.parchmentmc.org'
+        }
+        maven {
             name = 'Spigot'
             url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
 

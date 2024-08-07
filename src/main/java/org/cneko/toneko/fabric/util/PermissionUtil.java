@@ -1,9 +1,10 @@
 package org.cneko.toneko.fabric.util;
 
 import me.lucko.fabric.api.permissions.v0.Permissions;
-import net.minecraft.entity.Entity;
-import net.minecraft.server.command.ServerCommandSource;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.world.entity.Entity;
+
 import static org.cneko.toneko.common.api.Permissions.*;
 
 public class PermissionUtil {
@@ -49,7 +50,7 @@ public class PermissionUtil {
                 return Permissions.check(entity, perm);
             }
             // 没有权限API，默认拥有非管理员权限，3级默认拥有管理员权限
-            if (entity.hasPermissionLevel(3)) {
+            if (entity.hasPermissions(3)) {
                 return true;
             }
             return !isAdminPerm(perm);
@@ -62,16 +63,16 @@ public class PermissionUtil {
         return perm.startsWith("command.tonekoadmin");
     }
 
-    public static boolean has(ServerCommandSource source, String permission){
+    public static boolean has(CommandSourceStack source, String permission){
         return has(permission,source);
     }
-    public static boolean has(String permission, ServerCommandSource source) {
+    public static boolean has(String permission, CommandSourceStack source) {
         try {
             if (installed) {
                 return Permissions.check(source, permission);
             }
             // 没有权限API，默认拥有非管理员权限，3级默认拥有管理员权限
-            if (source.hasPermissionLevel(3)) {
+            if (source.hasPermission(3)) {
                 return true;
             }
             return !isAdminPerm(permission);

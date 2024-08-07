@@ -1,17 +1,5 @@
 package org.cneko.toneko.fabric.client.items;
 
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.model.BipedEntityModel;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.DyedColorComponent;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.RotationAxis;
 import org.cneko.toneko.fabric.enchanments.ToNekoEnchantments;
 import org.cneko.toneko.fabric.items.NekoArmor;
 import org.cneko.toneko.fabric.util.EnchantmentUtil;
@@ -23,20 +11,33 @@ import software.bernie.geckolib.util.Color;
 
 import static org.cneko.toneko.common.Bootstrap.MODID;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.DyedItemColor;
+
 public class NekoArmorRenderer<T extends NekoArmor<T>> extends GeoArmorRenderer<T>{
 
     public NekoArmorRenderer() {
-        super(new DefaultedItemGeoModel<>(Identifier.of(MODID, "armor/neko_armor")));
+        super(new DefaultedItemGeoModel<>(ResourceLocation.fromNamespaceAndPath(MODID, "armor/neko_armor")));
     }
 
     @Override
-    public void preRender(MatrixStack poseStack, T item, BakedGeoModel model, @Nullable VertexConsumerProvider bufferSource,
+    public void preRender(PoseStack poseStack, T item, BakedGeoModel model, @Nullable MultiBufferSource bufferSource,
                           @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight,
                           int packedOverlay, int colour) {
         // 如果有反转附魔
-        if (EnchantmentUtil.hasEnchantment(ToNekoEnchantments.REVERSION.getValue(), this.currentStack)) {
+        if (EnchantmentUtil.hasEnchantment(ToNekoEnchantments.REVERSION.location(), this.currentStack)) {
             // 旋转180度
-            poseStack.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(180));
+            poseStack.mulPose(Axis.XN.rotationDegrees(180));
             // 前进1/16个单位并下移动1单位
             poseStack.translate(0, -1.5, -0.0625);
         }
@@ -45,18 +46,18 @@ public class NekoArmorRenderer<T extends NekoArmor<T>> extends GeoArmorRenderer<
     }
 
     @Override
-    public void actuallyRender(MatrixStack poseStack, T animatable, BakedGeoModel model, @Nullable RenderLayer renderType,
-                               VertexConsumerProvider bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick,
+    public void actuallyRender(PoseStack poseStack, T animatable, BakedGeoModel model, @Nullable RenderType renderType,
+                               MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick,
                                int packedLight, int packedOverlay, int colour) {
         // 染色
         try {
             // 如果有染色
-            if (this.currentStack.contains(DataComponentTypes.DYED_COLOR)) {
+            if (this.currentStack.has(DataComponents.DYED_COLOR)) {
                 // 物品的染色rgb
                 Color renderColor = this.getRenderColor(animatable, partialTick, packedLight);
 
                 // 渲染物品颜色
-                buffer = buffer.color(renderColor.getRed(), renderColor.getGreen(), renderColor.getBlue(), renderColor.getAlpha());
+                buffer = buffer.setColor(renderColor.getRed(), renderColor.getGreen(), renderColor.getBlue(), renderColor.getAlpha());
 
                 colour = renderColor.getColor();
             }
@@ -70,7 +71,7 @@ public class NekoArmorRenderer<T extends NekoArmor<T>> extends GeoArmorRenderer<
     @Override
     public Color getRenderColor(T animatable, float partialTick, int packedLight) {
         // 默认为浅蓝色
-        return Color.ofOpaque(DyedColorComponent.getColor(this.currentStack, 6463722));
+        return Color.ofOpaque(DyedItemColor.getOrDefault(this.currentStack, 6463722));
     }
     public void setItemStack(ItemStack stack){
         this.currentStack = stack;
@@ -78,7 +79,7 @@ public class NekoArmorRenderer<T extends NekoArmor<T>> extends GeoArmorRenderer<
     public void setEntity(Entity entity){
         this.currentEntity = entity;
     }
-    public void setBaseModel(BipedEntityModel<?> baseModel){
+    public void setBaseModel(HumanoidModel<?> baseModel){
         this.baseModel = baseModel;
     }
     public void setSlot(EquipmentSlot slot){

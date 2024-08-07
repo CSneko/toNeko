@@ -1,15 +1,14 @@
 package org.cneko.toneko.fabric.util;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
-
 import java.util.concurrent.atomic.AtomicBoolean;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 public class EnchantmentUtil {
-    public static boolean hasEnchantment(Identifier id, ItemStack stack){
+    public static boolean hasEnchantment(ResourceLocation id, ItemStack stack){
         AtomicBoolean returnValue = new AtomicBoolean(false);
-        stack.getEnchantments().getEnchantments().forEach(enchantment -> {
-            if(enchantment.getIdAsString().equals(id.toString())){
+        stack.getEnchantments().keySet().forEach(enchantment -> {
+            if(enchantment.getRegisteredName().equals(id.toString())){
                 returnValue.set(true);
             }
         });

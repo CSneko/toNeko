@@ -2,11 +2,11 @@ package org.cneko.toneko.fabric.events;
 
 
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.message.MessageType;
-import net.minecraft.network.message.SignedMessage;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.ChatType;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.PlayerChatMessage;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import org.cneko.ctlib.common.file.JsonConfiguration;
 import org.cneko.toneko.common.Stats;
 import org.cneko.toneko.common.util.ConfigUtil;
@@ -28,9 +28,9 @@ public class ChatEvent {
         });
     }
 
-    public static void onChatMessage(SignedMessage message, ServerPlayerEntity sender, MessageType.Parameters params) {
-        NekoQuery.Neko neko = NekoQuery.getNeko(sender.getUuid());
-        String msg = message.getContent().getString();
+    public static void onChatMessage(PlayerChatMessage message, ServerPlayer sender, ChatType.Bound params) {
+        NekoQuery.Neko neko = NekoQuery.getNeko(sender.getUUID());
+        String msg = message.decoratedContent().getString();
         String playerName = TextUtil.getPlayerName(sender);
         // 获取昵称
         String nickname = neko.getNickName();
@@ -43,12 +43,12 @@ public class ChatEvent {
         // 根据喵的数量增加经验
         neko.addLevel((double) count / 1000.00);
         if(ConfigUtil.STATS) Stats.meowInChat(playerName,count);
-        sendMessage(Text.of(msg));
+        sendMessage(Component.nullToEmpty(msg));
         neko.save();
     }
-    public static void sendMessage(Text message){
-        for (PlayerEntity player : PlayerUtil.getPlayerList()){
-            player.sendMessage(message);
+    public static void sendMessage(Component message){
+        for (Player player : PlayerUtil.getPlayerList()){
+            player.sendSystemMessage(message);
         }
     }
 
@@ -81,7 +81,7 @@ public class ChatEvent {
         // 替换主人名称
         for(JsonConfiguration owner:owners){
             String uuid = owner.getString("uuid");
-            PlayerEntity player = PlayerUtil.getPlayerByUUID(UUID.fromString(uuid));
+            Player player = PlayerUtil.getPlayerByUUID(UUID.fromString(uuid));
             if(player!=null){
                 // 替换主人名称
                 String name = TextUtil.getPlayerName(player);

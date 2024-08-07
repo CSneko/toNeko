@@ -1,6 +1,7 @@
 package org.cneko.toneko.fabric.impl;
 
 import org.cneko.ctlib.common.file.YamlConfiguration;
+import org.cneko.toneko.common.util.ConfigUtil.Config;
 import org.cneko.toneko.common.util.FileUtil;
 
 import java.io.IOException;

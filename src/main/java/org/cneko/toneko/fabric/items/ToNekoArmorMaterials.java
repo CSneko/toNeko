@@ -1,25 +1,25 @@
 package org.cneko.toneko.fabric.items;
 
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.ArmorMaterial;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Identifier;
 import org.cneko.toneko.common.util.ConfigUtil;
 
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.crafting.Ingredient;
 
 import static org.cneko.toneko.common.Bootstrap.MODID;
 
 public class ToNekoArmorMaterials {
-    public static RegistryEntry<ArmorMaterial> NEKO;
+    public static Holder<ArmorMaterial> NEKO;
     public static void init(){
         // 如果启用了仅服务器端，则不注册物品
         if (!ConfigUtil.ONLY_SERVER) registerWithOutConfig();
@@ -35,8 +35,8 @@ public class ToNekoArmorMaterials {
                         ArmorItem.Type.LEGGINGS, 0 // 猫尾巴要啥防御点呀
                 ),
                 15, // 嗯...还是让你们可以附魔吧
-                RegistryEntry.of(SoundEvents.ENTITY_CAT_AMBIENT), // 喵喵喵~
-                () -> Ingredient.fromTag(TagKey.of(Registries.ITEM.getKey(), Identifier.of("c","wool"))), //wooooooooool
+                Holder.direct(SoundEvents.CAT_AMBIENT), // 喵喵喵~
+                () -> Ingredient.of(TagKey.create(BuiltInRegistries.ITEM.key(), ResourceLocation.fromNamespaceAndPath("c","wool"))), //wooooooooool
                 0.5F, // 猫尾巴可以吸收什么伤害呢
                 0.5F, // 猫尾巴还能抵御击退吗?肯定不能啦
                 true // 猫尾巴可以染色吗?当然可以啦,但是现在技术还不够呢,求原谅
@@ -57,9 +57,9 @@ public class ToNekoArmorMaterials {
      * @param dyeable 是否可染色
      * @return 盔甲材料
      */
-    public static RegistryEntry<ArmorMaterial> register(
+    public static Holder<ArmorMaterial> register(
             String id, Map<ArmorItem.Type, Integer> defensePoints,
-            int enchantability, RegistryEntry<SoundEvent> equipSound,
+            int enchantability, Holder<SoundEvent> equipSound,
             Supplier<Ingredient> repairIngredientSupplier,
             float toughness,
             float knockbackResistance,
@@ -70,15 +70,15 @@ public class ToNekoArmorMaterials {
                 // 我们可以将盔甲材质 ID 作为纹理层 ID 传递。
                 // 我们不需要后缀，因此我们将传递一个空字符串。
                 // 我们将传递收到的可染色布尔值作为可染色参数。
-                new ArmorMaterial.Layer(Identifier.of(MODID, id), "", dyeable)
+                new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(MODID, id), "", dyeable)
         );
 
         ArmorMaterial material = new ArmorMaterial(defensePoints, enchantability, equipSound, repairIngredientSupplier, layers, toughness, knockbackResistance);
         // Register the material within the ArmorMaterials registry.
-        material = Registry.register(Registries.ARMOR_MATERIAL, Identifier.of(MODID, id), material);
+        material = Registry.register(BuiltInRegistries.ARMOR_MATERIAL, ResourceLocation.fromNamespaceAndPath(MODID, id), material);
 
         // 大多数时候，您会需要材质的 RegistryEntry - 尤其是对于 ArmorItem 构造函数。
-        return RegistryEntry.of(material);
+        return Holder.direct(material);
     }
 
 }
