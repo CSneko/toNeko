@@ -1,0 +1,38 @@
+modLoader = "javafml"
+loaderVersion = "[4,)"
+#issueTrackerURL = ""
+license = "GPL-v3"
+
+[[mods]]
+modId = "toneko"
+version = "${version}"
+displayName = "toNeko"
+authors = '''
+CrystalNeko
+MrHua269/Lora4967
+pil0lo
+QWERTY770
+yichifauzi
+HappyRespawnanchor
+'''
+description = '''
+可爱即是正义!
+'''
+#logoFile = ""
+
+[[dependencies.toneko]]
+modId = "neoforge"
+type = "required"
+versionRange = "[21.0,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.toneko]]
+modId = "minecraft"
+type = "required"
+versionRange = "[1.21,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[mixins]]
+config = "toneko.mixins.json"
