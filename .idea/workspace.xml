@@ -7,7 +7,207 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="修复一点小Bug" />
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="修复一点小Bug">
+      <change afterPath="$PROJECT_DIR$/common/build.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/src/main/resources/assets/toneko/icon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/src/main/resources/toneko.mixins.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/fabric/build.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/fabric/ExampleModFabric.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/fabric/client/ExampleModFabricClient.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/fabric/src/main/resources/fabric.mod.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/neoforge/build.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/neoforge/gradle.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/neoforge/ExampleModNeoForge.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/neoforge/src/main/resources/META-INF/neoforge.mods.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README_en.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/CUSTOM_LANGUAGE.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/TONEKO_ONLINE_API.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/Meta.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/advancements/criterion/BecomeByPotionCriterion.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/advancements/criterion/ToNekoCriterion.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/toneko/ToNeko.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/toneko/api/NekoQuery.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/toneko/api/events/ChatEvents.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/toneko/bstats/Metrics.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/toneko/chat/NekoChatListener.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/toneko/command/AINekoCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/toneko/command/NekoCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/toneko/command/TabCompleter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/toneko/command/ToNekoCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/toneko/event/PlayerEventListenerBase.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/toneko/items/StickItemRecipeRegistry.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/toneko/items/StickItemWrapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/toneko/utils/ConfigFileUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/toneko/utils/LibraryDownloader.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekocommon/Stats.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekocommon/util/StringUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekocommon/util/ThreadFactories.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/ToNekoFabric.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/api/CommandEvents.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/api/Messages.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/api/Neko.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/api/NekoEntityEnum.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/api/NekoEntityEvents.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/api/Query.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/client/ToNekoFabricClient.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/client/screens/InstalledOptifine.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/command/AINekoCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/command/NekoCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/command/ToNekoCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/command/TrashCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/command/command.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/entity/EntityRegister.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/entity/ai/FollowAndAttackPlayerGoal.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/entity/client/nekoModel.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/entity/client/nekoRender.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/entity/nekoEntity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/event/PlayerAttack.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/event/PlayerChat.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/event/PlayerDamage.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/event/PlayerJoin.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/event/PlayerLeave.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/items/stick.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/libs/base.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/libs/lp.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/util/ConfigUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekofabric/util/TextUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekonk/Events.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekonk/ToNekoNK.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekonk/api/NekoSet.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekonk/bstats/Metrics.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/com/crystalneko/tonekonk/commands/ToNekoCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/neo/java/com/crystalneko/tonekonf/events/PlayerChat.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/无用代码/neo/java/com/crystalneko/tonekonf/events/ToNekoNF.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradlew" beforeDir="false" afterPath="$PROJECT_DIR$/gradlew" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradlew.bat" beforeDir="false" afterPath="$PROJECT_DIR$/gradlew.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/ctLibMod-0.1.12.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/fml-loader-4.0.22.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/other/tail/model.animation.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/other/tail/model.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/other/tail/texture.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/bukkit/ToNeko.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/bukkit/commands/ToNekoAdminCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/bukkit/commands/ToNekoCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/bukkit/commands/util/CmdContext.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/bukkit/commands/util/CmdUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/bukkit/util/BukkitSchedulerPool.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/bukkit/util/FoliaSchedulerPoolImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/bukkit/util/Language.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/Bootstrap.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/Stats.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/api/NekoQuery.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/api/Permissions.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/quirks/CaressQuirk.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/quirks/Quirk.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/quirks/QuirkRegister.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/quirks/Quirks.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/ConfigUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/FileUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/JsonUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/LanguageUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/Messaging.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/StringUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/scheduled/ISchedulerPool.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/scheduled/ScheduledTask.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/common/util/scheduled/SchedulerPoolProvider.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/ModMeta.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/ToNeko.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/api/PlayerInstallToNeko.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/api/PlayerPoseAPI.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/ToNekoClient.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/events/ClientNetworkPacketEvent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/events/ClientPlayerJoinEvent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/events/ClientTickEvent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/items/NekoArmorRenderer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/client/items/NekoArmorTrinketsRenderer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/codecs/CountCodecs.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/NekoCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/QuirkCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/ToNekoAdminCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/ToNekoCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/commands/TwwdfCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/datagen/AdvancementsProvider.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/datagen/ChestLootTablesProvider.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/datagen/ToNekoDataGenerator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/enchanments/ToNekoEnchantments.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/events/ChatEvent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/events/PlayerConnectionEvents.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/events/PlayerInteractionEvent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/events/PlayerTickEvent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/impl/FabricConfigImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/impl/FabricLanguageImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoArmor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoArmorTrinkets.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoCollectorItem.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/NekoPotionItem.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/ToNekoArmorMaterials.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/items/ToNekoItems.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/misc/ToNekoAttributes.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/misc/ToNekoComponents.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/mixin/EntityMixin.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/network/packets/EntityPosePayload.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/network/packets/ToNekoModCheckPayload.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/util/CommandUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/util/EnchantmentUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/util/FabricSchedulerPoolImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/util/PermissionUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/util/PlayerUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/fabric/util/TextUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cneko/toneko/neoforge/ToNeko.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/animations/item/armor/neko_armor.animation.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/config.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/defaultPlayerProfile.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/geo/item/armor/neko_armor.geo.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/en_us.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/ko_kr.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/zh_cn.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/lang/zh_tw.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/models/item/empty.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/models/item/neko_collector.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/models/item/neko_ears.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/models/item/neko_potion.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/models/item/neko_spawn_egg.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/models/item/neko_tail.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/item/armor/neko_armor.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/item/armor/neko_armor_tran.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/item/empty.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/item/neko_collector.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/item/neko_ears.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/item/neko_potion.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/item/neko_spawn_egg.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/item/neko_tail.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/c/tags/item/ears.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/c/tags/item/nuggets/iron_nuggets.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/c/tags/item/tails.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/c/tags/item/wool.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/minecraft/tags/item/dyeable.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/toneko/enchantment/reversion.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/toneko/recipe/neko_collector.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/toneko/recipe/neko_ears.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/toneko/recipe/neko_tail.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/toneko/tags/item/ears.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/toneko/tags/item/neko_armors.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/toneko/tags/item/tails.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/trinkets/entities/toneko.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/trinkets/tags/item/chest/back.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/trinkets/tags/item/feet/shoes.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/trinkets/tags/item/head/hat.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fabric.mod.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mixin.toneko.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -32,11 +232,16 @@
             <expand>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="toNeko" type="f1a62948:ProjectNode" />
+                <item name="toneko" type="f1a62948:ProjectNode" />
               </path>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="toNeko" type="f1a62948:ProjectNode" />
+                <item name="toneko" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="toneko" type="f1a62948:ProjectNode" />
                 <item name="运行配置" type="7b0102dc:RunConfigurationsNode" />
               </path>
             </expand>
@@ -59,7 +264,7 @@
     <option name="PUSH_AUTO_UPDATE" value="true" />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="1.21" />
+        <entry key="$PROJECT_DIR$" value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -72,8 +277,8 @@
 }</component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/CSneko/toNeko.git&quot;,
-    &quot;accountId&quot;: &quot;c85b6ef7-ef34-430b-85f7-0b45d6c0367e&quot;
+    &quot;url&quot;: &quot;https://github.com/HappyRespawnanchor/toNeko.git&quot;,
+    &quot;accountId&quot;: &quot;9af44a20-7285-43a2-acac-b9d172a912de&quot;
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
@@ -102,6 +307,7 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
     &quot;Gradle.toNeko Client.executor&quot;: &quot;Debug&quot;,
     &quot;Gradle.toNeko Datagen.executor&quot;: &quot;Run&quot;,
     &quot;Gradle.toNeko Server.executor&quot;: &quot;Run&quot;,
@@ -115,14 +321,19 @@
     &quot;Gradle.构建 toNeko.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;architectury&quot;,
     &quot;jdk.selected.com.intellij.ui.dsl.builder.impl.RowImpl.sdk&quot;: &quot;21&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/media/crystalneko/00053615000A874B/java/toNeko1206&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/Daniel/dev/java/mc/toNeko/common/src/main/resources/assets/toneko&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;project.structure.last.edited&quot;: &quot;库&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;,
     &quot;应用程序.Data Generation.executor&quot;: &quot;Run&quot;
   },
   &quot;keyToStringList&quot;: {
@@ -159,7 +370,7 @@
       <recent name="org.cneko.toneko.common" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.toNeko build">
+  <component name="RunManager" selected="Gradle.toNeko [clean]">
     <configuration name="toNeko Client" type="GradleRunConfiguration" factoryName="Gradle">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -270,6 +481,19 @@
       <RunAsTest>false</RunAsTest>
       <method v="2" />
     </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="toneko" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="toneko" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <list>
       <item itemvalue="Gradle.toNeko Client" />
       <item itemvalue="Gradle.toNeko Server" />
@@ -281,6 +505,14 @@
       <item itemvalue="应用程序.Minecraft Server" />
     </list>
   </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-b114ca120d71-intellij.indexing.shared.core-IU-242.20224.300" />
+        <option value="bundled-js-predefined-d6986cc7102b-410509235cf1-JavaScript-IU-242.20224.300" />
+      </set>
+    </attachedChunks>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="默认任务">
@@ -289,6 +521,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
+      <workItem from="1723090678691" duration="889000" />
     </task>
     <task id="LOCAL-00092" summary="这么重要的事情我居然忘记了(┙&gt;∧&lt;)┙へ┻┻">
       <option name="closed" value="true" />
@@ -684,6 +917,9 @@
     </task>
     <option name="localTasksCounter" value="141" />
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">

@@ -1,138 +1,82 @@
-/*buildscript {
-    repositories {
-        gradlePluginPortal()
-    }
-    dependencies {
-    }
-}
-*/
 plugins {
-    id 'fabric-loom' version '1.6-SNAPSHOT'
+    id 'dev.architectury.loom' version '1.6-SNAPSHOT' apply false
+    id 'architectury-plugin' version '3.4-SNAPSHOT'
+    id 'com.github.johnrengelman.shadow' version '8.1.1' apply false
 }
 
-version = project.mod_version
-group = project.maven_group
+architectury {
+    minecraft = project.minecraft_version
+}
 
-repositories {
-    // Add repositories to retrieve artifacts from in here.
-    // You should only use this when depending on other mods because
-    // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-    // See https://docs.gradle.org/current/userguide/declaring_repositories.html
-    // for more information about repositories.
-    maven {
-        name = 'Spigot'
-        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+allprojects {
+    group = rootProject.maven_group
+    version = rootProject.mod_version
+}
+
+subprojects {
+    apply plugin: 'dev.architectury.loom'
+    apply plugin: 'architectury-plugin'
+    apply plugin: 'maven-publish'
+
+    base {
+        // Set up a suffixed format for the mod jar names, e.g. `example-fabric`.
+        archivesName = "$rootProject.archives_name-$project.name"
     }
-    maven { url = 'https://oss.sonatype.org/content/groups/public/' }
-    maven {
-        name = 'papermc'
-        url = 'https://repo.papermc.io/repository/maven-public/'
-    }
-    maven {
-        name = 'GeckoLib'
-        url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
-        content {
-            includeGroup("software.bernie.geckolib")
+
+    repositories {
+        // Add repositories to retrieve artifacts from in here.
+        // You should only use this when depending on other mods because
+        // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
+        // See https://docs.gradle.org/current/userguide/declaring_repositories.html
+        // for more information about repositories.
+        maven {
+            name = 'ParchmentMC'
+            url = 'https://maven.parchmentmc.org'
         }
     }
 
-    maven {
-        name = "Modrinth"
-        url = "https://api.modrinth.com/maven"
+    loom {
+        silentMojangMappingsLicense()
     }
 
-    maven {
-        name = "TerraformersMC"
-        url = "https://maven.terraformersmc.com/"
-    }
-    maven {
-        name = "Ladysnake Libs"
-        url = 'https://maven.ladysnake.org/releases'
-    }
-
-    maven {
-        url "https://maven.neoforged.net/releases"
+    dependencies {
+        minecraft "net.minecraft:minecraft:$rootProject.minecraft_version"
+        //mappings loom.officialMojangMappings()
+        mappings loom.layered() {
+            officialMojangMappings()
+            parchment("org.parchmentmc.data:parchment-1.21:2024.07.28@zip") // ParchmentMC版本，目前最新2024.07.28
+        }
     }
 
-    flatDir {
-        dirs 'libs'
+    java {
+        // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+        // if it is present.
+        // If you remove this line, sources will not be generated.
+        withSourcesJar()
+
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
 
-    mavenCentral()
-
-}
-
-dependencies {
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    //mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-    mappings loom.layered() {
-        officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-1.21:2024.07.28@zip")
-    } // 使用ParchmentMC，完全兼容Mojang Map的映射
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-
-    compileOnly 'org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT'
-    compileOnly 'net.luckperms:api:5.4'
-    modCompileOnly "me.lucko:fabric-permissions-api:0.2-SNAPSHOT"
-    modImplementation "software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    modImplementation "dev.emi:trinkets:${trinkets_version}"
-    compileOnly 'dev.folia:folia-api:1.20.2-R0.1-SNAPSHOT'
-    modImplementation(name: "ctLibMod-0.1.12", ext: "jar")
-    // 把本地目录下的libs/ctLibMod-0.1.12.jar嵌入
-    include(name: "ctLibMod-0.1.12", ext: "jar")
-
-    // NeoForge
-    compileOnly "net.neoforged.fancymodloader:loader:4.0.22"
-    compileOnly "net.neoforged.fancymodloader:core:2.0.7"
-    compileOnly "net.neoforged:bus:8.0.1"
-    compileOnly(name: "fml-loader-4.0.22", ext: "jar")
-}
-
-processResources {
-    inputs.property "version", project.version
-    filteringCharset "UTF-8"
-
-    filesMatching("fabric.mod.json") {
-        expand "version": project.version
+    tasks.withType(JavaCompile).configureEach {
+        it.options.release = 21
     }
-    filesMatching("plugin.yml") {
-        expand "version": project.version
+
+    // Configure Maven publishing.
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                artifactId = base.archivesName.get()
+                from components.java
+            }
+        }
+
+        // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+        repositories {
+            // Add repositories to publish to here.
+            // Notice: This block does NOT have the same function as the block in the top level.
+            // The repositories here will be used for publishing your artifact, not for
+            // retrieving dependencies.
+        }
     }
-}
-
-def targetJavaVersion = 21
-tasks.withType(JavaCompile).configureEach {
-    // ensure that the encoding is set to UTF-8, no matter what the system default is
-    // this fixes some edge cases with special characters not displaying correctly
-    // see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
-    // If Javadoc is generated, this must be specified in that task too.
-    it.options.encoding = "UTF-8"
-    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
-        it.options.release = targetJavaVersion
-    }
-}
-
-java {
-    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
-    if (JavaVersion.current() < javaVersion) {
-        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
-    }
-    archivesBaseName = project.archives_base_name
-    // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-    // if it is present.
-    // If you remove this line, sources will not be generated.
-    withSourcesJar()
-}
-
-
-// 配置Javadoc生成
-javadoc {
-    options {
-        encoding = 'UTF-8' // 设置编码格式
-    }
-}
-
-fabricApi {
-    configureDataGeneration()
 }
