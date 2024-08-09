@@ -30,8 +30,9 @@ public final class ToNekoNeoForge {
         // 注册装备
         ToNekoArmorMaterials.init();
         ToNekoItems.init();
+        bus.addListener(ToNekoItems::buildContents);
         ToNekoAttributes.init();
-        bus.addListener(ToNekoAttributes::onRegisterAttributes);
+        //bus.addListener(ToNekoAttributes::onRegisterAttributes);
         new ToNeko().onInitialize();
 
     }

@@ -8,92 +8,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="支持NeoForge">
-      <change afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/mod/events/CommonChatEvent.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/mod/events/CommonPlayerInteractionEvent.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/mod/events/CommonPlayerTickEvent.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/ToNekoEvents.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/items/ToNekoItems.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/src/main/resources/toneko.mixins.json" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/resources/toneko.mixins.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/fabric/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/ModMeta.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/mod/ModMeta.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/ToNeko.java" beforeDir="false" afterPath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/ToNeko.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/api/PlayerInstallToNeko.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/api/PlayerInstallToNeko.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/api/PlayerPoseAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/mod/api/PlayerPoseAPI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/client/events/ClientNetworkPacketEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/client/events/ClientNetworkPacketEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/client/items/NekoArmorRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/mod/client/items/NekoArmorRenderer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/client/items/NekoArmorTrinketsRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/client/items/NekoArmorTrinketsRenderer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/codecs/CountCodecs.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/mod/codecs/CountCodecs.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/commands/NekoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/commands/NekoCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/commands/QuirkCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/commands/QuirkCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/commands/ToNekoAdminCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/commands/ToNekoAdminCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/commands/ToNekoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/commands/ToNekoCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/commands/TwwdfCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/commands/TwwdfCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/datagen/AdvancementsProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/datagen/AdvancementsProvider.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/enchanments/ToNekoEnchantments.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/mod/misc/ToNekoEnchantments.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/events/ChatEvent.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/events/PlayerConnectionEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/ToNekoEvents.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/events/PlayerInteractionEvent.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/events/PlayerTickEvent.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/impl/FabricConfigImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/mod/impl/FabricConfigImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/impl/FabricLanguageImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/mod/impl/FabricLanguageImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/items/NekoArmor.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/mod/items/NekoArmor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/items/NekoArmorTrinkets.java" beforeDir="false" afterPath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/items/NekoArmorTrinkets.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/items/NekoCollectorItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/items/NekoCollectorItem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/items/NekoPotionItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/mod/items/NekoPotionItem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/items/ToNekoArmorMaterials.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/mod/items/ToNekoArmorMaterials.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/items/ToNekoItems.java" beforeDir="false" afterPath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/items/ToNekoItems.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/misc/ToNekoComponents.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/mod/misc/ToNekoComponents.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/mixin/EntityMixin.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/mod/mixin/EntityMixin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/network/packets/EntityPosePayload.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/mod/packets/EntityPosePayload.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/network/packets/ToNekoModCheckPayload.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/mod/packets/ToNekoModCheckPayload.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/util/CommandUtil.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/util/EnchantmentUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/mod/util/EnchantmentUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/util/PermissionUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/mod/util/PermissionUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/util/PlayerUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/mod/util/PlayerUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/util/TextUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/mod/util/TextUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/neoforge/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/ToNekoNeoForge.java" beforeDir="false" afterPath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/ToNekoNeoForge.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/ModMeta.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/ToNeko.java" beforeDir="false" afterPath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/ToNeko.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/api/PlayerInstallToNeko.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/api/PlayerPoseAPI.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/client/ToNekoClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/client/ToNekoClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/client/events/ClientNetworkPacketEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/client/events/ClientNetworkPacketEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/client/items/NekoArmorRenderer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/codecs/CountCodecs.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/commands/NekoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/commands/NekoCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/commands/QuirkCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/commands/QuirkCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/commands/ToNekoAdminCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/commands/ToNekoAdminCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/commands/ToNekoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/commands/ToNekoCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/commands/TwwdfCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/commands/TwwdfCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/datagen/AdvancementsProvider.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/datagen/ChestLootTablesProvider.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/datagen/ToNekoDataGenerator.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/enchanments/ToNekoEnchantments.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/events/ChatEvent.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/events/PlayerConnectionEvents.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/events/PlayerInteractionEvent.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/events/PlayerTickEvent.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/impl/FabricConfigImpl.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/impl/FabricLanguageImpl.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/items/NekoArmor.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/items/NekoCollectorItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/items/NekoCollectorItem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/items/NekoPotionItem.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/items/ToNekoArmorMaterials.java" beforeDir="false" afterPath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/items/ToNekoArmorMaterials.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/items/ToNekoItems.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/misc/ToNekoAttributes.java" beforeDir="false" afterPath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/msic/ToNekoAttributes.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/misc/ToNekoComponents.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/mixin/EntityMixin.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/network/packets/EntityPosePayload.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/network/packets/ToNekoModCheckPayload.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/util/CommandUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/mod/util/CommandUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/util/EnchantmentUtil.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/util/PermissionUtil.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/util/PlayerUtil.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/util/TextUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/items/ToNekoItems.java" beforeDir="false" afterPath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/items/ToNekoItems.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -157,12 +74,12 @@
     &quot;assignee&quot;: &quot;CSneko&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "git@github.com:CSneko/toNeko.git",
-    "accountId": "c85b6ef7-ef34-430b-85f7-0b45d6c0367e"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:CSneko/toNeko.git&quot;,
+    &quot;accountId&quot;: &quot;c85b6ef7-ef34-430b-85f7-0b45d6c0367e&quot;
   }
-}]]></component>
+}</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="jar://$USER_HOME$/.gradle/caches/fabric-loom/1.21/net.fabricmc.yarn.1_21.1.21+build.7-v2/mappings.jar!/mappings/mappings.tiny" root0="FORCE_HIGHLIGHTING" />
   </component>
@@ -186,45 +103,45 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
-    "Gradle.toNeko Client.executor": "Debug",
-    "Gradle.toNeko Datagen.executor": "Run",
-    "Gradle.toNeko Server.executor": "Run",
-    "Gradle.toNeko [clean].executor": "Run",
-    "Gradle.toNeko [dependencies].executor": "Run",
-    "Gradle.toNeko [javadoc].executor": "Run",
-    "Gradle.toNeko build.executor": "Run",
-    "Gradle.toNeko datagen.executor": "Run",
-    "Gradle.toNekoFabric build.executor": "Run",
-    "Gradle.加载 Gradle 依赖项.executor": "Run",
-    "Gradle.构建 toNeko.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "arch",
-    "jdk.selected.com.intellij.ui.dsl.builder.impl.RowImpl.sdk": "21",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/media/crystalneko/00053615000A874B/java/toNeko/neoforge/src/main/java/org/cneko/toneko/neoforge",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "库",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "通义灵码",
-    "vue.rearranger.settings.migration": "true",
-    "应用程序.Data Generation.executor": "Run"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
+    &quot;Gradle.toNeko Client.executor&quot;: &quot;Debug&quot;,
+    &quot;Gradle.toNeko Datagen.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.toNeko Server.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.toNeko [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.toNeko [dependencies].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.toNeko [javadoc].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.toNeko build.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.toNeko datagen.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.toNekoFabric build.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.加载 Gradle 依赖项.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.构建 toNeko.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;arch&quot;,
+    &quot;jdk.selected.com.intellij.ui.dsl.builder.impl.RowImpl.sdk&quot;: &quot;21&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/media/crystalneko/00053615000A874B/java/toNeko/neoforge/src/main/java/org/cneko/toneko/neoforge&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;库&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;通义灵码&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;,
+    &quot;应用程序.Data Generation.executor&quot;: &quot;Run&quot;
   },
-  "keyToStringList": {
-    "jdk.preference.com.intellij.ui.dsl.builder.impl.RowImpl.sdk": [
-      "17=/usr/lib/jvm/java-1.17.0-openjdk-amd64",
-      "21=/usr/lib/jvm/java-21-openjdk-amd64"
+  &quot;keyToStringList&quot;: {
+    &quot;jdk.preference.com.intellij.ui.dsl.builder.impl.RowImpl.sdk&quot;: [
+      &quot;17=/usr/lib/jvm/java-1.17.0-openjdk-amd64&quot;,
+      &quot;21=/usr/lib/jvm/java-21-openjdk-amd64&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge" />
@@ -386,14 +303,6 @@
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
       <workItem from="1723090678691" duration="889000" />
-    </task>
-    <task id="LOCAL-00093" summary="更新了亿点点东西,要累死啦(&gt;_&lt;)">
-      <option name="closed" value="true" />
-      <created>1720168963151</created>
-      <option name="number" value="00093" />
-      <option name="presentableId" value="LOCAL-00093" />
-      <option name="project" value="LOCAL" />
-      <updated>1720168963152</updated>
     </task>
     <task id="LOCAL-00094" summary="更新了亿点点东西,要累死啦(&gt;_&lt;)">
       <option name="closed" value="true" />
@@ -779,7 +688,15 @@
       <option name="project" value="LOCAL" />
       <updated>1723182098818</updated>
     </task>
-    <option name="localTasksCounter" value="142" />
+    <task id="LOCAL-00142" summary="支持NeoForge">
+      <option name="closed" value="true" />
+      <created>1723192361388</created>
+      <option name="number" value="00142" />
+      <option name="presentableId" value="LOCAL-00142" />
+      <option name="project" value="LOCAL" />
+      <updated>1723192361388</updated>
+    </task>
+    <option name="localTasksCounter" value="143" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
