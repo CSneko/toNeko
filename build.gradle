@@ -76,6 +76,7 @@ subprojects {
         }
         compileOnly 'dev.folia:folia-api:1.20.2-R0.1-SNAPSHOT'
         modCompileOnly "me.lucko:fabric-permissions-api:0.2-SNAPSHOT"
+        modImplementation "software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}"
         modImplementation "dev.emi:trinkets:${trinkets_version}"
     }
 
