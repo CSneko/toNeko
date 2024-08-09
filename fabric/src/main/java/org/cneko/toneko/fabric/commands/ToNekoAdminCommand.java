@@ -8,13 +8,13 @@ import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.api.Permissions;
 import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.common.util.LanguageUtil;
-import org.cneko.toneko.fabric.util.PermissionUtil;
-import org.cneko.toneko.fabric.util.PlayerUtil;
+import org.cneko.toneko.common.mod.util.PermissionUtil;
+import org.cneko.toneko.common.mod.util.PlayerUtil;
 
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
-import static org.cneko.toneko.fabric.util.CommandUtil.getOnlinePlayers;
-import static org.cneko.toneko.fabric.util.TextUtil.translatable;
+import static org.cneko.toneko.common.mod.util.CommandUtil.getOnlinePlayers;
+import static org.cneko.toneko.common.mod.util.TextUtil.translatable;
 
 public class ToNekoAdminCommand {
     public static void init(){

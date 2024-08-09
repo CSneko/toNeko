@@ -4,7 +4,7 @@ package org.cneko.toneko.fabric.client.events;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
-import org.cneko.toneko.fabric.network.packets.EntityPosePayload;
+import org.cneko.toneko.common.mod.packets.EntityPosePayload;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -9,14 +9,14 @@ import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.api.Permissions;
 import org.cneko.toneko.common.quirks.Quirk;
 import org.cneko.toneko.common.quirks.QuirkRegister;
-import org.cneko.toneko.fabric.util.CommandUtil;
-import org.cneko.toneko.fabric.util.PermissionUtil;
+import org.cneko.toneko.common.mod.util.CommandUtil;
+import org.cneko.toneko.common.mod.util.PermissionUtil;
 
 import java.util.List;
 
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
-import static org.cneko.toneko.fabric.util.TextUtil.translatable;
+import static org.cneko.toneko.common.mod.util.TextUtil.translatable;
 public class QuirkCommand {
     public static void init(){
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> dispatcher.register(literal("quirk")

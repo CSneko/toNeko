@@ -17,6 +17,7 @@ import static org.cneko.toneko.common.Bootstrap.LOGGER;
 import static org.cneko.toneko.fabric.items.ToNekoItems.*;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import org.cneko.toneko.common.mod.client.items.NekoArmorRenderer;
 
 public class NekoArmorTrinketsRenderer {
     public static NekoTailTrinketRenderer NEKO_TAIL_TRINKET_RENDERER;

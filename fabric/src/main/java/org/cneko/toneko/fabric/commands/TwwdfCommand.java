@@ -3,14 +3,11 @@ package org.cneko.toneko.fabric.commands;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.fabricmc.fabric.impl.dimension.TaggedChoiceExtension;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
-import org.cneko.toneko.common.api.Permissions;
-import org.cneko.toneko.fabric.api.PlayerInstallToNeko;
-import org.cneko.toneko.fabric.util.PermissionUtil;
-import org.cneko.toneko.fabric.util.TextUtil;
+import org.cneko.toneko.common.api.PlayerInstallToNeko;
+import org.cneko.toneko.common.mod.util.TextUtil;
 
 import static net.minecraft.commands.Commands.literal;
 import static net.minecraft.commands.Commands.argument;

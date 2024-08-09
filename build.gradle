@@ -79,6 +79,7 @@ subprojects {
         modCompileOnly "me.lucko:fabric-permissions-api:0.2-SNAPSHOT"
         modImplementation "dev.emi:trinkets:${trinkets_version}"
         include "maven.modrinth:ctlibmod:0.1.13"
+        modImplementation "software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}"
     }
 
     java {

@@ -6,8 +6,8 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
-import org.cneko.toneko.neoforge.fabric.api.PlayerInstallToNeko;
-import org.cneko.toneko.neoforge.fabric.util.TextUtil;
+import org.cneko.toneko.common.api.PlayerInstallToNeko;
+import org.cneko.toneko.common.mod.util.TextUtil;
 
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;

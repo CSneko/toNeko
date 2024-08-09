@@ -9,13 +9,14 @@ import net.minecraft.world.entity.player.Player;
 import org.cneko.toneko.common.Bootstrap;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.api.Permissions;
-import org.cneko.toneko.neoforge.fabric.util.PlayerUtil;
+import org.cneko.toneko.common.mod.util.PlayerUtil;
 
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
-import static org.cneko.toneko.neoforge.fabric.util.CommandUtil.*;
-import static org.cneko.toneko.neoforge.fabric.util.PermissionUtil.has;
-import static org.cneko.toneko.neoforge.fabric.util.TextUtil.translatable;
+import static org.cneko.toneko.common.mod.util.CommandUtil.getOnlinePlayers;
+import static org.cneko.toneko.common.mod.util.CommandUtil.noPS;
+import static org.cneko.toneko.common.mod.util.PermissionUtil.has;
+import static org.cneko.toneko.common.mod.util.TextUtil.translatable;
 public class ToNekoCommand {
     public static void init(){
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {

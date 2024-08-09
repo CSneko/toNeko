@@ -13,7 +13,7 @@ import org.cneko.toneko.fabric.items.ToNekoItems;
 import java.util.function.Consumer;
 
 import static org.cneko.toneko.common.Bootstrap.MODID;
-import static org.cneko.toneko.fabric.util.TextUtil.translatable;
+import static org.cneko.toneko.common.mod.util.TextUtil.translatable;
 public class AdvancementsProvider extends FabricAdvancementProvider {
     public static AdvancementHolder NEKO_ATTRACTING;
     public static AdvancementHolder GOT_NEKO_POTION;

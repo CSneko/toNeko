@@ -9,6 +9,8 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import org.cneko.toneko.common.mod.items.NekoArmor;
+import org.cneko.toneko.common.mod.items.NekoPotionItem;
 import org.cneko.toneko.common.util.ConfigUtil;
 
 import static org.cneko.toneko.common.Bootstrap.MODID;
