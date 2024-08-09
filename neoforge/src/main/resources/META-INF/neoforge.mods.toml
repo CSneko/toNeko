@@ -7,13 +7,13 @@ license = "GPL-v3"
 modId = "toneko"
 version = "${version}"
 displayName = "toNeko"
-authors = '''
-CrystalNeko
-MrHua269/Lora4967
-pil0lo
-QWERTY770
-yichifauzi
-HappyRespawnanchor
+authors = '''CrystalNeko
+Contributors:
+  MrHua269/Lora4967
+  pil0lo
+  QWERTY770
+  yichifauzi
+  HappyRespawnanchor
 '''
 description = '''
 可爱即是正义!
