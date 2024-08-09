@@ -74,12 +74,9 @@ subprojects {
             officialMojangMappings()
             parchment("org.parchmentmc.data:parchment-1.21:2024.07.28@zip") // ParchmentMC版本，目前最新2024.07.28
         }
-        modImplementation "maven.modrinth:ctlibmod:0.1.12"
         compileOnly 'dev.folia:folia-api:1.20.2-R0.1-SNAPSHOT'
         modCompileOnly "me.lucko:fabric-permissions-api:0.2-SNAPSHOT"
         modImplementation "dev.emi:trinkets:${trinkets_version}"
-        include "maven.modrinth:ctlibmod:0.1.13"
-        modImplementation "software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}"
     }
 
     java {
