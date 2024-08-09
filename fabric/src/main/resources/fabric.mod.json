@@ -49,5 +49,10 @@
   },
   "mixins": [
     "toneko.mixins.json"
+  ],
+  "jars": [
+    {
+      "file": "META-INF/jars/ctLibMod-0.1.12.jar"
+    }
   ]
 }

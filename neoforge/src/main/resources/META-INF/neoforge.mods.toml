@@ -18,7 +18,7 @@ HappyRespawnanchor
 description = '''
 可爱即是正义!
 '''
-#logoFile = ""
+logoFile = "assets/toneko/icon.png"
 
 [[dependencies.toneko]]
 modId = "neoforge"
@@ -31,6 +31,13 @@ side = "BOTH"
 modId = "minecraft"
 type = "required"
 versionRange = "[1.21,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.toneko]]
+modId = "fabric_api"
+type = "required"
+versionRange = "*"
 ordering = "NONE"
 side = "BOTH"
 
