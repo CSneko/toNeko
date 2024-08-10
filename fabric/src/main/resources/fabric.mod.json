@@ -42,7 +42,8 @@
   },
   "suggests": {
     "luckperms": "*",
-    "geckolib": "*"
+    "geckolib": "*",
+    "trinkets": "*"
   },
   "breaks": {
     "optifabric": "*"

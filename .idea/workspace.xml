@@ -7,14 +7,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="修复common无法构建的问题">
-      <change afterPath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/client/ToNekoNeoForgeClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.architectury-transformer/debug.log" beforeDir="false" afterPath="$PROJECT_DIR$/.architectury-transformer/debug.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/ToNekoNeoForge.java" beforeDir="false" afterPath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/ToNekoNeoForge.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/items/ToNekoItems.java" beforeDir="false" afterPath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/items/ToNekoItems.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/msic/ToNekoAttributes.java" beforeDir="false" afterPath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/msic/ToNekoAttributes.java" afterDir="false" />
-    </list>
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="修复一点小Bug" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -39,11 +32,11 @@
             <expand>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="toneko" type="f1a62948:ProjectNode" />
+                <item name="toNeko" type="f1a62948:ProjectNode" />
               </path>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="toneko" type="f1a62948:ProjectNode" />
+                <item name="toNeko" type="f1a62948:ProjectNode" />
                 <item name="运行配置" type="7b0102dc:RunConfigurationsNode" />
               </path>
             </expand>
@@ -66,7 +59,7 @@
     <option name="PUSH_AUTO_UPDATE" value="true" />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="1.21" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -79,7 +72,7 @@
 }</component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;git@github.com:CSneko/toNeko.git&quot;,
+    &quot;url&quot;: &quot;https://github.com/CSneko/toNeko.git&quot;,
     &quot;accountId&quot;: &quot;c85b6ef7-ef34-430b-85f7-0b45d6c0367e&quot;
   }
 }</component>
@@ -106,50 +99,41 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
-    "Gradle.toNeko Client.executor": "Debug",
-    "Gradle.toNeko Datagen.executor": "Run",
-    "Gradle.toNeko Server.executor": "Run",
-    "Gradle.toNeko [clean].executor": "Run",
-    "Gradle.toNeko [dependencies].executor": "Run",
-    "Gradle.toNeko [javadoc].executor": "Run",
-    "Gradle.toNeko build.executor": "Run",
-    "Gradle.toNeko datagen.executor": "Run",
-    "Gradle.toNekoFabric build.executor": "Run",
-    "Gradle.加载 Gradle 依赖项.executor": "Run",
-    "Gradle.构建 toNeko.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "arch",
-    "jdk.selected.com.intellij.ui.dsl.builder.impl.RowImpl.sdk": "21",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/media/crystalneko/00053615000A874B/java/toNeko/neoforge/src/main/java/org/cneko/toneko/neoforge",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "库",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "vue.rearranger.settings.migration": "true",
-    "应用程序.Data Generation.executor": "Run",
-    "应用程序.Minecraft Client (:neoforge).executor": "Debug",
-    "应用程序.Minecraft Server (:neoforge).executor": "Run"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;Gradle.toNeko Client.executor&quot;: &quot;Debug&quot;,
+    &quot;Gradle.toNeko Datagen.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.toNeko Server.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.toNeko [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.toNeko [dependencies].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.toNeko [javadoc].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.toNeko build.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.toNeko datagen.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.toNekoFabric build.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.加载 Gradle 依赖项.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.构建 toNeko.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;jdk.selected.com.intellij.ui.dsl.builder.impl.RowImpl.sdk&quot;: &quot;21&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/media/crystalneko/00053615000A874B/java/toNeko1206&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;库&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;应用程序.Data Generation.executor&quot;: &quot;Run&quot;
   },
-  "keyToStringList": {
-    "jdk.preference.com.intellij.ui.dsl.builder.impl.RowImpl.sdk": [
-      "17=/usr/lib/jvm/java-1.17.0-openjdk-amd64",
-      "21=/usr/lib/jvm/java-21-openjdk-amd64"
+  &quot;keyToStringList&quot;: {
+    &quot;jdk.preference.com.intellij.ui.dsl.builder.impl.RowImpl.sdk&quot;: [
+      &quot;17=/usr/lib/jvm/java-1.17.0-openjdk-amd64&quot;,
+      &quot;21=/usr/lib/jvm/java-21-openjdk-amd64&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge" />
       <recent name="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/item" />
       <recent name="$PROJECT_DIR$/src/main/resources" />
       <recent name="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/entity/neko" />
@@ -172,7 +156,6 @@
       <recent name="com.crystalneko.tonekofabric.api" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="org.cneko.toneko.neoforge.fabric.items" />
       <recent name="org.cneko.toneko.common" />
     </key>
   </component>
@@ -293,10 +276,9 @@
       <item itemvalue="Gradle.toNeko [clean]" />
       <item itemvalue="Gradle.toNeko build" />
       <item itemvalue="Gradle.toNeko datagen" />
-      <item itemvalue="应用程序.Minecraft Client (:fabric)" />
-      <item itemvalue="应用程序.Minecraft Client (:neoforge)" />
-      <item itemvalue="应用程序.Minecraft Server (:fabric)" />
-      <item itemvalue="应用程序.Minecraft Server (:neoforge)" />
+      <item itemvalue="应用程序.Data Generation" />
+      <item itemvalue="应用程序.Minecraft Client" />
+      <item itemvalue="应用程序.Minecraft Server" />
     </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
@@ -307,7 +289,38 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-      <workItem from="1723090678691" duration="889000" />
+    </task>
+    <task id="LOCAL-00092" summary="这么重要的事情我居然忘记了(┙&gt;∧&lt;)┙へ┻┻">
+      <option name="closed" value="true" />
+      <created>1720159774390</created>
+      <option name="number" value="00092" />
+      <option name="presentableId" value="LOCAL-00092" />
+      <option name="project" value="LOCAL" />
+      <updated>1720159774391</updated>
+    </task>
+    <task id="LOCAL-00093" summary="更新了亿点点东西,要累死啦(&gt;_&lt;)">
+      <option name="closed" value="true" />
+      <created>1720168963151</created>
+      <option name="number" value="00093" />
+      <option name="presentableId" value="LOCAL-00093" />
+      <option name="project" value="LOCAL" />
+      <updated>1720168963152</updated>
+    </task>
+    <task id="LOCAL-00094" summary="更新了亿点点东西,要累死啦(&gt;_&lt;)">
+      <option name="closed" value="true" />
+      <created>1720169012035</created>
+      <option name="number" value="00094" />
+      <option name="presentableId" value="LOCAL-00094" />
+      <option name="project" value="LOCAL" />
+      <updated>1720169012035</updated>
+    </task>
+    <task id="LOCAL-00095" summary="嗯...1.20的最后一次提交了,再见了">
+      <option name="closed" value="true" />
+      <created>1720175011497</created>
+      <option name="number" value="00095" />
+      <option name="presentableId" value="LOCAL-00095" />
+      <option name="project" value="LOCAL" />
+      <updated>1720175011498</updated>
     </task>
     <task id="LOCAL-00096" summary="1.21的首次提交,迎接新版本٩(｡・ω・｡)﻿و">
       <option name="closed" value="true" />
@@ -669,43 +682,8 @@
       <option name="project" value="LOCAL" />
       <updated>1722745368009</updated>
     </task>
-    <task id="LOCAL-00141" summary="支持NeoForge">
-      <option name="closed" value="true" />
-      <created>1723182098818</created>
-      <option name="number" value="00141" />
-      <option name="presentableId" value="LOCAL-00141" />
-      <option name="project" value="LOCAL" />
-      <updated>1723182098818</updated>
-    </task>
-    <task id="LOCAL-00142" summary="支持NeoForge">
-      <option name="closed" value="true" />
-      <created>1723192361388</created>
-      <option name="number" value="00142" />
-      <option name="presentableId" value="LOCAL-00142" />
-      <option name="project" value="LOCAL" />
-      <updated>1723192361388</updated>
-    </task>
-    <task id="LOCAL-00143" summary="支持NeoForge">
-      <option name="closed" value="true" />
-      <created>1723213577575</created>
-      <option name="number" value="00143" />
-      <option name="presentableId" value="LOCAL-00143" />
-      <option name="project" value="LOCAL" />
-      <updated>1723213577576</updated>
-    </task>
-    <task id="LOCAL-00144" summary="修复common无法构建的问题">
-      <option name="closed" value="true" />
-      <created>1723264743219</created>
-      <option name="number" value="00144" />
-      <option name="presentableId" value="LOCAL-00144" />
-      <option name="project" value="LOCAL" />
-      <updated>1723264743219</updated>
-    </task>
-    <option name="localTasksCounter" value="145" />
+    <option name="localTasksCounter" value="141" />
     <servers />
-  </component>
-  <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -720,6 +698,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="稍微完善了下猫尾巴的代码呢" />
+    <MESSAGE value="简单添加了猫尾巴模型~" />
     <MESSAGE value="哎~我真是个笨蛋,怎么忘记注册材料了呀,算啦,剩下的今天下午再做吧" />
     <MESSAGE value="简单的完成了一点东西呢" />
     <MESSAGE value="没注意到调用了Bukkit的类" />
@@ -743,8 +723,6 @@
     <MESSAGE value="修复一点小问题，添加NekoPaws" />
     <MESSAGE value="尾巴和耳朵支持染色" />
     <MESSAGE value="修复一点小Bug" />
-    <MESSAGE value="支持NeoForge" />
-    <MESSAGE value="修复common无法构建的问题" />
-    <option name="LAST_COMMIT_MESSAGE" value="修复common无法构建的问题" />
+    <option name="LAST_COMMIT_MESSAGE" value="修复一点小Bug" />
   </component>
 </project>

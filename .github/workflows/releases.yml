@@ -21,11 +21,9 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
 
-      - name: Run DataGenera
-        run: ./gradlew runDatagen
+      - name: Build Mod
+        run: ./build.sh
 
-      - name: Build
-        run: ./gradlew build
 
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v2
@@ -35,5 +33,5 @@ jobs:
             name: ${{ github.event.release.tag_name }} 更新
             body: 发布 ${{ github.event.release.tag_name }}
             files: |
-              build/libs/*
+              result/*
             generate_notes: true
