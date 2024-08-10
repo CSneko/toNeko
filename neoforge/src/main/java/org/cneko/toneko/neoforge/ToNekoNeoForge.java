@@ -27,12 +27,13 @@ public final class ToNekoNeoForge {
         ITEMS.register(bus);
         DATA_COMPONENTS.register(bus);
         ARMOR_MATERIALS.register(bus);
+        ATTRIBUTES.register(bus);
         // 注册装备
         ToNekoArmorMaterials.init();
         ToNekoItems.init();
         bus.addListener(ToNekoItems::buildContents);
         ToNekoAttributes.init();
-        //bus.addListener(ToNekoAttributes::onRegisterAttributes);
+        bus.addListener(ToNekoAttributes::onRegisterAttributes);
         new ToNeko().onInitialize();
 
     }

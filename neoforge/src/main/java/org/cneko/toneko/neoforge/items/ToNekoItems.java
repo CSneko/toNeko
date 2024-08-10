@@ -47,11 +47,13 @@ public class ToNekoItems {
             NEKO_EARS = ITEMS.register(NekoArmor.NekoEarsItem.ID, NekoArmor.NekoEarsItem::new);
             NEKO_TAIL = ITEMS.register(NekoArmor.NekoTailItem.ID,NekoArmor.NekoTailItem::new);
             ITEMS.register(NekoArmor.NekoPawsItem.ID, NekoArmor.NekoPawsItem::new); // 此物品暂不添加
+            showItem = NEKO_EARS;
         }
         // 注册物品
+        DeferredHolder<Item, Item> finalShowItem = showItem;
         TONEKO_ITEM_GROUP = CREATIVE_MODE_TABS.register("item_group",() -> CreativeModeTab.builder()
                 .title(Component.translatable("itemGroup.toneko"))
-                .icon(() -> new ItemStack(NEKO_POTION))
+                .icon(() -> new ItemStack(finalShowItem.get().asItem()))
                 .displayItems((params, content) -> {
                     content.accept(NEKO_POTION.get());
                     content.accept(NEKO_COLLECTOR.get());
@@ -65,14 +67,14 @@ public class ToNekoItems {
         // 注册物品组
         TONEKO_ITEM_GROUP_KEY = ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), ResourceLocation.fromNamespaceAndPath(MODID, "item_group"));
 
-        /*ItemGroupEvents.modifyEntriesEvent(TONEKO_ITEM_GROUP_KEY).register(content -> {
-            content.accept(NEKO_POTION.get());
-            content.accept(NEKO_COLLECTOR.get());
-            if (isGeckolibInstalled) {
-                content.accept(NEKO_EARS.get());
-                content.accept(NEKO_TAIL.get());
-            }
-        });*/
+//        ItemGroupEvents.modifyEntriesEvent(TONEKO_ITEM_GROUP_KEY).register(content -> {
+//            content.accept(NEKO_POTION.get());
+//            content.accept(NEKO_COLLECTOR.get());
+//            if (isGeckolibInstalled) {
+//                content.accept(NEKO_EARS.get());
+//                content.accept(NEKO_TAIL.get());
+//            }
+//        });
     }
 
     public static boolean tryClass(String clazz){
