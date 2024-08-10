@@ -1,12 +1,13 @@
 modLoader = "javafml"
 loaderVersion = "[4,)"
-#issueTrackerURL = ""
+issueTrackerURL = "https://github.com/CSneko/toNeko/issues"
 license = "GPL-v3"
 
 [[mods]]
 modId = "toneko"
 version = "${version}"
 displayName = "toNeko"
+displayURL="https://github.com/CSneko/toNeko"
 authors = '''CrystalNeko
 Contributors:
   MrHua269/Lora4967
@@ -37,6 +38,34 @@ side = "BOTH"
 [[dependencies.toneko]]
 modId = "fabric_api"
 type = "required"
+versionRange = "*"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.toneko]]
+modId = "ctlib"
+type = "required"
+versionRange = "*"
+ordering = "NONE"
+side = "BOTH"
+
+# [[dependencies.toneko]]
+# modId = "luckperms"
+# type = "optional"
+# versionRange = "*"
+# ordering = "NONE"
+# side = "BOTH"
+
+[[dependencies.toneko]]
+modId = "geckolib"
+type = "optional"
+versionRange = "*"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.toneko]]
+modId = "optifine"
+type = "incompatible"
 versionRange = "*"
 ordering = "NONE"
 side = "BOTH"

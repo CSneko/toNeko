@@ -46,7 +46,8 @@
     "trinkets": "*"
   },
   "breaks": {
-    "optifabric": "*"
+    "optifabric": "*",
+    "optifine": "*"
   },
   "mixins": [
     "toneko.mixins.json"
