@@ -10,6 +10,8 @@
   "quirk.toneko.caress": "撫摸",
   "quirk.toneko.caress.use": "§d你輕輕撫摸了 %d §d喵～",
   "quirk.toneko.caress.be_used": "§d你被 %d §d輕輕地撫摸了一下喵～",
+  "key.toneko.lie" : "躺下",
+  "key.toneko.lie.category": "喵喵",
   "command.toneko.not_player": "§c指令執行者只能是玩家喔",
   "command.toneko.not_found": "§c沒找到這個玩家喔",
   "command.toneko.player.success": "§a你現在成為了 §6%d §a的主人喵～",
