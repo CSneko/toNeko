@@ -8,9 +8,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="支持NeoForge">
+      <change beforePath="$PROJECT_DIR$/.architectury-transformer/debug.log" beforeDir="false" afterPath="$PROJECT_DIR$/.architectury-transformer/debug.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/ToNekoNeoForge.java" beforeDir="false" afterPath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/ToNekoNeoForge.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/items/ToNekoItems.java" beforeDir="false" afterPath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/items/ToNekoItems.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GPL-V3_logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README_en.md" beforeDir="false" afterPath="$PROJECT_DIR$/README_en.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/common/build.gradle" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -131,9 +134,11 @@
     &quot;project.structure.last.edited&quot;: &quot;库&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;通义灵码&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;,
-    &quot;应用程序.Data Generation.executor&quot;: &quot;Run&quot;
+    &quot;应用程序.Data Generation.executor&quot;: &quot;Run&quot;,
+    &quot;应用程序.Minecraft Client (:neoforge).executor&quot;: &quot;Run&quot;,
+    &quot;应用程序.Minecraft Server (:neoforge).executor&quot;: &quot;Run&quot;
   },
   &quot;keyToStringList&quot;: {
     &quot;jdk.preference.com.intellij.ui.dsl.builder.impl.RowImpl.sdk&quot;: [
@@ -171,7 +176,7 @@
       <recent name="org.cneko.toneko.common" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.toNeko build">
+  <component name="RunManager" selected="应用程序.Minecraft Client (:neoforge)">
     <configuration name="toNeko Client" type="GradleRunConfiguration" factoryName="Gradle">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -303,14 +308,6 @@
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
       <workItem from="1723090678691" duration="889000" />
-    </task>
-    <task id="LOCAL-00094" summary="更新了亿点点东西,要累死啦(&gt;_&lt;)">
-      <option name="closed" value="true" />
-      <created>1720169012035</created>
-      <option name="number" value="00094" />
-      <option name="presentableId" value="LOCAL-00094" />
-      <option name="project" value="LOCAL" />
-      <updated>1720169012035</updated>
     </task>
     <task id="LOCAL-00095" summary="嗯...1.20的最后一次提交了,再见了">
       <option name="closed" value="true" />
@@ -696,7 +693,15 @@
       <option name="project" value="LOCAL" />
       <updated>1723192361388</updated>
     </task>
-    <option name="localTasksCounter" value="143" />
+    <task id="LOCAL-00143" summary="支持NeoForge">
+      <option name="closed" value="true" />
+      <created>1723213577575</created>
+      <option name="number" value="00143" />
+      <option name="presentableId" value="LOCAL-00143" />
+      <option name="project" value="LOCAL" />
+      <updated>1723213577576</updated>
+    </task>
+    <option name="localTasksCounter" value="144" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
