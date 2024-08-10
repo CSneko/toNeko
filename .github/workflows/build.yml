@@ -34,7 +34,7 @@ jobs:
       uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
 
     - name: Build Mod
-      run: ./build.sh
+      run: sh build.sh
 
     - name: Upload JAR artifacts
       uses: actions/upload-artifact@v4
