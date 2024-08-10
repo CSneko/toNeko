@@ -1,5 +1,7 @@
 # toNeko
-[简体中文](README.md) | [English](README_en.md)
+**[简体中文](README.md)** | [English](README_en.md)
+
+![break with optifine](https://wsrv.nl/?url=https%3A%2F%2Fimages.teamresourceful.com%2Fu%2F8vCLgK.svg&n=-1)
 ## 简单的介绍
 喵喵喵~
 ### 下载:

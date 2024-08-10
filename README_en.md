@@ -1,5 +1,7 @@
 # toNeko
-[简体中文](README.md) | [English](README_en.md)
+[简体中文](README.md) | **[English](README_en.md)**
+
+![break with optifine](https://wsrv.nl/?url=https%3A%2F%2Fimages.teamresourceful.com%2Fu%2F8vCLgK.svg&n=-1)
 ## Brief introduction
 Meow meow meow~
 ### Download:
@@ -14,7 +16,7 @@ Pre-plugin required for the plugin version: [ctlib](https://modrinth.com/plugin/
 
 **Currently the plugin version is temporarily suspended**
 ## Tips
-If you found that some text isn't your language, just modify [the config file](#configuration) to your language. 
+If you found that some text isn't your language, just modify [the config file](#configuration) to your language.
 
 ## Supported versions (but it does not mean that it cannot run on other versions):
 - Fabric 1.21
