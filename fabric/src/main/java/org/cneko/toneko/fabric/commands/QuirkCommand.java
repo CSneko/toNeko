@@ -91,7 +91,6 @@ public class QuirkCommand {
                 context.getSource().sendSystemMessage(translatable("command.quirk.remove", quirk));
             }
         });
-        neko.save();
         return 1;
     }
 

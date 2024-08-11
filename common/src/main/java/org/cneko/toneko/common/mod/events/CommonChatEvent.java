@@ -36,7 +36,6 @@ public class CommonChatEvent {
         neko.addLevel((double) count / 1000.00);
         if(ConfigUtil.STATS) Stats.meowInChat(playerName,count);
         sendMessage(Component.nullToEmpty(msg));
-        neko.save();
     }
     public static void sendMessage(Component message){
         for (Player player : PlayerUtil.getPlayerList()){

@@ -5,6 +5,7 @@ import org.cneko.toneko.common.quirks.Quirk;
 import org.cneko.toneko.common.quirks.QuirkRegister;
 import org.cneko.toneko.common.util.FileUtil;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -132,7 +133,7 @@ public class NekoQuery {
     }
 
     public static Neko getNeko(UUID uuid){
-        return new Neko(uuid);
+        return NekoData.getNeko(uuid);
     }
 
 
@@ -143,6 +144,14 @@ public class NekoQuery {
             this.uuid = uuid;
             profile = NekoQuery.getProfile(uuid);
             createProfile(uuid);
+        }
+        public Neko(File file){
+            try {
+                profile = JsonConfiguration.fromFile(file.toPath());
+                uuid = UUID.fromString(profile.getString("uuid"));
+            } catch (IOException e) {
+                LOGGER.error("Unable to load file:",e);
+            }
         }
 
         public String getProfilePath(){
@@ -319,6 +328,15 @@ public class NekoQuery {
         public void setNickName(String nickName){
             getProfile().set("nickname", nickName);
         }
+        public NekoSkin getSkin(){
+            return NekoSkin.of(getProfile().getString("skin"));
+        }
+        public void setSkin(NekoSkin skin){
+            getProfile().set("skin", skin.getSkin());
+        }
+        public boolean hasSkin(){
+            return !getProfile().getString("skin").equalsIgnoreCase("");
+        }
 
         public void save(){
             try {
@@ -354,14 +372,64 @@ public class NekoQuery {
                 getProfile().set("owners", owners);
             }
         }
+        public UUID getUuid(){
+            return uuid;
+        }
     }
-    public static class Owner {
-        private JsonConfiguration ownerConfig;
-        public Owner(JsonConfiguration ownerConfig){
-            this.ownerConfig = ownerConfig;
+
+    /**
+     * 存储了猫娘临时数据的类，大部分情况下都不许动它，知道吗
+     */
+    public static class NekoData {
+        public static List<Neko> nekoList = new ArrayList<>();
+
+        /**
+         * 获取猫娘
+         * @param uuid 猫娘uuid
+         * @return 猫娘数据
+         */
+        public static Neko getNeko(UUID uuid){
+            // 如果猫娘列表中有这个猫娘，就返回它
+            for (Neko neko : nekoList){
+                if(neko.getUuid().equals(uuid)){
+                    return neko;
+                }
+            }
+            // 如果没有，就创建一个
+            Neko neko = new Neko(uuid);
+            nekoList.add(neko);
+            return neko;
         }
-        public UUID getUUID(){
-            return UUID.fromString(ownerConfig.getString("uuid"));
+
+        /**
+         * 移除猫娘
+         * @param uuid 猫娘uuid
+         */
+        public static void removeNeko(UUID uuid){
+            nekoList.remove(getNeko(uuid));
         }
+
+        /**
+         * 保存所有猫娘数据
+         */
+        public static void saveAll(){
+            nekoList.forEach(Neko::save);
+        }
+
+        /**
+         * 清除所有猫娘数据并重新加载
+         */
+        public static void loadAll(){
+            nekoList.clear();
+            FileUtil.getFiles(PLAYER_DATA_PATH).forEach(file -> {
+                try {
+                    Neko neko = new Neko(file);
+                    nekoList.add(neko);
+                }catch (Exception e){
+                    LOGGER.error("Failed to load neko data", e);
+                }
+            });
+        }
+
     }
 }

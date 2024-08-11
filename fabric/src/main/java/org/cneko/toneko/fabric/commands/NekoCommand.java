@@ -17,13 +17,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemLore;
 import org.cneko.toneko.common.api.NekoQuery;
+import org.cneko.toneko.common.api.NekoSkin;
 import org.cneko.toneko.common.api.Permissions;
-import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.common.api.PlayerInstallToNeko;
 import org.cneko.toneko.common.mod.api.PlayerPoseAPI;
 import org.cneko.toneko.common.mod.packets.EntityPosePayload;
 import org.cneko.toneko.common.mod.util.PermissionUtil;
+import org.cneko.toneko.common.mod.util.SkinUtil;
 import org.cneko.toneko.common.mod.util.TextUtil;
+import org.cneko.toneko.common.util.ConfigUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,8 +78,22 @@ public class NekoCommand {
                                     .executes(NekoCommand::loreCommand)
                             )
                     )
+                    .then(literal("skin")
+                            .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_NEKO_SKIN))
+                            .then(argument("skin", StringArgumentType.string())
+                                    .executes(NekoCommand::skinCommand)
+                            )
+                    )
             );
         });
+    }
+
+    public static int skinCommand(CommandContext<CommandSourceStack> context) {
+        ServerPlayer player = context.getSource().getPlayer();
+        NekoQuery.Neko neko = NekoQuery.getNeko(player.getUUID());
+        neko.setSkin(NekoSkin.of(StringArgumentType.getString(context, "skin")));
+        SkinUtil.tryToSetSkin(player);
+        return 1;
     }
 
     public static int sitCommand(CommandContext<CommandSourceStack> context) {
@@ -131,7 +147,6 @@ public class NekoCommand {
         String nickname = StringArgumentType.getString(context, "nickname");
         // 设置昵称
         neko.setNickName(nickname);
-        neko.save();
         player.sendSystemMessage(translatable("command.neko.nickname.success", nickname));
         return 1;
     }

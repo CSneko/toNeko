@@ -38,7 +38,6 @@ public class CommonPlayerInteractionEvent {
                     return InteractionResult.SUCCESS;
                 }
             }
-            //neko.save();
         }
         return InteractionResult.PASS;
     }

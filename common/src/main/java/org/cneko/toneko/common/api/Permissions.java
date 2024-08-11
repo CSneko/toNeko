@@ -9,6 +9,7 @@ public class Permissions {
     public static String COMMAND_TONEKOADMIN_HELP = "command.tonekoadmin.help";
     public static String COMMAND_TONEKOADMIN_SET = "command.tonekoadmin.set";
     public static String COMMAND_TONEKOADMIN_RELOAD = "command.tonekoadmin.reload";
+    public static String COMMAND_TONEKOADMIN_SKIN = "command.tonekoadmin.skin";
     public static String COMMAND_TONEKO_PLAYER = "command.toneko.player";
     public static String COMMAND_TONEKO_ALIAS = "command.toneko.alias";
     public static String COMMAND_TONEKO_BLOCK = "command.toneko.block";
@@ -24,6 +25,7 @@ public class Permissions {
     public static String COMMAND_NEKO_NICKNAME = "command.neko.nickname";
     public static String COMMAND_NEKO_LEVEL = "command.neko.level";
     public static String COMMAND_NEKO_LORE = "command.neko.lore";
+    public static String COMMAND_NEKO_SKIN = "skin";
     public static String COMMAND_QUIRK = "command.quirk";
     public static String COMMAND_QUIRK_HELP = "command.quirk.help";
     public static String COMMAND_QUIRK_ADD = "command.quirk.add";

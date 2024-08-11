@@ -2,6 +2,8 @@ package org.cneko.toneko.common.util;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.cneko.toneko.common.Bootstrap.LOGGER;
 
@@ -86,6 +88,40 @@ public class FileUtil {
             }
         } catch (IOException e) {
             LOGGER.error("Cannot copy resource: ", e);
+        }
+    }
+
+    /**
+     * 获取指定目录下的所有文件（包括子目录中的文件）。
+     *
+     * @param path 目录路径
+     * @return 文件列表
+     */
+    public static List<File> getFiles(String path) {
+        File directory = new File(path);
+        List<File> files = new ArrayList<>();
+        if (directory.exists() && directory.isDirectory()) {
+            getFilesRecursively(directory, files);
+        }
+        return files;
+    }
+
+    /**
+     * 递归获取目录下的所有文件。
+     *
+     * @param directory 当前目录
+     * @param files 文件列表
+     */
+    private static void getFilesRecursively(File directory, List<File> files) {
+        File[] entries = directory.listFiles();
+        if (entries != null) {
+            for (File entry : entries) {
+                if (entry.isDirectory()) {
+                    getFilesRecursively(entry, files);
+                } else {
+                    files.add(entry);
+                }
+            }
         }
     }
 }

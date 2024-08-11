@@ -50,7 +50,8 @@
     "optifine": "*"
   },
   "mixins": [
-    "toneko.mixins.json"
+    "toneko.mixins.json",
+    "fabric.toneko.mixins.json"
   ],
   "jars": [
     {

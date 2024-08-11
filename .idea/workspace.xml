@@ -7,7 +7,30 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="修复一点小Bug" />
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="添加按键绑定">
+      <change afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/api/NekoSkin.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/mod/events/CommonWorldEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/mod/util/SkinUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/mixins/PlayerEntityMixin.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/fabric/src/main/resources/fabric.toneko.mixins.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/Bootstrap.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/Bootstrap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/api/NekoQuery.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/api/NekoQuery.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/api/Permissions.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/api/Permissions.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/mod/events/CommonChatEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/mod/events/CommonChatEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/mod/events/CommonPlayerInteractionEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/mod/events/CommonPlayerInteractionEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/util/FileUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/util/FileUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/resources/assets/toneko/lang/en_us.json" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/resources/assets/toneko/lang/en_us.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/resources/assets/toneko/lang/zh_cn.json" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/resources/assets/toneko/lang/zh_cn.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/resources/assets/toneko/lang/zh_tw.json" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/resources/assets/toneko/lang/zh_tw.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/ToNekoEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/ToNekoEvents.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/commands/NekoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/commands/NekoCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/commands/QuirkCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/commands/QuirkCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/commands/ToNekoAdminCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/commands/ToNekoAdminCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/commands/ToNekoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/commands/ToNekoCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/misc/ToNekoAttributes.java" beforeDir="false" afterPath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/misc/ToNekoAttributes.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fabric/src/main/resources/fabric.mod.json" beforeDir="false" afterPath="$PROJECT_DIR$/fabric/src/main/resources/fabric.mod.json" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -72,7 +95,7 @@
 }</component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/CSneko/toNeko.git&quot;,
+    &quot;url&quot;: &quot;git@github.com:CSneko/toNeko.git&quot;,
     &quot;accountId&quot;: &quot;c85b6ef7-ef34-430b-85f7-0b45d6c0367e&quot;
   }
 }</component>
@@ -123,7 +146,8 @@
     &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;应用程序.Data Generation.executor&quot;: &quot;Run&quot;
+    &quot;应用程序.Data Generation.executor&quot;: &quot;Run&quot;,
+    &quot;应用程序.Minecraft Client (:fabric).executor&quot;: &quot;Run&quot;
   },
   &quot;keyToStringList&quot;: {
     &quot;jdk.preference.com.intellij.ui.dsl.builder.impl.RowImpl.sdk&quot;: [
@@ -150,6 +174,7 @@
       <recent name="org.cneko.toneko.common.api.Permissions" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="org.cneko.toneko.common.mod.client" />
       <recent name="org.cneko.toneko.bukkit" />
       <recent name="com.crystalneko.toneko.api" />
       <recent name="com.crystalneko.tonekocommon" />
@@ -276,9 +301,11 @@
       <item itemvalue="Gradle.toNeko [clean]" />
       <item itemvalue="Gradle.toNeko build" />
       <item itemvalue="Gradle.toNeko datagen" />
-      <item itemvalue="应用程序.Data Generation" />
-      <item itemvalue="应用程序.Minecraft Client" />
-      <item itemvalue="应用程序.Minecraft Server" />
+      <item itemvalue="应用程序.Data Generation (:fabric)" />
+      <item itemvalue="应用程序.Minecraft Client (:fabric)" />
+      <item itemvalue="应用程序.Minecraft Client (:neoforge)" />
+      <item itemvalue="应用程序.Minecraft Server (:fabric)" />
+      <item itemvalue="应用程序.Minecraft Server (:neoforge)" />
     </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
@@ -289,30 +316,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-    </task>
-    <task id="LOCAL-00092" summary="这么重要的事情我居然忘记了(┙&gt;∧&lt;)┙へ┻┻">
-      <option name="closed" value="true" />
-      <created>1720159774390</created>
-      <option name="number" value="00092" />
-      <option name="presentableId" value="LOCAL-00092" />
-      <option name="project" value="LOCAL" />
-      <updated>1720159774391</updated>
-    </task>
-    <task id="LOCAL-00093" summary="更新了亿点点东西,要累死啦(&gt;_&lt;)">
-      <option name="closed" value="true" />
-      <created>1720168963151</created>
-      <option name="number" value="00093" />
-      <option name="presentableId" value="LOCAL-00093" />
-      <option name="project" value="LOCAL" />
-      <updated>1720168963152</updated>
-    </task>
-    <task id="LOCAL-00094" summary="更新了亿点点东西,要累死啦(&gt;_&lt;)">
-      <option name="closed" value="true" />
-      <created>1720169012035</created>
-      <option name="number" value="00094" />
-      <option name="presentableId" value="LOCAL-00094" />
-      <option name="project" value="LOCAL" />
-      <updated>1720169012035</updated>
     </task>
     <task id="LOCAL-00095" summary="嗯...1.20的最后一次提交了,再见了">
       <option name="closed" value="true" />
@@ -682,8 +685,36 @@
       <option name="project" value="LOCAL" />
       <updated>1722745368009</updated>
     </task>
-    <option name="localTasksCounter" value="141" />
+    <task id="LOCAL-00141" summary="修改构建脚本">
+      <option name="closed" value="true" />
+      <created>1723275603235</created>
+      <option name="number" value="00141" />
+      <option name="presentableId" value="LOCAL-00141" />
+      <option name="project" value="LOCAL" />
+      <updated>1723275603235</updated>
+    </task>
+    <task id="LOCAL-00142" summary="修改构建脚本">
+      <option name="closed" value="true" />
+      <created>1723275717660</created>
+      <option name="number" value="00142" />
+      <option name="presentableId" value="LOCAL-00142" />
+      <option name="project" value="LOCAL" />
+      <updated>1723275717660</updated>
+    </task>
+    <task id="LOCAL-00143" summary="添加按键绑定">
+      <option name="closed" value="true" />
+      <created>1723279797979</created>
+      <option name="number" value="00143" />
+      <option name="presentableId" value="LOCAL-00143" />
+      <option name="project" value="LOCAL" />
+      <updated>1723279797979</updated>
+    </task>
+    <option name="localTasksCounter" value="144" />
     <servers />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="dependencySupport" implementationName="java:net.kyori:adventure-api" />
+    <option featureType="dependencySupport" implementationName="java:net.fabricmc:fabric-loader" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -698,8 +729,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="稍微完善了下猫尾巴的代码呢" />
-    <MESSAGE value="简单添加了猫尾巴模型~" />
     <MESSAGE value="哎~我真是个笨蛋,怎么忘记注册材料了呀,算啦,剩下的今天下午再做吧" />
     <MESSAGE value="简单的完成了一点东西呢" />
     <MESSAGE value="没注意到调用了Bukkit的类" />
@@ -723,6 +752,18 @@
     <MESSAGE value="修复一点小问题，添加NekoPaws" />
     <MESSAGE value="尾巴和耳朵支持染色" />
     <MESSAGE value="修复一点小Bug" />
-    <option name="LAST_COMMIT_MESSAGE" value="修复一点小Bug" />
+    <MESSAGE value="修改构建脚本" />
+    <MESSAGE value="添加按键绑定" />
+    <option name="LAST_COMMIT_MESSAGE" value="添加按键绑定" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.ExceptionInInitializerError" package="java.lang" />
+          <option name="timeStamp" value="12" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
