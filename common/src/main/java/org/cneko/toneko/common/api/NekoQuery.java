@@ -1,5 +1,6 @@
 package org.cneko.toneko.common.api;
 
+import com.google.gson.JsonObject;
 import org.cneko.ctlib.common.file.JsonConfiguration;
 import org.cneko.toneko.common.quirks.Quirk;
 import org.cneko.toneko.common.quirks.QuirkRegister;
@@ -296,8 +297,9 @@ public class NekoQuery {
 
         public List<Quirk> getQuirks(){
             List<Quirk> quirks = new ArrayList<>();
-            getProfile().getStringList("quirks").forEach(s -> {
-                quirks.add(QuirkRegister.getById(s));
+            JsonObject gson = getProfile().toGson();
+            gson.getAsJsonArray("quirks").forEach(o -> {
+                quirks.add(QuirkRegister.getById(o.getAsJsonPrimitive().getAsString()));
             });
             return quirks;
         }
@@ -308,8 +310,7 @@ public class NekoQuery {
             if(!getQuirks().contains(quirk)){
                 List<String> quirks = getProfile().getStringList("quirks");
                 quirks.add(quirk.getId());
-                String[] qs = quirks.toArray(new String[quirks.size()]);
-                getProfile().set("quirks", qs);
+                getProfile().set("quirks", quirks);
             }
         }
         public void removeQuirk(Quirk quirk){

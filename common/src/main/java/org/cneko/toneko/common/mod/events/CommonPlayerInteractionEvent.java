@@ -31,9 +31,9 @@ public class CommonPlayerInteractionEvent {
                     sp.connection.send(packet);
                     nekoPlayer.connection.send(packet);
                     // 增加互动值
-                    //neko.addXp(player.getUuid(), CARESS.getInteractionValue());
+                    neko.addXp(player.getUUID(), CARESS.getInteractionValue());
                     // 发送消息文本
-                    player.displayClientMessage(translatable("quirk.toneko.caress.use", TextUtil.getPlayerName(player)), true);
+                    player.displayClientMessage(translatable("quirk.toneko.caress.use", TextUtil.getPlayerName(nekoPlayer)), true);
                     nekoPlayer.displayClientMessage(translatable("quirk.toneko.caress.be_used", TextUtil.getPlayerName(player)),true);
                     return InteractionResult.SUCCESS;
                 }

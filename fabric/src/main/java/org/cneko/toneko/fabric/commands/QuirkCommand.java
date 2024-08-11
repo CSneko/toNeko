@@ -49,7 +49,7 @@ public class QuirkCommand {
     public static int listQuirks(CommandContext<CommandSourceStack> context) {
         NekoQuery.Neko neko = NekoQuery.getNeko(context.getSource().getPlayer().getUUID());
         if(neko.getQuirks().isEmpty()){
-            context.getSource().sendSystemMessage(translatable("command.quirk.no_quirk"));
+            context.getSource().sendSystemMessage(translatable("command.quirk.no_any_quirk"));
             return 1;
         }
         // 列出quirks
@@ -57,7 +57,7 @@ public class QuirkCommand {
         // 转换为id
         List<String> quirkIds = quirks.stream().map(Quirk::getId).toList();
         // 翻译
-        List<Component> quirkTexts = quirkIds.stream().map(id -> translatable("quirk.toneko" + id)).toList();
+        List<Component> quirkTexts = quirkIds.stream().map(id -> translatable("quirk.toneko." + id)).toList();
         // 全部发送
         context.getSource().sendSystemMessage(translatable("command.quirk.list"));
         for (Component text : quirkTexts) {

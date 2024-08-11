@@ -3,8 +3,8 @@ package org.cneko.toneko.common.quirks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class QuirkRegister {
@@ -41,8 +41,8 @@ public class QuirkRegister {
      * @return 性癖
      */
     @NotNull
-    public static List<Quirk> getQuirks(){
-        return (List<Quirk>) quirks.values();
+    public static Collection<Quirk> getQuirks(){
+        return quirks.values();
     }
 
     /**

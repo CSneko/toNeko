@@ -10,7 +10,7 @@ import net.minecraft.world.entity.player.Player;
 import org.cneko.toneko.common.quirks.Quirk;
 import org.cneko.toneko.common.quirks.QuirkRegister;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 public class CommandUtil {
     public static final SuggestionProvider<CommandSourceStack> getOnlinePlayers = (context, builder) -> {
@@ -36,7 +36,7 @@ public class CommandUtil {
 
     public static CompletableFuture<Suggestions> getQuirksSuggestions(CommandContext<CommandSourceStack> source, SuggestionsBuilder builder) {
         // 获取quirks
-        List<Quirk> quirks = QuirkRegister.getQuirks();
+        Collection<Quirk> quirks = QuirkRegister.getQuirks();
         for (Quirk quirk : quirks) {
             builder.suggest(quirk.getId());
         }
