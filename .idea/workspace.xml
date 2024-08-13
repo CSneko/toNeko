@@ -7,18 +7,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="修复quirks，好啦，现在可以设置性癖啦">
-      <change afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/mod/client/screens/QuirkScreen.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/mod/packets/QuirkQueryPayload.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/api/events/AttributeEvents.java" afterDir="false" />
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="添加一点Events">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/src/main/resources/assets/toneko/lang/en_us.json" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/resources/assets/toneko/lang/en_us.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/src/main/resources/assets/toneko/lang/zh_cn.json" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/resources/assets/toneko/lang/zh_cn.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/src/main/resources/assets/toneko/lang/zh_tw.json" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/resources/assets/toneko/lang/zh_tw.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/commands/NekoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/commands/NekoCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/commands/ToNekoAdminCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/commands/ToNekoAdminCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/mixins/PlayerEntityMixin.java" beforeDir="false" afterPath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/mixins/PlayerEntityMixin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -303,14 +293,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-    </task>
-    <task id="LOCAL-00097" summary="1.21的首次提交,迎接新版本٩(｡・ω・｡)﻿و">
-      <option name="closed" value="true" />
-      <created>1720188764875</created>
-      <option name="number" value="00097" />
-      <option name="presentableId" value="LOCAL-00097" />
-      <option name="project" value="LOCAL" />
-      <updated>1720188764876</updated>
     </task>
     <task id="LOCAL-00098" summary="修复一点Bug(我为什么会在客户端注册服务器tick)">
       <option name="closed" value="true" />
@@ -696,7 +678,15 @@
       <option name="project" value="LOCAL" />
       <updated>1723395190081</updated>
     </task>
-    <option name="localTasksCounter" value="146" />
+    <task id="LOCAL-00146" summary="添加一点Events">
+      <option name="closed" value="true" />
+      <created>1723529277943</created>
+      <option name="number" value="00146" />
+      <option name="presentableId" value="LOCAL-00146" />
+      <option name="project" value="LOCAL" />
+      <updated>1723529277943</updated>
+    </task>
+    <option name="localTasksCounter" value="147" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -716,7 +706,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="没注意到调用了Bukkit的类" />
     <MESSAGE value="提交一个有Bug的版本~" />
     <MESSAGE value="修复模型问题" />
     <MESSAGE value="添加动画注册" />
@@ -741,7 +730,8 @@
     <MESSAGE value="添加按键绑定" />
     <MESSAGE value="修改Mixin，提升兼容性，修改common部分，添加一些皮肤相关的东西" />
     <MESSAGE value="修复quirks，好啦，现在可以设置性癖啦" />
-    <option name="LAST_COMMIT_MESSAGE" value="修复quirks，好啦，现在可以设置性癖啦" />
+    <MESSAGE value="添加一点Events" />
+    <option name="LAST_COMMIT_MESSAGE" value="添加一点Events" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
