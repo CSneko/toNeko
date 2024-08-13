@@ -78,12 +78,12 @@ public class NekoCommand {
                                     .executes(NekoCommand::loreCommand)
                             )
                     )
-                    .then(literal("skin")
-                            .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_NEKO_SKIN))
-                            .then(argument("skin", StringArgumentType.string())
-                                    .executes(NekoCommand::skinCommand)
-                            )
-                    )
+//                    .then(literal("skin")
+//                            .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_NEKO_SKIN))
+//                            .then(argument("skin", StringArgumentType.string())
+//                                    .executes(NekoCommand::skinCommand)
+//                            )
+//                    )
             );
         });
     }
