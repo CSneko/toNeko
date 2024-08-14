@@ -12,6 +12,7 @@
   "quirk.toneko.caress.be_used": "§dYou were gently petted by %d",
   "key.toneko.lie" : "lie",
   "key.toneko.lie.category": "neko",
+  "key.toneko.get_down": "get down",
   "command.toneko.not_player": "§cOnly player can be command executor",
   "command.toneko.not_found": "§cUnable to find the player.",
   "command.toneko.player.success": "§aYou become §6%d §a's owner now-nya",

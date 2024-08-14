@@ -7,6 +7,7 @@ import org.lwjgl.glfw.GLFW;
 
 public class ToNekoKeyBindings {
     public static KeyMapping LIE_KEY;
+    public static KeyMapping GET_DOWN_KEY;
 
     public static void init(){
         LIE_KEY = KeyBindingHelper.registerKeyBinding(
@@ -15,6 +16,14 @@ public class ToNekoKeyBindings {
                         InputConstants.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
                         GLFW.GLFW_KEY_I, // The keycode of the key
                         "key.toneko.lie.category" // The translation key of the keybinding's category.
+                )
+        );
+        GET_DOWN_KEY = KeyBindingHelper.registerKeyBinding(
+                new KeyMapping(
+                        "key.toneko.get_down", // The translation key of the keybinding's name
+                        InputConstants.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
+                        GLFW.GLFW_KEY_O, // The keycode of the key
+                        "key.toneko.lie.category" // The translation key of the keybinding's category.)
                 )
         );
     }

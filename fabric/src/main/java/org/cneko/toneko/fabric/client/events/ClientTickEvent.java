@@ -18,6 +18,9 @@ public class ClientTickEvent {
         while (ToNekoKeyBindings.LIE_KEY.consumeClick()) {
             client.player.connection.sendUnsignedCommand("neko lie");
         }
+        while (ToNekoKeyBindings.GET_DOWN_KEY.consumeClick()) {
+            client.player.connection.sendUnsignedCommand("neko getDown");
+        }
     }
 
     public static void onTick(Minecraft client) {

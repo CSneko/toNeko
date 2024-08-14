@@ -58,9 +58,9 @@ public class NekoCommand {
                             .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_NEKO_LIE))
                             .executes(NekoCommand::lieCommand)
                     )
-                    .then(literal("sit")
+                    .then(literal("getDown")
                             .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_NEKO_SIT))
-                            .executes(NekoCommand::sitCommand)
+                            .executes(NekoCommand::getDownCommand)
                     )
                     .then(literal("nickname")
                             .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_NEKO_NICKNAME))
@@ -96,16 +96,16 @@ public class NekoCommand {
         return 1;
     }
 
-    public static int sitCommand(CommandContext<CommandSourceStack> context) {
+    public static int getDownCommand(CommandContext<CommandSourceStack> context) {
         ServerPlayer player = context.getSource().getPlayer();
         String playerName = TextUtil.getPlayerName(player);
         // 如果玩家没有坐下,把玩家设置为坐下,否则把玩家设置为正常
         if(PlayerPoseAPI.contains(player)){
             PlayerPoseAPI.remove(player);
-            if(!ConfigUtil.ONLY_SERVER || PlayerInstallToNeko.get(playerName)) ServerPlayNetworking.send(player, new EntityPosePayload(Pose.SITTING,false));
+            if(!ConfigUtil.ONLY_SERVER || PlayerInstallToNeko.get(playerName)) ServerPlayNetworking.send(player, new EntityPosePayload(Pose.SWIMMING,false));
         }else{
-            PlayerPoseAPI.setPose(player, Pose.SITTING);
-            if(!ConfigUtil.ONLY_SERVER || PlayerInstallToNeko.get(playerName)) ServerPlayNetworking.send(player, new EntityPosePayload(Pose.SITTING,true));
+            PlayerPoseAPI.setPose(player, Pose.SWIMMING);
+            if(!ConfigUtil.ONLY_SERVER || PlayerInstallToNeko.get(playerName)) ServerPlayNetworking.send(player, new EntityPosePayload(Pose.SWIMMING,true));
         }
         return 1;
     }

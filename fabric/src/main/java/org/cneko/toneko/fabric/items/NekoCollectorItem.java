@@ -30,6 +30,7 @@ public class NekoCollectorItem extends Item {
         tooltip.add(Component.translatable("item.toneko.neko_collector.info", count, maxCount).withStyle(ChatFormatting.GREEN));
     }
 
+    @Override
     public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
         if (! (entity instanceof Player player)) return;
         // 获取玩家3格方块内的猫猫数量
@@ -58,5 +59,7 @@ public class NekoCollectorItem extends Item {
         }else {
             stack.set(ToNekoComponents.NEKO_PROGRESS_COMPONENT, new CountCodecs.FloatCountCodec(count, maxCount));
         }
+
+
     }
 }

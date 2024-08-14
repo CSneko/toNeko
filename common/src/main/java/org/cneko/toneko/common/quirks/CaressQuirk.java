@@ -7,6 +7,6 @@ public class CaressQuirk extends Quirk {
 
     @Override
     public int getInteractionValue() {
-        return 5;
+        return 1;
     }
 }

@@ -7,8 +7,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="添加一点Events">
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="添加Entity雏形">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/api/NekoQuery.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/api/NekoQuery.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/mod/items/NekoPotionItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/mod/items/NekoPotionItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/quirks/CaressQuirk.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/quirks/CaressQuirk.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/resources/assets/toneko/lang/en_us.json" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/resources/assets/toneko/lang/en_us.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/resources/assets/toneko/lang/zh_cn.json" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/resources/assets/toneko/lang/zh_cn.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/resources/assets/toneko/lang/zh_tw.json" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/resources/assets/toneko/lang/zh_tw.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/client/ToNekoKeyBindings.java" beforeDir="false" afterPath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/client/ToNekoKeyBindings.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/client/events/ClientTickEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/client/events/ClientTickEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/commands/NekoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/commands/NekoCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/items/NekoCollectorItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/items/NekoCollectorItem.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -293,14 +303,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-    </task>
-    <task id="LOCAL-00098" summary="修复一点Bug(我为什么会在客户端注册服务器tick)">
-      <option name="closed" value="true" />
-      <created>1720189570994</created>
-      <option name="number" value="00098" />
-      <option name="presentableId" value="LOCAL-00098" />
-      <option name="project" value="LOCAL" />
-      <updated>1720189570995</updated>
     </task>
     <task id="LOCAL-00099" summary="我为什么要和有病一样加remove?">
       <option name="closed" value="true" />
@@ -686,7 +688,15 @@
       <option name="project" value="LOCAL" />
       <updated>1723529277943</updated>
     </task>
-    <option name="localTasksCounter" value="147" />
+    <task id="LOCAL-00147" summary="添加Entity雏形">
+      <option name="closed" value="true" />
+      <created>1723536536957</created>
+      <option name="number" value="00147" />
+      <option name="presentableId" value="LOCAL-00147" />
+      <option name="project" value="LOCAL" />
+      <updated>1723536536957</updated>
+    </task>
+    <option name="localTasksCounter" value="148" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -706,7 +716,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="提交一个有Bug的版本~" />
     <MESSAGE value="修复模型问题" />
     <MESSAGE value="添加动画注册" />
     <MESSAGE value="修复动画注册,微调语言文件" />
@@ -731,7 +740,8 @@
     <MESSAGE value="修改Mixin，提升兼容性，修改common部分，添加一些皮肤相关的东西" />
     <MESSAGE value="修复quirks，好啦，现在可以设置性癖啦" />
     <MESSAGE value="添加一点Events" />
-    <option name="LAST_COMMIT_MESSAGE" value="添加一点Events" />
+    <MESSAGE value="添加Entity雏形" />
+    <option name="LAST_COMMIT_MESSAGE" value="添加Entity雏形" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

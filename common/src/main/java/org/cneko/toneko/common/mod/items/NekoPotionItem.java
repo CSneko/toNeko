@@ -43,7 +43,6 @@ public class NekoPotionItem extends PotionItem {
 
                 // 让猫猫听到经验音效
                 player.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0F, 1.0F);
-
             }
             neko.save();
         }
