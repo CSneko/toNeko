@@ -5,6 +5,7 @@ import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.commands.CommandSourceStack;
 import org.cneko.toneko.common.api.NekoQuery;
+import org.cneko.toneko.common.api.NekoSkin;
 import org.cneko.toneko.common.api.Permissions;
 import org.cneko.toneko.common.mod.util.PermissionUtil;
 import org.cneko.toneko.common.mod.util.PlayerUtil;
@@ -33,13 +34,60 @@ public class ToNekoAdminCommand {
                     .then(literal("reload")
                             .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_TONEKOADMIN_RELOAD))
                             .executes(ToNekoAdminCommand::reload)
-                    )
+                            .then(literal("data")
+                                    .executes(ToNekoAdminCommand::reloadData)
+                            )
+                   )
+//                    .then(literal("skin")
+//                            .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_TONEKOADMIN_SKIN))
+//                            .then(literal("list")
+//                                    .executes(ToNekoAdminCommand::skinList)
+//                            )
+//                            .then(literal("add")
+//                                    .then(argument("skin", StringArgumentType.string())
+//                                            .executes(ToNekoAdminCommand::skinAdd)
+//                                    )
+//                            )
+//                            .then(literal("remove")
+//                                    .then(argument("skin", StringArgumentType.string())
+//                                            .executes(ToNekoAdminCommand::skinRemove)
+//                                    )
+//                            )
+//                    )
                     .then(literal("help")
                             .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_TONEKOADMIN_HELP))
                             .executes(ToNekoAdminCommand::help)
                     )
             );
         });
+    }
+
+    public static int skinAdd(CommandContext<CommandSourceStack> context) {
+        String skin = StringArgumentType.getString(context, "skin");
+        NekoSkin.addSkin(skin);
+        context.getSource().sendSystemMessage(translatable("command.tonekoadmin.skin.add", skin));
+        return 1;
+    }
+
+    public static int skinRemove(CommandContext<CommandSourceStack> context) {
+        String skin = StringArgumentType.getString(context, "skin");
+        NekoSkin.removeSkin(skin);
+        context.getSource().sendSystemMessage(translatable("command.tonekoadmin.skin.remove", skin));
+        return 1;
+    }
+
+    public static int skinList(CommandContext<CommandSourceStack> context) {
+        String skins = NekoSkin.getSkins().stream().reduce((a, b) -> a + "\n" + b).toString();
+        context.getSource().sendSystemMessage(translatable("command.tonekoadmin.skin.list", skins));
+        return 1;
+    }
+
+    public static int reloadData(CommandContext<CommandSourceStack> context) {
+        // 重新加载猫娘数据
+        NekoQuery.NekoData.saveAll();
+        NekoQuery.NekoData.loadAll();
+        context.getSource().sendSystemMessage(translatable("command.tonekoadmin.reload.data"));
+        return 1;
     }
 
     public static int help(CommandContext<CommandSourceStack> context) {

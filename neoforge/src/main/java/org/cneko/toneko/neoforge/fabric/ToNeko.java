@@ -11,10 +11,7 @@ import org.cneko.toneko.common.mod.packets.EntityPosePayload;
 import org.cneko.toneko.common.mod.util.PermissionUtil;
 import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.common.util.LanguageUtil;
-import org.cneko.toneko.neoforge.fabric.commands.NekoCommand;
-import org.cneko.toneko.neoforge.fabric.commands.ToNekoAdminCommand;
-import org.cneko.toneko.neoforge.fabric.commands.ToNekoCommand;
-import org.cneko.toneko.neoforge.fabric.commands.TwwdfCommand;
+import org.cneko.toneko.neoforge.fabric.commands.*;
 
 public class ToNeko implements ModInitializer {
     @Override
@@ -28,7 +25,7 @@ public class ToNeko implements ModInitializer {
         ToNekoAdminCommand.init();
         NekoCommand.init();
         TwwdfCommand.init();
-        // QuirkCommand.init();
+        QuirkCommand.init();
 
 //        // 注册装备
 //        ToNekoArmorMaterials.init();

@@ -19,7 +19,6 @@ import org.cneko.toneko.common.mod.events.CommonWorldEvent;
 import org.cneko.toneko.common.mod.util.TextUtil;
 import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.common.util.LanguageUtil;
-
 public class ToNekoEvents {
     public static void init() {
         if(ConfigUtil.CHAT_ENABLE) {

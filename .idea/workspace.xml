@@ -7,18 +7,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="添加Entity雏形">
+    <list default="true" id="312ab46a-5beb-4dcc-9e4f-fc8d4e7dd7df" name="更改" comment="添加按键，修改数值">
+      <change afterPath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/client/ToNekoKeyBindings.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/api/NekoQuery.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/api/NekoQuery.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/mod/items/NekoPotionItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/mod/items/NekoPotionItem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/quirks/CaressQuirk.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/quirks/CaressQuirk.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/src/main/resources/assets/toneko/lang/en_us.json" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/resources/assets/toneko/lang/en_us.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/src/main/resources/assets/toneko/lang/zh_cn.json" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/resources/assets/toneko/lang/zh_cn.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/src/main/resources/assets/toneko/lang/zh_tw.json" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/resources/assets/toneko/lang/zh_tw.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/client/ToNekoKeyBindings.java" beforeDir="false" afterPath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/client/ToNekoKeyBindings.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/client/events/ClientTickEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/client/events/ClientTickEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/commands/NekoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/commands/NekoCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/items/NekoCollectorItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/items/NekoCollectorItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/mod/events/CommonPlayerInteractionEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/org/cneko/toneko/common/mod/events/CommonPlayerInteractionEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/ToNekoEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/fabric/src/main/java/org/cneko/toneko/fabric/ToNekoEvents.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/ToNeko.java" beforeDir="false" afterPath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/ToNeko.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/ToNekoEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/ToNekoEvents.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/client/ToNekoClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/client/ToNekoClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/client/events/ClientTickEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/client/events/ClientTickEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/commands/NekoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/commands/NekoCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/commands/QuirkCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/commands/QuirkCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/commands/ToNekoAdminCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/commands/ToNekoAdminCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/commands/ToNekoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/commands/ToNekoCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/items/NekoCollectorItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/fabric/items/NekoCollectorItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/items/ToNekoItems.java" beforeDir="false" afterPath="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge/items/ToNekoItems.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/neoforge/src/main/resources/META-INF/neoforge.mods.toml" beforeDir="false" afterPath="$PROJECT_DIR$/neoforge/src/main/resources/META-INF/neoforge.mods.toml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -128,11 +132,11 @@
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;jdk.selected.com.intellij.ui.dsl.builder.impl.RowImpl.sdk&quot;: &quot;21&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/media/crystalneko/00053615000A874B/java/toNeko1206&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/media/crystalneko/00053615000A874B/java/toNeko/neoforge/src/main/java/org/cneko/toneko/neoforge&quot;,
     &quot;project.structure.last.edited&quot;: &quot;库&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;vcs.Git&quot;,
     &quot;应用程序.Data Generation.executor&quot;: &quot;Run&quot;,
     &quot;应用程序.Minecraft Client (:fabric).executor&quot;: &quot;Run&quot;
   },
@@ -145,6 +149,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/neoforge/src/main/java/org/cneko/toneko/neoforge" />
       <recent name="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/item" />
       <recent name="$PROJECT_DIR$/src/main/resources" />
       <recent name="$PROJECT_DIR$/src/main/resources/assets/toneko/textures/entity/neko" />
@@ -168,6 +173,7 @@
       <recent name="com.crystalneko.tonekofabric.api" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="org.cneko.toneko.neoforge.fabric.items" />
       <recent name="org.cneko.toneko.common" />
     </key>
   </component>
@@ -303,14 +309,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696578879658</updated>
-    </task>
-    <task id="LOCAL-00099" summary="我为什么要和有病一样加remove?">
-      <option name="closed" value="true" />
-      <created>1720189937860</created>
-      <option name="number" value="00099" />
-      <option name="presentableId" value="LOCAL-00099" />
-      <option name="project" value="LOCAL" />
-      <updated>1720189937860</updated>
     </task>
     <task id="LOCAL-00100" summary="添加一个客户端验证~">
       <option name="closed" value="true" />
@@ -696,7 +694,15 @@
       <option name="project" value="LOCAL" />
       <updated>1723536536957</updated>
     </task>
-    <option name="localTasksCounter" value="148" />
+    <task id="LOCAL-00148" summary="添加按键，修改数值">
+      <option name="closed" value="true" />
+      <created>1723623782821</created>
+      <option name="number" value="00148" />
+      <option name="presentableId" value="LOCAL-00148" />
+      <option name="project" value="LOCAL" />
+      <updated>1723623782821</updated>
+    </task>
+    <option name="localTasksCounter" value="149" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -716,7 +722,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="修复模型问题" />
     <MESSAGE value="添加动画注册" />
     <MESSAGE value="修复动画注册,微调语言文件" />
     <MESSAGE value="啊?原来我一直没把配方上版本管理???" />
@@ -741,7 +746,8 @@
     <MESSAGE value="修复quirks，好啦，现在可以设置性癖啦" />
     <MESSAGE value="添加一点Events" />
     <MESSAGE value="添加Entity雏形" />
-    <option name="LAST_COMMIT_MESSAGE" value="添加Entity雏形" />
+    <MESSAGE value="添加按键，修改数值" />
+    <option name="LAST_COMMIT_MESSAGE" value="添加按键，修改数值" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

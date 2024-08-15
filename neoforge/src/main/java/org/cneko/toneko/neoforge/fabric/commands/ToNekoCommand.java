@@ -143,7 +143,6 @@ public class ToNekoCommand {
             }
             // 添加屏蔽词
             neko.addBlock(block, replace, method);
-            neko.save();
             player.sendSystemMessage(translatable("messages.toneko.block.add"));
             return 1;
         }catch (Exception e){
@@ -166,7 +165,6 @@ public class ToNekoCommand {
                 return 1;
             }
             neko.removeBlock(block);
-            neko.save();
             player.sendSystemMessage(translatable("messages.toneko.block.remove"));
             return 1;
         }catch (Exception e){
@@ -205,7 +203,6 @@ public class ToNekoCommand {
         }else {
             player.sendSystemMessage(translatable("messages.toneko.notOwner"));
         }
-        neko.save();
         return 1;
         }catch (Exception e){
             Bootstrap.LOGGER.error(e);
@@ -225,7 +222,6 @@ public class ToNekoCommand {
             } else {
                 player.sendSystemMessage(translatable("messages.toneko.notOwner"));
             }
-            neko.save();
             return 1;
         }catch (Exception e){
             Bootstrap.LOGGER.error(e);
@@ -252,7 +248,6 @@ public class ToNekoCommand {
                 return 1;
             }
             neko.addOwner(player.getUUID());
-            neko.save();
             player.sendSystemMessage(translatable("command.toneko.player.success", nekoName));
             return 1;
         }catch (Exception e){

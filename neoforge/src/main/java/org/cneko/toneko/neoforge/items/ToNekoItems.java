@@ -29,7 +29,7 @@ public class ToNekoItems {
 
     public static ResourceKey<CreativeModeTab> TONEKO_ITEM_GROUP_KEY;
     public static Supplier<CreativeModeTab> TONEKO_ITEM_GROUP;
-    public static boolean isGeckolibInstalled = tryClass("software.bernie.geckolib.animatable.GeoItem");
+    public static boolean isGeckolibInstalled = false; //tryClass("software.bernie.geckolib.animatable.GeoItem");
     public static void init() {
         // 如果启用了仅服务器端，则不注册物品
         if (!ConfigUtil.ONLY_SERVER) registerWithOutConfig();
@@ -88,5 +88,13 @@ public class ToNekoItems {
 
     @SubscribeEvent
     public static void buildContents(BuildCreativeModeTabContentsEvent event) {
+        if (event.getTabKey().equals(TONEKO_ITEM_GROUP_KEY)) {
+            event.accept(NEKO_POTION.get());
+            event.accept(NEKO_COLLECTOR.get());
+            if (isGeckolibInstalled) {
+                event.accept(NEKO_EARS.get());
+                event.accept(NEKO_TAIL.get());
+            }
+        }
     }
 }
