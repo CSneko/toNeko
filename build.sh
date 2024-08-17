@@ -1,3 +1,4 @@
+chmod +x gradlew
 ./gradlew runDatagen &      # 将命令放入后台运行
 pid=$!              # 获取该命令的PID
 sleep 60

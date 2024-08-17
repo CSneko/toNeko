@@ -4,6 +4,8 @@
   "item.toneko.neko_ears": "猫耳朵",
   "item.toneko.neko_collector": "喵喵吸收器",
   "item.toneko.neko_collector.info": "已经吸收 %d / %d 猫猫能量啦",
+  "item.toneko.furry_bohe": "兽薄荷",
+  "item.toneko.furry_bohe.info": "Also try Furry Bohe",
   "itemGroup.toneko": "猫猫",
   "attribute.name.neko.degree": "猫猫等级",
   "enchantment.toneko.reversion": "反转",

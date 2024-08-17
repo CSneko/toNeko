@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import org.cneko.toneko.common.mod.items.FurryBoheItem;
 import org.cneko.toneko.common.mod.items.NekoArmor;
 import org.cneko.toneko.common.mod.items.NekoPotionItem;
 import org.cneko.toneko.common.util.ConfigUtil;
@@ -22,6 +23,7 @@ public class ToNekoItems {
     public static NekoArmor.NekoEarsItem NEKO_EARS;
     public static NekoArmor.NekoTailItem NEKO_TAIL;
     public static NekoArmor.NekoPawsItem NEKO_PAWS;
+    public static FurryBoheItem FURRY_BOHE;
     public static ResourceKey<CreativeModeTab> TONEKO_ITEM_GROUP_KEY;
     public static CreativeModeTab TONEKO_ITEM_GROUP;
     public static boolean isGeckolibInstalled = tryClass("software.bernie.geckolib.animatable.GeoItem");
@@ -37,8 +39,10 @@ public class ToNekoItems {
     public static void registerWithOutConfig() {
         NEKO_POTION = new NekoPotionItem();
         NEKO_COLLECTOR = new NekoCollectorItem();
+        FURRY_BOHE = new FurryBoheItem();
         Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, NekoPotionItem.ID), NEKO_POTION);
         Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, NekoCollectorItem.ID), NEKO_COLLECTOR);
+        Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, FurryBoheItem.ID), FURRY_BOHE);
         // 如果安装了geckolib，则注册为ArmorItem
         if (isGeckolibInstalled) {
             // 如果安装了trinkets，则注册为TrinketItem
@@ -69,6 +73,7 @@ public class ToNekoItems {
         ItemGroupEvents.modifyEntriesEvent(TONEKO_ITEM_GROUP_KEY).register(content -> {
             content.accept(NEKO_POTION);
             content.accept(NEKO_COLLECTOR);
+            content.accept(FURRY_BOHE);
             if (isGeckolibInstalled) {
                 content.accept(NEKO_EARS);
                 content.accept(NEKO_TAIL);

@@ -4,6 +4,8 @@
   "item.toneko.neko_ears": "Neko ears",
   "item.toneko.neko_collector": "Neko collector",
   "item.toneko.neko_collector.info": "%d / %d Neko Energy already",
+  "item.toneko.furry_bohe": "Furry Bohe",
+  "item.toneko.furry_bohe.info": "Also try Furry Bohe",
   "itemGroup.toneko": "Neko",
   "attribute.name.neko.degree": "neko degree",
   "enchantment.toneko.reversion": "Reversion",

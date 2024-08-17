@@ -10,6 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
+import org.cneko.toneko.common.mod.items.FurryBoheItem;
 import org.cneko.toneko.common.mod.items.NekoArmor;
 import org.cneko.toneko.common.mod.items.NekoPotionItem;
 import org.cneko.toneko.common.util.ConfigUtil;
@@ -26,6 +27,7 @@ public class ToNekoItems {
     public static DeferredHolder<Item,Item> NEKO_POTION;
     public static DeferredHolder<Item,Item> NEKO_COLLECTOR;
     public static DeferredHolder<Item,Item> NEKO_TAIL;
+    public static DeferredHolder<Item,Item> FURRY_BOHE;
 
     public static ResourceKey<CreativeModeTab> TONEKO_ITEM_GROUP_KEY;
     public static Supplier<CreativeModeTab> TONEKO_ITEM_GROUP;
@@ -41,6 +43,7 @@ public class ToNekoItems {
     public static void registerWithOutConfig() {
         NEKO_POTION = ITEMS.register(NekoPotionItem.ID, NekoPotionItem::new);
         NEKO_COLLECTOR = ITEMS.register(NekoCollectorItem.ID,NekoCollectorItem::new);
+        FURRY_BOHE = ITEMS.register(FurryBoheItem.ID, FurryBoheItem::new);
         DeferredHolder<Item, Item> showItem = NEKO_POTION;
         // 如果安装了geckolib，则注册为ArmorItem
         if (isGeckolibInstalled) {
@@ -91,6 +94,7 @@ public class ToNekoItems {
         if (event.getTabKey().equals(TONEKO_ITEM_GROUP_KEY)) {
             event.accept(NEKO_POTION.get());
             event.accept(NEKO_COLLECTOR.get());
+            event.accept(FURRY_BOHE.get());
             if (isGeckolibInstalled) {
                 event.accept(NEKO_EARS.get());
                 event.accept(NEKO_TAIL.get());
