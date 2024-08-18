@@ -10,6 +10,7 @@ import org.cneko.toneko.common.mod.impl.FabricLanguageImpl;
 import org.cneko.toneko.common.mod.items.ToNekoArmorMaterials;
 import org.cneko.toneko.common.mod.packets.EntityPosePayload;
 import org.cneko.toneko.common.mod.packets.QuirkQueryPayload;
+import org.cneko.toneko.common.mod.quirks.ToNekoQuirks;
 import org.cneko.toneko.common.mod.util.PermissionUtil;
 import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.common.util.LanguageUtil;
@@ -37,7 +38,9 @@ public class ToNeko implements ModInitializer {
         ToNekoItems.init();
         // 注册属性
         ToNekoAttributes.init();
-        
+
+        // 注册Quirks
+        ToNekoQuirks.init();
         // 注册网络数据包
         PayloadTypeRegistry.playS2C().register(EntityPosePayload.ID, EntityPosePayload.CODEC);
         PayloadTypeRegistry.playS2C().register(QuirkQueryPayload.ID, QuirkQueryPayload.CODEC);

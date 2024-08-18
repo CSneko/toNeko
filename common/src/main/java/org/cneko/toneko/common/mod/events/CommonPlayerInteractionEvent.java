@@ -15,7 +15,7 @@ import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.mod.util.TextUtil;
 
 import static org.cneko.toneko.common.mod.util.TextUtil.translatable;
-import static org.cneko.toneko.common.quirks.Quirks.CARESS;
+import static org.cneko.toneko.common.mod.quirks.ToNekoQuirks.CARESS;
 
 public class CommonPlayerInteractionEvent {
     public static InteractionResult useEntity(Player player, Level world, InteractionHand hand, Entity entity, EntityHitResult hitResult) {

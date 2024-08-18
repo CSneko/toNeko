@@ -14,6 +14,7 @@ public abstract class Quirk {
         return id;
     }
 
+
     /**
      * 获取交互值,当玩家与猫娘互动时应该增加的好感经验
      * @return 交互值
