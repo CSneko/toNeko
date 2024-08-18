@@ -2,16 +2,14 @@ package org.cneko.toneko.common.mod.quirks;
 
 import net.minecraft.network.chat.Component;
 
-import java.util.List;
+import javax.annotation.Nullable;
 
 public interface ModQuirk {
     /**
-     * 添加悬浮文本，可参考物品的appendTooltip方法
-     * @param context 上下文
-     * @param tooltip tooltip列表
+     * 添加悬浮文本，可返回null
      */
-    default void appendTooltip(QuirkContext context,List<Component> tooltip){
-    }
+    @Nullable
+    Component getTooltip();
 
     int getInteractionValue(QuirkContext context);
 

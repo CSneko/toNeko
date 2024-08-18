@@ -5,10 +5,13 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import org.cneko.toneko.common.mod.packets.QuirkQueryPayload;
+import org.cneko.toneko.common.mod.quirks.ToNekoQuirk;
+import org.cneko.toneko.common.quirks.QuirkRegister;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -49,17 +52,25 @@ public class QuirkScreen extends Screen{
             Button button = Button.builder(text, new OnQuirkPress(quirk, quirks))
                     .bounds(x, y, buttonWidth, buttonHeight)
                     .build();
-
+            // 添加悬浮文本
+            try{
+                ToNekoQuirk q = (ToNekoQuirk) QuirkRegister.getById(quirk);
+                Component tooltip = q.getTooltip();
+                if (tooltip != null) {
+                    button.setTooltip(Tooltip.create(tooltip));
+                }
+            }catch (Exception ignored){}
             addRenderableWidget(button);
             y += buttonHeight + buttonSpacing; // 下一个按钮的位置
         }
 
         // 添加返回按钮
-        int doneButtonX = (this.width - buttonWidth) / 2;
-        int doneButtonY = y + buttonSpacing*2; // 放置在所有quirk按钮下方
+        int doneButtonX = this.width / 2 - buttonWidth;
+        int doneButtonY = y + buttonSpacing*4; // 放置在所有quirk按钮下方
         addRenderableWidget(Button.builder(translatable("gui.done"), (btn) -> {
             onClose();
-        }).bounds(doneButtonX, doneButtonY, buttonWidth, buttonHeight).build());
+        }).bounds(doneButtonX, doneButtonY, buttonWidth, buttonHeight)
+                .size(buttonWidth*2, buttonHeight).build());
     }
 
     @Override
