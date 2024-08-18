@@ -9,6 +9,7 @@ public class ToNekoKeyBindings {
     public static KeyMapping LIE_KEY;
     public static KeyMapping GET_DOWN_KEY;
     public static KeyMapping RIDE_KEY;
+    public static KeyMapping QUIRK_KEY;
 
     public static void init(){
         LIE_KEY = KeyBindingHelper.registerKeyBinding(
@@ -32,6 +33,14 @@ public class ToNekoKeyBindings {
                         "key.toneko.ride", // The translation key of the keybinding's name
                         InputConstants.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
                         GLFW.GLFW_KEY_K, // The keycode of the key
+                        "key.toneko.lie.category" // The translation key of the keybinding's category.)
+                )
+        );
+        QUIRK_KEY = KeyBindingHelper.registerKeyBinding(
+                new KeyMapping(
+                        "key.toneko.quirk", // The translation key of the keybinding's name
+                        InputConstants.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
+                        GLFW.GLFW_KEY_J, // The keycode of the key
                         "key.toneko.lie.category" // The translation key of the keybinding's category.)
                 )
         );

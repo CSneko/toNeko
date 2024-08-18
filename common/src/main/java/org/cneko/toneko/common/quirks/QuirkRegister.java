@@ -46,6 +46,15 @@ public class QuirkRegister {
     }
 
     /**
+     * 获取所有性癖的id
+     * @return id
+     */
+    @NotNull
+    public static Collection<String> getQuirkIds(){
+        return quirks.keySet();
+    }
+
+    /**
      * 是否存在性癖
      * @param id id
      * @return 是否存在

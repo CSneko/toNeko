@@ -24,6 +24,9 @@ public class ClientTickEvent {
         if (ToNekoKeyBindings.RIDE_KEY.consumeClick()) {
             client.player.connection.sendUnsignedCommand("neko ride");
         }
+        if (ToNekoKeyBindings.QUIRK_KEY.consumeClick()) {
+            client.player.connection.sendUnsignedCommand("quirk gui");
+        }
     }
 
     public static void onTick(Minecraft client) {

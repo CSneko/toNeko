@@ -319,6 +319,9 @@ public class NekoQuery {
         public void setQuirks(List<Quirk> quirks){
             getProfile().set("quirks", quirks.stream().map(Quirk::getId).collect(Collectors.toList()));
         }
+        public void setQuirksById(List<String> quirks){
+            getProfile().set("quirks", quirks);
+        }
 
         public boolean hasNickName(){
             return getProfile().getString("nickname") != null;

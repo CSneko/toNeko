@@ -6,16 +6,17 @@ import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import org.cneko.ctlib.common.util.ChatPrefix;
 import org.cneko.toneko.common.api.NekoQuery;
+import org.cneko.toneko.common.api.Permissions;
 import org.cneko.toneko.common.api.PlayerInstallToNeko;
-import org.cneko.toneko.common.mod.events.CommonChatEvent;
-import org.cneko.toneko.common.mod.events.CommonPlayerInteractionEvent;
-import org.cneko.toneko.common.mod.events.CommonPlayerTickEvent;
-import org.cneko.toneko.common.mod.events.CommonWorldEvent;
+import org.cneko.toneko.common.mod.events.*;
+import org.cneko.toneko.common.mod.packets.QuirkQueryPayload;
+import org.cneko.toneko.common.mod.util.PermissionUtil;
 import org.cneko.toneko.common.mod.util.TextUtil;
 import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.common.util.LanguageUtil;
@@ -32,6 +33,18 @@ public class ToNekoEvents {
         UseEntityCallback.EVENT.register(CommonPlayerInteractionEvent::useEntity);
         ServerTickEvents.START_SERVER_TICK.register(CommonPlayerTickEvent::startTick);
         ServerWorldEvents.UNLOAD.register(CommonWorldEvent::onWorldUnLoad);
+        ServerPlayNetworking.registerGlobalReceiver(QuirkQueryPayload.ID, ToNekoEvents::onQuirkQueryNetWorking);
+    }
+
+    public static void onQuirkQueryNetWorking(QuirkQueryPayload payload, ServerPlayNetworking.Context context) {
+        ServerPlayer player = context.player();
+        if (!PermissionUtil.has(player, Permissions.COMMAND_QUIRK)){
+            // 没有权限
+            return;
+        }
+        // 保存数据
+        NekoQuery.Neko neko = NekoQuery.getNeko(player.getUUID());
+        neko.setQuirksById(payload.getQuirks());
     }
 
 
