@@ -4,11 +4,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class QuirkRegister {
-    private static final Map<String, Quirk> quirks = new HashMap<>();
+    private static final Map<String, Quirk> quirks = new LinkedHashMap<>();
 
     /**
      * 注册一个性癖

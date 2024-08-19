@@ -37,8 +37,9 @@ public class QuirkScreen extends Screen{
         int buttonWidth = 100; // 每个按钮的宽度
         int buttonHeight = 20; // 每个按钮的高度
         int buttonSpacing = 10; // 按钮之间的间距
-        int y = this.height / 2 - (buttonHeight * (allQuirks.size() + 1) + buttonSpacing * (allQuirks.size())) / 2; // 计算起始y坐标
+        int y = this.height / 8; // 计算起始y坐标
 
+        int count = 0;
         for (String quirk : allQuirks) {
             MutableComponent text = Component.translatable("quirk.toneko." + quirk);
             if (quirks.contains(quirk)) {
@@ -48,7 +49,8 @@ public class QuirkScreen extends Screen{
                 text.withStyle(ChatFormatting.WHITE);
             }
 
-            int x = (this.width - buttonWidth) / 2; // 居中显示按钮
+            int x = (this.width / 3); // 一排显示3个按钮
+            x = x*count + ( x - buttonWidth) / 2;
             Button button = Button.builder(text, new OnQuirkPress(quirk, quirks))
                     .bounds(x, y, buttonWidth, buttonHeight)
                     .build();
@@ -61,7 +63,11 @@ public class QuirkScreen extends Screen{
                 }
             }catch (Exception ignored){}
             addRenderableWidget(button);
-            y += buttonHeight + buttonSpacing; // 下一个按钮的位置
+            count++;
+            if (count == 3) {
+                count = 0;
+                y += buttonHeight + buttonSpacing; // 下一个按钮的位置
+            }
         }
 
         // 添加返回按钮
