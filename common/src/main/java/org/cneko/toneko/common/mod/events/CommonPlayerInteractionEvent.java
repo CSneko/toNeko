@@ -21,21 +21,51 @@ public class CommonPlayerInteractionEvent {
             NekoQuery.Neko neko = NekoQuery.getNeko(nekoPlayer.getUUID());
             // 如果是猫娘且玩家是主人
             if(neko.isNeko() && neko.hasOwner(player.getUUID())){
+                boolean success = false;
                 // 如果有抚摸癖好且为玩家空手
                 for (Quirk q : neko.getQuirks()) {
                     if (q instanceof ModQuirk mq){
                         if(mq.onNekoInteraction(player, world, hand, nekoPlayer, hitResult)==InteractionResult.SUCCESS){
                             neko.addXp(player.getUUID(), mq.getInteractionValue(QuirkContext.Builder.create(nekoPlayer).build()));
-                            return InteractionResult.SUCCESS;
+                            success = true;
                         };
                     }
+                }
+                if(success){
+                    return InteractionResult.SUCCESS;
                 }
             }
         }
         return InteractionResult.PASS;
     }
 
-    public static void afterDeath(LivingEntity livingEntity, DamageSource damageSource) {
 
+    public static boolean onDamage(LivingEntity entity, DamageSource damageSource, float v) {
+        if (entity instanceof Player nekoPlayer){
+            NekoQuery.Neko neko = NekoQuery.getNeko(nekoPlayer.getUUID());
+            for (Quirk q : neko.getQuirks()){
+                if (q instanceof ModQuirk mq){
+                    mq.onDamage(nekoPlayer, damageSource, v);
+                }
+            }
+        }
+        return true;
+    }
+
+    public static InteractionResult onAttackEntity(Player nekoPlayer, Level level, InteractionHand interactionHand, Entity entity, EntityHitResult entityHitResult) {
+        NekoQuery.Neko neko = NekoQuery.getNeko(nekoPlayer.getUUID());
+        boolean success = false;
+        if (!(entity instanceof LivingEntity le)) return InteractionResult.PASS;
+        for (Quirk q : neko.getQuirks()){
+            if (q instanceof ModQuirk mq){
+                if(mq.onNekoAttack(nekoPlayer, level, interactionHand, le, entityHitResult)==InteractionResult.SUCCESS){
+                    success = true;
+                }
+            }
+        }
+        if(success){
+            return InteractionResult.SUCCESS;
+        }
+        return InteractionResult.PASS;
     }
 }

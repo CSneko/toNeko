@@ -1,6 +1,5 @@
 package org.cneko.toneko.neoforge.fabric;
 
-import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
@@ -33,7 +32,7 @@ public class ToNekoEvents {
         UseEntityCallback.EVENT.register(CommonPlayerInteractionEvent::useEntity);
         ServerTickEvents.START_SERVER_TICK.register(CommonPlayerTickEvent::startTick);
         ServerWorldEvents.UNLOAD.register(CommonWorldEvent::onWorldUnLoad);
-        ServerLivingEntityEvents.AFTER_DEATH.register(CommonPlayerInteractionEvent::afterDeath);
+//        ServerLivingEntityEvents.AFTER_DEATH.register(CommonPlayerInteractionEvent::afterDeath);
     }
 
 
