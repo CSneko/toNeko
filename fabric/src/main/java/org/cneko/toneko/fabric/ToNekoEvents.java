@@ -58,6 +58,8 @@ public class ToNekoEvents {
         ServerPlayer player = serverPlayNetworkHandler.getPlayer();
         NekoQuery.Neko neko = NekoQuery.getNeko(player.getUUID());
         if(neko.isNeko()){
+            // 修复quirks
+            neko.fixQuirks();
             String name = TextUtil.getPlayerName(player);
             ChatPrefix.addPrivatePrefix(name, LanguageUtil.prefix);
             for (Quirk quirk : neko.getQuirks()){

@@ -322,6 +322,11 @@ public class NekoQuery {
         public void setQuirksById(List<String> quirks){
             getProfile().set("quirks", quirks);
         }
+        public void fixQuirks(){
+            List<String> ids = getProfile().getStringList("quirks");
+            ids.removeIf(s -> !QuirkRegister.hasQuirk(s));
+            getProfile().set("quirks", ids);
+        }
 
         public boolean hasNickName(){
             return getProfile().getString("nickname") != null;
