@@ -1,6 +1,7 @@
 package org.cneko.toneko.common.mod.entities;
 
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.BreathAirGoal;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
@@ -10,13 +11,19 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.mod.entities.ai.goal.NekoFollowOwnerGoal;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class NekoEntity extends PathfinderMob{
+public class NekoEntity extends PathfinderMob implements GeoEntity,Neko {
     public NekoFollowOwnerGoal nekoFollowOwnerGoal;
+    private final AnimatableInstanceCache cache;
 
     public NekoEntity(EntityType<? extends NekoEntity> entityType, Level level) {
         super(entityType, level);
         NekoQuery.getNeko(this.getUUID()).setNeko(true);
+        this.cache = GeckoLibUtil.createInstanceCache(this);
     }
 
 
@@ -53,5 +60,20 @@ public class NekoEntity extends PathfinderMob{
 
     public GoalSelector getGoalSelector() {
         return this.goalSelector;
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.cache;
+    }
+
+    @Override
+    public LivingEntity getEntity() {
+        return this;
     }
 }

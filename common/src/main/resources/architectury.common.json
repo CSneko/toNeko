@@ -1,0 +1,5 @@
+{
+  "injected_interfaces": {
+    "net/minecraft/class_1657": ["org/cneko/toneko/common/mod/entities/Neko"]
+  }
+}
