@@ -30,7 +30,7 @@ public class ToNekoItems {
     public static boolean isTrinketsInstalled = tryClass("dev.emi.trinkets.api.Trinket");
     public static void init() {
         // 如果启用了仅服务器端，则不注册物品
-        if (!ConfigUtil.ONLY_SERVER) registerWithOutConfig();
+        registerWithOutConfig();
     }
 
     /**

@@ -10,7 +10,6 @@ import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.registries.DeferredHolder;
-import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.neoforge.ToNekoNeoForge;
 
 import java.util.List;
@@ -23,7 +22,7 @@ public class ToNekoArmorMaterials {
     public static DeferredHolder<ArmorMaterial,ArmorMaterial> NEKO;
     public static void init(){
         // 如果启用了仅服务器端，则不注册物品
-        if (!ConfigUtil.ONLY_SERVER) registerWithOutConfig();
+        registerWithOutConfig();
     }
 
     /**

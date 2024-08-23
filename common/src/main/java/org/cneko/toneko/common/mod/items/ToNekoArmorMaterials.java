@@ -22,7 +22,7 @@ public class ToNekoArmorMaterials {
     public static Holder<ArmorMaterial> NEKO;
     public static void init(){
         // 如果启用了仅服务器端，则不注册物品
-        if (!ConfigUtil.ONLY_SERVER) registerWithOutConfig();
+        registerWithOutConfig();
     }
 
     /**

@@ -63,7 +63,7 @@ public class QuirkCommand {
         String playerName = TextUtil.getPlayerName(player);
         NekoQuery.Neko neko = NekoQuery.getNeko(player.getUUID());
         // 打开设置屏幕
-        if(!ConfigUtil.ONLY_SERVER || PlayerInstallToNeko.get(playerName)) ServerPlayNetworking.send(player, new QuirkQueryPayload(
+        ServerPlayNetworking.send(player, new QuirkQueryPayload(
                 QuirkUtil.quirkToIds(neko.getQuirks()),
                 QuirkRegister.getQuirkIds().stream().toList(),true)
         );

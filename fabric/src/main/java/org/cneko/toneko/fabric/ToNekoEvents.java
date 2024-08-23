@@ -80,6 +80,6 @@ public class ToNekoEvents {
         // 保存猫娘数据
         neko.save();
         NekoQuery.NekoData.removeNeko(player.getUUID());
-        PlayerInstallToNeko.remove(TextUtil.getPlayerName(player));
+
     }
 }

@@ -34,7 +34,7 @@ public class ToNekoItems {
     public static boolean isGeckolibInstalled = false; //tryClass("software.bernie.geckolib.animatable.GeoItem");
     public static void init() {
         // 如果启用了仅服务器端，则不注册物品
-        if (!ConfigUtil.ONLY_SERVER) registerWithOutConfig();
+        registerWithOutConfig();
     }
 
     /**

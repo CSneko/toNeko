@@ -19,13 +19,11 @@ import net.minecraft.world.item.component.ItemLore;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.api.NekoSkin;
 import org.cneko.toneko.common.api.Permissions;
-import org.cneko.toneko.common.api.PlayerInstallToNeko;
 import org.cneko.toneko.common.mod.api.PlayerPoseAPI;
 import org.cneko.toneko.common.mod.packets.EntityPosePayload;
 import org.cneko.toneko.common.mod.util.PermissionUtil;
 import org.cneko.toneko.common.mod.util.SkinUtil;
 import org.cneko.toneko.common.mod.util.TextUtil;
-import org.cneko.toneko.common.util.ConfigUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,10 +100,10 @@ public class NekoCommand {
         // 如果玩家没有坐下,把玩家设置为坐下,否则把玩家设置为正常
         if(PlayerPoseAPI.contains(player)){
             PlayerPoseAPI.remove(player);
-            if(!ConfigUtil.ONLY_SERVER || PlayerInstallToNeko.get(playerName)) ServerPlayNetworking.send(player, new EntityPosePayload(Pose.SWIMMING,false));
+            ServerPlayNetworking.send(player, new EntityPosePayload(Pose.SWIMMING,false));
         }else{
             PlayerPoseAPI.setPose(player, Pose.SWIMMING);
-            if(!ConfigUtil.ONLY_SERVER || PlayerInstallToNeko.get(playerName)) ServerPlayNetworking.send(player, new EntityPosePayload(Pose.SWIMMING,true));
+            ServerPlayNetworking.send(player, new EntityPosePayload(Pose.SWIMMING,true));
         }
         return 1;
     }
@@ -157,10 +155,10 @@ public class NekoCommand {
         // 如果玩家没有躺下,把玩家设置为躺下,否则把玩家设置为正常
         if(PlayerPoseAPI.contains(player)){
             PlayerPoseAPI.remove(player);
-            if(!ConfigUtil.ONLY_SERVER || PlayerInstallToNeko.get(playerName)) ServerPlayNetworking.send(player, new EntityPosePayload(Pose.SLEEPING,false));
+            ServerPlayNetworking.send(player, new EntityPosePayload(Pose.SLEEPING,false));
         }else{
             PlayerPoseAPI.setPose(player, Pose.SLEEPING);
-            if(!ConfigUtil.ONLY_SERVER || PlayerInstallToNeko.get(playerName)) ServerPlayNetworking.send(player, new EntityPosePayload(Pose.SLEEPING,true));
+            ServerPlayNetworking.send(player, new EntityPosePayload(Pose.SLEEPING,true));
         }
         return 1;
     }
