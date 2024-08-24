@@ -54,15 +54,15 @@ public class Bootstrap {
         // 注册所有癖好
         Quirks.init();
         // 创建皮肤文件
-        if (!Files.exists(Path.of(SKIN_FILE))){
-            FileUtil.CreateFile(SKIN_FILE);
-            YamlConfiguration skins = new YamlConfiguration("");
-            skins.set("neko",DEFAULT_NEKO_SKINS.toArray(new String[0]));
-            try {
-                skins.save(Path.of(SKIN_FILE));
-            } catch (IOException e) {
-                LOGGER.error("Failed to create skin file");
-            }
-        }
+//        if (!Files.exists(Path.of(SKIN_FILE))){
+//            FileUtil.CreateFile(SKIN_FILE);
+//            YamlConfiguration skins = new YamlConfiguration("");
+//            skins.set("neko",DEFAULT_NEKO_SKINS.toArray(new String[0]));
+//            try {
+//                skins.save(Path.of(SKIN_FILE));
+//            } catch (IOException e) {
+//                LOGGER.error("Failed to create skin file");
+//            }
+//        }
     }
 }
