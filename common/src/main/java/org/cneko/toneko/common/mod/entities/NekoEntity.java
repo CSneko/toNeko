@@ -1,14 +1,22 @@
 package org.cneko.toneko.common.mod.entities;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.cneko.toneko.common.api.NekoQuery;
+import org.cneko.toneko.common.mod.api.NekoNameRegistry;
 import org.cneko.toneko.common.mod.api.NekoSkinRegistry;
 import org.cneko.toneko.common.mod.entities.ai.goal.NekoFollowOwnerGoal;
 import org.jetbrains.annotations.NotNull;
@@ -19,6 +27,8 @@ import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.util.GeckoLibUtil;
+
+import java.util.Set;
 
 public abstract class NekoEntity extends PathfinderMob implements GeoEntity,Neko {
     public NekoFollowOwnerGoal nekoFollowOwnerGoal;
@@ -55,6 +65,10 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity,Neko
         setSkin(nbt.getString("Skin"));
         if (getSkin().isEmpty()){
             setSkin(getRandomSkin());
+        }
+        // 设置名字（如果没有）
+        if (!this.hasCustomName()) {
+            this.setCustomName(Component.literal(NekoNameRegistry.getRandomName()));
         }
     }
 
@@ -105,9 +119,26 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity,Neko
     public String getRandomSkin(){
         return NekoSkinRegistry.getRandomSkin(this.getType());
     }
-
-    public static AttributeSupplier.Builder createNekoAttributes(){
-        return createMobAttributes();
+    // 最喜欢的物品
+    public Set<Item> getFavoriteItems(){
+        return Set.of();
+    }
+    // 是否喜欢这个物品
+    public boolean isLikedItem(ItemStack stack){
+        return this.getFavoriteItems().contains(stack.getItem()) ||
+                stack.is(TagKey.create(Registries.ITEM, getTagKeyLocation("liked_items")));
+    }
+    // 赠送物品
+    public boolean giftItem(Player player, ItemStack stack){
+        // 如果是喜欢的物品
+        if (this.isLikedItem(stack)){
+            // TODO：把物品放到背包里面
+            player.getInventory().removeItem(stack);
+            // 赠送成功
+            return true;
+        }else {
+            return false;
+        }
     }
 
     @Override
@@ -162,5 +193,13 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity,Neko
     @Override
     public boolean isPlayer() {
         return false;
+    }
+    public ResourceLocation getTagKeyLocation(String type){
+        ResourceLocation r = BuiltInRegistries.ENTITY_TYPE.getKey(this.getType());
+        return r.withPath("neko/"+r.getPath()+"/"+type);
+    }
+
+    public static AttributeSupplier.Builder createNekoAttributes(){
+        return createMobAttributes();
     }
 }
