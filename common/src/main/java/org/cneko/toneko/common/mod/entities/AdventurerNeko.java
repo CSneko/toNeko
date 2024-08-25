@@ -17,10 +17,6 @@ public class AdventurerNeko extends NekoEntity{
         super(entityType, level);
     }
 
-    @Override
-    public String getRandomSkin() {
-        return nekoSkins.get(new Random().nextInt(nekoSkins.size()));
-    }
 
     public static AttributeSupplier.Builder createAdventurerNekoAttributes(){
         return createNekoAttributes();

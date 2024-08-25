@@ -9,6 +9,7 @@ import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.cneko.toneko.common.api.NekoQuery;
+import org.cneko.toneko.common.mod.api.NekoSkinRegistry;
 import org.cneko.toneko.common.mod.entities.ai.goal.NekoFollowOwnerGoal;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -101,7 +102,9 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity,Neko
     public void setSkin(String skin) {
         this.skin = skin;
     }
-    public abstract String getRandomSkin();
+    public String getRandomSkin(){
+        return NekoSkinRegistry.getRandomSkin(this.getType());
+    }
 
     public static AttributeSupplier.Builder createNekoAttributes(){
         return createMobAttributes();

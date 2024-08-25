@@ -4,11 +4,17 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.cneko.toneko.common.mod.entities.Neko;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(Player.class)
-public class PlayerEntityMixin implements Neko {
+public abstract class PlayerEntityMixin implements Neko {
     @Override
     public LivingEntity getEntity() {
         return (Player)(Object) this;
+    }
+
+    @Override
+    public boolean isPlayer() {
+        return true;
     }
 }

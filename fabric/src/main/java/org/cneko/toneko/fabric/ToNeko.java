@@ -15,6 +15,7 @@ import org.cneko.toneko.common.mod.util.PermissionUtil;
 import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.common.util.LanguageUtil;
 import org.cneko.toneko.fabric.commands.*;
+import org.cneko.toneko.fabric.entities.ToNekoEntities;
 import org.cneko.toneko.fabric.items.ToNekoItems;
 import org.cneko.toneko.fabric.misc.ToNekoAttributes;
 
@@ -44,6 +45,10 @@ public class ToNeko implements ModInitializer {
         PayloadTypeRegistry.playS2C().register(EntityPosePayload.ID, EntityPosePayload.CODEC);
         PayloadTypeRegistry.playS2C().register(QuirkQueryPayload.ID, QuirkQueryPayload.CODEC);
         PayloadTypeRegistry.playC2S().register(QuirkQueryPayload.ID, QuirkQueryPayload.CODEC);
+
+        // 注册实体
+        ToNekoEntities.init();
+
         // 启动事件
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             ModMeta.INSTANCE.setServer(server);
