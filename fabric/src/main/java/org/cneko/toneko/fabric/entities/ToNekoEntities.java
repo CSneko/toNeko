@@ -16,7 +16,7 @@ public class ToNekoEntities {
             ResourceLocation.fromNamespaceAndPath(MODID,"adventurer_neko"),
             FabricEntityType.Builder.createMob(AdventurerNeko::new, MobCategory.CREATURE,(builder)->{
                 return builder.defaultAttributes(AdventurerNeko::createAdventurerNekoAttributes);
-            }).build()
+            }).sized(0.6f,1.8f).eyeHeight(1.7f).build()
     );
 
 }
