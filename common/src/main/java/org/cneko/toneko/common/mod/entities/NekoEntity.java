@@ -1,5 +1,6 @@
 package org.cneko.toneko.common.mod.entities;
 
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -35,11 +36,11 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity,Neko
     private final AnimatableInstanceCache cache;
     private String skin = "";
 
+
     public NekoEntity(EntityType<? extends NekoEntity> entityType, Level level) {
         super(entityType, level);
         NekoQuery.getNeko(this.getUUID()).setNeko(true);
         this.cache = GeckoLibUtil.createInstanceCache(this);
-
     }
 
     @Override
@@ -70,6 +71,7 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity,Neko
         if (!this.hasCustomName()) {
             this.setCustomName(Component.literal(NekoNameRegistry.getRandomName()));
         }
+        //TODO 获取背包的物品
     }
 
 
@@ -134,7 +136,8 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity,Neko
         if (this.isLikedItem(stack)){
             // TODO：把物品放到背包里面
             player.getInventory().removeItem(stack);
-            // 赠送成功
+            // 播放爱心粒子
+            this.level().addParticle(ParticleTypes.HEART,this.getX()+1.8, this.getY(), this.getZ(),1,1,1);
             return true;
         }else {
             return false;
@@ -156,28 +159,6 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity,Neko
             }
             return PlayState.CONTINUE;
         }));
-//        controllers.add(new AnimationController<>(this, 40, state -> {
-//            // 移动但速度较慢
-//            if (state.isMoving() && this.getDeltaMovement().lengthSqr() < 0.025) {
-//                state.getController().setAnimation(DefaultAnimations.WALK);
-//            }
-//            return PlayState.CONTINUE;
-//        }));
-//        controllers.add(new AnimationController<>(this, 40, state -> {
-//            // 移动但速度较快
-//            if (state.isMoving() && this.getDeltaMovement().lengthSqr() > 0.025) {
-//                state.getController().setAnimation(DefaultAnimations.RUN);
-//            }
-//            return PlayState.CONTINUE;
-//        }));
-//        controllers.add(new AnimationController<>(this, 80, state -> {
-//            // 游泳动画
-//            if (this.isInWaterOrBubble()) {
-//                state.getController().setAnimation(DefaultAnimations.SWIM);
-//            }
-//            return PlayState.CONTINUE;
-//        }));
-
     }
 
     @Override

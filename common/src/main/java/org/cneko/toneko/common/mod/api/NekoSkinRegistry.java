@@ -1,7 +1,6 @@
 package org.cneko.toneko.common.mod.api;
 
 import net.minecraft.world.entity.EntityType;
-import org.cneko.toneko.common.mod.entities.NekoEntity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
