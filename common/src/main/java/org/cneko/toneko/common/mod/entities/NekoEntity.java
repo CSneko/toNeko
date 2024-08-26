@@ -10,7 +10,10 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -29,6 +32,8 @@ import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.Objects;
+import java.util.Random;
 import java.util.Set;
 
 public abstract class NekoEntity extends PathfinderMob implements GeoEntity,Neko {
@@ -64,7 +69,7 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity,Neko
     public void load(@NotNull CompoundTag nbt) {
         super.load(nbt);
         setSkin(nbt.getString("Skin"));
-        if (getSkin().isEmpty()){
+        if (getSkin().isEmpty()) {
             setSkin(getRandomSkin());
         }
         // 设置名字（如果没有）
@@ -72,6 +77,12 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity,Neko
             this.setCustomName(Component.literal(NekoNameRegistry.getRandomName()));
         }
         //TODO 获取背包的物品
+
+        AttributeInstance scale = this.getAttribute(Attributes.SCALE);
+        if (scale!=null && scale.getValue()==1) {
+            // 随机设置 scale 为 0.85 ~ 1.05
+            scale.setBaseValue(0.85 + (1.05 - 0.85) * Math.random());
+        }
     }
 
 
@@ -151,11 +162,12 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity,Neko
             if (!state.isMoving()){
                 state.getController().setAnimation(DefaultAnimations.IDLE);
             }else if (state.isMoving()){
-                if (this.getDeltaMovement().lengthSqr()< 0.01){
-                    state.getController().setAnimation(DefaultAnimations.WALK);
-                }else if (this.getDeltaMovement().lengthSqr() >= 0.01){
-                    state.getController().setAnimation(DefaultAnimations.RUN);
-                }
+//                if (this.getDeltaMovement().lengthSqr()< 0.01){
+//                    state.getController().setAnimation(DefaultAnimations.WALK);
+//                }else if (this.getDeltaMovement().lengthSqr() >= 0.01){
+//                    state.getController().setAnimation(DefaultAnimations.RUN);
+//                }
+                state.getController().setAnimation(DefaultAnimations.WALK);
             }
             return PlayState.CONTINUE;
         }));
