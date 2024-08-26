@@ -12,5 +12,6 @@ public class ToNekoClient implements ClientModInitializer {
         ClientNetworkPacketEvent.init();
         ClientTickEvent.init();
         ClientPlayerJoinEvent.init();
+        //EntityRendererRegistry.register(ToNekoEntities.ADVENTURER_NEKO, NekoRenderer::new);
     }
 }

@@ -7,6 +7,7 @@ import net.minecraft.world.entity.player.Player;
 import org.cneko.toneko.neoforge.fabric.client.ToNekoKeyBindings;
 
 import static org.cneko.toneko.neoforge.fabric.client.events.ClientNetworkPacketEvent.poses;
+
 @Environment(EnvType.CLIENT)
 public class ClientTickEvent {
     public static void init(){
@@ -20,6 +21,12 @@ public class ClientTickEvent {
         }
         while (ToNekoKeyBindings.GET_DOWN_KEY.consumeClick()) {
             client.player.connection.sendUnsignedCommand("neko getDown");
+        }
+        if (ToNekoKeyBindings.RIDE_KEY.consumeClick()) {
+            client.player.connection.sendUnsignedCommand("neko ride");
+        }
+        if (ToNekoKeyBindings.QUIRK_KEY.consumeClick()) {
+            client.player.connection.sendUnsignedCommand("quirk gui");
         }
     }
 

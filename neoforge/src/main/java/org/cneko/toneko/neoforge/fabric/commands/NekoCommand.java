@@ -8,14 +8,18 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemLore;
+import net.minecraft.world.phys.AABB;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.api.NekoSkin;
 import org.cneko.toneko.common.api.Permissions;
@@ -76,6 +80,10 @@ public class NekoCommand {
                                     .executes(NekoCommand::loreCommand)
                             )
                     )
+                    .then(literal("ride")
+                            .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_NEKO_RIDE))
+                            .executes(NekoCommand::rideCommand)
+                    )
 //                    .then(literal("skin")
 //                            .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_NEKO_SKIN))
 //                            .then(argument("skin", StringArgumentType.string())
@@ -84,6 +92,28 @@ public class NekoCommand {
 //                    )
             );
         });
+    }
+
+    public static int rideCommand(CommandContext<CommandSourceStack> context) {
+        ServerPlayer entity = context.getSource().getPlayer();
+        ServerLevel world = entity.serverLevel();
+        // 获取玩家3格方块内的实体
+        float radius = 3.0f;
+        LivingEntity target = null;
+        // 创建一个包围盒，它代表了以 centerEntity 为中心、半径为 radius 的区域
+        AABB box = new AABB(entity.getX() - radius, entity.getY() - radius, entity.getZ() - radius,
+                entity.getX() + radius, entity.getY() + radius, entity.getZ() + radius);
+        List<Entity> entities = world.getEntities(entity, box);
+        for (Entity entity1 : entities){
+            if (entity1 instanceof LivingEntity) {
+                target = (LivingEntity) entity1;
+                break;
+            }
+        }
+        if (target != null){
+            entity.startRiding(target);
+        }
+        return 1;
     }
 
     public static int skinCommand(CommandContext<CommandSourceStack> context) {

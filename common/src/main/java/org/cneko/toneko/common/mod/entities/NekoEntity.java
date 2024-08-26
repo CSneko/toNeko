@@ -81,7 +81,7 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity,Neko
         // 猫娘会观察玩家
         this.goalSelector.addGoal(2, new LookAtPlayerGoal(this, Player.class, 8.0F));
         // 猫娘会近战攻击
-        this.goalSelector.addGoal(5, new MeleeAttackGoal(this, 1.0D, false));
+        this.goalSelector.addGoal(10, new MeleeAttackGoal(this, 1.0D, false));
         // 猫娘需要呼吸才能活呀
         this.goalSelector.addGoal(10, new BreathAirGoal(this));
         // 猫娘会闲逛

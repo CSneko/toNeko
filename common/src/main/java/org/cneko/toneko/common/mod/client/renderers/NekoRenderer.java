@@ -1,11 +1,17 @@
 package org.cneko.toneko.common.mod.client.renderers;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
+import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
@@ -19,7 +25,18 @@ public class NekoRenderer<T extends NekoEntity> extends GeoEntityRenderer<T> {
         super(renderManager, new NekoModel<>());
     }
 
+    @Override
+    public void actuallyRender(PoseStack poseStack, T entity, BakedGeoModel model, @Nullable RenderType renderType,
+                               MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick,
+                               int packedLight, int packedOverlay, int colour) {
+        // 设置头部旋转角度
+        entity.getYHeadRot();
 
+        if (entity.isBaby()){
+            poseStack.scale(0.5F, 0.5F, 0.5F); // 将幼年实体的尺寸缩小为原来的一半
+        }
+        super.actuallyRender(poseStack, entity, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
+    }
 
     public static class NekoModel<T extends NekoEntity> extends GeoModel<T> {
         @Override

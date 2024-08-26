@@ -10,12 +10,12 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import software.bernie.geckolib.animatable.GeoEntity;
 
 @SuppressWarnings("UnreachableCode")
 @Mixin(Entity.class)
-public abstract class EntityMixin {
+public abstract class EntityMixin implements GeoEntity {
 
-    @Shadow public abstract void placePortalTicket(BlockPos pos);
 
     @Inject(at = @At("HEAD"), method = "setPose", cancellable = true)
     public void setPose(Pose pose, CallbackInfo info){
