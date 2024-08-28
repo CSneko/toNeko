@@ -32,8 +32,6 @@ import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.Objects;
-import java.util.Random;
 import java.util.Set;
 
 public abstract class NekoEntity extends PathfinderMob implements GeoEntity,Neko {
