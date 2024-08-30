@@ -5,8 +5,12 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -32,6 +36,9 @@ import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Random;
 import java.util.Set;
 
 public abstract class NekoEntity extends PathfinderMob implements GeoEntity,Neko {
@@ -132,7 +139,7 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity,Neko
     }
     // 最喜欢的物品
     public Set<Item> getFavoriteItems(){
-        return Set.of();
+        return new HashSet<>();
     }
     // 是否喜欢这个物品
     public boolean isLikedItem(ItemStack stack){
@@ -147,15 +154,42 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity,Neko
             player.getInventory().removeItem(stack);
             // 播放爱心粒子
             this.level().addParticle(ParticleTypes.HEART,this.getX()+1.8, this.getY(), this.getZ(),1,1,1);
+            if (player instanceof ServerPlayer sp){
+                // 发送给客户端
+                ClientboundLevelParticlesPacket packet = new ClientboundLevelParticlesPacket(ParticleTypes.HEART, true, this.getX() + 1.8, this.getY(), this.getZ(), 2, 2, 2, 1, 1);
+                sp.connection.send(packet);
+                // 随机发送感谢消息
+                int i = new Random().nextInt(3);
+                player.sendSystemMessage(Component.translatable("message.toneko.neko.gift_success."+i, Objects.requireNonNull(this.getCustomName()).getString()));
+            }
+            // 设置玩家为主人
+            if (!this.getNeko().hasOwner(player.getUUID())){
+                this.getNeko().addOwner(player.getUUID());
+            }else {
+                // 如果是主人，则添加好感
+                this.getNeko().addXp(player.getUUID(), 100);
+            }
             return true;
         }else {
             return false;
         }
     }
 
+    // 当玩家右键
+    @Override
+    public @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
+        // Shift + 右键 送礼
+        if (player.isShiftKeyDown() && hand.equals(InteractionHand.MAIN_HAND) && !player.getItemInHand(hand).isEmpty()){
+            if(this.giftItem(player, player.getItemInHand(hand))) {
+                return InteractionResult.SUCCESS;
+            }
+        }
+        return super.mobInteract(player, hand);
+    }
+
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, 40, state -> {
+        controllers.add(new AnimationController<>(this, 20, state -> {
             // 没有移动，则播放idle动画
             if (!state.isMoving()){
                 state.getController().setAnimation(DefaultAnimations.IDLE);
