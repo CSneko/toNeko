@@ -41,6 +41,8 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 
+import static org.cneko.toneko.common.mod.util.TextUtil.randomTranslatabledComponent;
+
 public abstract class NekoEntity extends PathfinderMob implements GeoEntity,Neko {
     public NekoFollowOwnerGoal nekoFollowOwnerGoal;
     private final AnimatableInstanceCache cache;
@@ -159,8 +161,7 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity,Neko
                 ClientboundLevelParticlesPacket packet = new ClientboundLevelParticlesPacket(ParticleTypes.HEART, true, this.getX() + 1.8, this.getY(), this.getZ(), 2, 2, 2, 1, 1);
                 sp.connection.send(packet);
                 // 随机发送感谢消息
-                int i = new Random().nextInt(3);
-                player.sendSystemMessage(Component.translatable("message.toneko.neko.gift_success."+i, Objects.requireNonNull(this.getCustomName()).getString()));
+                player.sendSystemMessage(randomTranslatabledComponent("message.toneko.neko.gift_success",3, Objects.requireNonNull(this.getCustomName()).getString()));
             }
             // 设置玩家为主人
             if (!this.getNeko().hasOwner(player.getUUID())){
@@ -171,6 +172,9 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity,Neko
             }
             return true;
         }else {
+            if (player instanceof ServerPlayer) {
+                player.sendSystemMessage(randomTranslatabledComponent("message.toneko.neko.gift_fail", 3, Objects.requireNonNull(this.getCustomName()).getString()));
+            }
             return false;
         }
     }
