@@ -11,6 +11,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -33,6 +34,7 @@ import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
@@ -47,6 +49,7 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity,Neko
     public NekoFollowOwnerGoal nekoFollowOwnerGoal;
     private final AnimatableInstanceCache cache;
     private String skin = "";
+    private boolean isSitting = false;
 
 
     public NekoEntity(EntityType<? extends NekoEntity> entityType, Level level) {
@@ -192,18 +195,27 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity,Neko
     }
 
     @Override
+    public boolean startRiding(Entity vehicle, boolean force) {
+        this.isSitting = super.startRiding(vehicle, force);
+        return this.isSitting;
+    }
+
+    @Override
+    public void stopRiding() {
+        super.stopRiding();
+        this.isSitting = false;
+    }
+
+    @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, 20, state -> {
-            // 没有移动，则播放idle动画
+            // 没有移动
             if (!state.isMoving()){
-                state.getController().setAnimation(DefaultAnimations.IDLE);
+                // 是否为sit
+                if (this.isSitting) return state.setAndContinue(RawAnimation.begin().thenLoop("misc.sit"));
+                return state.setAndContinue(DefaultAnimations.IDLE);
             }else if (state.isMoving()){
-//                if (this.getDeltaMovement().lengthSqr()< 0.01){
-//                    state.getController().setAnimation(DefaultAnimations.WALK);
-//                }else if (this.getDeltaMovement().lengthSqr() >= 0.01){
-//                    state.getController().setAnimation(DefaultAnimations.RUN);
-//                }
-                state.getController().setAnimation(DefaultAnimations.WALK);
+                return state.setAndContinue(DefaultAnimations.WALK);
             }
             return PlayState.CONTINUE;
         }));
@@ -230,5 +242,9 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity,Neko
 
     public static AttributeSupplier.Builder createNekoAttributes(){
         return createMobAttributes();
+    }
+
+    public boolean isSitting() {
+        return isSitting;
     }
 }

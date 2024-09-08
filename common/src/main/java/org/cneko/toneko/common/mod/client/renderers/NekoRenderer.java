@@ -15,7 +15,10 @@ import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static org.cneko.toneko.common.Bootstrap.MODID;
 
@@ -23,6 +26,15 @@ public class NekoRenderer<T extends NekoEntity> extends GeoEntityRenderer<T> {
 
     public NekoRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new NekoModel<>());
+    }
+
+    @Override
+    public void preRender(PoseStack poseStack, T animatable, BakedGeoModel model, @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
+        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
+        // 坐下时向下移动
+        if (animatable.isSitting()) {
+            poseStack.translate(0, -0.7, 0);
+        }
     }
 
     @Override
