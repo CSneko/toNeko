@@ -7,7 +7,6 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import org.cneko.toneko.neoforge.fabric.ToNeko;
 import org.cneko.toneko.neoforge.msic.ToNekoAttributes;
 import org.cneko.toneko.neoforge.items.ToNekoArmorMaterials;
 import org.cneko.toneko.neoforge.items.ToNekoItems;
@@ -34,7 +33,7 @@ public final class ToNekoNeoForge {
         bus.addListener(ToNekoItems::buildContents);
         ToNekoAttributes.init();
         bus.addListener(ToNekoAttributes::onRegisterAttributes);
-        new ToNeko().onInitialize();
+        //new ToNeko().onInitialize();
 
     }
 }

@@ -10,7 +10,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import org.cneko.toneko.common.api.NekoQuery;
-import org.cneko.toneko.common.mod.entities.Neko;
+import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.quirks.ModQuirk;
 import org.cneko.toneko.common.mod.quirks.QuirkContext;
 import org.cneko.toneko.common.quirks.Quirk;
@@ -42,7 +42,7 @@ public class CommonPlayerInteractionEvent {
 
 
     public static boolean onDamage(LivingEntity entity, DamageSource damageSource, float v) {
-        if (entity instanceof Neko nekoPlayer){
+        if (entity instanceof INeko nekoPlayer){
             NekoQuery.Neko neko = nekoPlayer.getNeko();
             for (Quirk q : neko.getQuirks()){
                 if (q instanceof ModQuirk mq){

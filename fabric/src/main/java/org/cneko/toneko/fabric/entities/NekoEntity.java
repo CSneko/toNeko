@@ -1,5 +1,6 @@
-package org.cneko.toneko.common.mod.entities;
+package org.cneko.toneko.fabric.entities;
 
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -15,7 +16,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -27,7 +27,9 @@ import net.minecraft.world.level.Level;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.mod.api.NekoNameRegistry;
 import org.cneko.toneko.common.mod.api.NekoSkinRegistry;
-import org.cneko.toneko.common.mod.entities.ai.goal.NekoFollowOwnerGoal;
+import org.cneko.toneko.common.mod.entities.INeko;
+import org.cneko.toneko.common.mod.packets.interactives.NekoEntityInteractivePayload;
+import org.cneko.toneko.fabric.entities.ai.goal.NekoFollowOwnerGoal;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -40,12 +42,11 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.HashSet;
 import java.util.Objects;
-import java.util.Random;
 import java.util.Set;
 
 import static org.cneko.toneko.common.mod.util.TextUtil.randomTranslatabledComponent;
 
-public abstract class NekoEntity extends PathfinderMob implements GeoEntity,Neko {
+public abstract class NekoEntity extends PathfinderMob implements GeoEntity, INeko {
     public NekoFollowOwnerGoal nekoFollowOwnerGoal;
     private final AnimatableInstanceCache cache;
     private String skin = "";
@@ -151,12 +152,16 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity,Neko
         return this.getFavoriteItems().contains(stack.getItem()) ||
                 stack.is(TagKey.create(Registries.ITEM, getTagKeyLocation("liked_items")));
     }
+
+    public boolean giftItem(Player player, int slot){
+        return giftItem(player, player.getInventory().getItem(slot));
+    }
     // 赠送物品
     public boolean giftItem(Player player, ItemStack stack){
         // 如果是喜欢的物品
         if (this.isLikedItem(stack)){
             // TODO：把物品放到背包里面
-            player.getInventory().removeItem(stack);
+            player.getInventory().removeItem(player.getMainHandItem());
             // 播放爱心粒子
             this.level().addParticle(ParticleTypes.HEART,this.getX()+1.8, this.getY(), this.getZ(),1,1,1);
             if (player instanceof ServerPlayer sp){
@@ -185,17 +190,16 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity,Neko
     // 当玩家右键
     @Override
     public @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
-        // Shift + 右键 送礼
-        if (player.isShiftKeyDown() && hand.equals(InteractionHand.MAIN_HAND) && !player.getItemInHand(hand).isEmpty()){
-            if(this.giftItem(player, player.getItemInHand(hand))) {
-                return InteractionResult.SUCCESS;
-            }
+        // shift+右键打开互动菜单
+        if (hand.equals(InteractionHand.MAIN_HAND) && player.isShiftKeyDown() && player instanceof ServerPlayer sp){
+            ServerPlayNetworking.send(sp, new NekoEntityInteractivePayload(this.getUUID().toString()));
+            return InteractionResult.SUCCESS;
         }
         return super.mobInteract(player, hand);
     }
 
     @Override
-    public boolean startRiding(Entity vehicle, boolean force) {
+    public boolean startRiding(@NotNull Entity vehicle, boolean force) {
         this.isSitting = super.startRiding(vehicle, force);
         return this.isSitting;
     }

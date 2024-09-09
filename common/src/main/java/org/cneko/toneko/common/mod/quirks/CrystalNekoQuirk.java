@@ -1,7 +1,6 @@
 package org.cneko.toneko.common.mod.quirks;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -9,7 +8,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
-import org.cneko.toneko.common.mod.entities.Neko;
+import org.cneko.toneko.common.mod.entities.INeko;
 import org.jetbrains.annotations.Nullable;
 
 public class CrystalNekoQuirk extends ToNekoQuirk{
@@ -35,7 +34,7 @@ public class CrystalNekoQuirk extends ToNekoQuirk{
     }
 
     @Override
-    public void onDamage(Neko neko, DamageSource damageSource, float amount) {
+    public void onDamage(INeko neko, DamageSource damageSource, float amount) {
         super.onDamage(neko, damageSource, amount);
         if (neko instanceof Player nekoPlayer) {
             if (nekoPlayer.getHealth() <= 4) {
@@ -53,7 +52,7 @@ public class CrystalNekoQuirk extends ToNekoQuirk{
     }
 
     @Override
-    public void onJoin(Neko neko) {
+    public void onJoin(INeko neko) {
         super.onJoin(neko);
         if (neko instanceof Player nekoPlayer) {
             nekoPlayer.displayClientMessage(Component.translatable("quirk.toneko.crystal_neko.join"), true);
@@ -61,7 +60,7 @@ public class CrystalNekoQuirk extends ToNekoQuirk{
     }
 
     @Override
-    public InteractionResult onNekoAttack(Neko neko, Level level, InteractionHand interactionHand, LivingEntity entity, EntityHitResult entityHitResult) {
+    public InteractionResult onNekoAttack(INeko neko, Level level, InteractionHand interactionHand, LivingEntity entity, EntityHitResult entityHitResult) {
         super.onNekoAttack(neko, level, interactionHand, entity, entityHitResult);
         if (neko instanceof Player nekoPlayer) {
             float ratio = entity.getHealth() / entity.getMaxHealth(); // 比率

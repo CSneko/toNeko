@@ -8,6 +8,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
@@ -19,6 +20,7 @@ import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemLore;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.api.NekoSkin;
@@ -95,8 +97,8 @@ public class NekoCommand {
     }
 
     public static int rideCommand(CommandContext<CommandSourceStack> context) {
-        ServerPlayer entity = context.getSource().getPlayer();
-        ServerLevel world = entity.serverLevel();
+        Entity entity = context.getSource().getEntity();
+        ServerLevel world = (ServerLevel) entity.level();
         // 获取玩家3格方块内的实体
         float radius = 3.0f;
         LivingEntity target = null;
@@ -111,7 +113,11 @@ public class NekoCommand {
             }
         }
         if (target != null){
-            entity.startRiding(target);
+            entity.startRiding(target,true);
+        }
+
+        if (target instanceof ServerPlayer sp){
+            sp.connection.send(new ClientboundSetPassengersPacket(target));
         }
         return 1;
     }

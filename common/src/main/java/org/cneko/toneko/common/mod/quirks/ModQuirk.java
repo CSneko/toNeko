@@ -8,7 +8,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
-import org.cneko.toneko.common.mod.entities.Neko;
+import org.cneko.toneko.common.mod.entities.INeko;
 
 import javax.annotation.Nullable;
 
@@ -21,15 +21,15 @@ public interface ModQuirk {
 
     int getInteractionValue(QuirkContext context);
 
-    default InteractionResult onNekoInteraction(Player owner, Level world, InteractionHand hand, Neko neko, EntityHitResult hitResult) {
+    default InteractionResult onNekoInteraction(Player owner, Level world, InteractionHand hand, INeko neko, EntityHitResult hitResult) {
         return InteractionResult.PASS;
     }
 
-    default void onDamage(Neko neko, DamageSource damageSource, float amount){}
+    default void onDamage(INeko neko, DamageSource damageSource, float amount){}
 
-    default void onJoin(Neko neko) {}
+    default void onJoin(INeko neko) {}
 
-    default InteractionResult onNekoAttack(Neko neko, Level level, InteractionHand interactionHand, LivingEntity entity, EntityHitResult entityHitResult){
+    default InteractionResult onNekoAttack(INeko neko, Level level, InteractionHand interactionHand, LivingEntity entity, EntityHitResult entityHitResult){
         return InteractionResult.PASS;
     }
 }

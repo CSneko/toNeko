@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import org.cneko.toneko.common.api.NekoQuery;
-import org.cneko.toneko.common.mod.entities.Neko;
+import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.util.TextUtil;
 
 import static org.cneko.toneko.common.mod.quirks.ToNekoQuirks.CARESS;
@@ -39,7 +39,7 @@ public class CaressQuirk extends ToNekoQuirk{
     }
 
     @Override
-    public InteractionResult onNekoInteraction(Player owner, Level world, InteractionHand hand, Neko neko, EntityHitResult hitResult) {
+    public InteractionResult onNekoInteraction(Player owner, Level world, InteractionHand hand, INeko neko, EntityHitResult hitResult) {
         super.onNekoInteraction(owner, world, hand, neko, hitResult);
         if (owner.getMainHandItem().isEmpty()){
             LivingEntity nekoPlayer = neko.getEntity();

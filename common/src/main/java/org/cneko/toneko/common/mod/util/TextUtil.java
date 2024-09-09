@@ -1,16 +1,10 @@
 package org.cneko.toneko.common.mod.util;
 
-import static org.cneko.toneko.common.util.LanguageUtil.LANG;
-
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
-import org.cneko.toneko.common.api.NekoQuery;
-import org.cneko.toneko.common.mod.entities.Neko;
-import org.cneko.toneko.common.mod.events.CommonChatEvent;
 
 import java.util.Random;
 
-import static org.cneko.toneko.common.mod.events.CommonChatEvent.modify;
 public class TextUtil {
     public static Component translatable(String key, Object... args){
         return Component.translatable(key, args);

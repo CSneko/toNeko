@@ -14,7 +14,7 @@ import org.cneko.toneko.common.mod.items.FurryBoheItem;
 import org.cneko.toneko.common.mod.items.NekoArmor;
 import org.cneko.toneko.common.mod.items.NekoPotionItem;
 import org.cneko.toneko.common.util.ConfigUtil;
-import org.cneko.toneko.neoforge.fabric.items.NekoCollectorItem;
+
 
 import java.util.function.Supplier;
 
@@ -42,7 +42,7 @@ public class ToNekoItems {
      */
     public static void registerWithOutConfig() {
         NEKO_POTION = ITEMS.register(NekoPotionItem.ID, NekoPotionItem::new);
-        NEKO_COLLECTOR = ITEMS.register(NekoCollectorItem.ID,NekoCollectorItem::new);
+        //NEKO_COLLECTOR = ITEMS.register(NekoCollectorItem.ID,NekoCollectorItem::new);
         FURRY_BOHE = ITEMS.register(FurryBoheItem.ID, FurryBoheItem::new);
         DeferredHolder<Item, Item> showItem = NEKO_POTION;
         // 如果安装了geckolib，则注册为ArmorItem

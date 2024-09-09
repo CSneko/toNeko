@@ -4,7 +4,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.cneko.toneko.common.api.NekoQuery;
 
-public interface Neko {
+public interface INeko {
     default NekoQuery.Neko getNeko(){
         return NekoQuery.getNeko(this.getEntity().getUUID());
     }

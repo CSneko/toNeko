@@ -8,9 +8,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import org.cneko.toneko.common.mod.api.NekoNameRegistry;
 import org.cneko.toneko.common.mod.api.NekoSkinRegistry;
-import org.cneko.toneko.common.mod.entities.AdventurerNeko;
 
-import java.util.List;
 import java.util.Set;
 
 import static org.cneko.toneko.common.Bootstrap.MODID;

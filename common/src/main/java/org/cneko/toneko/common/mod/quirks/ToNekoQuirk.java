@@ -5,7 +5,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
-import org.cneko.toneko.common.mod.entities.Neko;
+import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.quirks.Quirk;
 
 public abstract class ToNekoQuirk extends Quirk implements ModQuirk {
@@ -16,7 +16,7 @@ public abstract class ToNekoQuirk extends Quirk implements ModQuirk {
     abstract public int getInteractionValue(QuirkContext context);
 
     @Override
-    public InteractionResult onNekoInteraction(Player owner, Level world, InteractionHand hand, Neko nekoPlayer, EntityHitResult hitResult) {
+    public InteractionResult onNekoInteraction(Player owner, Level world, InteractionHand hand, INeko nekoPlayer, EntityHitResult hitResult) {
         return ModQuirk.super.onNekoInteraction(owner, world, hand, nekoPlayer, hitResult);
     }
 }
