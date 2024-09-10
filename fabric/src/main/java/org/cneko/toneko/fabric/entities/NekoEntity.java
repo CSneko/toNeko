@@ -31,6 +31,7 @@ import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.packets.interactives.NekoEntityInteractivePayload;
 import org.cneko.toneko.fabric.entities.ai.goal.NekoFollowOwnerGoal;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -114,19 +115,20 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity, INe
         return NekoQuery.getNeko(this.getUUID());
     }
 
-    public void flowingOwner(Player flowingOwner, double minDistance, double maxDistance) {
+    public void followOwner(Player flowingOwner, double minDistance, double maxDistance, double followSpeed) {
         if (nekoFollowOwnerGoal != null){
             this.goalSelector.removeGoal(nekoFollowOwnerGoal);
         }
         if (flowingOwner != null) {
-            nekoFollowOwnerGoal = new NekoFollowOwnerGoal(this, flowingOwner, minDistance, maxDistance);
+            nekoFollowOwnerGoal = new NekoFollowOwnerGoal(this, flowingOwner, minDistance, maxDistance,followSpeed);
             this.goalSelector.addGoal(20, nekoFollowOwnerGoal);
+            this.setTarget(flowingOwner);
         }
     }
-    public void setFlowingOwner(Player flowingOwner) {
-        flowingOwner(flowingOwner, 0.5D, 30.0D);
+    public void followOwner(Player followingOwner) {
+        followOwner(followingOwner, -1, 30.0D,1.0D);
     }
-    public NekoFollowOwnerGoal getFlowingOwner() {
+    public @Nullable NekoFollowOwnerGoal getFollowingOwner() {
         return this.nekoFollowOwnerGoal;
     }
 

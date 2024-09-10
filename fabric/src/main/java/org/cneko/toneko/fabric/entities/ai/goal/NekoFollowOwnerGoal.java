@@ -1,46 +1,51 @@
 package org.cneko.toneko.fabric.entities.ai.goal;
 
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.goal.target.TargetGoal;
-import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
 import org.cneko.toneko.fabric.entities.NekoEntity;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public class NekoFollowOwnerGoal extends TargetGoal {
+import java.util.EnumSet;
+
+public class NekoFollowOwnerGoal extends Goal {
     private final NekoEntity nekoEntity;
     private final Player owner;
+    private final double followSpeed;
     private final double minDistanceSq;
     private final double maxDistanceSq;
-    public NekoFollowOwnerGoal(NekoEntity nekoEntity, Player owner ,double minDistance, double maxDistance){
-        super(nekoEntity,true);
+
+    public NekoFollowOwnerGoal(NekoEntity nekoEntity, Player owner, double minDistance, double maxDistance, double followSpeed) {
         this.nekoEntity = nekoEntity;
         this.owner = owner;
+        this.followSpeed = followSpeed;
         this.minDistanceSq = minDistance * minDistance;
         this.maxDistanceSq = maxDistance * maxDistance;
+        this.setFlags(EnumSet.of(Flag.MOVE));
     }
 
     @Override
     public boolean canUse() {
-        return owner != null && nekoEntity.getNeko().hasOwner(owner.getUUID());
+        if (owner == null || !nekoEntity.getNeko().hasOwner(owner.getUUID())) {
+            return false;
+        }
+        double distanceSq = nekoEntity.distanceToSqr(owner);
+        return distanceSq > maxDistanceSq || distanceSq < minDistanceSq;
     }
 
     @Override
     public void start() {
         super.start();
-        // 设置目标
-        nekoEntity.setTarget(owner);
     }
 
     @Override
-    protected boolean canAttack(@Nullable LivingEntity potentialTarget, @NotNull TargetingConditions targetPredicate) {
-        return false;
+    public void tick() {
+        if (owner != null) {
+            nekoEntity.getNavigation().moveTo(owner, followSpeed);
+        }
     }
 
     @Override
     public void stop() {
-        // 清空目标玩家
-        nekoEntity.setTarget(null);
+        nekoEntity.getNavigation().stop();
     }
 }

@@ -50,27 +50,7 @@ public class ToNekoEvents {
         AttackEntityCallback.EVENT.register(CommonPlayerInteractionEvent::onAttackEntity);
         ServerTickEvents.START_SERVER_TICK.register(CommonPlayerTickEvent::startTick);
         ServerWorldEvents.UNLOAD.register(CommonWorldEvent::onWorldUnLoad);
-        ServerPlayNetworking.registerGlobalReceiver(QuirkQueryPayload.ID, ToNekoEvents::onQuirkQueryNetWorking);
-        ServerPlayNetworking.registerGlobalReceiver(GiftItemPayload.ID, ToNekoEvents::onGiftItem);
-    }
 
-    public static void onGiftItem(GiftItemPayload payload, ServerPlayNetworking.Context context) {
-        // 寻找目标实体
-        NekoEntity nekoEntity = findNearbyEntityByUuid(context.player(),UUID.fromString(payload.uuid()));
-        if(nekoEntity != null){
-            nekoEntity.giftItem(context.player(), payload.slot());
-        }
-    }
-
-    public static void onQuirkQueryNetWorking(QuirkQueryPayload payload, ServerPlayNetworking.Context context) {
-        ServerPlayer player = context.player();
-        if (!PermissionUtil.has(player, Permissions.COMMAND_QUIRK)){
-            // 没有权限
-            return;
-        }
-        // 保存数据
-        NekoQuery.Neko neko = NekoQuery.getNeko(player.getUUID());
-        neko.setQuirksById(payload.getQuirks());
     }
 
 
@@ -102,35 +82,4 @@ public class ToNekoEvents {
         NekoQuery.NekoData.removeNeko(player.getUUID());
     }
 
-
-    /**
-     * 根据UUID查找附近的特定实体。
-     * @param player 查找的玩家。
-     * @param targetUuid 目标实体的UUID。
-     * @return 找到的实体，如果没有找到则返回null。
-     */
-    public static @Nullable NekoEntity findNearbyEntityByUuid(ServerPlayer player, UUID targetUuid) {
-        // 确定搜索范围，这里以玩家为中心，半径为64个方块
-        double range = 64;
-        AABB box = new AABB(
-                player.getX() - range,
-                player.getY() - range,
-                player.getZ() - range,
-                player.getX() + range,
-                player.getY() + range,
-                player.getZ() + range
-        );
-
-        Level world = player.level();
-        // 遍历指定范围内的所有实体
-        for (Entity entity : world.getEntitiesOfClass(Entity.class, box)) {
-            if (entity.getUUID().equals(targetUuid)) {
-                if (entity instanceof NekoEntity nekoEntity) {
-                    return nekoEntity; // 找到了目标实体
-                }
-            }
-        }
-
-        return null; // 没有找到目标实体
-    }
 }
