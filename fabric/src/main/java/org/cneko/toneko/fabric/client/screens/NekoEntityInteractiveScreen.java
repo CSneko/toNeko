@@ -7,9 +7,13 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.item.ItemStack;
+import org.cneko.toneko.common.mod.api.EntityPoseManager;
+import org.cneko.toneko.common.mod.client.api.ClientEntityPoseManager;
 import org.cneko.toneko.common.mod.packets.interactives.FollowOwnerPayload;
 import org.cneko.toneko.common.mod.packets.interactives.GiftItemPayload;
+import org.cneko.toneko.common.mod.packets.interactives.NekoPosePayload;
 import org.cneko.toneko.common.mod.packets.interactives.RideEntityPayload;
 import org.cneko.toneko.common.mod.util.EntityUtil;
 import org.cneko.toneko.fabric.entities.NekoEntity;
@@ -60,8 +64,9 @@ public class NekoEntityInteractiveScreen extends DynamicScreen{
             if (entity != null){
                 if (neko.isSitting()){
                     neko.stopRiding();
+                }else {
+                    neko.startRiding(entity, true);
                 }
-                neko.startRiding(entity,true);
                 // 向服务器发包
                 ClientPlayNetworking.send(new RideEntityPayload(neko.getUUID().toString(),entity.getUUID().toString()));
             }
@@ -73,11 +78,30 @@ public class NekoEntityInteractiveScreen extends DynamicScreen{
         // -------------------------------------------
         Button lieButton = Button.builder(Component.translatable("screen.toneko.neko_entity_interactive.button.lie"),(btn)->{
             // 把猫娘设置为躺
-
+            if (ClientEntityPoseManager.contains(neko)){
+                ClientEntityPoseManager.remove(neko);
+            }else {
+                ClientEntityPoseManager.setPose(neko, Pose.SLEEPING);
+            }
+            ClientPlayNetworking.send(new NekoPosePayload(Pose.SLEEPING,neko.getUUID().toString(),true));
         }).size(buttonWidth,buttonHeight).pos(x,y).build();
         lieButton.setTooltip(Tooltip.create(Component.translatable("screen.toneko.neko_entity_interactive.button.lie.des")));
         this.addRenderableWidget(lieButton);
         y += buttonBound;
+
+//        // ------------------------------------------
+//        Button getDownButton = Button.builder(Component.translatable("screen.toneko.neko_entity_interactive.button.get_down"),(btn)->{
+//            // 把猫娘设置为趴
+//            if (ClientEntityPoseManager.contains(neko)){
+//                ClientEntityPoseManager.remove(neko);
+//            }else {
+//                ClientEntityPoseManager.setPose(neko, Pose.SWIMMING);
+//            }
+//            ClientPlayNetworking.send(new NekoPosePayload(Pose.SWIMMING,neko.getUUID().toString(),true));
+//        }).size(buttonWidth,buttonHeight).pos(x,y).build();
+//        getDownButton.setTooltip(Tooltip.create(Component.translatable("screen.toneko.neko_entity_interactive.button.get_down.des")));
+//        this.addRenderableWidget(getDownButton);
+//        y += buttonBound;
 
 
     }

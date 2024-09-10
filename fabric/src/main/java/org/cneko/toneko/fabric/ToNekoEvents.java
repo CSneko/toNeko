@@ -11,6 +11,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.world.entity.Entity;
 import org.cneko.ctlib.common.util.ChatPrefix;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.mod.events.*;
@@ -33,9 +34,20 @@ public class ToNekoEvents {
         UseEntityCallback.EVENT.register(CommonPlayerInteractionEvent::useEntity);
         ServerLivingEntityEvents.ALLOW_DAMAGE.register(CommonPlayerInteractionEvent::onDamage);
         AttackEntityCallback.EVENT.register(CommonPlayerInteractionEvent::onAttackEntity);
-        ServerTickEvents.START_SERVER_TICK.register(CommonPlayerTickEvent::startTick);
+        ServerTickEvents.START_SERVER_TICK.register(ToNekoEvents::startTick);
         ServerWorldEvents.UNLOAD.register(CommonWorldEvent::onWorldUnLoad);
 
+    }
+
+    public static void startTick(MinecraftServer server) {
+        CommonPlayerTickEvent.startTick(server);
+        // 处理玩家潜行
+        for(ServerPlayer p: server.getPlayerList().getPlayers()){
+            // 如果是被骑乘的玩家，并且潜行，则取消骑乘
+            if(p.isShiftKeyDown()){
+                p.getPassengers().forEach(Entity::stopRiding);
+            }
+        }
     }
 
 

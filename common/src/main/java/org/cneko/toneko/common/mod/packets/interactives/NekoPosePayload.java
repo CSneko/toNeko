@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import static org.cneko.toneko.common.Bootstrap.MODID;
 
-public record NekoPosePayload(@NotNull Pose pose, @Nullable String uuid , boolean status) implements CustomPacketPayload {
+public record NekoPosePayload(@NotNull Pose pose, @NotNull String uuid , boolean status) implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<NekoPosePayload> ID = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(MODID, "entity_set_pose"));
     public static final StreamCodec<RegistryFriendlyByteBuf, NekoPosePayload> CODEC = StreamCodec.composite(
             Pose.STREAM_CODEC, NekoPosePayload::pose,

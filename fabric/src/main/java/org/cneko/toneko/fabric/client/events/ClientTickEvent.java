@@ -2,11 +2,13 @@ package org.cneko.toneko.fabric.client.events;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import org.cneko.toneko.common.mod.client.api.ClientEntityPoseManager;
 import org.cneko.toneko.fabric.client.ToNekoKeyBindings;
-
-import static org.cneko.toneko.fabric.client.events.ClientNetworkPacketEvent.poses;
 @Environment(EnvType.CLIENT)
 public class ClientTickEvent {
     public static void init(){
@@ -21,19 +23,24 @@ public class ClientTickEvent {
         while (ToNekoKeyBindings.GET_DOWN_KEY.consumeClick()) {
             client.player.connection.sendUnsignedCommand("neko getDown");
         }
-        if (ToNekoKeyBindings.RIDE_KEY.consumeClick()) {
+        while (ToNekoKeyBindings.RIDE_KEY.consumeClick()) {
             client.player.connection.sendUnsignedCommand("neko ride");
         }
-        if (ToNekoKeyBindings.QUIRK_KEY.consumeClick()) {
+        while (ToNekoKeyBindings.QUIRK_KEY.consumeClick()) {
             client.player.connection.sendUnsignedCommand("quirk gui");
         }
     }
 
     public static void onTick(Minecraft client) {
-        if (client.player != null) {
-            Player player = client.player;
-            if (poses.containsKey(player)) {
-                player.setPose(poses.get(player));
+        Player p = Minecraft.getInstance().player;
+        if (p != null) {
+            if (ClientEntityPoseManager.contains(p)) {
+                p.setPose(ClientEntityPoseManager.getPose(p));
+            }
+
+            // 如果是被骑乘的玩家，并且潜行，则取消骑乘
+            if(p.isShiftKeyDown()){
+                p.getPassengers().forEach(Entity::stopRiding);
             }
         }
     }

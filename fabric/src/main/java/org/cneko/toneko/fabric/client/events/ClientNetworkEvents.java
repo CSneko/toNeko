@@ -9,6 +9,8 @@ import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import org.cneko.toneko.common.mod.client.api.ClientEntityPoseManager;
+import org.cneko.toneko.common.mod.packets.VehicleStopRidePayload;
 import org.cneko.toneko.common.mod.packets.interactives.NekoEntityInteractivePayload;
 import org.cneko.toneko.fabric.client.screens.NekoEntityInteractiveScreen;
 import org.cneko.toneko.fabric.client.screens.QuirkScreen;
@@ -17,12 +19,9 @@ import org.cneko.toneko.common.mod.packets.QuirkQueryPayload;
 import org.cneko.toneko.fabric.entities.NekoEntity;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
-public class ClientNetworkPacketEvent {
-    public static final Map<Entity, Pose> poses = new HashMap<>();
+public class ClientNetworkEvents {
     public static void init(){
         ClientPlayNetworking.registerGlobalReceiver(EntityPosePayload.ID, (payload, context) -> {
             context.client().execute(() -> {
@@ -54,6 +53,12 @@ public class ClientNetworkPacketEvent {
             });
         });
 
+        ClientPlayNetworking.registerGlobalReceiver(VehicleStopRidePayload.ID,((payload, context) -> {
+            context.client().execute(() -> {
+
+            });
+        }));
+
     }
     public static void setPose(EntityPosePayload payload, ClientPlayNetworking.Context context) {
         String uuid = payload.uuid();
@@ -69,8 +74,8 @@ public class ClientNetworkPacketEvent {
         Pose pose = payload.pose();
         boolean status = payload.status();
         if(status) {
-            poses.put(entity, pose);
-        }else poses.remove(entity);
+            ClientEntityPoseManager.setPose(entity, pose);
+        }else ClientEntityPoseManager.remove(entity);
     }
 
 

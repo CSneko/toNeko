@@ -1,6 +1,10 @@
 package org.cneko.toneko.common.mod.events;
 
+import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 
 import static org.cneko.toneko.common.mod.api.EntityPoseManager.poseMap;
 

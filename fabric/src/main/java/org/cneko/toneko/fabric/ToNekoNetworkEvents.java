@@ -10,9 +10,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.api.Permissions;
+import org.cneko.toneko.common.mod.api.EntityPoseManager;
 import org.cneko.toneko.common.mod.packets.QuirkQueryPayload;
 import org.cneko.toneko.common.mod.packets.interactives.FollowOwnerPayload;
 import org.cneko.toneko.common.mod.packets.interactives.GiftItemPayload;
+import org.cneko.toneko.common.mod.packets.interactives.NekoPosePayload;
 import org.cneko.toneko.common.mod.packets.interactives.RideEntityPayload;
 import org.cneko.toneko.common.mod.util.PermissionUtil;
 import org.cneko.toneko.fabric.entities.NekoEntity;
@@ -26,6 +28,18 @@ public class ToNekoNetworkEvents {
         ServerPlayNetworking.registerGlobalReceiver(GiftItemPayload.ID, ToNekoNetworkEvents::onGiftItem);
         ServerPlayNetworking.registerGlobalReceiver(FollowOwnerPayload.ID, ToNekoNetworkEvents::onFollowOwner);
         ServerPlayNetworking.registerGlobalReceiver(RideEntityPayload.ID, ToNekoNetworkEvents::onRideEntity);
+        ServerPlayNetworking.registerGlobalReceiver(NekoPosePayload.ID, ToNekoNetworkEvents::onSetPose);
+    }
+
+    public static void onSetPose(NekoPosePayload payload, ServerPlayNetworking.Context context) {
+        processNekoInteractive(context.player(), UUID.fromString(payload.uuid()), neko -> {
+            // 如果已经有姿势了，则移除
+            if (EntityPoseManager.contains(neko)){
+                EntityPoseManager.remove(neko);
+            }else {
+                EntityPoseManager.setPose(neko, payload.pose());
+            }
+        });
     }
 
     public static void onRideEntity(RideEntityPayload payload, ServerPlayNetworking.Context context) {
@@ -34,10 +48,11 @@ public class ToNekoNetworkEvents {
             if (entity != null){
                 if (neko.isSitting()){
                     neko.stopRiding();
-                }
-                neko.startRiding(entity,true);
-                if (entity instanceof ServerPlayer sp){
-                    sp.connection.send(new ClientboundSetPassengersPacket(entity));
+                }else {
+                    neko.startRiding(entity, true);
+                    if (entity instanceof ServerPlayer sp) {
+                        sp.connection.send(new ClientboundSetPassengersPacket(entity));
+                    }
                 }
             }
         });
