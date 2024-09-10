@@ -2,7 +2,7 @@ package org.cneko.toneko.common.mod.events;
 
 import net.minecraft.server.MinecraftServer;
 
-import static org.cneko.toneko.common.mod.api.PlayerPoseAPI.poseMap;
+import static org.cneko.toneko.common.mod.api.EntityPoseManager.poseMap;
 
 public class CommonPlayerTickEvent {
     public static void startTick(MinecraftServer server) {

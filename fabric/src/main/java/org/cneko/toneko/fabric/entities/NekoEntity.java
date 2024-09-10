@@ -1,6 +1,7 @@
 package org.cneko.toneko.fabric.entities;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -16,6 +17,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -29,6 +31,7 @@ import org.cneko.toneko.common.mod.api.NekoNameRegistry;
 import org.cneko.toneko.common.mod.api.NekoSkinRegistry;
 import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.packets.interactives.NekoEntityInteractivePayload;
+import org.cneko.toneko.common.mod.util.EntityUtil;
 import org.cneko.toneko.fabric.entities.ai.goal.NekoFollowOwnerGoal;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -88,14 +91,14 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity, INe
         if (!this.hasCustomName()) {
             this.setCustomName(Component.literal(NekoNameRegistry.getRandomName()));
         }
-        //TODO 获取背包的物品
 
-        AttributeInstance scale = this.getAttribute(Attributes.SCALE);
-        if (scale!=null && scale.getValue()==1) {
-            // 随机设置 scale 为 0.85 ~ 1.05
-            scale.setBaseValue(0.85 + (1.05 - 0.85) * Math.random());
-        }
+        EntityUtil.randomizeAttributeValue(this, Attributes.SCALE,1,0.8,1.05); // 实体的体型为0.85~1.05间
+        EntityUtil.randomizeAttributeValue(this, Attributes.MOVEMENT_SPEED,0.7,0.5,0.6); // 实体速度为0.5~0.6间
+
     }
+
+
+
 
 
     @Override
@@ -109,24 +112,26 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity, INe
         this.goalSelector.addGoal(10, new BreathAirGoal(this));
         // 猫娘会闲逛
         this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 0.3, 1));
+        // 猫娘会跟主人
+        nekoFollowOwnerGoal = new NekoFollowOwnerGoal(this,null,30,this.followLeashSpeed());
+        this.goalSelector.addGoal(20,nekoFollowOwnerGoal);
     }
 
     public NekoQuery.Neko getNeko() {
         return NekoQuery.getNeko(this.getUUID());
     }
 
-    public void followOwner(Player flowingOwner, double minDistance, double maxDistance, double followSpeed) {
-        if (nekoFollowOwnerGoal != null){
-            this.goalSelector.removeGoal(nekoFollowOwnerGoal);
+    public void followOwner(Player followingOwner,double maxDistance, double followSpeed) {
+        if (nekoFollowOwnerGoal !=null) {
+            nekoFollowOwnerGoal.setTarget(followingOwner);
+            nekoFollowOwnerGoal.setMaxDistance(maxDistance);
+            nekoFollowOwnerGoal.setFollowSpeed(followSpeed);
+            nekoFollowOwnerGoal.start();
         }
-        if (flowingOwner != null) {
-            nekoFollowOwnerGoal = new NekoFollowOwnerGoal(this, flowingOwner, minDistance, maxDistance,followSpeed);
-            this.goalSelector.addGoal(20, nekoFollowOwnerGoal);
-            this.setTarget(flowingOwner);
-        }
+
     }
     public void followOwner(Player followingOwner) {
-        followOwner(followingOwner, -1, 30.0D,1.0D);
+        followOwner(followingOwner, this.getAttributeValue(Attributes.FOLLOW_RANGE),this.getAttributeValue(Attributes.MOVEMENT_SPEED));
     }
     public @Nullable NekoFollowOwnerGoal getFollowingOwner() {
         return this.nekoFollowOwnerGoal;
@@ -247,7 +252,7 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity, INe
     }
 
     public static AttributeSupplier.Builder createNekoAttributes(){
-        return createMobAttributes();
+        return createMobAttributes().add(Attributes.ATTACK_DAMAGE);
     }
 
     public boolean isSitting() {

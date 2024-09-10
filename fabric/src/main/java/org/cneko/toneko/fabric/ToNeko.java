@@ -9,9 +9,7 @@ import org.cneko.toneko.common.mod.impl.FabricConfigImpl;
 import org.cneko.toneko.common.mod.impl.FabricLanguageImpl;
 import org.cneko.toneko.common.mod.items.ToNekoArmorMaterials;
 import org.cneko.toneko.common.mod.packets.EntityPosePayload;
-import org.cneko.toneko.common.mod.packets.interactives.FollowOwnerPayload;
-import org.cneko.toneko.common.mod.packets.interactives.GiftItemPayload;
-import org.cneko.toneko.common.mod.packets.interactives.NekoEntityInteractivePayload;
+import org.cneko.toneko.common.mod.packets.interactives.*;
 import org.cneko.toneko.common.mod.packets.QuirkQueryPayload;
 import org.cneko.toneko.common.mod.quirks.ToNekoQuirks;
 import org.cneko.toneko.common.mod.util.PermissionUtil;
@@ -51,6 +49,8 @@ public class ToNeko implements ModInitializer {
         PayloadTypeRegistry.playS2C().register(NekoEntityInteractivePayload.ID, NekoEntityInteractivePayload.CODEC);
         PayloadTypeRegistry.playC2S().register(GiftItemPayload.ID, GiftItemPayload.CODEC);
         PayloadTypeRegistry.playC2S().register(FollowOwnerPayload.ID, FollowOwnerPayload.CODEC);
+        PayloadTypeRegistry.playC2S().register(RideEntityPayload.ID, RideEntityPayload.CODEC);
+        PayloadTypeRegistry.playC2S().register(NekoPosePayload.ID, NekoPosePayload.CODEC);
 
         // 注册实体
         ToNekoEntities.init();

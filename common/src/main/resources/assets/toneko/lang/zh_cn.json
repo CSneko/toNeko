@@ -97,6 +97,8 @@
   "screen.toneko.neko_entity_interactive.button.gift.des": "把手中的物品赠送给猫猫",
   "screen.toneko.neko_entity_interactive.button.follow": "跟随",
   "screen.toneko.neko_entity_interactive.button.follow.des": "猫猫会跟着你哦",
+  "screen.toneko.neko_entity_interactive.button.ride": "骑乘",
+  "screen.toneko.neko_entity_interactive.button.ride.des": "让猫猫骑上最近的实体（也包括你哦）",
   "misc.toneko.owner": "主人",
   "misc.toneko.nya": "喵~",
   "misc.toneko.prefix": "§a猫娘"

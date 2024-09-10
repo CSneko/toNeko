@@ -9,27 +9,25 @@ import java.util.EnumSet;
 
 public class NekoFollowOwnerGoal extends Goal {
     private final NekoEntity nekoEntity;
-    private final Player owner;
-    private final double followSpeed;
-    private final double minDistanceSq;
-    private final double maxDistanceSq;
+    private Player owner;
+    private double followSpeed;
+    private double maxDistanceSq;
 
-    public NekoFollowOwnerGoal(NekoEntity nekoEntity, Player owner, double minDistance, double maxDistance, double followSpeed) {
+    public NekoFollowOwnerGoal(NekoEntity nekoEntity, Player owner, double maxDistance, double followSpeed) {
         this.nekoEntity = nekoEntity;
         this.owner = owner;
         this.followSpeed = followSpeed;
-        this.minDistanceSq = minDistance * minDistance;
         this.maxDistanceSq = maxDistance * maxDistance;
         this.setFlags(EnumSet.of(Flag.MOVE));
     }
 
     @Override
     public boolean canUse() {
-        if (owner == null || !nekoEntity.getNeko().hasOwner(owner.getUUID())) {
+        if (owner == null) {
             return false;
         }
         double distanceSq = nekoEntity.distanceToSqr(owner);
-        return distanceSq > maxDistanceSq || distanceSq < minDistanceSq;
+        return distanceSq < maxDistanceSq;
     }
 
     @Override
@@ -46,6 +44,20 @@ public class NekoFollowOwnerGoal extends Goal {
 
     @Override
     public void stop() {
-        nekoEntity.getNavigation().stop();
+        super.stop();
+        owner = null;
+    }
+
+    public void setTarget(Player owner){
+        this.owner = owner;
+    }
+
+
+    public void setMaxDistance(double maxDistance){
+        this.maxDistanceSq = maxDistance * maxDistance;
+    }
+
+    public void setFollowSpeed(double followSpeed) {
+        this.followSpeed = followSpeed;
     }
 }

@@ -20,13 +20,12 @@ import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemLore;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.api.NekoSkin;
 import org.cneko.toneko.common.api.Permissions;
-import org.cneko.toneko.common.mod.api.PlayerPoseAPI;
+import org.cneko.toneko.common.mod.api.EntityPoseManager;
 import org.cneko.toneko.common.mod.packets.EntityPosePayload;
+import org.cneko.toneko.common.mod.util.EntityUtil;
 import org.cneko.toneko.common.mod.util.PermissionUtil;
 import org.cneko.toneko.common.mod.util.SkinUtil;
 import org.cneko.toneko.common.mod.util.TextUtil;
@@ -101,17 +100,8 @@ public class NekoCommand {
         ServerLevel world = (ServerLevel) entity.level();
         // 获取玩家3格方块内的实体
         float radius = 3.0f;
-        LivingEntity target = null;
-        // 创建一个包围盒，它代表了以 centerEntity 为中心、半径为 radius 的区域
-        AABB box = new AABB(entity.getX() - radius, entity.getY() - radius, entity.getZ() - radius,
-                entity.getX() + radius, entity.getY() + radius, entity.getZ() + radius);
-        List<Entity> entities = world.getEntities(entity, box);
-        for (Entity entity1 : entities){
-            if (entity1 instanceof LivingEntity) {
-                target = (LivingEntity) entity1;
-                break;
-            }
-        }
+        LivingEntity target = EntityUtil.findNearestEntityInRange(entity, world, radius);
+
         if (target != null){
             entity.startRiding(target,true);
         }
@@ -130,19 +120,38 @@ public class NekoCommand {
         return 1;
     }
 
+    // 原始方法 getDownCommand
     public static int getDownCommand(CommandContext<CommandSourceStack> context) {
-        ServerPlayer player = context.getSource().getPlayer();
-        String playerName = TextUtil.getPlayerName(player);
-        // 如果玩家没有坐下,把玩家设置为坐下,否则把玩家设置为正常
-        if(PlayerPoseAPI.contains(player)){
-            PlayerPoseAPI.remove(player);
-            ServerPlayNetworking.send(player, new EntityPosePayload(Pose.SWIMMING,false));
-        }else{
-            PlayerPoseAPI.setPose(player, Pose.SWIMMING);
-            ServerPlayNetworking.send(player, new EntityPosePayload(Pose.SWIMMING,true));
-        }
+        Entity entity = context.getSource().getEntity();
+        setEntityPose(entity, Pose.SWIMMING, context.getSource());
         return 1;
     }
+
+    // 原始方法 lieCommand
+    public static int lieCommand(CommandContext<CommandSourceStack> context) {
+        Entity entity = context.getSource().getEntity();
+        setEntityPose(entity, Pose.SLEEPING, context.getSource());
+        return 1;
+    }
+
+    // 设置实体的姿态
+    private static void setEntityPose(Entity entity, Pose pose, CommandSourceStack source) {
+        if (EntityPoseManager.contains(entity)) {
+            EntityPoseManager.remove(entity);
+            sendPosePacket(entity, pose, false);
+        } else {
+            EntityPoseManager.setPose(entity, pose);
+            sendPosePacket(entity, pose, true);
+        }
+    }
+
+    // 发送姿态包
+    private static void sendPosePacket(Entity entity, Pose pose, boolean isSet) {
+        if (entity instanceof ServerPlayer player) {
+            ServerPlayNetworking.send(player, new EntityPosePayload(pose,entity.getUUID().toString(), isSet));
+        }
+    }
+
 
     public static int loreCommand(CommandContext<CommandSourceStack> context) {
         ServerPlayer player = context.getSource().getPlayer();
@@ -185,19 +194,6 @@ public class NekoCommand {
         return 1;
     }
 
-    public static int lieCommand(CommandContext<CommandSourceStack> context) {
-        ServerPlayer player = context.getSource().getPlayer();
-        String playerName = TextUtil.getPlayerName(player);
-        // 如果玩家没有躺下,把玩家设置为躺下,否则把玩家设置为正常
-        if(PlayerPoseAPI.contains(player)){
-            PlayerPoseAPI.remove(player);
-            ServerPlayNetworking.send(player, new EntityPosePayload(Pose.SLEEPING,false));
-        }else{
-            PlayerPoseAPI.setPose(player, Pose.SLEEPING);
-            ServerPlayNetworking.send(player, new EntityPosePayload(Pose.SLEEPING,true));
-        }
-        return 1;
-    }
 
     public static int speedCommand(CommandContext<CommandSourceStack> context) {
         return giveEffect(context, MobEffects.MOVEMENT_SPEED);

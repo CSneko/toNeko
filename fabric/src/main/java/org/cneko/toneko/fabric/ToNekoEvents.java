@@ -8,32 +8,17 @@ import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
 import org.cneko.ctlib.common.util.ChatPrefix;
 import org.cneko.toneko.common.api.NekoQuery;
-import org.cneko.toneko.common.api.Permissions;
-import org.cneko.toneko.common.api.PlayerInstallToNeko;
-import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.events.*;
-import org.cneko.toneko.common.mod.packets.QuirkQueryPayload;
-import org.cneko.toneko.common.mod.packets.interactives.GiftItemPayload;
 import org.cneko.toneko.common.mod.quirks.ModQuirk;
-import org.cneko.toneko.common.mod.util.PermissionUtil;
 import org.cneko.toneko.common.mod.util.TextUtil;
 import org.cneko.toneko.common.quirks.Quirk;
 import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.common.util.LanguageUtil;
-import org.cneko.toneko.fabric.entities.NekoEntity;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.UUID;
 
 public class ToNekoEvents {
     public static void init() {
@@ -81,5 +66,7 @@ public class ToNekoEvents {
         neko.save();
         NekoQuery.NekoData.removeNeko(player.getUUID());
     }
+
+
 
 }

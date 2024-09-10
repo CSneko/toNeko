@@ -4,6 +4,7 @@ package org.cneko.toneko.fabric.client.events;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -21,7 +22,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class ClientNetworkPacketEvent {
-    public static final Map<Player, Pose> poses = new HashMap<>();
+    public static final Map<Entity, Pose> poses = new HashMap<>();
     public static void init(){
         ClientPlayNetworking.registerGlobalReceiver(EntityPosePayload.ID, (payload, context) -> {
             context.client().execute(() -> {
@@ -44,7 +45,7 @@ public class ClientNetworkPacketEvent {
                 // 通过uuid寻找猫娘
                 String uuid = payload.uuid();
                 if(uuid != null && !uuid.isEmpty()) {
-                    NekoEntity neko = findNearbyEntityByUuid(UUID.fromString(uuid));
+                    NekoEntity neko = findNearbyNekoByUuid(UUID.fromString(uuid),64);
                     if(neko != null) {
                         // 打开屏幕
                         context.client().setScreen(new NekoEntityInteractiveScreen(neko));
@@ -55,12 +56,21 @@ public class ClientNetworkPacketEvent {
 
     }
     public static void setPose(EntityPosePayload payload, ClientPlayNetworking.Context context) {
-        Player player = context.player();
+        String uuid = payload.uuid();
+        LivingEntity entity;
+        if (uuid !=null){
+            entity = findNearbyEntityByUuid(UUID.fromString(uuid),128);
+            if (entity == null){
+                entity = context.player();
+            }
+        }else {
+            entity = context.player();
+        }
         Pose pose = payload.pose();
         boolean status = payload.status();
         if(status) {
-            poses.put(player, pose);
-        }else poses.remove(player);
+            poses.put(entity, pose);
+        }else poses.remove(entity);
     }
 
 
@@ -69,10 +79,16 @@ public class ClientNetworkPacketEvent {
      * @param targetUuid 目标实体的UUID。
      * @return 找到的实体，如果没有找到则返回null。
      */
-    public static @Nullable NekoEntity findNearbyEntityByUuid(UUID targetUuid) {
+    public static @Nullable NekoEntity findNearbyNekoByUuid(UUID targetUuid,double range) {
+        if (findNearbyEntityByUuid(targetUuid,range) instanceof NekoEntity nekoEntity){
+            return nekoEntity;
+        }
+        return null;
+    }
+
+    public static @Nullable LivingEntity findNearbyEntityByUuid(UUID targetUuid,double range) {
         // 确定搜索范围，这里以玩家为中心，半径为64个方块
         Player player = Minecraft.getInstance().player;
-        double range = 64;
         AABB box = new AABB(player.getX() - range, player.getY() - range, player.getZ() - range,
                 player.getX() + range, player.getY() + range, player.getZ() + range);
 
@@ -80,12 +96,14 @@ public class ClientNetworkPacketEvent {
         // 遍历指定范围内的所有实体
         for (Entity entity : world.getEntities(player, box)) {
             if (entity.getUUID().equals(targetUuid)) {
-                if (entity instanceof NekoEntity nekoEntity) {
-                    return nekoEntity; // 找到了目标实体
+                if (entity instanceof LivingEntity le) {
+                    return le; // 找到了目标实体
                 }else return null;
             }
         }
 
         return null; // 没有找到目标实体
     }
+
+
 }
