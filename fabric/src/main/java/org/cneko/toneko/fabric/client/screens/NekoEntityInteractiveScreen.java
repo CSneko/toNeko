@@ -80,6 +80,7 @@ public class NekoEntityInteractiveScreen extends DynamicScreen{
             // 把猫娘设置为躺
             if (ClientEntityPoseManager.contains(neko)){
                 ClientEntityPoseManager.remove(neko);
+                neko.setPose(Pose.STANDING);
             }else {
                 ClientEntityPoseManager.setPose(neko, Pose.SLEEPING);
             }
@@ -87,7 +88,7 @@ public class NekoEntityInteractiveScreen extends DynamicScreen{
         }).size(buttonWidth,buttonHeight).pos(x,y).build();
         lieButton.setTooltip(Tooltip.create(Component.translatable("screen.toneko.neko_entity_interactive.button.lie.des")));
         this.addRenderableWidget(lieButton);
-        y += buttonBound;
+
 
 //        // ------------------------------------------
 //        Button getDownButton = Button.builder(Component.translatable("screen.toneko.neko_entity_interactive.button.get_down"),(btn)->{

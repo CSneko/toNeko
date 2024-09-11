@@ -2,6 +2,7 @@ package org.cneko.toneko.common.mod.api;
 
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.Entity;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +17,9 @@ public class EntityPoseManager {
     }
     public static Pose getPose(Entity entity) {
         return poseMap.getOrDefault(entity, Pose.STANDING);
+    }
+    public static @Nullable Pose getNullablePose(Entity entity) {
+        return poseMap.get(entity);
     }
     public static void remove(Entity entity) {
         poseMap.remove(entity);

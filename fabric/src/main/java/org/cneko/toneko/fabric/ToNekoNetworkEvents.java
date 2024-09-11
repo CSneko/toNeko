@@ -6,6 +6,7 @@ import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.cneko.toneko.common.api.NekoQuery;
@@ -36,6 +37,7 @@ public class ToNekoNetworkEvents {
             // 如果已经有姿势了，则移除
             if (EntityPoseManager.contains(neko)){
                 EntityPoseManager.remove(neko);
+                neko.setPose(Pose.STANDING);
             }else {
                 EntityPoseManager.setPose(neko, payload.pose());
             }

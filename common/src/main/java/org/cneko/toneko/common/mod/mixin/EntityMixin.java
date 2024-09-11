@@ -12,15 +12,14 @@ import software.bernie.geckolib.animatable.GeoEntity;
 
 @SuppressWarnings("UnreachableCode")
 @Mixin(Entity.class)
-public abstract class EntityMixin implements GeoEntity {
-
+public abstract class EntityMixin{
 
     @Inject(at = @At("HEAD"), method = "setPose", cancellable = true)
     public void setPose(Pose pose, CallbackInfo info){
         Entity entity = (Entity) (Object) this;
         // 如果实体存在设置的姿态，则取消设置姿态
         if (EntityPoseManager.contains(entity)){
-            if(EntityPoseManager.getPose(entity) != pose) {
+            if(EntityPoseManager.getNullablePose(entity) != pose) {
                 info.cancel();
             }
         }
