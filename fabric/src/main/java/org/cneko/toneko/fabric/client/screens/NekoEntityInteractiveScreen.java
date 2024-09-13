@@ -83,25 +83,28 @@ public class NekoEntityInteractiveScreen extends DynamicScreen{
                 neko.setPose(Pose.STANDING);
             }else {
                 ClientEntityPoseManager.setPose(neko, Pose.SLEEPING);
+                neko.setPose(Pose.SLEEPING);
             }
             ClientPlayNetworking.send(new NekoPosePayload(Pose.SLEEPING,neko.getUUID().toString(),true));
         }).size(buttonWidth,buttonHeight).pos(x,y).build();
         lieButton.setTooltip(Tooltip.create(Component.translatable("screen.toneko.neko_entity_interactive.button.lie.des")));
         this.addRenderableWidget(lieButton);
+        y += buttonBound;
 
-
-//        // ------------------------------------------
-//        Button getDownButton = Button.builder(Component.translatable("screen.toneko.neko_entity_interactive.button.get_down"),(btn)->{
-//            // 把猫娘设置为趴
-//            if (ClientEntityPoseManager.contains(neko)){
-//                ClientEntityPoseManager.remove(neko);
-//            }else {
-//                ClientEntityPoseManager.setPose(neko, Pose.SWIMMING);
-//            }
-//            ClientPlayNetworking.send(new NekoPosePayload(Pose.SWIMMING,neko.getUUID().toString(),true));
-//        }).size(buttonWidth,buttonHeight).pos(x,y).build();
-//        getDownButton.setTooltip(Tooltip.create(Component.translatable("screen.toneko.neko_entity_interactive.button.get_down.des")));
-//        this.addRenderableWidget(getDownButton);
+        // ------------------------------------------
+        Button getDownButton = Button.builder(Component.translatable("screen.toneko.neko_entity_interactive.button.get_down"),(btn)->{
+            // 把猫娘设置为趴
+            if (ClientEntityPoseManager.contains(neko)){
+                ClientEntityPoseManager.remove(neko);
+                neko.setPose(Pose.STANDING);
+            }else {
+                ClientEntityPoseManager.setPose(neko, Pose.SWIMMING);
+                neko.setPose(Pose.SWIMMING);
+            }
+            ClientPlayNetworking.send(new NekoPosePayload(Pose.SWIMMING,neko.getUUID().toString(),true));
+        }).size(buttonWidth,buttonHeight).pos(x,y).build();
+        getDownButton.setTooltip(Tooltip.create(Component.translatable("screen.toneko.neko_entity_interactive.button.get_down.des")));
+        this.addRenderableWidget(getDownButton);
 //        y += buttonBound;
 
 

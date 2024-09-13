@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.world.entity.Pose;
 import org.cneko.toneko.fabric.entities.NekoEntity;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
@@ -31,6 +32,10 @@ public class NekoRenderer<T extends NekoEntity> extends GeoEntityRenderer<T> {
         // 坐下时向下移动
         if (animatable.isSitting()) {
             poseStack.translate(0, -0.7, 0);
+        }
+        // 游泳/爬行时向下移动
+        if (animatable.getPose() == Pose.SWIMMING){
+            poseStack.translate(0, -0.5, 0);
         }
     }
 

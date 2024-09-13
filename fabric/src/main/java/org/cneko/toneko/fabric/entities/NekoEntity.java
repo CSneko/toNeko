@@ -13,19 +13,18 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.mod.api.NekoNameRegistry;
 import org.cneko.toneko.common.mod.api.NekoSkinRegistry;
@@ -220,16 +219,32 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity, INe
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, 20, state -> {
+            // 地上趴着
+            if (this.getPose() == Pose.SWIMMING){
+                return state.setAndContinue(DefaultAnimations.CRAWL);
+            }
             // 没有移动
             if (!state.isMoving()){
                 // 是否为sit
-                if (this.isSitting) return state.setAndContinue(RawAnimation.begin().thenLoop("misc.sit"));
+                if (this.isSitting()) return state.setAndContinue(RawAnimation.begin().thenLoop("misc.sit"));
                 return state.setAndContinue(DefaultAnimations.IDLE);
             }else if (state.isMoving()){
                 return state.setAndContinue(DefaultAnimations.WALK);
             }
+
             return PlayState.CONTINUE;
         }));
+    }
+
+    @Override
+    public void move(MoverType type, Vec3 pos) {
+        if (!this.canMove()) {
+            super.move(type, pos);
+        }
+    }
+
+    public boolean canMove() {
+        return this.getPose() != Pose.SWIMMING && !this.isSitting();
     }
 
     @Override
