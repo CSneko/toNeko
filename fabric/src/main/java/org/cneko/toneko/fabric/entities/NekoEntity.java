@@ -91,7 +91,7 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity, INe
             this.setCustomName(Component.literal(NekoNameRegistry.getRandomName()));
         }
 
-        EntityUtil.randomizeAttributeValue(this, Attributes.SCALE,1,0.8,1.05); // 实体的体型为0.85~1.05间
+        EntityUtil.randomizeAttributeValue(this, Attributes.SCALE,1,0.8,1.05); // 实体的体型为0.8~1.05间
         EntityUtil.randomizeAttributeValue(this, Attributes.MOVEMENT_SPEED,0.7,0.5,0.6); // 实体速度为0.5~0.6间
 
     }

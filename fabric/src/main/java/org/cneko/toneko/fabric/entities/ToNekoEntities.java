@@ -28,7 +28,7 @@ public class ToNekoEntities {
             BuiltInRegistries.ENTITY_TYPE,
             ResourceLocation.fromNamespaceAndPath(MODID,"adventurer_neko"),
             FabricEntityType.Builder.createMob(AdventurerNeko::new, MobCategory.CREATURE, builder -> builder.defaultAttributes(AdventurerNeko::createAdventurerNekoAttributes)
-                    .spawnRestriction(SpawnPlacementTypes.ON_GROUND, Heightmap.Types.WORLD_SURFACE, AdventurerNeko::checkMobSpawnRules)).sized(0.6f,1.8f).eyeHeight(1.7f).build()
+                    .spawnRestriction(SpawnPlacementTypes.ON_GROUND, Heightmap.Types.WORLD_SURFACE, AdventurerNeko::checkMobSpawnRules)).sized(0.5f,1.35f).eyeHeight(1).build()
     );
 
     public static void init() {
