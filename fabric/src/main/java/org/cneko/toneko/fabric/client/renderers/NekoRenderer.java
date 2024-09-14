@@ -28,7 +28,9 @@ public class NekoRenderer<T extends NekoEntity> extends GeoEntityRenderer<T> {
 
     @Override
     public void preRender(PoseStack poseStack, T animatable, BakedGeoModel model, @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
-        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
+        if (animatable.isBaby()){
+            poseStack.scale(0.5F, 0.5F, 0.5F); // 将幼年实体的尺寸缩小为原来的一半
+        }
         // 坐下时向下移动
         if (animatable.isSitting()) {
             poseStack.translate(0, -0.7, 0);
@@ -37,18 +39,13 @@ public class NekoRenderer<T extends NekoEntity> extends GeoEntityRenderer<T> {
         if (animatable.getPose() == Pose.SWIMMING){
             poseStack.translate(0, -0.5, 0);
         }
+        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
     }
 
     @Override
     public void actuallyRender(PoseStack poseStack, T entity, BakedGeoModel model, @Nullable RenderType renderType,
                                MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick,
                                int packedLight, int packedOverlay, int colour) {
-        // 设置头部旋转角度
-        entity.getYHeadRot();
-
-        if (entity.isBaby()){
-            poseStack.scale(0.5F, 0.5F, 0.5F); // 将幼年实体的尺寸缩小为原来的一半
-        }
         super.actuallyRender(poseStack, entity, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
     }
 

@@ -11,10 +11,7 @@ import net.minecraft.world.entity.Pose;
 import net.minecraft.world.item.ItemStack;
 import org.cneko.toneko.common.mod.api.EntityPoseManager;
 import org.cneko.toneko.common.mod.client.api.ClientEntityPoseManager;
-import org.cneko.toneko.common.mod.packets.interactives.FollowOwnerPayload;
-import org.cneko.toneko.common.mod.packets.interactives.GiftItemPayload;
-import org.cneko.toneko.common.mod.packets.interactives.NekoPosePayload;
-import org.cneko.toneko.common.mod.packets.interactives.RideEntityPayload;
+import org.cneko.toneko.common.mod.packets.interactives.*;
 import org.cneko.toneko.common.mod.util.EntityUtil;
 import org.cneko.toneko.fabric.entities.NekoEntity;
 import org.jetbrains.annotations.NotNull;
@@ -105,7 +102,16 @@ public class NekoEntityInteractiveScreen extends DynamicScreen{
         }).size(buttonWidth,buttonHeight).pos(x,y).build();
         getDownButton.setTooltip(Tooltip.create(Component.translatable("screen.toneko.neko_entity_interactive.button.get_down.des")));
         this.addRenderableWidget(getDownButton);
-//        y += buttonBound;
+        y += buttonBound;
+
+        // -------------------------------------------
+        Button breedButton = Button.builder(Component.translatable("screen.toneko.neko_entity_interactive.button.breed"),(btn)->{
+            // 向服务器发送繁殖请求
+            ClientPlayNetworking.send(new NekoBreedPayload(neko.getUUID().toString()));
+        }).size(buttonWidth,buttonHeight).pos(x,y).build();
+        breedButton.setTooltip(Tooltip.create(Component.translatable("screen.toneko.neko_entity_interactive.button.breed.des")));
+        this.addRenderableWidget(breedButton);
+        //y += buttonBound;
 
 
     }
