@@ -101,6 +101,8 @@
   "screen.toneko.neko_entity_interactive.button.ride.des": "Let the neko ride on the nearest entity (including you)",
   "screen.toneko.neko_entity_interactive.button.lie": "Lie down",
   "screen.toneko.neko_entity_interactive.button.lie.des": "Let the neko lie down (press again to get up)",
+  "screen.toneko.neko_entity_interactive.button.get_down": "Get down",
+  "screen.toneko.neko_entity_interactive.button.get_down.des": "Make the neko get down (press it again to get up)",
   "misc.toneko.owner": "owner",
   "misc.toneko.nya": "meow~",
   "misc.toneko.prefix": "§aneko"

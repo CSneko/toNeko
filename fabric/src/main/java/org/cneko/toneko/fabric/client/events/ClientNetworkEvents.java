@@ -44,7 +44,7 @@ public class ClientNetworkEvents {
                 // 通过uuid寻找猫娘
                 String uuid = payload.uuid();
                 if(uuid != null && !uuid.isEmpty()) {
-                    NekoEntity neko = findNearbyNekoByUuid(UUID.fromString(uuid),64);
+                    NekoEntity neko = findNearbyNekoByUuid(UUID.fromString(uuid),NekoEntity.DEFAULT_FIND_RANGE);
                     if(neko != null) {
                         // 打开屏幕
                         context.client().setScreen(new NekoEntityInteractiveScreen(neko));
@@ -52,12 +52,6 @@ public class ClientNetworkEvents {
                 }
             });
         });
-
-        ClientPlayNetworking.registerGlobalReceiver(VehicleStopRidePayload.ID,((payload, context) -> {
-            context.client().execute(() -> {
-
-            });
-        }));
 
     }
     public static void setPose(EntityPosePayload payload, ClientPlayNetworking.Context context) {

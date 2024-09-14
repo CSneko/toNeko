@@ -1,7 +1,6 @@
 package org.cneko.toneko.fabric.entities;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -10,15 +9,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -50,6 +47,9 @@ import java.util.Set;
 import static org.cneko.toneko.common.mod.util.TextUtil.randomTranslatabledComponent;
 
 public abstract class NekoEntity extends PathfinderMob implements GeoEntity, INeko {
+    public static double DEFAULT_FIND_RANGE = 16.0D;
+    public static float DEFAULT_RIDE_RANGE = 3f;
+
     public NekoFollowOwnerGoal nekoFollowOwnerGoal;
     private final AnimatableInstanceCache cache;
     private String skin = "";
@@ -220,8 +220,12 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity, INe
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, 20, state -> {
             // 地上趴着
-            if (this.getPose() == Pose.SWIMMING){
+            if (this.getPose() == Pose.SWIMMING && !this.isInLiquid()){
                 return state.setAndContinue(DefaultAnimations.CRAWL);
+            }
+            // 在水里
+            if (this.isInLiquid() && this.isEyeInFluid(FluidTags.WATER)){
+                return state.setAndContinue(DefaultAnimations.SWIM);
             }
             // 没有移动
             if (!state.isMoving()){
@@ -237,14 +241,21 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity, INe
     }
 
     @Override
-    public void move(MoverType type, Vec3 pos) {
-        if (!this.canMove()) {
+    public void move(@NotNull MoverType type, @NotNull Vec3 pos) {
+        if (this.canMove()) {
             super.move(type, pos);
         }
     }
 
+    @Override
+    public void moveTo(double x, double y, double z, float yRot, float xRot) {
+        if (this.canMove()){
+            super.moveTo(x, y, z, yRot, xRot);
+        }
+    }
+
     public boolean canMove() {
-        return this.getPose() != Pose.SWIMMING && !this.isSitting();
+        return this.getPose() != Pose.SWIMMING && !this.isSitting() || this.isInLiquid();
     }
 
     @Override

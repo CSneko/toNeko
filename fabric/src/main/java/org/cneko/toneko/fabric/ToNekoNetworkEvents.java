@@ -74,7 +74,7 @@ public class ToNekoNetworkEvents {
 
     public static void processNekoInteractive(ServerPlayer player, UUID targetUuid, EntityFinder finder) {
         // 寻找目标实体
-        NekoEntity nekoEntity = findNearbyNekoByUuid(player, targetUuid,16);
+        NekoEntity nekoEntity = findNearbyNekoByUuid(player, targetUuid,NekoEntity.DEFAULT_FIND_RANGE);
         // 如果实体与玩家太远，则不执行
         if(nekoEntity != null && !(nekoEntity.distanceToSqr(player) > 64)){
             // 处理代码

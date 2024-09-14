@@ -101,6 +101,8 @@
   "screen.toneko.neko_entity_interactive.button.ride.des": "让猫猫骑上最近的实体（也包括你哦）",
   "screen.toneko.neko_entity_interactive.button.lie": "躺下",
   "screen.toneko.neko_entity_interactive.button.lie.des": "让猫猫躺下（再按一次就可以起来哦）",
+  "screen.toneko.neko_entity_interactive.button.get_down": "趴下",
+  "screen.toneko.neko_entity_interactive.button.get_down.des": "让猫猫趴下（再按一次就可以起来哦）",
   "misc.toneko.owner": "主人",
   "misc.toneko.nya": "喵~",
   "misc.toneko.prefix": "§a猫娘"
