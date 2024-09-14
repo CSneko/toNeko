@@ -8,6 +8,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
@@ -17,6 +18,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -54,6 +56,7 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity, INe
     private final AnimatableInstanceCache cache;
     private String skin = "";
     private boolean isSitting = false;
+    private int age = 0;
 
 
     public NekoEntity(EntityType<? extends NekoEntity> entityType, Level level) {
@@ -190,6 +193,46 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity, INe
                 player.sendSystemMessage(randomTranslatabledComponent("message.toneko.neko.gift_fail", 3, Objects.requireNonNull(this.getCustomName()).getString()));
             }
             return false;
+        }
+    }
+
+    public boolean canMate(LivingEntity other){
+        return true;
+    }
+    public void spawnChildFromBreeding(ServerLevel level, INeko mate) {
+        NekoEntity child = this.getBreedOffspring(level, mate);
+        if (child != null) {
+            child.setBaby(true);
+            // 成长需要20*60*60ticks
+            child.setAge(72000);
+            this.finalizeSpawnChildFromBreeding(level, mate, child);
+            child.moveTo(this.getX(), this.getY(), this.getZ(), 0.0F, 0.0F);
+            level.addFreshEntityWithPassengers(child);
+        }
+    }
+    public void finalizeSpawnChildFromBreeding(ServerLevel level, INeko animal, @Nullable NekoEntity baby) {}
+    @Nullable
+    public abstract NekoEntity getBreedOffspring(ServerLevel level, INeko otherParent);
+
+    public int getAge() {
+        return this.age;
+    }
+    public int setAge(int age) {
+        return this.age = age;
+    }
+    public void addAge(int age) {
+        this.age += age;
+        if (this.age == 0) {
+            this.onGrowUp();
+        }
+    }
+    public void onGrowUp() {
+    }
+    @Override
+    public void tick() {
+        super.tick();
+        if (this.getAge() < 0) {
+            this.addAge(1);
         }
     }
 

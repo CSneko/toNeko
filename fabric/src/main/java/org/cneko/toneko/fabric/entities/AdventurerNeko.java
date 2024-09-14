@@ -1,10 +1,13 @@
 package org.cneko.toneko.fabric.entities;
 
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import org.cneko.toneko.common.mod.entities.INeko;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +36,11 @@ public class AdventurerNeko extends NekoEntity{
         i.add(Items.NETHERITE_LEGGINGS);
         i.add(Items.NETHERITE_BOOTS);
         return i;
+    }
+
+    @Override
+    public @Nullable AdventurerNeko getBreedOffspring(ServerLevel level, INeko otherParent) {
+        return new AdventurerNeko(ToNekoEntities.ADVENTURER_NEKO, level);
     }
 
     public static AttributeSupplier.Builder createAdventurerNekoAttributes(){
