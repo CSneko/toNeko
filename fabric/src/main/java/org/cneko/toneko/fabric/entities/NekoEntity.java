@@ -32,6 +32,7 @@ import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.packets.interactives.NekoEntityInteractivePayload;
 import org.cneko.toneko.common.mod.util.EntityUtil;
 import org.cneko.toneko.fabric.entities.ai.goal.NekoFollowOwnerGoal;
+import org.cneko.toneko.fabric.entities.ai.goal.NekoMateGoal;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -54,6 +55,7 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity, INe
     public static float DEFAULT_RIDE_RANGE = 3f;
 
     public NekoFollowOwnerGoal nekoFollowOwnerGoal;
+    public NekoMateGoal nekoMateGoal;
     private final AnimatableInstanceCache cache;
     private String skin = "";
     private boolean isSitting = false;
@@ -106,9 +108,6 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity, INe
     }
 
 
-
-
-
     @Override
     public void registerGoals() {
         super.registerGoals();
@@ -123,6 +122,9 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity, INe
         // 猫娘会跟主人
         nekoFollowOwnerGoal = new NekoFollowOwnerGoal(this,null,30,this.followLeashSpeed());
         this.goalSelector.addGoal(20,nekoFollowOwnerGoal);
+        // 猫娘有繁殖欲望
+        nekoMateGoal = new NekoMateGoal(this,null,30,this.followLeashSpeed());
+        this.goalSelector.addGoal(30,nekoMateGoal);
     }
 
     public NekoQuery.Neko getNeko() {
@@ -202,6 +204,11 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity, INe
         }
     }
 
+    public void tryMating(ServerLevel level, INeko mate) {
+        if (this.canMate(mate)) {
+            this.nekoMateGoal.setTarget(mate);
+        }
+    }
     public boolean canMate(INeko other){
         return other.getNeko().isNeko();
     }

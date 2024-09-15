@@ -32,17 +32,19 @@ public class EntityUtil {
 
     // 从范围获取实体
     public static LivingEntity findNearestEntityInRange(Entity entity, Level world, float radius) {
+        List<LivingEntity> entities = getLivingEntitiesInRange(entity, world, radius);
+
+        for (LivingEntity entity1 : entities) {
+            return entity1;
+        }
+        return null;
+    }
+
+    // 获取范围内所有LivingEntity
+    public static List<LivingEntity> getLivingEntitiesInRange(Entity entity, Level world, float radius) {
         AABB box = new AABB(entity.getX() - radius, entity.getY() - radius, entity.getZ() - radius,
                 entity.getX() + radius, entity.getY() + radius, entity.getZ() + radius);
-        List<Entity> entities = world.getEntities(entity, box);
-
-        for (Entity entity1 : entities) {
-            if (entity1 instanceof LivingEntity) {
-                return (LivingEntity) entity1;
-            }
-        }
-
-        return null;
+        return world.getEntitiesOfClass(LivingEntity.class, box);
     }
 
 

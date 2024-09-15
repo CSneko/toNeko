@@ -47,7 +47,7 @@ public class ClientNetworkEvents {
                     NekoEntity neko = findNearbyNekoByUuid(UUID.fromString(uuid),NekoEntity.DEFAULT_FIND_RANGE);
                     if(neko != null) {
                         // 打开屏幕
-                        context.client().setScreen(new NekoEntityInteractiveScreen(neko));
+                        context.client().setScreen(new NekoEntityInteractiveScreen(neko,Minecraft.getInstance().screen));
                     }
                 }
             });

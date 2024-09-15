@@ -95,6 +95,8 @@
   "screen.toneko.quirk": "Quirk Settings",
   "screen.toneko.neko_entity_interactive.button.gift": "Give a gift",
   "screen.toneko.neko_entity_interactive.button.gift.des": "Give the item in hand to the neko",
+  "screen.toneko.neko_entity_interactive.button.action": "Action",
+  "screen.toneko.neko_entity_interactive.button.action.des": "Let the neko do something",
   "screen.toneko.neko_entity_interactive.button.follow": "Follow",
   "screen.toneko.neko_entity_interactive.button.follow.des": "The neko will follow you",
   "screen.toneko.neko_entity_interactive.button.ride": "Ride",
@@ -103,6 +105,8 @@
   "screen.toneko.neko_entity_interactive.button.lie.des": "Let the neko lie down (press again to get up)",
   "screen.toneko.neko_entity_interactive.button.get_down": "Get down",
   "screen.toneko.neko_entity_interactive.button.get_down.des": "Make the neko get down (press it again to get up)",
+  "screen.toneko.neko_entity_interactive.button.breed": "mating",
+  "screen.toneko.neko_entity_interactive.button.breed.des": "Let the nearest cat mate with a neko (or you)",
   "misc.toneko.owner": "owner",
   "misc.toneko.nya": "meow~",
   "misc.toneko.prefix": "§aneko"

@@ -53,7 +53,7 @@ public class ToNeko implements ModInitializer {
         PayloadTypeRegistry.playC2S().register(RideEntityPayload.ID, RideEntityPayload.CODEC);
         PayloadTypeRegistry.playC2S().register(NekoPosePayload.ID, NekoPosePayload.CODEC);
         PayloadTypeRegistry.playS2C().register(VehicleStopRidePayload.ID, VehicleStopRidePayload.CODEC);
-        PayloadTypeRegistry.playC2S().register(NekoBreedPayload.ID, NekoBreedPayload.CODEC);
+        PayloadTypeRegistry.playC2S().register(NekoMatePayload.ID, NekoMatePayload.CODEC);
 
         // 注册实体
         ToNekoEntities.init();

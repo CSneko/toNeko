@@ -1,7 +1,6 @@
 package org.cneko.toneko.fabric;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -29,14 +28,14 @@ public class ToNekoNetworkEvents {
         ServerPlayNetworking.registerGlobalReceiver(FollowOwnerPayload.ID, ToNekoNetworkEvents::onFollowOwner);
         ServerPlayNetworking.registerGlobalReceiver(RideEntityPayload.ID, ToNekoNetworkEvents::onRideEntity);
         ServerPlayNetworking.registerGlobalReceiver(NekoPosePayload.ID, ToNekoNetworkEvents::onSetPose);
-        ServerPlayNetworking.registerGlobalReceiver(NekoBreedPayload.ID, ToNekoNetworkEvents::onBreed);
+        ServerPlayNetworking.registerGlobalReceiver(NekoMatePayload.ID, ToNekoNetworkEvents::onBreed);
     }
 
-    public static void onBreed(NekoBreedPayload nekoBreedPayload, ServerPlayNetworking.Context context) {
-        processNekoInteractive(context.player(), UUID.fromString(nekoBreedPayload.uuid()), neko -> {
-            INeko mate = context.player();
-            if (mate != null){
-                neko.breed((ServerLevel) context.player().level(), mate);
+    public static void onBreed(NekoMatePayload payload, ServerPlayNetworking.Context context) {
+        processNekoInteractive(context.player(), UUID.fromString(payload.uuid()), neko -> {
+            LivingEntity mate = findNearbyEntityByUuid(context.player(),UUID.fromString(payload.mateUuid()),10);
+            if (mate instanceof INeko m){
+                neko.tryMating((ServerLevel) context.player().level(), m);
             }
         });
     }
