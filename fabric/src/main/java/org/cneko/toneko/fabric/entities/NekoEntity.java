@@ -2,16 +2,21 @@ package org.cneko.toneko.fabric.entities;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.ChatFormatting;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.TagTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.stats.Stats;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
@@ -24,6 +29,7 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.cneko.toneko.common.api.NekoQuery;
@@ -47,11 +53,12 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.cneko.toneko.common.mod.util.TextUtil.randomTranslatabledComponent;
 
-public abstract class NekoEntity extends PathfinderMob implements GeoEntity, INeko {
+public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko {
     public static double DEFAULT_FIND_RANGE = 16.0D;
     public static float DEFAULT_RIDE_RANGE = 3f;
 
@@ -60,8 +67,7 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity, INe
     private final AnimatableInstanceCache cache;
     private String skin = "";
     private boolean isSitting = false;
-    private int age = 0;
-    private boolean isBaby = false;
+
 
 
     public NekoEntity(EntityType<? extends NekoEntity> entityType, Level level) {
@@ -77,8 +83,7 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity, INe
         if(!skin.isEmpty()) {
             this.setSkin(skin);
         }
-        this.setAge(nbt.getInt("Age"));
-        this.setBaby(nbt.getBoolean("Baby"));
+        randomize(nbt);
     }
 
     @Override
@@ -86,14 +91,15 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity, INe
         if (!getSkin().isEmpty()) {
             nbt.putString("Skin", getSkin());
         }
-        nbt.putInt("Age", this.getAge());
-        nbt.putBoolean("Baby", this.isBaby());
         super.addAdditionalSaveData(nbt);
     }
 
     @Override
     public void load(@NotNull CompoundTag nbt) {
         super.load(nbt);
+    }
+
+    public void randomize(CompoundTag nbt){
         setSkin(nbt.getString("Skin"));
         if (getSkin().isEmpty()) {
             setSkin(getRandomSkin());
@@ -105,7 +111,6 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity, INe
 
         EntityUtil.randomizeAttributeValue(this, Attributes.SCALE,1,0.8,1.05); // 实体的体型为0.8~1.05间
         EntityUtil.randomizeAttributeValue(this, Attributes.MOVEMENT_SPEED,0.7,0.5,0.6); // 实体速度为0.5~0.6间
-
     }
 
 
@@ -216,15 +221,13 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity, INe
     }
 
     public void breed(ServerLevel level, INeko mate) {
-        if (this.canMate(mate)) {
-            // 冒爱心
-            level.addParticle(ParticleTypes.HEART, this.getX(), this.getY(), this.getZ(), 1, 1, 1);
-            Packet<?> packet = new ClientboundLevelParticlesPacket(ParticleTypes.HEART,true, this.getX(), this.getY(), this.getZ(),1,1,1,0.2f,10);
-            if (mate instanceof ServerPlayer sp){
-                sp.connection.send(packet);
-            }
-            this.spawnChildFromBreeding(level, mate);
+        // 冒爱心
+        level.addParticle(ParticleTypes.HEART, this.getX(), this.getY(), this.getZ(), 1, 1, 1);
+        Packet<?> packet = new ClientboundLevelParticlesPacket(ParticleTypes.HEART,true, this.getX(), this.getY(), this.getZ(),3,3,3,0.2f,25);
+        if (mate instanceof ServerPlayer sp){
+            sp.connection.send(packet);
         }
+        this.spawnChildFromBreeding(level, mate);
     }
     public void spawnChildFromBreeding(ServerLevel level, INeko mate) {
         NekoEntity child = this.getBreedOffspring(level, mate);
@@ -233,49 +236,25 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity, INe
             child.moveTo(this.getX(), this.getY(), this.getZ(), 0.0F, 0.0F);
             this.finalizeSpawnChildFromBreeding(level, mate, child);
             level.addFreshEntityWithPassengers(child);
+
         }
     }
-    public void finalizeSpawnChildFromBreeding(ServerLevel level, INeko animal, NekoEntity child) {
-        // 成长需要20*60*60ticks
+    public void finalizeSpawnChildFromBreeding(ServerLevel level, INeko mate, NekoEntity child) {
+        level.broadcastEntityEvent(this, (byte)18);
         child.setAge(-72000);
-        child.load(new CompoundTag());
+        if (level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)) {
+            level.addFreshEntity(new ExperienceOrb(level, this.getX(), this.getY(), this.getZ(), this.getRandom().nextInt(7) + 1));
+        }
     }
     @Nullable
     public abstract NekoEntity getBreedOffspring(ServerLevel level, INeko otherParent);
-
-    public int getAge() {
-        return this.age;
-    }
-    public int setAge(int age) {
-        return this.age = age;
-    }
-    public void addAge(int age) {
-        this.age += age;
-        if (this.age == 0) {
-            this.onGrowUp();
+    @Nullable
+    @Override
+    public AgeableMob getBreedOffspring(@NotNull ServerLevel level, @NotNull AgeableMob otherParent) {
+        if (otherParent instanceof INeko neko){
+            return this.getBreedOffspring(level, neko);
         }
-    }
-
-    @Override
-    public void setBaby(boolean baby) {
-        super.setBaby(baby);
-        this.setAge(-72000);
-    }
-
-    @Override
-    public boolean isBaby() {
-        return this.getAge() < 0;
-    }
-
-    public void onGrowUp() {
-        this.setBaby(false);
-    }
-    @Override
-    public void tick() {
-        super.tick();
-        if (this.getAge() < 0) {
-            this.addAge(1);
-        }
+        return null;
     }
 
     // 当玩家右键

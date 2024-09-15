@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Random;
 
 import static org.cneko.toneko.common.mod.util.TextUtil.translatable;
 
@@ -52,8 +53,13 @@ public class NekoMateScreen extends Screen implements INekoScreen {
             int x = (this.width / 3); // 一排显示3个按钮
             x = x*count + ( x - buttonWidth) / 2;
             Button button = Button.builder(entity.getEntity().getName(),(btn)->{
-                ClientPlayNetworking.send(new NekoMatePayload(neko.getUUID().toString(), entity.getEntity().getUUID().toString()));
-                onClose();
+                if (entity.getEntity().isBaby()) {
+                    int i = new Random().nextInt(13);
+                    Minecraft.getInstance().player.sendSystemMessage(Component.translatable("message.toneko.neko.breed_fail_baby." + i));
+                }else {
+                    ClientPlayNetworking.send(new NekoMatePayload(neko.getUUID().toString(), entity.getEntity().getUUID().toString()));
+                    onClose();
+                }
             }).bounds(x, y, buttonWidth, buttonHeight).build();
             addRenderableWidget(button);
             count++;

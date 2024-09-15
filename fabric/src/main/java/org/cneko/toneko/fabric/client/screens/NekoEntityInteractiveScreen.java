@@ -18,10 +18,7 @@ import org.cneko.toneko.fabric.entities.NekoEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class NekoEntityInteractiveScreen extends InteractionScreen implements INekoScreen{
     private final @NotNull NekoEntity neko;
@@ -55,11 +52,17 @@ public class NekoEntityInteractiveScreen extends InteractionScreen implements IN
         }));
 
         builders.put("screen.toneko.neko_entity_interactive.button.breed",Button.builder(Component.translatable("screen.toneko.neko_entity_interactive.button.breed"),(btn)->{
+            if (neko.isBaby()){
+                int i = new Random().nextInt(13);
+                Minecraft.getInstance().player.sendSystemMessage(Component.translatable("message.toneko.neko.breed_fail_baby."+i));
+                return;
+            }
             // 获取附近16格内的所有猫娘
             List<INeko> entities = new ArrayList<>();
             for (LivingEntity entity : EntityUtil.getLivingEntitiesInRange(neko, Minecraft.getInstance().player.level(),(float) NekoEntity.DEFAULT_FIND_RANGE)){
-                if(entity instanceof INeko && !entity.isBaby()){
-                    entities.add((INeko) entity);
+                if(entity instanceof INeko o){
+                    if (o != neko)
+                        entities.add(o);
                 }
             }
             NekoMateScreen.open(neko,entities,null);

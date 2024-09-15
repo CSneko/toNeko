@@ -35,7 +35,8 @@ public class ToNekoNetworkEvents {
         processNekoInteractive(context.player(), UUID.fromString(payload.uuid()), neko -> {
             LivingEntity mate = findNearbyEntityByUuid(context.player(),UUID.fromString(payload.mateUuid()),10);
             if (mate instanceof INeko m){
-                neko.tryMating((ServerLevel) context.player().level(), m);
+                if (neko != m)
+                    neko.tryMating((ServerLevel) context.player().level(), m);
             }
         });
     }

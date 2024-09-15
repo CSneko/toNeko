@@ -28,6 +28,7 @@ public class NekoRenderer<T extends NekoEntity> extends GeoEntityRenderer<T> {
 
     @Override
     public void preRender(PoseStack poseStack, T animatable, BakedGeoModel model, @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
+        //System.out.println(animatable.getAge());
         if (animatable.isBaby()){
             poseStack.scale(0.5F, 0.5F, 0.5F); // 将幼年实体的尺寸缩小为原来的一半
         }
