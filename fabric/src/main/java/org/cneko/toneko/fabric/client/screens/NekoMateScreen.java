@@ -65,7 +65,7 @@ public class NekoMateScreen extends Screen implements INekoScreen {
         // 添加返回按钮
         int doneButtonX = this.width / 2 - buttonWidth;
         int doneButtonY = y + buttonSpacing*4; // 放置在所有quirk按钮下方
-        addRenderableWidget(Button.builder(translatable("gui.done"), (btn) -> {
+        addRenderableWidget(Button.builder(translatable("gui.back"), (btn) -> {
             minecraft.setScreen(null);
         }).bounds(doneButtonX, doneButtonY, buttonWidth, buttonHeight)
                 .size(buttonWidth*2, buttonHeight).build());
@@ -80,6 +80,13 @@ public class NekoMateScreen extends Screen implements INekoScreen {
     // 移除背景渲染
     @Override
     public void renderBackground(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    }
+
+    @Override
+    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
+        // 添加标题
+        guiGraphics.drawString(this.font, translatable("screen.toneko.mate"), this.width / 2 - this.font.width(translatable("screen.toneko.mate")) / 2, 20, 0xFFFFFFFF, true);
     }
 
     @Override

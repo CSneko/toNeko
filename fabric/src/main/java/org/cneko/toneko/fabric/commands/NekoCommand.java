@@ -102,7 +102,7 @@ public class NekoCommand {
         float radius = 3.0f;
         LivingEntity target = EntityUtil.findNearestEntityInRange(entity, world, radius);
 
-        if (target != null){
+        if (target != null && target != entity){
             entity.startRiding(target,true);
         }
 

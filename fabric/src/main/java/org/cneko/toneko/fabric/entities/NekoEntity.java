@@ -1,6 +1,7 @@
 package org.cneko.toneko.fabric.entities;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -120,10 +121,10 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity, INe
         // 猫娘会闲逛
         this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 0.3, 1));
         // 猫娘会跟主人
-        nekoFollowOwnerGoal = new NekoFollowOwnerGoal(this,null,30,this.followLeashSpeed());
+        nekoFollowOwnerGoal = new NekoFollowOwnerGoal(this,null,30,this.followLeashSpeed() / 1.5);
         this.goalSelector.addGoal(20,nekoFollowOwnerGoal);
         // 猫娘有繁殖欲望
-        nekoMateGoal = new NekoMateGoal(this,null,30,this.followLeashSpeed());
+        nekoMateGoal = new NekoMateGoal(this,null,30,this.followLeashSpeed() / 2);
         this.goalSelector.addGoal(30,nekoMateGoal);
     }
 
@@ -207,6 +208,7 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity, INe
     public void tryMating(ServerLevel level, INeko mate) {
         if (this.canMate(mate)) {
             this.nekoMateGoal.setTarget(mate);
+            mate.getEntity().sendSystemMessage(Component.translatable("message.toneko.neko.mate.start",this.getName(), mate.getEntity().getName()).withStyle(ChatFormatting.GREEN));
         }
     }
     public boolean canMate(INeko other){
@@ -236,6 +238,7 @@ public abstract class NekoEntity extends PathfinderMob implements GeoEntity, INe
     public void finalizeSpawnChildFromBreeding(ServerLevel level, INeko animal, NekoEntity child) {
         // 成长需要20*60*60ticks
         child.setAge(-72000);
+        child.load(new CompoundTag());
     }
     @Nullable
     public abstract NekoEntity getBreedOffspring(ServerLevel level, INeko otherParent);

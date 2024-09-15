@@ -1,5 +1,7 @@
 package org.cneko.toneko.fabric.entities.ai.goal;
 
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
@@ -36,12 +38,20 @@ public class NekoMateGoal extends Goal {
         if (target != null) {
             nekoEntity.getNavigation().moveTo(target.getEntity(), followSpeed);
             // 当距离小于1时，开始breed
-            if (nekoEntity.distanceToSqr(target.getEntity()) < 1 && nekoEntity.level() instanceof ServerLevel sl) {
-                nekoEntity.breed(sl, target);
-                this.stop();
+            if (nekoEntity.distanceToSqr(target.getEntity()) < 1) {
+                breed();
             }
         }
     }
+
+    public void breed(){
+        if (nekoEntity.level() instanceof ServerLevel sl) {
+            nekoEntity.breed(sl, target);
+            target.getEntity().sendSystemMessage(Component.translatable("message.toneko.neko.mate.finish").withStyle(ChatFormatting.GREEN));
+        }
+        this.stop();
+    }
+
 
     @Override
     public void stop() {
