@@ -12,6 +12,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -65,8 +66,9 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     public NekoFollowOwnerGoal nekoFollowOwnerGoal;
     public NekoMateGoal nekoMateGoal;
     private final AnimatableInstanceCache cache;
-    private String skin = "";
     private boolean isSitting = false;
+
+    public static final EntityDataAccessor<String> SKIN_DATA_ID = SynchedEntityData.defineId(NekoEntity.class, EntityDataSerializers.STRING);
 
 
 
@@ -79,16 +81,16 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
-        String skin = nbt.getString("Skin");
-        if(!skin.isEmpty()) {
-            this.setSkin(skin);
+        if(nbt.contains("Skin")) {
+            this.setSkin(nbt.getString("Skin"));
         }
         randomize(nbt);
     }
 
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag nbt) {
-        if (!getSkin().isEmpty()) {
+        if(!nbt.contains("Skin")) {
+            this.setSkin(getRandomSkin());
             nbt.putString("Skin", getSkin());
         }
         super.addAdditionalSaveData(nbt);
@@ -99,11 +101,15 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         super.load(nbt);
     }
 
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        CompoundTag nbt = new CompoundTag();
+        String skin = getRandomSkin();
+        builder.define(SKIN_DATA_ID,skin);
+    }
+
     public void randomize(CompoundTag nbt){
-        setSkin(nbt.getString("Skin"));
-        if (getSkin().isEmpty()) {
-            setSkin(getRandomSkin());
-        }
         // 设置名字（如果没有）
         if (!this.hasCustomName()) {
             this.setCustomName(Component.literal(NekoNameRegistry.getRandomName()));
@@ -158,10 +164,10 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     }
 
     public String getSkin() {
-        return skin;
+        return this.entityData.get(SKIN_DATA_ID);
     }
     public void setSkin(String skin) {
-        this.skin = skin;
+        this.entityData.set(SKIN_DATA_ID, skin);
     }
     public String getRandomSkin(){
         return NekoSkinRegistry.getRandomSkin(this.getType());

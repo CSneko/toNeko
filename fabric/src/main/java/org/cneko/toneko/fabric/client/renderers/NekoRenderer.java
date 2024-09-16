@@ -57,6 +57,7 @@ public class NekoRenderer<T extends NekoEntity> extends GeoEntityRenderer<T> {
             ResourceLocation id = ResourceLocation.fromNamespaceAndPath(
                     MODID,"geo/neko/"+animatable.getSkin()+".geo.json"
             );
+            System.out.println(animatable.getSkin());
             if (checkResource(id)){
                 return id;
             }
