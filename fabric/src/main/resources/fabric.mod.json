@@ -38,11 +38,11 @@
     "fabricloader": "*",
     "fabric": "*",
     "minecraft": "1.21.x",
-    "ctlib": "*"
+    "ctlib": "*",
+    "geckolib": "*"
   },
   "suggests": {
     "luckperms": "*",
-    "geckolib": "*",
     "trinkets": "*"
   },
   "breaks": {

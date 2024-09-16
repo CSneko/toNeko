@@ -70,8 +70,6 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
 
     public static final EntityDataAccessor<String> SKIN_DATA_ID = SynchedEntityData.defineId(NekoEntity.class, EntityDataSerializers.STRING);
 
-
-
     public NekoEntity(EntityType<? extends NekoEntity> entityType, Level level) {
         super(entityType, level);
         NekoQuery.getNeko(this.getUUID()).setNeko(true);
@@ -87,29 +85,42 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         randomize(nbt);
     }
 
+//    @Override
+//    public void addAdditionalSaveData(@NotNull CompoundTag nbt) {
+//        super.addAdditionalSaveData(nbt);
+//        nbt.putString("Skin", getSkin());
+//    }
+
     @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag nbt) {
-        if(!nbt.contains("Skin")) {
-            this.setSkin(getRandomSkin());
-            nbt.putString("Skin", getSkin());
-        }
-        super.addAdditionalSaveData(nbt);
+    public @NotNull CompoundTag saveWithoutId(CompoundTag compound) {
+        compound.putString("Skin", getSkin());
+        return super.saveWithoutId(compound);
     }
 
     @Override
     public void load(@NotNull CompoundTag nbt) {
         super.load(nbt);
+        if (nbt.contains("Skin")) {
+            this.setSkin(nbt.getString("Skin"));
+        }
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
         super.defineSynchedData(builder);
-        CompoundTag nbt = new CompoundTag();
-        String skin = getRandomSkin();
-        builder.define(SKIN_DATA_ID,skin);
+        builder.define(SKIN_DATA_ID,this.getSkin());
+    }
+
+    public void onSyncedDataUpdated(EntityDataAccessor<?> dataAccessor) {
+        if (dataAccessor.equals(SKIN_DATA_ID)) {
+            this.setSkin(getEntityData().get(SKIN_DATA_ID));
+        }
+        super.onSyncedDataUpdated(dataAccessor);
     }
 
     public void randomize(CompoundTag nbt){
+        if (this.getSkin().equalsIgnoreCase("none"))
+            this.setSkin(getRandomSkin());
         // 设置名字（如果没有）
         if (!this.hasCustomName()) {
             this.setCustomName(Component.literal(NekoNameRegistry.getRandomName()));
@@ -164,6 +175,8 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     }
 
     public String getSkin() {
+        if (this.entityData == null)
+            return this.getRandomSkin();
         return this.entityData.get(SKIN_DATA_ID);
     }
     public void setSkin(String skin) {

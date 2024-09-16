@@ -28,7 +28,6 @@ public class NekoRenderer<T extends NekoEntity> extends GeoEntityRenderer<T> {
 
     @Override
     public void preRender(PoseStack poseStack, T animatable, BakedGeoModel model, @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
-        //System.out.println(animatable.getAge());
         if (animatable.isBaby()){
             poseStack.scale(0.5F, 0.5F, 0.5F); // 将幼年实体的尺寸缩小为原来的一半
         }
@@ -57,7 +56,6 @@ public class NekoRenderer<T extends NekoEntity> extends GeoEntityRenderer<T> {
             ResourceLocation id = ResourceLocation.fromNamespaceAndPath(
                     MODID,"geo/neko/"+animatable.getSkin()+".geo.json"
             );
-            System.out.println(animatable.getSkin());
             if (checkResource(id)){
                 return id;
             }
@@ -86,7 +84,7 @@ public class NekoRenderer<T extends NekoEntity> extends GeoEntityRenderer<T> {
         @Override
         public ResourceLocation getAnimationResource(T animatable) {
             ResourceLocation id = ResourceLocation.fromNamespaceAndPath(
-                    MODID,"animations/neko/"+animatable.getRandomSkin()+".animation.json"
+                    MODID,"animations/neko/"+animatable.getSkin()+".animation.json"
             );
             if (checkResource(id)){
                 return id;
