@@ -119,8 +119,6 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     }
 
     public void randomize(CompoundTag nbt){
-        if (this.getSkin().equalsIgnoreCase("none"))
-            this.setSkin(getRandomSkin());
         // 设置名字（如果没有）
         if (!this.hasCustomName()) {
             this.setCustomName(Component.literal(NekoNameRegistry.getRandomName()));
