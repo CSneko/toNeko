@@ -289,7 +289,11 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
             }
             // 在水里
             if (this.isInLiquid() && this.isEyeInFluid(FluidTags.WATER)){
-                return state.setAndContinue(DefaultAnimations.SWIM);
+                if (state.isMoving()) {
+                    return state.setAndContinue(DefaultAnimations.SWIM);
+                }else {
+                    return state.setAndContinue(DefaultAnimations.CRAWL);
+                }
             }
             // 没有移动
             if (!state.isMoving()){
@@ -297,6 +301,10 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
                 if (this.isSitting()) return state.setAndContinue(RawAnimation.begin().thenLoop("misc.sit"));
                 return state.setAndContinue(DefaultAnimations.IDLE);
             }else if (state.isMoving()){
+                // 如果速度较快
+                if (this.getDeltaMovement().length() > 0.2){
+                    return state.setAndContinue(DefaultAnimations.RUN);
+                }
                 return state.setAndContinue(DefaultAnimations.WALK);
             }
 
