@@ -28,12 +28,19 @@ public class ToNekoEntities {
             BuiltInRegistries.ENTITY_TYPE,
             ResourceLocation.fromNamespaceAndPath(MODID,"adventurer_neko"),
             FabricEntityType.Builder.createMob(AdventurerNeko::new, MobCategory.CREATURE, builder -> builder.defaultAttributes(AdventurerNeko::createAdventurerNekoAttributes)
-                    .spawnRestriction(SpawnPlacementTypes.ON_GROUND, Heightmap.Types.WORLD_SURFACE, AdventurerNeko::checkMobSpawnRules)).sized(0.5f,1.6f).eyeHeight(1.35f).build()
+                    .spawnRestriction(SpawnPlacementTypes.ON_GROUND, Heightmap.Types.WORLD_SURFACE, AdventurerNeko::checkMobSpawnRules)).sized(0.5f,1.7f).eyeHeight(1.6f).build()
+    );
+    public static final EntityType<CrystalNekoEntity> CRYSTAL_NEKO = Registry.register(
+            BuiltInRegistries.ENTITY_TYPE,
+            ResourceLocation.fromNamespaceAndPath(MODID,"crystal_neko"),
+            FabricEntityType.Builder.createMob(CrystalNekoEntity::new, MobCategory.CREATURE, builder -> builder.defaultAttributes(CrystalNekoEntity::createNekoAttributes))
+                    .sized(0.5f,1.7f).eyeHeight(1.6f).build()
     );
 
     public static void init() {
         // 注册皮肤
         NekoSkinRegistry.register(ADVENTURER_NEKO,AdventurerNeko.nekoSkins);
+        NekoSkinRegistry.register(CRYSTAL_NEKO,CrystalNekoEntity.SKIN);
         // 注册名字
         Set<String> names = Set.of(
                 "Luna","Mochi","Poppy","Misty","Snowy","Coco","Peaches","Bubbles","Daisy","Cherry",

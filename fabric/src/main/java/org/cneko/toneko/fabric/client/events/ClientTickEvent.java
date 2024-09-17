@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import org.cneko.toneko.common.api.TickTasks;
 import org.cneko.toneko.common.mod.client.api.ClientEntityPoseManager;
 import org.cneko.toneko.fabric.client.ToNekoKeyBindings;
 @Environment(EnvType.CLIENT)
@@ -32,6 +33,7 @@ public class ClientTickEvent {
     }
 
     public static void onTick(Minecraft client) {
+        TickTasks.executeDefaultClient();
         Player p = Minecraft.getInstance().player;
         if (p != null) {
             if (ClientEntityPoseManager.contains(p)) {

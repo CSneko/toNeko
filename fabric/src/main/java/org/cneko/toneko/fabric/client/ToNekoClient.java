@@ -23,5 +23,6 @@ public class ToNekoClient implements ClientModInitializer {
             Minecraft.getInstance().execute(NekoArmorTrinketsRenderer::init);
         }
         EntityRendererRegistry.register(ToNekoEntities.ADVENTURER_NEKO, NekoRenderer::new);
+        EntityRendererRegistry.register(ToNekoEntities.CRYSTAL_NEKO, NekoRenderer::new);
     }
 }

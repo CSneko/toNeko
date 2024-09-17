@@ -11,11 +11,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.cneko.toneko.common.mod.client.api.ClientEntityPoseManager;
 import org.cneko.toneko.common.mod.packets.VehicleStopRidePayload;
+import org.cneko.toneko.common.mod.packets.interactives.CrystalNekoInteractivePayload;
 import org.cneko.toneko.common.mod.packets.interactives.NekoEntityInteractivePayload;
+import org.cneko.toneko.fabric.client.screens.CrystalNekoInteractiveScreen;
 import org.cneko.toneko.fabric.client.screens.NekoEntityInteractiveScreen;
 import org.cneko.toneko.fabric.client.screens.QuirkScreen;
 import org.cneko.toneko.common.mod.packets.EntityPosePayload;
 import org.cneko.toneko.common.mod.packets.QuirkQueryPayload;
+import org.cneko.toneko.fabric.entities.CrystalNekoEntity;
 import org.cneko.toneko.fabric.entities.NekoEntity;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,6 +55,21 @@ public class ClientNetworkEvents {
                 }
             });
         });
+
+        ClientPlayNetworking.registerGlobalReceiver(CrystalNekoInteractivePayload.ID, (payload, context)->{
+            context.client().execute(() -> {
+                // 通过uuid寻找猫娘
+                String uuid = payload.uuid();
+                if(uuid != null && !uuid.isEmpty()) {
+                    NekoEntity neko = findNearbyNekoByUuid(UUID.fromString(uuid),NekoEntity.DEFAULT_FIND_RANGE);
+                    if(neko instanceof CrystalNekoEntity cry) {
+                        // 打开屏幕
+                        context.client().setScreen(new CrystalNekoInteractiveScreen(cry,Minecraft.getInstance().screen));
+                    }
+                }
+            });
+        });
+
 
     }
     public static void setPose(EntityPosePayload payload, ClientPlayNetworking.Context context) {

@@ -279,10 +279,14 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     public @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         // shift+右键打开互动菜单
         if (hand.equals(InteractionHand.MAIN_HAND) && player.isShiftKeyDown() && player instanceof ServerPlayer sp){
-            ServerPlayNetworking.send(sp, new NekoEntityInteractivePayload(this.getUUID().toString()));
+            openInteractiveMenu(sp);
             return InteractionResult.SUCCESS;
         }
         return super.mobInteract(player, hand);
+    }
+
+    public void openInteractiveMenu(ServerPlayer player) {
+        ServerPlayNetworking.send(player, new NekoEntityInteractivePayload(this.getUUID().toString()));
     }
 
     @Override

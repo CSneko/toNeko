@@ -34,6 +34,8 @@ public class ConfigUtil {
     public static String CHAT_FORMAT = "${prefix}§e${name} §6>> §f${msg}";
     public static String CHAT_TONE = "misc.toneko.nya";
     public static boolean STATS = true;
+    // TODO: 2023/9/26 暂时为true方便测试
+    public static boolean IS_BRITH_DAY = true;
     public static Config INSTANCE;
 
     public static void load(){
