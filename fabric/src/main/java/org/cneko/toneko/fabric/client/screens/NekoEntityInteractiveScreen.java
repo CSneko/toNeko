@@ -24,7 +24,7 @@ public class NekoEntityInteractiveScreen extends InteractionScreen implements IN
     private final @NotNull NekoEntity neko;
     public NekoEntityInteractiveScreen(@NotNull NekoEntity neko, @Nullable Screen lastScreen) {
         // 调用父类构造函数
-        super(Component.empty(), lastScreen, ()-> {
+        super(Component.empty(), lastScreen, (screen)-> {
             // 在父类构造函数调用后执行
             return getButtonBuilders(neko);
         });

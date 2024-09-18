@@ -21,9 +21,9 @@ import java.util.Map;
 public class CrystalNekoInteractiveScreen extends InteractionScreen implements INekoScreen{
     public CrystalNekoEntity neko;
     public CrystalNekoInteractiveScreen(@NotNull CrystalNekoEntity neko, @Nullable Screen lastScreen) {
-        super(Component.empty(), lastScreen, ()-> {
+        super(Component.empty(), lastScreen, (screen)-> {
             // 在父类构造函数调用后执行
-            return getButtonBuilders(neko);
+            return getButtonBuilders(screen,neko);
         });
         this.neko = neko;
     }
@@ -33,7 +33,7 @@ public class CrystalNekoInteractiveScreen extends InteractionScreen implements I
         return neko;
     }
 
-    public static Map<String, Button.Builder> getButtonBuilders(CrystalNekoEntity neko) {
+    public static Map<String, Button.Builder> getButtonBuilders(Screen screen,CrystalNekoEntity neko) {
         Map<String,Button.Builder> builders = new LinkedHashMap<>();
         builders.put("screen.toneko.crystal_neko_interactive.button.who",Button.builder(Component.translatable("screen.toneko.crystal_neko_interactive.button.who"),(btn)->{
             Player player = Minecraft.getInstance().player;
@@ -68,6 +68,31 @@ public class CrystalNekoInteractiveScreen extends InteractionScreen implements I
             messageQueue.addTask(660, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.about_mod.15")));
             messageQueue.addTask(705, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.about_mod.16")));
             TickTasks.addClient(messageQueue);
+        }));
+        builders.put("screen.toneko.crystal_neko_interactive.button.plans",Button.builder(Component.translatable("screen.toneko.crystal_neko_interactive.button.plans"),(btn)->{
+            Player player = Minecraft.getInstance().player;
+            TickTaskQueue messageQueue = new TickTaskQueue();
+            messageQueue.addTask(20, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.0")));
+            messageQueue.addTask(90, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.1")));
+            messageQueue.addTask(140, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.2")));
+            messageQueue.addTask(190, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.3")));
+            messageQueue.addTask(230, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.4")));
+            messageQueue.addTask(260, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.5")));
+            messageQueue.addTask(300, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.6")));
+            messageQueue.addTask(345, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.7")));
+            messageQueue.addTask(380, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.8")));
+            messageQueue.addTask(425, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.9")));
+            messageQueue.addTask(455, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.10")));
+            messageQueue.addTask(490, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.11")));
+            messageQueue.addTask(535, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.12")));
+            messageQueue.addTask(585, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.13")));
+            messageQueue.addTask(625, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.14")));
+            messageQueue.addTask(660, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.15")));
+            messageQueue.addTask(705, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.16")));
+            TickTasks.addClient(messageQueue);
+        }));
+        builders.put("screen.toneko.crystal_neko_interactive.button.links",Button.builder(Component.translatable("screen.toneko.crystal_neko_interactive.button.links"),(btn)->{
+            Minecraft.getInstance().setScreen(new LinksScreen(screen,neko));
         }));
         return builders;
     }

@@ -22,7 +22,7 @@ public class InteractionScreen extends Screen {
 
     public void init() {
         super.init();
-        Map<String,Button.Builder> builders = this.buttonBuilders.getBuilders();
+        Map<String,Button.Builder> builders = this.buttonBuilders.getBuilders(this);
         // 仅在屏幕x轴70%外的屏幕中绘制
         int x = (int) (this.width * 0.7);
         int y = (int) (this.height * 0.1);
@@ -68,7 +68,7 @@ public class InteractionScreen extends Screen {
 
     @FunctionalInterface
     public interface ButtonBuilders {
-        Map<String,Button.Builder> getBuilders();
+        Map<String,Button.Builder> getBuilders(Screen screen);
     }
 
 }

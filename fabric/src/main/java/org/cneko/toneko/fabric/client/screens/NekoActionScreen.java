@@ -23,7 +23,7 @@ public class NekoActionScreen extends InteractionScreen implements INekoScreen{
     private final NekoEntity neko;
 
     public NekoActionScreen(@NotNull NekoEntity neko, @Nullable Screen lastScreen) {
-        super(Component.empty(), lastScreen, () -> getButtonBuilders(neko));
+        super(Component.empty(), lastScreen, (screen) -> getButtonBuilders(neko));
         this.neko = neko;
     }
 
