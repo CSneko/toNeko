@@ -137,7 +137,7 @@ public class CrystalNekoInteractiveScreen extends InteractionScreen implements I
         private final CrystalNekoEntity neko;
 
         public MoreInteractiveScreen(CrystalNekoEntity neko,@Nullable Screen lastScreen) {
-            super(Component.empty(), lastScreen, (screen -> CrystalNekoInteractiveScreen.getButtonBuilders(screen, neko)));
+            super(Component.empty(), lastScreen, (screen -> getButtonBuilders(screen, neko)));
             this.neko = neko;
         }
 
