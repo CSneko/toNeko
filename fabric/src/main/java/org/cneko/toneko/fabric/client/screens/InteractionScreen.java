@@ -68,7 +68,7 @@ public class InteractionScreen extends Screen {
 
     @FunctionalInterface
     public interface ButtonBuilders {
-        Map<String,Button.Builder> getBuilders(Screen screen);
+        Map<String,Button.Builder> getBuilders(InteractionScreen screen);
     }
 
 }

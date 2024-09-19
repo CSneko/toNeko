@@ -22,13 +22,20 @@ import java.util.*;
 
 public class NekoEntityInteractiveScreen extends InteractionScreen implements INekoScreen{
     private final @NotNull NekoEntity neko;
-    public NekoEntityInteractiveScreen(@NotNull NekoEntity neko, @Nullable Screen lastScreen) {
+    public NekoEntityInteractiveScreen(@NotNull NekoEntity neko, @Nullable Screen lastScreen,@Nullable ButtonBuilders builders) {
         // 调用父类构造函数
-        super(Component.empty(), lastScreen, (screen)-> {
-            // 在父类构造函数调用后执行
-            return getButtonBuilders(neko);
-        });
+        super(Component.empty(), lastScreen, getBuilders(neko, builders));
+
         this.neko = neko;
+    }
+    public NekoEntityInteractiveScreen(@NotNull NekoEntity neko, @Nullable Screen lastScreen){
+        this(neko,lastScreen,null);
+    }
+    private static ButtonBuilders getBuilders(NekoEntity neko, @Nullable ButtonBuilders builders) {
+        if (builders == null) {
+            return screen -> getButtonBuilders(neko);
+        }
+        return builders;
     }
 
     @Override
