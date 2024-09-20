@@ -4,11 +4,13 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.packets.interactives.CrystalNekoInteractivePayload;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class CrystalNekoEntity extends NekoEntity{
@@ -50,4 +52,5 @@ public class CrystalNekoEntity extends NekoEntity{
             player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.nya_tried."+ r));
         }
     }
+
 }

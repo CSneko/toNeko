@@ -151,6 +151,8 @@ public class CrystalNekoInteractiveScreen extends InteractionScreen implements I
             builders.put("screen.toneko.crystal_neko_more_interactive.button.nya",Button.builder(Component.translatable("screen.toneko.crystal_neko_more_interactive.button.nya"),(btn)->{
                 neko.nya(Minecraft.getInstance().player);
             }));
+
+
             return builders;
         }
     }

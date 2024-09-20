@@ -22,6 +22,7 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -349,6 +350,27 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
 
     public boolean canMove() {
         return this.getPose() != Pose.SWIMMING && !this.isSitting() || this.isInLiquid();
+    }
+
+    @Override
+    public boolean hurt(@NotNull DamageSource source, float amount) {
+        boolean result = super.hurt(source, amount);
+        if (!result) return false;
+        if (source.getEntity() instanceof Player player){
+            hurtByPlayer(player);
+        }
+        return true;
+    }
+
+    public void hurtByPlayer(Player player){
+        sendHurtMessageToPlayer(player);
+    }
+
+    public void sendHurtMessageToPlayer(Player player){
+        if (player instanceof ServerPlayer) {
+            int r = random.nextInt(6);
+            player.sendSystemMessage(Component.translatable("message.toneko.neko.on_hurt."+r, this.getName()));
+        }
     }
 
     @Override
