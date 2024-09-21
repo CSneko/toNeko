@@ -33,6 +33,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.Vec3;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.mod.api.NekoNameRegistry;
@@ -387,6 +388,12 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     public boolean isPlayer() {
         return false;
     }
+
+    @Override
+    public boolean checkSpawnRules(LevelAccessor level, MobSpawnType reason) {
+        return true;
+    }
+
     public ResourceLocation getTagKeyLocation(String type){
         ResourceLocation r = BuiltInRegistries.ENTITY_TYPE.getKey(this.getType());
         return r.withPath("neko/"+r.getPath()+"/"+type);

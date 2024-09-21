@@ -35,7 +35,7 @@ public class ToNekoEntities {
             BuiltInRegistries.ENTITY_TYPE,
             ResourceLocation.fromNamespaceAndPath(MODID,"crystal_neko"),
             FabricEntityType.Builder.createMob(CrystalNekoEntity::new, MobCategory.CREATURE, builder -> builder.defaultAttributes(CrystalNekoEntity::createNekoAttributes))
-                    .sized(0.5f,1.7f).eyeHeight(1.6f).build()
+                    .sized(0.5f,1.7f).eyeHeight(1.6f).canSpawnFarFromPlayer().passengerAttachments(0.5125F).clientTrackingRange(8).build()
     );
 
     public static void init() {
@@ -54,7 +54,8 @@ public class ToNekoEntities {
         BiomeModifications.addSpawn(BiomeSelectors.tag(IS_MOUNTAIN), MobCategory.CREATURE, ADVENTURER_NEKO, 5, 1, 1); // 在主世界的高山会生成一只
 
         if (ConfigUtil.IS_BIRTHDAY){
-            BiomeModifications.addSpawn(BiomeSelectors.all(), MobCategory.CREATURE, CRYSTAL_NEKO, 5, 1, 1); // 在所有世界生成一只
+            BiomeModifications.addSpawn(BiomeSelectors.all(), MobCategory.CREATURE, CRYSTAL_NEKO, 5, 1, 4); // 在所有世界生成一只
+            SpawnPlacements.register(CRYSTAL_NEKO, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, CrystalNekoEntity::checkMobSpawnRules);
         }
     }
 
