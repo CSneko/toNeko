@@ -16,6 +16,7 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.Heightmap;
 import org.cneko.toneko.common.mod.api.NekoNameRegistry;
 import org.cneko.toneko.common.mod.api.NekoSkinRegistry;
+import org.cneko.toneko.common.util.ConfigUtil;
 
 import java.util.Set;
 
@@ -51,6 +52,10 @@ public class ToNekoEntities {
 
         // 设置生成条件
         BiomeModifications.addSpawn(BiomeSelectors.tag(IS_MOUNTAIN), MobCategory.CREATURE, ADVENTURER_NEKO, 5, 1, 1); // 在主世界的高山会生成一只
+
+        if (ConfigUtil.IS_BIRTHDAY){
+            BiomeModifications.addSpawn(BiomeSelectors.all(), MobCategory.CREATURE, CRYSTAL_NEKO, 5, 1, 1); // 在所有世界生成一只
+        }
     }
 
 }

@@ -5,6 +5,7 @@ import org.cneko.ctlib.common.file.YamlConfiguration;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
 
 import static org.cneko.toneko.common.Bootstrap.LOGGER;
 import static org.cneko.toneko.common.util.LanguageUtil.language;
@@ -34,8 +35,9 @@ public class ConfigUtil {
     public static String CHAT_FORMAT = "${prefix}§e${name} §6>> §f${msg}";
     public static String CHAT_TONE = "misc.toneko.nya";
     public static boolean STATS = true;
-    // TODO: 2023/9/26 暂时为true方便测试
-    public static boolean IS_BRITH_DAY = true;
+    public static boolean IS_BIRTHDAY = false;
+    private static final int BIRTHDAY_MONTH = 9;
+    private static final int BIRTHDAY_DAY = 26;
     public static Config INSTANCE;
 
     public static void load(){
@@ -47,6 +49,10 @@ public class ConfigUtil {
         CHAT_FORMAT = CONFIG.getString("chat.format");
         CHAT_TONE = CONFIG.getString("chat.tone");
         STATS = CONFIG.getBoolean("stats",true);
+        LocalDate today = LocalDate.now();
+        if (today.getMonthValue() == BIRTHDAY_MONTH && today.getDayOfMonth() == BIRTHDAY_DAY) {
+            IS_BIRTHDAY = true;
+        }
     }
 
     // 预加载
@@ -60,7 +66,7 @@ public class ConfigUtil {
         }
     }
 
-    public static interface Config {
+    public interface Config {
         void load();
     }
 }
