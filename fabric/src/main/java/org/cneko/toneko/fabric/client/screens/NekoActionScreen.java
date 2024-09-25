@@ -38,7 +38,7 @@ public class NekoActionScreen extends InteractionScreen implements INekoScreen{
         builders.put("screen.toneko.neko_entity_interactive.button.ride",Button.builder(Component.translatable("screen.toneko.neko_entity_interactive.button.ride"),(btn)->{
             // 让猫娘骑在最近的实体身上
             LivingEntity entity = EntityUtil.findNearestEntityInRange(neko, Minecraft.getInstance().player.level(),NekoEntity.DEFAULT_RIDE_RANGE);
-            if (entity != null){
+            if (entity != null && entity != neko){
                 if (neko.isSitting()){
                     neko.stopRiding();
                 }else {

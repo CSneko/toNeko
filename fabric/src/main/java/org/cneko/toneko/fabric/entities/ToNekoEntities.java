@@ -47,7 +47,6 @@ public class ToNekoEntities {
     public static void init() {
         // 注册皮肤
         NekoSkinRegistry.register(ADVENTURER_NEKO,AdventurerNeko.nekoSkins);
-        NekoSkinRegistry.register(CRYSTAL_NEKO,CrystalNekoEntity.SKIN);
         // 注册名字
         Set<String> names = Set.of(
                 "Luna","Mochi","Poppy","Misty","Snowy","Coco","Peaches","Bubbles","Daisy","Cherry",
