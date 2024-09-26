@@ -44,6 +44,11 @@ public class Bootstrap {
             "Frankownicka","Ydonaa","croissant_cat","bugfishh","M_HUA","Hentay_");
 
     public static void bootstrap() {
+        /*
+         * 生日快乐，toNeko
+         *    --- CrystalNeko 2024/09/26
+         */
+
         // 创建必要的文件夹
         FileUtil.CreatePath(DATA_PATH);
         FileUtil.CreatePath(PLAYER_DATA_PATH);
