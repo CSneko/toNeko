@@ -2,12 +2,10 @@ package org.cneko.toneko.fabric.entities;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.ChatFormatting;
-import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.TagTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
@@ -17,7 +15,6 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.stats.Stats;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
@@ -27,7 +24,6 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
-import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -56,7 +52,6 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.HashSet;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 
 import static org.cneko.toneko.common.mod.util.TextUtil.randomTranslatabledComponent;
@@ -236,7 +231,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         }
     }
     public boolean canMate(INeko other){
-        return other.getNeko().isNeko();
+        return other.getNeko().isNeko() || other.allowMateIfNotNeko();
     }
 
     public void breed(ServerLevel level, INeko mate) {

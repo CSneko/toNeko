@@ -19,7 +19,7 @@ public class ToNekoClient implements ClientModInitializer {
         ClientTickEvent.init();
         ClientPlayerJoinEvent.init();
         // 注册trinkets渲染器
-        if (ToNekoItems.isTrinketsInstalled && ToNekoItems.isGeckolibInstalled){
+        if (ToNekoItems.isTrinketsInstalled){
             Minecraft.getInstance().execute(NekoArmorTrinketsRenderer::init);
         }
         EntityRendererRegistry.register(ToNekoEntities.ADVENTURER_NEKO, NekoRenderer::new);

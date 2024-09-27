@@ -6,6 +6,7 @@
   "client": [
   ],
   "mixins": [
+    "CatEntityMixin",
     "EntityMixin",
     "PlayerEntityMixin"
   ],

@@ -4,7 +4,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.entity.player.Player;
 import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.fabric.entities.NekoEntity;
 
