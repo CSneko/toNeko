@@ -6,7 +6,7 @@
 Meow meow meow~
 ### Download:
 [Plugin version](https://modrinth.com/plugin/toneko/)
-[Module version](https://modrinth.com/mod/tonekomod/)
+[Mod version](https://modrinth.com/mod/tonekomod/)
 ## How to use
 You only need to put it in the `plugins` or `mods` folder of the server/client.
 
