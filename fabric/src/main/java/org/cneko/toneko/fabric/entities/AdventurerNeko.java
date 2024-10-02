@@ -18,7 +18,7 @@ import java.util.Set;
 public class AdventurerNeko extends NekoEntity{
     public static final List<String> nekoSkins = new ArrayList<>();
     static {
-        nekoSkins.addAll(List.of("grmmy","AQuarter"));
+        nekoSkins.addAll(List.of("grmmy","aquarter"));
     }
     public AdventurerNeko(EntityType<? extends NekoEntity> entityType, Level level) {
         super(entityType, level);
