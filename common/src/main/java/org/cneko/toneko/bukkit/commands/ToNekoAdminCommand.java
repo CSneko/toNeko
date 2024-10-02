@@ -37,7 +37,7 @@ public class ToNekoAdminCommand implements CommandExecutor {
         // 获取玩家(如果可以的话)
         Player nekoPlayer = Bukkit.getPlayer(nekoName);
         if (nekoPlayer == null){
-            sender.sendMessage("command.toneko.not_found");
+            sender.sendMessage(get("command.toneko.not_found"));
             return true;
         }
         NekoQuery.Neko neko = NekoQuery.getNeko(nekoPlayer.getUniqueId());
@@ -61,7 +61,7 @@ public class ToNekoAdminCommand implements CommandExecutor {
     }
 
     public boolean helpCommand(CmdContext ctx) {
-        ctx.getSender().sendMessage("command.tonekoadmin.help");
+        ctx.getSender().sendMessage(get("command.tonekoadmin.help"));
         return true;
     }
 }

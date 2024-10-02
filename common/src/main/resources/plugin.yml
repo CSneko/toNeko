@@ -1,38 +1,21 @@
 name: toNeko
-version: '${version}'
-main: com.crystalneko.toneko.ToNeko
-api-version: '1.16'
+version: '1.3.6'
+main: org.cneko.toneko.bukkit.ToNeko
+api-version: '1.21'
 author: CrystalNeko
-softdepend: [ctLib]
+depends: [ctLib]
 folia-supported: true
 commands:
   toneko:
     usage: /toneko help
-    aliases: [cnk,tocat]
     description: toneko命令
   neko:
     usage: /neko help
-    aliases: [cat]
     description: 猫娘命令
-  aineko:
-    usage: /aineko help
-    description: AI猫娘命令
 permissions:
-  toneko.command.player:
+  command.toneko.help:
     default: true
-  toneko.command.item:
+  command.toneko.player:
     default: true
-  toneko.command.remove:
+  command.toneko.remove:
     default: true
-  toneko.command.xp:
-    default: true
-  toneko.command.aliases:
-    default: true
-  toneko.command.reload:
-    default: op
-  neko.command.jump:
-    default: true
-    description: 跳跃提升
-  neko.command.vision:
-    default: true
-    description: 夜视
