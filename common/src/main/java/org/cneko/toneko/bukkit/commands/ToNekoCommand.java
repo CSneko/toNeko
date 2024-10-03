@@ -1,9 +1,11 @@
 package org.cneko.toneko.bukkit.commands;
 
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
+import io.papermc.paper.command.brigadier.argument.resolvers.selector.PlayerSelectorArgumentResolver;
 import io.papermc.paper.plugin.lifecycle.event.LifecycleEventManager;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.kyori.adventure.text.Component;
@@ -30,10 +32,11 @@ public class ToNekoCommand {
                                     .requires(s -> check(s, Permissions.COMMAND_TONEKO_HELP))
                                     .executes(ToNekoCommand::helpCommand)
                             )
-                            .then(Commands.literal("player"))
-                            .then(Commands.argument("player", ArgumentTypes.player())
-                                    .requires(s -> check(s, Permissions.COMMAND_TONEKO_PLAYER))
-                                    .executes(ToNekoCommand::playerCommand)
+                            .then(Commands.literal("player")
+                                    .then(Commands.argument("player", ArgumentTypes.player())
+                                            .requires(s -> check(s, Permissions.COMMAND_TONEKO_PLAYER))
+                                            .executes(ToNekoCommand::playerCommand)
+                                    )
                             )
                     .build()
             );
@@ -41,17 +44,23 @@ public class ToNekoCommand {
     }
 
     public static int playerCommand(CommandContext<CommandSourceStack> context) {
-        NekoQuery.Neko neko = NekoQuery.getNeko(context.getArgument("player", Player.class).getUniqueId());
+        Player nekoPlayer = null;
+        try {
+            nekoPlayer = context.getArgument("player", PlayerSelectorArgumentResolver.class).resolve(context.getSource()).getFirst();
+        } catch (CommandSyntaxException e) {
+            throw new RuntimeException(e);
+        }
+        NekoQuery.Neko neko = NekoQuery.getNeko(nekoPlayer.getUniqueId());
         Player player = (Player) context.getSource().getSender();
         if (neko.isNeko()){
             if (neko.hasOwner(player.getUniqueId())){
-                sendTransTo(player,"command.toneko.player.alreadyOwner",neko.getNickName());
+                sendTransTo(player,"command.toneko.player.alreadyOwner",nekoPlayer.getName());
             }else {
                 neko.addOwner(player.getUniqueId());
-                sendTransTo(player,"command.toneko.player.success", neko.getNickName());
+                sendTransTo(player,"command.toneko.player.success", nekoPlayer.getName());
             }
         }else {
-            sendTransTo(player,"command.toneko.player.notNeko", neko.getNickName());
+            sendTransTo(player,"command.toneko.player.notNeko", nekoPlayer.getName());
         }
         return 1;
     }

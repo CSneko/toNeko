@@ -9,9 +9,9 @@ commands:
   toneko:
     usage: /toneko help
     description: toneko命令
-  neko:
-    usage: /neko help
-    description: 猫娘命令
+  tonekoadmin:
+    usage: /tonekoadmin help
+    description: toNeko管理员命令
 permissions:
   command.toneko.help:
     default: true

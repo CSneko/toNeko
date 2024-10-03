@@ -2,12 +2,17 @@ package org.cneko.toneko.common.util;
 
 import org.cneko.ctlib.common.util.ChatPrefix;
 
+import java.util.List;
 import java.util.Random;
 
 
 public class Messaging {
 
     public static String format(String msg, String player, String nickname){
+        return format(msg,player,nickname,ChatPrefix.getPrivatePrefix(player) + ChatPrefix.getAllPublicPrefixValues());
+    }
+
+    public static String format(String msg, String player, String nickname, String prefix){
         // 修改昵称
         if(nickname.isEmpty()){
             nickname = player;
@@ -16,7 +21,6 @@ public class Messaging {
         }
         // 从config读取格式
         String format = ConfigUtil.CHAT_FORMAT;
-        String prefix = ChatPrefix.getPrivatePrefix(player) + ChatPrefix.getAllPublicPrefixValues();
         return format.
                 replace("${prefix}",prefix).
                 replace("${msg}",msg).

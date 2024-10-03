@@ -8,6 +8,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.cneko.ctlib.common.util.ChatPrefix;
 import org.cneko.toneko.bukkit.ToNeko;
+import org.cneko.toneko.bukkit.api.NekoStatus;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.util.LanguageUtil;
 
@@ -24,7 +25,7 @@ public class PlayerConnectionEvents implements Listener {
             // 修复quirks
             neko.fixQuirks();
             String name = player.getName();
-            ChatPrefix.addPrivatePrefix(name, LanguageUtil.prefix);
+            NekoStatus.addPrefix(player);
         }
     }
 
@@ -34,7 +35,7 @@ public class PlayerConnectionEvents implements Listener {
         NekoQuery.Neko neko = NekoQuery.getNeko(player.getUniqueId());
         if(neko.isNeko()){
             String name = player.getName();
-            ChatPrefix.removePrivatePrefix(name, LanguageUtil.prefix);
+            NekoStatus.removePrefix(player);
         }
         // 保存猫娘数据
         neko.save();

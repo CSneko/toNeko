@@ -7,7 +7,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.cneko.ctlib.common.file.JsonConfiguration;
+import org.cneko.ctlib.common.util.ChatPrefix;
+import org.cneko.toneko.bukkit.api.NekoStatus;
+import org.cneko.toneko.common.Stats;
 import org.cneko.toneko.common.api.NekoQuery;
+import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.common.util.LanguageUtil;
 import org.cneko.toneko.common.util.Messaging;
 
@@ -25,9 +29,34 @@ public class ChatEvent implements Listener {
     @EventHandler
     public void onChat(AsyncChatEvent event) {
         event.setCancelled(true);
+        Player player = event.getPlayer();
+        NekoQuery.Neko neko = NekoQuery.getNeko(player.getUniqueId());
         String message = event.signedMessage().message();
-        message = modify(message, NekoQuery.getNeko(event.getPlayer().getUniqueId()));
+        // 获取昵称
+        String nickname = neko.getNickName();
+        message = modify(message, neko);
+        // 获取前缀
+        List<String> prefix = NekoStatus.getPlayerPrefixes(player);
+        String p = formatPrefixes(prefix);
+        // 格式化消息
+        message = Messaging.format(message,player.getName(),nickname,p);
         sendMessage(message);
+        // 消息中喵的数量
+        int count = Stats.getMeow(message);
+        // 根据喵的数量增加经验
+        neko.addLevel((double) count / 1000.00);
+        if(ConfigUtil.STATS) Stats.meowInChat(player.getName(),count);
+    }
+
+    public static String formatPrefixes(List<String> prefixes) {
+        StringBuilder formatted = new StringBuilder();
+
+        for (String prefix : prefixes) {
+            // 将每个前缀格式化为 [§a前缀§f§r]
+            formatted.append("[§a").append(prefix).append("§f§r]");
+        }
+
+        return formatted.toString();
     }
 
     public static void sendMessage(String message){

@@ -9,4 +9,12 @@ public class Language {
     public static String get(String key, Object... args) {
         return LanguageUtil.translatable(key, args);
     }
+
+    public class LanguageImpl implements LanguageUtil.Language{
+
+        @Override
+        public void load() {
+
+        }
+    }
 }
