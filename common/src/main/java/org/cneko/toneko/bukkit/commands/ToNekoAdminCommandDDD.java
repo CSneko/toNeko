@@ -6,7 +6,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.cneko.toneko.bukkit.commands.util.CmdContext;
-import org.cneko.toneko.bukkit.util.Language;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.api.Permissions;
 import org.cneko.toneko.common.util.ConfigUtil;
@@ -15,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static org.cneko.toneko.bukkit.util.Language.get;
 
-public class ToNekoAdminCommand implements CommandExecutor {
+public class ToNekoAdminCommandDDD implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         CmdContext ctx = new CmdContext(sender,args);

@@ -5,7 +5,6 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.cneko.ctlib.common.file.JsonConfiguration;
 import org.cneko.toneko.common.api.NekoQuery;
@@ -15,12 +14,12 @@ import org.cneko.toneko.common.util.Messaging;
 import java.util.List;
 import java.util.UUID;
 
-import static org.cneko.toneko.bukkit.ToNeko.pluginInstance;
+import static org.cneko.toneko.bukkit.ToNeko.INSTANCE;
 import static org.cneko.toneko.common.util.LanguageUtil.translatable;
 
 public class ChatEvent implements Listener {
     public static void init(){
-        Bukkit.getServer().getPluginManager().registerEvents(new ChatEvent(), pluginInstance);
+        Bukkit.getServer().getPluginManager().registerEvents(new ChatEvent(), INSTANCE);
     }
 
     @EventHandler

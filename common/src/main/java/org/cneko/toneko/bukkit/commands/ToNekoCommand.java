@@ -1,76 +1,63 @@
 package org.cneko.toneko.bukkit.commands;
 
-import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
+import com.mojang.brigadier.context.CommandContext;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.command.brigadier.Commands;
+import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
+import io.papermc.paper.plugin.lifecycle.event.LifecycleEventManager;
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
-import org.cneko.toneko.bukkit.commands.util.CmdContext;
+import org.bukkit.plugin.Plugin;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.api.Permissions;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.UUID;
+import static org.cneko.toneko.bukkit.ToNeko.INSTANCE;
+import static org.cneko.toneko.bukkit.util.MsgUtil.sendTransTo;
+import static org.cneko.toneko.bukkit.util.PermissionChecker.check;
 
-import static org.cneko.toneko.bukkit.commands.util.CmdUtils.*;
-import static org.cneko.toneko.bukkit.util.Language.get;
+@SuppressWarnings("UnstableApiUsage")
+public class ToNekoCommand {
+    public static void init(){
+        LifecycleEventManager<@org.jetbrains.annotations.NotNull Plugin> manager = INSTANCE.getLifecycleManager();
+        manager.registerEventHandler(LifecycleEvents.COMMANDS,event -> {
+            final Commands commands = event.registrar();
+            commands.register(
+                    Commands.literal("toneko")
+                    .requires(s -> check(s, Permissions.COMMAND_TONEKO_HELP))
+                    .executes(ToNekoCommand::helpCommand)
+                            .then(Commands.literal("help")
+                                    .requires(s -> check(s, Permissions.COMMAND_TONEKO_HELP))
+                                    .executes(ToNekoCommand::helpCommand)
+                            )
+                            .then(Commands.literal("player"))
+                            .then(Commands.argument("player", ArgumentTypes.player())
+                                    .requires(s -> check(s, Permissions.COMMAND_TONEKO_PLAYER))
+                                    .executes(ToNekoCommand::playerCommand)
+                            )
+                    .build()
+            );
+        });
+    }
 
-public class ToNekoCommand implements CommandExecutor {
-
-    @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        CmdContext ctx = new CmdContext(sender,args);
-        // 不允许命令执行者不是玩家
-        if (!ctx.isPlayer()) return notPlayer(ctx);
-        // ------------------------------------ help ----------------------------------
-        if (ctx.first("help", Permissions.COMMAND_TONEKO_HELP)){
-            return helpCommand(ctx);
-        }
-        // ----------------------------------- player ----------------------------------
-        if (ctx.first("player", Permissions.COMMAND_TONEKO_PLAYER)){
-            if (ctx.aSecond("neko")){
-                return playerCommand(ctx);
+    public static int playerCommand(CommandContext<CommandSourceStack> context) {
+        NekoQuery.Neko neko = NekoQuery.getNeko(context.getArgument("player", Player.class).getUniqueId());
+        Player player = (Player) context.getSource().getSender();
+        if (neko.isNeko()){
+            if (neko.hasOwner(player.getUniqueId())){
+                sendTransTo(player,"command.toneko.player.alreadyOwner",neko.getNickName());
+            }else {
+                neko.addOwner(player.getUniqueId());
+                sendTransTo(player,"command.toneko.player.success", neko.getNickName());
             }
+        }else {
+            sendTransTo(player,"command.toneko.player.notNeko", neko.getNickName());
         }
-        // ----------------------------------- remove -----------------------------------
-        if (ctx.first("remove", Permissions.COMMAND_TONEKO_REMOVE)){
-            if (ctx.aSecond("neko")){
-                return removeCommand(ctx);
-            }
-        }
-        return true;
+        return 1;
     }
 
-    public boolean removeCommand(CmdContext ctx) {
-        UUID player = ctx.getPlayer().getUniqueId();
-        String nekoName = ctx.getArgument("neko");
-        Player nekoPlayer = Bukkit.getPlayer(nekoName);
-        if (nekoPlayer == null) return playerNotFound(ctx);
-        NekoQuery.Neko neko = NekoQuery.getNeko(nekoPlayer.getUniqueId());
-        if (!neko.hasOwner(player)) return playerNotNekoOwner(ctx);
-        neko.removeOwner(player);
-        neko.save();
-        ctx.getSender().sendMessage(get("command.toneko.remove.success",nekoName));
-        return true;
-    }
-
-    public static boolean playerCommand(CmdContext ctx) {
-        UUID player = ctx.getPlayer().getUniqueId();
-        String nekoName = ctx.getArgument("neko");
-        Player nekoPlayer = Bukkit.getPlayer(nekoName);
-        if (nekoPlayer == null) return playerNotFound(ctx);
-        NekoQuery.Neko neko = NekoQuery.getNeko(nekoPlayer.getUniqueId());
-        if (!neko.isNeko()) return playerNotNeko(ctx);
-        if (neko.hasOwner(player)) return playerAlreadyNekoOwner(ctx);
-        neko.addOwner(player);
-        neko.save();
-        ctx.getSender().sendMessage(get("command.toneko.player.success",nekoName));
-        return true;
-    }
-
-
-    public static boolean helpCommand(CmdContext ctx){
-        ctx.getSender().sendMessage(get("command.toneko.help"));
-        return true;
+    public static int helpCommand(CommandContext<CommandSourceStack> context) {
+        sendTransTo((Player) context.getSource().getSender(), "command.toneko.help");
+        return 1;
     }
 }

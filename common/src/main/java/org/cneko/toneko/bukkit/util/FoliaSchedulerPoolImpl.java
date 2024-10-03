@@ -13,14 +13,14 @@ public class FoliaSchedulerPoolImpl implements ISchedulerPool {
     @Override
     public ScheduledTask scheduleAsync(@NotNull Runnable task, long delayedTicks) {
         final ScheduledTask wrapped = new ScheduledTask(task,this);
-        wrapped.setTaskMarker(Bukkit.getAsyncScheduler().runDelayed(ToNeko.pluginInstance, ignored -> wrapped.run(),delayedTicks * 50, TimeUnit.MILLISECONDS));
+        wrapped.setTaskMarker(Bukkit.getAsyncScheduler().runDelayed(ToNeko.INSTANCE, ignored -> wrapped.run(),delayedTicks * 50, TimeUnit.MILLISECONDS));
         return wrapped;
     }
 
     @Override
     public ScheduledTask executeAsync(@NotNull Runnable task) {
         final ScheduledTask wrapped = new ScheduledTask(task,this);
-        wrapped.setTaskMarker(Bukkit.getAsyncScheduler().runNow(ToNeko.pluginInstance,ignored -> wrapped.run()));
+        wrapped.setTaskMarker(Bukkit.getAsyncScheduler().runNow(ToNeko.INSTANCE, ignored -> wrapped.run()));
         return wrapped;
     }
 
@@ -29,11 +29,11 @@ public class FoliaSchedulerPoolImpl implements ISchedulerPool {
         final ScheduledTask wrapped = new ScheduledTask(task,this);
 
         if (level == null){
-            wrapped.setTaskMarker(Bukkit.getGlobalRegionScheduler().runDelayed(ToNeko.pluginInstance,ignored -> wrapped.run(),delayedTicks));
+            wrapped.setTaskMarker(Bukkit.getGlobalRegionScheduler().runDelayed(ToNeko.INSTANCE, ignored -> wrapped.run(),delayedTicks));
             return wrapped;
         }
 
-        wrapped.setTaskMarker(Bukkit.getRegionScheduler().runDelayed(ToNeko.pluginInstance, ((World) level),chunkX,chunkZ,ignored -> wrapped.run(),delayedTicks));
+        wrapped.setTaskMarker(Bukkit.getRegionScheduler().runDelayed(ToNeko.INSTANCE, ((World) level),chunkX,chunkZ, ignored -> wrapped.run(),delayedTicks));
         return wrapped;
     }
 

@@ -36,7 +36,7 @@ public class LanguageUtil {
         return String.format(translatable(key), args);
     }
 
-    public static interface Language {
+    public interface Language {
         void load();
         default String translatable(String key){
             if(LANG.contains(key)){
