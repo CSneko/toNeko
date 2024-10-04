@@ -1,6 +1,7 @@
 package org.cneko.toneko.bukkit;
 
 import org.bukkit.plugin.java.JavaPlugin;
+import org.cneko.toneko.bukkit.commands.NekoCommand;
 import org.cneko.toneko.bukkit.commands.ToNekoAdminCommand;
 import org.cneko.toneko.bukkit.commands.ToNekoCommand;
 import org.cneko.toneko.bukkit.events.ChatEvent;
@@ -12,6 +13,8 @@ import org.cneko.toneko.common.mod.impl.FabricLanguageImpl;
 import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.common.util.FileUtil;
 import org.cneko.toneko.common.util.LanguageUtil;
+
+import static org.cneko.toneko.common.Bootstrap.MODID;
 
 public class ToNeko extends JavaPlugin {
     public static JavaPlugin INSTANCE;
@@ -25,6 +28,7 @@ public class ToNeko extends JavaPlugin {
         Bootstrap.bootstrap();
         ToNekoCommand.init();
         ToNekoAdminCommand.init();
+        NekoCommand.init();
         ChatEvent.init();
         PlayerConnectionEvents.init();
         WorldEvents.init();

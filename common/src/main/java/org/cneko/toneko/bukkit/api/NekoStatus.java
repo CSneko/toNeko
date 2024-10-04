@@ -1,8 +1,6 @@
 package org.cneko.toneko.bukkit.api;
 
-import net.kyori.adventure.audience.ForwardingAudience;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;

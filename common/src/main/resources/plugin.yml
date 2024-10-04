@@ -1,5 +1,5 @@
 name: toNeko
-version: '1.3.6'
+version: '1.3.7'
 main: org.cneko.toneko.bukkit.ToNeko
 api-version: '1.21'
 author: CrystalNeko
@@ -12,10 +12,17 @@ commands:
   tonekoadmin:
     usage: /tonekoadmin help
     description: toNeko管理员命令
+  neko:
+    usage: /neko help
+    description: 猫猫命令
 permissions:
   command.toneko.help:
     default: true
   command.toneko.player:
     default: true
   command.toneko.remove:
+    default: true
+  command.neko.help:
+    default: true
+  command.neko.ride:
     default: true

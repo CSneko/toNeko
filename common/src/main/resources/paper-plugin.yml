@@ -1,0 +1,19 @@
+name: toNeko
+version: '1.3.7'
+main: org.cneko.toneko.bukkit.ToNeko
+description: Turn Players to Neko in Minecraft
+api-version: '1.21'
+authors:
+  - CrystalNeko
+website: https://github.com/CSNeko/toNeko
+dependencies:
+  bootstrap:
+    ctLib:
+      load: BEFORE
+      required: true
+      join-classpath: false
+  server:
+    ctLib:
+      load: BEFORE
+      required: true
+      join-classpath: true

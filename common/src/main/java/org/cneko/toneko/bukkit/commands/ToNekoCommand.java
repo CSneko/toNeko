@@ -37,10 +37,34 @@ public class ToNekoCommand {
                                             .requires(s -> check(s, Permissions.COMMAND_TONEKO_PLAYER))
                                             .executes(ToNekoCommand::playerCommand)
                                     )
+                            ).then(Commands.literal("remove")
+                                    .then(Commands.argument("player", ArgumentTypes.player())
+                                            .requires(s -> check(s, Permissions.COMMAND_TONEKO_REMOVE))
+                                            .executes(ToNekoCommand::removeCommand)
+                                    )
                             )
                     .build()
             );
         });
+    }
+
+    public static int removeCommand(CommandContext<CommandSourceStack> context) {
+        Player player = (Player) context.getSource().getSender();
+        Player nekoPlayer;
+        try {
+            nekoPlayer = context.getArgument("player", PlayerSelectorArgumentResolver.class).resolve(context.getSource()).getFirst();
+        } catch (CommandSyntaxException e) {
+            throw new RuntimeException(e);
+        }
+        NekoQuery.Neko neko = NekoQuery.getNeko(nekoPlayer.getUniqueId());
+        if (neko.hasOwner(player.getUniqueId())){
+            neko.removeOwner(player.getUniqueId());
+            neko.save();
+            sendTransTo(player,"command.toneko.remove", nekoPlayer.getName());
+        }else {
+            sendTransTo(player,"messages.toneko.notOwner", nekoPlayer.getName());
+        }
+        return 1;
     }
 
     public static int playerCommand(CommandContext<CommandSourceStack> context) {
