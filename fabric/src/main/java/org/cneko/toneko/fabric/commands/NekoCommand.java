@@ -28,7 +28,6 @@ import org.cneko.toneko.common.mod.packets.EntityPosePayload;
 import org.cneko.toneko.common.mod.util.EntityUtil;
 import org.cneko.toneko.common.mod.util.PermissionUtil;
 import org.cneko.toneko.common.mod.util.SkinUtil;
-import org.cneko.toneko.common.mod.util.TextUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,12 +61,12 @@ public class NekoCommand {
                             .executes(NekoCommand::lieCommand)
                     )
                     .then(literal("getDown")
-                            .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_NEKO_SIT))
+                            .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_NEKO_GET_DOWN))
                             .executes(NekoCommand::getDownCommand)
                     )
                     .then(literal("nickname")
                             .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_NEKO_NICKNAME))
-                            .then(argument("nickname", StringArgumentType.string())
+                            .then(argument("nickname", StringArgumentType.greedyString())
                                     .executes(NekoCommand::nicknameCommand)
                             )
                     )
@@ -77,7 +76,7 @@ public class NekoCommand {
                     )
                     .then(literal("lore")
                             .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_NEKO_LORE))
-                            .then(argument("lore", StringArgumentType.string())
+                            .then(argument("lore", StringArgumentType.greedyString())
                                     .executes(NekoCommand::loreCommand)
                             )
                     )

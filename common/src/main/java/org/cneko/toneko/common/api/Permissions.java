@@ -21,7 +21,7 @@ public class Permissions {
     public static String COMMAND_NEKO_VISION = "command.neko.vision";
     public static String COMMAND_NEKO_SPEED = "command.neko.speed";
     public static String COMMAND_NEKO_LIE = "command.neko.lie";
-    public static String COMMAND_NEKO_SIT = "command.neko.sit";
+    public static String COMMAND_NEKO_GET_DOWN = "command.neko.get_down";
     public static String COMMAND_NEKO_NICKNAME = "command.neko.nickname";
     public static String COMMAND_NEKO_LEVEL = "command.neko.level";
     public static String COMMAND_NEKO_LORE = "command.neko.lore";

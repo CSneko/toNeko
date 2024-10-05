@@ -81,10 +81,14 @@ public class NekoQuery {
         neko.save();
     }
 
-    public void removeBlock(UUID uuid,String block){
+    public static void removeBlock(UUID uuid,String block){
         Neko neko =  getNeko(uuid);
         neko.removeBlock(block);
         neko.save();
+    }
+
+    public static double getLevel(UUID uuid){
+        return getNeko(uuid).getLevel();
     }
 
 

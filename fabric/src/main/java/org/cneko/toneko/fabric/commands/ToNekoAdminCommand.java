@@ -99,6 +99,7 @@ public class ToNekoAdminCommand {
         // 重新加载配置文件和语言文件
         ConfigUtil.load();
         LanguageUtil.load();
+        reloadData(context);
         context.getSource().sendSystemMessage(translatable("command.tonekoadmin.reload"));
         return 1;
     }

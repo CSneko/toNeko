@@ -16,13 +16,41 @@ commands:
     usage: /neko help
     description: 猫猫命令
 permissions:
-  command.toneko.help:
+#  command.toneko.help:
+#    default: true
+#  command.toneko.player:
+#    default: true
+#  command.toneko.remove:
+#    default: true
+#  command.neko.help:
+#    default: true
+#  command.neko.ride:
+#    default: true
+  command.tonekoadmin:
+    default: op
+    children:
+      command.tonekoadmin.help: true
+      command.tonekoadmin.set: true
+      command.tonekoadmin.reload: true
+  command.toneko:
     default: true
-  command.toneko.player:
+    children:
+      command.toneko.help: true
+      command.toneko.player: true
+      command.toneko.remove: true
+      command.toneko.alias: true
+      command.toneko.block: true
+      command.toneko.xp: true
+  command.neko:
     default: true
-  command.toneko.remove:
-    default: true
-  command.neko.help:
-    default: true
-  command.neko.ride:
-    default: true
+    children:
+      command.neko.help: true
+      command.neko.ride: true
+      command.neko.get_down: true
+      command.neko.lie: true
+      command.neko.nickname: true
+      command.neko.level: true
+      command.neko.lore: true
+      command.neko.vision: true
+      command.neko.jump: true
+      command.neko.speed: true

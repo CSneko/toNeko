@@ -66,7 +66,7 @@
   "command.neko.help": "§b/neko getHelp(These commands only for neko):\n§a/neko jump §bJump higher!\n§a/neko vision §bDo you want to see clearly as a neko at night?\n§a/neko speed §bToo quickly(>_<)\n§a/neko lie §bLie down and rest for a while\n§a/neko nickname <nickname> §bSet a cute nickname\n§a/neko level §bShow your neko level\n§a/neko lore <lore> §bSet a cute lore for your item in hand.",
   "command.neko.not_neko": "§cYou are not a neko",
   "command.neko.nickname.success": "§aYour nickname is %s §a now",
-  "command.neko.level.success": "§aYou neko level is %d",
+  "command.neko.level.success": "§aYou neko level is %f",
   "command.neko.lore.no_item": "§cI can find air from your hand.",
   "command.quirk.help": "§b/quirk help:\n§a/quirk help §bI am sure you know what this command can do.\n§a/quirk add <quirk> §bAdd a quirk\n§a/quirk remove <quirk> §bRemove a quirk\n§a/quirk list §bList all quirks\n§a/quirk gui §bOpen quirks GUI",
   "command.quirk.remove": "§aRemove quirk %s §a successful",

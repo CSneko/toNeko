@@ -66,7 +66,7 @@
   "command.neko.help": "§b/neko 幫助（注意喔，這些指令都是貓貓專有的喔）：\n§a/neko jump §b跳得更高！\n§a/neko vision §b想和貓貓一樣在夜晚看得更清楚嗎\n§a/neko speed §b太快啦 (>_<)\n§a/neko lie §b躺下來休息會吧\n§a/neko nickname <暱稱> §b設定一個可愛的暱稱吧\n§a/neko level §b看看你的貓貓等級\n§a/neko lore <描述> §b給你手中的物品設定一個可愛的描述吧",
   "command.neko.not_neko": "§c你並不是一隻貓貓喔",
   "command.neko.nickname.success": "§a現在你的暱稱是 %s §a啦",
-  "command.neko.level.success": "§a你的貓貓等級是 %s §a啦",
+  "command.neko.level.success": "§a你的貓貓等級是 %f §a啦",
   "command.neko.lore.no_item": "§c你手上什麼都沒有耶",
   "command.quirk.help": "§b/quirk 幫助：\n§a/quirk help §b我相信你肯定知道這個指令是做什麼的喵\n§a/quirk add <性癖> §b新增性癖\n§a/quirk remove <性癖> §b刪除性癖\n§a/quirk list §b列出所有性癖\n§a/quirk gui §b打开性癖页面",
   "command.quirk.remove": "§a成功刪除了 %s §a性癖了喵",

@@ -66,7 +66,7 @@
   "command.neko.help": "§b/neko 帮助(注意哦,这些命令都是猫猫专有的哦):\n§a/neko jump §b跳的更高!\n§a/neko vision §b想和猫猫一样在夜晚看得更清楚吗\n§a/neko speed §b太快啦(>_<)\n§a/neko lie §b躺下来休息会吧\n§a/neko nickname <昵称> §b设置一个可爱的昵称吧\n§a/neko level §b看看你的猫猫等级\n§a/neko lore <描述> §b给你手中的物品设置一个可爱的描述吧",
   "command.neko.not_neko": "§c你并不是一只猫猫哦",
   "command.neko.nickname.success": "§a现在你的昵称是 %s §a啦",
-  "command.neko.level.success": "§a你的猫猫等级是 %d §a啦",
+  "command.neko.level.success": "§a你的猫猫等级是 %f §a啦",
   "command.neko.lore.no_item": "§c你手上什么都没有诶",
   "command.quirk.help": "§b/quirk 帮助:\n§a/quirk help §b我相信你肯定知道这个命令是做什么的喵\n§a/quirk add <XP> §b添加XP\n§a/quirk remove <XP> §b删除XP\n§a/quirk list §b列出所有XP\n§a/quirk gui §b打开XP界面",
   "command.quirk.remove": "§a成功删除了 %s §aXP了喵",

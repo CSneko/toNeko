@@ -13,6 +13,8 @@ import org.bukkit.plugin.Plugin;
 import org.cneko.toneko.bukkit.api.NekoStatus;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.api.Permissions;
+import org.cneko.toneko.common.util.ConfigUtil;
+import org.cneko.toneko.common.util.LanguageUtil;
 import org.jetbrains.annotations.NotNull;
 
 import static org.cneko.toneko.bukkit.ToNeko.INSTANCE;
@@ -39,9 +41,32 @@ public class ToNekoAdminCommand {
                                             .executes(ToNekoAdminCommand::setCommand)
                                     )
                             )
+                            .then(Commands.literal("reload")
+                                    .requires(s -> check(s, Permissions.COMMAND_TONEKOADMIN_RELOAD))
+                                    .executes(ToNekoAdminCommand::reloadCommand)
+                                    .then(Commands.literal("data")
+                                            .executes(ToNekoAdminCommand::reloadDataCommand)
+                                    )
+                            )
                             .build()
             );
         });
+    }
+
+    public static int reloadDataCommand(CommandContext<CommandSourceStack> context) {
+        NekoQuery.NekoData.saveAll();
+        NekoQuery.NekoData.loadAll();
+        sendTransTo((Player) context.getSource().getSender(), "command.tonekoadmin.reload.data");
+        return 1;
+    }
+
+    public static int reloadCommand(CommandContext<CommandSourceStack> context) {
+        // 重新加载配置文件和语言文件
+        ConfigUtil.load();
+        LanguageUtil.load();
+        reloadDataCommand(context);
+        sendTransTo((Player) context.getSource().getSender(), "command.tonekoadmin.reload");
+        return 1;
     }
 
     public static int helpCommand(CommandContext<CommandSourceStack> context) {
