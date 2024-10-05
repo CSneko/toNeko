@@ -218,7 +218,7 @@ public class NekoCommand {
         // 等级开方/2
         int effectLevel = (int) (Math.sqrt(level)/2.00);
         // 对((((等级+1)的开方)乘以(玩家的经验值的开方))/(玩家生命值/4))*20来计算效果时间
-        int time = ((int) (((Math.sqrt(level+1)) * (Math.sqrt(player.totalExperience+1))) / (player.getHealth()/4)))*100;
+        int time = (int)(((((Math.sqrt(level+1)) * (Math.sqrt(player.totalExperience+1))) / (player.getHealth()/4)))*100);
         player.addEffect(new MobEffectInstance(effect, time, effectLevel));
         return 1;
     }
