@@ -14,13 +14,12 @@ Pre-mods required for the mod version (must be added): [ctlib](https://modrinth.
 
 Pre-plugin required for the plugin version: [ctlib](https://modrinth.com/plugin/ctlib)
 
-**Currently the plugin version is temporarily suspended**
 ## Tips
 If you found that some text isn't your language, just modify [the config file](#configuration) to your language.
 
 ## Supported versions (but it does not mean that it cannot run on other versions):
 - Fabric 1.21
-- Spigot/Paper/Folia 1.17~latest
+- Paper/Folia 1.21
 ## How to become a neko
 If you want to become a neko, it's very simple. You just need to make a neko collector and then get close to cats. When the energy is full, a bottle of neko potion will drop. Just drink it.
 
