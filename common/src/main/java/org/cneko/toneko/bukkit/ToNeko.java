@@ -7,6 +7,7 @@ import org.cneko.toneko.bukkit.commands.ToNekoCommand;
 import org.cneko.toneko.bukkit.events.ChatEvent;
 import org.cneko.toneko.bukkit.events.PlayerConnectionEvents;
 import org.cneko.toneko.bukkit.events.WorldEvents;
+import org.cneko.toneko.bukkit.msic.Metrics;
 import org.cneko.toneko.common.Bootstrap;
 import org.cneko.toneko.common.mod.impl.FabricConfigImpl;
 import org.cneko.toneko.common.mod.impl.FabricLanguageImpl;
@@ -21,6 +22,7 @@ public class ToNeko extends JavaPlugin {
     @Override
     public void onEnable() {
         INSTANCE = this;
+        new Metrics(this, 19899);
         FileUtil.CreatePath("plugins/toNeko");
         ConfigUtil.CONFIG_FILE = "plugins/toNeko/config.yml";
         ConfigUtil.INSTANCE = new FabricConfigImpl();
