@@ -84,7 +84,7 @@ public class NekoCommand {
     public static int loreCommand(CommandContext<CommandSourceStack> context) {
         Player player = (Player) context.getSource().getSender();
         // 获取玩家手中的物品
-        ItemStack stack = player.getActiveItem();
+        ItemStack stack = player.getInventory().getItemInMainHand();
         if (stack.isEmpty()) {
             sendTransTo(player,"command.neko.lore.no_item");
             return 1;
