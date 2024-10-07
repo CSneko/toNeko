@@ -12,20 +12,22 @@ public class Messaging {
         return format(msg,player,nickname,ChatPrefix.getPrivatePrefix(player) + ChatPrefix.getAllPublicPrefixValues());
     }
 
-    public static String format(String msg, String player, String nickname, String prefix){
+    public static String format(String msg, String player, String nickname, String prefix, String chatFormat){
         // 修改昵称
         if(nickname.isEmpty()){
             nickname = player;
         }else {
             nickname = "§6~§f"+nickname;
         }
-        // 从config读取格式
-        String format = ConfigUtil.CHAT_FORMAT;
-        return format.
+        return chatFormat.
                 replace("${prefix}",prefix).
                 replace("${msg}",msg).
                 replace("${name}",nickname).
                 replace("${c}","§");
+    }
+
+    public static String format(String msg, String player, String nickname, String prefix){
+        return format(msg,player,nickname,prefix,ConfigUtil.CHAT_FORMAT);
     }
 
     public static String replacePhrase(String message, String phrase){

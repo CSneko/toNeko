@@ -9,6 +9,7 @@ import org.bukkit.event.Listener;
 import org.cneko.ctlib.common.file.JsonConfiguration;
 import org.cneko.ctlib.common.util.ChatPrefix;
 import org.cneko.toneko.bukkit.api.NekoStatus;
+import org.cneko.toneko.bukkit.util.PlaceHolderUtil;
 import org.cneko.toneko.common.Stats;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.util.ConfigUtil;
@@ -39,13 +40,18 @@ public class ChatEvent implements Listener {
         List<String> prefix = NekoStatus.getPlayerPrefixes(player);
         String p = formatPrefixes(prefix);
         // 格式化消息
-        message = Messaging.format(message,player.getName(),nickname,p);
+        message = format(message, player, nickname, p);
         sendMessage(message);
         // 消息中喵的数量
         int count = Stats.getMeow(message);
         // 根据喵的数量增加经验
         neko.addLevel((double) count / 1000.00);
         if(ConfigUtil.STATS) Stats.meowInChat(player.getName(),count);
+    }
+
+    private String format(String message, Player player, String nickname,String prefix){
+        String format = PlaceHolderUtil.replace(player,ConfigUtil.CHAT_FORMAT);
+        return Messaging.format(message,player.getName(),nickname,prefix,format);
     }
 
     public static String formatPrefixes(List<String> prefixes) {

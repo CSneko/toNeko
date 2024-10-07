@@ -2,6 +2,13 @@ architectury {
     common rootProject.enabled_platforms.split(',')
 }
 
+repositories {
+    maven {
+        url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
+    }
+}
+
+
 dependencies {
     // We depend on Fabric Loader here to use the Fabric @Environment annotations,
     // which get remapped to the correct annotations on each platform.
@@ -11,4 +18,5 @@ dependencies {
     //include "maven.modrinth:ctlibmod:0.1.13"
     compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
     compileOnly files("libs/paper-1.21.jar")
+    compileOnly 'me.clip:placeholderapi:2.11.6'
 }
