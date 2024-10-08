@@ -27,7 +27,7 @@ public class NekoRenderer<T extends NekoEntity> extends GeoEntityRenderer<T> {
     }
 
     @Override
-    public void preRender(PoseStack poseStack, T animatable, BakedGeoModel model, @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
+    public void preRender(PoseStack poseStack, T animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         if (animatable.isBaby()){
             poseStack.scale(0.5F, 0.5F, 0.5F); // 将幼年实体的尺寸缩小为原来的一半
         }
@@ -39,21 +39,39 @@ public class NekoRenderer<T extends NekoEntity> extends GeoEntityRenderer<T> {
         if (animatable.getPose() == Pose.SWIMMING){
             poseStack.translate(0, -0.5, 0);
         }
-        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
+        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
 
-    @Override
-    public void actuallyRender(PoseStack poseStack, T entity, BakedGeoModel model, @Nullable RenderType renderType,
-                               MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick,
-                               int packedLight, int packedOverlay, int colour) {
-        super.actuallyRender(poseStack, entity, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
-    }
+
+
+//    @Override
+//    public void preRender(PoseStack poseStack, T animatable, BakedGeoModel model, @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
+//        if (animatable.isBaby()){
+//            poseStack.scale(0.5F, 0.5F, 0.5F); // 将幼年实体的尺寸缩小为原来的一半
+//        }
+//        // 坐下时向下移动
+//        if (animatable.isSitting()) {
+//            poseStack.translate(0, -0.7, 0);
+//        }
+//        // 游泳/爬行时向下移动
+//        if (animatable.getPose() == Pose.SWIMMING){
+//            poseStack.translate(0, -0.5, 0);
+//        }
+//        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
+//    }
+//
+//    @Override
+//    public void actuallyRender(PoseStack poseStack, T entity, BakedGeoModel model, @Nullable RenderType renderType,
+//                               MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick,
+//                               int packedLight, int packedOverlay, int colour) {
+//        super.actuallyRender(poseStack, entity, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
+//    }
 
     public static class NekoModel<T extends NekoEntity> extends GeoModel<T> {
         @Override
         public ResourceLocation getModelResource(T animatable) {
             // 检查文件是否存在
-            ResourceLocation id = ResourceLocation.fromNamespaceAndPath(
+            ResourceLocation id = new ResourceLocation(
                     MODID,"geo/neko/"+animatable.getSkin()+".geo.json"
             );
             if (checkResource(id)){
@@ -63,33 +81,33 @@ public class NekoRenderer<T extends NekoEntity> extends GeoEntityRenderer<T> {
              * 更好的实现方法应该是getDefaultSkin()
              * 但我觉得...这样似乎更为抽象和有趣(bushi)
              */
-            return ResourceLocation.fromNamespaceAndPath(
+            return new ResourceLocation(
                     MODID,"geo/neko/"+animatable.getRandomSkin()+".geo.json"
             );
         }
 
         @Override
         public ResourceLocation getTextureResource(T animatable) {
-            ResourceLocation id = ResourceLocation.fromNamespaceAndPath(
+            ResourceLocation id = new ResourceLocation(
                     MODID,"textures/neko/"+animatable.getSkin()+".png"
             );
             if (checkResource(id)){
                 return id;
             }
-            return ResourceLocation.fromNamespaceAndPath(
+            return new ResourceLocation(
                     MODID,"textures/neko/"+animatable.getRandomSkin()+".png"
             );
         }
 
         @Override
         public ResourceLocation getAnimationResource(T animatable) {
-            ResourceLocation id = ResourceLocation.fromNamespaceAndPath(
+            ResourceLocation id = new ResourceLocation(
                     MODID,"animations/neko/"+animatable.getSkin()+".animation.json"
             );
             if (checkResource(id)){
                 return id;
             }
-            return ResourceLocation.fromNamespaceAndPath(
+            return new ResourceLocation(
                     MODID,"animations/neko/"+animatable.getRandomSkin()+".animation.json"
             );
         }

@@ -36,62 +36,62 @@ public class NekoArmorTrinkets {
         public NekoTailTrinketItem() {
             super();
         }
-        @Override
-        public boolean canEquipFromUse(ItemStack stack, LivingEntity entity) {
-            return true;
-        }
+//        @Override
+//        public boolean canEquipFromUse(ItemStack stack, LivingEntity entity) {
+//            return true;
+//        }
         @Override
         public boolean canUnequip(ItemStack stack, SlotReference slot, LivingEntity entity) {
             return true;
         }
-        @Override
-        public Multimap<Holder<Attribute>, AttributeModifier> getModifiers(ItemStack stack, SlotReference slot, LivingEntity entity, ResourceLocation slotIdentifier) {
-            Multimap<Holder<Attribute>, AttributeModifier> modifiers = Multimaps.newMultimap(Maps.newLinkedHashMap(), ArrayList::new);
-            // 添加 10 的neko_degree
-            modifiers.put(ToNekoAttributes.NEKO_DEGREE, new AttributeModifier(ToNekoAttributes.NEKO_DEGREE_ID, 10.0, AttributeModifier.Operation.ADD_VALUE));
-            return modifiers;
-        }
+//        @Override
+//        public Multimap<Holder<Attribute>, AttributeModifier> getModifiers(ItemStack stack, SlotReference slot, LivingEntity entity, ResourceLocation slotIdentifier) {
+//            Multimap<Holder<Attribute>, AttributeModifier> modifiers = Multimaps.newMultimap(Maps.newLinkedHashMap(), ArrayList::new);
+//            // 添加 10 的neko_degree
+//            modifiers.put(ToNekoAttributes.NEKO_DEGREE, new AttributeModifier(ToNekoAttributes.NEKO_DEGREE_ID, 10.0, AttributeModifier.Operation.ADD_VALUE));
+//            return modifiers;
+//        }
     }
 
     public static class NekoEarsTrinketItem extends NekoArmor.NekoEarsItem implements Trinket{
         public NekoEarsTrinketItem() {
             super();
         }
-        @Override
-        public boolean canEquipFromUse(ItemStack stack, LivingEntity entity) {
-            return true;
-        }
+//        @Override
+//        public boolean canEquipFromUse(ItemStack stack, LivingEntity entity) {
+//            return true;
+//        }
         @Override
         public boolean canUnequip(ItemStack stack, SlotReference slot, LivingEntity entity) {
             return true;
         }
-        @Override
-        public Multimap<Holder<Attribute>, AttributeModifier> getModifiers(ItemStack stack, SlotReference slot, LivingEntity entity, ResourceLocation slotIdentifier) {
-            Multimap<Holder<Attribute>, AttributeModifier> modifiers = Multimaps.newMultimap(Maps.newLinkedHashMap(), ArrayList::new);
-            // 添加 10 的neko_degree
-            modifiers.put(ToNekoAttributes.NEKO_DEGREE, new AttributeModifier(ToNekoAttributes.NEKO_DEGREE_ID, 10.0, AttributeModifier.Operation.ADD_VALUE));
-            return modifiers;
-        }
+//        @Override
+//        public Multimap<Holder<Attribute>, AttributeModifier> getModifiers(ItemStack stack, SlotReference slot, LivingEntity entity, ResourceLocation slotIdentifier) {
+//            Multimap<Holder<Attribute>, AttributeModifier> modifiers = Multimaps.newMultimap(Maps.newLinkedHashMap(), ArrayList::new);
+//            // 添加 10 的neko_degree
+//            modifiers.put(ToNekoAttributes.NEKO_DEGREE, new AttributeModifier(ToNekoAttributes.NEKO_DEGREE_ID, 10.0, AttributeModifier.Operation.ADD_VALUE));
+//            return modifiers;
+//        }
     }
     public static class NekoPawsTrinketItem extends NekoArmor.NekoPawsItem implements Trinket {
         public NekoPawsTrinketItem() {
             super();
         }
-        @Override
-        public boolean canEquipFromUse(ItemStack stack, LivingEntity entity) {
-            return true;
-        }
+//        @Override
+//        public boolean canEquipFromUse(ItemStack stack, LivingEntity entity) {
+//            return true;
+//        }
         @Override
         public boolean canUnequip(ItemStack stack, SlotReference slot, LivingEntity entity) {
             return true;
         }
-        @Override
-        public Multimap<Holder<Attribute>, AttributeModifier> getModifiers(ItemStack stack, SlotReference slot, LivingEntity entity, ResourceLocation slotIdentifier) {
-            Multimap<Holder<Attribute>, AttributeModifier> modifiers = Multimaps.newMultimap(Maps.newLinkedHashMap(), ArrayList::new);
-            // 添加 10 的neko_degree
-            modifiers.put(ToNekoAttributes.NEKO_DEGREE, new AttributeModifier(ToNekoAttributes.NEKO_DEGREE_ID, 10.0, AttributeModifier.Operation.ADD_VALUE));
-            return modifiers;
-        }
+//        @Override
+//        public Multimap<Holder<Attribute>, AttributeModifier> getModifiers(ItemStack stack, SlotReference slot, LivingEntity entity, ResourceLocation slotIdentifier) {
+//            Multimap<Holder<Attribute>, AttributeModifier> modifiers = Multimaps.newMultimap(Maps.newLinkedHashMap(), ArrayList::new);
+//            // 添加 10 的neko_degree
+//            modifiers.put(ToNekoAttributes.NEKO_DEGREE, new AttributeModifier(ToNekoAttributes.NEKO_DEGREE_ID, 10.0, AttributeModifier.Operation.ADD_VALUE));
+//            return modifiers;
+//        }
     }
 
 }

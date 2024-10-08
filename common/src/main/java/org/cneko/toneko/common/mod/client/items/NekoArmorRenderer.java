@@ -6,72 +6,110 @@ import com.mojang.math.Axis;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.DyedItemColor;
-import org.cneko.toneko.common.mod.misc.ToNekoEnchantments;
 import org.cneko.toneko.common.mod.util.EnchantmentUtil;
 import org.cneko.toneko.common.mod.items.NekoArmor;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
+import software.bernie.geckolib.core.object.Color;
 import software.bernie.geckolib.model.DefaultedItemGeoModel;
 import software.bernie.geckolib.renderer.GeoArmorRenderer;
-import software.bernie.geckolib.util.Color;
 
 import static org.cneko.toneko.common.Bootstrap.MODID;
 
 public class NekoArmorRenderer<T extends NekoArmor<T>> extends GeoArmorRenderer<T>{
 
     public NekoArmorRenderer() {
-        super(new DefaultedItemGeoModel<>(ResourceLocation.fromNamespaceAndPath(MODID, "armor/neko_armor")));
+        super(new DefaultedItemGeoModel<>(new ResourceLocation(MODID, "armor/neko_armor")));
     }
 
     @Override
-    public void preRender(PoseStack poseStack, T item, BakedGeoModel model, @Nullable MultiBufferSource bufferSource,
-                          @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight,
-                          int packedOverlay, int colour) {
-        // 如果有反转附魔
-        if (EnchantmentUtil.hasEnchantment(ToNekoEnchantments.REVERSION.location(), this.currentStack)) {
-            // 旋转180度
-            poseStack.mulPose(Axis.XN.rotationDegrees(180));
-            // 前进1/16个单位并下移动1单位
-            poseStack.translate(0, -1.5, -0.0625);
-        }
+    public void preRender(PoseStack poseStack, T animatable, BakedGeoModel model, @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+//        // 如果有反转附魔
+//        if (EnchantmentUtil.hasEnchantment(ToNekoEnchantments.REVERSION.location(), this.currentStack)) {
+//            // 旋转180度
+//            poseStack.mulPose(Axis.XN.rotationDegrees(180));
+//            // 前进1/16个单位并下移动1单位
+//            poseStack.translate(0, -1.5, -0.0625);
+//        }
+        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
 
-        super.preRender(poseStack, item, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
     }
 
     @Override
-    public void actuallyRender(PoseStack poseStack, T animatable, BakedGeoModel model, @Nullable RenderType renderType,
-                               MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick,
-                               int packedLight, int packedOverlay, int colour) {
-        // 染色
+    public void actuallyRender(PoseStack poseStack, T animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        //        // 染色
         try {
             // 如果有染色
-            if (this.currentStack.has(DataComponents.DYED_COLOR)) {
+            if (animatable.hasCustomColor(this.currentStack)) {
                 // 物品的染色rgb
                 Color renderColor = this.getRenderColor(animatable, partialTick, packedLight);
 
                 // 渲染物品颜色
-                buffer = buffer.setColor(renderColor.getRed(), renderColor.getGreen(), renderColor.getBlue(), renderColor.getAlpha());
+                buffer = buffer.color(renderColor.getRed(), renderColor.getGreen(), renderColor.getBlue(), renderColor.getAlpha());
 
-                colour = renderColor.getColor();
+                //colour = renderColor.getColor();
             }
 
         } catch (Exception ignored) {
         }
-
-        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
+        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
 
     @Override
     public Color getRenderColor(T animatable, float partialTick, int packedLight) {
-        // 默认为浅蓝色
-        return Color.ofOpaque(DyedItemColor.getOrDefault(this.currentStack, 6463722));
+        if (animatable.hasCustomColor(this.currentStack)) {
+            return Color.ofOpaque(animatable.getColor(this.currentStack));
+        }
+        return Color.ofOpaque(6463722);
     }
+
+    //    @Override
+//    public void preRender(PoseStack poseStack, T item, BakedGeoModel model, @Nullable MultiBufferSource bufferSource,
+//                          @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight,
+//                          int packedOverlay, int colour) {
+//        // 如果有反转附魔
+//        if (EnchantmentUtil.hasEnchantment(ToNekoEnchantments.REVERSION.location(), this.currentStack)) {
+//            // 旋转180度
+//            poseStack.mulPose(Axis.XN.rotationDegrees(180));
+//            // 前进1/16个单位并下移动1单位
+//            poseStack.translate(0, -1.5, -0.0625);
+//        }
+//
+//        super.preRender(poseStack, item, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
+//    }
+//
+//    @Override
+//    public void actuallyRender(PoseStack poseStack, T animatable, BakedGeoModel model, @Nullable RenderType renderType,
+//                               MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick,
+//                               int packedLight, int packedOverlay, int colour) {
+//        // 染色
+//        try {
+//            // 如果有染色
+//            if (this.currentStack.has(DataComponents.DYED_COLOR)) {
+//                // 物品的染色rgb
+//                Color renderColor = this.getRenderColor(animatable, partialTick, packedLight);
+//
+//                // 渲染物品颜色
+//                buffer = buffer.setColor(renderColor.getRed(), renderColor.getGreen(), renderColor.getBlue(), renderColor.getAlpha());
+//
+//                colour = renderColor.getColor();
+//            }
+//
+//        } catch (Exception ignored) {
+//        }
+//
+//        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
+//    }
+//
+//    @Override
+//    public Color getRenderColor(T animatable, float partialTick, int packedLight) {
+//        // 默认为浅蓝色
+//        return Color.ofOpaque(DyedItemColor.getOrDefault(this.currentStack, 6463722));
+//    }
     public void setItemStack(ItemStack stack){
         this.currentStack = stack;
     }

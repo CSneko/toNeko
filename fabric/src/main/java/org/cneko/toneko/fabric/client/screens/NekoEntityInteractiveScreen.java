@@ -12,7 +12,6 @@ import net.minecraft.world.entity.Pose;
 import net.minecraft.world.item.ItemStack;
 import org.cneko.toneko.common.mod.client.api.ClientEntityPoseManager;
 import org.cneko.toneko.common.mod.entities.INeko;
-import org.cneko.toneko.common.mod.packets.interactives.*;
 import org.cneko.toneko.common.mod.util.EntityUtil;
 import org.cneko.toneko.fabric.entities.NekoEntity;
 import org.jetbrains.annotations.NotNull;
@@ -50,7 +49,7 @@ public class NekoEntityInteractiveScreen extends InteractionScreen implements IN
             ItemStack stack = Minecraft.getInstance().player.getMainHandItem();
             int slot = Minecraft.getInstance().player.getInventory().findSlotMatchingItem(stack);
             if(!stack.isEmpty()){
-                ClientPlayNetworking.send(new GiftItemPayload(neko.getUUID().toString(), slot));
+//                ClientPlayNetworking.send(new GiftItemPayload(neko.getUUID().toString(), slot));
             }
         }));
 

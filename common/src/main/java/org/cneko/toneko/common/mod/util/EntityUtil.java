@@ -21,7 +21,7 @@ public class EntityUtil {
      * @param min             最小值
      * @param max             最大值
      */
-    public static void randomizeAttributeValue(LivingEntity entity, Holder<Attribute> attribute, double baseValue, double min, double max) {
+    public static void randomizeAttributeValue(LivingEntity entity, Attribute attribute, double baseValue, double min, double max) {
         AttributeInstance attributeInstance = entity.getAttribute(attribute);
         if (attributeInstance != null && attributeInstance.getValue() == baseValue) {
             double newValue = min + (max - min) * Math.random();

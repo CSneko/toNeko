@@ -7,7 +7,6 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.cneko.toneko.common.mod.entities.INeko;
-import org.cneko.toneko.common.mod.packets.interactives.NekoMatePayload;
 import org.cneko.toneko.fabric.entities.NekoEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -57,7 +56,7 @@ public class NekoMateScreen extends Screen implements INekoScreen {
                     int i = new Random().nextInt(13);
                     Minecraft.getInstance().player.sendSystemMessage(Component.translatable("message.toneko.neko.breed_fail_baby." + i));
                 }else {
-                    ClientPlayNetworking.send(new NekoMatePayload(neko.getUUID().toString(), entity.getEntity().getUUID().toString()));
+                    //ClientPlayNetworking.send(new NekoMatePayload(neko.getUUID().toString(), entity.getEntity().getUUID().toString()));
                     onClose();
                 }
             }).bounds(x, y, buttonWidth, buttonHeight).build();
@@ -83,10 +82,6 @@ public class NekoMateScreen extends Screen implements INekoScreen {
         return false;
     }
 
-    // 移除背景渲染
-    @Override
-    public void renderBackground(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-    }
 
     @Override
     public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {

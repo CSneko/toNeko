@@ -4,7 +4,6 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.Minecraft;
 import org.cneko.toneko.fabric.client.renderers.NekoRenderer;
-import org.cneko.toneko.fabric.client.events.ClientNetworkEvents;
 import org.cneko.toneko.fabric.client.events.ClientPlayerJoinEvent;
 import org.cneko.toneko.fabric.client.events.ClientTickEvent;
 import org.cneko.toneko.fabric.client.items.NekoArmorTrinketsRenderer;
@@ -15,7 +14,6 @@ public class ToNekoClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ToNekoKeyBindings.init();
-        ClientNetworkEvents.init();
         ClientTickEvent.init();
         ClientPlayerJoinEvent.init();
         // 注册trinkets渲染器

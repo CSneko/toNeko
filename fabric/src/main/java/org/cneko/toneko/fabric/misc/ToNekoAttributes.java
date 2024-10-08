@@ -10,7 +10,7 @@ import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import static org.cneko.toneko.common.Bootstrap.MODID;
 
 public class ToNekoAttributes {
-    public static final ResourceLocation NEKO_DEGREE_ID = ResourceLocation.fromNamespaceAndPath(MODID, "neko.degree");
+    public static final ResourceLocation NEKO_DEGREE_ID = new ResourceLocation(MODID, "neko.degree");
     public static final Holder<Attribute> NEKO_DEGREE = register(NEKO_DEGREE_ID,
         new RangedAttribute("attribute.name.neko.degree",
         1.0, 0.0, 100.0

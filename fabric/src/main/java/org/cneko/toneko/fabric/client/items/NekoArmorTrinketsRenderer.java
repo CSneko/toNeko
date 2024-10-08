@@ -53,7 +53,8 @@ public class NekoArmorTrinketsRenderer {
                 poseStack.pushPose();
 
                 // 执行渲染
-                renderer.renderToBuffer(poseStack, vertexConsumers.getBuffer(RenderType.entityTranslucent(BuiltInRegistries.ITEM.getKey(NEKO_TAIL))), light, OverlayTexture.NO_OVERLAY, 1);
+                renderer.renderToBuffer(poseStack,vertexConsumers.getBuffer(RenderType.armorGlint()),light, OverlayTexture.NO_OVERLAY,1,1,1,1);
+//                renderer.renderToBuffer(poseStack, vertexConsumers.getBuffer(RenderType.entityTranslucent(BuiltInRegistries.ITEM.getKey(NEKO_TAIL))), light, OverlayTexture.NO_OVERLAY, 1);
             } catch (Exception ignored) {} finally {
                 // 恢复之前的矩阵状态
                 poseStack.popPose();
@@ -79,7 +80,7 @@ public class NekoArmorTrinketsRenderer {
                 poseStack.pushPose();
 
                 // 执行渲染
-                renderer.renderToBuffer(poseStack, vertexConsumers.getBuffer(RenderType.entityTranslucent(BuiltInRegistries.ITEM.getKey(NEKO_EARS))), light, OverlayTexture.NO_OVERLAY, 1);
+                renderer.renderToBuffer(poseStack,vertexConsumers.getBuffer(RenderType.armorGlint()),light, OverlayTexture.NO_OVERLAY,1,1,1,1);
 
             } catch (Exception ignored) {} finally {
                 // 恢复之前的矩阵状态
@@ -105,7 +106,7 @@ public class NekoArmorTrinketsRenderer {
                 poseStack.pushPose();
 
                 // 执行渲染
-                renderer.renderToBuffer(poseStack, vertexConsumers.getBuffer(RenderType.entityTranslucent(BuiltInRegistries.ITEM.getKey(NEKO_PAWS))), light, OverlayTexture.NO_OVERLAY, 1);
+                renderer.renderToBuffer(poseStack,vertexConsumers.getBuffer(RenderType.armorGlint()),light, OverlayTexture.NO_OVERLAY,1,1,1,1);
 
             } catch (Exception ignored) {} finally {
                 // 恢复之前的矩阵状态

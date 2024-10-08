@@ -8,9 +8,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import org.cneko.toneko.common.mod.client.api.ClientEntityPoseManager;
-import org.cneko.toneko.common.mod.packets.interactives.FollowOwnerPayload;
-import org.cneko.toneko.common.mod.packets.interactives.NekoPosePayload;
-import org.cneko.toneko.common.mod.packets.interactives.RideEntityPayload;
 import org.cneko.toneko.common.mod.util.EntityUtil;
 import org.cneko.toneko.fabric.entities.NekoEntity;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +28,7 @@ public class NekoActionScreen extends InteractionScreen implements INekoScreen{
         Map<String, Button.Builder> builders = new LinkedHashMap<>();
 
         builders.put("screen.toneko.neko_entity_interactive.button.follow",Button.builder(Component.translatable("screen.toneko.neko_entity_interactive.button.follow"),(btn)->{
-            ClientPlayNetworking.send(new FollowOwnerPayload(neko.getUUID().toString()));
+//            ClientPlayNetworking.send(new FollowOwnerPayload(neko.getUUID().toString()));
             neko.followOwner(Minecraft.getInstance().player);
         }));
 
@@ -45,7 +42,7 @@ public class NekoActionScreen extends InteractionScreen implements INekoScreen{
                     neko.startRiding(entity, true);
                 }
                 // 向服务器发包
-                ClientPlayNetworking.send(new RideEntityPayload(neko.getUUID().toString(),entity.getUUID().toString()));
+//                ClientPlayNetworking.send(new RideEntityPayload(neko.getUUID().toString(),entity.getUUID().toString()));
             }
         }));
 
@@ -58,7 +55,7 @@ public class NekoActionScreen extends InteractionScreen implements INekoScreen{
                 ClientEntityPoseManager.setPose(neko, Pose.SLEEPING);
                 neko.setPose(Pose.SLEEPING);
             }
-            ClientPlayNetworking.send(new NekoPosePayload(Pose.SLEEPING,neko.getUUID().toString(),true));
+//            ClientPlayNetworking.send(new NekoPosePayload(Pose.SLEEPING,neko.getUUID().toString(),true));
         }));
 
         builders.put("screen.toneko.neko_entity_interactive.button.get_down",Button.builder(Component.translatable("screen.toneko.neko_entity_interactive.button.get_down"),(btn)->{
@@ -70,7 +67,7 @@ public class NekoActionScreen extends InteractionScreen implements INekoScreen{
                 ClientEntityPoseManager.setPose(neko, Pose.SWIMMING);
                 neko.setPose(Pose.SWIMMING);
             }
-            ClientPlayNetworking.send(new NekoPosePayload(Pose.SWIMMING,neko.getUUID().toString(),true));
+//            ClientPlayNetworking.send(new NekoPosePayload(Pose.SWIMMING,neko.getUUID().toString(),true));
         }));
         return builders;
     }

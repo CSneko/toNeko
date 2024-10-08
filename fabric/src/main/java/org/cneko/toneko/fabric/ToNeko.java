@@ -2,16 +2,11 @@ package org.cneko.toneko.fabric;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import org.cneko.toneko.common.Bootstrap;
 import org.cneko.toneko.common.mod.ModMeta;
 import org.cneko.toneko.common.mod.impl.FabricConfigImpl;
 import org.cneko.toneko.common.mod.impl.FabricLanguageImpl;
 import org.cneko.toneko.common.mod.items.ToNekoArmorMaterials;
-import org.cneko.toneko.common.mod.packets.EntityPosePayload;
-import org.cneko.toneko.common.mod.packets.VehicleStopRidePayload;
-import org.cneko.toneko.common.mod.packets.interactives.*;
-import org.cneko.toneko.common.mod.packets.QuirkQueryPayload;
 import org.cneko.toneko.common.mod.quirks.ToNekoQuirks;
 import org.cneko.toneko.common.mod.util.PermissionUtil;
 import org.cneko.toneko.common.util.ConfigUtil;
@@ -43,18 +38,6 @@ public class ToNeko implements ModInitializer {
 
         // 注册Quirks
         ToNekoQuirks.init();
-        // 注册网络数据包
-        PayloadTypeRegistry.playS2C().register(EntityPosePayload.ID, EntityPosePayload.CODEC);
-        PayloadTypeRegistry.playS2C().register(QuirkQueryPayload.ID, QuirkQueryPayload.CODEC);
-        PayloadTypeRegistry.playC2S().register(QuirkQueryPayload.ID, QuirkQueryPayload.CODEC);
-        PayloadTypeRegistry.playS2C().register(NekoEntityInteractivePayload.ID, NekoEntityInteractivePayload.CODEC);
-        PayloadTypeRegistry.playC2S().register(GiftItemPayload.ID, GiftItemPayload.CODEC);
-        PayloadTypeRegistry.playC2S().register(FollowOwnerPayload.ID, FollowOwnerPayload.CODEC);
-        PayloadTypeRegistry.playC2S().register(RideEntityPayload.ID, RideEntityPayload.CODEC);
-        PayloadTypeRegistry.playC2S().register(NekoPosePayload.ID, NekoPosePayload.CODEC);
-        PayloadTypeRegistry.playS2C().register(VehicleStopRidePayload.ID, VehicleStopRidePayload.CODEC);
-        PayloadTypeRegistry.playC2S().register(NekoMatePayload.ID, NekoMatePayload.CODEC);
-        PayloadTypeRegistry.playS2C().register(CrystalNekoInteractivePayload.ID, CrystalNekoInteractivePayload.CODEC);
 
         // 注册实体
         ToNekoEntities.init();
@@ -64,7 +47,6 @@ public class ToNeko implements ModInitializer {
             ModMeta.INSTANCE.setServer(server);
             // 启动监Event
             ToNekoEvents.init();
-            ToNekoNetworkEvents.init();
             // 注册权限
             PermissionUtil.init();
             // 通用的启动

@@ -56,10 +56,6 @@ public class InteractionScreen extends Screen {
     }
 
 
-    // 移除背景渲染
-    @Override
-    public void renderBackground(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-    }
 
     @Override
     public void onClose() {

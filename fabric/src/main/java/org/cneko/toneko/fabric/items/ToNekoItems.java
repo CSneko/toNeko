@@ -43,10 +43,10 @@ public class ToNekoItems {
         NEKO_POTION = new NekoPotionItem();
         NEKO_COLLECTOR = new NekoCollectorItem();
         FURRY_BOHE = new FurryBoheItem();
-        Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, NekoPotionItem.ID), NEKO_POTION);
-        Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, NekoCollectorItem.ID), NEKO_COLLECTOR);
-        Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, FurryBoheItem.ID), FURRY_BOHE);
-        Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, "adventurer_neko_spawn_egg"), ADVENTURER_NEKO_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(MODID, NekoPotionItem.ID), NEKO_POTION);
+        Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(MODID, NekoCollectorItem.ID), NEKO_COLLECTOR);
+        Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(MODID, FurryBoheItem.ID), FURRY_BOHE);
+        Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(MODID, "adventurer_neko_spawn_egg"), ADVENTURER_NEKO_SPAWN_EGG);
 
         // 如果安装了trinkets，则注册为TrinketItem
         if (isTrinketsInstalled){
@@ -56,15 +56,15 @@ public class ToNekoItems {
             NEKO_TAIL = new NekoArmor.NekoTailItem();
             NEKO_PAWS = new NekoArmor.NekoPawsItem();
         }
-        Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, NekoArmor.NekoEarsItem.ID), NEKO_EARS);
-        Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, NekoArmor.NekoTailItem.ID), NEKO_TAIL);
-        Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, NekoArmor.NekoPawsItem.ID), NEKO_PAWS);
+        Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(MODID, NekoArmor.NekoEarsItem.ID), NEKO_EARS);
+        Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(MODID, NekoArmor.NekoTailItem.ID), NEKO_TAIL);
+        Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(MODID, NekoArmor.NekoPawsItem.ID), NEKO_PAWS);
         TONEKO_ITEM_GROUP = FabricItemGroup.builder()
                 .icon(() -> new ItemStack(NEKO_EARS))
                 .title(Component.translatable("itemGroup.toneko"))
                 .build();
         // 注册物品组
-        TONEKO_ITEM_GROUP_KEY = ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), ResourceLocation.fromNamespaceAndPath(MODID, "item_group"));
+        TONEKO_ITEM_GROUP_KEY = ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), new ResourceLocation(MODID, "item_group"));
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, TONEKO_ITEM_GROUP_KEY,TONEKO_ITEM_GROUP);
 
         ItemGroupEvents.modifyEntriesEvent(TONEKO_ITEM_GROUP_KEY).register(content -> {

@@ -35,19 +35,18 @@ import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.mod.api.NekoNameRegistry;
 import org.cneko.toneko.common.mod.api.NekoSkinRegistry;
 import org.cneko.toneko.common.mod.entities.INeko;
-import org.cneko.toneko.common.mod.packets.interactives.NekoEntityInteractivePayload;
 import org.cneko.toneko.common.mod.util.EntityUtil;
 import org.cneko.toneko.fabric.entities.ai.goal.NekoFollowOwnerGoal;
 import org.cneko.toneko.fabric.entities.ai.goal.NekoMateGoal;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.PlayState;
-import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.constant.DefaultAnimations;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.HashSet;
@@ -102,11 +101,11 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         }
     }
 
-    @Override
-    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
-        super.defineSynchedData(builder);
-        builder.define(SKIN_DATA_ID,this.getSkin());
-    }
+//    @Override
+//    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+//        super.defineSynchedData(builder);
+//        builder.define(SKIN_DATA_ID,this.getSkin());
+//    }
 
     public void onSyncedDataUpdated(EntityDataAccessor<?> dataAccessor) {
         if (dataAccessor.equals(SKIN_DATA_ID)) {
@@ -121,7 +120,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
             this.setCustomName(Component.literal(NekoNameRegistry.getRandomName()));
         }
 
-        EntityUtil.randomizeAttributeValue(this, Attributes.SCALE,1,0.8,1.05); // 实体的体型为0.8~1.05间
+//        EntityUtil.randomizeAttributeValue(this, Attributes.SCALE,1,0.8,1.05); // 实体的体型为0.8~1.05间
         EntityUtil.randomizeAttributeValue(this, Attributes.MOVEMENT_SPEED,0.7,0.5,0.6); // 实体速度为0.5~0.6间
     }
 
@@ -283,7 +282,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     }
 
     public void openInteractiveMenu(ServerPlayer player) {
-        ServerPlayNetworking.send(player, new NekoEntityInteractivePayload(this.getUUID().toString()));
+//        ServerPlayNetworking.send(player, new NekoEntityInteractivePayload(this.getUUID().toString()));
     }
 
     @Override
@@ -298,37 +297,37 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         this.isSitting = false;
     }
 
-    @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, 20, state -> {
-            // 地上趴着
-            if (this.getPose() == Pose.SWIMMING && !this.isInLiquid()){
-                return state.setAndContinue(DefaultAnimations.CRAWL);
-            }
-            // 在水里
-            if (this.isInLiquid() && this.isEyeInFluid(FluidTags.WATER)){
-                if (state.isMoving()) {
-                    return state.setAndContinue(DefaultAnimations.SWIM);
-                }else {
-                    return state.setAndContinue(DefaultAnimations.CRAWL);
-                }
-            }
-            // 没有移动
-            if (!state.isMoving()){
-                // 是否为sit
-                if (this.isSitting()) return state.setAndContinue(RawAnimation.begin().thenLoop("misc.sit"));
-                return state.setAndContinue(DefaultAnimations.IDLE);
-            }else if (state.isMoving()){
-                // 如果速度较快
-                if (this.getDeltaMovement().length() > 0.2){
-                    return state.setAndContinue(DefaultAnimations.RUN);
-                }
-                return state.setAndContinue(DefaultAnimations.WALK);
-            }
-
-            return PlayState.CONTINUE;
-        }));
-    }
+//    @Override
+//    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+//        controllers.add(new AnimationController<>(this, 20, state -> {
+//            // 地上趴着
+//            if (this.getPose() == Pose.SWIMMING && !this.isInLiquid()){
+//                return state.setAndContinue(DefaultAnimations.CRAWL);
+//            }
+//            // 在水里
+//            if (this.isInLiquid() && this.isEyeInFluid(FluidTags.WATER)){
+//                if (state.isMoving()) {
+//                    return state.setAndContinue(DefaultAnimations.SWIM);
+//                }else {
+//                    return state.setAndContinue(DefaultAnimations.CRAWL);
+//                }
+//            }
+//            // 没有移动
+//            if (!state.isMoving()){
+//                // 是否为sit
+//                if (this.isSitting()) return state.setAndContinue(RawAnimation.begin().thenLoop("misc.sit"));
+//                return state.setAndContinue(DefaultAnimations.IDLE);
+//            }else if (state.isMoving()){
+//                // 如果速度较快
+//                if (this.getDeltaMovement().length() > 0.2){
+//                    return state.setAndContinue(DefaultAnimations.RUN);
+//                }
+//                return state.setAndContinue(DefaultAnimations.WALK);
+//            }
+//
+//            return PlayState.CONTINUE;
+//        }));
+//    }
 
     @Override
     public void move(@NotNull MoverType type, @NotNull Vec3 pos) {
@@ -345,7 +344,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     }
 
     public boolean canMove() {
-        return this.getPose() != Pose.SWIMMING && !this.isSitting() || this.isInLiquid();
+        return this.getPose() != Pose.SWIMMING && !this.isSitting();
     }
 
     @Override
@@ -367,6 +366,38 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
             int r = random.nextInt(6);
             player.sendSystemMessage(Component.translatable("message.toneko.neko.on_hurt."+r, this.getName()));
         }
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, 20, state -> {
+            // 地上趴着
+            if (this.getPose() == Pose.SWIMMING && !this.isInWater()){
+                return state.setAndContinue(DefaultAnimations.CRAWL);
+            }
+            // 在水里
+            if (this.isInWater() && this.isEyeInFluid(FluidTags.WATER)){
+                if (state.isMoving()) {
+                    return state.setAndContinue(DefaultAnimations.SWIM);
+                }else {
+                    return state.setAndContinue(DefaultAnimations.CRAWL);
+                }
+            }
+            // 没有移动
+            if (!state.isMoving()){
+                // 是否为sit
+                if (this.isSitting()) return state.setAndContinue(RawAnimation.begin().thenLoop("misc.sit"));
+                return state.setAndContinue(DefaultAnimations.IDLE);
+            }else if (state.isMoving()){
+                // 如果速度较快
+                if (this.getDeltaMovement().length() > 0.2){
+                    return state.setAndContinue(DefaultAnimations.RUN);
+                }
+                return state.setAndContinue(DefaultAnimations.WALK);
+            }
+
+            return PlayState.CONTINUE;
+        }));
     }
 
     @Override

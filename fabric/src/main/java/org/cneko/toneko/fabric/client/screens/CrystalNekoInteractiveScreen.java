@@ -10,7 +10,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.cneko.toneko.common.api.TickTasks;
 import org.cneko.toneko.common.mod.entities.INeko;
-import org.cneko.toneko.common.mod.packets.interactives.GiftItemPayload;
 import org.cneko.toneko.common.mod.util.EntityUtil;
 import org.cneko.toneko.common.mod.util.TickTaskQueue;
 import org.cneko.toneko.fabric.entities.CrystalNekoEntity;
@@ -112,7 +111,7 @@ public class CrystalNekoInteractiveScreen extends InteractionScreen implements I
             ItemStack stack = Minecraft.getInstance().player.getMainHandItem();
             int slot = Minecraft.getInstance().player.getInventory().findSlotMatchingItem(stack);
             if(!stack.isEmpty()){
-                ClientPlayNetworking.send(new GiftItemPayload(neko.getUUID().toString(), slot));
+                //ClientPlayNetworking.send(new GiftItemPayload(neko.getUUID().toString(), slot));
             }
         }));
 

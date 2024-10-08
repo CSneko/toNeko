@@ -6,7 +6,6 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.Holder;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.server.level.ServerLevel;
@@ -19,12 +18,10 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.ItemLore;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.api.NekoSkin;
 import org.cneko.toneko.common.api.Permissions;
 import org.cneko.toneko.common.mod.api.EntityPoseManager;
-import org.cneko.toneko.common.mod.packets.EntityPosePayload;
 import org.cneko.toneko.common.mod.util.EntityUtil;
 import org.cneko.toneko.common.mod.util.PermissionUtil;
 import org.cneko.toneko.common.mod.util.SkinUtil;
@@ -56,14 +53,14 @@ public class NekoCommand {
                             .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_NEKO_SPEED))
                             .executes(NekoCommand::speedCommand)
                     )
-                    .then(literal("lie")
-                            .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_NEKO_LIE))
-                            .executes(NekoCommand::lieCommand)
-                    )
-                    .then(literal("getDown")
-                            .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_NEKO_GET_DOWN))
-                            .executes(NekoCommand::getDownCommand)
-                    )
+//                    .then(literal("lie")
+//                            .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_NEKO_LIE))
+//                            .executes(NekoCommand::lieCommand)
+//                    )
+//                    .then(literal("getDown")
+//                            .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_NEKO_GET_DOWN))
+//                            .executes(NekoCommand::getDownCommand)
+//                    )
                     .then(literal("nickname")
                             .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_NEKO_NICKNAME))
                             .then(argument("nickname", StringArgumentType.greedyString())
@@ -74,12 +71,12 @@ public class NekoCommand {
                             .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_NEKO_LEVEL))
                             .executes(NekoCommand::levelCommand)
                     )
-                    .then(literal("lore")
-                            .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_NEKO_LORE))
-                            .then(argument("lore", StringArgumentType.greedyString())
-                                    .executes(NekoCommand::loreCommand)
-                            )
-                    )
+//                    .then(literal("lore")
+//                            .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_NEKO_LORE))
+//                            .then(argument("lore", StringArgumentType.greedyString())
+//                                    .executes(NekoCommand::loreCommand)
+//                            )
+//                    )
                     .then(literal("ride")
                             .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_NEKO_RIDE))
                             .executes(NekoCommand::rideCommand)
@@ -119,59 +116,59 @@ public class NekoCommand {
         return 1;
     }
 
-    // 原始方法 getDownCommand
-    public static int getDownCommand(CommandContext<CommandSourceStack> context) {
-        Entity entity = context.getSource().getEntity();
-        setEntityPose(entity, Pose.SWIMMING, context.getSource());
-        return 1;
-    }
+//    // 原始方法 getDownCommand
+//    public static int getDownCommand(CommandContext<CommandSourceStack> context) {
+//        Entity entity = context.getSource().getEntity();
+//        setEntityPose(entity, Pose.SWIMMING, context.getSource());
+//        return 1;
+//    }
+//
+//    // 原始方法 lieCommand
+//    public static int lieCommand(CommandContext<CommandSourceStack> context) {
+//        Entity entity = context.getSource().getEntity();
+//        setEntityPose(entity, Pose.SLEEPING, context.getSource());
+//        return 1;
+//    }
 
-    // 原始方法 lieCommand
-    public static int lieCommand(CommandContext<CommandSourceStack> context) {
-        Entity entity = context.getSource().getEntity();
-        setEntityPose(entity, Pose.SLEEPING, context.getSource());
-        return 1;
-    }
+//    // 设置实体的姿态
+//    private static void setEntityPose(Entity entity, Pose pose, CommandSourceStack source) {
+//        if (EntityPoseManager.contains(entity)) {
+//            EntityPoseManager.remove(entity);
+//            sendPosePacket(entity, pose, false);
+//        } else {
+//            EntityPoseManager.setPose(entity, pose);
+//            sendPosePacket(entity, pose, true);
+//        }
+//    }
 
-    // 设置实体的姿态
-    private static void setEntityPose(Entity entity, Pose pose, CommandSourceStack source) {
-        if (EntityPoseManager.contains(entity)) {
-            EntityPoseManager.remove(entity);
-            sendPosePacket(entity, pose, false);
-        } else {
-            EntityPoseManager.setPose(entity, pose);
-            sendPosePacket(entity, pose, true);
-        }
-    }
-
-    // 发送姿态包
-    private static void sendPosePacket(Entity entity, Pose pose, boolean isSet) {
-        if (entity instanceof ServerPlayer player) {
-            ServerPlayNetworking.send(player, new EntityPosePayload(pose,entity.getUUID().toString(), isSet));
-        }
-    }
+//    // 发送姿态包
+//    private static void sendPosePacket(Entity entity, Pose pose, boolean isSet) {
+//        if (entity instanceof ServerPlayer player) {
+//            ServerPlayNetworking.send(player, new EntityPosePayload(pose,entity.getUUID().toString(), isSet));
+//        }
+//    }
 
 
-    public static int loreCommand(CommandContext<CommandSourceStack> context) {
-        ServerPlayer player = context.getSource().getPlayer();
-        if (!NekoQuery.isNeko(player.getUUID())){
-            context.getSource().getPlayer().sendSystemMessage(translatable("command.neko.not_neko"));
-        }else {
-            // 获取玩家手中的物品
-            ItemStack stack = player.getMainHandItem();
-            if (stack.isEmpty()) {
-                context.getSource().getPlayer().sendSystemMessage(translatable("command.neko.lore.no_item"));
-                return 1;
-            }
-            String lore = StringArgumentType.getString(context, "lore");
-            Component text = Component.nullToEmpty(lore);
-            List<Component> loreList = new ArrayList<>();
-            loreList.add(text);
-            // 给物品添加lore
-            stack.set(DataComponents.LORE,new ItemLore(loreList));
-        }
-        return 1;
-    }
+//    public static int loreCommand(CommandContext<CommandSourceStack> context) {
+//        ServerPlayer player = context.getSource().getPlayer();
+//        if (!NekoQuery.isNeko(player.getUUID())){
+//            context.getSource().getPlayer().sendSystemMessage(translatable("command.neko.not_neko"));
+//        }else {
+//            // 获取玩家手中的物品
+//            ItemStack stack = player.getMainHandItem();
+//            if (stack.isEmpty()) {
+//                context.getSource().getPlayer().sendSystemMessage(translatable("command.neko.lore.no_item"));
+//                return 1;
+//            }
+//            String lore = StringArgumentType.getString(context, "lore");
+//            Component text = Component.nullToEmpty(lore);
+//            List<Component> loreList = new ArrayList<>();
+//            loreList.add(text);
+//            // 给物品添加lore
+//            stack.set(DataComponents.LORE,new ItemLore(loreList));
+//        }
+//        return 1;
+//    }
 
     public static int levelCommand(CommandContext<CommandSourceStack> context) {
         NekoQuery.Neko neko = NekoQuery.getNeko(context.getSource().getPlayer().getUUID());
@@ -206,7 +203,7 @@ public class NekoCommand {
         return giveEffect(context, MobEffects.JUMP);
     }
 
-    public static int giveEffect(CommandContext<CommandSourceStack> context, Holder<MobEffect> effect) {
+    public static int giveEffect(CommandContext<CommandSourceStack> context, MobEffect effect) {
         Player player = context.getSource().getPlayer();
         NekoQuery.Neko neko = NekoQuery.getNeko(player.getUUID());
         if(!neko.isNeko()){

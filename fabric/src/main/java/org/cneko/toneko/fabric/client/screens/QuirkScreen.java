@@ -9,7 +9,6 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import org.cneko.toneko.common.mod.packets.QuirkQueryPayload;
 import org.cneko.toneko.common.mod.quirks.ToNekoQuirk;
 import org.cneko.toneko.common.quirks.QuirkRegister;
 import org.jetbrains.annotations.NotNull;
@@ -90,7 +89,7 @@ public class QuirkScreen extends Screen{
     public void onClose() {
         Minecraft.getInstance().setScreen(lastScreen);
         // 向服务器发送quirk
-        ClientPlayNetworking.getSender().sendPacket(new QuirkQueryPayload(quirks,allQuirks,true));
+        //ClientPlayNetworking.getSender().sendPacket(new QuirkQueryPayload(quirks,allQuirks,true));
     }
 
 

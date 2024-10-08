@@ -9,14 +9,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.api.Permissions;
-import org.cneko.toneko.common.api.PlayerInstallToNeko;
-import org.cneko.toneko.common.mod.packets.QuirkQueryPayload;
 import org.cneko.toneko.common.mod.util.CommandUtil;
 import org.cneko.toneko.common.mod.util.PermissionUtil;
 import org.cneko.toneko.common.mod.util.TextUtil;
 import org.cneko.toneko.common.quirks.Quirk;
 import org.cneko.toneko.common.quirks.QuirkRegister;
-import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.common.util.QuirkUtil;
 
 import java.util.List;
@@ -50,25 +47,25 @@ public class QuirkCommand {
                         .requires(source -> PermissionUtil.has(Permissions.COMMAND_QUIRK_LIST, source))
                         .executes(QuirkCommand::listQuirks)
                 )
-                .then(literal("gui")
-                        .requires(source -> PermissionUtil.has(Permissions.COMMAND_QUIRK_GUI, source))
-                        .executes(QuirkCommand::quirkGui)
-                )
-                .executes(QuirkCommand::quirkGui)
+//                .then(literal("gui")
+//                        .requires(source -> PermissionUtil.has(Permissions.COMMAND_QUIRK_GUI, source))
+//                        .executes(QuirkCommand::quirkGui)
+//                )
+//                .executes(QuirkCommand::quirkGui)
         ));
     }
 
-    public static int quirkGui(CommandContext<CommandSourceStack> context) {
-        ServerPlayer player = context.getSource().getPlayer();
-        String playerName = TextUtil.getPlayerName(player);
-        NekoQuery.Neko neko = NekoQuery.getNeko(player.getUUID());
-        // 打开设置屏幕
-        ServerPlayNetworking.send(player, new QuirkQueryPayload(
-                QuirkUtil.quirkToIds(neko.getQuirks()),
-                QuirkRegister.getQuirkIds().stream().toList(),true)
-        );
-        return 1;
-    }
+//    public static int quirkGui(CommandContext<CommandSourceStack> context) {
+//        ServerPlayer player = context.getSource().getPlayer();
+//        String playerName = TextUtil.getPlayerName(player);
+//        NekoQuery.Neko neko = NekoQuery.getNeko(player.getUUID());
+//        // 打开设置屏幕
+//        ServerPlayNetworking.send(player, new QuirkQueryPayload(
+//                QuirkUtil.quirkToIds(neko.getQuirks()),
+//                QuirkRegister.getQuirkIds().stream().toList(),true)
+//        );
+//        return 1;
+//    }
 
     public static int listQuirks(CommandContext<CommandSourceStack> context) {
         NekoQuery.Neko neko = NekoQuery.getNeko(context.getSource().getPlayer().getUUID());
