@@ -24,12 +24,12 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.renderer.GeoArmorRenderer;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import javax.annotation.Nullable;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public abstract class NekoArmor<N extends Item & GeoItem> extends DyeableArmorItem implements GeoItem {
     public final AnimatableInstanceCache cache;
+    private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
     public NekoArmor(ArmorMaterial material, Type type, Properties settings) {
         super(material, type, settings);
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
@@ -87,7 +87,7 @@ public abstract class NekoArmor<N extends Item & GeoItem> extends DyeableArmorIt
 
     @Override
     public Supplier<Object> getRenderProvider() {
-        return null;
+        return this.renderProvider;
     }
 
 

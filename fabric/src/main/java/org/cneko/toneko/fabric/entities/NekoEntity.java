@@ -72,6 +72,11 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         this.cache = GeckoLibUtil.createInstanceCache(this);
     }
 
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(SKIN_DATA_ID,"grmmy");
+    }
+
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
