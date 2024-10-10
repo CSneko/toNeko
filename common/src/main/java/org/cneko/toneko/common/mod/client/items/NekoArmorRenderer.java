@@ -36,7 +36,6 @@ public class NekoArmorRenderer<T extends NekoArmor<T>> extends GeoArmorRenderer<
 //            poseStack.translate(0, -1.5, -0.0625);
 //        }
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
-
     }
 
     @Override
@@ -129,6 +128,15 @@ public class NekoArmorRenderer<T extends NekoArmor<T>> extends GeoArmorRenderer<
     public static class NekoTailRenderer extends NekoArmorRenderer<NekoArmor.NekoTailItem> {
         public NekoTailRenderer() {
             super();
+        }
+
+        @Override
+        public void preRender(PoseStack poseStack, NekoArmor.NekoTailItem animatable, BakedGeoModel model, @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+            if (this.currentEntity.isShiftKeyDown()){
+                // 向后移动一点
+                poseStack.translate(0, 0, 0.35);
+            }
+            super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
         }
     }
 
