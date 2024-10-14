@@ -78,6 +78,7 @@ subprojects {
         }
 
         modCompileOnly "me.lucko:fabric-permissions-api:0.2-SNAPSHOT"
+        modImplementation "net.fabricmc.fabric-api:fabric-api:$rootProject.fabric_api_version"
         modImplementation "software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}"
     }
 

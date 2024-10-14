@@ -1,5 +1,4 @@
 package org.cneko.toneko.common;
-
 import org.cneko.ctlib.common.file.JsonConfiguration;
 import org.cneko.ctlib.common.file.YamlConfiguration;
 import org.cneko.toneko.common.quirks.Quirks;
