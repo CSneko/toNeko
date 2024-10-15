@@ -1,4 +1,4 @@
-package org.cneko.toneko.fabric.commands;
+package org.cneko.toneko.common.mod.commands;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;

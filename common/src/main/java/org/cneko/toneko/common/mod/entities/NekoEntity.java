@@ -1,4 +1,4 @@
-package org.cneko.toneko.fabric.entities;
+package org.cneko.toneko.common.mod.entities;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.ChatFormatting;
@@ -34,11 +34,10 @@ import net.minecraft.world.phys.Vec3;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.mod.api.NekoNameRegistry;
 import org.cneko.toneko.common.mod.api.NekoSkinRegistry;
-import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.packets.interactives.NekoEntityInteractivePayload;
 import org.cneko.toneko.common.mod.util.EntityUtil;
-import org.cneko.toneko.fabric.entities.ai.goal.NekoFollowOwnerGoal;
-import org.cneko.toneko.fabric.entities.ai.goal.NekoMateGoal;
+import org.cneko.toneko.common.mod.entities.ai.goal.NekoFollowOwnerGoal;
+import org.cneko.toneko.common.mod.entities.ai.goal.NekoMateGoal;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;

@@ -1,4 +1,4 @@
-package org.cneko.toneko.fabric.client.screens;
+package org.cneko.toneko.common.mod.client.screens;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;

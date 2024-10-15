@@ -1,15 +1,13 @@
-package org.cneko.toneko.fabric.client.events;
+package org.cneko.toneko.common.mod.client.events;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import org.cneko.toneko.common.api.TickTasks;
 import org.cneko.toneko.common.mod.client.api.ClientEntityPoseManager;
-import org.cneko.toneko.fabric.client.ToNekoKeyBindings;
+import org.cneko.toneko.common.mod.client.ToNekoKeyBindings;
 @Environment(EnvType.CLIENT)
 public class ClientTickEvent {
     public static void init(){

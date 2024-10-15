@@ -3,12 +3,13 @@ package org.cneko.toneko.fabric.client;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.Minecraft;
-import org.cneko.toneko.fabric.client.renderers.NekoRenderer;
-import org.cneko.toneko.fabric.client.events.ClientNetworkEvents;
-import org.cneko.toneko.fabric.client.events.ClientPlayerJoinEvent;
-import org.cneko.toneko.fabric.client.events.ClientTickEvent;
+import org.cneko.toneko.common.mod.client.ToNekoKeyBindings;
+import org.cneko.toneko.common.mod.client.renderers.NekoRenderer;
+import org.cneko.toneko.common.mod.client.events.ClientNetworkEvents;
+import org.cneko.toneko.common.mod.client.events.ClientPlayerJoinEvent;
+import org.cneko.toneko.common.mod.client.events.ClientTickEvent;
 import org.cneko.toneko.fabric.client.items.NekoArmorTrinketsRenderer;
-import org.cneko.toneko.fabric.entities.ToNekoEntities;
+import org.cneko.toneko.common.mod.entities.ToNekoEntities;
 import org.cneko.toneko.fabric.items.ToNekoItems;
 
 public class ToNekoClient implements ClientModInitializer {

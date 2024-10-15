@@ -1,4 +1,4 @@
-package org.cneko.toneko.fabric.entities;
+package org.cneko.toneko.common.mod.entities;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.BlockPos;
@@ -7,12 +7,10 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.packets.interactives.CrystalNekoInteractivePayload;
 import org.jetbrains.annotations.Nullable;
 

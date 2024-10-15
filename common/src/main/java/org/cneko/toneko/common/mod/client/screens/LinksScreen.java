@@ -1,11 +1,10 @@
-package org.cneko.toneko.fabric.client.screens;
+package org.cneko.toneko.common.mod.client.screens;
 
 import net.minecraft.Util;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import org.cneko.toneko.fabric.entities.NekoEntity;
+import org.cneko.toneko.common.mod.entities.NekoEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

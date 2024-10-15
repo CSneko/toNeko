@@ -1,4 +1,4 @@
-package org.cneko.toneko.fabric;
+package org.cneko.toneko.common.mod.events;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
@@ -16,7 +16,7 @@ import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.packets.QuirkQueryPayload;
 import org.cneko.toneko.common.mod.packets.interactives.*;
 import org.cneko.toneko.common.mod.util.PermissionUtil;
-import org.cneko.toneko.fabric.entities.NekoEntity;
+import org.cneko.toneko.common.mod.entities.NekoEntity;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;

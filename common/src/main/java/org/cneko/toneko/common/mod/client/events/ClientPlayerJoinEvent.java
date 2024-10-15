@@ -1,4 +1,4 @@
-package org.cneko.toneko.fabric.client.events;
+package org.cneko.toneko.common.mod.client.events;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;

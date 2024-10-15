@@ -1,4 +1,4 @@
-package org.cneko.toneko.fabric.commands;
+package org.cneko.toneko.common.mod.commands;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -9,14 +9,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.api.Permissions;
-import org.cneko.toneko.common.api.PlayerInstallToNeko;
 import org.cneko.toneko.common.mod.packets.QuirkQueryPayload;
 import org.cneko.toneko.common.mod.util.CommandUtil;
 import org.cneko.toneko.common.mod.util.PermissionUtil;
 import org.cneko.toneko.common.mod.util.TextUtil;
 import org.cneko.toneko.common.quirks.Quirk;
 import org.cneko.toneko.common.quirks.QuirkRegister;
-import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.common.util.QuirkUtil;
 
 import java.util.List;

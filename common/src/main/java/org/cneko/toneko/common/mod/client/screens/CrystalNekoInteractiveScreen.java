@@ -1,20 +1,16 @@
-package org.cneko.toneko.fabric.client.screens;
+package org.cneko.toneko.common.mod.client.screens;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.cneko.toneko.common.api.TickTasks;
-import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.packets.interactives.GiftItemPayload;
-import org.cneko.toneko.common.mod.util.EntityUtil;
 import org.cneko.toneko.common.mod.util.TickTaskQueue;
-import org.cneko.toneko.fabric.entities.CrystalNekoEntity;
-import org.cneko.toneko.fabric.entities.NekoEntity;
+import org.cneko.toneko.common.mod.entities.CrystalNekoEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

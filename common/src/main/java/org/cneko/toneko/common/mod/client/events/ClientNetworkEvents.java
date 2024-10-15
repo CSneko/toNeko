@@ -1,4 +1,4 @@
-package org.cneko.toneko.fabric.client.events;
+package org.cneko.toneko.common.mod.client.events;
 
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -10,16 +10,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.cneko.toneko.common.mod.client.api.ClientEntityPoseManager;
-import org.cneko.toneko.common.mod.packets.VehicleStopRidePayload;
 import org.cneko.toneko.common.mod.packets.interactives.CrystalNekoInteractivePayload;
 import org.cneko.toneko.common.mod.packets.interactives.NekoEntityInteractivePayload;
-import org.cneko.toneko.fabric.client.screens.CrystalNekoInteractiveScreen;
-import org.cneko.toneko.fabric.client.screens.NekoEntityInteractiveScreen;
-import org.cneko.toneko.fabric.client.screens.QuirkScreen;
+import org.cneko.toneko.common.mod.client.screens.CrystalNekoInteractiveScreen;
+import org.cneko.toneko.common.mod.client.screens.NekoEntityInteractiveScreen;
+import org.cneko.toneko.common.mod.client.screens.QuirkScreen;
 import org.cneko.toneko.common.mod.packets.EntityPosePayload;
 import org.cneko.toneko.common.mod.packets.QuirkQueryPayload;
-import org.cneko.toneko.fabric.entities.CrystalNekoEntity;
-import org.cneko.toneko.fabric.entities.NekoEntity;
+import org.cneko.toneko.common.mod.entities.CrystalNekoEntity;
+import org.cneko.toneko.common.mod.entities.NekoEntity;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;

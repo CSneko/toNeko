@@ -1,9 +1,8 @@
-package org.cneko.toneko.fabric.entities.ai.goal;
+package org.cneko.toneko.common.mod.entities.ai.goal;
 
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
-import org.cneko.toneko.fabric.entities.NekoEntity;
+import org.cneko.toneko.common.mod.entities.NekoEntity;
 
 import java.util.EnumSet;
 

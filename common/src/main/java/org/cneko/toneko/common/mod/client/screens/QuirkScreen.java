@@ -1,4 +1,4 @@
-package org.cneko.toneko.fabric.client.screens;
+package org.cneko.toneko.common.mod.client.screens;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.ChatFormatting;

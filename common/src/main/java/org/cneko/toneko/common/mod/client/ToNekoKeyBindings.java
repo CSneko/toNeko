@@ -1,4 +1,4 @@
-package org.cneko.toneko.fabric.client;
+package org.cneko.toneko.common.mod.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;

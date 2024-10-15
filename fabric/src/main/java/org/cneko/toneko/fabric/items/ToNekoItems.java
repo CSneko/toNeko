@@ -14,8 +14,7 @@ import net.minecraft.world.item.SpawnEggItem;
 import org.cneko.toneko.common.mod.items.FurryBoheItem;
 import org.cneko.toneko.common.mod.items.NekoArmor;
 import org.cneko.toneko.common.mod.items.NekoPotionItem;
-import org.cneko.toneko.common.util.ConfigUtil;
-import org.cneko.toneko.fabric.entities.ToNekoEntities;
+import org.cneko.toneko.common.mod.entities.ToNekoEntities;
 
 import static org.cneko.toneko.common.Bootstrap.MODID;
 
