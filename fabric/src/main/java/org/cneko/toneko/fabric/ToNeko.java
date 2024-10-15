@@ -15,6 +15,7 @@ import org.cneko.toneko.common.mod.impl.FabricConfigImpl;
 import org.cneko.toneko.common.mod.impl.FabricLanguageImpl;
 import org.cneko.toneko.common.mod.items.ToNekoArmorMaterials;
 import org.cneko.toneko.common.mod.packets.EntityPosePayload;
+import org.cneko.toneko.common.mod.packets.ToNekoPackets;
 import org.cneko.toneko.common.mod.packets.VehicleStopRidePayload;
 import org.cneko.toneko.common.mod.packets.interactives.*;
 import org.cneko.toneko.common.mod.packets.QuirkQueryPayload;
@@ -49,17 +50,7 @@ public class ToNeko implements ModInitializer {
         // 注册Quirks
         ToNekoQuirks.init();
         // 注册网络数据包
-        PayloadTypeRegistry.playS2C().register(EntityPosePayload.ID, EntityPosePayload.CODEC);
-        PayloadTypeRegistry.playS2C().register(QuirkQueryPayload.ID, QuirkQueryPayload.CODEC);
-        PayloadTypeRegistry.playC2S().register(QuirkQueryPayload.ID, QuirkQueryPayload.CODEC);
-        PayloadTypeRegistry.playS2C().register(NekoEntityInteractivePayload.ID, NekoEntityInteractivePayload.CODEC);
-        PayloadTypeRegistry.playC2S().register(GiftItemPayload.ID, GiftItemPayload.CODEC);
-        PayloadTypeRegistry.playC2S().register(FollowOwnerPayload.ID, FollowOwnerPayload.CODEC);
-        PayloadTypeRegistry.playC2S().register(RideEntityPayload.ID, RideEntityPayload.CODEC);
-        PayloadTypeRegistry.playC2S().register(NekoPosePayload.ID, NekoPosePayload.CODEC);
-        PayloadTypeRegistry.playS2C().register(VehicleStopRidePayload.ID, VehicleStopRidePayload.CODEC);
-        PayloadTypeRegistry.playC2S().register(NekoMatePayload.ID, NekoMatePayload.CODEC);
-        PayloadTypeRegistry.playS2C().register(CrystalNekoInteractivePayload.ID, CrystalNekoInteractivePayload.CODEC);
+        ToNekoPackets.init();
 
         // 注册实体
         ToNekoEntities.init();
