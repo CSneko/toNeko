@@ -10,6 +10,7 @@ import org.cneko.toneko.bukkit.events.WorldEvents;
 import org.cneko.toneko.bukkit.msic.Metrics;
 import org.cneko.toneko.bukkit.util.PlaceHolderUtil;
 import org.cneko.toneko.common.Bootstrap;
+import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.mod.impl.FabricConfigImpl;
 import org.cneko.toneko.common.mod.impl.FabricLanguageImpl;
 import org.cneko.toneko.common.util.ConfigUtil;
@@ -45,5 +46,11 @@ public class ToNeko extends JavaPlugin {
         PlayerConnectionEvents.init();
         WorldEvents.init();
         // event end
+    }
+
+    @Override
+    public void onDisable() {
+        super.onDisable();
+        NekoQuery.NekoData.saveAll();
     }
 }

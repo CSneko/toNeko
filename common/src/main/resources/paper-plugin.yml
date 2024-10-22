@@ -1,8 +1,9 @@
 name: toNeko
-version: '1.3.9'
+version: '1.3.10'
 main: org.cneko.toneko.bukkit.ToNeko
 description: Turn Players to Neko in Minecraft
 api-version: '1.21'
+folia-supported: true
 authors:
   - CrystalNeko
 website: https://github.com/CSNeko/toNeko

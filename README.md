@@ -4,6 +4,8 @@
 ![break with optifine](https://wsrv.nl/?url=https%3A%2F%2Fimages.teamresourceful.com%2Fu%2F8vCLgK.svg&n=-1)
 ## 简单的介绍
 喵喵喵~
+
+喜欢这个模组记得点个star哦~
 ### 下载:
 [插件版](https://modrinth.com/plugin/toneko/)
 [模组版](https://modrinth.com/mod/tonekomod/)

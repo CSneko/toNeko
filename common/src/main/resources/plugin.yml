@@ -1,5 +1,5 @@
 name: toNeko
-version: '1.3.9'
+version: '1.3.10'
 main: org.cneko.toneko.bukkit.ToNeko
 api-version: '1.21'
 author: CrystalNeko

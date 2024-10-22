@@ -4,6 +4,8 @@
 ![break with optifine](https://wsrv.nl/?url=https%3A%2F%2Fimages.teamresourceful.com%2Fu%2F8vCLgK.svg&n=-1)
 ## Brief introduction
 Meow meow meow~
+
+If you like this mod, please click a star~
 ### Download:
 [Plugin version](https://modrinth.com/plugin/toneko/)
 [Mod version](https://modrinth.com/mod/tonekomod/)
