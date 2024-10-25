@@ -7,6 +7,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.javafmlmod.FMLJavaModLanguageProvider;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.cneko.toneko.common.mod.commands.NekoCommand;
 import org.cneko.toneko.common.mod.commands.QuirkCommand;
@@ -56,7 +57,6 @@ public final class ToNekoNeoForge {
         QuirkCommand.init();
         ToNekoAdminCommand.init();
 
-        //new ToNeko().onInitialize();
 
     }
 }

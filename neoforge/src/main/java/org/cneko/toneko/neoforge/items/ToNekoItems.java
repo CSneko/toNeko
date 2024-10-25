@@ -9,8 +9,10 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
+import org.cneko.toneko.common.mod.entities.ToNekoEntities;
 import org.cneko.toneko.common.mod.items.FurryBoheItem;
 import org.cneko.toneko.common.mod.items.NekoArmor;
 import org.cneko.toneko.common.mod.items.NekoCollectorItem;
@@ -27,6 +29,7 @@ public class ToNekoItems {
 
     public static ResourceKey<CreativeModeTab> TONEKO_ITEM_GROUP_KEY;
     public static Supplier<CreativeModeTab> TONEKO_ITEM_GROUP;
+    public static DeferredSpawnEggItem ADVENTURER_NEKO_SPAWN_EGG;
     public static void init() {
         registerWithOutConfig();
     }
@@ -41,6 +44,9 @@ public class ToNekoItems {
 
         NEKO_EARS = ITEMS.register(NekoArmor.NekoEarsItem.ID, NekoArmor.NekoEarsItem::new).get();
         NEKO_TAIL = ITEMS.register(NekoArmor.NekoTailItem.ID,NekoArmor.NekoTailItem::new).get();
+
+        ADVENTURER_NEKO_SPAWN_EGG = ITEMS.register("adventurer_neko_spawn_egg",()->new DeferredSpawnEggItem(()->ToNekoEntities.ADVENTURER_NEKO, 0x7e7e7e, 0xffffff,new Item.Properties())).get();
+
         ITEMS.register(NekoArmor.NekoPawsItem.ID, NekoArmor.NekoPawsItem::new); // 此物品暂不添加
         // 注册物品组
         TONEKO_ITEM_GROUP_KEY = ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), ResourceLocation.fromNamespaceAndPath(MODID, "item_group"));

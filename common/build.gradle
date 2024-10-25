@@ -19,4 +19,5 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
     compileOnly files("libs/paper-1.21.jar")
     compileOnly 'me.clip:placeholderapi:2.11.6'
+    modImplementation "software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}"
 }

@@ -8,6 +8,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import org.cneko.toneko.common.mod.client.renderers.NekoRenderer;
+import org.cneko.toneko.common.mod.entities.ToNekoEntities;
 
 import static org.cneko.toneko.common.Bootstrap.MODID;
 
@@ -16,18 +18,19 @@ import static org.cneko.toneko.common.Bootstrap.MODID;
 public class ToNekoNeoForgeClient {
 
     public ToNekoNeoForgeClient(IEventBus bus, ModContainer container){
-//        new ToNekoClient().onInitializeClient();
-        // TODO: 渲染问题我解决不掉
         bus.addListener(ToNekoNeoForgeClient::registerEntityRenderers);
-
     }
 
     @SubscribeEvent
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event){
-//        event.registerEntityRenderer(
-//                ToNekoEntities.ADVENTURER_NEKO,
-//                NekoRenderer::new
-//        );
+        event.registerEntityRenderer(
+                ToNekoEntities.ADVENTURER_NEKO,
+                NekoRenderer::new
+        );
+        event.registerEntityRenderer(
+                ToNekoEntities.CRYSTAL_NEKO,
+                NekoRenderer::new
+        );
     }
 
 
