@@ -12,7 +12,7 @@ import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
-import org.cneko.toneko.fabric.items.ToNekoItems;
+import org.cneko.toneko.common.mod.items.ToNekoItems;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;

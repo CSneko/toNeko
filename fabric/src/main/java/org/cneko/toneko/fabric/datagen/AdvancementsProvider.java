@@ -8,12 +8,14 @@ import net.minecraft.advancements.AdvancementType;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceLocation;
-import org.cneko.toneko.fabric.items.ToNekoItems;
+import org.cneko.toneko.common.mod.items.ToNekoItems;
 
 import java.util.function.Consumer;
 
 import static org.cneko.toneko.common.Bootstrap.MODID;
 import static org.cneko.toneko.common.mod.util.TextUtil.translatable;
+import static org.cneko.toneko.fabric.items.ToNekoItems.NEKO_COLLECTOR;
+
 public class AdvancementsProvider extends FabricAdvancementProvider {
     public static AdvancementHolder NEKO_ATTRACTING;
     public static AdvancementHolder GOT_NEKO_POTION;
@@ -37,7 +39,7 @@ public class AdvancementsProvider extends FabricAdvancementProvider {
                         true, // 获得发送到聊天
                         false // 不隐藏进度
                 )
-                .addCriterion("neko_attracting", InventoryChangeTrigger.TriggerInstance.hasItems(ToNekoItems.NEKO_COLLECTOR))
+                .addCriterion("neko_attracting", InventoryChangeTrigger.TriggerInstance.hasItems(NEKO_COLLECTOR))
                 .save(consumer, MODID+"/root");
         GOT_NEKO_POTION = Advancement.Builder.advancement()
                 .display(

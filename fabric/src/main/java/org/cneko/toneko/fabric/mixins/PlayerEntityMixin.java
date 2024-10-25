@@ -3,7 +3,7 @@ package org.cneko.toneko.fabric.mixins;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.player.Player;
 import org.cneko.toneko.fabric.api.events.AttributeEvents;
-import org.cneko.toneko.fabric.misc.ToNekoAttributes;
+import org.cneko.toneko.common.mod.misc.ToNekoAttributes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

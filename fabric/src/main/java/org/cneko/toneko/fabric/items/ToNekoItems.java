@@ -13,25 +13,21 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
 import org.cneko.toneko.common.mod.items.FurryBoheItem;
 import org.cneko.toneko.common.mod.items.NekoArmor;
+import org.cneko.toneko.common.mod.items.NekoCollectorItem;
 import org.cneko.toneko.common.mod.items.NekoPotionItem;
 import org.cneko.toneko.common.mod.entities.ToNekoEntities;
+import static org.cneko.toneko.common.mod.items.ToNekoItems.*;
 
 import static org.cneko.toneko.common.Bootstrap.MODID;
 
 
 public class ToNekoItems {
-    public static NekoPotionItem NEKO_POTION;
     public static NekoCollectorItem NEKO_COLLECTOR;
-    public static NekoArmor.NekoEarsItem NEKO_EARS;
-    public static NekoArmor.NekoTailItem NEKO_TAIL;
-    public static NekoArmor.NekoPawsItem NEKO_PAWS;
-    public static FurryBoheItem FURRY_BOHE;
     public static ResourceKey<CreativeModeTab> TONEKO_ITEM_GROUP_KEY;
     public static CreativeModeTab TONEKO_ITEM_GROUP;
     public static final SpawnEggItem ADVENTURER_NEKO_SPAWN_EGG = new SpawnEggItem(ToNekoEntities.ADVENTURER_NEKO, 0x7e7e7e, 0xffffff,new Item.Properties());
     public static boolean isTrinketsInstalled = tryClass("dev.emi.trinkets.api.Trinket");
     public static void init() {
-        // 如果启用了仅服务器端，则不注册物品
         registerWithOutConfig();
     }
 

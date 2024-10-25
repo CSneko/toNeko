@@ -25,7 +25,7 @@ import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.common.util.LanguageUtil;
 import org.cneko.toneko.common.mod.entities.ToNekoEntities;
 import org.cneko.toneko.fabric.items.ToNekoItems;
-import org.cneko.toneko.fabric.misc.ToNekoAttributes;
+import org.cneko.toneko.common.mod.misc.ToNekoAttributes;
 
 public class ToNeko implements ModInitializer {
     @Override

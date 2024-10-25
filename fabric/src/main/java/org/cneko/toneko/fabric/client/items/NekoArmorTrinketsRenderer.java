@@ -14,7 +14,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
 import static org.cneko.toneko.common.Bootstrap.LOGGER;
-import static org.cneko.toneko.fabric.items.ToNekoItems.*;
+import static org.cneko.toneko.common.mod.items.ToNekoItems.*;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import org.cneko.toneko.common.mod.client.items.NekoArmorRenderer;

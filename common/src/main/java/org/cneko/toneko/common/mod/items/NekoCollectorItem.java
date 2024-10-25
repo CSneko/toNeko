@@ -1,4 +1,4 @@
-package org.cneko.toneko.fabric.items;
+package org.cneko.toneko.common.mod.items;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -12,7 +12,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.cneko.toneko.common.mod.codecs.CountCodecs;
 import org.cneko.toneko.common.mod.misc.ToNekoComponents;
-import org.cneko.toneko.fabric.misc.ToNekoAttributes;
+import org.cneko.toneko.common.mod.misc.ToNekoAttributes;
 
 import java.util.List;
 

@@ -13,12 +13,12 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
 import org.cneko.toneko.common.mod.items.NekoArmor;
-import org.cneko.toneko.fabric.misc.ToNekoAttributes;
+import org.cneko.toneko.common.mod.misc.ToNekoAttributes;
 
 import java.util.ArrayList;
 
 import static org.cneko.toneko.common.Bootstrap.LOGGER;
-import static org.cneko.toneko.fabric.items.ToNekoItems.*;
+import static org.cneko.toneko.common.mod.items.ToNekoItems.*;
 public class NekoArmorTrinkets {
     public static void init() {
         LOGGER.info("Trinkets detected, registering Neko Armors as TrinketItem");

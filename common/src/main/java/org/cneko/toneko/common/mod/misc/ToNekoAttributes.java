@@ -1,8 +1,7 @@
-package org.cneko.toneko.fabric.misc;
+package org.cneko.toneko.common.mod.misc;
 
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
@@ -17,13 +16,12 @@ public class ToNekoAttributes {
         ).setSyncable(true)
     );
 
-    public static void init(){
-        //FabricDefaultAttributeRegistry.register(EntityType.PLAYER,Player.createAttributes().add(NEKO_DEGREE));
-    }
-
+    @ExpectPlatform
     public static Holder<Attribute> register(ResourceLocation id, Attribute attribute) {
-        return Registry.registerForHolder(BuiltInRegistries.ATTRIBUTE,id, attribute);
+        return null;
     }
 
+    public static void init() {
 
+    }
 }
