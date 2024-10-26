@@ -49,10 +49,13 @@ public final class ToNekoNeoForge {
         ToNekoArmorMaterials.init();
         ToNekoItems.init();
         bus.addListener(ToNekoItems::buildContents);
+        //bus.addListener(ToNekoItems::registerEvent);
         ToNekoAttributes.init();
         bus.addListener(ToNekoAttributes::onRegisterAttributes);
+        bus.addListener(ToNekoAttributes::registerAttributes);
         ToNekoEvents.init();
         ToNekoEntities.init();
+        //bus.addListener(ToNekoEntities::registerEntityTypes);
 
         // 注册网络数据包
         ToNekoPackets.init();

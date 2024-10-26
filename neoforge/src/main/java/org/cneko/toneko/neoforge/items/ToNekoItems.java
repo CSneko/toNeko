@@ -9,9 +9,13 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.NewRegistryEvent;
+import net.neoforged.neoforge.registries.RegisterEvent;
 import org.cneko.toneko.common.mod.entities.ToNekoEntities;
 import org.cneko.toneko.common.mod.items.FurryBoheItem;
 import org.cneko.toneko.common.mod.items.NekoArmor;
@@ -29,8 +33,6 @@ import static org.cneko.toneko.neoforge.ToNekoNeoForge.ITEMS;
 
 public class ToNekoItems {
 
-    public static ResourceKey<CreativeModeTab> TONEKO_ITEM_GROUP_KEY;
-    public static Supplier<CreativeModeTab> TONEKO_ITEM_GROUP;
     public static DeferredHolder<Item,DeferredSpawnEggItem> ADVENTURER_NEKO_SPAWN_EGG_HOLDER;
     public static DeferredHolder<Item,NekoPotionItem> NEKO_POTION_HOLDER;
     public static DeferredHolder<Item,NekoCollectorItem> NEKO_COLLECTOR_HOLDER;
@@ -48,25 +50,19 @@ public class ToNekoItems {
      */
     public static void registerWithOutConfig() {
         NEKO_POTION_HOLDER = ITEMS.register(NekoPotionItem.ID, NekoPotionItem::new);
-        //NEKO_POTION = NEKO_POTION_HOLDER.get();
 
         NEKO_COLLECTOR_HOLDER = ITEMS.register(NekoCollectorItem.ID, NekoCollectorItem::new);
-        //NEKO_COLLECTOR = NEKO_COLLECTOR_HOLDER.get();
 
         FURRY_BOHE_HOLDER = ITEMS.register(FurryBoheItem.ID, FurryBoheItem::new);
-        //FURRY_BOHE = FURRY_BOHE_HOLDER.get();
 
         NEKO_EARS_HOLDER = ITEMS.register(NekoArmor.NekoEarsItem.ID, NekoArmor.NekoEarsItem::new);
-        //NEKO_EARS = NEKO_EARS_HOLDER.get();
 
-        NEKO_TAIL_HOLDER = ITEMS.register(NekoArmor.NekoTailItem.ID,NekoArmor.NekoTailItem::new);
-        //NEKO_TAIL = NEKO_TAIL_HOLDER.get();
+        NEKO_TAIL_HOLDER = ITEMS.register(NekoArmor.NekoTailItem.ID, NekoArmor.NekoTailItem::new);
 
         ADVENTURER_NEKO_SPAWN_EGG_HOLDER = ITEMS.register("adventurer_neko_spawn_egg",()->new DeferredSpawnEggItem(()->ToNekoEntities.ADVENTURER_NEKO, 0x7e7e7e, 0xffffff,new Item.Properties()));
 
         ITEMS.register(NekoArmor.NekoPawsItem.ID, NekoArmor.NekoPawsItem::new); // 此物品暂不添加
         // 注册物品组
-        TONEKO_ITEM_GROUP_KEY = ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), ResourceLocation.fromNamespaceAndPath(MODID, "item_group"));
         TONEKO_ITEM_GROUP_HOLDER = ToNekoNeoForge.CREATIVE_MODE_TABS.register("toneko_group", ()-> CreativeModeTab.builder()
                 .icon(()->NEKO_EARS_HOLDER.get().getDefaultInstance())
                 .title(Component.translatable("itemGroup.toneko"))
@@ -85,13 +81,22 @@ public class ToNekoItems {
 
     @SubscribeEvent
     public static void buildContents(BuildCreativeModeTabContentsEvent event) {
-        if (event.getTabKey().equals(TONEKO_ITEM_GROUP_KEY)) {
-            event.accept(NEKO_POTION);
-            event.accept(NEKO_COLLECTOR);
-            event.accept(FURRY_BOHE);
-            event.accept(NEKO_EARS);
-            event.accept(NEKO_TAIL);
+        if (event.getTab().equals(TONEKO_ITEM_GROUP_HOLDER.get())) {
+            event.accept(NEKO_POTION_HOLDER.get());
+            event.accept(NEKO_COLLECTOR_HOLDER.get());
+            event.accept(FURRY_BOHE_HOLDER.get());
+            event.accept(NEKO_EARS_HOLDER.get());
+            event.accept(NEKO_TAIL_HOLDER.get());
             event.accept(ADVENTURER_NEKO_SPAWN_EGG_HOLDER.get());
         }
+    }
+
+    @SubscribeEvent
+    public static void registerEvent(FMLCommonSetupEvent event){
+        NEKO_POTION = NEKO_POTION_HOLDER.get();
+        NEKO_COLLECTOR = NEKO_COLLECTOR_HOLDER.get();
+        FURRY_BOHE = FURRY_BOHE_HOLDER.get();
+        NEKO_TAIL = NEKO_TAIL_HOLDER.get();
+        NEKO_EARS = NEKO_EARS_HOLDER.get();
     }
 }

@@ -9,7 +9,7 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import org.cneko.toneko.common.mod.client.renderers.NekoRenderer;
-import org.cneko.toneko.common.mod.entities.ToNekoEntities;
+import org.cneko.toneko.neoforge.entities.ToNekoEntities;
 
 import static org.cneko.toneko.common.Bootstrap.MODID;
 
@@ -24,11 +24,11 @@ public class ToNekoNeoForgeClient {
     @SubscribeEvent
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event){
         event.registerEntityRenderer(
-                ToNekoEntities.ADVENTURER_NEKO,
+                ToNekoEntities.ADVENTURER_NEKO_HOLDER.get(),
                 NekoRenderer::new
         );
         event.registerEntityRenderer(
-                ToNekoEntities.CRYSTAL_NEKO,
+                ToNekoEntities.CRYSTAL_NEKO_HOLDER.get(),
                 NekoRenderer::new
         );
     }
