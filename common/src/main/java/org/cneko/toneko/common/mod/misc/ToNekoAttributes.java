@@ -5,23 +5,23 @@ import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
+import org.jetbrains.annotations.NotNull;
 
 import static org.cneko.toneko.common.Bootstrap.MODID;
 
 public class ToNekoAttributes {
     public static final ResourceLocation NEKO_DEGREE_ID = ResourceLocation.fromNamespaceAndPath(MODID, "neko.degree");
-    public static final Holder<Attribute> NEKO_DEGREE = register(NEKO_DEGREE_ID,
+    public static final @NotNull Holder<Attribute> NEKO_DEGREE = register(NEKO_DEGREE_ID,
         new RangedAttribute("attribute.name.neko.degree",
         1.0, 0.0, 100.0
         ).setSyncable(true)
     );
 
     @ExpectPlatform
-    public static Holder<Attribute> register(ResourceLocation id, Attribute attribute) {
-        return null;
+    public static @NotNull Holder<Attribute> register(ResourceLocation id, Attribute attribute) {
+        throw new AssertionError();
     }
 
     public static void init() {
-
     }
 }

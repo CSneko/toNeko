@@ -10,6 +10,7 @@ import static org.cneko.toneko.common.mod.misc.ToNekoAttributes.NEKO_DEGREE;
 public class ToNekoAttributes {
 
     public static void init(){
+        org.cneko.toneko.common.mod.misc.ToNekoAttributes.init();
     }
 
 

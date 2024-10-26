@@ -18,6 +18,8 @@ import org.cneko.toneko.common.mod.items.NekoArmor;
 import org.cneko.toneko.common.mod.items.NekoCollectorItem;
 import org.cneko.toneko.common.mod.items.NekoPotionItem;
 import org.cneko.toneko.common.util.ConfigUtil;
+import org.cneko.toneko.neoforge.ToNekoNeoForge;
+
 import static org.cneko.toneko.common.mod.items.ToNekoItems.*;
 
 import java.util.function.Supplier;
@@ -29,7 +31,14 @@ public class ToNekoItems {
 
     public static ResourceKey<CreativeModeTab> TONEKO_ITEM_GROUP_KEY;
     public static Supplier<CreativeModeTab> TONEKO_ITEM_GROUP;
-    public static DeferredSpawnEggItem ADVENTURER_NEKO_SPAWN_EGG;
+    public static DeferredHolder<Item,DeferredSpawnEggItem> ADVENTURER_NEKO_SPAWN_EGG_HOLDER;
+    public static DeferredHolder<Item,NekoPotionItem> NEKO_POTION_HOLDER;
+    public static DeferredHolder<Item,NekoCollectorItem> NEKO_COLLECTOR_HOLDER;
+    public static DeferredHolder<Item,FurryBoheItem> FURRY_BOHE_HOLDER;
+    public static DeferredHolder<Item,NekoArmor.NekoEarsItem> NEKO_EARS_HOLDER;
+    public static DeferredHolder<Item,NekoArmor.NekoTailItem> NEKO_TAIL_HOLDER;
+    public static DeferredHolder<CreativeModeTab,CreativeModeTab> TONEKO_ITEM_GROUP_HOLDER;
+
     public static void init() {
         registerWithOutConfig();
     }
@@ -38,19 +47,31 @@ public class ToNekoItems {
      * 强制注册物品，无论配置文件如何设置
      */
     public static void registerWithOutConfig() {
-        NEKO_POTION = ITEMS.register(NekoPotionItem.ID, NekoPotionItem::new).get();
-        NEKO_COLLECTOR = ITEMS.register(NekoCollectorItem.ID, NekoCollectorItem::new).get();
-        FURRY_BOHE = ITEMS.register(FurryBoheItem.ID, FurryBoheItem::new).get();
+        NEKO_POTION_HOLDER = ITEMS.register(NekoPotionItem.ID, NekoPotionItem::new);
+        //NEKO_POTION = NEKO_POTION_HOLDER.get();
 
-        NEKO_EARS = ITEMS.register(NekoArmor.NekoEarsItem.ID, NekoArmor.NekoEarsItem::new).get();
-        NEKO_TAIL = ITEMS.register(NekoArmor.NekoTailItem.ID,NekoArmor.NekoTailItem::new).get();
+        NEKO_COLLECTOR_HOLDER = ITEMS.register(NekoCollectorItem.ID, NekoCollectorItem::new);
+        //NEKO_COLLECTOR = NEKO_COLLECTOR_HOLDER.get();
 
-        ADVENTURER_NEKO_SPAWN_EGG = ITEMS.register("adventurer_neko_spawn_egg",()->new DeferredSpawnEggItem(()->ToNekoEntities.ADVENTURER_NEKO, 0x7e7e7e, 0xffffff,new Item.Properties())).get();
+        FURRY_BOHE_HOLDER = ITEMS.register(FurryBoheItem.ID, FurryBoheItem::new);
+        //FURRY_BOHE = FURRY_BOHE_HOLDER.get();
+
+        NEKO_EARS_HOLDER = ITEMS.register(NekoArmor.NekoEarsItem.ID, NekoArmor.NekoEarsItem::new);
+        //NEKO_EARS = NEKO_EARS_HOLDER.get();
+
+        NEKO_TAIL_HOLDER = ITEMS.register(NekoArmor.NekoTailItem.ID,NekoArmor.NekoTailItem::new);
+        //NEKO_TAIL = NEKO_TAIL_HOLDER.get();
+
+        ADVENTURER_NEKO_SPAWN_EGG_HOLDER = ITEMS.register("adventurer_neko_spawn_egg",()->new DeferredSpawnEggItem(()->ToNekoEntities.ADVENTURER_NEKO, 0x7e7e7e, 0xffffff,new Item.Properties()));
 
         ITEMS.register(NekoArmor.NekoPawsItem.ID, NekoArmor.NekoPawsItem::new); // 此物品暂不添加
         // 注册物品组
         TONEKO_ITEM_GROUP_KEY = ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), ResourceLocation.fromNamespaceAndPath(MODID, "item_group"));
-        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, TONEKO_ITEM_GROUP_KEY,TONEKO_ITEM_GROUP.get());
+        TONEKO_ITEM_GROUP_HOLDER = ToNekoNeoForge.CREATIVE_MODE_TABS.register("toneko_group", ()-> CreativeModeTab.builder()
+                .icon(()->NEKO_EARS_HOLDER.get().getDefaultInstance())
+                .title(Component.translatable("itemGroup.toneko"))
+                .build()
+        );
     }
 
     public static boolean tryClass(String clazz){
@@ -70,6 +91,7 @@ public class ToNekoItems {
             event.accept(FURRY_BOHE);
             event.accept(NEKO_EARS);
             event.accept(NEKO_TAIL);
+            event.accept(ADVENTURER_NEKO_SPAWN_EGG_HOLDER.get());
         }
     }
 }

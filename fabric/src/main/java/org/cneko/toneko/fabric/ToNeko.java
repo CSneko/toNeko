@@ -23,7 +23,7 @@ import org.cneko.toneko.common.mod.quirks.ToNekoQuirks;
 import org.cneko.toneko.common.mod.util.PermissionUtil;
 import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.common.util.LanguageUtil;
-import org.cneko.toneko.common.mod.entities.ToNekoEntities;
+import org.cneko.toneko.fabric.entities.ToNekoEntities;
 import org.cneko.toneko.fabric.items.ToNekoItems;
 import org.cneko.toneko.common.mod.misc.ToNekoAttributes;
 
