@@ -35,6 +35,9 @@ public class ToNeko implements ModInitializer {
         NekoCommand.init();
         QuirkCommand.init();
 
+        // 注册实体
+        ToNekoEntities.init();
+
         // 注册装备
         ToNekoArmorMaterials.init();
         // 注册物品
@@ -46,9 +49,6 @@ public class ToNeko implements ModInitializer {
         ToNekoQuirks.init();
         // 注册网络数据包
         ToNekoPackets.init();
-
-        // 注册实体
-        ToNekoEntities.init();
 
         // 启动事件
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
