@@ -8,6 +8,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import org.cneko.toneko.common.mod.client.ToNekoKeyBindings;
+import org.cneko.toneko.common.mod.client.events.ClientNetworkEvents;
+import org.cneko.toneko.common.mod.client.events.ClientPlayerJoinEvent;
+import org.cneko.toneko.common.mod.client.events.ClientTickEvent;
 import org.cneko.toneko.common.mod.client.renderers.NekoRenderer;
 import org.cneko.toneko.neoforge.entities.ToNekoEntities;
 
@@ -19,6 +23,10 @@ public class ToNekoNeoForgeClient {
 
     public ToNekoNeoForgeClient(IEventBus bus, ModContainer container){
         bus.addListener(ToNekoNeoForgeClient::registerEntityRenderers);
+        ClientNetworkEvents.init();
+        ClientPlayerJoinEvent.init();
+        ClientTickEvent.init();
+        ToNekoKeyBindings.init();
     }
 
     @SubscribeEvent
