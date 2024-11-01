@@ -92,6 +92,15 @@ public class NekoArmorRenderer<T extends NekoArmor<T>> extends GeoArmorRenderer<
         public NekoTailRenderer() {
             super();
         }
+
+        @Override
+        public void preRender(PoseStack poseStack, NekoArmor.NekoTailItem item, BakedGeoModel model, @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
+            if (this.currentEntity.isShiftKeyDown()){
+                // 向后移动一点
+                poseStack.translate(0, 0, 0.35);
+            }
+            super.preRender(poseStack, item, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
+        }
     }
 
     public static class NekoEarsRenderer extends NekoArmorRenderer<NekoArmor.NekoEarsItem> {

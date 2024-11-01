@@ -45,10 +45,11 @@ public final class ToNekoNeoForge {
         ARMOR_MATERIALS.register(bus);
         ATTRIBUTES.register(bus);
         ENTITY_TYPES.register(bus);
+        CREATIVE_MODE_TABS.register(bus);
         // 注册装备
         ToNekoArmorMaterials.init();
         ToNekoItems.init();
-        bus.addListener(ToNekoItems::buildContents);
+        //bus.addListener(ToNekoItems::buildContents);
         //bus.addListener(ToNekoItems::registerEvent);
         ToNekoAttributes.init();
         bus.addListener(ToNekoAttributes::onRegisterAttributes);
