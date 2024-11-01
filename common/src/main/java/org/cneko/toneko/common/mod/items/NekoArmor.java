@@ -88,8 +88,8 @@ public abstract class NekoArmor<N extends Item & GeoItem> extends ArmorItem impl
 
     public static class NekoTailItem extends NekoArmor<NekoTailItem> {
         public static final String ID = "neko_tail";
-        public NekoTailItem() {
-            super(ToNekoArmorMaterials.NEKO,Type.CHESTPLATE,new Properties().stacksTo(1));
+        public NekoTailItem(Holder<ArmorMaterial> material) {
+            super(material,Type.CHESTPLATE,new Properties().stacksTo(1));
         }
 
         @Override
@@ -111,8 +111,8 @@ public abstract class NekoArmor<N extends Item & GeoItem> extends ArmorItem impl
 
     public static class NekoEarsItem extends NekoArmor<NekoEarsItem> {
         public static final String ID = "neko_ears";
-        public NekoEarsItem() {
-            super(ToNekoArmorMaterials.NEKO,Type.HELMET,new Properties().stacksTo(1));
+        public NekoEarsItem(Holder<ArmorMaterial> material) {
+            super(material,Type.HELMET,new Properties().stacksTo(1));
         }
 
         @Override
@@ -124,8 +124,8 @@ public abstract class NekoArmor<N extends Item & GeoItem> extends ArmorItem impl
 
     public static class NekoPawsItem extends NekoArmor<NekoPawsItem> {
         public static final String ID = "neko_paws";
-        public NekoPawsItem() {
-            super(ToNekoArmorMaterials.NEKO,Type.BOOTS,new Properties().stacksTo(1));
+        public NekoPawsItem(Holder<ArmorMaterial> material) {
+            super(material,Type.BOOTS,new Properties().stacksTo(1));
         }
 
         @Override

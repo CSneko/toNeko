@@ -1,4 +1,4 @@
-package org.cneko.toneko.common.mod.items;
+package org.cneko.toneko.fabric.items;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -10,7 +10,6 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.crafting.Ingredient;
-import org.cneko.toneko.common.util.ConfigUtil;
 
 import java.util.List;
 import java.util.Map;

@@ -56,13 +56,13 @@ public class ToNekoItems {
 
         FURRY_BOHE_HOLDER = ITEMS.register(FurryBoheItem.ID, FurryBoheItem::new);
 
-        NEKO_EARS_HOLDER = ITEMS.register(NekoArmor.NekoEarsItem.ID, NekoArmor.NekoEarsItem::new);
+        NEKO_EARS_HOLDER = ITEMS.register(NekoArmor.NekoEarsItem.ID, ()->new NekoArmor.NekoEarsItem(ToNekoArmorMaterials.NEKO));
 
-        NEKO_TAIL_HOLDER = ITEMS.register(NekoArmor.NekoTailItem.ID, NekoArmor.NekoTailItem::new);
+        NEKO_TAIL_HOLDER = ITEMS.register(NekoArmor.NekoTailItem.ID, ()->new NekoArmor.NekoTailItem(ToNekoArmorMaterials.NEKO));
 
         ADVENTURER_NEKO_SPAWN_EGG_HOLDER = ITEMS.register("adventurer_neko_spawn_egg",()->new DeferredSpawnEggItem(()->ToNekoEntities.ADVENTURER_NEKO_HOLDER.get(), 0x7e7e7e, 0xffffff,new Item.Properties()));
 
-        ITEMS.register(NekoArmor.NekoPawsItem.ID, NekoArmor.NekoPawsItem::new); // 此物品暂不添加
+        ITEMS.register(NekoArmor.NekoPawsItem.ID, ()->new NekoArmor.NekoPawsItem(ToNekoArmorMaterials.NEKO)); // 此物品暂不添加
         // 注册物品组
         TONEKO_ITEM_GROUP_HOLDER = ToNekoNeoForge.CREATIVE_MODE_TABS.register("toneko_group", ()-> CreativeModeTab.builder()
                 .icon(()->NEKO_EARS_HOLDER.get().getDefaultInstance())

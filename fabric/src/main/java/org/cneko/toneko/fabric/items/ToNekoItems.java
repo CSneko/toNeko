@@ -47,9 +47,9 @@ public class ToNekoItems {
         if (isTrinketsInstalled){
             NekoArmorTrinkets.init();
         }else {
-            NEKO_EARS = new NekoArmor.NekoEarsItem();
-            NEKO_TAIL = new NekoArmor.NekoTailItem();
-            NEKO_PAWS = new NekoArmor.NekoPawsItem();
+            NEKO_EARS = new NekoArmor.NekoEarsItem(ToNekoArmorMaterials.NEKO);
+            NEKO_TAIL = new NekoArmor.NekoTailItem(ToNekoArmorMaterials.NEKO);
+            NEKO_PAWS = new NekoArmor.NekoPawsItem(ToNekoArmorMaterials.NEKO);
         }
         Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, NekoArmor.NekoEarsItem.ID), NEKO_EARS);
         Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, NekoArmor.NekoTailItem.ID), NEKO_TAIL);

@@ -34,7 +34,7 @@ public class NekoArmorTrinkets {
     }
     public static class NekoTailTrinketItem extends NekoArmor.NekoTailItem implements Trinket {
         public NekoTailTrinketItem() {
-            super();
+            super(ToNekoArmorMaterials.NEKO);
         }
         @Override
         public boolean canEquipFromUse(ItemStack stack, LivingEntity entity) {
@@ -55,7 +55,7 @@ public class NekoArmorTrinkets {
 
     public static class NekoEarsTrinketItem extends NekoArmor.NekoEarsItem implements Trinket{
         public NekoEarsTrinketItem() {
-            super();
+            super(ToNekoArmorMaterials.NEKO);
         }
         @Override
         public boolean canEquipFromUse(ItemStack stack, LivingEntity entity) {
@@ -75,7 +75,7 @@ public class NekoArmorTrinkets {
     }
     public static class NekoPawsTrinketItem extends NekoArmor.NekoPawsItem implements Trinket {
         public NekoPawsTrinketItem() {
-            super();
+            super(ToNekoArmorMaterials.NEKO);
         }
         @Override
         public boolean canEquipFromUse(ItemStack stack, LivingEntity entity) {

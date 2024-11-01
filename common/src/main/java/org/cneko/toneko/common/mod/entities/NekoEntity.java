@@ -64,22 +64,23 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     private final AnimatableInstanceCache cache;
     private boolean isSitting = false;
 
-    public static final EntityDataAccessor<String> SKIN_DATA_ID = SynchedEntityData.defineId(NekoEntity.class, EntityDataSerializers.STRING);
+    //public static final EntityDataAccessor<String> SKIN_DATA_ID = SynchedEntityData.defineId(NekoEntity.class, EntityDataSerializers.STRING);
 
     public NekoEntity(EntityType<? extends NekoEntity> entityType, Level level) {
         super(entityType, level);
         NekoQuery.getNeko(this.getUUID()).setNeko(true);
         this.cache = GeckoLibUtil.createInstanceCache(this);
+        randomize(new CompoundTag());
     }
 
-    @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag nbt) {
-        super.readAdditionalSaveData(nbt);
-        if(nbt.contains("Skin")) {
-            this.setSkin(nbt.getString("Skin"));
-        }
-        randomize(nbt);
-    }
+//    @Override
+//    public void readAdditionalSaveData(@NotNull CompoundTag nbt) {
+//        super.readAdditionalSaveData(nbt);
+//        if(nbt.contains("Skin")) {
+//            this.setSkin(nbt.getString("Skin"));
+//        }
+//        randomize(nbt);
+//    }
 
 //    @Override
 //    public void addAdditionalSaveData(@NotNull CompoundTag nbt) {
@@ -87,32 +88,32 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
 //        nbt.putString("Skin", getSkin());
 //    }
 
-    @Override
-    public @NotNull CompoundTag saveWithoutId(CompoundTag compound) {
-        compound.putString("Skin", getSkin());
-        return super.saveWithoutId(compound);
-    }
+//    @Override
+//    public @NotNull CompoundTag saveWithoutId(CompoundTag compound) {
+//        compound.putString("Skin", getSkin());
+//        return super.saveWithoutId(compound);
+//    }
 
-    @Override
-    public void load(@NotNull CompoundTag nbt) {
-        super.load(nbt);
-        if (nbt.contains("Skin")) {
-            this.setSkin(nbt.getString("Skin"));
-        }
-    }
+//    @Override
+//    public void load(@NotNull CompoundTag nbt) {
+//        super.load(nbt);
+//        if (nbt.contains("Skin")) {
+//            this.setSkin(nbt.getString("Skin"));
+//        }
+//    }
 
-    @Override
-    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
-        super.defineSynchedData(builder);
-        builder.define(SKIN_DATA_ID,this.getSkin());
-    }
-
-    public void onSyncedDataUpdated(EntityDataAccessor<?> dataAccessor) {
-        if (dataAccessor.equals(SKIN_DATA_ID)) {
-            this.setSkin(getEntityData().get(SKIN_DATA_ID));
-        }
-        super.onSyncedDataUpdated(dataAccessor);
-    }
+//    @Override
+//    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+//        super.defineSynchedData(builder);
+//        builder.define(SKIN_DATA_ID,this.getSkin());
+//    }
+//
+//    public void onSyncedDataUpdated(EntityDataAccessor<?> dataAccessor) {
+//        if (dataAccessor.equals(SKIN_DATA_ID)) {
+//            this.setSkin(getEntityData().get(SKIN_DATA_ID));
+//        }
+//        super.onSyncedDataUpdated(dataAccessor);
+//    }
 
     public void randomize(CompoundTag nbt){
         // 设置名字（如果没有）
@@ -168,13 +169,15 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         return this.goalSelector;
     }
 
-    public String getSkin() {
-        if (this.entityData == null)
-            return this.getRandomSkin();
-        return this.entityData.get(SKIN_DATA_ID);
-    }
+//    public String getSkin() {
+////        if (this.entityData == null)
+////            return this.getRandomSkin();
+////        return this.entityData.get(SKIN_DATA_ID);
+//        return
+//    }
+    public abstract String getSkin();
     public void setSkin(String skin) {
-        this.entityData.set(SKIN_DATA_ID, skin);
+        //this.entityData.set(SKIN_DATA_ID, skin);
     }
     public String getRandomSkin(){
         return NekoSkinRegistry.getRandomSkin(this.getType());

@@ -77,7 +77,6 @@ public class ToNekoArmorMaterials {
         // Register the material within the ArmorMaterials registry.
         DeferredHolder<ArmorMaterial,ArmorMaterial> materialHolder = ToNekoNeoForge.ARMOR_MATERIALS.register(id, () -> material);
 
-        // 大多数时候，您会需要材质的 RegistryEntry - 尤其是对于 ArmorItem 构造函数。
         return materialHolder;
     }
 
