@@ -14,6 +14,8 @@ You only need to put it in the `plugins` or `mods` folder of the server/client.
 
 Pre-mods required for the mod version (must be added): [ctlib](https://modrinth.com/mod/ctlibmod), [geckolib](https://modrinth.com/mod/geckolib)
 
+The NeoForge version also requires the [Forgified Fabric API](https://modrinth.com/mod/forgified-fabric-api)
+
 Pre-plugin required for the plugin version: [ctlib](https://modrinth.com/plugin/ctlib)
 
 ## Tips

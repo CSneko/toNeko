@@ -14,6 +14,8 @@
 
 模组版需要的前置mod(一定要加哦): [ctlib](https://modrinth.com/mod/ctlibmod)，[geckolib](https://modrinth.com/mod/geckolib)
 
+NeoForge版本还需要[Forgified Fabric API](https://modrinth.com/mod/forgified-fabric-api)哦
+
 插件版需要的前置插件: [ctlib](https://modrinth.com/plugin/ctlib)
 
 ## 小提示
