@@ -21,17 +21,6 @@ public class AdventurerNeko extends NekoEntity{
         super(entityType, level);
     }
 
-    @Override
-    public String getSkin() {
-        // 你问我为啥要这样干？ 啊我也不知道我为啥要这样干
-        String u = this.uuid.toString();
-        if (u.startsWith("a") || u.startsWith("b") || u.startsWith("c") || u.startsWith("d")
-        || u.startsWith("e") || u.startsWith("f")
-        ){
-            return "aquarter";
-        }
-        return "grmmy";
-    }
 
     @Override
     public Set<Item> getFavoriteItems() {
