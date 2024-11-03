@@ -6,6 +6,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
@@ -17,6 +18,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.Mth;
+import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -24,6 +27,8 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -64,6 +69,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     private final AnimatableInstanceCache cache;
     private boolean isSitting = false;
     private String skin;
+    final NekoInventory inventory = new NekoInventory(this);
 
     public static final EntityDataAccessor<String> SKIN_DATA_ID = SynchedEntityData.defineId(NekoEntity.class, EntityDataSerializers.STRING);
 
@@ -96,11 +102,16 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putString("Skin", this.getSkin());
+        compound.put("Inventory", this.inventory.save(new ListTag()));
+        compound.putInt("SelectedItemSlot", this.inventory.selected);
     }
 
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         this.setSkin(compound.getString("Skin"));
+        ListTag listTag = compound.getList("Inventory", 10);
+        this.inventory.load(listTag);
+        this.inventory.selected = compound.getInt("SelectedItemSlot");
     }
 
     @Override
@@ -119,6 +130,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         this.goalSelector.addGoal(20,nekoFollowOwnerGoal);
         // 猫娘有繁殖欲望
         nekoMateGoal = new NekoMateGoal(this,null,30,this.followLeashSpeed() / 2);
+
         this.goalSelector.addGoal(30,nekoMateGoal);
     }
 
@@ -192,8 +204,8 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     public boolean giftItem(Player player, ItemStack stack){
         // 如果是喜欢的物品
         if (this.isLikedItem(stack)){
-            // TODO：把物品放到背包里面
             player.getInventory().removeItem(player.getMainHandItem());
+            this.getInventory().add(stack);
             // 播放爱心粒子
             this.level().addParticle(ParticleTypes.HEART,this.getX()+1.8, this.getY(), this.getZ(),1,1,1);
             if (player instanceof ServerPlayer sp){
@@ -216,6 +228,92 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
                 player.sendSystemMessage(randomTranslatabledComponent("message.toneko.neko.gift_fail", 3, Objects.requireNonNull(this.getCustomName()).getString()));
             }
             return false;
+        }
+    }
+
+    public NekoInventory getInventory() {
+        return this.inventory;
+    }
+
+    public ItemStack getItemBySlot(EquipmentSlot slot) {
+        if (slot == EquipmentSlot.MAINHAND) {
+            return this.inventory.getSelected();
+        } else if (slot == EquipmentSlot.OFFHAND) {
+            return (ItemStack)this.inventory.offhand.get(0);
+        } else {
+            return slot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR ? (ItemStack)this.inventory.armor.get(slot.getIndex()) : ItemStack.EMPTY;
+        }
+    }
+
+    public void setItemSlot(EquipmentSlot slot, ItemStack stack) {
+        this.verifyEquippedItem(stack);
+        if (slot == EquipmentSlot.MAINHAND) {
+            this.onEquipItem(slot, (ItemStack)this.inventory.items.set(this.inventory.selected, stack), stack);
+        } else if (slot == EquipmentSlot.OFFHAND) {
+            this.onEquipItem(slot, (ItemStack)this.inventory.offhand.set(0, stack), stack);
+        } else if (slot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR) {
+            this.onEquipItem(slot, (ItemStack)this.inventory.armor.set(slot.getIndex(), stack), stack);
+        }
+
+    }
+
+    public boolean addItem(ItemStack stack) {
+        return this.inventory.add(stack);
+    }
+    public Iterable<ItemStack> getArmorSlots() {
+        return this.inventory.armor;
+    }
+
+    @Override
+    public void die(DamageSource damageSource) {
+        super.die(damageSource);
+        Level world = this.level();
+        if (world instanceof ServerLevel) {
+            ServerLevel serverLevel = (ServerLevel) world;
+            this.dropAllDeathLoot(serverLevel, damageSource);
+            this.getInventory().dropAll();
+        }
+    }
+
+    @Nullable
+    public ItemEntity drop(ItemStack itemStack, boolean includeThrowerName) {
+        return this.drop(itemStack, false, includeThrowerName);
+    }
+
+    @Nullable
+    public ItemEntity drop(ItemStack droppedItem, boolean dropAround, boolean includeThrowerName) {
+        if (droppedItem.isEmpty()) {
+            return null;
+        } else {
+            if (this.level().isClientSide) {
+                this.swing(InteractionHand.MAIN_HAND);
+            }
+
+            double d = this.getEyeY() - 0.30000001192092896;
+            ItemEntity itemEntity = new ItemEntity(this.level(), this.getX(), d, this.getZ(), droppedItem);
+            itemEntity.setPickUpDelay(40);
+            if (includeThrowerName) {
+                itemEntity.setThrower(this);
+            }
+
+            float f;
+            float g;
+            if (dropAround) {
+                f = this.random.nextFloat() * 0.5F;
+                g = this.random.nextFloat() * 6.2831855F;
+                itemEntity.setDeltaMovement((double)(-Mth.sin(g) * f), 0.20000000298023224, (double)(Mth.cos(g) * f));
+            } else {
+                f = 0.3F;
+                g = Mth.sin(this.getXRot() * 0.017453292F);
+                float h = Mth.cos(this.getXRot() * 0.017453292F);
+                float i = Mth.sin(this.getYRot() * 0.017453292F);
+                float j = Mth.cos(this.getYRot() * 0.017453292F);
+                float k = this.random.nextFloat() * 6.2831855F;
+                float l = 0.02F * this.random.nextFloat();
+                itemEntity.setDeltaMovement((double)(-i * h * 0.3F) + Math.cos((double)k) * (double)l, (double)(-g * 0.3F + 0.1F + (this.random.nextFloat() - this.random.nextFloat()) * 0.1F), (double)(j * h * 0.3F) + Math.sin((double)k) * (double)l);
+            }
+
+            return itemEntity;
         }
     }
 
@@ -323,6 +421,12 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
 
             return PlayState.CONTINUE;
         }));
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        this.inventory.tick();
     }
 
     @Override
