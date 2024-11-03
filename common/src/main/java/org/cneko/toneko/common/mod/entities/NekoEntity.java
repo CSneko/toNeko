@@ -72,6 +72,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         NekoQuery.getNeko(this.getUUID()).setNeko(true);
         this.cache = GeckoLibUtil.createInstanceCache(this);
         randomize();
+        this.skin = getSkin();
     }
 
 
@@ -86,33 +87,20 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
         super.defineSynchedData(builder);
-        builder.define(SKIN_DATA_ID, this.getSkin());
+        builder.define(SKIN_DATA_ID, "grmmy");
     }
 
-    @Override
-    public void onSyncedDataUpdated(EntityDataAccessor<?> dataAccessor) {
-        super.onSyncedDataUpdated(dataAccessor);
-        if (dataAccessor.equals(SKIN_DATA_ID)) {
-            this.setSkin(this.getEntityData().get(SKIN_DATA_ID));
-        }
+
+    public void addAdditionalSaveData(CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+        compound.putString("Skin", this.getSkin());
     }
 
-    @Override
-    public CompoundTag saveWithoutId(CompoundTag compound) {
-        compound.putString("skin", this.getSkin());
-        return super.saveWithoutId(compound);
-    }
-
-    @Override
-    public void load(CompoundTag compound) {
-        super.load(compound);
-        if (compound.contains("skin")) {
-            this.setSkin(compound.getString("skin"));
-        }else {
-            this.setSkin(this.getRandomSkin());
-        }
+    public void readAdditionalSaveData(CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
+        this.setSkin(compound.getString("Skin"));
     }
 
     @Override
@@ -159,14 +147,33 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     }
 
     public String getSkin(){
-        return this.skin;
+        if (this.level().isClientSide()) {
+            String s = this.entityData.get(SKIN_DATA_ID);
+            if (s.isEmpty()){
+                this.entityData.packDirty();
+                s = this.getDefaultSkin();
+            }
+            return s;
+        }
+        if (this.skin == null || skin.isEmpty()) {
+            skin = this.getRandomSkin();
+            this.setSkin(skin);
+            return skin;
+        }
+        return skin;
     }
     public void setSkin(String skin) {
         this.skin = skin;
-        this.entityData.set(SKIN_DATA_ID, skin);
+        //noinspection ConstantValue
+        if (this.entityData != null) {
+            this.entityData.set(SKIN_DATA_ID, skin);
+        }
     }
     public String getRandomSkin(){
         return NekoSkinRegistry.getRandomSkin(this.getType());
+    }
+    public String getDefaultSkin(){
+        return "aquarter";
     }
     // 最喜欢的物品
     public Set<Item> getFavoriteItems(){
