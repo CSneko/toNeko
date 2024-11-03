@@ -19,7 +19,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
-import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -28,7 +27,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -99,14 +97,14 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     }
 
 
-    public void addAdditionalSaveData(CompoundTag compound) {
+    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putString("Skin", this.getSkin());
         compound.put("Inventory", this.inventory.save(new ListTag()));
         compound.putInt("SelectedItemSlot", this.inventory.selected);
     }
 
-    public void readAdditionalSaveData(CompoundTag compound) {
+    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         this.setSkin(compound.getString("Skin"));
         ListTag listTag = compound.getList("Inventory", 10);
@@ -202,6 +200,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     }
     // 赠送物品
     public boolean giftItem(Player player, ItemStack stack){
+        this.drop(stack, true);
         // 如果是喜欢的物品
         if (this.isLikedItem(stack)){
             player.getInventory().removeItem(player.getMainHandItem());
@@ -235,24 +234,24 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         return this.inventory;
     }
 
-    public ItemStack getItemBySlot(EquipmentSlot slot) {
+    public @NotNull ItemStack getItemBySlot(@NotNull EquipmentSlot slot) {
         if (slot == EquipmentSlot.MAINHAND) {
             return this.inventory.getSelected();
         } else if (slot == EquipmentSlot.OFFHAND) {
-            return (ItemStack)this.inventory.offhand.get(0);
+            return this.inventory.offhand.getFirst();
         } else {
-            return slot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR ? (ItemStack)this.inventory.armor.get(slot.getIndex()) : ItemStack.EMPTY;
+            return slot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR ? this.inventory.armor.get(slot.getIndex()) : ItemStack.EMPTY;
         }
     }
 
-    public void setItemSlot(EquipmentSlot slot, ItemStack stack) {
+    public void setItemSlot(@NotNull EquipmentSlot slot, @NotNull ItemStack stack) {
         this.verifyEquippedItem(stack);
         if (slot == EquipmentSlot.MAINHAND) {
-            this.onEquipItem(slot, (ItemStack)this.inventory.items.set(this.inventory.selected, stack), stack);
+            this.onEquipItem(slot, this.inventory.items.set(this.inventory.selected, stack), stack);
         } else if (slot == EquipmentSlot.OFFHAND) {
-            this.onEquipItem(slot, (ItemStack)this.inventory.offhand.set(0, stack), stack);
+            this.onEquipItem(slot, this.inventory.offhand.set(0, stack), stack);
         } else if (slot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR) {
-            this.onEquipItem(slot, (ItemStack)this.inventory.armor.set(slot.getIndex(), stack), stack);
+            this.onEquipItem(slot, this.inventory.armor.set(slot.getIndex(), stack), stack);
         }
 
     }
@@ -260,18 +259,22 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     public boolean addItem(ItemStack stack) {
         return this.inventory.add(stack);
     }
-    public Iterable<ItemStack> getArmorSlots() {
+    public @NotNull Iterable<ItemStack> getArmorSlots() {
         return this.inventory.armor;
     }
 
     @Override
-    public void die(DamageSource damageSource) {
+    public void die(@NotNull DamageSource damageSource) {
         super.die(damageSource);
         Level world = this.level();
         if (world instanceof ServerLevel) {
-            ServerLevel serverLevel = (ServerLevel) world;
-            this.dropAllDeathLoot(serverLevel, damageSource);
-            this.getInventory().dropAll();
+//            ServerLevel serverLevel = (ServerLevel) world;
+//            this.dropAllDeathLoot(serverLevel, damageSource);
+//            this.getInventory().dropAll();
+            Entity entity = damageSource.getEntity();
+            if (entity != null){
+                entity.sendSystemMessage(Component.translatable("message.toneko.neko.die.no_item_drop"));
+            }
         }
     }
 
@@ -301,16 +304,15 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
             if (dropAround) {
                 f = this.random.nextFloat() * 0.5F;
                 g = this.random.nextFloat() * 6.2831855F;
-                itemEntity.setDeltaMovement((double)(-Mth.sin(g) * f), 0.20000000298023224, (double)(Mth.cos(g) * f));
+                itemEntity.setDeltaMovement(-Mth.sin(g) * f, 0.20000000298023224, Mth.cos(g) * f);
             } else {
-                f = 0.3F;
                 g = Mth.sin(this.getXRot() * 0.017453292F);
                 float h = Mth.cos(this.getXRot() * 0.017453292F);
                 float i = Mth.sin(this.getYRot() * 0.017453292F);
                 float j = Mth.cos(this.getYRot() * 0.017453292F);
                 float k = this.random.nextFloat() * 6.2831855F;
                 float l = 0.02F * this.random.nextFloat();
-                itemEntity.setDeltaMovement((double)(-i * h * 0.3F) + Math.cos((double)k) * (double)l, (double)(-g * 0.3F + 0.1F + (this.random.nextFloat() - this.random.nextFloat()) * 0.1F), (double)(j * h * 0.3F) + Math.sin((double)k) * (double)l);
+                itemEntity.setDeltaMovement((double)(-i * h * 0.3F) + Math.cos(k) * (double)l, -g * 0.3F + 0.1F + (this.random.nextFloat() - this.random.nextFloat()) * 0.1F, (double)(j * h * 0.3F) + Math.sin(k) * (double)l);
             }
 
             return itemEntity;
@@ -484,7 +486,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     }
 
     @Override
-    public boolean checkSpawnRules(LevelAccessor level, MobSpawnType reason) {
+    public boolean checkSpawnRules(@NotNull LevelAccessor level, @NotNull MobSpawnType reason) {
         return true;
     }
 

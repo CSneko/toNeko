@@ -92,6 +92,7 @@
   "message.toneko.neko.on_hurt.3": "§e%s §d>> §fYou... were careless?",
   "message.toneko.neko.on_hurt.4": "§e%s §d>> §fYou... You are so bad!",
   "message.toneko.neko.on_hurt.5": "§e%s §d>> §fBig bad!",
+  "message.toneko.neko.die.no_item_drop": "§cYou are so mean. I won't return the item to you. Humph!",
   "message.toneko.neko.mate.start": "%s will mate with %s, please wait~",
   "message.toneko.neko.mate.finish": "Mating completed!",
   "message.toneko.neko.breed_fail_baby.0": "§cYour idea is a bit dangerous!",
