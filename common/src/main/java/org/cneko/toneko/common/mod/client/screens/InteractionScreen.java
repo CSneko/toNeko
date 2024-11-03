@@ -26,9 +26,9 @@ public class InteractionScreen extends Screen {
         // 仅在屏幕x轴70%外的屏幕中绘制
         int x = (int) (this.width * 0.7);
         int y = (int) (this.height * 0.1);
-        int buttonWidth = (int)(this.width * 0.25);
-        int buttonHeight = (int)(this.height * 0.08);
-        int buttonBound = (int)(this.height * 0.15);
+        int buttonWidth = (int)(this.width * 0.2);
+        int buttonHeight = (int)(this.height * 0.06);
+        int buttonBound = (int)(this.height * 0.13);
 
         if (lastScreen != null){
             // 添加返回按钮

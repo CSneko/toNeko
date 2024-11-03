@@ -37,6 +37,7 @@ import net.minecraft.world.phys.Vec3;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.mod.api.NekoNameRegistry;
 import org.cneko.toneko.common.mod.api.NekoSkinRegistry;
+import org.cneko.toneko.common.mod.entities.ai.goal.NekoPickupItemGoal;
 import org.cneko.toneko.common.mod.packets.interactives.NekoEntityInteractivePayload;
 import org.cneko.toneko.common.mod.util.EntityUtil;
 import org.cneko.toneko.common.mod.entities.ai.goal.NekoFollowOwnerGoal;
@@ -128,8 +129,9 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         this.goalSelector.addGoal(20,nekoFollowOwnerGoal);
         // 猫娘有繁殖欲望
         nekoMateGoal = new NekoMateGoal(this,null,30,this.followLeashSpeed() / 2);
-
         this.goalSelector.addGoal(30,nekoMateGoal);
+        // 会尝试捡起附近的物品
+        this.goalSelector.addGoal(5, new NekoPickupItemGoal(this));
     }
 
     public NekoQuery.Neko getNeko() {
@@ -191,8 +193,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     }
     // 是否喜欢这个物品
     public boolean isLikedItem(ItemStack stack){
-        return this.getFavoriteItems().contains(stack.getItem()) ||
-                stack.is(TagKey.create(Registries.ITEM, getTagKeyLocation("liked_items")));
+        return this.getFavoriteItems().contains(stack.getItem());
     }
 
     public boolean giftItem(Player player, int slot){
@@ -256,6 +257,14 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
 
     }
 
+    public @NotNull ItemStack getItemInHand() {
+        return this.inventory.getSelected();
+    }
+
+    public void selectItem(ItemStack stack) {
+        this.inventory.selected = this.inventory.findSlotMatchingItem(stack);
+    }
+
     public boolean addItem(ItemStack stack) {
         return this.inventory.add(stack);
     }
@@ -273,6 +282,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
 //            this.getInventory().dropAll();
             Entity entity = damageSource.getEntity();
             if (entity != null){
+                // 发送消息，告诉玩家过于罪恶了（我才不会告诉你是因为有Bug呢）
                 entity.sendSystemMessage(Component.translatable("message.toneko.neko.die.no_item_drop"));
             }
         }
@@ -490,10 +500,6 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         return true;
     }
 
-    public ResourceLocation getTagKeyLocation(String type){
-        ResourceLocation r = BuiltInRegistries.ENTITY_TYPE.getKey(this.getType());
-        return r.withPath("neko/"+r.getPath()+"/"+type);
-    }
 
     public static AttributeSupplier.Builder createNekoAttributes(){
         return createMobAttributes().add(Attributes.ATTACK_DAMAGE);

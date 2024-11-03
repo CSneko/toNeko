@@ -6,6 +6,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 
@@ -45,6 +46,13 @@ public class EntityUtil {
         AABB box = new AABB(entity.getX() - radius, entity.getY() - radius, entity.getZ() - radius,
                 entity.getX() + radius, entity.getY() + radius, entity.getZ() + radius);
         return world.getEntitiesOfClass(LivingEntity.class, box);
+    }
+
+    // 获取范围内所有ItemEntity
+    public static List<ItemEntity> getItemEntitiesInRange(Entity entity, Level world, float radius) {
+        AABB box = new AABB(entity.getX() - radius, entity.getY() - radius, entity.getZ() - radius,
+                entity.getX() + radius, entity.getY() + radius, entity.getZ() + radius);
+        return world.getEntitiesOfClass(ItemEntity.class, box);
     }
 
 

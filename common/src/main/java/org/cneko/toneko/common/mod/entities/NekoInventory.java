@@ -600,6 +600,19 @@ public class NekoInventory implements Container, Nameable {
         return false;
     }
 
+    public boolean isFull() {
+        // 检查主物品栏、装备栏和副手栏是否全部已满
+        for (NonNullList<ItemStack> compartment : compartments) {
+            for (ItemStack stack : compartment) {
+                if (stack.isEmpty()) {
+                    return false; // 如果有任何一个槽位为空，则库存未满
+                }
+            }
+        }
+        return true; // 所有槽位都已满
+    }
+
+
 
     public void clearContent() {
         Iterator var1 = this.compartments.iterator();
