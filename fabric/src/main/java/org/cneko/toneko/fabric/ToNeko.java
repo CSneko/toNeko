@@ -3,6 +3,7 @@ package org.cneko.toneko.fabric;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import org.cneko.toneko.common.Bootstrap;
+import org.cneko.toneko.common.mod.ModBootstrap;
 import org.cneko.toneko.common.mod.ModMeta;
 import org.cneko.toneko.common.mod.commands.NekoCommand;
 import org.cneko.toneko.common.mod.commands.QuirkCommand;
@@ -60,6 +61,7 @@ public class ToNeko implements ModInitializer {
             PermissionUtil.init();
             // 通用的启动
             Bootstrap.bootstrap();
+            ModBootstrap.bootstrap();
         });
     }
 }

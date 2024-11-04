@@ -7,14 +7,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.cneko.ctlib.common.file.JsonConfiguration;
-import org.cneko.ctlib.common.util.ChatPrefix;
 import org.cneko.toneko.bukkit.api.NekoStatus;
 import org.cneko.toneko.bukkit.util.PlaceHolderUtil;
 import org.cneko.toneko.common.Stats;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.common.util.LanguageUtil;
-import org.cneko.toneko.common.util.Messaging;
+import org.cneko.toneko.common.api.Messaging;
 
 import java.util.List;
 import java.util.UUID;
@@ -36,11 +35,8 @@ public class ChatEvent implements Listener {
         // 获取昵称
         String nickname = neko.getNickName();
         message = modify(message, neko);
-        // 获取前缀
-        List<String> prefix = NekoStatus.getPlayerPrefixes(player);
-        String p = formatPrefixes(prefix);
         // 格式化消息
-        message = format(message, player, nickname, p);
+        message = format(message, player, nickname);
         sendMessage(message);
         // 消息中喵的数量
         int count = Stats.getMeow(message);
@@ -49,9 +45,9 @@ public class ChatEvent implements Listener {
         if(ConfigUtil.STATS) Stats.meowInChat(player.getName(),count);
     }
 
-    private String format(String message, Player player, String nickname,String prefix){
+    private String format(String message, Player player, String nickname){
         String format = PlaceHolderUtil.replace(player,ConfigUtil.CHAT_FORMAT);
-        return Messaging.format(message,player.getName(),nickname,prefix,format);
+        return Messaging.format(message,player.getName(),nickname,format);
     }
 
     public static String formatPrefixes(List<String> prefixes) {

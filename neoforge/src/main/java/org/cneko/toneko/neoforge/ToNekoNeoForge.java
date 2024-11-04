@@ -15,6 +15,7 @@ import net.neoforged.fml.javafmlmod.FMLJavaModLanguageProvider;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.cneko.toneko.common.Bootstrap;
+import org.cneko.toneko.common.mod.ModBootstrap;
 import org.cneko.toneko.common.mod.ModMeta;
 import org.cneko.toneko.common.mod.commands.NekoCommand;
 import org.cneko.toneko.common.mod.commands.QuirkCommand;
@@ -85,7 +86,7 @@ public final class ToNekoNeoForge {
         ConfigUtil.INSTANCE = new FabricConfigImpl();
         // 通用的启动
         Bootstrap.bootstrap();
-
+        ModBootstrap.bootstrap();
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             ModMeta.INSTANCE.setServer(server);
         });

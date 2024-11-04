@@ -11,6 +11,9 @@ public class PlayerUtil {
     public static Player getPlayerByName(String name) {
         return ModMeta.INSTANCE.getServer().getPlayerList().getPlayerByName(name);
     }
+    public static UUID getPlayerUUIDByName(String name) {
+        return getPlayerByName(name).getUUID();
+    }
     public static Player getPlayerByUUID(UUID uuid) {
         return ModMeta.INSTANCE.getServer().getPlayerList().getPlayer(uuid);
     }

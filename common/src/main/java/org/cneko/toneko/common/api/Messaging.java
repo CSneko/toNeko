@@ -1,38 +1,65 @@
-package org.cneko.toneko.common.util;
+package org.cneko.toneko.common.api;
 
-import org.cneko.ctlib.common.util.ChatPrefix;
+import org.cneko.toneko.common.util.ConfigUtil;
+import org.cneko.toneko.common.util.LanguageUtil;
+import org.jetbrains.annotations.ApiStatus;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
+import java.util.UUID;
 
 public class Messaging {
+    @ApiStatus.Internal
+    public static GetPlayerUUID GET_PLAYER_UUID_INSTANCE;
 
     public static String format(String msg, String player, String nickname){
-        return format(msg,player,nickname,ChatPrefix.getPrivatePrefix(player) + ChatPrefix.getAllPublicPrefixValues());
+        return format(msg,player,nickname, getChatPrefixes(player));
     }
 
-    public static String format(String msg, String player, String nickname, String prefix, String chatFormat){
+    public static String format(String message, String playerName, String nickname, String format) {
+        return format(message,playerName,nickname,getChatPrefixes(playerName),format);
+    }
+
+    public static String format(String msg, String player, String nickname, List<String> prefix, String chatFormat){
         // 修改昵称
-        if(nickname.isEmpty()){
+        if(nickname.isEmpty() || nickname.isBlank()){
             nickname = player;
         }else {
             nickname = "§6~§f"+nickname;
         }
         return chatFormat.
-                replace("${prefix}",prefix).
+                replace("${prefix}",formatPrefixes(prefix)).
                 replace("${msg}",msg).
                 replace("${name}",nickname).
                 replace("${c}","§");
     }
 
-    public static String format(String msg, String player, String nickname, String prefix){
-        return format(msg,player,nickname,prefix,ConfigUtil.CHAT_FORMAT);
+    public static String format(String msg, String player, String nickname, List<String> prefixes){
+        return format(msg,player,nickname,prefixes, ConfigUtil.CHAT_FORMAT);
+    }
+
+    public static List<String> getChatPrefixes(String playerName){
+        UUID uuid = GET_PLAYER_UUID_INSTANCE.get(playerName);
+        List<String> prefixes = new ArrayList<>();
+        if (NekoQuery.isNeko(uuid)){
+            prefixes.add(LanguageUtil.prefix);
+        }
+        return prefixes;
     }
 
     public static String replacePhrase(String message, String phrase){
         message = runPetPhrases(message, phrase);
         return message;
+    }
+
+    private static String formatPrefixes(List<String> prefixes){
+        StringBuilder formatted = new StringBuilder();
+        for (String prefix : prefixes) {
+            // 将每个前缀格式化为 [§a前缀§f§r]
+            formatted.append("[§a").append(prefix).append("§f§r]");
+        }
+        return formatted.toString();
     }
 
     /*
@@ -81,5 +108,9 @@ public class Messaging {
         }
 
         return text;
+    }
+
+    public interface GetPlayerUUID {
+        UUID get(String playerName);
     }
 }

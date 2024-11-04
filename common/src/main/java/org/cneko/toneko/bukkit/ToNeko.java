@@ -9,7 +9,9 @@ import org.cneko.toneko.bukkit.events.PlayerConnectionEvents;
 import org.cneko.toneko.bukkit.events.WorldEvents;
 import org.cneko.toneko.bukkit.msic.Metrics;
 import org.cneko.toneko.bukkit.util.PlaceHolderUtil;
+import org.cneko.toneko.bukkit.util.PlayerUtil;
 import org.cneko.toneko.common.Bootstrap;
+import org.cneko.toneko.common.api.Messaging;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.mod.impl.FabricConfigImpl;
 import org.cneko.toneko.common.mod.impl.FabricLanguageImpl;
@@ -27,6 +29,7 @@ public class ToNeko extends JavaPlugin {
         ConfigUtil.INSTANCE = new FabricConfigImpl();
         LanguageUtil.INSTANCE = new FabricLanguageImpl();
         Bootstrap.bootstrap();
+        Messaging.GET_PLAYER_UUID_INSTANCE = PlayerUtil::getPlayerUUIDByName;
         // common end
 
         // util start
