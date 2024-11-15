@@ -7,10 +7,8 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SpawnEggItem;
+import net.minecraft.world.item.*;
+import org.cneko.toneko.common.mod.blocks.ToNekoBlocks;
 import org.cneko.toneko.common.mod.items.FurryBoheItem;
 import org.cneko.toneko.common.mod.items.NekoArmor;
 import org.cneko.toneko.common.mod.items.NekoCollectorItem;
@@ -38,10 +36,14 @@ public class ToNekoItems {
         NEKO_POTION = new NekoPotionItem();
         NEKO_COLLECTOR = new NekoCollectorItem();
         FURRY_BOHE = new FurryBoheItem();
+        CATNIP = new Item(new Item.Properties());
+        CATNIP_SEED = new ItemNameBlockItem(ToNekoBlocks.CATNIP, new Item.Properties());
         Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, NekoPotionItem.ID), NEKO_POTION);
         Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, NekoCollectorItem.ID), NEKO_COLLECTOR);
         Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, FurryBoheItem.ID), FURRY_BOHE);
         Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, "adventurer_neko_spawn_egg"), ADVENTURER_NEKO_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, "catnip"), CATNIP);
+        Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, "catnip_seed"), CATNIP_SEED);
 
         // 如果安装了trinkets，则注册为TrinketItem
         if (isTrinketsInstalled){
@@ -65,9 +67,11 @@ public class ToNekoItems {
         ItemGroupEvents.modifyEntriesEvent(TONEKO_ITEM_GROUP_KEY).register(content -> {
             content.accept(NEKO_POTION);
             content.accept(NEKO_COLLECTOR);
-            content.accept(FURRY_BOHE);
             content.accept(NEKO_EARS);
             content.accept(NEKO_TAIL);
+            content.accept(FURRY_BOHE);
+            content.accept(CATNIP);
+            content.accept(CATNIP_SEED);
             content.accept(ADVENTURER_NEKO_SPAWN_EGG);
         });
     }
