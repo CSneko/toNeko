@@ -79,6 +79,7 @@ subprojects {
 
         modCompileOnly "me.lucko:fabric-permissions-api:0.2-SNAPSHOT"
         modImplementation "net.fabricmc.fabric-api:fabric-api:$rootProject.fabric_api_version"
+
     }
 
     java {
