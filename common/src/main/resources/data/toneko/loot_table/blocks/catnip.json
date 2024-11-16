@@ -50,6 +50,12 @@
           "name": "toneko:furry_bohe",
           "weight": 1,
           "quality": 1,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": 1
+            }
+          ],
           "conditions": [
             {
               "condition": "minecraft:random_chance",

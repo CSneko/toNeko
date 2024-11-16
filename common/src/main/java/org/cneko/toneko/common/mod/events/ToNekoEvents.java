@@ -8,12 +8,19 @@ import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.trading.ItemCost;
+import net.minecraft.world.item.trading.MerchantOffer;
 import org.cneko.ctlib.common.util.ChatPrefix;
 import org.cneko.toneko.common.api.NekoQuery;
+import org.cneko.toneko.common.mod.items.ToNekoItems;
 import org.cneko.toneko.common.mod.quirks.ModQuirk;
 import org.cneko.toneko.common.mod.util.TextUtil;
 import org.cneko.toneko.common.quirks.Quirk;
@@ -35,6 +42,18 @@ public class ToNekoEvents {
         AttackEntityCallback.EVENT.register(CommonPlayerInteractionEvent::onAttackEntity);
         ServerTickEvents.START_SERVER_TICK.register(ToNekoEvents::startTick);
         ServerWorldEvents.UNLOAD.register(CommonWorldEvent::onWorldUnLoad);
+        TradeOfferHelper.registerVillagerOffers(VillagerProfession.FARMER,
+                1,
+                (factories) -> {
+                    factories.add((trader, random) -> new MerchantOffer(
+                            new ItemCost(Items.EMERALD, 1),
+                            ToNekoItems.CATNIP_SEED.getDefaultInstance(),
+                            10,
+                            10,
+                            1.1f
+                    ));
+                }
+        );
 
     }
 
