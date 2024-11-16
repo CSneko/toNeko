@@ -12,8 +12,6 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
@@ -22,6 +20,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 
 public class NekoInventory implements Container, Nameable {
     public static final int POP_TIME_DURATION = 5;
@@ -48,7 +47,7 @@ public class NekoInventory implements Container, Nameable {
     }
 
     public ItemStack getSelected() {
-        return isHotbarSlot(this.selected) ? (ItemStack)this.items.get(this.selected) : ItemStack.EMPTY;
+        return isHotbarSlot(this.selected) ? this.items.get(this.selected) : ItemStack.EMPTY;
     }
 
     public static int getSelectionSize() {
@@ -61,7 +60,7 @@ public class NekoInventory implements Container, Nameable {
 
     public int getFreeSlot() {
         for(int i = 0; i < this.items.size(); ++i) {
-            if (((ItemStack)this.items.get(i)).isEmpty()) {
+            if (this.items.get(i).isEmpty()) {
                 return i;
             }
         }
@@ -76,10 +75,10 @@ public class NekoInventory implements Container, Nameable {
         } else {
             if (i == -1) {
                 this.selected = this.getSuitableHotbarSlot();
-                if (!((ItemStack)this.items.get(this.selected)).isEmpty()) {
+                if (!this.items.get(this.selected).isEmpty()) {
                     int j = this.getFreeSlot();
                     if (j != -1) {
-                        this.items.set(j, (ItemStack)this.items.get(this.selected));
+                        this.items.set(j, this.items.get(this.selected));
                     }
                 }
 
@@ -93,8 +92,8 @@ public class NekoInventory implements Container, Nameable {
 
     public void pickSlot(int index) {
         this.selected = this.getSuitableHotbarSlot();
-        ItemStack itemStack = (ItemStack)this.items.get(this.selected);
-        this.items.set(this.selected, (ItemStack)this.items.get(index));
+        ItemStack itemStack = this.items.get(this.selected);
+        this.items.set(this.selected, this.items.get(index));
         this.items.set(index, itemStack);
     }
 
@@ -104,7 +103,7 @@ public class NekoInventory implements Container, Nameable {
 
     public int findSlotMatchingItem(ItemStack stack) {
         for(int i = 0; i < this.items.size(); ++i) {
-            if (!((ItemStack)this.items.get(i)).isEmpty() && ItemStack.isSameItemSameComponents(stack, (ItemStack)this.items.get(i))) {
+            if (!this.items.get(i).isEmpty() && ItemStack.isSameItemSameComponents(stack, this.items.get(i))) {
                 return i;
             }
         }
@@ -114,7 +113,7 @@ public class NekoInventory implements Container, Nameable {
 
     public int findSlotMatchingUnusedItem(ItemStack stack) {
         for(int i = 0; i < this.items.size(); ++i) {
-            ItemStack itemStack = (ItemStack)this.items.get(i);
+            ItemStack itemStack = this.items.get(i);
             if (!itemStack.isEmpty() && ItemStack.isSameItemSameComponents(stack, itemStack) && !itemStack.isDamaged() && !itemStack.isEnchanted() && !itemStack.has(DataComponents.CUSTOM_NAME)) {
                 return i;
             }
@@ -128,14 +127,14 @@ public class NekoInventory implements Container, Nameable {
         int j;
         for(i = 0; i < 9; ++i) {
             j = (this.selected + i) % 9;
-            if (((ItemStack)this.items.get(j)).isEmpty()) {
+            if (this.items.get(j).isEmpty()) {
                 return j;
             }
         }
 
         for(i = 0; i < 9; ++i) {
             j = (this.selected + i) % 9;
-            if (!((ItemStack)this.items.get(j)).isEnchanted()) {
+            if (!this.items.get(j).isEnchanted()) {
                 return j;
             }
         }
@@ -146,8 +145,6 @@ public class NekoInventory implements Container, Nameable {
     public void swapPaint(double direction) {
         int i = (int)Math.signum(direction);
 
-        for(this.selected -= i; this.selected < 0; this.selected += 9) {
-        }
 
         while(this.selected >= 9) {
             this.selected -= 9;
@@ -174,14 +171,12 @@ public class NekoInventory implements Container, Nameable {
 
         int j = this.getMaxStackSize(itemStack) - itemStack.getCount();
         int k = Math.min(i, j);
-        if (k == 0) {
-            return i;
-        } else {
+        if (k != 0) {
             i -= k;
             itemStack.grow(k);
             itemStack.setPopTime(5);
-            return i;
         }
+        return i;
     }
 
     public int getSlotWithRemainingSpace(ItemStack stack) {
@@ -191,7 +186,7 @@ public class NekoInventory implements Container, Nameable {
             return 40;
         } else {
             for(int i = 0; i < this.items.size(); ++i) {
-                if (this.hasRemainingSpaceForItem((ItemStack)this.items.get(i), stack)) {
+                if (this.hasRemainingSpaceForItem(this.items.get(i), stack)) {
                     return i;
                 }
             }
@@ -201,14 +196,12 @@ public class NekoInventory implements Container, Nameable {
     }
 
     public void tick() {
-        Iterator var1 = this.compartments.iterator();
 
-        while(var1.hasNext()) {
-            NonNullList<ItemStack> nonNullList = (NonNullList)var1.next();
+        for (NonNullList<ItemStack> compartment : this.compartments) {
 
-            for(int i = 0; i < nonNullList.size(); ++i) {
-                if (!((ItemStack)nonNullList.get(i)).isEmpty()) {
-                    ((ItemStack)nonNullList.get(i)).inventoryTick(this.neko.level(), this.neko, i, this.selected == i);
+            for (int i = 0; i < compartment.size(); ++i) {
+                if (!compartment.get(i).isEmpty()) {
+                    compartment.get(i).inventoryTick(this.neko.level(), this.neko, i, this.selected == i);
                 }
             }
         }
@@ -251,9 +244,7 @@ public class NekoInventory implements Container, Nameable {
                     crashReportCategory = crashReport.addCategory("Item being added");
                     crashReportCategory.setDetail("Item ID", Item.getId(stack.getItem()));
                     crashReportCategory.setDetail("Item data", stack.getDamageValue());
-                    crashReportCategory.setDetail("Item name", () -> {
-                        return stack.getHoverName().getString();
-                    });
+                    crashReportCategory.setDetail("Item name", () -> stack.getHoverName().getString());
                     throw new ReportedException(crashReport);
                 }
 
@@ -264,7 +255,7 @@ public class NekoInventory implements Container, Nameable {
 
                     if (slot >= 0) {
                         this.items.set(slot, stack.copyAndClear());
-                        ((ItemStack)this.items.get(slot)).setPopTime(5);
+                        this.items.get(slot).setPopTime(5);
                         return true;
                     }
                 } catch (Throwable var9) {
@@ -273,9 +264,7 @@ public class NekoInventory implements Container, Nameable {
                     crashReportCategory = crashReport.addCategory("Item being added");
                     crashReportCategory.setDetail("Item ID", Item.getId(stack.getItem()));
                     crashReportCategory.setDetail("Item data", stack.getDamageValue());
-                    crashReportCategory.setDetail("Item name", () -> {
-                        return stack.getHoverName().getString();
-                    });
+                    crashReportCategory.setDetail("Item name", () -> stack.getHoverName().getString());
                     throw new ReportedException(crashReport);
                 }
 
@@ -290,9 +279,7 @@ public class NekoInventory implements Container, Nameable {
                     crashReportCategory = crashReport.addCategory("Item being added");
                     crashReportCategory.setDetail("Item ID", Item.getId(stack.getItem()));
                     crashReportCategory.setDetail("Item data", stack.getDamageValue());
-                    crashReportCategory.setDetail("Item name", () -> {
-                        return stack.getHoverName().getString();
-                    });
+                    crashReportCategory.setDetail("Item name", () -> stack.getHoverName().getString());
                     throw new ReportedException(crashReport);
                 }
 
@@ -304,9 +291,7 @@ public class NekoInventory implements Container, Nameable {
                     crashReportCategory = crashReport.addCategory("Item being added");
                     crashReportCategory.setDetail("Item ID", Item.getId(stack.getItem()));
                     crashReportCategory.setDetail("Item data", stack.getDamageValue());
-                    crashReportCategory.setDetail("Item name", () -> {
-                        return stack.getHoverName().getString();
-                    });
+                    crashReportCategory.setDetail("Item name", () -> stack.getHoverName().getString());
                     throw new ReportedException(crashReport);
                 }
             }
@@ -319,17 +304,16 @@ public class NekoInventory implements Container, Nameable {
                 crashReportCategory = crashReport.addCategory("Item being added");
                 crashReportCategory.setDetail("Item ID", Item.getId(stack.getItem()));
                 crashReportCategory.setDetail("Item data", stack.getDamageValue());
-                crashReportCategory.setDetail("Item name", () -> {
-                    return stack.getHoverName().getString();
-                });
+                crashReportCategory.setDetail("Item name", () -> stack.getHoverName().getString());
                 throw new ReportedException(crashReport);
             }
         }
     }
 
 
-    public ItemStack removeItem(int slot, int amount) {
-        List<ItemStack> list = null;
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public @NotNull ItemStack removeItem(int slot, int amount) {
+        NonNullList list = null;
 
         NonNullList nonNullList;
         for(Iterator var4 = this.compartments.iterator(); var4.hasNext(); slot -= nonNullList.size()) {
@@ -343,12 +327,13 @@ public class NekoInventory implements Container, Nameable {
         return list != null && !((ItemStack)list.get(slot)).isEmpty() ? ContainerHelper.removeItem(list, slot, amount) : ItemStack.EMPTY;
     }
 
+    @SuppressWarnings("LoopStatementThatDoesntLoop")
     public void removeItem(ItemStack stack) {
-        Iterator var2 = this.compartments.iterator();
+        Iterator<NonNullList<ItemStack>> var2 = this.compartments.iterator();
 
         while(true) {
             while(var2.hasNext()) {
-                NonNullList<ItemStack> nonNullList = (NonNullList)var2.next();
+                NonNullList<ItemStack> nonNullList = var2.next();
 
                 for(int i = 0; i < nonNullList.size(); ++i) {
                     if (nonNullList.get(i) == stack) {
@@ -362,7 +347,8 @@ public class NekoInventory implements Container, Nameable {
         }
     }
 
-    public ItemStack removeItemNoUpdate(int slot) {
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public @NotNull ItemStack removeItemNoUpdate(int slot) {
         NonNullList<ItemStack> nonNullList = null;
 
         NonNullList nonNullList2;
@@ -374,8 +360,8 @@ public class NekoInventory implements Container, Nameable {
             }
         }
 
-        if (nonNullList != null && !((ItemStack)nonNullList.get(slot)).isEmpty()) {
-            ItemStack itemStack = (ItemStack)nonNullList.get(slot);
+        if (nonNullList != null && !nonNullList.get(slot).isEmpty()) {
+            ItemStack itemStack = nonNullList.get(slot);
             nonNullList.set(slot, ItemStack.EMPTY);
             return itemStack;
         } else {
@@ -383,8 +369,9 @@ public class NekoInventory implements Container, Nameable {
         }
     }
 
-    public void setItem(int slot, ItemStack stack) {
-        NonNullList<ItemStack> nonNullList = null;
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public void setItem(int slot, @NotNull ItemStack stack) {
+        NonNullList nonNullList = null;
 
         NonNullList nonNullList2;
         for(Iterator var4 = this.compartments.iterator(); var4.hasNext(); slot -= nonNullList2.size()) {
@@ -402,33 +389,33 @@ public class NekoInventory implements Container, Nameable {
     }
 
     public float getDestroySpeed(BlockState state) {
-        return ((ItemStack)this.items.get(this.selected)).getDestroySpeed(state);
+        return this.items.get(this.selected).getDestroySpeed(state);
     }
 
     public ListTag save(ListTag listTag) {
         int i;
         CompoundTag compoundTag;
         for(i = 0; i < this.items.size(); ++i) {
-            if (!((ItemStack)this.items.get(i)).isEmpty()) {
+            if (!this.items.get(i).isEmpty()) {
                 compoundTag = new CompoundTag();
                 compoundTag.putByte("Slot", (byte)i);
-                listTag.add(((ItemStack)this.items.get(i)).save(this.neko.registryAccess(), compoundTag));
+                listTag.add(this.items.get(i).save(this.neko.registryAccess(), compoundTag));
             }
         }
 
         for(i = 0; i < this.armor.size(); ++i) {
-            if (!((ItemStack)this.armor.get(i)).isEmpty()) {
+            if (!this.armor.get(i).isEmpty()) {
                 compoundTag = new CompoundTag();
                 compoundTag.putByte("Slot", (byte)(i + 100));
-                listTag.add(((ItemStack)this.armor.get(i)).save(this.neko.registryAccess(), compoundTag));
+                listTag.add(this.armor.get(i).save(this.neko.registryAccess(), compoundTag));
             }
         }
 
         for(i = 0; i < this.offhand.size(); ++i) {
-            if (!((ItemStack)this.offhand.get(i)).isEmpty()) {
+            if (!this.offhand.get(i).isEmpty()) {
                 compoundTag = new CompoundTag();
                 compoundTag.putByte("Slot", (byte)(i + 150));
-                listTag.add(((ItemStack)this.offhand.get(i)).save(this.neko.registryAccess(), compoundTag));
+                listTag.add(this.offhand.get(i).save(this.neko.registryAccess(), compoundTag));
             }
         }
 
@@ -443,7 +430,8 @@ public class NekoInventory implements Container, Nameable {
         for(int i = 0; i < listTag.size(); ++i) {
             CompoundTag compoundTag = listTag.getCompound(i);
             int j = compoundTag.getByte("Slot") & 255;
-            ItemStack itemStack = (ItemStack)ItemStack.parse(this.neko.registryAccess(), compoundTag).orElse(ItemStack.EMPTY);
+            ItemStack itemStack = ItemStack.parse(this.neko.registryAccess(), compoundTag).orElse(ItemStack.EMPTY);
+            //noinspection ConstantValue
             if (j >= 0 && j < this.items.size()) {
                 this.items.set(j, itemStack);
             } else if (j >= 100 && j < this.armor.size() + 100) {
@@ -460,7 +448,7 @@ public class NekoInventory implements Container, Nameable {
     }
 
     public boolean isEmpty() {
-        Iterator var1 = this.items.iterator();
+        Iterator<ItemStack> var1 = this.items.iterator();
 
         ItemStack itemStack;
         do {
@@ -476,26 +464,27 @@ public class NekoInventory implements Container, Nameable {
                                 return true;
                             }
 
-                            itemStack = (ItemStack)var1.next();
+                            itemStack = var1.next();
                         } while(itemStack.isEmpty());
 
                         return false;
                     }
 
-                    itemStack = (ItemStack)var1.next();
+                    itemStack = var1.next();
                 } while(itemStack.isEmpty());
 
                 return false;
             }
 
-            itemStack = (ItemStack)var1.next();
+            itemStack = var1.next();
         } while(itemStack.isEmpty());
 
         return false;
     }
 
-    public ItemStack getItem(int slot) {
-        List<ItemStack> list = null;
+    @SuppressWarnings("rawtypes")
+    public @NotNull ItemStack getItem(int slot) {
+        NonNullList list = null;
 
         NonNullList nonNullList;
         for(Iterator var3 = this.compartments.iterator(); var3.hasNext(); slot -= nonNullList.size()) {
@@ -509,25 +498,23 @@ public class NekoInventory implements Container, Nameable {
         return list == null ? ItemStack.EMPTY : (ItemStack)list.get(slot);
     }
 
-    public Component getName() {
+    public @NotNull Component getName() {
         return Component.translatable("container.inventory");
     }
 
     public ItemStack getArmor(int slot) {
-        return (ItemStack)this.armor.get(slot);
+        return this.armor.get(slot);
     }
 
     public void dropAll() {
-        Iterator var1 = this.compartments.iterator();
 
-        while(var1.hasNext()) {
-            List<ItemStack> list = (List)var1.next();
+        for (NonNullList<ItemStack> compartment : this.compartments) {
 
-            for(int i = 0; i < list.size(); ++i) {
-                ItemStack itemStack = (ItemStack)list.get(i);
+            for (int i = 0; i < ((List<ItemStack>) compartment).size(); ++i) {
+                ItemStack itemStack = ((List<ItemStack>) compartment).get(i);
                 if (!itemStack.isEmpty()) {
                     this.neko.drop(itemStack, true, false);
-                    list.set(i, ItemStack.EMPTY);
+                    ((List<ItemStack>) compartment).set(i, ItemStack.EMPTY);
                 }
             }
         }
@@ -547,14 +534,10 @@ public class NekoInventory implements Container, Nameable {
     }
 
     public boolean contains(ItemStack stack) {
-        Iterator var2 = this.compartments.iterator();
 
-        while(var2.hasNext()) {
-            List<ItemStack> list = (List)var2.next();
-            Iterator var4 = list.iterator();
+        for (NonNullList<ItemStack> compartment : this.compartments) {
 
-            while(var4.hasNext()) {
-                ItemStack itemStack = (ItemStack)var4.next();
+            for (ItemStack itemStack : compartment) {
                 if (!itemStack.isEmpty() && ItemStack.isSameItemSameComponents(itemStack, stack)) {
                     return true;
                 }
@@ -565,14 +548,10 @@ public class NekoInventory implements Container, Nameable {
     }
 
     public boolean contains(TagKey<Item> tag) {
-        Iterator var2 = this.compartments.iterator();
 
-        while(var2.hasNext()) {
-            List<ItemStack> list = (List)var2.next();
-            Iterator var4 = list.iterator();
+        for (NonNullList<ItemStack> compartment : this.compartments) {
 
-            while(var4.hasNext()) {
-                ItemStack itemStack = (ItemStack)var4.next();
+            for (ItemStack itemStack : compartment) {
                 if (!itemStack.isEmpty() && itemStack.is(tag)) {
                     return true;
                 }
@@ -583,14 +562,10 @@ public class NekoInventory implements Container, Nameable {
     }
 
     public boolean contains(Predicate<ItemStack> predicate) {
-        Iterator var2 = this.compartments.iterator();
 
-        while(var2.hasNext()) {
-            List<ItemStack> list = (List)var2.next();
-            Iterator var4 = list.iterator();
+        for (NonNullList<ItemStack> compartment : this.compartments) {
 
-            while(var4.hasNext()) {
-                ItemStack itemStack = (ItemStack)var4.next();
+            for (ItemStack itemStack : compartment) {
                 if (predicate.test(itemStack)) {
                     return true;
                 }
@@ -600,26 +575,28 @@ public class NekoInventory implements Container, Nameable {
         return false;
     }
 
-    public boolean isFull() {
+    public boolean canAdd() {
         // 检查主物品栏、装备栏和副手栏是否全部已满
         for (NonNullList<ItemStack> compartment : compartments) {
             for (ItemStack stack : compartment) {
                 if (stack.isEmpty()) {
-                    return false; // 如果有任何一个槽位为空，则库存未满
+                    return true; // 如果有任何一个槽位为空，则库存未满
                 }
             }
         }
-        return true; // 所有槽位都已满
+        return false; // 所有槽位都已满
+    }
+
+    public boolean isFull(){
+        return !this.canAdd();
     }
 
 
 
     public void clearContent() {
-        Iterator var1 = this.compartments.iterator();
 
-        while(var1.hasNext()) {
-            List<ItemStack> list = (List)var1.next();
-            list.clear();
+        for (NonNullList<ItemStack> compartment : this.compartments) {
+            ((List<ItemStack>) compartment).clear();
         }
 
     }

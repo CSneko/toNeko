@@ -90,6 +90,8 @@
   "message.toneko.neko.gift_fail.0": "§e%s §d>> §f雖然我不太喜歡你的禮物，不過還是謝謝喵~",
   "message.toneko.neko.gift_fail.1": "§e%s §d>> §f你的好意我心領了，不過我不太需要喵~",
   "message.toneko.neko.gift_fail.2": "§e%s §d>> §f雖然你很好，不過我不太需要喵~",
+    "message.toneko.neko.gift_full.0": "§e%s §d>> §f咱身上的东西有点太多了喵~",
+  "message.toneko.neko.gift_full.1": "§e%s §d>> §f真的要塞不下啦",
   "message.toneko.neko.mate.start": "%s 將會與 %s 進行交配，請稍等~",
   "message.toneko.neko.mate.finish": "交配完成！",
   "message.toneko.neko.on_hurt.0": "§e%s §d>> §f你好坏！",

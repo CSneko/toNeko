@@ -22,7 +22,7 @@ public class NekoPickupItemGoal extends Goal {
         List<ItemEntity> items = EntityUtil.getItemEntitiesInRange(neko, neko.level(), 3);
         for (ItemEntity item : items){
             // 喜欢物品则拾取
-            if (neko.isLikedItem(item.getItem()) && !neko.getInventory().isFull()){
+            if (neko.isLikedItem(item.getItem()) && neko.getInventory().canAdd()){
                 // 如果在1格以内直接拾取
                 if (neko.distanceTo(item) < 1){
                     neko.getInventory().add(item.getItem());
@@ -38,7 +38,7 @@ public class NekoPickupItemGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        return (!neko.getInventory().isFull()) && !stop;
+        return (neko.getInventory().canAdd()) && !stop;
     }
 
     @Override

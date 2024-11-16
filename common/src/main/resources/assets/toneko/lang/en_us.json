@@ -90,6 +90,8 @@
   "message.toneko.neko.gift_fail.0": "§e%s §d>> §fAlthough I don't like your gift very much, thank you anyway, meow~",
   "message.toneko.neko.gift_fail.1": "§e%s §d>> §fI appreciate your kindness, but I don't really need it, meow~",
   "message.toneko.neko.gift_fail.2": "§e%s §d>> §fAlthough you are very good, I don't really need it, meow~",
+  "message.toneko.neko.gift_full.0": "§e%s §d>> §fI have too many things on me~",
+  "message.toneko.neko.gift_full.1": "§e%s §d>> §fI can't save any more",
   "message.toneko.neko.on_hurt.0": "§e%s §d>> §fYou are so bad!",
   "message.toneko.neko.on_hurt.1": "§e%s §d>> §fI hate you!",
   "message.toneko.neko.on_hurt.2": "§e%s §d>> §fYou... you cannot do this!",

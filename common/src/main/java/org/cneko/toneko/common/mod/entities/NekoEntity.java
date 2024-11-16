@@ -3,6 +3,7 @@ package org.cneko.toneko.common.mod.entities;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
@@ -18,6 +19,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -33,6 +35,7 @@ import net.minecraft.world.phys.Vec3;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.mod.api.NekoNameRegistry;
 import org.cneko.toneko.common.mod.api.NekoSkinRegistry;
+import org.cneko.toneko.common.mod.effects.ToNekoEffects;
 import org.cneko.toneko.common.mod.entities.ai.goal.NekoPickupItemGoal;
 import org.cneko.toneko.common.mod.items.ToNekoItems;
 import org.cneko.toneko.common.mod.packets.interactives.NekoEntityInteractivePayload;
@@ -128,7 +131,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         // 会尝试捡起附近的物品
         this.goalSelector.addGoal(5, new NekoPickupItemGoal(this));
         // 会被拿着喜欢物品的玩家吸引
-        this.goalSelector.addGoal(10, new TemptGoal(this, 0.5D, this::isFavoriteItem,false));
+        this.goalSelector.addGoal(15, new TemptGoal(this, 0.5D, this::isFavoriteItem,false));
     }
 
     public NekoQuery.Neko getNeko() {
@@ -207,8 +210,19 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         this.drop(stack, true);
         // 如果是喜欢的物品
         if (this.isLikedItem(stack)){
-            player.getInventory().removeItem(player.getMainHandItem());
-            this.getInventory().add(stack);
+            // 如果是猫薄荷，则吃下它
+            if (stack.is(ToNekoItems.CATNIP)){
+                this.addEffect(new MobEffectInstance(
+                        BuiltInRegistries.MOB_EFFECT.wrapAsHolder(ToNekoEffects.NEKO_EFFECT),
+                        10000,
+                        0
+                ));
+            } else if (this.getInventory().canAdd()) {
+                this.getInventory().add(stack);
+                player.getInventory().removeItem(player.getMainHandItem());
+                player.sendSystemMessage(randomTranslatabledComponent("message.toneko.neo.gift_full",2, Objects.requireNonNull(this.getCustomName()).getString()));
+                return false;
+            }
             // 播放爱心粒子
             this.level().addParticle(ParticleTypes.HEART,this.getX()+1.8, this.getY(), this.getZ(),1,1,1);
             if (player instanceof ServerPlayer sp){
