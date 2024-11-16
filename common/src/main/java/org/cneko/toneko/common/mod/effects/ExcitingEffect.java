@@ -18,10 +18,10 @@ public class ExcitingEffect extends MobEffect {
     protected ExcitingEffect() {
         super(MobEffectCategory.NEUTRAL, 0xFF00FF);
         this.addAttributeModifier(ToNekoAttributes.NEKO_DEGREE,LOCATION,10, AttributeModifier.Operation.ADD_VALUE);
-        this.addAttributeModifier(Attributes.MOVEMENT_SPEED,LOCATION,1.3, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
-        this.addAttributeModifier(Attributes.ATTACK_SPEED,LOCATION,1.3, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
-        this.addAttributeModifier(Attributes.JUMP_STRENGTH,LOCATION,1.3, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
-        this.addAttributeModifier(Attributes.ATTACK_DAMAGE,LOCATION,1.3, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
+        this.addAttributeModifier(Attributes.MOVEMENT_SPEED,LOCATION,0.3, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
+        this.addAttributeModifier(Attributes.ATTACK_SPEED,LOCATION,0.3, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
+        this.addAttributeModifier(Attributes.JUMP_STRENGTH,LOCATION,0.3, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
+        this.addAttributeModifier(Attributes.ATTACK_DAMAGE,LOCATION,0.3, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
     }
 
     @Override

@@ -24,6 +24,7 @@ import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.api.NekoSkin;
 import org.cneko.toneko.common.api.Permissions;
 import org.cneko.toneko.common.mod.api.EntityPoseManager;
+import org.cneko.toneko.common.mod.misc.ToNekoAttributes;
 import org.cneko.toneko.common.mod.packets.EntityPosePayload;
 import org.cneko.toneko.common.mod.util.EntityUtil;
 import org.cneko.toneko.common.mod.util.PermissionUtil;
@@ -213,12 +214,15 @@ public class NekoCommand {
             player.sendSystemMessage(translatable("command.neko.not_neko"));
             return 1;
         }
+        // 猫猫等级
+        double nekoDegree = player.getAttributeValue(ToNekoAttributes.NEKO_DEGREE);
         // 获取玩家等级来计算效果
         double level = neko.getLevel();
-        // 等级开方/2
-        int effectLevel = (int) (Math.sqrt(level)/2.00);
-        // 对((((等级+1)的开方)乘以(玩家的经验值的开方))/(玩家生命值/4))*20来计算效果时间
-        int time = (int)(((((Math.sqrt(level+1)) * (Math.sqrt(player.totalExperience+1))) / (player.getHealth()/4)))*100);
+        // (等级+猫猫等级)开方/2
+        int effectLevel = (int) (Math.sqrt(level+nekoDegree)/2.00);
+
+        // 对((((等级+1)的开方)乘以(玩家的经验值的开方))/(玩家生命值/4))*20*(猫猫等级+1)/2来计算效果时间
+        int time = (int)(((((Math.sqrt(level+1)) * (Math.sqrt(player.totalExperience+1))) / (player.getHealth()/4)))*100 * (nekoDegree+1)/2);
         player.addEffect(new MobEffectInstance(effect, time, effectLevel));
         return 1;
     }
