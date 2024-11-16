@@ -7,19 +7,19 @@
       "model": "toneko:block/catnip/catnip_stage1"
     },
     "age=2": {
-      "model": "toneko:block/catnip/catnip_stage1"
+      "model": "toneko:block/catnip/catnip_stage2"
     },
     "age=3": {
       "model": "toneko:block/catnip/catnip_stage3"
     },
     "age=4": {
-      "model": "toneko:block/catnip/catnip_stage3"
+      "model": "toneko:block/catnip/catnip_stage4"
     },
     "age=5": {
       "model": "toneko:block/catnip/catnip_stage5"
     },
     "age=6": {
-      "model": "toneko:block/catnip/catnip_stage5"
+      "model": "toneko:block/catnip/catnip_stage6"
     },
     "age=7": {
       "model": "toneko:block/catnip/catnip_stage7"

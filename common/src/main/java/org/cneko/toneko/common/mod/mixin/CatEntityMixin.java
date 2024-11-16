@@ -16,4 +16,9 @@ public class CatEntityMixin implements INeko {
     public boolean allowMateIfNotNeko() {
         return true;
     }
+
+    @Override
+    public boolean isNeko() {
+        return true;
+    }
 }

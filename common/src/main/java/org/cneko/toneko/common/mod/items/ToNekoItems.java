@@ -10,6 +10,6 @@ public class ToNekoItems {
     public static NekoArmor.NekoEarsItem NEKO_EARS;
     public static NekoArmor.NekoPawsItem NEKO_PAWS;
     public static NekoCollectorItem NEKO_COLLECTOR;
-    public static Item CATNIP;
+    public static CatnipItem CATNIP;
     public static Item CATNIP_SEED;
 }

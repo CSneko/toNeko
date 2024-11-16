@@ -19,4 +19,8 @@ public interface INeko {
     default boolean allowMateIfNotNeko(){
         return false;
     }
+
+    default boolean isNeko(){
+        return this.getNeko().isNeko();
+    }
 }

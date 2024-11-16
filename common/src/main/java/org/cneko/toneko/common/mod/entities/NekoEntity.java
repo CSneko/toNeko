@@ -3,8 +3,6 @@ package org.cneko.toneko.common.mod.entities;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
@@ -13,11 +11,9 @@ import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -38,6 +34,7 @@ import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.mod.api.NekoNameRegistry;
 import org.cneko.toneko.common.mod.api.NekoSkinRegistry;
 import org.cneko.toneko.common.mod.entities.ai.goal.NekoPickupItemGoal;
+import org.cneko.toneko.common.mod.items.ToNekoItems;
 import org.cneko.toneko.common.mod.packets.interactives.NekoEntityInteractivePayload;
 import org.cneko.toneko.common.mod.util.EntityUtil;
 import org.cneko.toneko.common.mod.entities.ai.goal.NekoFollowOwnerGoal;
@@ -53,9 +50,7 @@ import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 import static org.cneko.toneko.common.mod.util.TextUtil.randomTranslatabledComponent;
 
@@ -132,6 +127,8 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         this.goalSelector.addGoal(30,nekoMateGoal);
         // 会尝试捡起附近的物品
         this.goalSelector.addGoal(5, new NekoPickupItemGoal(this));
+        // 会被拿着喜欢物品的玩家吸引
+        this.goalSelector.addGoal(10, new TemptGoal(this, 0.5D, this::isFavoriteItem,false));
     }
 
     public NekoQuery.Neko getNeko() {
@@ -187,13 +184,19 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     public String getDefaultSkin(){
         return "aquarter";
     }
+
     // 最喜欢的物品
-    public Set<Item> getFavoriteItems(){
-        return new HashSet<>();
+    public boolean isFavoriteItem(ItemStack stack){
+        Item item = stack.getItem();
+        return item.equals(ToNekoItems.CATNIP);
     }
     // 是否喜欢这个物品
     public boolean isLikedItem(ItemStack stack){
-        return this.getFavoriteItems().contains(stack.getItem());
+        return isFavoriteItem(stack);
+    }
+    // 是否需要这个物品
+    public boolean isNeededItem(ItemStack stack){
+        return isLikedItem(stack);
     }
 
     public boolean giftItem(Player player, int slot){
@@ -493,6 +496,11 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     @Override
     public boolean isPlayer() {
         return false;
+    }
+
+    @Override
+    public boolean isNeko() {
+        return true;
     }
 
     @Override

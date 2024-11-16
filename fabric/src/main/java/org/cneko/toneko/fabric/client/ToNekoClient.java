@@ -1,8 +1,11 @@
 package org.cneko.toneko.fabric.client;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderType;
+import org.cneko.toneko.common.mod.blocks.ToNekoBlocks;
 import org.cneko.toneko.common.mod.client.ToNekoKeyBindings;
 import org.cneko.toneko.common.mod.client.renderers.NekoRenderer;
 import org.cneko.toneko.common.mod.client.events.ClientNetworkEvents;
@@ -25,5 +28,6 @@ public class ToNekoClient implements ClientModInitializer {
         }
         EntityRendererRegistry.register(ToNekoEntities.ADVENTURER_NEKO, NekoRenderer::new);
         EntityRendererRegistry.register(ToNekoEntities.CRYSTAL_NEKO, NekoRenderer::new);
+        BlockRenderLayerMap.INSTANCE.putBlock(ToNekoBlocks.CATNIP, RenderType.cutout());
     }
 }

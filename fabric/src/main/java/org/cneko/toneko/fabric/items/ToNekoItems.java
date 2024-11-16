@@ -9,10 +9,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
 import org.cneko.toneko.common.mod.blocks.ToNekoBlocks;
-import org.cneko.toneko.common.mod.items.FurryBoheItem;
-import org.cneko.toneko.common.mod.items.NekoArmor;
-import org.cneko.toneko.common.mod.items.NekoCollectorItem;
-import org.cneko.toneko.common.mod.items.NekoPotionItem;
+import org.cneko.toneko.common.mod.items.*;
 import org.cneko.toneko.common.mod.entities.ToNekoEntities;
 import static org.cneko.toneko.common.mod.items.ToNekoItems.*;
 
@@ -36,7 +33,7 @@ public class ToNekoItems {
         NEKO_POTION = new NekoPotionItem();
         NEKO_COLLECTOR = new NekoCollectorItem();
         FURRY_BOHE = new FurryBoheItem();
-        CATNIP = new Item(new Item.Properties());
+        CATNIP = new CatnipItem();
         CATNIP_SEED = new ItemNameBlockItem(ToNekoBlocks.CATNIP, new Item.Properties());
         Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, NekoPotionItem.ID), NEKO_POTION);
         Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, NekoCollectorItem.ID), NEKO_COLLECTOR);

@@ -46,7 +46,7 @@ public class ToNekoEvents {
                 1,
                 (factories) -> {
                     factories.add((trader, random) -> new MerchantOffer(
-                            new ItemCost(Items.EMERALD, 1),
+                            new ItemCost(Items.EMERALD, 2),
                             ToNekoItems.CATNIP_SEED.getDefaultInstance(),
                             10,
                             10,

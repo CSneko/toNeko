@@ -1,9 +1,12 @@
 package org.cneko.toneko.common.mod.entities;
 
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -23,19 +26,8 @@ public class AdventurerNeko extends NekoEntity{
 
 
     @Override
-    public Set<Item> getFavoriteItems() {
-        Set<Item> i = super.getFavoriteItems();
-        i.add(Items.DIAMOND_SWORD);
-        i.add(Items.DIAMOND_CHESTPLATE);
-        i.add(Items.DIAMOND_HELMET);
-        i.add(Items.DIAMOND_LEGGINGS);
-        i.add(Items.DIAMOND_BOOTS);
-        i.add(Items.NETHERITE_SWORD);
-        i.add(Items.NETHERITE_CHESTPLATE);
-        i.add(Items.NETHERITE_HELMET);
-        i.add(Items.NETHERITE_LEGGINGS);
-        i.add(Items.NETHERITE_BOOTS);
-        return i;
+    public boolean isFavoriteItem(ItemStack stack) {
+        return super.isFavoriteItem(stack) || stack.is(ItemTags.SWORDS) || stack.is(ItemTags.CHEST_ARMOR) || stack.is(ItemTags.HEAD_ARMOR) || stack.is(ItemTags.LEG_ARMOR) || stack.is(ItemTags.FOOT_ARMOR);
     }
 
     @Override

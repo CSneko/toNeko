@@ -2,6 +2,6 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/crop",
 	"textures": {
-		"crop": "toneko:block/catnip/catnip_stage7"
+		"crop": "toneko:block/catnip/catnip_stage6"
 	}
 }

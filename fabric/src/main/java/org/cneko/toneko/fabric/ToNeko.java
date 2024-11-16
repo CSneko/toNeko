@@ -9,6 +9,7 @@ import org.cneko.toneko.common.mod.commands.NekoCommand;
 import org.cneko.toneko.common.mod.commands.QuirkCommand;
 import org.cneko.toneko.common.mod.commands.ToNekoAdminCommand;
 import org.cneko.toneko.common.mod.commands.ToNekoCommand;
+import org.cneko.toneko.common.mod.effects.ToNekoEffects;
 import org.cneko.toneko.common.mod.events.ToNekoEvents;
 import org.cneko.toneko.common.mod.events.ToNekoNetworkEvents;
 import org.cneko.toneko.common.mod.impl.FabricConfigImpl;
@@ -43,6 +44,8 @@ public class ToNeko implements ModInitializer {
         ToNekoArmorMaterials.init();
         // 注册物品
         ToNekoItems.init();
+        // 注册状态
+        ToNekoEffects.init();
         // 注册属性
         ToNekoAttributes.init();
 
