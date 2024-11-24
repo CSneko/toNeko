@@ -25,8 +25,11 @@ public class ToNekoEvents {
     public static void init() {
         if(ConfigUtil.CHAT_ENABLE) {
             ServerMessageEvents.ALLOW_CHAT_MESSAGE.register((message, sender, params) -> {
-                CommonChatEvent.onChatMessage(message, sender, params);
-                return false;
+                if (ConfigUtil.CHAT_ENABLE) {
+                    CommonChatEvent.onChatMessage(message, sender, params);
+                    return false;
+                }
+                return true;
             });
         }
         ServerPlayConnectionEvents.JOIN.register(ToNekoEvents::onPlayerJoin);

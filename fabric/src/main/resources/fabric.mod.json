@@ -24,9 +24,6 @@
   "icon": "assets/toneko/icon.png",
   "environment": "*",
   "entrypoints": {
-    "fabric-datagen": [
-      "org.cneko.toneko.fabric.datagen.ToNekoDataGenerator"
-    ],
     "client": [
       "org.cneko.toneko.fabric.client.ToNekoClient"
     ],
