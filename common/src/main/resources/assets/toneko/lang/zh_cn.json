@@ -218,6 +218,12 @@
   "screen.toneko.links.button.bilibili.des": "这事模组作者的B站帐号哦",
   "screen.toneko.config.button.true": "§a启用",
   "screen.toneko.config.button.false": "§c禁用",
+  "screen.toneko.config.key.language": "语言",
+  "screen.toneko.config.key.chat.enable": "启用聊天修改",
+  "screen.toneko.config.key.chat.format": "聊天格式",
+  "screen.toneko.config.key.stats": "启用猫猫统计",
+  "screen.toneko.config.button.quit": "我改好啦",
+  "screen.toneko.config.button.apply": "马上生效",
   "misc.toneko.owner": "主人",
   "misc.toneko.nya": "喵~",
   "misc.toneko.prefix": "§a猫娘"

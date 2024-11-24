@@ -29,10 +29,10 @@ public class Messaging {
             nickname = "§6~§f"+nickname;
         }
         return chatFormat.
-                replace("${prefix}",formatPrefixes(prefix)).
-                replace("${msg}",msg).
-                replace("${name}",nickname).
-                replace("${c}","§");
+                replace("%prefix%",formatPrefixes(prefix)).
+                replace("%msg%",msg).
+                replace("%name%",nickname).
+                replace("%c%","§");
     }
 
     public static String format(String msg, String player, String nickname, List<String> prefixes){

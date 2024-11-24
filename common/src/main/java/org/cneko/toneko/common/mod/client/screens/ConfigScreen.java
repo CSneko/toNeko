@@ -19,17 +19,24 @@ public class ConfigScreen extends Screen {
     @Override
     public void init() {
         super.init();
+
+//        Component titleText = Component.translatable("screen.toneko.config.title");
+//        int titleWidth = this.font.width(titleText);
+//        int titleX = (this.width - titleWidth) / 2; // 居中标题
+//        int titleY = (int) (this.height * 0.05);
+//        this.addRenderableWidget(MultiLineLabel.create(this.font, titleText));
+
         int x = (int) (this.width * 0.1);
         var ref = new Object() {
             int y = (int) (height * 0.1);
         };
         int widgetWidth = (int) (this.width * 0.3);
         int inputWidth = (int) (this.width * 0.3); // EditBox 或 Button 的宽度
-        int height = (int) (this.height * 0.05);
-        int space = 30;
+        int height = (int) (this.height * 0.08);
+        int space = 20;
         ConfigUtil.CONFIG_BUILDER.getKeys().forEach(key -> {
             // 创建并添加 ConfigWidget
-            ConfigWidget configWidget = new ConfigWidget(x, ref.y, widgetWidth, height, Component.literal(key), this.font);
+            ConfigWidget configWidget = new ConfigWidget(x, ref.y, widgetWidth, height, Component.translatable("screen.toneko.config.key."+key), this.font);
             addRenderableWidget(configWidget);
 
             // 计算 EditBox 或 Button 的 x 坐标
@@ -60,6 +67,23 @@ public class ConfigScreen extends Screen {
 
             ref.y += height + space; // 每添加一个组件后，调整 y 坐标
         });
+
+        // 底部两个按钮
+        int btnWidth = (int) (this.width * 0.4);
+        int btnHeight = (int) (this.height * 0.08);
+        int btnY = (int) (this.height * 0.9); // 放置在底部
+        int btnSpacing = (int) (this.width * 0.05); // 按钮间的间距
+
+        // 左侧按钮
+        Button leftButton = Button.builder(Component.translatable("screen.toneko.config.button.quit"), btn -> minecraft.setScreen(lastScreen))
+                .bounds(this.width / 2 - btnWidth - btnSpacing / 2, btnY, btnWidth, btnHeight).build();
+        addRenderableWidget(leftButton);
+
+        // 右侧按钮
+        Button rightButton = Button.builder(Component.translatable("screen.toneko.config.button.apply"), btn -> {
+            ConfigUtil.load();
+        }).bounds(this.width / 2 + btnSpacing / 2, btnY, btnWidth, btnHeight).build();
+        addRenderableWidget(rightButton);
     }
 
 
@@ -94,10 +118,12 @@ public class ConfigScreen extends Screen {
             private int height;
             private final ConfigBuilder config;
             private final String key;
+            public boolean value;
             public Builder(String key,ConfigBuilder cfg){
                 this.entry = cfg.get(key);
                 this.config = cfg;
                 this.key = key;
+                this.value = entry.bool();
             }
             public Builder pos(int x, int y) {
                 this.x = x;
@@ -128,8 +154,9 @@ public class ConfigScreen extends Screen {
                     message = Component.translatable("screen.toneko.config.button.false");
                 }
                 return new ConfigButton(x, y, width, height,message , (btn)->{
-                    config.setBoolean(key,!entry.bool());
-                    btn.setMessage(entry.bool()?Component.translatable("screen.toneko.config.button.true"):Component.translatable("screen.toneko.config.button.false"));
+                    config.setBoolean(key,!value);
+                    value = !value;
+                    btn.setMessage(value?Component.translatable("screen.toneko.config.button.true"):Component.translatable("screen.toneko.config.button.false"));
                 }, ConfigButton.DEFAULT_NARRATION);
             }
 
