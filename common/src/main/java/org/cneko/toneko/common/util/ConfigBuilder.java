@@ -55,13 +55,34 @@ public class ConfigBuilder {
     public ConfigBuilder addBoolean(String key, Boolean value, String... comments) {
         return this.add(key, Entry.of(value, String.join("\n", comments)), comments);
     }
+    public void setBoolean(String key, boolean value) {
+        config.set(key, value);
+        try {
+            config.saveToFile(path.toFile());
+        } catch (IOException ignored) {
+        }
+    }
+    public void setString(String key, String value) {
+        config.set(key, value);
+        try {
+            config.saveToFile(path.toFile());
+        } catch (IOException ignored) {
+        }
+    }
+    public Entry get(String key){
+        return Entry.of(config.get(key),"");
+    }
+
+    public List<String> getKeys() {
+        return new ArrayList<>(defaults.keySet());
+    }
 
 
 
     public ConfigBuilder build() {
         for (String key : defaults.keySet()) {
             Entry entry = defaults.get(key);
-            if (!config.contains(key)) {
+            if (!config.containsNestedKey(key)) { // Use a new method to check nested keys
                 config.addComment(key, entry.comment);
                 config.set(key, entry.get());
             }
@@ -114,6 +135,9 @@ public class ConfigBuilder {
         public Number number(){
             return (Number) value;
         }
+        public boolean bool(){
+            return (boolean) value;
+        }
         public ConfigBuilder config(){
             return (ConfigBuilder) value;
         }
@@ -133,7 +157,7 @@ public class ConfigBuilder {
             throw new IllegalArgumentException("Invalid type: " + value.getClass().getName());
         }
 
-        enum Types{
+        public enum Types{
             STRING,
             NUMBER,
             BOOLEAN,
@@ -241,6 +265,25 @@ public class ConfigBuilder {
             return data.containsKey(key);
         }
 
+        public boolean containsNestedKey(String key) {
+            String[] keys = key.split("\\.");
+            Map<String, Object> current = data;
+            for (String k : keys) {
+                if (!current.containsKey(k)) {
+                    return false;
+                }
+                Object value = current.get(k);
+                if (value instanceof Map) {
+                    current = (Map<String, Object>) value;
+                } else if (!(value instanceof Map) && keys[keys.length -1] != k) {
+                    return false;
+                }
+
+
+            }
+            return true;
+        }
+
         public void addComment(String key, String... commentLines) {
             // SnakeYaml 不直接支持在特定 key 前添加注释.  变通方法: 使用 Tag.COMMENT
             StringBuilder comment = new StringBuilder();
@@ -312,9 +355,6 @@ public class ConfigBuilder {
                             }
 
                         }
-
-
-
 
                     }
 

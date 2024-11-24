@@ -7,6 +7,13 @@ architectury {
     fabric()
 }
 
+repositories {
+    maven {
+        name = "Terraformers"
+        url = "https://maven.terraformersmc.com/"
+    }
+}
+
 configurations {
     common {
         canBeResolved = true
@@ -35,6 +42,8 @@ dependencies {
     include modApi("maven.modrinth:ctlibmod:0.1.13")
     modImplementation "dev.emi:trinkets:${trinkets_version}"
     modImplementation "software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}"
+    modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
+
 //    modImplementation "software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}"
 }
 

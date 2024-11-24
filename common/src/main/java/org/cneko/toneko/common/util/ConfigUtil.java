@@ -19,8 +19,7 @@ public class ConfigUtil {
             .addBoolean("stats", true,
                     "启用统计功能，统计数据将发送到 toneko API，如何使用api请查看 https://github.com/CSneko/toNeko/blob/main/docs/TONEKO_ONLINE_API.md",
                     "Enable statistics, statistics data will be sent to the toneko API, how to use the api please see https://github.com/CSneko/toNeko/blob/main/docs/TONEKO_ONLINE_API.md")
-            .build()
-            ;
+            .build();
     public static ConfigBuilder.YC CONFIG = CONFIG_BUILDER.createConfig();
 
     public static boolean IS_BIRTHDAY = false;
@@ -28,6 +27,7 @@ public class ConfigUtil {
     private static final int BIRTHDAY_DAY = 26;
 
     public static void load(){
+        CONFIG = CONFIG_BUILDER.createConfig();
         LocalDate today = LocalDate.now();
         if (today.getMonthValue() == BIRTHDAY_MONTH && today.getDayOfMonth() == BIRTHDAY_DAY) {
             IS_BIRTHDAY = true;
