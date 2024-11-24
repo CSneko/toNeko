@@ -12,13 +12,11 @@ import org.cneko.toneko.common.mod.commands.ToNekoCommand;
 import org.cneko.toneko.common.mod.effects.ToNekoEffects;
 import org.cneko.toneko.common.mod.events.ToNekoEvents;
 import org.cneko.toneko.common.mod.events.ToNekoNetworkEvents;
-import org.cneko.toneko.common.mod.impl.FabricConfigImpl;
 import org.cneko.toneko.common.mod.impl.FabricLanguageImpl;
 import org.cneko.toneko.fabric.items.ToNekoArmorMaterials;
 import org.cneko.toneko.common.mod.packets.ToNekoPackets;
 import org.cneko.toneko.common.mod.quirks.ToNekoQuirks;
 import org.cneko.toneko.common.mod.util.PermissionUtil;
-import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.common.util.LanguageUtil;
 import org.cneko.toneko.fabric.entities.ToNekoEntities;
 import org.cneko.toneko.fabric.items.ToNekoItems;
@@ -29,8 +27,6 @@ public class ToNeko implements ModInitializer {
     public void onInitialize() {
         // 初始化语言和配置
         LanguageUtil.INSTANCE = new FabricLanguageImpl();
-        ConfigUtil.INSTANCE = new FabricConfigImpl();
-        ConfigUtil.preload();
         // 注册命令
         ToNekoCommand.init();
         ToNekoAdminCommand.init();

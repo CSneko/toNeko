@@ -14,7 +14,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.VillagerProfession;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.ItemCost;
 import net.minecraft.world.item.trading.MerchantOffer;
@@ -29,10 +28,13 @@ import org.cneko.toneko.common.util.LanguageUtil;
 
 public class ToNekoEvents {
     public static void init() {
-        if(ConfigUtil.CHAT_ENABLE) {
+        if(ConfigUtil.isChatEnable()) {
             ServerMessageEvents.ALLOW_CHAT_MESSAGE.register((message, sender, params) -> {
-                CommonChatEvent.onChatMessage(message, sender, params);
-                return false;
+                if (ConfigUtil.isChatEnable()) {
+                    CommonChatEvent.onChatMessage(message, sender, params);
+                    return false;
+                }
+                return true;
             });
         }
         ServerPlayConnectionEvents.JOIN.register(ToNekoEvents::onPlayerJoin);
@@ -44,15 +46,13 @@ public class ToNekoEvents {
         ServerWorldEvents.UNLOAD.register(CommonWorldEvent::onWorldUnLoad);
         TradeOfferHelper.registerVillagerOffers(VillagerProfession.FARMER,
                 1,
-                (factories) -> {
-                    factories.add((trader, random) -> new MerchantOffer(
-                            new ItemCost(Items.EMERALD, 2),
-                            ToNekoItems.CATNIP_SEED.getDefaultInstance(),
-                            10,
-                            10,
-                            1.1f
-                    ));
-                }
+                (factories) -> factories.add((trader, random) -> new MerchantOffer(
+                        new ItemCost(Items.EMERALD, 2),
+                        ToNekoItems.CATNIP_SEED.getDefaultInstance(),
+                        10,
+                        10,
+                        1.1f
+                ))
         );
 
     }

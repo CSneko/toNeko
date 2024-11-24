@@ -13,7 +13,6 @@ import org.cneko.toneko.bukkit.util.PlayerUtil;
 import org.cneko.toneko.common.Bootstrap;
 import org.cneko.toneko.common.api.Messaging;
 import org.cneko.toneko.common.api.NekoQuery;
-import org.cneko.toneko.common.mod.impl.FabricConfigImpl;
 import org.cneko.toneko.common.mod.impl.FabricLanguageImpl;
 import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.common.util.FileUtil;
@@ -26,7 +25,6 @@ public class ToNeko extends JavaPlugin {
         // common start
         FileUtil.CreatePath("plugins/toNeko");
         ConfigUtil.CONFIG_FILE = "plugins/toNeko/config.yml";
-        ConfigUtil.INSTANCE = new FabricConfigImpl();
         LanguageUtil.INSTANCE = new FabricLanguageImpl();
         Bootstrap.bootstrap();
         Messaging.GET_PLAYER_UUID_INSTANCE = PlayerUtil::getPlayerUUIDByName;

@@ -36,7 +36,7 @@ public class Messaging {
     }
 
     public static String format(String msg, String player, String nickname, List<String> prefixes){
-        return format(msg,player,nickname,prefixes, ConfigUtil.CHAT_FORMAT);
+        return format(msg,player,nickname,prefixes, ConfigUtil.getChatFormat());
     }
 
     public static List<String> getChatPrefixes(String playerName){

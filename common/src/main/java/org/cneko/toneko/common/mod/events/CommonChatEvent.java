@@ -34,7 +34,7 @@ public class CommonChatEvent {
         int count = Stats.getMeow(msg);
         // 根据喵的数量增加经验
         neko.addLevel((double) count / 1000.00);
-        if(ConfigUtil.STATS) Stats.meowInChat(playerName,count);
+        if(ConfigUtil.isStatsEnable()) Stats.meowInChat(playerName,count);
         sendMessage(Component.nullToEmpty(msg));
     }
     public static void sendMessage(Component message){

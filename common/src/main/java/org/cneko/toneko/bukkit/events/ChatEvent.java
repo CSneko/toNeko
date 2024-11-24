@@ -42,11 +42,11 @@ public class ChatEvent implements Listener {
         int count = Stats.getMeow(message);
         // 根据喵的数量增加经验
         neko.addLevel((double) count / 1000.00);
-        if(ConfigUtil.STATS) Stats.meowInChat(player.getName(),count);
+        if(ConfigUtil.isStatsEnable()) Stats.meowInChat(player.getName(),count);
     }
 
     private String format(String message, Player player, String nickname){
-        String format = PlaceHolderUtil.replace(player,ConfigUtil.CHAT_FORMAT);
+        String format = PlaceHolderUtil.replace(player,ConfigUtil.getChatFormat());
         return Messaging.format(message,player.getName(),nickname,format);
     }
 
