@@ -216,6 +216,7 @@
   "screen.toneko.links.button.discord.des": "来这里聊聊天喵",
   "screen.toneko.links.button.bilibili": "B站",
   "screen.toneko.links.button.bilibili.des": "这事模组作者的B站帐号哦",
+  "screen.toneko.config.title": "猫猫设置",
   "screen.toneko.config.button.true": "§a启用",
   "screen.toneko.config.button.false": "§c禁用",
   "screen.toneko.config.key.language": "语言",
