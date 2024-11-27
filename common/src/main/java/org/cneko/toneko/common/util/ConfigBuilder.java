@@ -1,15 +1,11 @@
 package org.cneko.toneko.common.util;
 
+import org.jetbrains.annotations.Nullable;
 import org.yaml.snakeyaml.DumperOptions;
-import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.nodes.Tag;
-import org.yaml.snakeyaml.representer.Representer;
 
 import java.io.*;
-import java.lang.reflect.Constructor;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
@@ -40,19 +36,19 @@ public class ConfigBuilder {
         return this.add(key, defaultValue, combinedComment);
     }
 
-    public ConfigBuilder addString(String key, String value, String comment) {
+    public ConfigBuilder addString(String key, String value,String url, String comment) {
         return this.add(key, Entry.of(value, comment), comment);
     }
 
-    public ConfigBuilder addString(String key, String value, String... comments) {
+    public ConfigBuilder addString(String key, String value,String url, String... comments) {
         return this.add(key, Entry.of(value, String.join("\n", comments)), comments);
     }
 
-    public ConfigBuilder addBoolean(String key, Boolean value, String comment) {
+    public ConfigBuilder addBoolean(String key, Boolean value,String url, String comment) {
         return this.add(key, Entry.of(value, comment), comment);
     }
 
-    public ConfigBuilder addBoolean(String key, Boolean value, String... comments) {
+    public ConfigBuilder addBoolean(String key, Boolean value,String url, String... comments) {
         return this.add(key, Entry.of(value, String.join("\n", comments)), comments);
     }
     public void setBoolean(String key, boolean value) {
@@ -115,10 +111,15 @@ public class ConfigBuilder {
         private final Object value;
         private final Types type;
         private final String comment;
+        private String url;
         public Entry(Object value, Types type,String comment){
             this.value = value;
             this.type = type;
             this.comment = comment;
+        }
+        public Entry(Object value, Types type,String comment,@Nullable String url){
+            this(value,type,comment);
+            this.url = url;
         }
         public Object get(){
             return value;
@@ -128,6 +129,12 @@ public class ConfigBuilder {
         }
         public String comment(){
             return comment;
+        }
+        public void setUrl(String url){
+            this.url = url;
+        }
+        public String url(){
+            return url;
         }
         public String string(){
             return (String) value;

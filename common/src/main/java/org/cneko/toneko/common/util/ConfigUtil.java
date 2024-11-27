@@ -7,20 +7,18 @@ public class ConfigUtil {
     public static String CONFIG_FILE = "config/toneko.yml";
 
     public static ConfigBuilder CONFIG_BUILDER = ConfigBuilder.create(Path.of(CONFIG_FILE))
-            .addString("language", "zh_cn",
+            .addString("language", "zh_cn", null,
                     "语言选项（支持 zh_cn,zh_tw,en_us,ko_kr）,可自定义语言，详细查看 https://github.com/CSneko/toNeko/docs/CUSTOM_LANGUAGE.md",
                     "Language Option (Supported zh_cn,zh_tw,en_us,ko_kr), you can customize the language, see https://github.com/CSneko/toNeko/docs/CUSTOM_LANGUAGE.md")
-            .addBoolean("chat.enable", true,
-                    "  是否启用聊天修改 （开启后会对MCDr造成一定影响）",
+            .addBoolean("chat.enable", true, null,
+                    "是否启用聊天修改 （开启后会对MCDr造成一定影响）",
                     "Whether to enable chat modification (it will cause some effects on MCDr)" )
-            .addString("chat.format","%prefix%§e%name% §d>> §f%msg%",
+            .addString("chat.format","%prefix%§e%name% §d>> §f%msg%",null,
                     "聊天格式，占位符 %name% = 玩家名称, %msg% = 玩家消息, %prefix% = 前缀",
                     "Chat format, placeholder %name% = player name, %msg% = player message, %prefix% = prefix")
-            .addBoolean("stats", true,
+            .addBoolean("stats", true, null,
                     "启用统计功能，统计数据将发送到 toneko API，如何使用api请查看 https://github.com/CSneko/toNeko/blob/main/docs/TONEKO_ONLINE_API.md",
                     "Enable statistics, statistics data will be sent to the toneko API, how to use the api please see https://github.com/CSneko/toNeko/blob/main/docs/TONEKO_ONLINE_API.md")
-            .addBoolean("test",true,
-                    "aaa")
             .build();
     public static ConfigBuilder.YC CONFIG = CONFIG_BUILDER.createConfig();
 

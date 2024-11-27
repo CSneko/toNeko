@@ -1,8 +1,10 @@
 package org.cneko.toneko.common.mod.client.screens;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.*;
+import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -10,14 +12,18 @@ import net.minecraft.network.chat.Component;
 import org.cneko.toneko.common.util.ConfigBuilder;
 import org.cneko.toneko.common.util.ConfigUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ConfigScreen extends Screen {
     private final Screen lastScreen;
     private ScrollPanel scrollPanel;
+    private ConfigWidget randomText;
+    private static int randoms = 18;
 
     public ConfigScreen(Screen lastScreen) {
         super(Component.empty());
@@ -44,16 +50,18 @@ public class ConfigScreen extends Screen {
 
 
         ConfigUtil.CONFIG_BUILDER.getKeys().forEach(key -> {
-            int widgetHeight = (int) (this.height * 0.08); // 每行组件的高度
+            int widgetHeight = 20; // 每行组件的高度
             int space = 10; // 文本与编辑框/按钮之间的水平间隔
+
+            // 获取配置项
+            ConfigBuilder.Entry entry = ConfigUtil.CONFIG_BUILDER.get(key);
 
             // 文本组件
             int textWidth = (int) (scrollWidth * 0.35); // 文本宽度占滚动区域的35%
             ConfigWidget configWidget = new ConfigWidget(0, 0, textWidth, widgetHeight,
-                    Component.translatable("screen.toneko.config.key." + key), this.font);
+                    Component.translatable("screen.toneko.config.key." + key), this.font,entry.url());
+            configWidget.setTooltip(Tooltip.create(Component.translatable("screen.toneko.config.key." + key + ".des")));
 
-            // 获取配置项
-            ConfigBuilder.Entry entry = ConfigUtil.CONFIG_BUILDER.get(key);
             AbstractWidget inputComponent;
 
             if (entry.type() == ConfigBuilder.Entry.Types.BOOLEAN) {
@@ -71,10 +79,6 @@ public class ConfigScreen extends Screen {
                 return; // 未知类型，跳过
             }
 
-            // 统一水平与垂直对齐
-            configWidget.setX(scrollPanel.getX() + 5);
-            configWidget.setY(scrollPanel.getY() + scrollPanel.totalContentHeight + 5);
-
             inputComponent.setX(configWidget.getX() + textWidth + space);
             inputComponent.setY(configWidget.getY() + (configWidget.getHeight() - inputComponent.getHeight()) / 2);
 
@@ -86,13 +90,22 @@ public class ConfigScreen extends Screen {
             scrollPanel.totalContentHeight += widgetHeight;
         });
 
+        // 文本组件
+        int textWidth = (int) (scrollWidth * 0.35); // 文本宽度占滚动区域的35%
 
+        int random = new Random().nextInt(randoms);
+        randomText = new ConfigWidget(0, 0,textWidth,20,Component.translatable("screen.toneko.config.random."+random),this.font);
+        scrollPanel.addTextWidget(randomText);
+        scrollPanel.addWidget(new Button.Builder(Component.translatable("screen.toneko.config.button.random"),(btn)->{
+            modifyRandomText();
+        }).size(textWidth,20).build());
+        scrollPanel.totalContentHeight += 20;
 
         addRenderableWidget(scrollPanel);
 
         // 分区3：底部按钮（固定）
-        int btnWidth = (int) (this.width * 0.4);
-        int btnHeight = (int) (this.height * 0.08);
+        int btnWidth = (int) (this.width * 0.3);
+        int btnHeight = 20;
         int btnY = (int) (this.height * 0.9);
         int btnSpacing = (int) (this.width * 0.05);
 
@@ -107,6 +120,11 @@ public class ConfigScreen extends Screen {
         addRenderableWidget(rightButton);
     }
 
+    public void modifyRandomText(){
+        int random = new Random().nextInt(randoms);
+        randomText.setMessage(Component.translatable("screen.toneko.config.random."+random));
+    }
+
 
 
     @Override
@@ -115,14 +133,26 @@ public class ConfigScreen extends Screen {
     }
 
     public static class ConfigWidget extends AbstractStringWidget {
+        private String url;
         public ConfigWidget(int x, int y, int width, int height, Component message, Font font) {
             super(x, y, width, height, message, font);
+        }
+        public ConfigWidget(int x, int y, int width, int height, Component message, Font font,@Nullable String url){
+            this(x, y, width, height, message, font);
+            this.url = url;
         }
 
         @Override
         public void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
             guiGraphics.drawString(getFont(), this.getMessage(), this.getX() + 5, this.getY() + (this.height - 8) / 2,
                     16777215, false);
+        }
+
+        @Override
+        public void onClick(double mouseX, double mouseY) {
+            if (url != null){
+                ConfirmLinkScreen.confirmLinkNow(Minecraft.getInstance().screen, url);
+            }
         }
     }
 
@@ -145,7 +175,7 @@ public class ConfigScreen extends Screen {
 
         public void addWidget(AbstractWidget widget) {
             widget.setX((int) (this.getX() + width*0.5)); // 添加间距
-            widget.setY((int) (this.getY() + totalContentHeight - scrollAmount + 5));
+            widget.setY(this.getY() + totalContentHeight - scrollAmount + 5);
             this.children.add(widget);
         }
         public void addTextWidget(ConfigWidget configWidget) {
@@ -224,9 +254,15 @@ public class ConfigScreen extends Screen {
             int currentY = this.getY() + 5 - scrollAmount;
             for (AbstractWidget widget : children) {
                 widget.setY(currentY);
-                currentY += widget.getHeight() + 10;
+                // 如果是文本与输入框的组合，需要特殊处理
+                if (widget instanceof ConfigWidget configWidget) {
+                    currentY += configWidget.getHeight(); // 增加文本高度
+                } else {
+                    currentY += widget.getHeight() + 10; // 增加间隔
+                }
             }
         }
+
 
         @Override
         public List<? extends GuiEventListener> children() {
