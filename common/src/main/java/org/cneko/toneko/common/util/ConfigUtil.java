@@ -16,7 +16,7 @@ public class ConfigUtil {
             .addString("chat.format","%prefix%§e%name% §d>> §f%msg%",null,
                     "聊天格式，占位符 %name% = 玩家名称, %msg% = 玩家消息, %prefix% = 前缀",
                     "Chat format, placeholder %name% = player name, %msg% = player message, %prefix% = prefix")
-            .addBoolean("stats", true, null,
+            .addBoolean("stats", true, "https://github.com/CSneko/toNeko/blob/main/docs/TONEKO_ONLINE_API.md",
                     "启用统计功能，统计数据将发送到 toneko API，如何使用api请查看 https://github.com/CSneko/toNeko/blob/main/docs/TONEKO_ONLINE_API.md",
                     "Enable statistics, statistics data will be sent to the toneko API, how to use the api please see https://github.com/CSneko/toNeko/blob/main/docs/TONEKO_ONLINE_API.md")
             .build();

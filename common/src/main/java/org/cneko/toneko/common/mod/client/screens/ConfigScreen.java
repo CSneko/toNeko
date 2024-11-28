@@ -17,13 +17,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class ConfigScreen extends Screen {
     private final Screen lastScreen;
     private ScrollPanel scrollPanel;
     private ConfigWidget randomText;
-    private static int randoms = 18;
+    private static int randoms = 22;
 
     public ConfigScreen(Screen lastScreen) {
         super(Component.empty());
@@ -96,9 +95,7 @@ public class ConfigScreen extends Screen {
         int random = new Random().nextInt(randoms);
         randomText = new ConfigWidget(0, 0,textWidth,20,Component.translatable("screen.toneko.config.random."+random),this.font);
         scrollPanel.addTextWidget(randomText);
-        scrollPanel.addWidget(new Button.Builder(Component.translatable("screen.toneko.config.button.random"),(btn)->{
-            modifyRandomText();
-        }).size(textWidth,20).build());
+        scrollPanel.addWidget(new Button.Builder(Component.translatable("screen.toneko.config.button.random"),(btn)-> modifyRandomText()).size(textWidth,20).build());
         scrollPanel.totalContentHeight += 20;
 
         addRenderableWidget(scrollPanel);
@@ -164,8 +161,6 @@ public class ConfigScreen extends Screen {
         private int totalContentHeight = 0; // 子组件的总高度
         private final int scrollbarWidth = 6; // 滚动条宽度
         private boolean isDragging = false; // 是否在拖动滚动条
-        private int dragStartY = 0; // 拖动开始时的鼠标 Y
-        private int initialScrollAmount = 0; // 拖动开始时的滚动偏移量
 
         public ScrollPanel(int x, int y, int width, int height, Component title) {
             super(x, y, width, height, title);
@@ -213,8 +208,12 @@ public class ConfigScreen extends Screen {
         @Override
         public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
             if (isDragging) {
+                // 拖动开始时的鼠标 Y
+                int dragStartY = 0;
                 int dragDelta = (int) (mouseY - dragStartY);
                 double scrollRatio = (double) totalContentHeight / panelHeight;
+                // 拖动开始时的滚动偏移量
+                int initialScrollAmount = 0;
                 scrollAmount = (int) Math.max(0, Math.min(totalContentHeight - panelHeight, initialScrollAmount + dragDelta * scrollRatio));
                 updateChildrenPositions();
                 return true;
@@ -265,12 +264,12 @@ public class ConfigScreen extends Screen {
 
 
         @Override
-        public List<? extends GuiEventListener> children() {
+        public @NotNull List<? extends GuiEventListener> children() {
             return children;
         }
 
         @Override
-        public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
+        public void updateWidgetNarration(@NotNull NarrationElementOutput narrationElementOutput) {
             // Narration is optional
         }
 
@@ -301,7 +300,7 @@ public class ConfigScreen extends Screen {
         }
 
         @Override
-        protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
+        protected void updateWidgetNarration(@NotNull NarrationElementOutput narrationElementOutput) {
 
         }
     }
@@ -310,6 +309,14 @@ public class ConfigScreen extends Screen {
 
         public ConfigButton(int x, int y, int width, int height, Component message, OnPress onPress, CreateNarration createNarration) {
             super(x, y, width, height, message, onPress, createNarration);
+//            this.setAlpha(0.5f);
+        }
+
+        @Override
+        protected void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+            super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
+//            int color = 0X5cb85c;
+//            guiGraphics.fill(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, color);
         }
 
         public static class Builder{

@@ -37,19 +37,19 @@ public class ConfigBuilder {
     }
 
     public ConfigBuilder addString(String key, String value,String url, String comment) {
-        return this.add(key, Entry.of(value, comment), comment);
+        return this.add(key, Entry.of(value, comment,url), comment);
     }
 
     public ConfigBuilder addString(String key, String value,String url, String... comments) {
-        return this.add(key, Entry.of(value, String.join("\n", comments)), comments);
+        return this.add(key, Entry.of(value, String.join("\n", comments),url), comments);
     }
 
     public ConfigBuilder addBoolean(String key, Boolean value,String url, String comment) {
-        return this.add(key, Entry.of(value, comment), comment);
+        return this.add(key, Entry.of(value, comment,url), comment);
     }
 
     public ConfigBuilder addBoolean(String key, Boolean value,String url, String... comments) {
-        return this.add(key, Entry.of(value, String.join("\n", comments)), comments);
+        return this.add(key, Entry.of(value, String.join("\n", comments),url), comments);
     }
     public void setBoolean(String key, boolean value) {
         config.set(key, value);
@@ -66,7 +66,7 @@ public class ConfigBuilder {
         }
     }
     public Entry get(String key){
-        return Entry.of(config.get(key),"");
+        return defaults.get(key);
     }
 
     public List<String> getKeys() {
@@ -130,8 +130,9 @@ public class ConfigBuilder {
         public String comment(){
             return comment;
         }
-        public void setUrl(String url){
+        public Entry setUrl(String url){
             this.url = url;
+            return this;
         }
         public String url(){
             return url;
@@ -149,17 +150,17 @@ public class ConfigBuilder {
             return (ConfigBuilder) value;
         }
 
-        public static Entry of(Object value,String comment){
+        public static Entry of(Object value,String comment,String url){
             if (value instanceof String){
-                return new Entry(value,Types.STRING,comment);
+                return new Entry(value,Types.STRING,comment,url);
             }else if (value instanceof Number){
-                return new Entry(value,Types.NUMBER,comment);
+                return new Entry(value,Types.NUMBER,comment,url);
             }else if (value instanceof Boolean){
-                return new Entry(value,Types.BOOLEAN,comment);
+                return new Entry(value,Types.BOOLEAN,comment,url);
             }else if (value instanceof List<?>){
-                return new Entry(value,Types.LIST,comment);
+                return new Entry(value,Types.LIST,comment,url);
             }else if (value instanceof ConfigBuilder){
-                return new Entry(value,Types.CONFIG,comment);
+                return new Entry(value,Types.CONFIG,comment,url);
             }
             throw new IllegalArgumentException("Invalid type: " + value.getClass().getName());
         }
