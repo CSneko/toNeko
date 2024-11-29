@@ -42,6 +42,7 @@ import org.cneko.toneko.common.mod.packets.interactives.NekoEntityInteractivePay
 import org.cneko.toneko.common.mod.util.EntityUtil;
 import org.cneko.toneko.common.mod.entities.ai.goal.NekoFollowOwnerGoal;
 import org.cneko.toneko.common.mod.entities.ai.goal.NekoMateGoal;
+import org.cneko.toneko.common.util.ConfigUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -53,6 +54,8 @@ import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import static org.cneko.toneko.common.mod.util.TextUtil.randomTranslatabledComponent;
@@ -60,12 +63,28 @@ import static org.cneko.toneko.common.mod.util.TextUtil.randomTranslatabledCompo
 public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko {
     public static double DEFAULT_FIND_RANGE = 16.0D;
     public static float DEFAULT_RIDE_RANGE = 3f;
+    public static final List<String> MOE_TAGS = List.of(
+            "tsundere", // 傲娇
+            "baka", // 笨蛋
+            "mesugaki", // 雌小鬼
+            "yowaki", // 弱气
+            "dojikko", // 冒失
+            "yandere", // 病娇
+            "tennen_boke", // 天然呆
+            "haraguro", // 腹黑
+            "gentleness", // 温柔
+            "shoakuma", // 小恶魔
+            "chunibyo", // 中二病
+            "shizukana", // 文静
+            "narenareshi", // 自来熟
+            "paranoia", // 偏执
+            "yuri" // 百合
+    );
 
     public NekoFollowOwnerGoal nekoFollowOwnerGoal;
     public NekoMateGoal nekoMateGoal;
     private final AnimatableInstanceCache cache;
     private boolean isSitting = false;
-    private String skin;
     final NekoInventory inventory = new NekoInventory(this);
 
     public static final EntityDataAccessor<String> SKIN_DATA_ID = SynchedEntityData.defineId(NekoEntity.class, EntityDataSerializers.STRING);
@@ -75,7 +94,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         NekoQuery.getNeko(this.getUUID()).setNeko(true);
         this.cache = GeckoLibUtil.createInstanceCache(this);
         randomize();
-        this.skin = getSkin();
+        this.setPersistenceRequired();
     }
 
 
@@ -159,23 +178,12 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     }
 
     public String getSkin(){
-        if (this.level().isClientSide()) {
-            String s = this.entityData.get(SKIN_DATA_ID);
-            if (s.isEmpty()){
-                this.entityData.packDirty();
-                s = this.getDefaultSkin();
-            }
-            return s;
+        if (this.entityData.get(SKIN_DATA_ID).isEmpty()){
+            this.setSkin(getRandomSkin());
         }
-        if (this.skin == null || skin.isEmpty()) {
-            skin = this.getRandomSkin();
-            this.setSkin(skin);
-            return skin;
-        }
-        return skin;
+        return this.entityData.get(SKIN_DATA_ID);
     }
     public void setSkin(String skin) {
-        this.skin = skin;
         //noinspection ConstantValue
         if (this.entityData != null) {
             this.entityData.set(SKIN_DATA_ID, skin);
@@ -495,6 +503,13 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
             int r = random.nextInt(6);
             player.sendSystemMessage(Component.translatable("message.toneko.neko.on_hurt."+r, this.getName()));
         }
+    }
+
+    public String generateAIPrompt() {
+        return ConfigUtil.getAIPrompt()
+                .replaceAll("%neko_name%", this.getName().getString())
+                .replaceAll("%neko_hight%", String.valueOf(this.getBbHeight()))
+                ;
     }
 
     @Override

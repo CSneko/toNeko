@@ -16,9 +16,18 @@ public class ConfigUtil {
             .addString("chat.format","%prefix%§e%name% §d>> §f%msg%",null,
                     "聊天格式，占位符 %name% = 玩家名称, %msg% = 玩家消息, %prefix% = 前缀",
                     "Chat format, placeholder %name% = player name, %msg% = player message, %prefix% = prefix")
-            .addBoolean("stats", true, "https://github.com/CSneko/toNeko/blob/main/docs/TONEKO_ONLINE_API.md",
-                    "启用统计功能，统计数据将发送到 toneko API，如何使用api请查看 https://github.com/CSneko/toNeko/blob/main/docs/TONEKO_ONLINE_API.md",
-                    "Enable statistics, statistics data will be sent to the toneko API, how to use the api please see https://github.com/CSneko/toNeko/blob/main/docs/TONEKO_ONLINE_API.md")
+            .addBoolean("ai.enable",false,"https://s.cneko.org/toNekoAI",
+                    "是否启用AI",
+                    "Enable AI")
+            .addString("ai.key","","https://s.cneko.org/toNekoAI",
+                    "Gemini的密钥，请参阅https://s.cneko.org/toNekoAI",
+                    "API Key of Gemini,see https://s.cneko.org/toNekoAI")
+            .addString("ai.prompt","","https://s.cneko.org/toNekoAI",
+                    "AI提示词，参阅 https://s.cneko.org/toNekoAI",
+                    "AI prompt,see https://s.cneko.org/toNekoAI")
+            .addBoolean("stats", true, "https://s.cneko.org/toNekoOnlineAPI",
+                    "启用统计功能，统计数据将发送到 toneko API，如何使用api请查看 https://s.cneko.org/toNekoOnlineAPI",
+                    "Enable statistics, statistics data will be sent to the toneko API, how to use the api please see https://s.cneko.org/toNekoOnlineAPI")
             .build();
     public static ConfigBuilder.YC CONFIG = CONFIG_BUILDER.createConfig();
 
@@ -42,6 +51,9 @@ public class ConfigUtil {
     }
     public static boolean isStatsEnable() {
         return CONFIG.getBoolean("stats");
+    }
+    public static String getAIPrompt() {
+        return CONFIG.getString("ai.prompt");
     }
 
 

@@ -22,7 +22,7 @@ public class ConfigScreen extends Screen {
     private final Screen lastScreen;
     private ScrollPanel scrollPanel;
     private ConfigWidget randomText;
-    private static int randoms = 22;
+    private static int randoms = 29;
 
     public ConfigScreen(Screen lastScreen) {
         super(Component.empty());
