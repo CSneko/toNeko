@@ -2,6 +2,7 @@ package org.cneko.toneko.common.mod.client.screens;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -32,6 +33,24 @@ public class NekoEntityInteractiveScreen extends InteractionScreen implements IN
             return screen -> getButtonBuilders(neko);
         }
         return builders;
+    }
+
+    @Override
+    public void init() {
+        this.startY = (int) (this.height * 0.1)+40;
+        super.init();
+    }
+
+    @Override
+    public void render(@NotNull GuiGraphics gui, int mouseX, int mouseY, float partialTick) {
+        super.render(gui, mouseX, mouseY, partialTick);
+        int x = (int) (this.width * 0.7);
+        int y = (int) (this.height * 0.1);
+        // 显示猫娘的名字
+        gui.renderTooltip(this.font,Component.translatable("screen.toneko.neko_entity_interactive.tooltip.name",neko.getCustomName().getString()),x,y);
+        y += 20;
+        // 显示猫娘的萌属性
+        gui.renderTooltip(this.font,Component.translatable("screen.toneko.neko_entity_interactive.tooltip.moe_tags",neko.getMoeTagsString()),x,y);
     }
 
     @Override

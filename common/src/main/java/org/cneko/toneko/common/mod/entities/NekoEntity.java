@@ -54,8 +54,8 @@ import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import static org.cneko.toneko.common.mod.util.TextUtil.randomTranslatabledComponent;
@@ -86,12 +86,15 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     private final AnimatableInstanceCache cache;
     private boolean isSitting = false;
     final NekoInventory inventory = new NekoInventory(this);
+    private List<String> moeTags = new ArrayList<>();
 
     public static final EntityDataAccessor<String> SKIN_DATA_ID = SynchedEntityData.defineId(NekoEntity.class, EntityDataSerializers.STRING);
+    public static final EntityDataAccessor<String> MOE_TAGS_ID = SynchedEntityData.defineId(NekoEntity.class, EntityDataSerializers.STRING);
 
     public NekoEntity(EntityType<? extends NekoEntity> entityType, Level level) {
         super(entityType, level);
-        NekoQuery.getNeko(this.getUUID()).setNeko(true);
+        NekoQuery.Neko neko = NekoQuery.getNeko(this.getUUID());
+        neko.setNeko(true);
         this.cache = GeckoLibUtil.createInstanceCache(this);
         randomize();
         this.setPersistenceRequired();
@@ -99,19 +102,44 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
 
 
     public void randomize(){
+        NekoQuery.Neko neko = NekoQuery.getNeko(this.getUUID());
         // 设置名字（如果没有）
         if (!this.hasCustomName()) {
             this.setCustomName(Component.literal(NekoNameRegistry.getRandomName()));
         }
 
-        EntityUtil.randomizeAttributeValue(this, Attributes.SCALE,1,0.8,1.05); // 实体的体型为0.8~1.05间
+        EntityUtil.randomizeAttributeValue(this, Attributes.SCALE,1,0.65,1.05); // 实体的体型为0.65~1.05间
         EntityUtil.randomizeAttributeValue(this, Attributes.MOVEMENT_SPEED,0.7,0.5,0.6); // 实体速度为0.5~0.6间
+
+        if (!this.level().isClientSide){
+            // 初始化萌属性喵
+            if (!neko.hasAnyMoeTags()){
+                // 随机设置2~3个萌属性喵
+                List<String> tags = new ArrayList<>();
+                for (int i = 0; i < Mth.nextInt(this.random, 2, 3); i++) {
+                    tags.add(MOE_TAGS.get(Mth.nextInt(this.random, 0, MOE_TAGS.size() - 1)));
+                }
+                this.setMoeTags(tags,true);
+            }else {
+                this.setMoeTags(getMoeTags(),false);
+            }
+        }
     }
 
     @Override
     protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
         super.defineSynchedData(builder);
-        builder.define(SKIN_DATA_ID, "grmmy");
+        builder.define(SKIN_DATA_ID, this.getDefaultSkin());
+        builder.define(MOE_TAGS_ID, "");
+    }
+
+    @Override
+    public void onSyncedDataUpdated(@NotNull EntityDataAccessor<?> dataAccessor) {
+        super.onSyncedDataUpdated(dataAccessor);
+        if (dataAccessor.equals(MOE_TAGS_ID)) {
+            String moeTagsString = this.entityData.get(MOE_TAGS_ID);
+            this.moeTags = moeTagsString.isEmpty() ? List.of() : List.of(moeTagsString.split(":"));
+        }
     }
 
 
@@ -194,6 +222,37 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     }
     public String getDefaultSkin(){
         return "aquarter";
+    }
+
+    public List<String> getMoeTags(){
+        if (this.level().isClientSide){
+            String moeTagsString = this.entityData.get(MOE_TAGS_ID);
+            return moeTagsString.isEmpty() ? List.of() : List.of(moeTagsString.split(":"));
+        } else {
+            return NekoQuery.getNeko(this.getUUID()).getMoeTags();
+        }
+    }
+
+    public String getMoeTagsString(){
+        List<Component> tags = new ArrayList<>();
+        StringBuilder result = new StringBuilder();
+        this.getMoeTags().forEach(moeTag -> tags.add(Component.translatable("moe.toneko."+moeTag)));
+        for (Component tag : tags) {
+            result.append(tag.getString()).append(",");
+        }
+        if (!result.isEmpty()){
+            result.deleteCharAt(result.length() - 1);
+        }
+        return result.toString();
+    }
+    public void setMoeTags(List<String> moeTags,boolean updateNekoProfile){
+        if (!this.level().isClientSide){
+            if (updateNekoProfile) {
+                NekoQuery.getNeko(this.getUUID()).setMoeTags(moeTags);
+            }
+            this.moeTags = moeTags;
+            this.entityData.set(MOE_TAGS_ID, String.join(":", moeTags));
+        }
     }
 
     // 最喜欢的物品

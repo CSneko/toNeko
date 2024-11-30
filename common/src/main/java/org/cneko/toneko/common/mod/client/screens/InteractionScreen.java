@@ -14,6 +14,7 @@ import java.util.Map;
 public class InteractionScreen extends Screen {
     private final ButtonBuilders buttonBuilders;
     private Screen lastScreen;
+    protected int startY = 0;
     public InteractionScreen(Component title, @Nullable Screen lastScreen ,ButtonBuilders buttonBuilders) {
         super(title);
         this.lastScreen = lastScreen;
@@ -25,7 +26,7 @@ public class InteractionScreen extends Screen {
         Map<String,Button.Builder> builders = this.buttonBuilders.getBuilders(this);
         // 仅在屏幕x轴70%外的屏幕中绘制
         int x = (int) (this.width * 0.7);
-        int y = (int) (this.height * 0.1);
+        int y = startY;
         int buttonWidth = (int)(this.width * 0.2);
         int buttonHeight = (int)(this.height * 0.06);
         int buttonBound = (int)(this.height * 0.13);

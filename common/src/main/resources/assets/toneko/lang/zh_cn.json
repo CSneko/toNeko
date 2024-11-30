@@ -208,6 +208,8 @@
   "screen.toneko.neko_entity_interactive.button.get_down.des": "让猫猫趴下（再按一次就可以起来哦）",
   "screen.toneko.neko_entity_interactive.button.breed": "交配",
   "screen.toneko.neko_entity_interactive.button.breed.des": "让猫猫和附近的猫猫交配（也可以是你哦）",
+  "screen.toneko.neko_entity_interactive.tooltip.name": "猫猫の名字：%s",
+  "screen.toneko.neko_entity_interactive.tooltip.moe_tags": "猫猫の萌属性：%s",
   "screen.toneko.mate": "选择交配对象",
   "screen.toneko.crystal_neko_interactive.button.who": "你是?",
   "screen.toneko.crystal_neko_interactive.button.who.des": "来听听作者简短的介绍吧",

@@ -331,6 +331,25 @@ public class NekoQuery {
             ids.removeIf(s -> !QuirkRegister.hasQuirk(s));
             getProfile().set("quirks", ids);
         }
+        public List<String> getMoeTags(){
+            return getProfile().getStringList("moe_tags");
+        }
+        public boolean hasAnyMoeTags(){
+            return !getMoeTags().isEmpty();
+        }
+        public void setMoeTags(List<String> moeTags){
+            getProfile().set("moe_tags", moeTags);
+        }
+        public void addMoeTags(String tag){
+            if (!getMoeTags().contains(tag)){
+                List<String> moeTags = getMoeTags();
+                moeTags.add(tag);
+                setMoeTags(moeTags);
+            }
+        }
+        public void removeMoeTags(String tag){
+            getProfile().getStringList("moe_tags").removeIf(s -> s.equalsIgnoreCase(tag));
+        }
 
         public boolean hasNickName(){
             return getProfile().getString("nickname") != null;
@@ -360,7 +379,7 @@ public class NekoQuery {
         }
 
         @FunctionalInterface
-        private interface OwnerAction {
+        public interface OwnerAction {
             void apply(JsonConfiguration ownerConfig);
         }
 
