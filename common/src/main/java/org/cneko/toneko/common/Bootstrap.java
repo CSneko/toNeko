@@ -1,6 +1,7 @@
 package org.cneko.toneko.common;
 import org.cneko.ctlib.common.file.JsonConfiguration;
 import org.cneko.toneko.common.quirks.Quirks;
+import org.cneko.toneko.common.util.AIUtil;
 import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.common.util.FileUtil;
 import org.cneko.toneko.common.util.LanguageUtil;
@@ -53,6 +54,8 @@ public class Bootstrap {
         LanguageUtil.load();
         // 注册所有癖好
         Quirks.init();
+        // 初始化AI
+        AIUtil.init();
         // 创建皮肤文件
 //        if (!Files.exists(Path.of(SKIN_FILE))){
 //            FileUtil.CreateFile(SKIN_FILE);

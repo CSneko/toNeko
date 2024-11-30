@@ -106,6 +106,18 @@ public class FileUtil {
         return files;
     }
 
+    public static int readNumberFromFile(String filePath) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line = reader.readLine();
+            if (line != null) {
+                return Integer.parseInt(line);
+            }
+        } catch (IOException | NumberFormatException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
     /**
      * 递归获取目录下的所有文件。
      *

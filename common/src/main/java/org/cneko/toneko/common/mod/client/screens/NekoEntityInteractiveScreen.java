@@ -61,6 +61,10 @@ public class NekoEntityInteractiveScreen extends InteractionScreen implements IN
     public static Map<String,Button.Builder> getButtonBuilders(NekoEntity neko) {
         Map<String,Button.Builder> builders = new LinkedHashMap<>();
 
+        builders.put("screen.toneko.neko_entity_interactive.button.chat",Button.builder(Component.translatable("screen.toneko.neko_entity_interactive.button.chat"),(btn)->{
+            Minecraft.getInstance().setScreen(new ChatWithNekoScreen(neko));
+        }));
+
         builders.put("screen.toneko.neko_entity_interactive.button.gift",Button.builder(Component.translatable("screen.toneko.neko_entity_interactive.button.gift"),(btn)->{
             ItemStack stack = Minecraft.getInstance().player.getMainHandItem();
             int slot = Minecraft.getInstance().player.getInventory().findSlotMatchingItem(stack);

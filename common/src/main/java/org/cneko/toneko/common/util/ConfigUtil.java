@@ -55,6 +55,9 @@ public class ConfigUtil {
     public static String getAIPrompt() {
         return CONFIG.getString("ai.prompt");
     }
+    public static String getAIKey(){
+        return CONFIG.getString("ai.key");
+    }
 
 
 }
