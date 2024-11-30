@@ -118,6 +118,20 @@ public class FileUtil {
         return 0;
     }
 
+    public static String readStringFromFile(String filePath) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            StringBuilder content = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                content.append(line).append("\n");
+            }
+            return content.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
     /**
      * 递归获取目录下的所有文件。
      *

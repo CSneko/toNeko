@@ -564,10 +564,14 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         }
     }
 
-    public String generateAIPrompt() {
+    public String generateAIPrompt(Player player) {
         return ConfigUtil.getAIPrompt()
                 .replaceAll("%neko_name%", this.getName().getString())
-                .replaceAll("%neko_hight%", String.valueOf(this.getBbHeight()))
+                .replaceAll("%neko_height%", String.valueOf(this.getBbHeight()))
+                .replaceAll("%neko_moe_tags%", this.getMoeTagsString())
+
+                .replaceAll("%player_name%", player.getName().getString())
+                .replaceAll("%player_is_neko%", player.isNeko()?Component.translatable("misc.toneko.is_or_not.is").getString():Component.translatable("misc.toneko.is_or_not.not").getString())
                 ;
     }
 

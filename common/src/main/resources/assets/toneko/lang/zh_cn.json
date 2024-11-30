@@ -99,6 +99,7 @@
   "messages.toneko.block.add": "§a成功添加屏蔽词了喵",
   "messages.toneko.notOwner": "§c你不是 %s 的主人喵~",
   "messages.toneko.client.join": "§a小提示: 如果聊天栏出现了一堆错误代码,你可以不用管它哦",
+  "messages.toneko.ai.not_enabled": "§c服务器没有开启AI哦",
   "message.toneko.neko.gift_success.0": "§e%s §d>> §f这真的是给我的吗，太谢谢你了喵~",
   "message.toneko.neko.gift_success.1": "§e%s §d>> §f哇！你对我真好喵，我超喜欢你喵~",
   "message.toneko.neko.gift_success.2": "§e%s §d>> §f我喜欢你的礼物喵~谢谢喵~",
@@ -286,5 +287,7 @@
   "screen.toneko.config.random.28": "不要让不开心的情绪占据了你的心灵哦，猫猫祝你一直开心",
   "misc.toneko.owner": "主人",
   "misc.toneko.nya": "喵~",
-  "misc.toneko.prefix": "§a猫娘"
+  "misc.toneko.prefix": "§a猫娘",
+  "misc.toneko.is_or_not.is": "是",
+  "misc.toneko.is_or_not.not": "不是"
 }

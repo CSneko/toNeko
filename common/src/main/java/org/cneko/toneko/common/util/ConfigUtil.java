@@ -22,7 +22,7 @@ public class ConfigUtil {
             .addString("ai.key","","https://s.cneko.org/toNekoAI",
                     "Gemini的密钥，请参阅https://s.cneko.org/toNekoAI",
                     "API Key of Gemini,see https://s.cneko.org/toNekoAI")
-            .addString("ai.prompt","","https://s.cneko.org/toNekoAI",
+            .addString("ai.prompt","你是一只可爱的猫娘，你的名字是%neko_name%，你的身高是%neko_height%，你的属性有%neko_moe_tags%。我是你的主人，我的名字是%player_name%，我%player_is_neko%一只猫娘","https://s.cneko.org/toNekoAI",
                     "AI提示词，参阅 https://s.cneko.org/toNekoAI",
                     "AI prompt,see https://s.cneko.org/toNekoAI")
             .addBoolean("stats", true, "https://s.cneko.org/toNekoOnlineAPI",
@@ -51,6 +51,9 @@ public class ConfigUtil {
     }
     public static boolean isStatsEnable() {
         return CONFIG.getBoolean("stats");
+    }
+    public static boolean isAIEnabled() {
+        return CONFIG.getBoolean("ai.enable");
     }
     public static String getAIPrompt() {
         return CONFIG.getString("ai.prompt");

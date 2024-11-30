@@ -71,7 +71,7 @@ public class ConfigScreen extends Screen {
                 EditBox editBox = new EditBox(this.font, 0, 0, textWidth, widgetHeight,
                         Component.literal(key));
                 editBox.setValue(ConfigUtil.CONFIG_BUILDER.get(key).string());
-                editBox.setMaxLength(100);
+                editBox.setMaxLength(1000);
                 editBox.setResponder(text -> ConfigUtil.CONFIG_BUILDER.setString(key, text));
                 inputComponent = editBox;
             } else {

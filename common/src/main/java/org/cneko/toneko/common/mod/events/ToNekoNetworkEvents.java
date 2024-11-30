@@ -1,6 +1,7 @@
 package org.cneko.toneko.common.mod.events;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -9,6 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import org.cneko.toneko.common.api.Messaging;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.api.Permissions;
 import org.cneko.toneko.common.mod.api.EntityPoseManager;
@@ -17,8 +19,12 @@ import org.cneko.toneko.common.mod.packets.QuirkQueryPayload;
 import org.cneko.toneko.common.mod.packets.interactives.*;
 import org.cneko.toneko.common.mod.util.PermissionUtil;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
+import org.cneko.toneko.common.util.AIUtil;
+import org.cneko.toneko.common.util.ConfigUtil;
+import org.cneko.toneko.common.util.LanguageUtil;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
 import java.util.UUID;
 
 public class ToNekoNetworkEvents {
@@ -29,6 +35,21 @@ public class ToNekoNetworkEvents {
         ServerPlayNetworking.registerGlobalReceiver(RideEntityPayload.ID, ToNekoNetworkEvents::onRideEntity);
         ServerPlayNetworking.registerGlobalReceiver(NekoPosePayload.ID, ToNekoNetworkEvents::onSetPose);
         ServerPlayNetworking.registerGlobalReceiver(NekoMatePayload.ID, ToNekoNetworkEvents::onBreed);
+        ServerPlayNetworking.registerGlobalReceiver(ChatWithNekoPayload.ID, ToNekoNetworkEvents::onChatWithNeko);
+    }
+
+    public static void onChatWithNeko(ChatWithNekoPayload payload, ServerPlayNetworking.Context context) {
+        processNekoInteractive(context.player(), UUID.fromString(payload.uuid()), neko -> {
+            // 如果没有开启AI，则不执行
+            if (!ConfigUtil.isAIEnabled()){
+                context.player().sendSystemMessage(Component.translatable("messages.toneko.ai.not_enabled"));
+            }else {
+                AIUtil.sendMessage(neko.getUUID(), neko.generateAIPrompt(context.player()), payload.message(), message -> {
+                    String r = Messaging.format(message,neko.getCustomName().getString(),"", Collections.singletonList(LanguageUtil.prefix),ConfigUtil.getChatFormat());
+                    context.player().sendSystemMessage(Component.literal(r));
+                });
+            }
+        });
     }
 
     public static void onBreed(NekoMatePayload payload, ServerPlayNetworking.Context context) {

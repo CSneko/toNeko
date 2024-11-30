@@ -26,15 +26,18 @@ public class AIUtil {
     public static void init(){
         FileUtil.CreatePath(PAST_MESSAGE_PATH);
     }
-    public void sendMessage(UUID uuid,String prompt, String message, MessageCallback callback){
+    public static void sendMessage(UUID uuid, String prompt, String message, MessageCallback callback){
         executor.submit(()->{
             try{
                 FileUtil.CreatePath(PAST_MESSAGE_PATH + uuid + "/");
                 String pastMessagePath = PAST_MESSAGE_PATH + uuid + "/" +"messages.json";
                 FileUtil.CreateFile(pastMessagePath);
                 // 读取json
+                String json = FileUtil.readStringFromFile(pastMessagePath);
+                if (json.equalsIgnoreCase("")){
+                    FileUtil.WriteFile(pastMessagePath, "{\"contents\":[]}");
+                }
                 JsonConfiguration j = JsonConfiguration.fromFile(Path.of(pastMessagePath));
-                // 读取contents列表
                 List<JsonConfiguration> contents = j.getJsonList("contents");
                 // 检查是否超过了20
                 if (contents.size() >= 20){
@@ -56,8 +59,8 @@ public class AIUtil {
                 String url = API_URL + "?" + query;
 
                 // 发送请求
-                var post = new HttpPost.HttpPostObject(url,j.toString(),"application/json");
-                post.setHeaders(Map.of("msg", j.toString()));
+                var post = new HttpPost.HttpPostObject(url,"","application/json");
+                post.setHeaders(Map.of("msg",URLEncoder.encode(j.toString(), StandardCharsets.UTF_8)));
                 post.connect();
                 int statusCode = post.getStatusCode();
                 if (statusCode == 200){
@@ -67,7 +70,8 @@ public class AIUtil {
                     String resMsg = resJson.getString("response");
                     // 写入json
                     JsonConfiguration newJ = genNewJson(msg, resMsg);
-                    contents.add(newJ);
+                    contents.addAll(newJ.getJsonList("contents"));
+                    j.set("contents", contents);
                     // 保存到文件
                     FileUtil.WriteFile(pastMessagePath, j.toString());
                     // 回调
@@ -81,7 +85,7 @@ public class AIUtil {
 
     private static @NotNull JsonConfiguration genNewJson(String msg, String resMsg) {
         String jsonString = """
-                {
+                {"contents":[{
                     "role":"user",
                     "parts":[
                         {"text":"%s"}
@@ -91,7 +95,7 @@ public class AIUtil {
                     "parts":[
                         {"text":"%s"}
                     ]
-                }
+                }]}
                 """;
         jsonString = String.format(jsonString, msg, resMsg);
         return new JsonConfiguration(jsonString);
