@@ -99,6 +99,7 @@
   "messages.toneko.block.remove": "§aRemove the blocked word succeed!",
   "messages.toneko.block.add": "§aAdd the blocked word succeed",
   "messages.toneko.client.join": "§aTips: If there is any error in chat, you don't need to care about it.",
+  "messages.toneko.ai.not_enabled": "§cThe server not enabled AI",
   "message.toneko.neko.gift_success.0": "§e%s §d>> §fIs this really for me? Thank you so much meow~",
   "message.toneko.neko.gift_success.1": "§e%s §d>> §fWow! You are so nice to me meow, I like you so much meow~",
   "message.toneko.neko.gift_success.2": "§e%s §d>> §fI like your gift meow~Thank you meow~",
@@ -194,6 +195,8 @@
   "advancements.toneko.neko_armor.title": "§aMeow, neko tails wag",
   "advancements.toneko.neko_armor.description": "§dWear neko gear",
   "screen.toneko.quirk": "Quirk Settings",
+  "screen.toneko.neko_entity_interactive.button.chat": "Chat",
+  "screen.toneko.neko_entity_interactive.button.chat.des": "Chat with Neko",
   "screen.toneko.neko_entity_interactive.button.gift": "Give a gift",
   "screen.toneko.neko_entity_interactive.button.gift.des": "Give the item in hand to the neko",
   "screen.toneko.neko_entity_interactive.button.action": "Action",
@@ -208,7 +211,10 @@
   "screen.toneko.neko_entity_interactive.button.get_down.des": "Make the neko get down (press it again to get up)",
   "screen.toneko.neko_entity_interactive.button.breed": "mating",
   "screen.toneko.neko_entity_interactive.button.breed.des": "Let the nearest neko mate with a neko (or you)",
-  "screen.toneko.crystal_neko_interactive.button.who": "Who is you?",
+  "screen.toneko.neko_entity_interactive.tooltip.name": "Nekoのname：%s",
+  "screen.toneko.neko_entity_interactive.tooltip.moe_tags": "Nekoのmoe tags：%s",
+  "screen.toneko.chat_with_neko.button.send": "Say what you wanna say",
+  "screen.toneko.crystal_neko_interactive.button.who": "Who are you?",
   "screen.toneko.crystal_neko_interactive.button.who.des": "Listen to me say about me",
   "screen.toneko.crystal_neko_interactive.button.about_mod": "About the Mod",
   "screen.toneko.crystal_neko_interactive.button.about_mod.des": "Listen some info of toNeko",
@@ -282,5 +288,7 @@
   "screen.toneko.config.random.28": "Don't let unhappy emotions occupy your heart, neko wishes you happiness forever",
   "misc.toneko.owner": "owner",
   "misc.toneko.nya": "meow~",
-  "misc.toneko.prefix": "§aneko"
+  "misc.toneko.prefix": "§aneko",
+  "misc.toneko.is_or_not.is": "is",
+  "misc.toneko.is_or_not.not": "isn't"
 }

@@ -26,7 +26,12 @@ public class InteractionScreen extends Screen {
         Map<String,Button.Builder> builders = this.buttonBuilders.getBuilders(this);
         // 仅在屏幕x轴70%外的屏幕中绘制
         int x = (int) (this.width * 0.7);
-        int y = startY;
+        int y;
+        if (startY != 0) {
+            y = startY;
+        }else {
+            y = (int) (this.height * 0.1);
+        }
         int buttonWidth = (int)(this.width * 0.2);
         int buttonHeight = (int)(this.height * 0.06);
         int buttonBound = (int)(this.height * 0.13);
