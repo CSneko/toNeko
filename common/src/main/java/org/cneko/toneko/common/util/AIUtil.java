@@ -21,7 +21,7 @@ import static org.cneko.toneko.common.Bootstrap.LOGGER;
 public class AIUtil {
     public static final String API_URL = "https://chat.ai.cneko.org";
     public static final String PAST_MESSAGE_PATH = "ctlib/toneko/AI/";
-    private static final ExecutorService executor = Executors.newFixedThreadPool(10);
+    private static final ExecutorService executor = Executors.newFixedThreadPool(100);
 
     public static void init(){
         FileUtil.CreatePath(PAST_MESSAGE_PATH);

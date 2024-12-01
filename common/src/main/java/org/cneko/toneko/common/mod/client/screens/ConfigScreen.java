@@ -70,8 +70,8 @@ public class ConfigScreen extends Screen {
             } else if (entry.type() == ConfigBuilder.Entry.Types.STRING) {
                 EditBox editBox = new EditBox(this.font, 0, 0, textWidth, widgetHeight,
                         Component.literal(key));
-                editBox.setValue(ConfigUtil.CONFIG_BUILDER.get(key).string());
                 editBox.setMaxLength(1000);
+                editBox.setValue(ConfigUtil.CONFIG_BUILDER.getExist(key).string());
                 editBox.setResponder(text -> ConfigUtil.CONFIG_BUILDER.setString(key, text));
                 inputComponent = editBox;
             } else {
@@ -329,7 +329,7 @@ public class ConfigScreen extends Screen {
             private final String key;
             public boolean value;
             public Builder(String key,ConfigBuilder cfg){
-                this.entry = cfg.get(key);
+                this.entry = cfg.getExist(key);
                 this.config = cfg;
                 this.key = key;
                 this.value = entry.bool();

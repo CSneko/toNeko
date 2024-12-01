@@ -1,5 +1,6 @@
 package org.cneko.toneko.common.util;
 
+import org.cneko.ctlib.common.file.YamlConfiguration;
 import org.jetbrains.annotations.Nullable;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
@@ -13,16 +14,16 @@ import static org.cneko.toneko.common.Bootstrap.LOGGER;
 
 public class ConfigBuilder {
     private final Path path;
-    private YC config;
+    private YamlConfiguration config;
     private final Map<String,Entry> defaults = new LinkedHashMap<>();
     public ConfigBuilder(Path path){
         this.path = path;
         // 尝试读取文件
         try {
-            config = new YC(path);
+            config = new YamlConfiguration(path);
         } catch (Exception e) {
             // 出现错误，创建一个空的配置文件
-            config = new YC("");
+            config = new YamlConfiguration("");
         }
     }
 
@@ -54,19 +55,22 @@ public class ConfigBuilder {
     public void setBoolean(String key, boolean value) {
         config.set(key, value);
         try {
-            config.saveToFile(path.toFile());
+            config.save(path.toFile());
         } catch (IOException ignored) {
         }
     }
     public void setString(String key, String value) {
         config.set(key, value);
         try {
-            config.saveToFile(path.toFile());
+            config.save(path.toFile());
         } catch (IOException ignored) {
         }
     }
     public Entry get(String key){
         return defaults.get(key);
+    }
+    public Entry getExist(String key){
+        return Entry.of(config.get(key), get(key).comment, config.getString("url"));
     }
 
     public List<String> getKeys() {
@@ -78,13 +82,13 @@ public class ConfigBuilder {
     public ConfigBuilder build() {
         for (String key : defaults.keySet()) {
             Entry entry = defaults.get(key);
-            if (!config.containsNestedKey(key)) { // Use a new method to check nested keys
-                config.addComment(key, entry.comment);
+            if (!config.contains(key)) {
+                //config.addComment(key, entry.comment);
                 config.set(key, entry.get());
             }
         }
         try {
-            config.saveToFile(path.toFile());
+            config.save(path.toFile());
         } catch (IOException e) {
             LOGGER.error("Unable to save config file", e);
         }
@@ -93,9 +97,9 @@ public class ConfigBuilder {
 
 
 
-    public YC createConfig(){
+    public YamlConfiguration createConfig(){
         try {
-            return YC.fromFile(path);
+            return YamlConfiguration.fromFile(path);
         } catch (IOException e) {
             return config;
         }
