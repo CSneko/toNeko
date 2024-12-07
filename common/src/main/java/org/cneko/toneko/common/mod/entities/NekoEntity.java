@@ -375,6 +375,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         // 啊不要学我
         if (!this.level().isClientSide()){
             this.setMoeTags(this.getMoeTags());
+            this.setSkin(this.getSkin());
         }
     }
 

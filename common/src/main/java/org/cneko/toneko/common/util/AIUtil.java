@@ -26,11 +26,11 @@ public class AIUtil {
     public static void init(){
         FileUtil.CreatePath(PAST_MESSAGE_PATH);
     }
-    public static void sendMessage(UUID uuid, String prompt, String message, MessageCallback callback){
+    public static void sendMessage(UUID uuid,UUID userUuid, String prompt, String message, MessageCallback callback){
         executor.submit(()->{
             try{
                 FileUtil.CreatePath(PAST_MESSAGE_PATH + uuid + "/");
-                String pastMessagePath = PAST_MESSAGE_PATH + uuid + "/" +"messages.json";
+                String pastMessagePath = PAST_MESSAGE_PATH + uuid + "/" +userUuid + ".json";
                 FileUtil.CreateFile(pastMessagePath);
                 // 读取json
                 String json = FileUtil.readStringFromFile(pastMessagePath);
@@ -75,7 +75,7 @@ public class AIUtil {
                     // 保存到文件
                     FileUtil.WriteFile(pastMessagePath, j.toString());
                     // 回调
-                    callback.execute(resMsg);
+                    callback.execute(resMsg.replace("\\n",""));
                 }
             }catch (Exception e){
                 LOGGER.error("Failed to send message", e);

@@ -44,7 +44,7 @@ public class ToNekoNetworkEvents {
             if (!ConfigUtil.isAIEnabled()){
                 context.player().sendSystemMessage(Component.translatable("messages.toneko.ai.not_enabled"));
             }else {
-                AIUtil.sendMessage(neko.getUUID(), neko.generateAIPrompt(context.player()), payload.message(), message -> {
+                AIUtil.sendMessage(neko.getUUID(),context.player().getUUID(), neko.generateAIPrompt(context.player()), payload.message(), message -> {
                     String r = Messaging.format(message,neko.getCustomName().getString(),"", Collections.singletonList(LanguageUtil.prefix),ConfigUtil.getChatFormat());
                     context.player().sendSystemMessage(Component.literal(r));
                 });
