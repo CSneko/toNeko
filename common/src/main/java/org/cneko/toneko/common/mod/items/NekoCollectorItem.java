@@ -11,6 +11,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.cneko.toneko.common.mod.codecs.CountCodecs;
+import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.misc.ToNekoComponents;
 import org.cneko.toneko.common.mod.misc.ToNekoAttributes;
 
@@ -41,8 +42,8 @@ public class NekoCollectorItem extends Item {
                 entity.getX() + radius, entity.getY() + radius, entity.getZ() + radius);
         List<Entity> entities = world.getEntities(entity, box);
         for (Entity entity1 : entities) {
-            if (entity1 instanceof Cat) {
-                catCount++;
+            if (entity1 instanceof INeko) {
+                catCount+= ((INeko) entity1).getNekoAbility();
             }
         }
         if (catCount==0) return;

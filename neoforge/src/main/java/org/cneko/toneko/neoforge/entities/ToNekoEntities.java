@@ -44,8 +44,7 @@ public class ToNekoEntities {
 
     }
 
-    @SubscribeEvent
-    public static void registerEntityTypes(FMLCommonSetupEvent event){
+    public static void reg(){
         CRYSTAL_NEKO = CRYSTAL_NEKO_HOLDER.get();
         ADVENTURER_NEKO = ADVENTURER_NEKO_HOLDER.get();
     }

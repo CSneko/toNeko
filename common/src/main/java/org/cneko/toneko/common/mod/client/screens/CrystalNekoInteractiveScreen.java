@@ -8,6 +8,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.cneko.toneko.common.api.TickTasks;
+import org.cneko.toneko.common.mod.packets.MateWithCrystalNekoPayload;
 import org.cneko.toneko.common.mod.packets.interactives.GiftItemPayload;
 import org.cneko.toneko.common.mod.util.TickTaskQueue;
 import org.cneko.toneko.common.mod.entities.CrystalNekoEntity;
@@ -118,12 +119,16 @@ public class CrystalNekoInteractiveScreen extends InteractionScreen implements I
 
         builders.put("screen.toneko.neko_entity_interactive.button.breed",Button.builder(Component.translatable("screen.toneko.neko_entity_interactive.button.breed"),(btn)->{
             Player player = Minecraft.getInstance().player;
-            TickTaskQueue messageQueue = new TickTaskQueue();
-            messageQueue.addTask(20, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.interactive.breed.0")));
-            messageQueue.addTask(50, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.interactive.breed.1")));
-            messageQueue.addTask(90, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.interactive.breed.2")));
-            messageQueue.addTask(120, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.interactive.breed.3")));
-            TickTasks.addClient(messageQueue);
+            if (player.getUUID().equals(CrystalNekoEntity.CRYSTAL_NEKO_UUID)){
+                ClientPlayNetworking.send(new MateWithCrystalNekoPayload(neko.getUUID().toString()));
+            }else {
+                TickTaskQueue messageQueue = new TickTaskQueue();
+                messageQueue.addTask(20, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.interactive.breed.0")));
+                messageQueue.addTask(50, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.interactive.breed.1")));
+                messageQueue.addTask(90, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.interactive.breed.2")));
+                messageQueue.addTask(120, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.interactive.breed.3")));
+                TickTasks.addClient(messageQueue);
+            }
         }));
 
         return builders;
@@ -147,7 +152,6 @@ public class CrystalNekoInteractiveScreen extends InteractionScreen implements I
             builders.put("screen.toneko.crystal_neko_more_interactive.button.nya",Button.builder(Component.translatable("screen.toneko.crystal_neko_more_interactive.button.nya"),(btn)->{
                 neko.nya(Minecraft.getInstance().player);
             }));
-
 
             return builders;
         }

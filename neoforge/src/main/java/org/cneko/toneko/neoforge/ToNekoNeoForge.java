@@ -24,6 +24,7 @@ import org.cneko.toneko.common.mod.util.PermissionUtil;
 import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.common.util.LanguageUtil;
 import org.cneko.toneko.neoforge.entities.ToNekoEntities;
+import org.cneko.toneko.neoforge.items.ToNekoBlocks;
 import org.cneko.toneko.neoforge.msic.ToNekoAttributes;
 import org.cneko.toneko.neoforge.items.ToNekoArmorMaterials;
 import org.cneko.toneko.neoforge.items.ToNekoItems;
@@ -35,6 +36,7 @@ import static org.cneko.toneko.common.Bootstrap.MODID;
 @Mod(MODID)
 public final class ToNekoNeoForge {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
+    public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
     public static final DeferredRegister.DataComponents DATA_COMPONENTS = DeferredRegister.createDataComponents(MODID);
     public static final DeferredRegister<ArmorMaterial> ARMOR_MATERIALS = DeferredRegister.create(Registries.ARMOR_MATERIAL, MODID);
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
@@ -42,6 +44,7 @@ public final class ToNekoNeoForge {
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(Registries.ENTITY_TYPE, MODID);
     public ToNekoNeoForge(IEventBus bus, ModContainer container) {
         ITEMS.register(bus);
+        BLOCKS.register(bus);
         DATA_COMPONENTS.register(bus);
         ARMOR_MATERIALS.register(bus);
         ATTRIBUTES.register(bus);
@@ -50,6 +53,7 @@ public final class ToNekoNeoForge {
         // 注册装备
         ToNekoArmorMaterials.init();
         ToNekoItems.init();
+        ToNekoBlocks.init();
         //bus.addListener(ToNekoItems::buildContents);
         //bus.addListener(ToNekoItems::registerEvent);
         ToNekoAttributes.init();
@@ -77,6 +81,7 @@ public final class ToNekoNeoForge {
         ModBootstrap.bootstrap();
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             ModMeta.INSTANCE.setServer(server);
+            ToNekoItems.reg();
         });
     }
 

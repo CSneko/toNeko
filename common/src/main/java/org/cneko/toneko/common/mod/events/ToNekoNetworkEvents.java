@@ -14,7 +14,9 @@ import org.cneko.toneko.common.api.Messaging;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.api.Permissions;
 import org.cneko.toneko.common.mod.api.EntityPoseManager;
+import org.cneko.toneko.common.mod.entities.CrystalNekoEntity;
 import org.cneko.toneko.common.mod.entities.INeko;
+import org.cneko.toneko.common.mod.packets.MateWithCrystalNekoPayload;
 import org.cneko.toneko.common.mod.packets.QuirkQueryPayload;
 import org.cneko.toneko.common.mod.packets.interactives.*;
 import org.cneko.toneko.common.mod.util.PermissionUtil;
@@ -36,6 +38,15 @@ public class ToNekoNetworkEvents {
         ServerPlayNetworking.registerGlobalReceiver(NekoPosePayload.ID, ToNekoNetworkEvents::onSetPose);
         ServerPlayNetworking.registerGlobalReceiver(NekoMatePayload.ID, ToNekoNetworkEvents::onBreed);
         ServerPlayNetworking.registerGlobalReceiver(ChatWithNekoPayload.ID, ToNekoNetworkEvents::onChatWithNeko);
+        ServerPlayNetworking.registerGlobalReceiver(MateWithCrystalNekoPayload.ID, ToNekoNetworkEvents::onMateWithCrystalNeko);
+    }
+
+    public static void onMateWithCrystalNeko(MateWithCrystalNekoPayload mateWithCrystalNekoPayload, ServerPlayNetworking.Context context) {
+        processNekoInteractive(context.player(), UUID.fromString(mateWithCrystalNekoPayload.uuid()), neko -> {
+            if (neko instanceof CrystalNekoEntity cneko){
+                cneko.tryMating((ServerLevel) neko.level(), context.player());
+            }
+        });
     }
 
     public static void onChatWithNeko(ChatWithNekoPayload payload, ServerPlayNetworking.Context context) {

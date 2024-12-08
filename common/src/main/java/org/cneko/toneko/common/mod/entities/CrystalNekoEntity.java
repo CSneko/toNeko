@@ -11,12 +11,16 @@ import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.mod.packets.interactives.CrystalNekoInteractivePayload;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.UUID;
 
 public class CrystalNekoEntity extends NekoEntity{
     public static final String SKIN = "crystal_neko";
     public static final String NAME = "Crystal_Neko";
+    public static final UUID CRYSTAL_NEKO_UUID = UUID.fromString("13309540-fcc1-4d54-884b-55433f1f431f");
     private int nyaCount = 0;
     public CrystalNekoEntity(EntityType<? extends NekoEntity> entityType, Level level) {
         super(entityType, level);
@@ -24,13 +28,13 @@ public class CrystalNekoEntity extends NekoEntity{
     }
 
     @Override
-    public @Nullable NekoEntity getBreedOffspring(ServerLevel level, INeko otherParent) {
-        return null;
+    public NekoEntity getBreedOffspring(ServerLevel level, INeko otherParent) {
+        return new CrystalNekoEntity(ToNekoEntities.CRYSTAL_NEKO, level);
     }
 
     @Override
     public boolean canMate(INeko other) {
-        return false;
+        return  other.getEntity().getUUID().equals(CRYSTAL_NEKO_UUID);
     }
 
     @Override
@@ -56,5 +60,10 @@ public class CrystalNekoEntity extends NekoEntity{
 
     public static boolean checkCrystalNekoSpawnRules(EntityType<? extends net.minecraft.world.entity.Mob> entityType, LevelAccessor levelAccessor, MobSpawnType reason, BlockPos pos, RandomSource randomSource) {
         return true;
+    }
+
+    @Override
+    public NekoQuery.Neko getNeko() {
+        return NekoQuery.getNeko(CRYSTAL_NEKO_UUID);
     }
 }

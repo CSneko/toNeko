@@ -95,7 +95,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     public NekoEntity(EntityType<? extends NekoEntity> entityType, Level level) {
         super(entityType, level);
         if (!this.level().isClientSide()){
-            NekoQuery.Neko neko = NekoQuery.getNeko(this.getUUID());
+            NekoQuery.Neko neko = this.getNeko();
             neko.setNeko(true);
             randomize();
         }
@@ -105,7 +105,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
 
 
     public void randomize(){
-        NekoQuery.Neko neko = NekoQuery.getNeko(this.getUUID());
+        NekoQuery.Neko neko = this.getNeko();
         // 设置名字（如果没有）
         if (!this.hasCustomName()) {
             this.setCustomName(Component.literal(NekoNameRegistry.getRandomName()));
@@ -225,7 +225,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
             String moeTagsString = this.entityData.get(MOE_TAGS_ID);
             return moeTagsString.isEmpty() ? List.of() : List.of(moeTagsString.split(":"));
         } else {
-            return NekoQuery.getNeko(this.getUUID()).getMoeTags();
+            return this.getNeko().getMoeTags();
         }
     }
 
@@ -246,7 +246,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         // 服务器需要更新猫娘数据，客户端不需要
         if (!this.level().isClientSide){
             // 同时更新猫娘数据
-            NekoQuery.getNeko(this.getUUID()).setMoeTags(moeTags);
+            this.getNeko().setMoeTags(moeTags);
         }
         // 更新数据
         this.entityData.set(MOE_TAGS_ID, String.join(":", moeTags));
@@ -437,6 +437,9 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         if (mate instanceof ServerPlayer sp){
             sp.connection.send(packet);
         }
+        // 增加等级
+        this.getNeko().addLevel(0.1);
+        mate.getNeko().addLevel(0.1);
         this.spawnChildFromBreeding(level, mate);
     }
     public void spawnChildFromBreeding(ServerLevel level, INeko mate) {

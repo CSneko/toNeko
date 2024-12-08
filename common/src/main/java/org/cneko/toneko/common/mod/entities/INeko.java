@@ -23,4 +23,8 @@ public interface INeko {
     default boolean isNeko(){
         return this.getNeko().isNeko();
     }
+
+    default int getNekoAbility(){
+        return (int)((this.getNeko().getLevel()+1));
+    }
 }
