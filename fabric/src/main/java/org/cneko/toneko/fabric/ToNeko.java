@@ -40,8 +40,8 @@ public class ToNeko implements ModInitializer {
         // 注册装备
         ToNekoArmorMaterials.init();
         // 注册物品
-        ToNekoItems.init();
         ToNekoBlocks.init();
+        ToNekoItems.init();
         // 注册状态
         ToNekoEffects.init();
         // 注册属性

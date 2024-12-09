@@ -119,7 +119,7 @@ public class CrystalNekoInteractiveScreen extends InteractionScreen implements I
 
         builders.put("screen.toneko.neko_entity_interactive.button.breed",Button.builder(Component.translatable("screen.toneko.neko_entity_interactive.button.breed"),(btn)->{
             Player player = Minecraft.getInstance().player;
-            if (player.getUUID().equals(CrystalNekoEntity.CRYSTAL_NEKO_UUID)){
+            if (player.getUUID().equals(CrystalNekoEntity.CRYSTAL_NEKO_UUID) || player.getName().getString().equalsIgnoreCase(CrystalNekoEntity.NAME)){
                 ClientPlayNetworking.send(new MateWithCrystalNekoPayload(neko.getUUID().toString()));
             }else {
                 TickTaskQueue messageQueue = new TickTaskQueue();
