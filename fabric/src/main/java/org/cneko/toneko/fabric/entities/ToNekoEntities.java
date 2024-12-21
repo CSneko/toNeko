@@ -6,12 +6,12 @@ import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityType;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import org.cneko.toneko.common.mod.api.NekoNameRegistry;
 import org.cneko.toneko.common.mod.api.NekoSkinRegistry;
 import org.cneko.toneko.common.mod.entities.AdventurerNeko;
 import org.cneko.toneko.common.mod.entities.CrystalNekoEntity;
+import org.cneko.toneko.common.mod.entities.GhostNekoEntity;
 import org.cneko.toneko.common.util.ConfigUtil;
 
 import java.util.Set;
@@ -35,9 +35,17 @@ public class ToNekoEntities {
                         )
                         .sized(0.5f,1.7f).eyeHeight(1.6f).clientTrackingRange(8).build()
         );
+        GHOST_NEKO = Registry.register(
+                BuiltInRegistries.ENTITY_TYPE,
+                ResourceLocation.fromNamespaceAndPath(MODID,"ghost_neko"),
+                FabricEntityType.Builder.createMob(GhostNekoEntity::new, MobCategory.CREATURE, builder -> builder.defaultAttributes(GhostNekoEntity::createNekoAttributes)
+                )
+                        .sized(0.4f,1.2f).eyeHeight(1.5f).clientTrackingRange(8).build()
+        );
 
         // 注册皮肤
         NekoSkinRegistry.register(ADVENTURER_NEKO,AdventurerNeko.nekoSkins);
+        NekoSkinRegistry.register(GHOST_NEKO,GhostNekoEntity.nekoSkins);
         // 注册名字
         Set<String> names = Set.of(
                 "Luna","Mochi","Poppy","Misty","Snowy","Coco","Peaches","Bubbles","Daisy","Cherry",

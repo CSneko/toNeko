@@ -8,8 +8,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.cneko.toneko.common.api.TickTasks;
+import org.cneko.toneko.common.mod.items.ToNekoItems;
 import org.cneko.toneko.common.mod.packets.MateWithCrystalNekoPayload;
 import org.cneko.toneko.common.mod.packets.interactives.GiftItemPayload;
+import org.cneko.toneko.common.mod.util.TextUtil;
 import org.cneko.toneko.common.mod.util.TickTaskQueue;
 import org.cneko.toneko.common.mod.entities.CrystalNekoEntity;
 import org.jetbrains.annotations.NotNull;
@@ -121,6 +123,17 @@ public class CrystalNekoInteractiveScreen extends InteractionScreen implements I
             Player player = Minecraft.getInstance().player;
             if (player.getUUID().equals(CrystalNekoEntity.CRYSTAL_NEKO_UUID) || player.getName().getString().equalsIgnoreCase(CrystalNekoEntity.NAME)){
                 ClientPlayNetworking.send(new MateWithCrystalNekoPayload(neko.getUUID().toString()));
+            }else if(neko.getMoeTags().contains("mesugaki")){
+                if (!player.getMainHandItem().is(ToNekoItems.CATNIP)) {
+                    // 杂鱼，你还不配和我交配~
+                    btn.setPosition(new Random().nextInt(screen.width - btn.getWidth()), new Random().nextInt(screen.height - btn.getHeight()));
+                    player.sendSystemMessage(TextUtil.randomTranslatabledComponent("message.toneko.neko.breed_fail_zako", 10, neko.getName().getString()));
+                }else {
+                    // 哪只猫猫会拒绝猫薄荷呢
+                    NekoMateScreen.open(neko,List.of(player),null);
+                    player.sendSystemMessage(TextUtil.randomTranslatabledComponent("message.toneko.neko.breed_success_zako", 3, neko.getName().getString()));
+                }
+                return;
             }else {
                 TickTaskQueue messageQueue = new TickTaskQueue();
                 messageQueue.addTask(20, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.interactive.breed.0")));

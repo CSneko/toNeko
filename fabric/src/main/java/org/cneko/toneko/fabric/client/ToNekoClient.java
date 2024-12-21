@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import org.cneko.toneko.common.mod.blocks.ToNekoBlocks;
 import org.cneko.toneko.common.mod.client.ToNekoKeyBindings;
+import org.cneko.toneko.common.mod.client.renderers.GhostNekoRenderer;
 import org.cneko.toneko.common.mod.client.renderers.NekoRenderer;
 import org.cneko.toneko.common.mod.client.events.ClientNetworkEvents;
 import org.cneko.toneko.common.mod.client.events.ClientPlayerJoinEvent;
@@ -28,6 +29,7 @@ public class ToNekoClient implements ClientModInitializer {
         }
         EntityRendererRegistry.register(ToNekoEntities.ADVENTURER_NEKO, NekoRenderer::new);
         EntityRendererRegistry.register(ToNekoEntities.CRYSTAL_NEKO, NekoRenderer::new);
+        EntityRendererRegistry.register(ToNekoEntities.GHOST_NEKO, GhostNekoRenderer::new);
         BlockRenderLayerMap.INSTANCE.putBlock(ToNekoBlocks.CATNIP, RenderType.cutout());
     }
 }

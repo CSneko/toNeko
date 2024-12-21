@@ -34,7 +34,7 @@ public class CrystalNekoEntity extends NekoEntity{
 
     @Override
     public boolean canMate(INeko other) {
-        return  other.getEntity().getUUID().equals(CRYSTAL_NEKO_UUID) || other.getEntity().getName().getString().contains(NAME);
+        return true;
     }
 
     @Override
