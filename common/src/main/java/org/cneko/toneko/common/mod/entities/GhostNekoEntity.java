@@ -16,13 +16,22 @@ public class GhostNekoEntity extends NekoEntity{
     }
 
     @Override
-    public @Nullable NekoEntity getBreedOffspring(ServerLevel level, INeko otherParent) {
+    public @Nullable GhostNekoEntity getBreedOffspring(ServerLevel level, INeko otherParent) {
         return new GhostNekoEntity(ToNekoEntities.GHOST_NEKO,this.level());
     }
 
     @Override
     public void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(50,new NekoFlyingAroundGoal(this));
+    }
+
+    @Override
+    public boolean isNoGravity() {
+        return true;
+    }
+
+    @Override
+    public String getDefaultSkin() {
+        return "ninjia";
     }
 }

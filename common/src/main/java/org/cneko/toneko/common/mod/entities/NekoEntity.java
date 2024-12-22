@@ -157,23 +157,23 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     public void registerGoals() {
         super.registerGoals();
         // 猫娘会观察玩家
-        this.goalSelector.addGoal(2, new LookAtPlayerGoal(this, Player.class, 8.0F));
+        this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Player.class, 8.0F));
         // 猫娘会近战攻击
         this.goalSelector.addGoal(10, new MeleeAttackGoal(this, 1.0D, false));
         // 猫娘需要呼吸才能活呀
-        this.goalSelector.addGoal(10, new BreathAirGoal(this));
+        this.goalSelector.addGoal(5, new BreathAirGoal(this));
         // 猫娘会闲逛
-        this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 0.3, 1));
+        this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 0.3, 1));
         // 猫娘会跟主人
         nekoFollowOwnerGoal = new NekoFollowOwnerGoal(this,null,30,this.followLeashSpeed() / 1.5);
-        this.goalSelector.addGoal(20,nekoFollowOwnerGoal);
+        this.goalSelector.addGoal(4,nekoFollowOwnerGoal);
         // 猫娘有繁殖欲望
         nekoMateGoal = new NekoMateGoal(this,null,30,this.followLeashSpeed() / 2);
-        this.goalSelector.addGoal(30,nekoMateGoal);
+        this.goalSelector.addGoal(3,nekoMateGoal);
         // 会尝试捡起附近的物品
         this.goalSelector.addGoal(5, new NekoPickupItemGoal(this));
         // 会被拿着喜欢物品的玩家吸引
-        this.goalSelector.addGoal(15, new TemptGoal(this, 0.5D, this::isFavoriteItem,false));
+        this.goalSelector.addGoal(5, new TemptGoal(this, 0.5D, this::isFavoriteItem,false));
     }
 
     public NekoQuery.Neko getNeko() {
@@ -357,15 +357,9 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     public void die(@NotNull DamageSource damageSource) {
         super.die(damageSource);
         Level world = this.level();
-        if (world instanceof ServerLevel) {
-//            ServerLevel serverLevel = (ServerLevel) world;
-//            this.dropAllDeathLoot(serverLevel, damageSource);
-//            this.getInventory().dropAll();
-            Entity entity = damageSource.getEntity();
-            if (entity != null){
-                // 发送消息，告诉玩家过于罪恶了（我才不会告诉你是因为有Bug呢）
-                entity.sendSystemMessage(Component.translatable("message.toneko.neko.die.no_item_drop"));
-            }
+        if (world instanceof ServerLevel serverLevel) {
+            this.dropAllDeathLoot(serverLevel, damageSource);
+            this.getInventory().dropAll();
         }
     }
 
