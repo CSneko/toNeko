@@ -50,7 +50,9 @@ public class NekoEntityInteractiveScreen extends InteractionScreen implements IN
         int x = (int) (this.width * 0.7);
         int y = (int) (this.height * 0.1);
         // 显示猫娘的名字
-        gui.renderTooltip(this.font,Component.translatable("screen.toneko.neko_entity_interactive.tooltip.name",neko.getCustomName().getString()),x,y);
+        try {
+            gui.renderTooltip(this.font, Component.translatable("screen.toneko.neko_entity_interactive.tooltip.name", neko.getCustomName().getString()), x, y);
+        } catch (Exception ignored){}
         y += 20;
         // 显示猫娘的萌属性
         gui.renderTooltip(this.font,Component.translatable("screen.toneko.neko_entity_interactive.tooltip.moe_tags",neko.getMoeTagsString()),x,y);

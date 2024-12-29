@@ -15,6 +15,11 @@
   "attribute.name.neko.degree": "猫猫等级",
   "enchantment.toneko.reversion": "反转",
   "entity.toneko.adventurer_neko": "冒险家猫娘",
+  "entity.toneko.adventurer_neko.des": "热爱冒险的猫娘",
+  "entity.toneko.crystal_neko": "Crystal_Neko",
+  "entity.toneko.crystal_neko.ded": "Crystal_Neko",
+  "entity.toneko.ghost_neko": "幽灵猫娘",
+  "entity.toneko.ghost_neko.des": "幽灵形态的猫娘，无视重力，可以穿墙与飞行，但可以与生物交互",
   "quirk.toneko.caress": "抚摸",
   "quirk.toneko.caress.des": "你喜欢被摸摸",
   "quirk.toneko.caress.use": "§d你轻轻抚摸了 %s §d喵~",
@@ -303,5 +308,9 @@
   "misc.toneko.nya": "喵~",
   "misc.toneko.prefix": "§a猫娘",
   "misc.toneko.is_or_not.is": "是",
-  "misc.toneko.is_or_not.not": "不是"
+  "misc.toneko.is_or_not.not": "不是",
+  "misc.toneko.time.day": "白天",
+  "misc.toneko.time.night": "晚上",
+  "misc.toneko.weather.rain": "雨天",
+  "misc.toneko.weather.sunny": "晴天"
 }

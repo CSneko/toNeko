@@ -360,6 +360,8 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         if (world instanceof ServerLevel serverLevel) {
             this.dropAllDeathLoot(serverLevel, damageSource);
             this.getInventory().dropAll();
+            // 清理掉猫猫的数据
+            this.getNeko().delete();
         }
     }
 
@@ -583,13 +585,21 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
 
     public String generateAIPrompt(Player player) {
         return ConfigUtil.getAIPrompt()
-                .replaceAll("%neko_name%", this.getName().getString())
-                .replaceAll("%neko_height%", new DecimalFormat("#.00").format(this.getBbHeight()))
-                .replaceAll("%neko_moe_tags%", this.getMoeTagsString())
+                .replace("%neko_name%", this.getName().getString())
+                .replace("%neko_type%", getTypeName().getString())
+                .replace("%neko_des%", getDescription())
+                .replace("%neko_height%", new DecimalFormat("0.00").format(this.getBbHeight()))
+                .replace("%neko_moe_tags%", this.getMoeTagsString())
 
-                .replaceAll("%player_name%", player.getName().getString())
-                .replaceAll("%player_is_neko%", player.isNeko()?Component.translatable("misc.toneko.is_or_not.is").getString():Component.translatable("misc.toneko.is_or_not.not").getString())
+                .replace("%player_name%", player.getName().getString())
+                .replace("%player_is_neko%", player.isNeko()?Component.translatable("misc.toneko.is_or_not.is").getString():Component.translatable("misc.toneko.is_or_not.not").getString())
+
+                .replace("%world_time%",this.level().isDay()? Component.translatable("misc.toneko.time.day").getString():Component.translatable("misc.toneko.time.night").getString())
+                .replace("%world_weather",(this.level().isRainingAt(this.blockPosition())||this.level().isThundering())? Component.translatable("misc.toneko.weather.rain").getString():Component.translatable("misc.toneko.weather.sunny").getString())
                 ;
+    }
+    public String getDescription() {
+        return Component.translatable(getType().getDescriptionId()+".des").getString();
     }
 
     @Override

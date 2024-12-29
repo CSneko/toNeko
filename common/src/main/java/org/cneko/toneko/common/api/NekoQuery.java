@@ -407,6 +407,10 @@ public class NekoQuery {
         public UUID getUuid(){
             return uuid;
         }
+
+        public void delete(){
+            NekoData.deleteNeko(uuid);
+        }
     }
 
     /**
@@ -439,6 +443,16 @@ public class NekoQuery {
          */
         public static void removeNeko(UUID uuid){
             nekoList.remove(getNeko(uuid));
+        }
+
+        /**
+         * 删除猫娘
+         * @param uuid 猫娘uuid
+         */
+        public static void deleteNeko(UUID uuid){
+            Neko neko = getNeko(uuid);
+            nekoList.remove(neko);
+            FileUtil.DeleteFile(neko.getProfilePath());
         }
 
         /**

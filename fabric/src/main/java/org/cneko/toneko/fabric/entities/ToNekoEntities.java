@@ -38,7 +38,7 @@ public class ToNekoEntities {
         GHOST_NEKO = Registry.register(
                 BuiltInRegistries.ENTITY_TYPE,
                 ResourceLocation.fromNamespaceAndPath(MODID,"ghost_neko"),
-                FabricEntityType.Builder.createMob(GhostNekoEntity::new, MobCategory.CREATURE, builder -> builder.defaultAttributes(GhostNekoEntity::createNekoAttributes)
+                FabricEntityType.Builder.createMob(GhostNekoEntity::new, MobCategory.CREATURE, builder -> builder.defaultAttributes(GhostNekoEntity::createGhostNekoAttributes)
                 )
                         .sized(0.4f,1.2f).eyeHeight(1.5f).clientTrackingRange(8).build()
         );
