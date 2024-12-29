@@ -28,6 +28,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -56,7 +57,6 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -549,6 +549,19 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
 
     @Override
     public boolean hurt(@NotNull DamageSource source, float amount) {
+        if (source.getEntity() instanceof Player player){
+            // 栓住玩家
+            if (player.getMainHandItem().is(Items.LEAD)){
+                if (player.isLeashed()){
+                    player.dropLeash(true, true);
+                }else {
+                    player.setLeashedTo(this, true);
+                    // 减少栓绳
+                    player.getMainHandItem().setCount(player.getMainHandItem().getCount() - 1);
+                }
+                return false;
+            }
+        }
         boolean result = super.hurt(source, amount);
         if (!result) return false;
         if (source.getEntity() instanceof Player player){

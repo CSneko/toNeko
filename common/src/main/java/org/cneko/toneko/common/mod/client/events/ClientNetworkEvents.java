@@ -10,6 +10,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.cneko.toneko.common.mod.client.api.ClientEntityPoseManager;
+import org.cneko.toneko.common.mod.packets.PlayerLeadByPlayerPayload;
 import org.cneko.toneko.common.mod.packets.interactives.CrystalNekoInteractivePayload;
 import org.cneko.toneko.common.mod.packets.interactives.NekoEntityInteractivePayload;
 import org.cneko.toneko.common.mod.client.screens.CrystalNekoInteractiveScreen;
@@ -19,6 +20,7 @@ import org.cneko.toneko.common.mod.packets.EntityPosePayload;
 import org.cneko.toneko.common.mod.packets.QuirkQueryPayload;
 import org.cneko.toneko.common.mod.entities.CrystalNekoEntity;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
+import org.cneko.toneko.common.mod.util.PlayerUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -66,6 +68,16 @@ public class ClientNetworkEvents {
                         context.client().setScreen(new CrystalNekoInteractiveScreen(cry,Minecraft.getInstance().screen));
                     }
                 }
+            });
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(PlayerLeadByPlayerPayload.ID, (payload, context) ->{
+            context.client().execute(()->{
+                // 获取玩家（如果存在的话）
+                Player holder = PlayerUtil.getPlayerByUUID(UUID.fromString(payload.holder()));
+                Player target = PlayerUtil.getPlayerByUUID(UUID.fromString(payload.target()));
+                // 拴上玩家
+                target.setLeashedTo(holder,true);
             });
         });
 

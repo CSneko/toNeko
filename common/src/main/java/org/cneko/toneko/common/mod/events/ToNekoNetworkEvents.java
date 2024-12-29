@@ -8,6 +8,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.cneko.toneko.common.api.Messaging;
@@ -17,10 +18,13 @@ import org.cneko.toneko.common.mod.api.EntityPoseManager;
 import org.cneko.toneko.common.mod.entities.CrystalNekoEntity;
 import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.packets.MateWithCrystalNekoPayload;
+import org.cneko.toneko.common.mod.packets.PlayerLeadByPlayerPayload;
 import org.cneko.toneko.common.mod.packets.QuirkQueryPayload;
 import org.cneko.toneko.common.mod.packets.interactives.*;
+import org.cneko.toneko.common.mod.util.EntityUtil;
 import org.cneko.toneko.common.mod.util.PermissionUtil;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
+import org.cneko.toneko.common.mod.util.PlayerUtil;
 import org.cneko.toneko.common.util.AIUtil;
 import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.common.util.LanguageUtil;
@@ -39,6 +43,18 @@ public class ToNekoNetworkEvents {
         ServerPlayNetworking.registerGlobalReceiver(NekoMatePayload.ID, ToNekoNetworkEvents::onBreed);
         ServerPlayNetworking.registerGlobalReceiver(ChatWithNekoPayload.ID, ToNekoNetworkEvents::onChatWithNeko);
         ServerPlayNetworking.registerGlobalReceiver(MateWithCrystalNekoPayload.ID, ToNekoNetworkEvents::onMateWithCrystalNeko);
+        ServerPlayNetworking.registerGlobalReceiver(PlayerLeadByPlayerPayload.ID,ToNekoNetworkEvents::onPlayerLeadByPlayer);
+    }
+
+    public static void onPlayerLeadByPlayer(PlayerLeadByPlayerPayload payload, ServerPlayNetworking.Context context) {
+        try{
+            // 寻找对应玩家（如果有的话）
+            Player holder = PlayerUtil.getPlayerByUUID(UUID.fromString(payload.holder()));
+            Player target = PlayerUtil.getPlayerByUUID(UUID.fromString(payload.target()));
+            // 告诉玩家自己被拴上了
+            ServerPlayNetworking.send((ServerPlayer) holder, new PlayerLeadByPlayerPayload(holder.getUUID().toString(),target.getUUID().toString()));
+        }catch (Exception ignored){
+        }
     }
 
     public static void onMateWithCrystalNeko(MateWithCrystalNekoPayload mateWithCrystalNekoPayload, ServerPlayNetworking.Context context) {
