@@ -53,6 +53,7 @@ public class ToNekoNetworkEvents {
             Player target = PlayerUtil.getPlayerByUUID(UUID.fromString(payload.target()));
             // 告诉玩家自己被拴上了
             ServerPlayNetworking.send((ServerPlayer) holder, new PlayerLeadByPlayerPayload(holder.getUUID().toString(),target.getUUID().toString()));
+            ServerPlayNetworking.send((ServerPlayer) target, new PlayerLeadByPlayerPayload(holder.getUUID().toString(),target.getUUID().toString()));
         }catch (Exception ignored){
         }
     }

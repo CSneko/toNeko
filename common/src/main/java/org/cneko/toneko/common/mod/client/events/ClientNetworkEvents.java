@@ -77,7 +77,7 @@ public class ClientNetworkEvents {
                 Player holder = PlayerUtil.getPlayerByUUID(UUID.fromString(payload.holder()));
                 Player target = PlayerUtil.getPlayerByUUID(UUID.fromString(payload.target()));
                 // 拴上玩家
-                target.setLeashedTo(holder,true);
+                target.setLeashedTo(holder,false);
             });
         });
 
