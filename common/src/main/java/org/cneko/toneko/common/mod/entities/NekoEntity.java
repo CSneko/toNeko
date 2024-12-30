@@ -592,6 +592,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
                 .replace("%neko_moe_tags%", this.getMoeTagsString())
 
                 .replace("%player_name%", player.getName().getString())
+                .replace("%player_is_owner%",this.getNeko().hasOwner(player.getUUID())?Component.translatable("misc.toneko.is_or_not.is").getString():Component.translatable("misc.toneko.is_or_not.not").getString())
                 .replace("%player_is_neko%", player.isNeko()?Component.translatable("misc.toneko.is_or_not.is").getString():Component.translatable("misc.toneko.is_or_not.not").getString())
 
                 .replace("%world_time%",this.level().isDay()? Component.translatable("misc.toneko.time.day").getString():Component.translatable("misc.toneko.time.night").getString())

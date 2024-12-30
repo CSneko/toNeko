@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityType;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.entity.MobCategory;
 import org.cneko.toneko.common.mod.api.NekoNameRegistry;
 import org.cneko.toneko.common.mod.api.NekoSkinRegistry;
@@ -64,8 +65,8 @@ public class ToNekoEntities {
         重新创建了个世界，它生成了喵！好逆天的Bug喵！
          */
         // 设置生成条件
-        BiomeModifications.addSpawn(BiomeSelectors.foundInOverworld(), MobCategory.CREATURE, ADVENTURER_NEKO, 5, 1, 1); // 在主世界的高山会生成一只
-
+        BiomeModifications.addSpawn(BiomeSelectors.tag(BiomeTags.IS_MOUNTAIN), MobCategory.CREATURE, ADVENTURER_NEKO, 5, 1, 1); // 在主世界的高山会生成一只
+        BiomeModifications.addSpawn(BiomeSelectors.tag(BiomeTags.ALLOWS_SURFACE_SLIME_SPAWNS).and(BiomeSelectors.tag(BiomeTags.HAS_JUNGLE_TEMPLE)), MobCategory.CREATURE, GHOST_NEKO, 5, 1, 1); // 与史莱姆一起生成
         if (ConfigUtil.IS_BIRTHDAY){
             BiomeModifications.addSpawn(BiomeSelectors.all(), MobCategory.CREATURE, CRYSTAL_NEKO, 10, 1, 4); // 在所有世界生成一只
         }
