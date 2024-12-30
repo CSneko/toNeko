@@ -22,6 +22,7 @@ public class AIUtil {
     public static final String API_URL = "https://chat.ai.cneko.org";
     public static final String PAST_MESSAGE_PATH = "ctlib/toneko/AI/";
     private static final ExecutorService executor = Executors.newFixedThreadPool(100);
+    private static final int MAX_MESSAGE_COUNT = 30;
 
     public static void init(){
         FileUtil.CreatePath(PAST_MESSAGE_PATH);
@@ -40,7 +41,7 @@ public class AIUtil {
                 JsonConfiguration j = JsonConfiguration.fromFile(Path.of(pastMessagePath));
                 List<JsonConfiguration> contents = j.getJsonList("contents");
                 // 检查是否超过了20
-                if (contents.size() >= 20){
+                if (contents.size() >= MAX_MESSAGE_COUNT){
                     // 删除第一个
                     contents.removeFirst();
                     // 重新构建json
