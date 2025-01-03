@@ -10,6 +10,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.cneko.toneko.common.mod.client.api.ClientEntityPoseManager;
+import org.cneko.toneko.common.mod.client.util.ClientPlayerUtil;
 import org.cneko.toneko.common.mod.packets.PlayerLeadByPlayerPayload;
 import org.cneko.toneko.common.mod.packets.interactives.CrystalNekoInteractivePayload;
 import org.cneko.toneko.common.mod.packets.interactives.NekoEntityInteractivePayload;
@@ -74,10 +75,12 @@ public class ClientNetworkEvents {
         ClientPlayNetworking.registerGlobalReceiver(PlayerLeadByPlayerPayload.ID, (payload, context) ->{
             context.client().execute(()->{
                 // 获取玩家（如果存在的话）
-                Player holder = PlayerUtil.getPlayerByUUID(UUID.fromString(payload.holder()));
-                Player target = PlayerUtil.getPlayerByUUID(UUID.fromString(payload.target()));
+                Player holder = ClientPlayerUtil.getPlayerByUUID(UUID.fromString(payload.holder()));
+                Player target = ClientPlayerUtil.getPlayerByUUID(UUID.fromString(payload.target()));
                 // 拴上玩家
-                target.setLeashedTo(holder,false);
+                if (target != null && holder != null) {
+                    target.setLeashedTo(holder,false);
+                }
             });
         });
 

@@ -1,6 +1,8 @@
 package org.cneko.toneko.common.mod.mixin;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -62,9 +64,10 @@ public abstract class PlayerEntityMixin implements INeko, Leashable {
                 player.setLeashedTo(holder, true);
                 // 减少栓绳
                 holder.getMainHandItem().setCount(holder.getMainHandItem().getCount() - 1);
-                if(player.level().isClientSide()){
-                    // 如果是在客户端，就发送给服务端
-                    ClientPlayNetworking.send(new PlayerLeadByPlayerPayload(holder.getUUID().toString(), player.getUUID().toString()));
+                // 在服务端运行的话呢同时发给客户端
+                if (player instanceof ServerPlayer sp) {
+                    ServerPlayNetworking.send(sp, new PlayerLeadByPlayerPayload(holder.getUUID().toString(), player.getUUID().toString()));
+                    ServerPlayNetworking.send((ServerPlayer) holder,new PlayerLeadByPlayerPayload(holder.getUUID().toString(),player.getUUID().toString()));
                 }
                 cir.setReturnValue(false);
                 cir.cancel();
