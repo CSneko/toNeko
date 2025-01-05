@@ -7,6 +7,7 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.nodes.Tag;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
@@ -88,6 +89,10 @@ public class ConfigBuilder {
             }
         }
         try {
+            Path configPath = Path.of("config/");
+            if (!Files.exists(configPath)){
+                Files.createDirectories(configPath);
+            }
             config.save(path.toFile());
         } catch (IOException e) {
             LOGGER.error("Unable to save config file", e);
