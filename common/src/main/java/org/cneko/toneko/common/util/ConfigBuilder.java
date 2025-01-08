@@ -1,13 +1,16 @@
 package org.cneko.toneko.common.util;
 
-import org.cneko.ctlib.common.file.YamlConfiguration;
+import com.google.gson.Gson;
+import org.cneko.ctlib.common.file.JsonConfiguration;
 import org.jetbrains.annotations.Nullable;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.nodes.Tag;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.util.*;
 
@@ -15,16 +18,16 @@ import static org.cneko.toneko.common.Bootstrap.LOGGER;
 
 public class ConfigBuilder {
     private final Path path;
-    private YamlConfiguration config;
+    private YamlC config;
     private final Map<String,Entry> defaults = new LinkedHashMap<>();
     public ConfigBuilder(Path path){
         this.path = path;
         // 尝试读取文件
         try {
-            config = new YamlConfiguration(path);
+            config = new YamlC(path);
         } catch (Exception e) {
             // 出现错误，创建一个空的配置文件
-            config = new YamlConfiguration("");
+            config = new YamlC("");
         }
     }
 
@@ -102,9 +105,9 @@ public class ConfigBuilder {
 
 
 
-    public YamlConfiguration createConfig(){
+    public YamlC createConfig(){
         try {
-            return YamlConfiguration.fromFile(path);
+            return new YamlC(path);
         } catch (IOException e) {
             return config;
         }
@@ -183,6 +186,265 @@ public class ConfigBuilder {
         }
     }
 
+    public static class YamlC{
+
+        private final Map<String, Object> data;
+        private final Path path;
+
+        public YamlC(Path path) throws IOException {
+            this.path = path;
+            if (Files.exists(path)) {
+                InputStream in = Files.newInputStream(path);
+
+                try {
+                    // 使用 UTF-8 编码读取
+                    InputStreamReader reader = new InputStreamReader(in, StandardCharsets.UTF_8);
+                    Yaml yaml = new Yaml();
+                    this.data = yaml.load(reader);
+                } catch (Throwable var6) {
+                    try {
+                        in.close();
+                    } catch (Throwable var5) {
+                        var6.addSuppressed(var5);
+                    }
+
+                    throw var6;
+                }
+
+                in.close();
+            } else {
+                this.data = new LinkedHashMap<>();
+            }
+        }
+
+        public YamlC(File file) throws IOException {
+            this(file.toPath());
+        }
+
+        public YamlC(String yamlContent) {
+            Yaml yaml = new Yaml();
+            this.data = yaml.load(yamlContent);
+            this.path = null;
+        }
+
+        public Object get(String path) {
+            String[] keys = path.split("\\.");
+            Map<String, Object> current = this.data;
+
+            for(int i = 0; i < keys.length - 1; ++i) {
+                current = (Map)current.get(keys[i]);
+                if (current == null) {
+                    return null;
+                }
+            }
+
+            return current.get(keys[keys.length - 1]);
+        }
+
+        public void set(String path, Object value) {
+            String[] keys = path.split("\\.");
+            Map<String, Object> current = this.data;
+
+            for(int i = 0; i < keys.length - 1; ++i) {
+                current = (Map)current.computeIfAbsent(keys[i], (k) -> {
+                    return new LinkedHashMap();
+                });
+            }
+
+            current.put(keys[keys.length - 1], value);
+
+            try {
+                this.save();
+            } catch (IOException var6) {
+                System.out.println(var6.getMessage());
+            }
+
+        }
+
+        public void save() throws IOException {
+            if (this.path != null) {
+                DumperOptions options = new DumperOptions();
+                options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+                Yaml yaml = new Yaml(options);
+                OutputStream out = Files.newOutputStream(this.path);
+
+                try {
+                    yaml.dump(this.data, new OutputStreamWriter(out, StandardCharsets.UTF_8));
+                } catch (Throwable var7) {
+                    if (out != null) {
+                        try {
+                            out.close();
+                        } catch (Throwable var6) {
+                            var7.addSuppressed(var6);
+                        }
+                    }
+
+                    throw var7;
+                }
+
+                if (out != null) {
+                    out.close();
+                }
+
+            }
+        }
+
+        public void save(Path targetPath) throws IOException {
+            DumperOptions options = new DumperOptions();
+            options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+            Yaml yaml = new Yaml(options);
+            OutputStream out = Files.newOutputStream(targetPath);
+
+            try {
+                yaml.dump(this.data, new OutputStreamWriter(out,StandardCharsets.UTF_8));
+            } catch (Throwable var8) {
+                if (out != null) {
+                    try {
+                        out.close();
+                    } catch (Throwable var7) {
+                        var8.addSuppressed(var7);
+                    }
+                }
+
+                throw var8;
+            }
+
+            if (out != null) {
+                out.close();
+            }
+
+        }
+
+        public void save(File targetFile) throws IOException {
+            this.save(targetFile.toPath());
+        }
+
+        public String getString(String path) {
+            return (String)this.get(path);
+        }
+
+        public List<String> getStringList(String path) {
+            return (List)this.get(path);
+        }
+
+        public float getFloat(String path) {
+            Object value = this.get(path);
+            return value instanceof Float ? (Float)value : 0.0F;
+        }
+
+        public double getDouble(String path) {
+            Object value = this.get(path);
+            return value instanceof Double ? (Double)value : 0.0;
+        }
+
+        public int getInt(String path) {
+            Object value = this.get(path);
+            return value instanceof Integer ? (Integer)value : 0;
+        }
+
+        public boolean getBoolean(String path) {
+            Object value = this.get(path);
+            return value instanceof Boolean && (Boolean)value;
+        }
+
+        public boolean getBoolean(String path, boolean defValue) {
+            Object value = this.get(path);
+            return value instanceof Boolean ? (Boolean)value : defValue;
+        }
+
+        public boolean isSet(String path) {
+            return this.get(path) != null;
+        }
+
+        public boolean contains(String path) {
+            return this.isSet(path);
+        }
+
+        public ArrayList<Integer> getIntList(String path) {
+            Object value = this.get(path);
+            if (value instanceof List) {
+                ArrayList<Integer> list = new ArrayList();
+                Iterator var4 = ((List)value).iterator();
+
+                while(var4.hasNext()) {
+                    Object obj = var4.next();
+                    if (obj instanceof Integer) {
+                        list.add((Integer)obj);
+                    }
+                }
+
+                return list;
+            } else {
+                return new ArrayList();
+            }
+        }
+
+        public ArrayList<Double> getDoubleList(String path) {
+            Object value = this.get(path);
+            if (value instanceof List) {
+                ArrayList<Double> list = new ArrayList();
+                Iterator var4 = ((List)value).iterator();
+
+                while(var4.hasNext()) {
+                    Object obj = var4.next();
+                    if (obj instanceof Double) {
+                        list.add((Double)obj);
+                    }
+                }
+
+                return list;
+            } else {
+                return new ArrayList();
+            }
+        }
+
+        public ArrayList<Float> getFloatList(String path) {
+            Object value = this.get(path);
+            if (value instanceof List) {
+                ArrayList<Float> list = new ArrayList();
+                Iterator var4 = ((List)value).iterator();
+
+                while(var4.hasNext()) {
+                    Object obj = var4.next();
+                    if (obj instanceof Float) {
+                        list.add((Float)obj);
+                    }
+                }
+
+                return list;
+            } else {
+                return new ArrayList();
+            }
+        }
+
+        public ArrayList<Object> getList(String path) {
+            Object value = this.get(path);
+            return value instanceof List ? new ArrayList((List)value) : new ArrayList();
+        }
+
+        public String toString() {
+            DumperOptions options = new DumperOptions();
+            options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+            Yaml yaml = new Yaml(options);
+            return yaml.dump(this.data);
+        }
+
+        public boolean equals(Object obj) {
+            return obj.toString().equals(this.toString());
+        }
+
+        public boolean equalsCaseIgnoreCase(Object obj) {
+            return obj.toString() != null ? obj.toString().equalsIgnoreCase(this.toString()) : false;
+        }
+
+        public static JsonConfiguration toJson(String yamlContent) {
+            Yaml yaml = new Yaml();
+            Map<String, Object> yamlMap = (Map)yaml.load(yamlContent);
+            Gson gson = new Gson();
+            return JsonConfiguration.of(gson.toJson(yamlMap));
+        }
+
+    }
 
     public static class YC {
         private Map<String, Object> data;
