@@ -44,18 +44,13 @@ public class ToNekoEntities {
                         .sized(0.4f,1.2f).eyeHeight(1.5f).clientTrackingRange(8).build()
         );
 
+        org.cneko.toneko.common.mod.entities.ToNekoEntities.init();
+
         // 注册皮肤
         NekoSkinRegistry.register(ADVENTURER_NEKO,AdventurerNeko.nekoSkins);
         NekoSkinRegistry.register(GHOST_NEKO,GhostNekoEntity.nekoSkins);
-        // 注册名字
-        Set<String> names = Set.of(
-                "Luna","Mochi","Poppy","Misty","Snowy","Coco","Peaches","Bubbles","Daisy","Cherry",
-                "ひなた","もふこ","ちゃちゃまる","ひめにゃん",
-                "Felicity","Purrin","Catrina","Fluffy","Meowgical","Felina","Ayame","Cinnamon","Momo"
-        );
-        NekoNameRegistry.register(names);
 
-        /*
+                /*
         不知道为什么喵，我测试的时候总是不生成，真的好奇怪的问题
         后来测试了很多次喵，都没生成
         这个我也是改来改去的喵，就是很奇怪
@@ -66,7 +61,7 @@ public class ToNekoEntities {
          */
         // 设置生成条件
         BiomeModifications.addSpawn(BiomeSelectors.tag(BiomeTags.IS_MOUNTAIN), MobCategory.CREATURE, ADVENTURER_NEKO, 5, 1, 1); // 在主世界的高山会生成一只
-        BiomeModifications.addSpawn(BiomeSelectors.tag(BiomeTags.ALLOWS_SURFACE_SLIME_SPAWNS).and(BiomeSelectors.tag(BiomeTags.HAS_JUNGLE_TEMPLE)), MobCategory.CREATURE, GHOST_NEKO, 5, 1, 1); // 与史莱姆一起生成
+        BiomeModifications.addSpawn(BiomeSelectors.tag(BiomeTags.ALLOWS_SURFACE_SLIME_SPAWNS).or(BiomeSelectors.tag(BiomeTags.HAS_JUNGLE_TEMPLE)), MobCategory.CREATURE, GHOST_NEKO, 5, 1, 1); // 与史莱姆一起生成
         if (ConfigUtil.IS_BIRTHDAY){
             BiomeModifications.addSpawn(BiomeSelectors.all(), MobCategory.CREATURE, CRYSTAL_NEKO, 10, 1, 4); // 在所有世界生成一只
         }
