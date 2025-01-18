@@ -20,6 +20,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -420,10 +421,12 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         if (this.canMate(mate)) {
             this.nekoMateGoal.setTarget(mate);
             mate.getEntity().sendSystemMessage(Component.translatable("message.toneko.neko.mate.start",this.getName(), mate.getEntity().getName()).withStyle(ChatFormatting.GREEN));
+        }else {
+            mate.getEntity().sendSystemMessage(Component.translatable("message.toneko.neko.mate.fail",this.getName(), mate.getEntity().getName()).withStyle(ChatFormatting.RED));
         }
     }
     public boolean canMate(INeko other){
-        return other.getNeko().isNeko() || other.allowMateIfNotNeko();
+        return other.getNeko().isNeko() || other.allowMateIfNotNeko() || this.hasEffect(MobEffects.WEAKNESS) || other.getEntity().hasEffect(MobEffects.WEAKNESS);
     }
 
     public void breed(ServerLevel level, INeko mate) {
@@ -437,6 +440,9 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         this.getNeko().addLevel(0.1);
         mate.getNeko().addLevel(0.1);
         this.spawnChildFromBreeding(level, mate);
+        // 分别给予虚弱效果
+        this.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 3000, 0));
+        mate.getEntity().addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 3000, 0));
     }
     public void spawnChildFromBreeding(ServerLevel level, INeko mate) {
         NekoEntity child = this.getBreedOffspring(level, mate);

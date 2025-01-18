@@ -121,6 +121,7 @@
   "message.toneko.neko.on_hurt.5": "§e%s §d>> §fBig bad!",
   "message.toneko.neko.die.no_item_drop": "§cYou are so mean. I won't return the item to you. Humph!",
   "message.toneko.neko.mate.start": "%s will mate with %s, please wait~",
+  "message.toneko.neko.mate.fail": "%c Seems failed...",
   "message.toneko.neko.mate.finish": "Mating completed!",
   "message.toneko.neko.breed_fail_baby.0": "§cYour idea is a bit dangerous!",
   "message.toneko.neko.breed_fail_baby.1": "§cPlease stop your behavior!",

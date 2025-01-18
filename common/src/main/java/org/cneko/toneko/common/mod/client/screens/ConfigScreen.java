@@ -47,7 +47,6 @@ public class ConfigScreen extends Screen {
 
         this.scrollPanel = new ScrollPanel(scrollX, scrollY, scrollWidth, scrollHeight, Component.empty());
 
-
         ConfigUtil.CONFIG_BUILDER.getKeys().forEach(key -> {
             int widgetHeight = 20; // 每行组件的高度
             int space = 10; // 文本与编辑框/按钮之间的水平间隔

@@ -59,6 +59,7 @@ public class NekoMateScreen extends Screen implements INekoScreen {
                 }else {
                     ClientPlayNetworking.send(new NekoMatePayload(neko.getUUID().toString(), entity.getEntity().getUUID().toString()));
                     onClose();
+                    //minecraft.setScreen(new MateConfirmScreen(neko, entity));
                 }
             }).bounds(x, y, buttonWidth, buttonHeight).build();
             addRenderableWidget(button);
