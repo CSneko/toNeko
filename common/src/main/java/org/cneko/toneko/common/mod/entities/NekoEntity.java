@@ -426,7 +426,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         }
     }
     public boolean canMate(INeko other){
-        return other.getNeko().isNeko() || other.allowMateIfNotNeko() || this.hasEffect(MobEffects.WEAKNESS) || other.getEntity().hasEffect(MobEffects.WEAKNESS);
+        return (other.getNeko().isNeko() || other.allowMateIfNotNeko()) && !this.hasEffect(MobEffects.WEAKNESS) && !other.getEntity().hasEffect(MobEffects.WEAKNESS);
     }
 
     public void breed(ServerLevel level, INeko mate) {
