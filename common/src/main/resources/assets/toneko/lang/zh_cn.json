@@ -82,7 +82,7 @@
   "command.tonekoadmin.set.false": "§a成功将 %s 取消设置为猫娘了喵",
   "command.tonekoadmin.set.true": "§a成功将 %s 设置为猫娘了喵",
   "command.tonekoadmin.reload": "§a成功重载了配置文件和语言文件了喵",
-  "command.tonekoadmin.reload.data": "§a成功重载了猫猫数据文件了喵",
+  "command.tonekoadmin.reload.data": "§a成功重载了猫猫数据文件了喵，消耗了%s秒~",
   "command.tonekoadmin.skin.list": "§b所有的猫猫皮肤在这里啦:\n %s",
   "command.tonekoadmin.skin.add": "§a成功添加了 %s §a的皮肤了喵",
   "command.tonekoadmin.skin.remove": "§a成功删除了 %s §a的皮肤了喵",

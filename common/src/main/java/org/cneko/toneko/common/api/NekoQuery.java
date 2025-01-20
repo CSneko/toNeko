@@ -12,6 +12,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -417,6 +419,7 @@ public class NekoQuery {
      * 存储了猫娘临时数据的类，大部分情况下都不许动它，知道吗
      */
     public static class NekoData {
+        private static final ExecutorService executor = Executors.newFixedThreadPool(4);
         public static List<Neko> nekoList = new ArrayList<>();
 
         /**
@@ -460,6 +463,17 @@ public class NekoQuery {
          */
         public static void saveAll(){
             nekoList.forEach(Neko::save);
+        }
+
+        /**
+         * 异步保存所有猫娘数据
+         * @param callback 回调
+         */
+        public static void saveAllAsync(Runnable callback){
+            executor.submit(() -> {
+                saveAll();
+                callback.run();
+            });
         }
 
         /**

@@ -82,7 +82,7 @@
   "command.tonekoadmin.set.false": "§aSet %s to neko succeed!",
   "command.tonekoadmin.set.true": "§aUnset %s to neko succeed!",
   "command.tonekoadmin.reload": "§aReload the config and language succeed!",
-  "command.tonekoadmin.reload.data": "§aSuccessfully reloaded neko data file meow",
+  "command.tonekoadmin.reload.data": "§aSuccessfully reloaded neko data file meow,spent %s seconds",
   "command.tonekoadmin.skin.list": "§bAll neko skins are here:\n %s",
   "command.tonekoadmin.skin.add": "§aSuccessfully added %s §a skins meow",
   "command.tonekoadmin.skin.remove": "§aSuccessfully deleted %s §a skins meow",

@@ -54,9 +54,15 @@ public class ToNekoAdminCommand {
     }
 
     public static int reloadDataCommand(CommandContext<CommandSourceStack> context) {
-        NekoQuery.NekoData.saveAll();
-        NekoQuery.NekoData.loadAll();
-        sendTransTo((Player) context.getSource().getSender(), "command.tonekoadmin.reload.data");
+        long startTime = System.currentTimeMillis(); // 记录开始时间
+
+        NekoQuery.NekoData.saveAllAsync(() -> {
+            long elapsedTime = (System.currentTimeMillis() - startTime) / 1000; // 计算耗时（秒）
+            sendTransTo((Player) context.getSource().getSender(),
+                    "command.tonekoadmin.reload.data",
+                    elapsedTime); // 将耗时传递给方法
+        });
+        // NekoQuery.NekoData.loadAll(); // 这...这，大可不必
         return 1;
     }
 

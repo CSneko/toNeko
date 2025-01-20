@@ -83,10 +83,13 @@ public class ToNekoAdminCommand {
     }
 
     public static int reloadData(CommandContext<CommandSourceStack> context) {
-        // 重新加载猫娘数据
-        NekoQuery.NekoData.saveAll();
-        NekoQuery.NekoData.loadAll();
-        context.getSource().sendSystemMessage(translatable("command.tonekoadmin.reload.data"));
+        long startTime = System.currentTimeMillis(); // 记录开始时间
+
+        NekoQuery.NekoData.saveAllAsync(() -> {
+            // NekoQuery.NekoData.loadAll(); // 这...这，大可不必
+            long elapsedTime = (System.currentTimeMillis() - startTime) / 1000; // 计算耗时（秒）
+            context.getSource().sendSystemMessage(translatable("command.tonekoadmin.reload.data", elapsedTime)); // 将耗时传递给方法
+        });
         return 1;
     }
 

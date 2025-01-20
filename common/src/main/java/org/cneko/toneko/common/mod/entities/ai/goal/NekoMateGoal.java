@@ -43,7 +43,7 @@ public class NekoMateGoal extends Goal {
             nekoEntity.getNavigation().moveTo(target.getEntity(), followSpeed);
             // 当距离小于1时，开始贴贴
             if (nekoEntity.distanceToSqr(target.getEntity()) < 1) {
-                if (mating >= 40) {
+                if (mating >= 30) {
                     breed();
                 }
                 mating++;
