@@ -3,6 +3,7 @@ package org.cneko.toneko.common.mod.client.events;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
@@ -10,18 +11,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.cneko.toneko.common.mod.client.api.ClientEntityPoseManager;
+import org.cneko.toneko.common.mod.client.screens.InteractionScreen;
+import org.cneko.toneko.common.mod.client.screens.NekoScreenRegistry;
 import org.cneko.toneko.common.mod.client.util.ClientPlayerUtil;
 import org.cneko.toneko.common.mod.packets.PlayerLeadByPlayerPayload;
-import org.cneko.toneko.common.mod.packets.interactives.CrystalNekoInteractivePayload;
 import org.cneko.toneko.common.mod.packets.interactives.NekoEntityInteractivePayload;
-import org.cneko.toneko.common.mod.client.screens.CrystalNekoInteractiveScreen;
-import org.cneko.toneko.common.mod.client.screens.NekoEntityInteractiveScreen;
 import org.cneko.toneko.common.mod.client.screens.QuirkScreen;
 import org.cneko.toneko.common.mod.packets.EntityPosePayload;
 import org.cneko.toneko.common.mod.packets.QuirkQueryPayload;
-import org.cneko.toneko.common.mod.entities.CrystalNekoEntity;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
-import org.cneko.toneko.common.mod.util.PlayerUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -52,25 +50,12 @@ public class ClientNetworkEvents {
                     NekoEntity neko = findNearbyNekoByUuid(UUID.fromString(uuid),NekoEntity.DEFAULT_FIND_RANGE);
                     if(neko != null) {
                         // 打开屏幕
-                        context.client().setScreen(new NekoEntityInteractiveScreen(neko,Minecraft.getInstance().screen));
+                        context.client().setScreen(new InteractionScreen(Component.empty(),neko,Minecraft.getInstance().screen, NekoScreenRegistry.get(neko.getType())));
                     }
                 }
             });
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(CrystalNekoInteractivePayload.ID, (payload, context)->{
-            context.client().execute(() -> {
-                // 通过uuid寻找猫娘
-                String uuid = payload.uuid();
-                if(uuid != null && !uuid.isEmpty()) {
-                    NekoEntity neko = findNearbyNekoByUuid(UUID.fromString(uuid),NekoEntity.DEFAULT_FIND_RANGE);
-                    if(neko instanceof CrystalNekoEntity cry) {
-                        // 打开屏幕
-                        context.client().setScreen(new CrystalNekoInteractiveScreen(cry,Minecraft.getInstance().screen));
-                    }
-                }
-            });
-        });
 
         ClientPlayNetworking.registerGlobalReceiver(PlayerLeadByPlayerPayload.ID, (payload, context) ->{
             context.client().execute(()->{

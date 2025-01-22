@@ -2,6 +2,7 @@ package org.cneko.toneko.common.mod.entities;
 
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -13,10 +14,14 @@ import org.jetbrains.annotations.ApiStatus;
 import java.util.Set;
 import java.util.function.Supplier;
 
-public class ToNekoEntities {
+import static org.cneko.toneko.common.mod.util.ResourceLocationUtil.toNekoLoc;
 
+public class ToNekoEntities {
+    public static ResourceLocation ADVENTURER_NEKO_ID = toNekoLoc("adventurer_neko");
     public static EntityType<AdventurerNeko> ADVENTURER_NEKO;
+    public static ResourceLocation CRYSTAL_NEKO_ID = toNekoLoc("crystal_neko");
     public static EntityType<CrystalNekoEntity> CRYSTAL_NEKO;
+    public static ResourceLocation GHOST_NEKO_ID = toNekoLoc("ghost_neko");
     public static EntityType<GhostNekoEntity> GHOST_NEKO;
 
     public static void init() {

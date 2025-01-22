@@ -33,6 +33,7 @@ public class ToNekoNeoForgeClient {
         ClientTickEvent.init();
         ToNekoKeyBindings.init();
 
+        org.cneko.toneko.common.mod.client.ToNekoClient.init();
     }
 
     @SubscribeEvent

@@ -22,13 +22,13 @@ public class ToNekoEntities {
     public static DeferredHolder<EntityType<?>, EntityType<AdventurerNeko>> ADVENTURER_NEKO_HOLDER;
     public static DeferredHolder<EntityType<?>, EntityType<GhostNekoEntity>> GHOST_NEKO_HOLDER;
     public static void init(){
-        CRYSTAL_NEKO_HOLDER = ToNekoNeoForge.ENTITY_TYPES.register("crystal_neko",
+        CRYSTAL_NEKO_HOLDER = ToNekoNeoForge.ENTITY_TYPES.register(CRYSTAL_NEKO_ID.getPath(),
                 org.cneko.toneko.common.mod.entities.ToNekoEntities.getCrystalNeko()
         );
-        ADVENTURER_NEKO_HOLDER = ToNekoNeoForge.ENTITY_TYPES.register("adventurer_neko",
+        ADVENTURER_NEKO_HOLDER = ToNekoNeoForge.ENTITY_TYPES.register(ADVENTURER_NEKO_ID.getPath(),
                 org.cneko.toneko.common.mod.entities.ToNekoEntities.getAdventurerNeko()
         );
-        GHOST_NEKO_HOLDER = ToNekoNeoForge.ENTITY_TYPES.register("ghost_neko",
+        GHOST_NEKO_HOLDER = ToNekoNeoForge.ENTITY_TYPES.register(GHOST_NEKO_ID.getPath(),
                 org.cneko.toneko.common.mod.entities.ToNekoEntities.getGhostNeko()
         );
 

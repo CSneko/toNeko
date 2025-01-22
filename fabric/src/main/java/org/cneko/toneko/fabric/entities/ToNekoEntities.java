@@ -24,21 +24,21 @@ public class ToNekoEntities {
     public static void init(){
         ADVENTURER_NEKO = Registry.register(
                 BuiltInRegistries.ENTITY_TYPE,
-                ResourceLocation.fromNamespaceAndPath(MODID,"adventurer_neko"),
+                ADVENTURER_NEKO_ID,
                 FabricEntityType.Builder.createMob(AdventurerNeko::new, MobCategory.CREATURE, builder -> builder.defaultAttributes(AdventurerNeko::createAdventurerNekoAttributes)
                         ).
                         sized(0.5f,1.7f).eyeHeight(1.6f).build()
         );
         CRYSTAL_NEKO = Registry.register(
                 BuiltInRegistries.ENTITY_TYPE,
-                ResourceLocation.fromNamespaceAndPath(MODID,"crystal_neko"),
+                CRYSTAL_NEKO_ID,
                 FabricEntityType.Builder.createMob(CrystalNekoEntity::new, MobCategory.CREATURE, builder -> builder.defaultAttributes(CrystalNekoEntity::createNekoAttributes)
                         )
                         .sized(0.5f,1.7f).eyeHeight(1.6f).clientTrackingRange(8).build()
         );
         GHOST_NEKO = Registry.register(
                 BuiltInRegistries.ENTITY_TYPE,
-                ResourceLocation.fromNamespaceAndPath(MODID,"ghost_neko"),
+                GHOST_NEKO_ID,
                 FabricEntityType.Builder.createMob(GhostNekoEntity::new, MobCategory.CREATURE, builder -> builder.defaultAttributes(GhostNekoEntity::createGhostNekoAttributes)
                 )
                         .sized(0.4f,1.2f).eyeHeight(1.5f).clientTrackingRange(8).build()

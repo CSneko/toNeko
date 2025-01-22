@@ -12,8 +12,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import org.cneko.toneko.common.api.NekoQuery;
-import org.cneko.toneko.common.mod.packets.interactives.CrystalNekoInteractivePayload;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -35,11 +33,6 @@ public class CrystalNekoEntity extends NekoEntity{
     @Override
     public boolean canMate(INeko other) {
         return true;
-    }
-
-    @Override
-    public void openInteractiveMenu(ServerPlayer player) {
-        ServerPlayNetworking.send(player,new CrystalNekoInteractivePayload(this.getUUID().toString()));
     }
 
     @Override
