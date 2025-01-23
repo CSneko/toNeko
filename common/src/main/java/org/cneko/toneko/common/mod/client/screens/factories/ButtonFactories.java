@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import org.cneko.toneko.common.api.TickTasks;
 import org.cneko.toneko.common.mod.client.api.ClientEntityPoseManager;
 import org.cneko.toneko.common.mod.client.screens.*;
-import org.cneko.toneko.common.mod.client.screens.NekoScreenRegistry.NekoScreenBuilder.ButtonFactory;
+import org.cneko.toneko.common.mod.client.screens.NekoScreenBuilder.ButtonFactory;
 import org.cneko.toneko.common.mod.entities.CrystalNekoEntity;
 import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Random;
 
 public class ButtonFactories {
+    public static ButtonFactory BACK_BUTTON = screen -> Button.builder(Component.translatable("gui.back"), button -> Minecraft.getInstance().setScreen(screen.lastScreen));
     public static ButtonFactory CHAT_BUTTON = screen -> Button.builder(Component.translatable("screen.toneko.neko_entity_interactive.button.chat"),(btn)-> Minecraft.getInstance().setScreen(new ChatWithNekoScreen(screen.getNeko())));
     public static ButtonFactory GIFT_BUTTON = screen -> Button.builder(Component.translatable("screen.toneko.neko_entity_interactive.button.gift"),(btn)->{
         ItemStack stack = Minecraft.getInstance().player.getMainHandItem();

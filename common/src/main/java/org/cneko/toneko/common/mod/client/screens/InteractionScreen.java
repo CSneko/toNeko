@@ -6,17 +6,20 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class InteractionScreen extends Screen implements INekoScreen{
-    private NekoScreenRegistry.NekoScreenBuilder builder;
-    private Screen lastScreen;
-    private NekoEntity neko;
+    private NekoScreenBuilder builder;
+    public Screen lastScreen;
+    private final NekoEntity neko;
     protected int startY = 0;
     private List<TooltipWidget> tooltips;
     public InteractionScreen(Component title, NekoEntity neko, @Nullable Screen lastScreen) {
@@ -24,9 +27,11 @@ public class InteractionScreen extends Screen implements INekoScreen{
         this.lastScreen = lastScreen;
         this.neko = neko;
     }
-    public InteractionScreen(Component title, NekoEntity neko,@Nullable Screen lastScreen, @NotNull NekoScreenRegistry.NekoScreenBuilder builder){
+    public InteractionScreen(Component title, NekoEntity neko,@Nullable Screen lastScreen, @NotNull NekoScreenBuilder builder){
         super(title);
         this.builder = builder;
+        this.lastScreen = lastScreen;
+        this.neko = neko;
     }
 
     @Override
@@ -34,7 +39,7 @@ public class InteractionScreen extends Screen implements INekoScreen{
         return neko;
     }
 
-    public void setBuilder(NekoScreenRegistry.NekoScreenBuilder builder) {
+    public void setBuilder(NekoScreenBuilder builder) {
         this.builder = builder;
     }
 
@@ -54,22 +59,27 @@ public class InteractionScreen extends Screen implements INekoScreen{
             int buttonWidth = (int)(this.width * 0.2);
             int buttonHeight = (int)(this.height * 0.06);
             int buttonBound = (int)(this.height * 0.13);
-            int tooltipBound = (int)(this.height * 0.05);
+            int tooltipBound = (int)(this.height * 0.1);
             if (lastScreen != null){
                 // 添加返回按钮
                 addRenderableWidget(Button.builder(Component.translatable("gui.back"), button -> Minecraft.getInstance().setScreen(lastScreen)).size(buttonWidth,buttonHeight).pos(x,y).build());
                 y += buttonBound;
             }
             tooltips = new ArrayList<>();
-            for (NekoScreenRegistry.NekoScreenBuilder.WidgetFactory widget : this.builder.getWidgets()) {
-                if (widget instanceof NekoScreenRegistry.NekoScreenBuilder.ButtonFactory buttonFactory) {
+            for (NekoScreenBuilder.WidgetFactory widget : this.builder.getWidgets()) {
+                if (widget instanceof NekoScreenBuilder.ButtonFactory buttonFactory) {
                     Button.Builder btnBuilder = buttonFactory.build(this);
                     Button button = btnBuilder.size(buttonWidth, buttonHeight).pos(x, y).build();
-                    button.setTooltip(Tooltip.create(Component.translatable(button.getMessage() + ".des")));
+                    if (button.getMessage() instanceof MutableComponent component && component.getContents() instanceof TranslatableContents t) {
+                        // 判断语言文件中有没有描述
+                        if (!Objects.equals(t.getFallback(), t.getKey())) {
+                            button.setTooltip(Tooltip.create(Component.translatable(t.getKey() + ".des")));
+                        }
+                    }
                     addRenderableWidget(button);
                     y += buttonBound;
                 }
-                if (widget instanceof NekoScreenRegistry.NekoScreenBuilder.TooltipFactory tooltipFactory) {
+                if (widget instanceof NekoScreenBuilder.TooltipFactory tooltipFactory) {
                     tooltips.add(new TooltipWidget(x,y,tooltipFactory.build(this)));
                     y += tooltipBound;
                 }
