@@ -58,13 +58,8 @@ public class InteractionScreen extends Screen implements INekoScreen{
             }
             int buttonWidth = (int)(this.width * 0.2);
             int buttonHeight = (int)(this.height * 0.06);
-            int buttonBound = (int)(this.height * 0.13);
+            int buttonBound = (int)(this.height * 0.1);
             int tooltipBound = (int)(this.height * 0.1);
-            if (lastScreen != null){
-                // 添加返回按钮
-                addRenderableWidget(Button.builder(Component.translatable("gui.back"), button -> Minecraft.getInstance().setScreen(lastScreen)).size(buttonWidth,buttonHeight).pos(x,y).build());
-                y += buttonBound;
-            }
             tooltips = new ArrayList<>();
             for (NekoScreenBuilder.WidgetFactory widget : this.builder.getWidgets()) {
                 if (widget instanceof NekoScreenBuilder.ButtonFactory buttonFactory) {

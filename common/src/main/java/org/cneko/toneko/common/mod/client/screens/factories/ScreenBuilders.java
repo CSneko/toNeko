@@ -6,7 +6,7 @@ public class ScreenBuilders {
             .addTooltip(TooltipFactories.NAME_TOOLTIP)
             .addTooltip(TooltipFactories.MOE_TAGS_TOOLTIP);
     public static final NekoScreenBuilder COMMON_START = COMMON_TOOLTIP.clone()
-            .setStartY(10)
+            .setStartY(5)
             .addButton(ButtonFactories.BACK_BUTTON);
     public static final NekoScreenBuilder COMMON_INTERACTION_SCREEN = COMMON_START.clone()
             .addButton(ButtonFactories.CHAT_BUTTON)
