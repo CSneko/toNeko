@@ -17,8 +17,8 @@ public class NekoMateGoal extends Goal {
     private final NekoEntity nekoEntity;
     private double followSpeed;
     private double maxDistanceSq;
-    private INeko target;
-    private short mating = 0;
+    public INeko target;
+    public short mating = 0;
 
     public NekoMateGoal(NekoEntity nekoEntity, INeko target, double maxDistance, double followSpeed) {
         this.nekoEntity = nekoEntity;
