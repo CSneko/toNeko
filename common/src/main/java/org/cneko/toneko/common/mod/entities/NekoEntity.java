@@ -425,6 +425,9 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
             mate.getEntity().sendSystemMessage(Component.translatable("message.toneko.neko.mate.fail",this.getName(), mate.getEntity().getName()).withStyle(ChatFormatting.RED));
         }
     }
+    public void afterMate() {
+        this.nekoMateGoal.mating = 0;
+    }
     public boolean canMate(INeko other){
         return (other.getNeko().isNeko() || other.allowMateIfNotNeko()) && !this.hasEffect(MobEffects.WEAKNESS) && !other.getEntity().hasEffect(MobEffects.WEAKNESS);
     }
@@ -439,20 +442,20 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         // 增加等级
         this.getNeko().addLevel(0.1);
         mate.getNeko().addLevel(0.1);
-        this.spawnChildFromBreeding(level, mate);
+        NekoEntity baby = this.spawnChildFromBreeding(level, mate);
         // 分别给予虚弱效果
         this.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 3000, 0));
         mate.getEntity().addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 3000, 0));
     }
-    public void spawnChildFromBreeding(ServerLevel level, INeko mate) {
+    public NekoEntity spawnChildFromBreeding(ServerLevel level, INeko mate) {
         NekoEntity child = this.getBreedOffspring(level, mate);
         if (child != null) {
             child.setBaby(true);
             child.moveTo(this.getX(), this.getY(), this.getZ(), 0.0F, 0.0F);
             this.finalizeSpawnChildFromBreeding(level, mate, child);
             level.addFreshEntityWithPassengers(child);
-
         }
+        return child;
     }
     public void finalizeSpawnChildFromBreeding(ServerLevel level, INeko mate, NekoEntity child) {
         level.broadcastEntityEvent(this, (byte)18);

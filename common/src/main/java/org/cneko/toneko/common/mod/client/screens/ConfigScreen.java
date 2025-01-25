@@ -29,6 +29,11 @@ public class ConfigScreen extends Screen {
         this.lastScreen = lastScreen;
     }
 
+    public ConfigScreen() {
+        this(null);
+    }
+
+
     @Override
     public void init() {
         super.init();

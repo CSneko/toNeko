@@ -10,12 +10,14 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterNamedRenderTypesEvent;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import org.cneko.toneko.common.mod.client.ToNekoKeyBindings;
 import org.cneko.toneko.common.mod.client.events.ClientNetworkEvents;
 import org.cneko.toneko.common.mod.client.events.ClientPlayerJoinEvent;
 import org.cneko.toneko.common.mod.client.events.ClientTickEvent;
 import org.cneko.toneko.common.mod.client.renderers.GhostNekoRenderer;
 import org.cneko.toneko.common.mod.client.renderers.NekoRenderer;
+import org.cneko.toneko.common.mod.client.screens.ConfigScreen;
 import org.cneko.toneko.neoforge.entities.ToNekoEntities;
 import org.cneko.toneko.neoforge.items.ToNekoBlocks;
 
@@ -32,6 +34,7 @@ public class ToNekoNeoForgeClient {
         ClientPlayerJoinEvent.init();
         ClientTickEvent.init();
         ToNekoKeyBindings.init();
+        container.registerExtensionPoint(IConfigScreenFactory.class, (a,b)->new ConfigScreen());
 
         org.cneko.toneko.common.mod.client.ToNekoClient.init();
     }

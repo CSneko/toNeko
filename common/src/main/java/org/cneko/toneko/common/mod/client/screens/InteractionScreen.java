@@ -18,10 +18,10 @@ import java.util.Objects;
 
 public class InteractionScreen extends Screen implements INekoScreen{
     private NekoScreenBuilder builder;
+    private List<TooltipWidget> tooltips;
     public Screen lastScreen;
     private final NekoEntity neko;
     protected int startY = 0;
-    private List<TooltipWidget> tooltips;
     public InteractionScreen(Component title, NekoEntity neko, @Nullable Screen lastScreen) {
         super(title);
         this.lastScreen = lastScreen;
@@ -75,7 +75,7 @@ public class InteractionScreen extends Screen implements INekoScreen{
                     y += buttonBound;
                 }
                 if (widget instanceof NekoScreenBuilder.TooltipFactory tooltipFactory) {
-                    tooltips.add(new TooltipWidget(x,y,tooltipFactory.build(this)));
+                    tooltips.add(new TooltipWidget(x,y,tooltipFactory));
                     y += tooltipBound;
                 }
             }
@@ -87,9 +87,9 @@ public class InteractionScreen extends Screen implements INekoScreen{
     public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
         try {
-            if (tooltips != null){
+            if (tooltips != null) {
                 for (TooltipWidget tooltip : tooltips) {
-                    guiGraphics.renderTooltip(this.font, tooltip.tooltip(), tooltip.x(), tooltip.y());
+                    guiGraphics.renderTooltip(this.font, tooltip.tooltip().build(this), tooltip.x(), tooltip.y());
                 }
             }
         }catch (Exception ignored){}
@@ -112,6 +112,6 @@ public class InteractionScreen extends Screen implements INekoScreen{
         Minecraft.getInstance().setScreen(lastScreen);
     }
 
-    public record TooltipWidget(int x,int y,Component tooltip){}
+    public record TooltipWidget(int x, int y, NekoScreenBuilder.TooltipFactory tooltip){}
 
 }

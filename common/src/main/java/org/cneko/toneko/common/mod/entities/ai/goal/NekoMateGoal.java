@@ -68,6 +68,7 @@ public class NekoMateGoal extends Goal {
             );
         }
         this.stop();
+        nekoEntity.afterMate();
     }
 
 
