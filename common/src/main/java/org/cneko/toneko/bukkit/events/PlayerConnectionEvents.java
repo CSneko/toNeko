@@ -38,7 +38,6 @@ public class PlayerConnectionEvents implements Listener {
             NekoStatus.removePrefix(player);
         }
         // 保存猫娘数据
-        neko.save();
-        NekoQuery.NekoData.removeNeko(player.getUniqueId());
+        NekoQuery.NekoData.saveAndRemoveNeko(player.getUniqueId());
     }
 }

@@ -21,7 +21,11 @@ import static org.cneko.toneko.common.Bootstrap.LOGGER;
 public class AIUtil {
     public static final String API_URL = "https://chat.ai.cneko.org";
     public static final String PAST_MESSAGE_PATH = "ctlib/toneko/AI/";
-    private static final ExecutorService executor = Executors.newFixedThreadPool(100);
+    private static final ExecutorService executor = Executors.newFixedThreadPool(100, r -> {
+        Thread thread = new Thread(r);
+        thread.setDaemon(true); // 将线程设为守护线程
+        return thread;
+    });
     private static final int MAX_MESSAGE_COUNT = 30;
 
     public static void init(){

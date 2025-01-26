@@ -87,6 +87,7 @@ public class ToNekoAdminCommand {
 
         NekoQuery.NekoData.saveAllAsync(() -> {
             // NekoQuery.NekoData.loadAll(); // 这...这，大可不必
+            NekoQuery.NekoData.removeAll();
             long elapsedTime = (System.currentTimeMillis() - startTime) / 1000; // 计算耗时（秒）
             context.getSource().sendSystemMessage(translatable("command.tonekoadmin.reload.data", elapsedTime)); // 将耗时传递给方法
         });

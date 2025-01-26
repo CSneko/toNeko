@@ -89,14 +89,16 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     private final AnimatableInstanceCache cache;
     private boolean isSitting = false;
     final NekoInventory inventory = new NekoInventory(this);
+    private short slowTimer = 20;
+    private NekoQuery.Neko neko;
 
     public static final EntityDataAccessor<String> SKIN_DATA_ID = SynchedEntityData.defineId(NekoEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<String> MOE_TAGS_ID = SynchedEntityData.defineId(NekoEntity.class, EntityDataSerializers.STRING);
 
     public NekoEntity(EntityType<? extends NekoEntity> entityType, Level level) {
         super(entityType, level);
+        neko = NekoQuery.getNeko(this.getUUID());
         if (!this.level().isClientSide()){
-            NekoQuery.Neko neko = this.getNeko();
             neko.setNeko(true);
             randomize();
         }
@@ -178,7 +180,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     }
 
     public NekoQuery.Neko getNeko() {
-        return NekoQuery.getNeko(this.getUUID());
+        return this.neko;
     }
 
     public void followOwner(Player followingOwner,double maxDistance, double followSpeed) {
@@ -361,15 +363,33 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         if (world instanceof ServerLevel serverLevel) {
             this.dropAllDeathLoot(serverLevel, damageSource);
             this.getInventory().dropAll();
+        }
+    }
+
+    @Override
+    public void remove(@NotNull RemovalReason reason) {
+        super.remove(reason);
+        if (reason.shouldDestroy()){
             // 清理掉猫猫的数据
             this.getNeko().delete();
+        }else {
+            // 暂时移除掉数据
+            NekoQuery.NekoData.saveAndRemoveNeko(this.getUUID());
         }
+
     }
 
     @Override
     public void baseTick() {
         super.baseTick();
         // 啊不要学我
+        slowTimer++;
+        if (slowTimer >= 20){
+            slowTimer = 0;
+            slowTick();
+        }
+    }
+    public void slowTick(){
         if (!this.level().isClientSide()){
             this.setMoeTags(this.getMoeTags());
             this.setSkin(this.getSkin());

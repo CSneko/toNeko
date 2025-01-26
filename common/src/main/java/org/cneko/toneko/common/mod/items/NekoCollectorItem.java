@@ -60,7 +60,6 @@ public class NekoCollectorItem extends Item {
         }else {
             stack.set(ToNekoComponents.NEKO_PROGRESS_COMPONENT, new CountCodecs.FloatCountCodec(count, maxCount));
         }
-        entity.clearFire();
 
 
     }

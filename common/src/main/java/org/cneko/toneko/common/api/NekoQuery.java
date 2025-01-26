@@ -419,7 +419,12 @@ public class NekoQuery {
      * 存储了猫娘临时数据的类，大部分情况下都不许动它，知道吗
      */
     public static class NekoData {
-        private static final ExecutorService executor = Executors.newFixedThreadPool(4);
+        private static final ExecutorService executor = Executors.newFixedThreadPool(4, r -> {
+            Thread thread = new Thread(r);
+            thread.setDaemon(true); // 将线程设为守护线程
+            return thread;
+        });
+
         public static List<Neko> nekoList = new ArrayList<>();
 
         /**
@@ -446,6 +451,11 @@ public class NekoQuery {
          */
         public static void removeNeko(UUID uuid){
             nekoList.remove(getNeko(uuid));
+        }
+        public static void saveAndRemoveNeko(UUID uuid){
+            Neko neko = getNeko(uuid);
+            removeNeko(uuid);
+            neko.save();
         }
 
         /**
@@ -476,6 +486,10 @@ public class NekoQuery {
             });
         }
 
+        public static void removeAll(){
+            nekoList.clear();
+        }
+
         /**
          * 清除所有猫娘数据并重新加载
          */
@@ -490,6 +504,27 @@ public class NekoQuery {
                 }
             });
         }
+
+        public static void startAsyncAutoSave(){
+            // 当jvm关闭时关闭任务
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                executor.shutdownNow();
+                saveAll();
+                LOGGER.info("Stopped async auto save");
+            }));
+            executor.submit(() -> {
+                while (true){
+                    try {
+                        Thread.sleep(1000 * 60 * 30);
+                        saveAll();
+                        LOGGER.info("Saved all neko data");
+                    }catch (Exception e){
+                        LOGGER.error("Failed to save neko data", e);
+                    }
+                }
+            });
+        }
+
 
     }
 }

@@ -13,11 +13,11 @@ public class CommonPlayerTickEvent {
     public static void startTick(MinecraftServer server) {
         TickTasks.executeDefault();
         // 强行设置玩家的动作
-        poseMap.forEach((player, pose) -> {
-            if (player == null){
-                return;
-            }
-            player.setPose(pose);
-        });
+//        poseMap.forEach((player, pose) -> {
+//            if (player == null){
+//                return;
+//            }
+//            player.setPose(pose);
+//        });
     }
 }

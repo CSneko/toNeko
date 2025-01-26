@@ -1,5 +1,6 @@
 package org.cneko.toneko.common;
 import org.cneko.ctlib.common.file.JsonConfiguration;
+import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.quirks.Quirks;
 import org.cneko.toneko.common.util.AIUtil;
 import org.cneko.toneko.common.util.ConfigUtil;
@@ -67,5 +68,6 @@ public class Bootstrap {
 //                LOGGER.error("Failed to create skin file");
 //            }
 //        }
+        NekoQuery.NekoData.startAsyncAutoSave();
     }
 }

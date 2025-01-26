@@ -24,7 +24,7 @@ public class NekoScreenRegistry {
     public static void init(){
         register(ADVENTURER_NEKO_ID, ScreenBuilders.COMMON_INTERACTION_SCREEN);
         register(CRYSTAL_NEKO_ID, ScreenBuilders.CRYSTAL_NEKO_INTERACTION_SCREEN);
-        register(GHOST_NEKO_ID, ScreenBuilders.CRYSTAL_NEKO_BASE_INTERACTION_SCREEN);
+        register(GHOST_NEKO_ID, ScreenBuilders.COMMON_INTERACTION_SCREEN);
     }
 
 }
