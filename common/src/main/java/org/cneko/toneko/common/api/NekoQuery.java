@@ -442,6 +442,14 @@ public class NekoQuery {
             nekoList.add(neko);
             return neko;
         }
+        // 内存中的猫娘数量
+        public static int getNekoCount(){
+            return nekoList.size();
+        }
+        // 所有猫娘数量
+        public static int getAllNekoCount() {
+            return FileUtil.getFiles(DATA_PATH).size();
+        }
 
         /**
          * 移除猫娘
@@ -522,7 +530,6 @@ public class NekoQuery {
                 }
             });
         }
-
 
     }
 }

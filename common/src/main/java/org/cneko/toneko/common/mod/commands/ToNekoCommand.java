@@ -111,7 +111,7 @@ public class ToNekoCommand {
             String nekoName = context.getArgument("neko", String.class);
             NekoQuery.Neko neko = NekoQuery.getNeko(PlayerUtil.getPlayerByName(nekoName).getUUID());
             if (!neko.hasOwner(player.getUUID())) {
-                player.sendSystemMessage(translatable("messages.toneko.notOwner"));
+                player.sendSystemMessage(translatable("messages.toneko.notOwner", nekoName));
                 return 1;
             }
             neko.removeOwner(player.getUUID());

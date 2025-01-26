@@ -37,6 +37,18 @@ public class ToNekoAdminCommand {
                             .then(literal("data")
                                     .executes(ToNekoAdminCommand::reloadData)
                             )
+                            .then(literal("config")
+                                    .executes(ToNekoAdminCommand::reloadConfig)
+                            )
+                   )
+                   .then(literal("data")
+                           .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_TONEKOADMIN_DATA))
+                           .then(literal("loadedCount")
+                                   .executes(ToNekoAdminCommand::dataLoadedCount)
+                           )
+                           .then(literal("allCount")
+                                   .executes(ToNekoAdminCommand::dataAllCount)
+                           )
                    )
 //                    .then(literal("skin")
 //                            .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_TONEKOADMIN_SKIN))
@@ -61,6 +73,17 @@ public class ToNekoAdminCommand {
             );
         });
     }
+
+    public static int dataAllCount(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSystemMessage(translatable("command.tonekoadmin.data.all_count", NekoQuery.NekoData.getAllNekoCount()));
+        return 1;
+    }
+
+    public static int dataLoadedCount(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSystemMessage(translatable("command.tonekoadmin.data.loaded_count", NekoQuery.NekoData.getNekoCount()));
+        return 1;
+    }
+
 
     public static int skinAdd(CommandContext<CommandSourceStack> context) {
         String skin = StringArgumentType.getString(context, "skin");
@@ -93,20 +116,24 @@ public class ToNekoAdminCommand {
         });
         return 1;
     }
+    private static int reloadConfig(CommandContext<CommandSourceStack> context) {
+        // 重新加载配置文件和语言文件
+        ConfigUtil.load();
+        LanguageUtil.load();
+        context.getSource().sendSystemMessage(translatable("command.tonekoadmin.reload"));
+        return 1;
+    }
+    public static int reload(CommandContext<CommandSourceStack> context) {
+        reloadConfig(context);
+        reloadData(context);
+        return 1;
+    }
 
     public static int help(CommandContext<CommandSourceStack> context) {
         context.getSource().sendSystemMessage(translatable("command.tonekoadmin.help"));
         return 1;
     }
 
-    public static int reload(CommandContext<CommandSourceStack> context) {
-        // 重新加载配置文件和语言文件
-        ConfigUtil.load();
-        LanguageUtil.load();
-        reloadData(context);
-        context.getSource().sendSystemMessage(translatable("command.tonekoadmin.reload"));
-        return 1;
-    }
 
     public static int set(CommandContext<CommandSourceStack> context) {
         CommandSourceStack source = context.getSource();
