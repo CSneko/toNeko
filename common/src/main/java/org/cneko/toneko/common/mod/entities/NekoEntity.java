@@ -90,15 +90,14 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     private boolean isSitting = false;
     final NekoInventory inventory = new NekoInventory(this);
     private short slowTimer = 20;
-    private NekoQuery.Neko neko;
 
     public static final EntityDataAccessor<String> SKIN_DATA_ID = SynchedEntityData.defineId(NekoEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<String> MOE_TAGS_ID = SynchedEntityData.defineId(NekoEntity.class, EntityDataSerializers.STRING);
 
     public NekoEntity(EntityType<? extends NekoEntity> entityType, Level level) {
         super(entityType, level);
-        neko = NekoQuery.getNeko(this.getUUID());
         if (!this.level().isClientSide()){
+            NekoQuery.Neko neko = this.getNeko();
             neko.setNeko(true);
             randomize();
         }
@@ -180,7 +179,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     }
 
     public NekoQuery.Neko getNeko() {
-        return this.neko;
+        return NekoQuery.getNeko(this.getUUID());
     }
 
     public void followOwner(Player followingOwner,double maxDistance, double followSpeed) {
