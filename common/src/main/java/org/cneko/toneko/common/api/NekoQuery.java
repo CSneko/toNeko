@@ -9,9 +9,7 @@ import org.cneko.toneko.common.util.FileUtil;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -425,7 +423,7 @@ public class NekoQuery {
             return thread;
         });
 
-        public static List<Neko> nekoList = new ArrayList<>();
+        public static Set<Neko> nekoList = new HashSet<>();
 
         /**
          * 获取猫娘
