@@ -31,6 +31,8 @@ public class PermissionUtil {
     public static void registerAll(){
         register(COMMAND_TONEKOADMIN_SET);
         register(COMMAND_TONEKOADMIN_RELOAD);
+        register(COMMAND_TONEKOADMIN_HELP);
+        register(COMMAND_TONEKOADMIN_DATA);
         register(COMMAND_TONEKO_PLAYER);
         register(COMMAND_TONEKO_ALIAS);
         register(COMMAND_TONEKO_BLOCK);
@@ -40,7 +42,15 @@ public class PermissionUtil {
         register(COMMAND_NEKO_SPEED);
         register(COMMAND_NEKO_VISION);
         register(COMMAND_NEKO_JUMP);
+        register(COMMAND_NEKO_LEVEL);
+        register(COMMAND_NEKO_LORE);
+        register(COMMAND_NEKO_GET_DOWN);
+        register(COMMAND_NEKO_LIE);
+        register(COMMAND_NEKO_NICKNAME);
         register(COMMAND_QUIRK);
+        register(COMMAND_QUIRK_ADD);
+        register(COMMAND_QUIRK_GUI);
+        register(COMMAND_QUIRK_LIST);
         register(COMMAND_QUIRK_HELP);
     }
     // 是否拥有权限

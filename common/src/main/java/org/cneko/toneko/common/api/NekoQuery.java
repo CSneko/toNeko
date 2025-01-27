@@ -15,6 +15,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static org.cneko.toneko.common.Bootstrap.*;
@@ -418,8 +419,8 @@ public class NekoQuery {
      * 存储了猫娘临时数据的类，大部分情况下都不许动它，知道吗
      */
     public static class NekoData {
-        private static final ExecutorService executor = Executors.newFixedThreadPool(
-                Runtime.getRuntime().availableProcessors(),
+        public static final ExecutorService executor = Executors.newFixedThreadPool(
+                1000,
                 r -> {
                     Thread thread = new Thread(r);
                     thread.setDaemon(true); // 守护线程
@@ -459,7 +460,7 @@ public class NekoQuery {
                 try {
                     return new Neko(file);
                 } catch (Exception e) {
-                    LOGGER.error("Failed to load neko data for UUID: " + uuid, e);
+                    LOGGER.error("Failed to load neko data for UUID: {}", uuid, e);
                 }
             }
             return null;
@@ -471,6 +472,17 @@ public class NekoQuery {
 
         public static int getAllNekoCount() {
             return FileUtil.getFiles(DATA_PATH).size();
+        }
+        public static void asyncGetAllNekoCount(AsyncIntCallback callback) {
+            executor.submit(() -> {
+                int count = getAllNekoCount();
+                callback.apply(count);
+            });
+        }
+
+        @FunctionalInterface
+        public interface AsyncIntCallback {
+            void apply(int count);
         }
 
         public static void removeNeko(UUID uuid) {
@@ -490,6 +502,27 @@ public class NekoQuery {
                 executor.submit(() -> FileUtil.DeleteFile(neko.getProfilePath()));
             }
         }
+        public static int deleteIf(Predicate<Neko> predicate) {
+            // 删除计数器
+            AtomicInteger deleteCount = new AtomicInteger(0);
+
+            // 扫描文件夹
+            FileUtil.getFiles(PLAYER_DATA_PATH).forEach(file -> {
+                try {
+                    Neko neko = new Neko(file);
+                    if (predicate.test(neko)) {
+                        FileUtil.DeleteFile(file.getPath());
+                        deleteCount.incrementAndGet(); // 增加删除计数
+                    }
+                } catch (Exception e) {
+                    LOGGER.error("Failed to load neko data from file: {}", file, e);
+                }
+            });
+
+            // 返回删除的数量
+            return deleteCount.get();
+        }
+
 
         public static void saveAll() {
             nekoMap.values().forEach(Neko::save);
@@ -513,7 +546,7 @@ public class NekoQuery {
                     Neko neko = new Neko(file);
                     nekoMap.put(neko.getUuid(), neko);
                 } catch (Exception e) {
-                    LOGGER.error("Failed to load neko data from file: " + file, e);
+                    LOGGER.error("Failed to load neko data from file: {}", file, e);
                 }
             });
         }
@@ -529,6 +562,7 @@ public class NekoQuery {
                     while (!Thread.currentThread().isInterrupted()) {
                         Thread.sleep(1000 * 60 * 30);
                         saveAll();
+                        removeAll();
                         LOGGER.info("Saved all neko data");
                     }
                 } catch (InterruptedException e) {

@@ -88,6 +88,7 @@
   "command.tonekoadmin.skin.remove": "§aSuccessfully deleted %s §a skins meow",
   "command.tonekoadmin.data.loaded_count": "§aThe amount of neko data currently loaded: %s",
   "command.tonekoadmin.data.all_count": "§aThe total amount of neko data: %s",
+  "command.tonekoadmin.data.delete_rubbish": "§aSuccessfully deleted %s pieces of rubbish data, took %s seconds~",
   "command.tonekoadmin.help": "§b/tonekoadmin help:\n§a/tonekoadmin help §bget help\n§a/tonekoadmin set <player> §bSet player to neko or unset\n§a/tonekoadmin reload §bReload the config and language\n§a/tonekoadmin data §bAbout data",
   "command.neko.help": "§b/neko getHelp(These commands only for neko):\n§a/neko jump §bJump higher!\n§a/neko vision §bDo you want to see clearly as a neko at night?\n§a/neko speed §bToo quickly(>_<)\n§a/neko lie §bLie down and rest for a while\n§a/neko nickname <nickname> §bSet a cute nickname\n§a/neko level §bShow your neko level\n§a/neko lore <lore> §bSet a cute lore for your item in hand.",
   "command.neko.not_neko": "§cYou are not a neko",

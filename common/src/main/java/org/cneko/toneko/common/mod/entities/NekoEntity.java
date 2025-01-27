@@ -368,7 +368,6 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         if (world instanceof ServerLevel serverLevel) {
             this.dropAllDeathLoot(serverLevel, damageSource);
             this.getInventory().dropAll();
-
         }
     }
 

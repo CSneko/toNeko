@@ -5,13 +5,17 @@ import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.commands.CommandSourceStack;
 import org.cneko.toneko.common.api.NekoQuery;
-import org.cneko.toneko.common.api.NekoSkin;
 import org.cneko.toneko.common.api.Permissions;
+import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.common.util.LanguageUtil;
 import org.cneko.toneko.common.mod.util.PermissionUtil;
 import org.cneko.toneko.common.mod.util.PlayerUtil;
 
+import java.io.File;
+import java.util.*;
+
+import static com.mojang.text2speech.Narrator.LOGGER;
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
 import static org.cneko.toneko.common.mod.util.CommandUtil.getOnlinePlayers;
@@ -49,23 +53,10 @@ public class ToNekoAdminCommand {
                            .then(literal("allCount")
                                    .executes(ToNekoAdminCommand::dataAllCount)
                            )
+                           .then(literal("deleteRubbish")
+                                   .executes(ToNekoAdminCommand::dataDeleteRubbish)
+                           )
                    )
-//                    .then(literal("skin")
-//                            .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_TONEKOADMIN_SKIN))
-//                            .then(literal("list")
-//                                    .executes(ToNekoAdminCommand::skinList)
-//                            )
-//                            .then(literal("add")
-//                                    .then(argument("skin", StringArgumentType.string())
-//                                            .executes(ToNekoAdminCommand::skinAdd)
-//                                    )
-//                            )
-//                            .then(literal("remove")
-//                                    .then(argument("skin", StringArgumentType.string())
-//                                            .executes(ToNekoAdminCommand::skinRemove)
-//                                    )
-//                            )
-//                    )
                     .then(literal("help")
                             .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_TONEKOADMIN_HELP))
                             .executes(ToNekoAdminCommand::help)
@@ -74,8 +65,33 @@ public class ToNekoAdminCommand {
         });
     }
 
+    public static int dataDeleteRubbish(CommandContext<CommandSourceStack> context) {
+        // 在异步进行
+        NekoQuery.NekoData.executor.submit(() -> {
+            // 记录时间
+            long startTime = System.currentTimeMillis();
+            // 扫描服务器内所有世界的实体数据（包括未生成的）并生成列表
+            Set<UUID> uuids = new HashSet<>();
+            context.getSource().getServer().getAllLevels().forEach(level -> {
+                level.getAllEntities().forEach(entity -> {
+                    if (entity instanceof INeko neko) {
+                        uuids.add(neko.getEntity().getUUID());
+                    }
+                });
+            });
+            uuids.addAll(PlayerUtil.getPlayerUUIDs(context.getSource().getServer()));
+            // 删除符合条件的
+            int deletedCount = NekoQuery.NekoData.deleteIf(neko -> !uuids.contains(neko.uuid));
+            // 计算时间（秒）
+            long elapsedTime = (System.currentTimeMillis() - startTime) / 1000;
+            context.getSource().sendSystemMessage(translatable("command.tonekoadmin.data.delete_rubbish", deletedCount, elapsedTime));
+        });
+        return 1;
+    }
+
+
     public static int dataAllCount(CommandContext<CommandSourceStack> context) {
-        context.getSource().sendSystemMessage(translatable("command.tonekoadmin.data.all_count", NekoQuery.NekoData.getAllNekoCount()));
+        NekoQuery.NekoData.asyncGetAllNekoCount(count -> context.getSource().sendSystemMessage(translatable("command.tonekoadmin.data.all_count", count)));
         return 1;
     }
 
@@ -84,26 +100,6 @@ public class ToNekoAdminCommand {
         return 1;
     }
 
-
-    public static int skinAdd(CommandContext<CommandSourceStack> context) {
-        String skin = StringArgumentType.getString(context, "skin");
-        NekoSkin.addSkin(skin);
-        context.getSource().sendSystemMessage(translatable("command.tonekoadmin.skin.add", skin));
-        return 1;
-    }
-
-    public static int skinRemove(CommandContext<CommandSourceStack> context) {
-        String skin = StringArgumentType.getString(context, "skin");
-        NekoSkin.removeSkin(skin);
-        context.getSource().sendSystemMessage(translatable("command.tonekoadmin.skin.remove", skin));
-        return 1;
-    }
-
-    public static int skinList(CommandContext<CommandSourceStack> context) {
-        String skins = NekoSkin.getSkins().stream().reduce((a, b) -> a + "\n" + b).toString();
-        context.getSource().sendSystemMessage(translatable("command.tonekoadmin.skin.list", skins));
-        return 1;
-    }
 
     public static int reloadData(CommandContext<CommandSourceStack> context) {
         long startTime = System.currentTimeMillis(); // 记录开始时间

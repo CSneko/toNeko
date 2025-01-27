@@ -15,6 +15,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import static org.cneko.toneko.common.Bootstrap.LOGGER;
 
@@ -27,12 +29,13 @@ public class AIUtil {
         return thread;
     });
     private static final int MAX_MESSAGE_COUNT = 30;
+    private static final int REQUEST_TIMEOUT = 60;
 
     public static void init(){
         FileUtil.CreatePath(PAST_MESSAGE_PATH);
     }
     public static void sendMessage(UUID uuid,UUID userUuid, String prompt, String message, MessageCallback callback){
-        executor.submit(()->{
+        var future = executor.submit(()->{
             try{
                 FileUtil.CreatePath(PAST_MESSAGE_PATH + uuid + "/");
                 String pastMessagePath = PAST_MESSAGE_PATH + uuid + "/" +userUuid + ".json";
@@ -84,6 +87,17 @@ public class AIUtil {
                 }
             }catch (Exception e){
                 LOGGER.error("Failed to send message", e);
+            }
+        });
+        // 设置超时机制
+        executor.submit(() -> {
+            try {
+                future.get(REQUEST_TIMEOUT, TimeUnit.SECONDS);
+            } catch (TimeoutException e) {
+                future.cancel(true); // 超时后取消任务
+                LOGGER.warn("Message sending task timed out and was cancelled.");
+            } catch (Exception e) {
+                LOGGER.error("Unexpected error during message sending task.", e);
             }
         });
     }

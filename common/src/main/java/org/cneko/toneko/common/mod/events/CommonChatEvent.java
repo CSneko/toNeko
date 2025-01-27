@@ -17,6 +17,7 @@ import org.cneko.toneko.common.api.Messaging;
 import java.util.List;
 import java.util.UUID;
 
+import static org.cneko.toneko.common.Bootstrap.LOGGER;
 import static org.cneko.toneko.common.util.LanguageUtil.translatable;
 
 public class CommonChatEvent {
@@ -41,6 +42,8 @@ public class CommonChatEvent {
         for (Player player : PlayerUtil.getPlayerList()){
             player.sendSystemMessage(message);
         }
+        // 输出到控制台（并清除格式化代码）
+        LOGGER.info(message.getString().replaceAll("§[0-9a-fk-or]",""));
     }
 
 
