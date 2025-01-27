@@ -62,6 +62,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.cneko.toneko.common.mod.util.TextUtil.randomTranslatabledComponent;
+import static org.cneko.toneko.common.Bootstrap.LOGGER;
 
 public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko {
     public static double DEFAULT_FIND_RANGE = 16.0D;
@@ -179,7 +180,12 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     }
 
     public NekoQuery.Neko getNeko() {
-        return NekoQuery.getNeko(this.getUUID());
+        if (this.isAlive()) {
+            return NekoQuery.getNeko(this.getUUID());
+        }else {
+            // 返回默认值
+            return NekoQuery.NekoData.getNeko(NekoQuery.NekoData.EMPTY_UUID);
+        }
     }
 
     public void followOwner(Player followingOwner,double maxDistance, double followSpeed) {
@@ -362,21 +368,33 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         if (world instanceof ServerLevel serverLevel) {
             this.dropAllDeathLoot(serverLevel, damageSource);
             this.getInventory().dropAll();
+
         }
     }
 
     @Override
     public void remove(@NotNull RemovalReason reason) {
         super.remove(reason);
-        if (reason.shouldDestroy()){
-            // 清理掉猫猫的数据
-            this.getNeko().delete();
-        }else {
-            // 暂时移除掉数据
-            NekoQuery.NekoData.saveAndRemoveNeko(this.getUUID());
+
+        // 获取猫猫对象
+        NekoQuery.Neko neko = this.getNeko();
+        if (neko == null) {
+            LOGGER.warn("Neko instance is null for UUID: " + this.getUUID());
+            return;
         }
 
+        if (reason.shouldDestroy()) {
+            // 需要销毁数据
+            NekoQuery.NekoData.deleteNeko(this.getUUID());
+        } else if (reason.shouldSave()) {
+            // 需要保存数据
+            NekoQuery.NekoData.saveAndRemoveNeko(this.getUUID());
+        } else {
+            // 既不需要销毁也不需要保存
+            NekoQuery.NekoData.deleteNeko(this.getUUID());
+        }
     }
+
 
     @Override
     public void baseTick() {

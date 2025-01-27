@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -417,119 +418,126 @@ public class NekoQuery {
      * 存储了猫娘临时数据的类，大部分情况下都不许动它，知道吗
      */
     public static class NekoData {
-        private static final ExecutorService executor = Executors.newFixedThreadPool(4, r -> {
-            Thread thread = new Thread(r);
-            thread.setDaemon(true); // 将线程设为守护线程
-            return thread;
-        });
+        private static final ExecutorService executor = Executors.newFixedThreadPool(
+                Runtime.getRuntime().availableProcessors(),
+                r -> {
+                    Thread thread = new Thread(r);
+                    thread.setDaemon(true); // 守护线程
+                    return thread;
+                }
+        );
 
-        public static Set<Neko> nekoList = new HashSet<>();
+        // 改用线程安全的Map
+        private static final Map<UUID, Neko> nekoMap = new ConcurrentHashMap<>();
+
+        public static final UUID EMPTY_UUID = UUID.fromString("00000000-0000-0000-0000-000000000000");
 
         /**
          * 获取猫娘
          * @param uuid 猫娘uuid
          * @return 猫娘数据
          */
-        public static Neko getNeko(UUID uuid){
-            // 如果猫娘列表中有这个猫娘，就返回它
-            for (Neko neko : nekoList){
-                if(neko.getUuid().equals(uuid)){
-                    return neko;
+        public static Neko getNeko(UUID uuid) {
+            // 优先从内存加载
+            return nekoMap.computeIfAbsent(uuid, id -> {
+                Neko neko = loadFromFile(uuid); // 从磁盘加载
+                if (neko == null) {
+                    neko = new Neko(uuid); // 如果不存在，创建新对象
+                }
+                return neko;
+            });
+        }
+
+        /**
+         * 从文件加载猫娘数据
+         * @param uuid 猫娘uuid
+         * @return 猫娘数据
+         */
+        private static Neko loadFromFile(UUID uuid) {
+            File file = new File(DATA_PATH, uuid.toString() + ".json");
+            if (file.exists()) {
+                try {
+                    return new Neko(file);
+                } catch (Exception e) {
+                    LOGGER.error("Failed to load neko data for UUID: " + uuid, e);
                 }
             }
-            // 如果没有，就创建一个
-            Neko neko = new Neko(uuid);
-            nekoList.add(neko);
-            return neko;
+            return null;
         }
-        // 内存中的猫娘数量
-        public static int getNekoCount(){
-            return nekoList.size();
+
+        public static int getNekoCount() {
+            return nekoMap.size();
         }
-        // 所有猫娘数量
+
         public static int getAllNekoCount() {
             return FileUtil.getFiles(DATA_PATH).size();
         }
 
-        /**
-         * 移除猫娘
-         * @param uuid 猫娘uuid
-         */
-        public static void removeNeko(UUID uuid){
-            nekoList.remove(getNeko(uuid));
-        }
-        public static void saveAndRemoveNeko(UUID uuid){
-            Neko neko = getNeko(uuid);
-            removeNeko(uuid);
-            neko.save();
+        public static void removeNeko(UUID uuid) {
+            nekoMap.remove(uuid);
         }
 
-        /**
-         * 删除猫娘
-         * @param uuid 猫娘uuid
-         */
-        public static void deleteNeko(UUID uuid){
-            Neko neko = getNeko(uuid);
-            nekoList.remove(neko);
-            FileUtil.DeleteFile(neko.getProfilePath());
+        public static void saveAndRemoveNeko(UUID uuid) {
+            Neko neko = nekoMap.remove(uuid);
+            if (neko != null) {
+                executor.submit(neko::save);
+            }
         }
 
-        /**
-         * 保存所有猫娘数据
-         */
-        public static void saveAll(){
-            nekoList.forEach(Neko::save);
+        public static void deleteNeko(UUID uuid) {
+            Neko neko = nekoMap.remove(uuid);
+            if (neko != null) {
+                executor.submit(() -> FileUtil.DeleteFile(neko.getProfilePath()));
+            }
         }
 
-        /**
-         * 异步保存所有猫娘数据
-         * @param callback 回调
-         */
-        public static void saveAllAsync(Runnable callback){
+        public static void saveAll() {
+            nekoMap.values().forEach(Neko::save);
+        }
+
+        public static void saveAllAsync(Runnable callback) {
             executor.submit(() -> {
                 saveAll();
                 callback.run();
             });
         }
 
-        public static void removeAll(){
-            nekoList.clear();
+        public static void removeAll() {
+            nekoMap.clear();
         }
 
-        /**
-         * 清除所有猫娘数据并重新加载
-         */
-        public static void loadAll(){
-            nekoList.clear();
+        public static void loadAll() {
+            nekoMap.clear();
             FileUtil.getFiles(PLAYER_DATA_PATH).forEach(file -> {
                 try {
                     Neko neko = new Neko(file);
-                    nekoList.add(neko);
-                }catch (Exception e){
-                    LOGGER.error("Failed to load neko data", e);
+                    nekoMap.put(neko.getUuid(), neko);
+                } catch (Exception e) {
+                    LOGGER.error("Failed to load neko data from file: " + file, e);
                 }
             });
         }
 
-        public static void startAsyncAutoSave(){
-            // 当jvm关闭时关闭任务
+        public static void startAsyncAutoSave() {
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 executor.shutdownNow();
                 saveAll();
                 LOGGER.info("Stopped async auto save");
             }));
             executor.submit(() -> {
-                while (true){
-                    try {
+                try {
+                    while (!Thread.currentThread().isInterrupted()) {
                         Thread.sleep(1000 * 60 * 30);
                         saveAll();
                         LOGGER.info("Saved all neko data");
-                    }catch (Exception e){
-                        LOGGER.error("Failed to save neko data", e);
                     }
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                } catch (Exception e) {
+                    LOGGER.error("Failed to save neko data", e);
                 }
             });
         }
-
     }
+
 }
