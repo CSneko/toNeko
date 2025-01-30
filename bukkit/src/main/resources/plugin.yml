@@ -54,3 +54,11 @@ permissions:
       command.neko.vision: true
       command.neko.jump: true
       command.neko.speed: true
+  command.quirk:
+    default: true
+    children:
+      command.quirk.help: true
+      command.quirk.gui: true
+      command.quirk.add: true
+      command.quirk.remove: true
+      command.quirk.list: true
