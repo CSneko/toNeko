@@ -8,3 +8,4 @@ kill -9 $pid       # 60s后强制kill
 mkdir result
 cp -r fabric/build/libs/* result
 cp -r neoforge/build/libs/* result
+cp -r bukkit/build/libs/* result

@@ -1,7 +1,6 @@
 package org.cneko.toneko.bukkit.events;
 
 import org.bukkit.event.Listener;
-import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
 import org.cneko.toneko.bukkit.ToNeko;
 import org.cneko.toneko.common.api.NekoQuery;

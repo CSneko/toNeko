@@ -1,7 +1,10 @@
 package org.cneko.toneko.common.mod.client.events;
 
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
@@ -15,6 +18,7 @@ import org.cneko.toneko.common.mod.client.screens.InteractionScreen;
 import org.cneko.toneko.common.mod.client.screens.NekoScreenRegistry;
 import org.cneko.toneko.common.mod.client.util.ClientPlayerUtil;
 import org.cneko.toneko.common.mod.packets.PlayerLeadByPlayerPayload;
+import org.cneko.toneko.common.mod.packets.PluginDetectPayload;
 import org.cneko.toneko.common.mod.packets.interactives.NekoEntityInteractivePayload;
 import org.cneko.toneko.common.mod.client.screens.QuirkScreen;
 import org.cneko.toneko.common.mod.packets.EntityPosePayload;
@@ -23,6 +27,8 @@ import org.cneko.toneko.common.mod.entities.NekoEntity;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
+
+import static org.cneko.toneko.common.mod.util.ResourceLocationUtil.toNekoLoc;
 
 public class ClientNetworkEvents {
     public static void init(){

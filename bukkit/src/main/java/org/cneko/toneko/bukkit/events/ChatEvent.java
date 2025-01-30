@@ -6,14 +6,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.cneko.ctlib.common.file.JsonConfiguration;
-import org.cneko.toneko.bukkit.api.NekoStatus;
 import org.cneko.toneko.bukkit.util.PlaceHolderUtil;
 import org.cneko.toneko.common.Stats;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.api.json.NekoDataModel;
 import org.cneko.toneko.common.util.ConfigUtil;
-import org.cneko.toneko.common.util.LanguageUtil;
 import org.cneko.toneko.common.api.Messaging;
 
 import java.util.List;

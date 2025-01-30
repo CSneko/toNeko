@@ -37,15 +37,7 @@ subprojects {
             name = "Modrinth"
             url = "https://api.modrinth.com/maven"
         }
-        maven {
-            name = 'Spigot'
-            url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
-        }
-        maven { url = 'https://oss.sonatype.org/content/groups/public/' }
-        maven {
-            name = 'papermc'
-            url = 'https://repo.papermc.io/repository/maven-public/'
-        }
+        maven { url = uri("https://oss.sonatype.org/content/groups/public/") }
         maven {
             name = "TerraformersMC"
             url = "https://maven.terraformersmc.com/"

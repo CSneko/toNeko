@@ -47,10 +47,40 @@ public class ToNekoAdminCommand {
                                     .then(Commands.literal("data")
                                             .executes(ToNekoAdminCommand::reloadDataCommand)
                                     )
+                                    .then(Commands.literal("config")
+                                            .executes(ToNekoAdminCommand::reloadConfigCommand)
+                                    )
+                            )
+                            .then(Commands.literal("data")
+                                    .requires(s -> check(s, Permissions.COMMAND_TONEKOADMIN_DATA))
+                                    .then(Commands.literal("loadedCount")
+                                            .executes(ToNekoAdminCommand::dataLoadedCount)
+                                    )
+                                    .then(Commands.literal("allCount")
+                                            .executes(ToNekoAdminCommand::dataAllCount)
+                                    )
                             )
                             .build()
             );
         });
+    }
+
+    private static int dataAllCount(CommandContext<CommandSourceStack> context) {
+        NekoQuery.NekoData.asyncGetAllNekoCount(count -> sendTransTo((Player) context.getSource().getSender(), "command.tonekoadmin.data.all_count", count));
+        return 1;
+    }
+
+    private static int dataLoadedCount(CommandContext<CommandSourceStack> context) {
+        sendTransTo((Player) context.getSource().getSender(), "command.tonekoadmin.data.loaded_count", NekoQuery.NekoData.getNekoCount());
+        return 1;
+    }
+
+    public static int reloadConfigCommand(CommandContext<CommandSourceStack> context) {
+        // 重新加载配置文件和语言文件
+        ConfigUtil.load();
+        LanguageUtil.load();
+        sendTransTo((Player) context.getSource().getSender(), "command.tonekoadmin.reload");
+        return 1;
     }
 
     public static int reloadDataCommand(CommandContext<CommandSourceStack> context) {
@@ -63,16 +93,12 @@ public class ToNekoAdminCommand {
                     "command.tonekoadmin.reload.data",
                     elapsedTime); // 将耗时传递给方法
         });
-        // NekoQuery.NekoData.loadAll(); // 这...这，大可不必
         return 1;
     }
 
     public static int reloadCommand(CommandContext<CommandSourceStack> context) {
-        // 重新加载配置文件和语言文件
-        ConfigUtil.load();
-        LanguageUtil.load();
+        reloadConfigCommand(context);
         reloadDataCommand(context);
-        sendTransTo((Player) context.getSource().getSender(), "command.tonekoadmin.reload");
         return 1;
     }
 

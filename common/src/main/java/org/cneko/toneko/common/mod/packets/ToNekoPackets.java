@@ -20,5 +20,7 @@ public class ToNekoPackets {
         PayloadTypeRegistry.playC2S().register(MateWithCrystalNekoPayload.ID, MateWithCrystalNekoPayload.CODEC);
         PayloadTypeRegistry.playC2S().register(PlayerLeadByPlayerPayload.ID, PlayerLeadByPlayerPayload.CODEC);
         PayloadTypeRegistry.playS2C().register(PlayerLeadByPlayerPayload.ID, PlayerLeadByPlayerPayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(PluginDetectPayload.ID, PluginDetectPayload.CODEC);
+        PayloadTypeRegistry.playC2S().register(PluginDetectPayload.ID, PluginDetectPayload.CODEC);
     }
 }

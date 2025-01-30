@@ -10,9 +10,7 @@ import net.kyori.adventure.text.Component;
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -28,7 +26,6 @@ import java.util.List;
 
 import static org.cneko.toneko.bukkit.ToNeko.INSTANCE;
 import static org.cneko.toneko.bukkit.util.MsgUtil.sendTransTo;
-import static org.cneko.toneko.bukkit.util.PermissionChecker.check;
 import static org.cneko.toneko.bukkit.util.PermissionChecker.checkAndNeko;
 @SuppressWarnings("UnstableApiUsage")
 public class NekoCommand {
