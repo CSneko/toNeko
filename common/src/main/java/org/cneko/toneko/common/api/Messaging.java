@@ -1,5 +1,6 @@
 package org.cneko.toneko.common.api;
 
+import org.cneko.toneko.common.api.json.NekoDataModel;
 import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.common.util.LanguageUtil;
 import org.jetbrains.annotations.ApiStatus;
@@ -8,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+
+import static org.cneko.toneko.common.util.LanguageUtil.translatable;
 
 public class Messaging {
     @ApiStatus.Internal
@@ -60,6 +63,27 @@ public class Messaging {
             formatted.append("[§a").append(prefix).append("§f§r]");
         }
         return formatted.toString();
+    }
+
+    public static String nekoModify(String message, NekoQuery.Neko neko){
+        List<NekoDataModel.Owner> owners= neko.getOwners();
+
+        // 替换屏蔽词
+        for (NekoDataModel.BlockWord block : neko.getProfile().getBlockWords()){
+            if(block.getMethod() == NekoDataModel.BlockWord.Method.ALL && message.contains(block.getBlock())){
+                // 如果屏蔽词的类型为all，则直接替换为屏蔽词
+                message = block.getBlock();
+                break;
+            }
+            message = message.replace(block.getBlock(),block.getBlock());
+        }
+
+
+        //添加口癖
+        String phrase = LanguageUtil.phrase;
+        phrase = translatable(phrase);
+        message = Messaging.replacePhrase(message,phrase);
+        return message;
     }
 
     /*

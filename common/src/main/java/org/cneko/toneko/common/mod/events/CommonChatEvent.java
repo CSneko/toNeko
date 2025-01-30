@@ -8,6 +8,7 @@ import net.minecraft.world.entity.player.Player;
 import org.cneko.ctlib.common.file.JsonConfiguration;
 import org.cneko.toneko.common.Stats;
 import org.cneko.toneko.common.api.NekoQuery;
+import org.cneko.toneko.common.api.json.NekoDataModel;
 import org.cneko.toneko.common.mod.util.PlayerUtil;
 import org.cneko.toneko.common.mod.util.TextUtil;
 import org.cneko.toneko.common.util.ConfigUtil;
@@ -55,44 +56,25 @@ public class CommonChatEvent {
      */
     public static String modify(String message, NekoQuery.Neko neko){
         if(neko.isNeko()){
-            message = nekoModify(message, neko);
-        }
-        return message;
-    }
-    public static String nekoModify(String message, NekoQuery.Neko neko){
-        List<JsonConfiguration> owners= neko.getOwners();
-
-        // 替换屏蔽词
-        for (JsonConfiguration block : neko.getProfile().getJsonList("blockWords")){
-            if(block.getString("method").equalsIgnoreCase("all")){
-                // 如果屏蔽词的类型为all，则直接替换为屏蔽词
-                message = block.getString("replace");
-                break;
-            }
-            message = message.replace(block.getString("block"),block.getString("replace"));
-        }
-
-        // 替换主人名称
-        for(JsonConfiguration owner:owners){
-            String uuid = owner.getString("uuid");
-            Player player = PlayerUtil.getPlayerByUUID(UUID.fromString(uuid));
-            if(player!=null){
-                // 替换主人名称
-                String name = TextUtil.getPlayerName(player);
-                String t = translatable("misc.toneko.owner");
-                message = message.replace(name,t);
-                // 替换别名
-                List<String> alias = owner.getStringList("alias");
-                for (String s : alias) {
-                    message = message.replace(s, t);
+            message = Messaging.nekoModify(message, neko);
+            List<NekoDataModel.Owner> owners = neko.getOwners();
+            // 替换主人名称
+            for(NekoDataModel.Owner owner:owners){
+                UUID uuid = owner.getUuid();
+                Player player = PlayerUtil.getPlayerByUUID(uuid);
+                if(player!=null){
+                    // 替换主人名称
+                    String name = player.getName().getString();
+                    String t = translatable("misc.toneko.owner");
+                    message = message.replace(name,t);
+                    // 替换别名
+                    List<String> alias = owner.getAliases();
+                    for (String s : alias) {
+                        message = message.replace(s, t);
+                    }
                 }
             }
         }
-
-        //添加口癖
-        String phrase = LanguageUtil.phrase;
-        phrase = translatable(phrase);
-        message = Messaging.replacePhrase(message,phrase);
         return message;
     }
 }

@@ -17,6 +17,7 @@ import org.cneko.toneko.common.quirks.Quirk;
 import org.cneko.toneko.common.quirks.QuirkRegister;
 import org.cneko.toneko.common.util.QuirkUtil;
 
+import java.util.Collection;
 import java.util.List;
 
 import static net.minecraft.commands.Commands.argument;
@@ -75,7 +76,7 @@ public class QuirkCommand {
             return 1;
         }
         // 列出quirks
-        List<Quirk> quirks = neko.getQuirks();
+        Collection<Quirk> quirks = neko.getQuirks();
         // 转换为id
         List<String> quirkIds = quirks.stream().map(Quirk::getId).toList();
         // 翻译

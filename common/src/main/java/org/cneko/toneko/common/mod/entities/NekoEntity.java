@@ -378,7 +378,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         // 获取猫猫对象
         NekoQuery.Neko neko = this.getNeko();
         if (neko == null) {
-            LOGGER.warn("Neko instance is null for UUID: " + this.getUUID());
+            LOGGER.warn("Neko instance is null for UUID: {}", this.getUUID());
             return;
         }
 

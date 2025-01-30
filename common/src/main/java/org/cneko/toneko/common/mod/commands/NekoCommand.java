@@ -21,14 +21,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemLore;
 import org.cneko.toneko.common.api.NekoQuery;
-import org.cneko.toneko.common.api.NekoSkin;
 import org.cneko.toneko.common.api.Permissions;
 import org.cneko.toneko.common.mod.api.EntityPoseManager;
 import org.cneko.toneko.common.mod.misc.ToNekoAttributes;
 import org.cneko.toneko.common.mod.packets.EntityPosePayload;
 import org.cneko.toneko.common.mod.util.EntityUtil;
 import org.cneko.toneko.common.mod.util.PermissionUtil;
-import org.cneko.toneko.common.mod.util.SkinUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,12 +83,6 @@ public class NekoCommand {
                             .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_NEKO_RIDE))
                             .executes(NekoCommand::rideCommand)
                     )
-//                    .then(literal("skin")
-//                            .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_NEKO_SKIN))
-//                            .then(argument("skin", StringArgumentType.string())
-//                                    .executes(NekoCommand::skinCommand)
-//                            )
-//                    )
             );
         });
     }
@@ -109,14 +101,6 @@ public class NekoCommand {
         if (target instanceof ServerPlayer sp){
             sp.connection.send(new ClientboundSetPassengersPacket(target));
         }
-        return 1;
-    }
-
-    public static int skinCommand(CommandContext<CommandSourceStack> context) {
-        ServerPlayer player = context.getSource().getPlayer();
-        NekoQuery.Neko neko = NekoQuery.getNeko(player.getUUID());
-        neko.setSkin(NekoSkin.of(StringArgumentType.getString(context, "skin")));
-        SkinUtil.tryToSetSkin(player);
         return 1;
     }
 

@@ -1,13 +1,13 @@
 package org.cneko.toneko.common.api;
 
-import com.google.gson.JsonObject;
 import org.cneko.ctlib.common.file.JsonConfiguration;
+import org.cneko.toneko.common.api.json.NekoDataModel;
+import org.cneko.toneko.common.api.json.NekoParser;
 import org.cneko.toneko.common.quirks.Quirk;
 import org.cneko.toneko.common.quirks.QuirkRegister;
 import org.cneko.toneko.common.util.FileUtil;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,7 +16,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import static org.cneko.toneko.common.Bootstrap.*;
 
@@ -46,8 +45,8 @@ public class NekoQuery {
      * @param uuid 玩家UUID
      * @return 主人列表，默认请见resources/defaultPlayerProfile.json
      */
-    public static JsonConfiguration getOwners(UUID uuid){
-        return getProfile(uuid).getJsonConfiguration("owners");
+    public static List<NekoDataModel.Owner> getOwners(UUID uuid){
+        return Objects.requireNonNull(getProfile(uuid)).getOwners();
     }
 
     /**
@@ -126,17 +125,12 @@ public class NekoQuery {
      * @param uuid 玩家UUID
      * @return 猫娘数据文件，不存在则返回默认的
      */
-    public static JsonConfiguration getProfile(UUID uuid){
+    public static NekoDataModel getProfile(UUID uuid){
         String profilePath = getProfilePath(uuid);
         if(!FileUtil.FileExists(profilePath)){
             createProfile(uuid);
         }
-        try {
-            return JsonConfiguration.fromFile(Path.of(profilePath));
-        } catch (IOException e) {
-            LOGGER.error("Failed to read file:", e);
-            return null;
-        }
+        return NekoParser.fromFile(Path.of(profilePath));
     }
 
     public static Neko getNeko(UUID uuid){
@@ -144,273 +138,228 @@ public class NekoQuery {
     }
 
 
+
     public static class Neko {
         public UUID uuid;
-        private JsonConfiguration profile;
-        public Neko(UUID uuid){
+        private NekoDataModel profile;
+
+        public Neko(UUID uuid) {
             this.uuid = uuid;
-            profile = NekoQuery.getProfile(uuid);
+            this.profile = NekoQuery.getProfile(uuid);
             createProfile(uuid);
         }
-        public Neko(File file){
-            try {
-                profile = JsonConfiguration.fromFile(file.toPath());
-                uuid = UUID.fromString(profile.getString("uuid"));
-            } catch (IOException e) {
-                LOGGER.error("Unable to load file:",e);
-            }
+
+        public Neko(File file) {
+            String json = FileUtil.readStringFromFile(file.toPath().toString());
+            this.profile = NekoParser.parse(json);
+            this.uuid = profile.getUuid();
         }
 
-        public String getProfilePath(){
+        public String getProfilePath() {
             return NekoQuery.getProfilePath(uuid);
         }
 
-        public JsonConfiguration getProfile(){
+        public NekoDataModel getProfile() {
             return profile;
         }
+
         /**
          * 查询是否是猫娘
+         *
          * @return 是否是猫娘
          */
-        public boolean isNeko(){
-            return profile.getBoolean("is", false);
+        public boolean isNeko() {
+            return profile.isActive();
         }
+
         /**
          * 将玩家设为猫娘
+         *
          * @param isNeko 是否是猫娘
          */
-        public void setNeko(boolean isNeko){
-            JsonConfiguration profile = getProfile();
-            profile.set("is", isNeko);
-            FileUtil.WriteFile(getProfilePath(), profile.toString());
+        public void setNeko(boolean isNeko) {
+            profile.setActive(isNeko);
             save();
         }
 
-        public boolean hasOwner(UUID owner){
+        public boolean hasOwner(UUID owner) {
             AtomicBoolean hasOwner = new AtomicBoolean(false);
-            processOwners(owner, o -> {
-                hasOwner.set(true);
-            });
+            processOwners(owner, o -> hasOwner.set(true));
             return hasOwner.get();
         }
+
         /**
          * 获取猫娘的所有主人
-         * @return 主人列表，默认请见resources/defaultPlayerProfile.json
+         *
+         * @return 主人列表
          */
-        public List<JsonConfiguration> getOwners(){
-            return getProfile().getJsonList("owners");
+        public List<NekoDataModel.Owner> getOwners() {
+            return profile.getOwners();
         }
 
         /**
          * 添加主人
+         *
          * @param owner 主人UUID
          */
-        public void addOwner(UUID owner){
-            if(!hasOwner(owner)){
-                // 读取主人列表
-                List<JsonConfiguration> o = getOwners();
-                // 获取默认数据
-                JsonConfiguration j = DEFAULT_OWNER_PROFILE;
-                j.set("uuid", owner.toString());
-                // 添加数据
-                o.add(j);
-                getProfile().set("owners", o);
+        public void addOwner(UUID owner) {
+            if (!hasOwner(owner)) {
+                NekoDataModel.Owner newOwner = new NekoDataModel.Owner();
+                newOwner.setUuid(owner);
+                newOwner.setXp(0);
+                newOwner.setAliases(new ArrayList<>());
+                profile.getOwners().add(newOwner);
             }
         }
 
-        public void removeOwner(UUID owner){
-            processOwners(owner, o -> {
-                List<JsonConfiguration> owners = getOwners();
-                owners.remove(o);
-                getProfile().set("owners", owners);
-            });
+        public void removeOwner(UUID owner) {
+            profile.getOwners().removeIf(o -> o.getUuid().equals(owner));
         }
 
-        public void addAlias(UUID owner, String alias){
-            //System.out.println(owner);
+        public void addAlias(UUID owner, String alias) {
             processOwners(owner, o -> {
-                    List<String> aliases = o.getStringList("aliases");
-                    if(!aliases.contains(alias)){
-                        aliases.add(alias);
-                        //System.out.println(alias);
-                        o.set("aliases", aliases);
-                    }
-                    //System.out.println("aaa "+alias);
-                });
-        }
-        public void removeAlias(UUID owner, String alias){
-            processOwners(owner, o -> {
-                List<String> aliases = o.getStringList("aliases");
-                if (aliases.contains(alias)) {
-                    aliases.remove(alias);
-                    o.set("aliases", aliases);
+                if (!o.getAliases().contains(alias)) {
+                    o.getAliases().add(alias);
                 }
             });
         }
-        public void addXp(UUID owner, int xp){
-            addLevel((double) xp /1000.00d);
-            processOwners(owner, o -> {
-                int oxp = o.getInt("xp");
-                oxp += xp;
-                o.set("xp", oxp);
-            });
+
+        public void removeAlias(UUID owner, String alias) {
+            processOwners(owner, o -> o.getAliases().remove(alias));
         }
-        public void removeXp(UUID owner, int xp){
-            processOwners(owner, o -> {
-                int oxp = o.getInt("xp");
-                oxp -= xp;
-                if(oxp < 0) oxp = 0;
-                o.set("xp", oxp);
-            });
+
+        public void addXp(UUID owner, int xp) {
+            addLevel((double) xp / 1000.00d);
+            processOwners(owner, o -> o.xp += xp);
         }
-        public void setXp(UUID owner, int xp){
-            processOwners(owner, o -> {
-                o.set("xp", xp);
-            });
+
+        public void removeXp(UUID owner, int xp) {
+            processOwners(owner, o -> o.xp = Math.max(0, o.xp - xp));
         }
-        public int getXp(UUID owner){
+
+        public void setXp(UUID owner, int xp) {
+            processOwners(owner, o -> o.xp = xp);
+        }
+
+        public int getXp(UUID owner) {
             AtomicInteger xp = new AtomicInteger(0);
-            processOwners(owner, o -> xp.set(o.getInt("xp")));
+            processOwners(owner, o -> xp.set(o.xp));
             return xp.get();
         }
 
-        public void addLevel(double level){
-            double l = getLevel() + level;
-            setLevel(l);
-        }
-        public void setLevel(double level){
-            getProfile().set("level", level);
-        }
-        public double getLevel(){
-            return getProfile().getDouble("level");
+        public void addLevel(double level) {
+            profile.setLevel(profile.getLevel() + level);
         }
 
-        public void addBlock(String block, String replace, String method){
-            List<JsonConfiguration> blockWords = getProfile().getJsonList("blockWords");
-            JsonConfiguration BW = DEFAULT_BLOCK_WORDS;
-            BW.set("replace", replace);
-            BW.set("method", method);
-            BW.set("block", block);
-            blockWords.add(BW);
-            getProfile().set("blockWords", blockWords);
+        public void setLevel(double level) {
+            profile.setLevel(level);
         }
 
-        public void removeBlock(String block){
-            List<JsonConfiguration> blockWords = getProfile().getJsonList("blockWords");
-            blockWords.removeIf(o -> o.getString("block").equalsIgnoreCase(block));
-            getProfile().set("blockWords", blockWords);
+        public double getLevel() {
+            return profile.getLevel();
         }
 
-        public List<Quirk> getQuirks(){
-            List<Quirk> quirks = new ArrayList<>();
-            JsonObject gson = getProfile().toGson();
-            gson.getAsJsonArray("quirks").forEach(o -> {
-                quirks.add(QuirkRegister.getById(o.getAsJsonPrimitive().getAsString()));
-            });
-            return quirks;
+        public void addBlock(String block, String replace, String method) {
+            NekoDataModel.BlockWord newBlock = new NekoDataModel.BlockWord();
+            newBlock.setBlock(block);
+            newBlock.setReplace(replace);
+            newBlock.setMethod(method);
+            profile.getBlockWords().add(newBlock);
         }
-        public boolean hasQuirk(Quirk quirk){
-            return getQuirks().contains(quirk);
+
+        public void removeBlock(String block) {
+            profile.getBlockWords().removeIf(b -> b.getBlock().equalsIgnoreCase(block));
         }
-        public void addQuirk(Quirk quirk){
-            if(!getQuirks().contains(quirk)){
-                List<String> quirks = getProfile().getStringList("quirks");
-                quirks.add(quirk.getId());
-                getProfile().set("quirks", quirks);
+
+        public List<Quirk> getQuirks() {
+            List<String> q = profile.getQuirks();
+            return q.stream().map(QuirkRegister::getById).toList();
+        }
+
+        public boolean hasQuirk(Quirk quirk) {
+            return profile.getQuirks().contains(quirk.getId());
+        }
+
+        public void addQuirk(Quirk quirk) {
+            if (!profile.getQuirks().contains(quirk.getId())) {
+                profile.getQuirks().add(quirk.getId());
             }
         }
-        public void removeQuirk(Quirk quirk){
-            getProfile().getStringList("quirks").removeIf(s -> s.equalsIgnoreCase(quirk.getId()));
+
+        public void removeQuirk(Quirk quirk) {
+            profile.getQuirks().remove(quirk.getId());
         }
-        public void setQuirks(List<Quirk> quirks){
-            getProfile().set("quirks", quirks.stream().map(Quirk::getId).collect(Collectors.toList()));
+
+        public void setQuirks(List<Quirk> quirks) {
+            List<String> q = quirks.stream().map(Quirk::getId).toList();
+            profile.setQuirks(q);
         }
-        public void setQuirksById(List<String> quirks){
-            getProfile().set("quirks", quirks);
+        public void setQuirksById(List<String> quirks) {
+            profile.setQuirks(quirks);
         }
         public void fixQuirks(){
-            List<String> ids = getProfile().getStringList("quirks");
-            ids.removeIf(s -> !QuirkRegister.hasQuirk(s));
-            getProfile().set("quirks", ids);
-        }
-        public List<String> getMoeTags(){
-            return getProfile().getStringList("moe_tags");
-        }
-        public boolean hasAnyMoeTags(){
-            return !getMoeTags().isEmpty();
-        }
-        public void setMoeTags(List<String> moeTags){
-            getProfile().set("moe_tags", moeTags);
-        }
-        public void addMoeTags(String tag){
-            if (!getMoeTags().contains(tag)){
-                List<String> moeTags = getMoeTags();
-                moeTags.add(tag);
-                setMoeTags(moeTags);
-            }
-        }
-        public void removeMoeTags(String tag){
-            getProfile().getStringList("moe_tags").removeIf(s -> s.equalsIgnoreCase(tag));
+            profile.getQuirks().removeIf(q -> QuirkRegister.getById(q)==null);
         }
 
-        public boolean hasNickName(){
-            return getProfile().getString("nickname") != null;
-        }
-        public String getNickName(){
-            return getProfile().getString("nickname");
-        }
-        public void setNickName(String nickName){
-            getProfile().set("nickname", nickName);
-        }
-        public NekoSkin getSkin(){
-            return NekoSkin.of(getProfile().getString("skin"));
-        }
-        public void setSkin(NekoSkin skin){
-            getProfile().set("skin", skin.getSkin());
-        }
-        public boolean hasSkin(){
-            return !getProfile().getString("skin").equalsIgnoreCase("");
+        public List<String> getMoeTags() {
+            return profile.getMoeTags();
         }
 
-        public void save(){
-            try {
-                getProfile().save();
-            }catch (Exception e){
-                LOGGER.error("Failed to save profile", e);
+        public boolean hasAnyMoeTags() {
+            return !profile.getMoeTags().isEmpty();
+        }
+
+        public void setMoeTags(List<String> moeTags) {
+            profile.setMoeTags(moeTags);
+        }
+
+        public void addMoeTags(String tag) {
+            if (!profile.getMoeTags().contains(tag)) {
+                profile.getMoeTags().add(tag);
             }
+        }
+
+        public void removeMoeTags(String tag) {
+            profile.getMoeTags().remove(tag);
+        }
+
+        public String getNickName() {
+            return profile.getNickName();
+        }
+
+        public void setNickName(String nickName) {
+            profile.setNickName(nickName);
+        }
+
+        public void save() {
+            String json = NekoParser.toJson(profile);
+            FileUtil.WriteFile(getProfilePath(), json);
         }
 
         @FunctionalInterface
         public interface OwnerAction {
-            void apply(JsonConfiguration ownerConfig);
+            void apply(NekoDataModel.Owner owner);
         }
 
         /**
          * 遍历所有主人直到找到匹配的
+         *
          * @param uuid 主人UUID
          */
         public void processOwners(UUID uuid, OwnerAction action) {
-            /* 都是你害的,为什么这么难搞啊
-                我要崩溃了 (☍﹏⁰。)
-             */
-            List<JsonConfiguration> owners = getOwners(); // 获取当前的主人列表
-            boolean updated = false; // 标记是否进行了修改
-            for (JsonConfiguration o : owners) {
-                if (o.getString("uuid").equalsIgnoreCase(uuid.toString())) {
-                    action.apply(o); // 执行Lambda定义的操作
-                    updated = true; // 标记已修改
+            for (NekoDataModel.Owner owner : profile.getOwners()) {
+                if (owner.getUuid().equals(uuid)) {
+                    action.apply(owner);
                     break;
                 }
             }
-            if (updated) { // 如果有修改，则更新profile中的owners
-                getProfile().set("owners", owners);
-            }
         }
-        public UUID getUuid(){
+
+        public UUID getUuid() {
             return uuid;
         }
 
-        public void delete(){
+        public void delete() {
             NekoData.deleteNeko(uuid);
         }
     }
