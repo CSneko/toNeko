@@ -56,10 +56,10 @@ public class InteractionScreen extends Screen implements INekoScreen{
             }else {
                 y = (int) (this.height * 0.1);
             }
-            int buttonWidth = (int)(this.width * 0.2);
-            int buttonHeight = (int)(this.height * 0.06);
-            int buttonBound = (int)(this.height * 0.1);
-            int tooltipBound = (int)(this.height * 0.1);
+            int buttonWidth = 100;
+            int buttonHeight = 20;
+            int buttonBound = 30;
+            int tooltipBound = 20;
             tooltips = new ArrayList<>();
             for (NekoScreenBuilder.WidgetFactory widget : this.builder.getWidgets()) {
                 if (widget instanceof NekoScreenBuilder.ButtonFactory buttonFactory) {

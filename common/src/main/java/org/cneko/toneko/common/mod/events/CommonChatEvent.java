@@ -5,14 +5,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.PlayerChatMessage;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import org.cneko.ctlib.common.file.JsonConfiguration;
 import org.cneko.toneko.common.Stats;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.api.json.NekoDataModel;
 import org.cneko.toneko.common.mod.util.PlayerUtil;
 import org.cneko.toneko.common.mod.util.TextUtil;
 import org.cneko.toneko.common.util.ConfigUtil;
-import org.cneko.toneko.common.util.LanguageUtil;
 import org.cneko.toneko.common.api.Messaging;
 
 import java.util.List;
@@ -29,7 +27,7 @@ public class CommonChatEvent {
         // 获取昵称
         String nickname = neko.getNickName();
         // 修改消息
-        msg = modify(msg, neko);
+        msg = Messaging.nekoModify(msg,neko);
         // 格式化消息
         msg = Messaging.format(msg,playerName,nickname);
         // 消息中喵的数量
@@ -56,7 +54,6 @@ public class CommonChatEvent {
      */
     public static String modify(String message, NekoQuery.Neko neko){
         if(neko.isNeko()){
-            message = Messaging.nekoModify(message, neko);
             List<NekoDataModel.Owner> owners = neko.getOwners();
             // 替换主人名称
             for(NekoDataModel.Owner owner:owners){

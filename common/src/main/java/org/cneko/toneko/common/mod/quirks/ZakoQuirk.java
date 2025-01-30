@@ -24,11 +24,6 @@ public class ZakoQuirk extends ToNekoQuirk{
     }
 
     @Override
-    public int getInteractionValue(QuirkContext context) {
-        return getInteractionValue();
-    }
-
-    @Override
     public int getInteractionValue() {
         return 1;
     }

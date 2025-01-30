@@ -23,11 +23,6 @@ public class CaressQuirk extends ToNekoQuirk{
     }
 
     @Override
-    public int getInteractionValue(QuirkContext context) {
-        return getInteractionValue();
-    }
-
-    @Override
     public int getInteractionValue() {
         return 1;
     }

@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.cneko.toneko.bukkit.ToNeko.INSTANCE;
+import static org.cneko.toneko.common.Bootstrap.LOGGER;
 import static org.cneko.toneko.common.util.LanguageUtil.translatable;
 
 public class ChatEvent implements Listener {
@@ -32,7 +33,7 @@ public class ChatEvent implements Listener {
         String message = event.signedMessage().message();
         // 获取昵称
         String nickname = neko.getNickName();
-        message = modify(message, neko);
+        message = Messaging.nekoModify(message, neko);
         // 格式化消息
         message = format(message, player, nickname);
         sendMessage(message);
@@ -48,19 +49,10 @@ public class ChatEvent implements Listener {
         return Messaging.format(message,player.getName(),nickname,format);
     }
 
-    public static String formatPrefixes(List<String> prefixes) {
-        StringBuilder formatted = new StringBuilder();
-
-        for (String prefix : prefixes) {
-            // 将每个前缀格式化为 [§a前缀§f§r]
-            formatted.append("[§a").append(prefix).append("§f§r]");
-        }
-
-        return formatted.toString();
-    }
-
     public static void sendMessage(String message){
         Bukkit.getServer().sendMessage(Component.text(message));
+        // 输出到控制台（并清除格式化代码）
+        LOGGER.info(message.replaceAll("§[0-9a-fk-or]",""));
     }
 
     /**
@@ -71,7 +63,6 @@ public class ChatEvent implements Listener {
      */
     public static String modify(String message, NekoQuery.Neko neko){
         if(neko.isNeko()){
-            message = Messaging.nekoModify(message, neko);
             List<NekoDataModel.Owner> owners = neko.getOwners();
             // 替换主人名称
             for(NekoDataModel.Owner owner:owners){

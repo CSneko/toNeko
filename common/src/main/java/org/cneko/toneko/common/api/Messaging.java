@@ -15,6 +15,18 @@ import static org.cneko.toneko.common.util.LanguageUtil.translatable;
 public class Messaging {
     @ApiStatus.Internal
     public static GetPlayerUUID GET_PLAYER_UUID_INSTANCE;
+    @ApiStatus.Internal
+    public static PrefixEvent PREFIX_EVENT_INSTANCE;
+    @ApiStatus.Internal
+    public static SendMessage SEND_MESSAGE_INSTANCE;
+    @ApiStatus.Internal
+    public static NekoModify NEKO_MODIFY_INSTANCE;
+    @ApiStatus.Internal
+    public static OnFormat ON_FORMAT_INSTANCE;
+
+    public static void sendMessage(String playerName, String message, boolean modify){
+        SEND_MESSAGE_INSTANCE.sendMessage(playerName,message,modify);
+    }
 
     public static String format(String msg, String player, String nickname){
         return format(msg,player,nickname, getChatPrefixes(player));
@@ -31,6 +43,7 @@ public class Messaging {
         }else {
             nickname = "§6~§f"+nickname;
         }
+        msg = ON_FORMAT_INSTANCE.format(msg,player,nickname,prefix,chatFormat);
         return chatFormat.
                 replace("%prefix%",formatPrefixes(prefix)).
                 replace("%msg%",msg).
@@ -48,6 +61,7 @@ public class Messaging {
         if (NekoQuery.isNeko(uuid)){
             prefixes.add(LanguageUtil.prefix);
         }
+        PREFIX_EVENT_INSTANCE.onPrefix(playerName,prefixes);
         return prefixes;
     }
 
@@ -83,6 +97,8 @@ public class Messaging {
         String phrase = LanguageUtil.phrase;
         phrase = translatable(phrase);
         message = Messaging.replacePhrase(message,phrase);
+        // 修改消息
+        message = NEKO_MODIFY_INSTANCE.modify(message,neko);
         return message;
     }
 
@@ -136,5 +152,17 @@ public class Messaging {
 
     public interface GetPlayerUUID {
         UUID get(String playerName);
+    }
+    public interface PrefixEvent{
+        void onPrefix(String playerName, List<String> prefix);
+    }
+    public interface SendMessage{
+        void sendMessage(String playerName, String message, boolean modify);
+    }
+    public interface NekoModify{
+        String modify(String message, NekoQuery.Neko neko);
+    }
+    public interface OnFormat{
+        String format(String message, String playerName, String nickname, List<String> prefixes,String chatFormat);
     }
 }

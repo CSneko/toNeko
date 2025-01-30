@@ -2,7 +2,6 @@ package org.cneko.toneko.bukkit;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import org.cneko.toneko.bukkit.commands.NekoCommand;
-import org.cneko.toneko.bukkit.commands.QuirkCommand;
 import org.cneko.toneko.bukkit.commands.ToNekoAdminCommand;
 import org.cneko.toneko.bukkit.commands.ToNekoCommand;
 import org.cneko.toneko.bukkit.events.ChatEvent;
@@ -67,6 +66,19 @@ public class ToNeko extends JavaPlugin {
         WorldEvents.init();
         NetworkingEvents.init();
         // event end
+
+        // api event start // TODO 完成
+        Messaging.PREFIX_EVENT_INSTANCE = (name, prefix) -> {};
+        Messaging.SEND_MESSAGE_INSTANCE = (name, msg, modify) -> {
+            if (modify){
+                msg = Messaging.nekoModify(msg, NekoQuery.getNeko(org.cneko.toneko.common.mod.util.PlayerUtil.getPlayerUUIDByName(name)));
+            }
+            msg = Messaging.format(msg,name,NekoQuery.getNeko(org.cneko.toneko.common.mod.util.PlayerUtil.getPlayerUUIDByName(name)).getNickName(),Messaging.getChatPrefixes(name));
+            ChatEvent.sendMessage(msg);
+        };
+        Messaging.NEKO_MODIFY_INSTANCE = ChatEvent::modify;
+        Messaging.ON_FORMAT_INSTANCE = (message, playerName, nickname, prefix, chatFormat) -> message;
+        // api event end
     }
 
     @Override

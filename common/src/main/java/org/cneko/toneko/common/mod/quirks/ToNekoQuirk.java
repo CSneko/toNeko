@@ -13,7 +13,7 @@ public abstract class ToNekoQuirk extends Quirk implements ModQuirk {
         super(id);
     }
 
-    abstract public int getInteractionValue(QuirkContext context);
+    abstract public int getInteractionValue();
 
     @Override
     public InteractionResult onNekoInteraction(Player owner, Level world, InteractionHand hand, INeko nekoPlayer, EntityHitResult hitResult) {

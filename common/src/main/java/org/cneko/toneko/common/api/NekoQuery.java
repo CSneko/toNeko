@@ -37,7 +37,6 @@ public class NekoQuery {
     public static void setNeko(UUID uuid, boolean isNeko){
         Neko neko = getNeko(uuid);
         neko.setNeko(isNeko);
-        neko.save();
     }
 
     /**
@@ -67,25 +66,21 @@ public class NekoQuery {
     public static void addOwner(UUID uuid, UUID owner){
         Neko neko =  getNeko(uuid);
         neko.addOwner(owner);
-        neko.save();
     }
 
     public static void removeOwner(UUID uuid,UUID owner){
         Neko neko =  getNeko(uuid);
         neko.removeOwner(owner);
-        neko.save();
     }
 
     public static void addBlock(UUID uuid,String block, String replace, String method){
         Neko neko =  getNeko(uuid);
         neko.addBlock(block,replace,method);
-        neko.save();
     }
 
     public static void removeBlock(UUID uuid,String block){
         Neko neko =  getNeko(uuid);
         neko.removeBlock(block);
-        neko.save();
     }
 
     public static double getLevel(UUID uuid){
@@ -179,7 +174,6 @@ public class NekoQuery {
          */
         public void setNeko(boolean isNeko) {
             profile.setActive(isNeko);
-            save();
         }
 
         public boolean hasOwner(UUID owner) {

@@ -7,37 +7,47 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.quirks.ModQuirk;
-import org.cneko.toneko.common.mod.quirks.QuirkContext;
 import org.cneko.toneko.common.quirks.Quirk;
 
 public class CommonPlayerInteractionEvent {
     public static InteractionResult useEntity(Player player, Level world, InteractionHand hand, Entity entity, EntityHitResult hitResult) {
         // 目标实体为玩家
-        if(entity instanceof ServerPlayer nekoPlayer && player instanceof ServerPlayer sp){
-            NekoQuery.Neko neko = NekoQuery.getNeko(nekoPlayer.getUUID());
-            // 如果是猫娘且玩家是主人
+        if(entity instanceof INeko nekoPlayer && player instanceof ServerPlayer sp){
+            NekoQuery.Neko neko = NekoQuery.getNeko(nekoPlayer.getEntity().getUUID());
+            // 如果是猫娘且玩家是主人（执行目标的quirk）
             if(neko.isNeko() && neko.hasOwner(player.getUUID())){
                 boolean success = false;
                 // 如果有抚摸癖好且为玩家空手
                 for (Quirk q : neko.getQuirks()) {
                     if (q instanceof ModQuirk mq){
                         if(mq.onNekoInteraction(player, world, hand, nekoPlayer, hitResult)==InteractionResult.SUCCESS){
-                            neko.addXp(player.getUUID(), mq.getInteractionValue(QuirkContext.Builder.create(nekoPlayer).build()));
+                            neko.addXp(player.getUUID(), mq.getInteractionValue());
                             success = true;
-                        };
+                        }
                     }
                 }
                 if(success){
                     return InteractionResult.SUCCESS;
                 }
+
             }
+
+            // 执行操作者的quirk
+            NekoQuery.Neko playerNeko = NekoQuery.getNeko(player.getUUID());
+            for (Quirk q : playerNeko.getQuirks()) {
+                if (q instanceof ModQuirk mq){
+                    if(mq.onInteractionOther(player,world,hand,nekoPlayer,hitResult)==InteractionResult.SUCCESS){
+                        playerNeko.addXp(player.getUUID(), mq.getInteractionValue());
+                        return InteractionResult.SUCCESS;
+                    }
+                }
+            }
+
         }
         return InteractionResult.PASS;
     }

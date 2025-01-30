@@ -30,6 +30,7 @@ import org.cneko.toneko.common.mod.util.PermissionUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
@@ -69,6 +70,10 @@ public class NekoCommand {
                                     .executes(NekoCommand::nicknameCommand)
                             )
                     )
+                    .then(literal("removeNickname")
+                            .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_NEKO_NICKNAME))
+                            .executes(NekoCommand::removeNicknameCommand)
+                    )
                     .then(literal("level")
                             .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_NEKO_LEVEL))
                             .executes(NekoCommand::levelCommand)
@@ -85,6 +90,13 @@ public class NekoCommand {
                     )
             );
         });
+    }
+
+    private static int removeNicknameCommand(CommandContext<CommandSourceStack> context) {
+        UUID uuid = context.getSource().getEntity().getUUID();
+        NekoQuery.Neko neko = NekoQuery.getNeko(uuid);
+        neko.setNickName("");
+        return 1;
     }
 
     public static int rideCommand(CommandContext<CommandSourceStack> context) {

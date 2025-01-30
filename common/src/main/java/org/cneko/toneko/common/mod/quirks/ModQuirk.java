@@ -19,9 +19,10 @@ public interface ModQuirk {
     @Nullable
     Component getTooltip();
 
-    int getInteractionValue(QuirkContext context);
-
     default InteractionResult onNekoInteraction(Player owner, Level world, InteractionHand hand, INeko neko, EntityHitResult hitResult) {
+        return InteractionResult.PASS;
+    }
+    default InteractionResult onInteractionOther(Player player, Level level, InteractionHand hand,INeko other, EntityHitResult hitResult){
         return InteractionResult.PASS;
     }
 
@@ -32,4 +33,6 @@ public interface ModQuirk {
     default InteractionResult onNekoAttack(INeko neko, Level level, InteractionHand interactionHand, LivingEntity entity, EntityHitResult entityHitResult){
         return InteractionResult.PASS;
     }
+
+    int getInteractionValue();
 }
