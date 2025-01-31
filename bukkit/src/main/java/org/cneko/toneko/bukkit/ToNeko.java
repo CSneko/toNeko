@@ -70,10 +70,6 @@ public class ToNeko extends JavaPlugin {
         // api event start // TODO 完成
         Messaging.PREFIX_EVENT_INSTANCE = (name, prefix) -> {};
         Messaging.SEND_MESSAGE_INSTANCE = (name, msg, modify) -> {
-            if (modify){
-                msg = Messaging.nekoModify(msg, NekoQuery.getNeko(org.cneko.toneko.common.mod.util.PlayerUtil.getPlayerUUIDByName(name)));
-            }
-            msg = Messaging.format(msg,name,NekoQuery.getNeko(org.cneko.toneko.common.mod.util.PlayerUtil.getPlayerUUIDByName(name)).getNickName(),Messaging.getChatPrefixes(name));
             ChatEvent.sendMessage(msg);
         };
         Messaging.NEKO_MODIFY_INSTANCE = ChatEvent::modify;

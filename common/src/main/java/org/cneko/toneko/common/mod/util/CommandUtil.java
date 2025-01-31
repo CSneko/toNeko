@@ -23,16 +23,6 @@ public class CommandUtil {
         return builder.buildFuture();
     };
 
-    // 没有权限
-    public static int noPS(CommandSourceStack player){
-        player.sendSystemMessage(TextUtil.translatable("command.toneko.noPermission"));
-        return 1;
-    }
-    // 没有权限
-    public static int noPS(Player player){
-        player.sendSystemMessage(TextUtil.translatable("command.toneko.noPermission"));
-        return 1;
-    }
 
     public static CompletableFuture<Suggestions> getQuirksSuggestions(CommandContext<CommandSourceStack> source, SuggestionsBuilder builder) {
         // 获取quirks

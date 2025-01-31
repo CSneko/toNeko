@@ -168,7 +168,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         // 猫娘会闲逛
         this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 0.3, 1));
         // 猫娘会跟主人
-        nekoFollowOwnerGoal = new NekoFollowOwnerGoal(this,null,30,this.followLeashSpeed() / 1.5);
+        nekoFollowOwnerGoal = new NekoFollowOwnerGoal(this,null,30,Math.min(0.1,this.followLeashSpeed() / 1.5));
         this.goalSelector.addGoal(4,nekoFollowOwnerGoal);
         // 猫娘有繁殖欲望
         nekoMateGoal = new NekoMateGoal(this,null,30,this.followLeashSpeed() / 2);
@@ -279,6 +279,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     }
     // 赠送物品
     public boolean giftItem(Player player, ItemStack stack){
+
         this.drop(stack, true);
         // 如果是喜欢的物品
         if (this.isLikedItem(stack)){

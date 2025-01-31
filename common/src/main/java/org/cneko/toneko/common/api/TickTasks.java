@@ -2,12 +2,13 @@ package org.cneko.toneko.common.api;
 
 import org.cneko.toneko.common.mod.util.ITickable;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 public class TickTasks {
-    public static final List<ITickable> CLIENT_TASKS = new LinkedList<>();
-    public static final List<ITickable> TASKS = new LinkedList<>();
+    public static final List<ITickable> CLIENT_TASKS = new ArrayList<>();
+    public static final List<ITickable> TASKS = new ArrayList<>();
 
     public static void add(ITickable task) {
         TASKS.add(task);

@@ -2,14 +2,21 @@ package org.cneko.toneko.common.mod.commands;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.commands.synchronization.ArgumentTypeInfos;
+import net.minecraft.commands.synchronization.SingletonArgumentInfo;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import org.cneko.toneko.common.Bootstrap;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.api.Permissions;
+import org.cneko.toneko.common.mod.commands.arguments.NekoArgument;
 import org.cneko.toneko.common.mod.util.PlayerUtil;
+
+import java.util.function.Predicate;
 
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
@@ -20,26 +27,27 @@ import static org.cneko.toneko.common.mod.util.PermissionUtil.has;
 public class ToNekoCommand {
     public static void init(){
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
+
             //------------------------------------------------toneko-----------------------------------------------
             dispatcher.register(literal("toneko")
                     //----------------------------------------player-------------------------------------
                     .then(literal("player")
-                            .then(argument("neko", StringArgumentType.string())
-                                    .suggests(getOnlinePlayers)  //获取玩家列表
+                            .requires(source -> has(source, Permissions.COMMAND_TONEKO_PLAYER))
+                            .then(argument("neko", NekoArgument.neko())
                                     .executes(ToNekoCommand::playerCommand)
                             )
                     )
                     //--------------------------------------------------aliases--------------------------------------
                     .then(literal("aliases")
-                            .then(argument("neko", StringArgumentType.string())
-                                    .suggests(getOnlinePlayers)  //获取玩家列表
+                            .requires(source -> has(source, Permissions.COMMAND_TONEKO_ALIAS))
+                            .then(argument("neko",NekoArgument.ownedNeko())
                                     //-------------------------------------add---------------------------------------
                                     .then(literal("add")
-                                            .then(argument("aliases", StringArgumentType.string())
+                                            .then(argument("aliases", StringArgumentType.word())
                                                     .executes(ToNekoCommand::AliasesAdd)
                                             )
                                     ).then(literal("remove")
-                                            .then(argument("aliases", StringArgumentType.string())
+                                            .then(argument("aliases", StringArgumentType.word())
                                                     .executes(ToNekoCommand::AliasesRemove)
                                             )
                                     )
@@ -47,13 +55,13 @@ public class ToNekoCommand {
                     )
                     //-----------------------------------------------block--------------------------------------------
                     .then(literal("block")
-                            .then(argument("neko", StringArgumentType.string())
-                                    .suggests(getOnlinePlayers)
+                            .requires(source -> has(source, Permissions.COMMAND_TONEKO_BLOCK))
+                            .then(argument("neko",NekoArgument.ownedNeko())
                                     //--------------------------------add------------------------------------
                                     .then(literal("add")
-                                            .then(argument("block",StringArgumentType.string())
-                                                    .then(argument("replace",StringArgumentType.string())
-                                                            .then(argument("method",StringArgumentType.string())
+                                            .then(argument("block",StringArgumentType.word())
+                                                    .then(argument("replace",StringArgumentType.word())
+                                                            .then(argument("method",StringArgumentType.word())
                                                                     .suggests((context, builder) -> {
                                                                         builder.suggest("all");
                                                                         builder.suggest("word");
@@ -66,7 +74,7 @@ public class ToNekoCommand {
                                     )
                                     //----------------------------remove----------------------------------
                                     .then(literal("remove")
-                                            .then(argument("block",StringArgumentType.string())
+                                            .then(argument("block",StringArgumentType.word())
                                                     .executes(ToNekoCommand::removeBlock)
                                             )
                                     )
@@ -74,20 +82,21 @@ public class ToNekoCommand {
                     )
                     //-----------------------------------------xp------------------------------------------------
                     .then(literal("xp")
-                            .then(argument("neko",StringArgumentType.string())
-                                    .suggests(getOnlinePlayers)
+                            .requires(source -> has(source, Permissions.COMMAND_TONEKO_XP))
+                            .then(argument("neko",NekoArgument.ownedNeko())
                                     .executes(ToNekoCommand::xp)
                             )
                     )
                     //-------------------------------------------remove--------------------------------------
                     .then(literal("remove")
-                            .then(argument("neko",StringArgumentType.string())
-                                    .suggests(getOnlinePlayers)
+                            .requires(source -> has(source, Permissions.COMMAND_TONEKO_REMOVE))
+                            .then(argument("neko",NekoArgument.ownedNeko())
                                     .executes(ToNekoCommand::remove)
                             )
                     )
                     //-------------------------------------help---------------------------------------------------
                     .then(literal("help")
+                            .requires(source -> has(source, Permissions.COMMAND_TONEKO_HELP))
                             .executes(ToNekoCommand::help)
                     )
 
@@ -99,7 +108,6 @@ public class ToNekoCommand {
 
     public static int help(CommandContext<CommandSourceStack> context) {
         final CommandSourceStack source = context.getSource();
-        if(!has(source, Permissions.COMMAND_TONEKO_HELP)) return noPS(source);
         source.sendSystemMessage(translatable("command.toneko.help"));
         return 1;
     }
@@ -107,15 +115,10 @@ public class ToNekoCommand {
     public static int remove(CommandContext<CommandSourceStack> context) {
         try {
             final Player player = context.getSource().getPlayer();
-            if (!has(player, Permissions.COMMAND_TONEKO_REMOVE)) return noPS(player);
-            String nekoName = context.getArgument("neko", String.class);
-            NekoQuery.Neko neko = NekoQuery.getNeko(PlayerUtil.getPlayerByName(nekoName).getUUID());
-            if (!neko.hasOwner(player.getUUID())) {
-                player.sendSystemMessage(translatable("messages.toneko.notOwner", nekoName));
-                return 1;
-            }
+            Player nekoP = context.getArgument("neko", ServerPlayer.class);
+            NekoQuery.Neko neko = NekoQuery.getNeko(nekoP.getUUID());
             neko.removeOwner(player.getUUID());
-            player.sendSystemMessage(translatable("command.toneko.remove"));
+            player.sendSystemMessage(translatable("command.toneko.remove", nekoP.getName().getString()));
             neko.save();
             return 1;
         }catch (Exception e){
@@ -128,19 +131,14 @@ public class ToNekoCommand {
         try {
             final CommandSourceStack source = context.getSource();
             final Player player = source.getPlayer();
-            if (!has(player, Permissions.COMMAND_TONEKO_BLOCK)) return noPS(source);
             //获取关键信息
-            String nekoName = context.getArgument("neko", String.class); //猫娘的名称
+            ServerPlayer nekoP = context.getArgument("neko", ServerPlayer.class); //猫娘
             String block = context.getArgument("block", String.class); //屏蔽词
             String replace = context.getArgument("replace", String.class); //替换词
             String method = context.getArgument("method", String.class); //all or word
 
-            NekoQuery.Neko neko = NekoQuery.getNeko(PlayerUtil.getPlayerByName(nekoName).getUUID());
+            NekoQuery.Neko neko = NekoQuery.getNeko(nekoP.getUUID());
 
-            if (!neko.hasOwner(player.getUUID())) {
-                player.sendSystemMessage(translatable("messages.toneko.notOwner"));
-                return 1;
-            }
             // 添加屏蔽词
             neko.addBlock(block, replace, method);
             player.sendSystemMessage(translatable("messages.toneko.block.add"));
@@ -155,15 +153,10 @@ public class ToNekoCommand {
         try {
             final CommandSourceStack source = context.getSource();
             final Player player = source.getPlayer();
-            if (!has(player, Permissions.COMMAND_TONEKO_BLOCK)) return noPS(source);
-            String nekoName = context.getArgument("neko", String.class); //猫娘的名称
+            ServerPlayer nekoP = context.getArgument("neko", ServerPlayer.class); //猫娘的名称
             String block = context.getArgument("block", String.class); //屏蔽词
 
-            NekoQuery.Neko neko = NekoQuery.getNeko(PlayerUtil.getPlayerByName(nekoName).getUUID());
-            if (!neko.hasOwner(player.getUUID())) {
-                player.sendSystemMessage(translatable("messages.toneko.notOwner"));
-                return 1;
-            }
+            NekoQuery.Neko neko = NekoQuery.getNeko(nekoP.getUUID());
             neko.removeBlock(block);
             player.sendSystemMessage(translatable("messages.toneko.block.remove"));
             return 1;
@@ -176,14 +169,9 @@ public class ToNekoCommand {
     public static int xp(CommandContext<CommandSourceStack> context) {
         try {
             ServerPlayer player = context.getSource().getPlayer();
-            if (!has(player, Permissions.COMMAND_TONEKO_BLOCK)) return noPS(player);
-            String nekoName = StringArgumentType.getString(context, "neko");
-            NekoQuery.Neko neko = NekoQuery.getNeko(PlayerUtil.getPlayerByName(nekoName).getUUID());
-            if (neko.hasOwner(player.getUUID())) {
-                player.sendSystemMessage(translatable("command.toneko.xp", nekoName, neko.getXp(player.getUUID())));
-            } else {
-                player.sendSystemMessage(translatable("messages.toneko.notOwner"));
-            }
+            ServerPlayer nekoP = context.getArgument("neko", ServerPlayer.class);
+            NekoQuery.Neko neko = NekoQuery.getNeko(nekoP.getUUID());
+            player.sendSystemMessage(translatable("command.toneko.xp", nekoP.getName().getString(), neko.getXp(player.getUUID())));
             return 1;
         }catch (Exception e){
             Bootstrap.LOGGER.error(e);
@@ -193,16 +181,11 @@ public class ToNekoCommand {
 
     public static int AliasesRemove(CommandContext<CommandSourceStack> context) {
         try{
-        ServerPlayer player = context.getSource().getPlayer();
-        if(!has(player, Permissions.COMMAND_TONEKO_ALIAS)) return noPS(player);
-        NekoQuery.Neko neko = NekoQuery.getNeko(PlayerUtil.getPlayerByName(StringArgumentType.getString(context, "neko")).getUUID());
-        if(neko.hasOwner(player.getUUID())){
+            ServerPlayer player = context.getSource().getPlayer();
+            NekoQuery.Neko neko = NekoQuery.getNeko(context.getArgument("neko", ServerPlayer.class).getUUID());
             String aliases = StringArgumentType.getString(context, "aliases");
             neko.removeAlias(player.getUUID(), aliases);
             player.sendSystemMessage(translatable("command.toneko.aliases.remove", aliases));
-        }else {
-            player.sendSystemMessage(translatable("messages.toneko.notOwner"));
-        }
         return 1;
         }catch (Exception e){
             Bootstrap.LOGGER.error(e);
@@ -213,15 +196,10 @@ public class ToNekoCommand {
     public static int AliasesAdd(CommandContext<CommandSourceStack> context) {
         try {
             ServerPlayer player = context.getSource().getPlayer();
-            if (!has(player, Permissions.COMMAND_TONEKO_ALIAS)) return noPS(player);
-            NekoQuery.Neko neko = NekoQuery.getNeko(PlayerUtil.getPlayerByName(StringArgumentType.getString(context, "neko")).getUUID());
-            if (neko.hasOwner(player.getUUID())) {
-                String aliases = StringArgumentType.getString(context, "aliases");
-                neko.addAlias(player.getUUID(), aliases);
-                player.sendSystemMessage(translatable("command.toneko.aliases.add", aliases));
-            } else {
-                player.sendSystemMessage(translatable("messages.toneko.notOwner"));
-            }
+            NekoQuery.Neko neko = NekoQuery.getNeko(context.getArgument("neko", ServerPlayer.class).getUUID());
+            String aliases = StringArgumentType.getString(context, "aliases");
+            neko.addAlias(player.getUUID(), aliases);
+            player.sendSystemMessage(translatable("command.toneko.aliases.add", aliases));
             return 1;
         }catch (Exception e){
             Bootstrap.LOGGER.error(e);
@@ -232,10 +210,9 @@ public class ToNekoCommand {
     public static int playerCommand(CommandContext<CommandSourceStack> context) {
         try {
             ServerPlayer player = context.getSource().getPlayer(); // 命令发送者
-            String nekoName = StringArgumentType.getString(context, "neko"); // 猫娘名称
-            if (!has(player, Permissions.COMMAND_TONEKO_PLAYER)) return noPS(player);
-            Player nekoPlayer = PlayerUtil.getPlayerByName(nekoName);
-            NekoQuery.Neko neko = NekoQuery.getNeko(nekoPlayer.getUUID());
+            ServerPlayer nekoP = context.getArgument("neko", ServerPlayer.class);
+            String nekoName = nekoP.getName().getString();
+            NekoQuery.Neko neko = NekoQuery.getNeko(nekoP.getUUID());
             assert player != null;
             if (!neko.isNeko()) {
                 // 不是猫娘

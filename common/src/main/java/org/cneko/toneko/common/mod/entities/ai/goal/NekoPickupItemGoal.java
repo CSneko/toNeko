@@ -28,8 +28,6 @@ public class NekoPickupItemGoal extends Goal {
                     neko.getInventory().add(item.getItem());
                     item.remove(Entity.RemovalReason.DISCARDED);
                 }else {
-//                    // 否则尝试寻路（划掉）飞过去
-//                    neko.moveTo(item.getX(), item.getY(), item.getZ());
                     neko.getNavigation().moveTo(item, 0.4);
                 }
             }

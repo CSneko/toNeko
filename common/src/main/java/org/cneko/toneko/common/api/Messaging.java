@@ -5,10 +5,9 @@ import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.common.util.LanguageUtil;
 import org.jetbrains.annotations.ApiStatus;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.IntStream;
 
 import static org.cneko.toneko.common.util.LanguageUtil.translatable;
 
@@ -23,8 +22,16 @@ public class Messaging {
     public static NekoModify NEKO_MODIFY_INSTANCE;
     @ApiStatus.Internal
     public static OnFormat ON_FORMAT_INSTANCE;
+    private static final String PREFIX_FORMAT = "[§a%s§f§r]";
 
     public static void sendMessage(String playerName, String message, boolean modify){
+        UUID uuid = GET_PLAYER_UUID_INSTANCE.get(playerName);
+        if (uuid == null) return;
+        NekoQuery.Neko neko = NekoQuery.getNeko(uuid);
+        if (modify){
+            message = Messaging.nekoModify(message, neko);
+        }
+        message = Messaging.format(message,playerName,neko.getNickName(),Messaging.getChatPrefixes(playerName));
         SEND_MESSAGE_INSTANCE.sendMessage(playerName,message,modify);
     }
 
@@ -66,7 +73,7 @@ public class Messaging {
     }
 
     public static String replacePhrase(String message, String phrase){
-        message = runPetPhrases(message, phrase);
+        message = PhraseProcessor.runPetPhrases(message,phrase);
         return message;
     }
 
@@ -74,7 +81,7 @@ public class Messaging {
         StringBuilder formatted = new StringBuilder();
         for (String prefix : prefixes) {
             // 将每个前缀格式化为 [§a前缀§f§r]
-            formatted.append("[§a").append(prefix).append("§f§r]");
+            formatted.append(String.format(PREFIX_FORMAT, prefix));
         }
         return formatted.toString();
     }
@@ -84,12 +91,16 @@ public class Messaging {
 
         // 替换屏蔽词
         for (NekoDataModel.BlockWord block : neko.getProfile().getBlockWords()){
-            if(block.getMethod() == NekoDataModel.BlockWord.Method.ALL && message.contains(block.getBlock())){
-                // 如果屏蔽词的类型为all，则直接替换为屏蔽词
-                message = block.getBlock();
-                break;
+            if (message.contains(block.getBlock())) {
+                if (block.getMethod() == NekoDataModel.BlockWord.Method.ALL) {
+                    // 如果屏蔽词的类型为all，则直接替换为屏蔽词
+                    message = block.getBlock();
+                    message = message.replace(block.getBlock(),block.getReplace());
+                    break;
+                } else if (block.getMethod() == NekoDataModel.BlockWord.Method.WORD) {
+                    message = message.replace(block.getBlock(), block.getReplace());
+                }
             }
-            message = message.replace(block.getBlock(),block.getBlock());
         }
 
 
@@ -102,52 +113,76 @@ public class Messaging {
         return message;
     }
 
-    /*
-     以下代码来源于
-     https://github.com/CSneko/kawai-text/blob/main/js/petPhrase.js
-     */
+    public static class PhraseProcessor {
+        // 标点符号常量池
+        private static final Set<Character> PUNCTUATIONS = Set.of(
+                '.', ',', '?', '!', '。', '，', '？', '！'
+        );
 
-    public static String replaceCharWithRandom(String text, char chr, String target, double probability) {
-        String result = text;
-        Random random = new Random();
-        double rand = random.nextDouble();
-        if (rand < probability) {
-            int index = text.indexOf(chr);
-            if (index != -1) {
-                result = text.substring(0, index) + target + text.substring(index + 1);
-            }
-        }
-        return result;
-    }
+        // 线程安全随机数
+        private static final ThreadLocalRandom RANDOM = ThreadLocalRandom.current();
 
-    public static String runPetPhrases(String text, String petPhrase) {
-        char[] punctuation = {'.', ',', '?', '!', '。', '，', '？', '！'};
+        // 概率阈值
+        private static final double REPLACE_PROBABILITY = 0.4;
 
-        // Check and add petPhrase at the end if needed
-        if (!text.endsWith(petPhrase)) {
-            boolean add = true;
-            for (char punct : punctuation) {
-                if (text.endsWith(String.valueOf(punct))) {
-                    add = false;
-                    // Remove the last character
-                    text = text.substring(0, text.length() - 1);
-                    break;
-                }
-            }
-            if (add) {
-                text = text + petPhrase;
-            }
+        /**
+         * 智能字符替换 (原子操作版)
+         * @param text 原始文本
+         * @param targetChar 目标字符
+         * @param replacement 替换内容
+         * @param probability 替换概率 (0.0-1.0)
+         * @return 处理后的文本
+         */
+        public static String replaceCharWithRandom(String text, char targetChar, String replacement, double probability) {
+            if (text.isEmpty() || probability <= 0) return text;
+
+            return IntStream.range(0, text.length())
+                    .collect(StringBuilder::new, (sb, i) -> {
+                        char c = text.charAt(i);
+                        if (c == targetChar && RANDOM.nextDouble() < probability) {
+                            sb.append(replacement);
+                        } else {
+                            sb.append(c);
+                        }
+                    }, StringBuilder::append)
+                    .toString();
         }
 
-        // Add petPhrase before punctuation marks
-        for (char punct : punctuation) {
-            // If petPhrase does not end with punctuation mark, add it before
-            if (!petPhrase.endsWith(String.valueOf(punct))) {
-                text = replaceCharWithRandom(text, punct, petPhrase + punct, 0.4);
-            }
+        /**
+         * 口癖处理引擎 (并行优化版)
+         * @param text 原始文本
+         * @param petPhrase 口癖短语
+         * @return 处理后的文本
+         */
+        public static String runPetPhrases(String text, String petPhrase) {
+            if (text.isEmpty() || petPhrase.isEmpty()) return text;
+
+            // 阶段1：结尾处理 (保留标点)
+            text = processTextEnding(text, petPhrase);
+
+            // 阶段2：标点前插入 (并行流优化)
+            return PUNCTUATIONS.parallelStream()
+                    .filter(punct -> !petPhrase.endsWith(String.valueOf(punct)))
+                    .reduce(text, (current, punct) ->
+                                    replaceCharWithRandom(current, punct, petPhrase + punct, REPLACE_PROBABILITY),
+                            (s1, s2) -> s2 // 合并策略选择最后处理结果
+                    );
         }
 
-        return text;
+        /**
+         * 智能结尾处理
+         */
+        private static String processTextEnding(String text, String petPhrase) {
+            return Optional.of(text)
+                    .filter(t -> !t.endsWith(petPhrase))
+                    .map(t -> {
+                        char lastChar = t.charAt(t.length() - 1);
+                        return PUNCTUATIONS.contains(lastChar)
+                                ? t.substring(0, t.length() - 1) + petPhrase + lastChar // 保留原标点
+                                : t + petPhrase;
+                    })
+                    .orElse(text);
+        }
     }
 
     public interface GetPlayerUUID {

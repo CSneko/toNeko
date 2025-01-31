@@ -9,7 +9,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.cneko.toneko.common.api.Messaging;
 import org.cneko.toneko.common.api.NekoQuery;
@@ -22,7 +21,6 @@ import org.cneko.toneko.common.mod.packets.PlayerLeadByPlayerPayload;
 import org.cneko.toneko.common.mod.packets.PluginDetectPayload;
 import org.cneko.toneko.common.mod.packets.QuirkQueryPayload;
 import org.cneko.toneko.common.mod.packets.interactives.*;
-import org.cneko.toneko.common.mod.util.EntityUtil;
 import org.cneko.toneko.common.mod.util.PermissionUtil;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
 import org.cneko.toneko.common.mod.util.PlayerUtil;
@@ -61,7 +59,7 @@ public class ToNekoNetworkEvents {
     }
 
     public static void onMateWithCrystalNeko(MateWithCrystalNekoPayload mateWithCrystalNekoPayload, ServerPlayNetworking.Context context) {
-        processNekoInteractive(context.player(), UUID.fromString(mateWithCrystalNekoPayload.uuid()), neko -> {
+        processNekoInteractive(context.player(), mateWithCrystalNekoPayload.uuid(), neko -> {
             if (neko instanceof CrystalNekoEntity cneko){
                 cneko.tryMating((ServerLevel) neko.level(), context.player());
             }
@@ -69,7 +67,7 @@ public class ToNekoNetworkEvents {
     }
 
     public static void onChatWithNeko(ChatWithNekoPayload payload, ServerPlayNetworking.Context context) {
-        processNekoInteractive(context.player(), UUID.fromString(payload.uuid()), neko -> {
+        processNekoInteractive(context.player(), payload.uuid(), neko -> {
             // 如果没有开启AI，则不执行
             if (!ConfigUtil.isAIEnabled()){
                 context.player().sendSystemMessage(Component.translatable("messages.toneko.ai.not_enabled"));
@@ -83,8 +81,8 @@ public class ToNekoNetworkEvents {
     }
 
     public static void onBreed(NekoMatePayload payload, ServerPlayNetworking.Context context) {
-        processNekoInteractive(context.player(), UUID.fromString(payload.uuid()), neko -> {
-            LivingEntity mate = findNearbyEntityByUuid(context.player(),UUID.fromString(payload.mateUuid()),10);
+        processNekoInteractive(context.player(), payload.uuid(), neko -> {
+            Entity mate = findNearbyEntityByUuid(context.player(),UUID.fromString(payload.mateUuid()),10);
             if (mate instanceof INeko m){
                 if (neko != m)
                     neko.tryMating((ServerLevel) context.player().level(), m);
@@ -93,7 +91,7 @@ public class ToNekoNetworkEvents {
     }
 
     public static void onSetPose(NekoPosePayload payload, ServerPlayNetworking.Context context) {
-        processNekoInteractive(context.player(), UUID.fromString(payload.uuid()), neko -> {
+        processNekoInteractive(context.player(), payload.uuid(), neko -> {
             // 如果已经有姿势了，则移除
             if (EntityPoseManager.contains(neko)){
                 EntityPoseManager.remove(neko);
@@ -105,8 +103,8 @@ public class ToNekoNetworkEvents {
     }
 
     public static void onRideEntity(RideEntityPayload payload, ServerPlayNetworking.Context context) {
-        processNekoInteractive(context.player(), UUID.fromString(payload.uuid()), neko -> {
-            LivingEntity entity = findNearbyEntityByUuid(context.player(),UUID.fromString(payload.vehicleUuid()),5);
+        processNekoInteractive(context.player(), payload.uuid(), neko -> {
+           Entity entity = findNearbyEntityByUuid(context.player(),UUID.fromString(payload.vehicleUuid()),5);
             if (entity != null){
                 if (neko.isSitting()){
                     neko.stopRiding();
@@ -121,24 +119,30 @@ public class ToNekoNetworkEvents {
     }
 
     public static void onFollowOwner(FollowOwnerPayload payload, ServerPlayNetworking.Context context) {
-        processNekoInteractive(context.player(), UUID.fromString(payload.uuid()), neko -> {
+        processNekoInteractive(context.player(), payload.uuid(), neko -> {
             neko.followOwner(context.player());
         });
     }
 
     public static void onGiftItem(GiftItemPayload payload, ServerPlayNetworking.Context context) {
-        processNekoInteractive(context.player(), UUID.fromString(payload.uuid()), neko -> {
+        processNekoInteractive(context.player(), payload.uuid(), neko -> {
             neko.giftItem(context.player(), payload.slot());
         });
     }
 
-    public static void processNekoInteractive(ServerPlayer player, UUID targetUuid, EntityFinder finder) {
-        // 寻找目标实体
-        NekoEntity nekoEntity = findNearbyNekoByUuid(player, targetUuid,NekoEntity.DEFAULT_FIND_RANGE);
-        // 如果实体与玩家太远，则不执行
-        if(nekoEntity != null && !(nekoEntity.distanceToSqr(player) > 64)){
-            // 处理代码
-            finder.find(nekoEntity);
+    private static void processNekoInteractive(ServerPlayer player, String uuid, EntityFinder finder) {
+        // 检查uuid是否合法
+        try {
+            UUID targetUuid = UUID.fromString(uuid);
+            // 寻找目标实体
+            NekoEntity nekoEntity = findNearbyNekoByUuid(player, targetUuid,NekoEntity.DEFAULT_FIND_RANGE);
+            // 如果实体与玩家太远，则不执行
+            if(nekoEntity != null && !(nekoEntity.distanceToSqr(player) > 64)){
+                // 处理代码
+                finder.find(nekoEntity);
+            }
+        }catch (Exception ignored){
+            return;
         }
     }
 
@@ -161,36 +165,20 @@ public class ToNekoNetworkEvents {
 
     /**
      * 根据UUID查找附近的特定实体。
-     * @param player 查找的玩家。
+     *
+     * @param player     查找的玩家。
      * @param targetUuid 目标实体的UUID。
      * @return 找到的实体，如果没有找到则返回null。
      */
-    public static @Nullable LivingEntity findNearbyEntityByUuid(ServerPlayer player, UUID targetUuid,double range) {
-        // 确定搜索范围，以玩家为中心
-        AABB box = new AABB(
-                player.getX() - range,
-                player.getY() - range,
-                player.getZ() - range,
-                player.getX() + range,
-                player.getY() + range,
-                player.getZ() + range
-        );
+    private static Entity findNearbyEntityByUuid(ServerPlayer player, UUID targetUuid, double range) {
+        ServerLevel world = (ServerLevel) player.level();
 
-        Level world = player.level();
-        // 遍历指定范围内的所有实体
-        for (Entity entity : world.getEntitiesOfClass(Entity.class, box)) {
-            if (entity.getUUID().equals(targetUuid)) {
-                if (entity instanceof LivingEntity le){
-                    return le;
-                }
-            }
-        }
+        return world.getEntity(targetUuid);
 
-        return null; // 没有找到目标实体
     }
 
-    public static @Nullable NekoEntity findNearbyNekoByUuid(ServerPlayer player, UUID targetUuid,double rang) {
-        LivingEntity entity = findNearbyEntityByUuid(player,targetUuid,rang);
+    public static @Nullable NekoEntity findNearbyNekoByUuid(ServerPlayer player, UUID targetUuid,double range) {
+        Entity entity = findNearbyEntityByUuid(player,targetUuid,range);
         if (entity instanceof NekoEntity nekoEntity){
             return nekoEntity;
         }else {
