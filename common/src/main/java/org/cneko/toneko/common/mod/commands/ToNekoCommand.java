@@ -14,6 +14,8 @@ import org.cneko.toneko.common.Bootstrap;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.api.Permissions;
 import org.cneko.toneko.common.mod.commands.arguments.NekoArgument;
+import org.cneko.toneko.common.mod.commands.arguments.NekoSuggestionProvider;
+import org.cneko.toneko.common.mod.commands.arguments.WordSuggestionProvider;
 import org.cneko.toneko.common.mod.util.PlayerUtil;
 
 import java.util.function.Predicate;
@@ -34,6 +36,7 @@ public class ToNekoCommand {
                     .then(literal("player")
                             .requires(source -> has(source, Permissions.COMMAND_TONEKO_PLAYER))
                             .then(argument("neko", NekoArgument.neko())
+                                    .suggests(new NekoSuggestionProvider(false))
                                     .executes(ToNekoCommand::playerCommand)
                             )
                     )
@@ -41,6 +44,7 @@ public class ToNekoCommand {
                     .then(literal("aliases")
                             .requires(source -> has(source, Permissions.COMMAND_TONEKO_ALIAS))
                             .then(argument("neko",NekoArgument.ownedNeko())
+                                            .suggests(new NekoSuggestionProvider(true))
                                     //-------------------------------------add---------------------------------------
                                     .then(literal("add")
                                             .then(argument("aliases", StringArgumentType.word())
@@ -48,6 +52,7 @@ public class ToNekoCommand {
                                             )
                                     ).then(literal("remove")
                                             .then(argument("aliases", StringArgumentType.word())
+                                                    .suggests(WordSuggestionProvider.aliases())
                                                     .executes(ToNekoCommand::AliasesRemove)
                                             )
                                     )
@@ -57,6 +62,7 @@ public class ToNekoCommand {
                     .then(literal("block")
                             .requires(source -> has(source, Permissions.COMMAND_TONEKO_BLOCK))
                             .then(argument("neko",NekoArgument.ownedNeko())
+                                            .suggests(new NekoSuggestionProvider(true))
                                     //--------------------------------add------------------------------------
                                     .then(literal("add")
                                             .then(argument("block",StringArgumentType.word())
@@ -76,6 +82,7 @@ public class ToNekoCommand {
                                     .then(literal("remove")
                                             .then(argument("block",StringArgumentType.word())
                                                     .executes(ToNekoCommand::removeBlock)
+                                                    .suggests(WordSuggestionProvider.blockWord())
                                             )
                                     )
                             )
@@ -84,6 +91,7 @@ public class ToNekoCommand {
                     .then(literal("xp")
                             .requires(source -> has(source, Permissions.COMMAND_TONEKO_XP))
                             .then(argument("neko",NekoArgument.ownedNeko())
+                                    .suggests(new NekoSuggestionProvider(true))
                                     .executes(ToNekoCommand::xp)
                             )
                     )
@@ -91,6 +99,7 @@ public class ToNekoCommand {
                     .then(literal("remove")
                             .requires(source -> has(source, Permissions.COMMAND_TONEKO_REMOVE))
                             .then(argument("neko",NekoArgument.ownedNeko())
+                                    .suggests(new NekoSuggestionProvider(true))
                                     .executes(ToNekoCommand::remove)
                             )
                     )

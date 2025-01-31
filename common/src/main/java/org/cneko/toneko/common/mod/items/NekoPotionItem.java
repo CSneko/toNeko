@@ -30,6 +30,7 @@ public class NekoPotionItem extends PotionItem {
     public void toneko(Level world, Player user, InteractionHand hand) {
         // 如果食物被成功吃掉并且玩家还不是猫猫，则把玩家变成猫猫
         InteractionResultHolder<ItemStack> result = super.use(world, user, hand);
+        if (world.isClientSide()) return;
         NekoQuery.Neko neko = NekoQuery.getNeko(user.getUUID());
         if(result.getResult() == InteractionResult.CONSUME && !neko.isNeko()){
             neko.setNeko(true);

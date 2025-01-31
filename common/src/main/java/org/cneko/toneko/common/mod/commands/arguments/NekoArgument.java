@@ -6,6 +6,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import net.minecraft.client.multiplayer.ClientSuggestionProvider;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -61,31 +62,6 @@ public class NekoArgument implements ArgumentType<ServerPlayer> {
     private boolean checkNeko(Player player) {
         NekoQuery.Neko neko = NekoQuery.getNeko(player.getUUID());
         return neko.isNeko();
-    }
-
-    @Override
-    public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        if (!(context.getSource() instanceof CommandSourceStack source)) return CompletableFuture.completedFuture(builder.build());
-        ServerPlayer senderPlayer = source.getPlayer(); // 获取命令发送者（可能为 null）
-
-        for (Player player : PlayerUtil.getPlayerList()) { // 确保只遍历在线玩家
-            if (!checkNeko(player)) continue; // 跳过非猫娘玩家
-
-            if (requireOwned) {
-                // 如果发送者不是玩家，直接跳过
-                if (senderPlayer == null) continue;
-
-                // 检查目标猫娘是否属于发送者
-                NekoQuery.Neko neko = NekoQuery.getNeko(player.getUUID());
-                if (neko.hasOwner(senderPlayer.getUUID())) {
-                    builder.suggest(player.getName().getString());
-                }
-            } else {
-                builder.suggest(player.getName().getString());
-            }
-        }
-
-        return builder.buildFuture();
     }
 
     @Override

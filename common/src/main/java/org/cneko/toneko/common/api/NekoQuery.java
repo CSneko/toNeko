@@ -6,6 +6,7 @@ import org.cneko.toneko.common.api.json.NekoParser;
 import org.cneko.toneko.common.quirks.Quirk;
 import org.cneko.toneko.common.quirks.QuirkRegister;
 import org.cneko.toneko.common.util.FileUtil;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -189,6 +190,16 @@ public class NekoQuery {
          */
         public List<NekoDataModel.Owner> getOwners() {
             return profile.getOwners();
+        }
+
+        @Nullable
+        public NekoDataModel.Owner getOwner(UUID owner) {
+            for (NekoDataModel.Owner owner1 : profile.getOwners()) {
+                if (owner1.getUuid().equals(owner)) {
+                    return owner1;
+                }
+            }
+            return null;
         }
 
         /**

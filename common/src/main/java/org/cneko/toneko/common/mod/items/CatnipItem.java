@@ -30,7 +30,7 @@ public class CatnipItem extends Item {
     @Override
     public @NotNull ItemStack finishUsingItem(ItemStack stack, @NotNull Level level, @NotNull LivingEntity livingEntity) {
         FoodProperties foodProperties = stack.get(DataComponents.FOOD);
-        if (foodProperties != null) {
+        if (foodProperties != null && !livingEntity.level().isClientSide) {
             if (livingEntity instanceof INeko neko && neko.isNeko()){
                 livingEntity.addEffect(new MobEffectInstance(
                         BuiltInRegistries.MOB_EFFECT.wrapAsHolder(ToNekoEffects.NEKO_EFFECT),
