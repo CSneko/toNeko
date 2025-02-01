@@ -32,6 +32,8 @@ public class ToNekoCommand {
 
             //------------------------------------------------toneko-----------------------------------------------
             dispatcher.register(literal("toneko")
+                    // 不允许终端执行
+                    .requires(CommandSourceStack::isPlayer)
                     //----------------------------------------player-------------------------------------
                     .then(literal("player")
                             .requires(source -> has(source, Permissions.COMMAND_TONEKO_PLAYER))

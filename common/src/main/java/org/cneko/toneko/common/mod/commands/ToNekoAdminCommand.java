@@ -1,9 +1,13 @@
 package org.cneko.toneko.common.mod.commands;
 
+import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.server.level.ServerPlayer;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.api.Permissions;
 import org.cneko.toneko.common.mod.entities.INeko;
@@ -12,13 +16,10 @@ import org.cneko.toneko.common.util.LanguageUtil;
 import org.cneko.toneko.common.mod.util.PermissionUtil;
 import org.cneko.toneko.common.mod.util.PlayerUtil;
 
-import java.io.File;
 import java.util.*;
 
-import static com.mojang.text2speech.Narrator.LOGGER;
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
-import static org.cneko.toneko.common.mod.util.CommandUtil.getOnlinePlayers;
 import static org.cneko.toneko.common.mod.util.TextUtil.translatable;
 
 public class ToNekoAdminCommand {
@@ -29,9 +30,10 @@ public class ToNekoAdminCommand {
                     .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_TONEKOADMIN))
                     .then(literal("set")
                             .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_TONEKOADMIN_SET))
-                            .then(argument("neko", StringArgumentType.string())
-                                    .suggests(getOnlinePlayers)
-                                    .executes(ToNekoAdminCommand::set)
+                            .then(argument("neko", EntityArgument.player())
+                                    .then(argument("is",BoolArgumentType.bool())
+                                            .executes(ToNekoAdminCommand::set)
+                                    )
                             )
 
                     )
@@ -66,8 +68,7 @@ public class ToNekoAdminCommand {
     }
 
     public static int dataDeleteRubbish(CommandContext<CommandSourceStack> context) {
-        // 在异步进行
-        NekoQuery.NekoData.executor.submit(() -> {
+        context.getSource().getServer().execute(() -> {
             // 记录时间
             long startTime = System.currentTimeMillis();
             // 扫描服务器内所有世界的实体数据（包括未生成的）并生成列表
@@ -133,16 +134,23 @@ public class ToNekoAdminCommand {
 
     public static int set(CommandContext<CommandSourceStack> context) {
         CommandSourceStack source = context.getSource();
-        String nekoName = StringArgumentType.getString(context, "neko");
-        NekoQuery.Neko neko = NekoQuery.getNeko(PlayerUtil.getPlayerByName(nekoName).getUUID());
-        boolean isNeko = neko.isNeko();
+        ServerPlayer nekoP;
+        try {
+            nekoP = EntityArgument.getPlayer(context, "neko");
+        } catch (CommandSyntaxException e) {
+            return 0;
+        }
+        NekoQuery.Neko neko = NekoQuery.getNeko(nekoP.getUUID());
+        if (neko==null){
+            return 0;
+        }
+        boolean isNeko = context.getArgument("is", Boolean.class);
         if(isNeko){
-            // 如果是猫猫，则设置为非猫猫
-            neko.setNeko(false);
-            source.sendSystemMessage(translatable("command.tonekoadmin.set.false", nekoName));
-        }else {
             neko.setNeko(true);
-            source.sendSystemMessage(translatable("command.tonekoadmin.set.true", nekoName));
+            source.sendSystemMessage(translatable("command.tonekoadmin.set.true", nekoP.getName().getString()));
+        }else {
+            neko.setNeko(false);
+            source.sendSystemMessage(translatable("command.tonekoadmin.set.false", nekoP.getName().getString()));
         }
         return 1;
     }

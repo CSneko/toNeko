@@ -78,6 +78,10 @@ public class PermissionUtil {
     }
     public static boolean has(String permission, CommandSourceStack source) {
         try {
+            // 如果是终端执行，则直接返回true
+            if (source.getEntity() == null) {
+                return true;
+            }
             if (installed) {
                 return Permissions.check(source, permission);
             }

@@ -40,6 +40,7 @@ public class NekoCommand {
     public static void init(){
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             dispatcher.register(literal("neko")
+                    .requires(CommandSourceStack::isPlayer)
                     .then(literal("help")
                             .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_NEKO_HELP))
                             .executes(NekoCommand::helpCommand)

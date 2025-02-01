@@ -26,7 +26,7 @@ import static org.cneko.toneko.common.mod.util.TextUtil.translatable;
 public class QuirkCommand {
     public static void init(){
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> dispatcher.register(literal("quirk")
-                .requires(source -> PermissionUtil.has(Permissions.COMMAND_QUIRK, source))
+                .requires(source -> PermissionUtil.has(Permissions.COMMAND_QUIRK, source) && source.isPlayer())
                 .then(literal("help")
                         .requires(source -> PermissionUtil.has(Permissions.COMMAND_QUIRK_HELP, source))
                         .executes(QuirkCommand::helpCommand)
@@ -59,7 +59,6 @@ public class QuirkCommand {
 
     public static int quirkGui(CommandContext<CommandSourceStack> context) {
         ServerPlayer player = context.getSource().getPlayer();
-        String playerName = TextUtil.getPlayerName(player);
         NekoQuery.Neko neko = NekoQuery.getNeko(player.getUUID());
         // 打开设置屏幕
         ServerPlayNetworking.send(player, new QuirkQueryPayload(
