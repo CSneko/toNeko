@@ -1,9 +1,7 @@
 package org.cneko.toneko.common.mod.items;
 
-import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.food.FoodProperties;
@@ -14,17 +12,9 @@ import org.cneko.toneko.common.mod.effects.ToNekoEffects;
 import org.cneko.toneko.common.mod.entities.INeko;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.Optional;
-
 public class CatnipItem extends Item {
-    public CatnipItem() {
-        super(new Properties().component(DataComponents.FOOD,
-                new FoodProperties(2,1.0f,true,1.6f, Optional.empty(),
-                        List.of()
-                )
-            )
-        );
+    public CatnipItem(Properties properties) {
+        super(properties);
     }
 
     @Override

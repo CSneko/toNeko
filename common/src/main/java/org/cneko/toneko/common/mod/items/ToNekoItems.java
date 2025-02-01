@@ -1,6 +1,8 @@
 package org.cneko.toneko.common.mod.items;
 
-
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 
 public class ToNekoItems {
@@ -11,5 +13,8 @@ public class ToNekoItems {
     public static NekoArmor.NekoPawsItem NEKO_PAWS;
     public static NekoCollectorItem NEKO_COLLECTOR;
     public static CatnipItem CATNIP;
+    public static CatnipItem CATNIP_SANDWICH;
     public static Item CATNIP_SEED;
+
+    public static final TagKey<Item> CATNIP_TAG = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c","foods/catnip"));
 }

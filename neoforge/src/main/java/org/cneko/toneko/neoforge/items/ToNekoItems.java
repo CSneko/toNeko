@@ -1,10 +1,12 @@
 package org.cneko.toneko.neoforge.items;
 
 import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemNameBlockItem;
@@ -24,6 +26,8 @@ import org.cneko.toneko.neoforge.entities.ToNekoEntities;
 
 import static org.cneko.toneko.common.mod.items.ToNekoItems.*;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.cneko.toneko.common.Bootstrap.MODID;
@@ -33,12 +37,14 @@ import static org.cneko.toneko.neoforge.ToNekoNeoForge.ITEMS;
 public class ToNekoItems {
 
     public static DeferredHolder<Item,DeferredSpawnEggItem> ADVENTURER_NEKO_SPAWN_EGG_HOLDER;
+    public static DeferredHolder<Item,DeferredSpawnEggItem> GHOST_NEKO_SPAWN_EGG_HOLDER;
     public static DeferredHolder<Item,NekoPotionItem> NEKO_POTION_HOLDER;
     public static DeferredHolder<Item,NekoCollectorItem> NEKO_COLLECTOR_HOLDER;
     public static DeferredHolder<Item,FurryBoheItem> FURRY_BOHE_HOLDER;
     public static DeferredHolder<Item,NekoArmor.NekoEarsItem> NEKO_EARS_HOLDER;
     public static DeferredHolder<Item,NekoArmor.NekoTailItem> NEKO_TAIL_HOLDER;
     public static DeferredHolder<Item, CatnipItem> CATNIP_HOLDER;
+    public static DeferredHolder<Item, CatnipItem> CATNIP_SANDWICH_HOLDER;
     public static DeferredHolder<Item,Item> CATNIP_SEED_HOLDER;
     public static DeferredHolder<CreativeModeTab,CreativeModeTab> TONEKO_ITEM_GROUP_HOLDER;
 
@@ -61,8 +67,17 @@ public class ToNekoItems {
         NEKO_TAIL_HOLDER = ITEMS.register(NekoArmor.NekoTailItem.ID, ()->new NekoArmor.NekoTailItem(ToNekoArmorMaterials.NEKO));
 
         ADVENTURER_NEKO_SPAWN_EGG_HOLDER = ITEMS.register("adventurer_neko_spawn_egg",()->new DeferredSpawnEggItem(()->ToNekoEntities.ADVENTURER_NEKO_HOLDER.get(), 0x7e7e7e, 0xffffff,new Item.Properties()));
+        ADVENTURER_NEKO_SPAWN_EGG_HOLDER = ITEMS.register("ghost_neko_spawn_egg",()->new DeferredSpawnEggItem(()->ToNekoEntities.GHOST_NEKO_HOLDER.get(), 0x7e7e7e, 0xffffff,new Item.Properties()));
 
-        CATNIP_HOLDER = ITEMS.register("catnip", CatnipItem::new);
+        CATNIP_HOLDER = ITEMS.register("catnip", ()->new CatnipItem(new Item.Properties().component(DataComponents.FOOD,
+                new FoodProperties(2,1.0f,true,1.6f, Optional.empty(),
+                        List.of()
+                ))));
+
+        CATNIP_SANDWICH_HOLDER = ITEMS.register("catnip_sandwich", ()->new CatnipItem(new Item.Properties().component(DataComponents.FOOD,
+                new FoodProperties(6,3.0f,false,1.6f, Optional.empty(),
+                        List.of()
+                ))));
 
         CATNIP_SEED_HOLDER = ITEMS.register("catnip_seed",()->new ItemNameBlockItem(ToNekoBlocks.CATNIP_HOLDER.get(), new Item.Properties()));
 
@@ -78,7 +93,9 @@ public class ToNekoItems {
                     event.accept(NEKO_EARS_HOLDER.get());
                     event.accept(NEKO_TAIL_HOLDER.get());
                     event.accept(ADVENTURER_NEKO_SPAWN_EGG_HOLDER.get());
+                    event.accept(GHOST_NEKO_SPAWN_EGG_HOLDER.get());
                     event.accept(CATNIP_HOLDER.get());
+                    event.accept(CATNIP_SANDWICH_HOLDER.get());
                     event.accept(CATNIP_SEED_HOLDER.get());
                 })
                 .build()
@@ -103,7 +120,9 @@ public class ToNekoItems {
             event.accept(NEKO_EARS_HOLDER.get());
             event.accept(NEKO_TAIL_HOLDER.get());
             event.accept(ADVENTURER_NEKO_SPAWN_EGG_HOLDER.get());
+            event.accept(GHOST_NEKO_SPAWN_EGG_HOLDER.get());
             event.accept(CATNIP_HOLDER.get());
+            event.accept(CATNIP_SANDWICH_HOLDER.get());
             event.accept(CATNIP_SEED_HOLDER.get());
         }
         reg();
@@ -111,6 +130,7 @@ public class ToNekoItems {
 
     public static void reg(){
         CATNIP = CATNIP_HOLDER.get();
+        CATNIP_SANDWICH = CATNIP_SANDWICH_HOLDER.get();
         CATNIP_SEED = CATNIP_SEED_HOLDER.get();
         NEKO_COLLECTOR = NEKO_COLLECTOR_HOLDER.get();
         FURRY_BOHE = FURRY_BOHE_HOLDER.get();

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "BCB"
+  ],
+  "key": {
+    "B": {
+      "item" : "minecraft:bread"
+    },
+    "C": {
+      "item" : "toneko:catnip"
+    }
+  },
+  "result": {
+    "id": "toneko:catnip_sandwich",
+    "count": 1
+  }
+}

@@ -262,8 +262,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
 
     // 最喜欢的物品
     public boolean isFavoriteItem(ItemStack stack){
-        Item item = stack.getItem();
-        return item.equals(ToNekoItems.CATNIP);
+        return stack.is(ToNekoItems.CATNIP_TAG);
     }
     // 是否喜欢这个物品
     public boolean isLikedItem(ItemStack stack){
@@ -284,7 +283,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         // 如果是喜欢的物品
         if (this.isLikedItem(stack)){
             // 如果是猫薄荷，则吃下它
-            if (stack.is(ToNekoItems.CATNIP)){
+            if (stack.is(ToNekoItems.CATNIP_TAG)){
                 this.addEffect(new MobEffectInstance(
                         BuiltInRegistries.MOB_EFFECT.wrapAsHolder(ToNekoEffects.NEKO_EFFECT),
                         10000,
