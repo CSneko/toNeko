@@ -6,6 +6,7 @@ import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import org.cneko.toneko.common.mod.entities.AdventurerNeko;
 import org.cneko.toneko.common.mod.entities.CrystalNekoEntity;
+import org.cneko.toneko.common.mod.entities.GhostNekoEntity;
 import org.cneko.toneko.neoforge.entities.ToNekoEntities;
 
 import static org.cneko.toneko.common.mod.misc.ToNekoAttributes.NEKO_DEGREE;
@@ -25,6 +26,7 @@ public class ToNekoAttributes {
     public static void registerAttributes(EntityAttributeCreationEvent event){
         event.put(ToNekoEntities.ADVENTURER_NEKO_HOLDER.get(), AdventurerNeko.createAdventurerNekoAttributes().build());
         event.put(ToNekoEntities.CRYSTAL_NEKO_HOLDER.get(), CrystalNekoEntity.createNekoAttributes().build());
+        event.put(ToNekoEntities.GHOST_NEKO_HOLDER.get(), GhostNekoEntity.createGhostNekoAttributes().build());
     }
 
 

@@ -1,0 +1,31 @@
+{
+  "parent": "minecraft:toneko/got_neko_potion",
+  "criteria": {
+    "neko_lv100": {
+      "conditions": {
+        "level": 100.0
+      },
+      "trigger": "minecraft:toneko/neko_lv100"
+    }
+  },
+  "display": {
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "description": {
+      "translate": "advancements.toneko.neko_lv100.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "toneko:neko_tail"
+    },
+    "title": {
+      "translate": "advancements.toneko.neko_lv100.title"
+    }
+  },
+  "requirements": [
+    [
+      "neko_lv100"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

@@ -1,6 +1,7 @@
 package org.cneko.toneko.neoforge;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ArmorMaterial;
@@ -29,6 +30,7 @@ import org.cneko.toneko.neoforge.msic.ToNekoAttributes;
 import org.cneko.toneko.neoforge.items.ToNekoArmorMaterials;
 import org.cneko.toneko.neoforge.items.ToNekoItems;
 import net.minecraft.world.entity.ai.attributes.Attribute;
+import org.cneko.toneko.neoforge.msic.ToNekoCriteriaNeoForge;
 
 import static org.cneko.toneko.common.Bootstrap.MODID;
 
@@ -42,6 +44,7 @@ public final class ToNekoNeoForge {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
     public static final DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(Registries.ATTRIBUTE, MODID);
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(Registries.ENTITY_TYPE, MODID);
+    public static final DeferredRegister<CriterionTrigger<?>> CRITERION_TRIGGERS = DeferredRegister.create(Registries.TRIGGER_TYPE, "minecraft");
     public ToNekoNeoForge(IEventBus bus, ModContainer container) {
         ITEMS.register(bus);
         BLOCKS.register(bus);
@@ -50,11 +53,13 @@ public final class ToNekoNeoForge {
         ATTRIBUTES.register(bus);
         ENTITY_TYPES.register(bus);
         CREATIVE_MODE_TABS.register(bus);
+        CRITERION_TRIGGERS.register(bus);
         // 注册装备
         ToNekoArmorMaterials.init();
         ToNekoItems.init();
         ToNekoBlocks.init();
         ToNekoAttributes.init();
+        ToNekoCriteriaNeoForge.init();
         bus.addListener(ToNekoAttributes::onRegisterAttributes);
         bus.addListener(ToNekoAttributes::registerAttributes);
         ToNekoEvents.init();

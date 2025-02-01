@@ -1,0 +1,28 @@
+{
+  "parent": "minecraft:toneko/catnip",
+  "criteria": {
+    "first_gift": {
+      "trigger": "minecraft:toneko/gift_neko"
+    }
+  },
+  "display": {
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "description": {
+      "translate": "advancements.toneko.first_gift.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "toneko:catnip_sandwich"
+    },
+    "title": {
+      "translate": "advancements.toneko.first_gift.title"
+    }
+  },
+  "requirements": [
+    [
+      "first_gift"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

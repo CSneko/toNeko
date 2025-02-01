@@ -23,6 +23,7 @@ import org.cneko.toneko.common.mod.items.*;
 import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.neoforge.ToNekoNeoForge;
 import org.cneko.toneko.neoforge.entities.ToNekoEntities;
+import org.cneko.toneko.neoforge.msic.ToNekoCriteriaNeoForge;
 
 import static org.cneko.toneko.common.mod.items.ToNekoItems.*;
 
@@ -67,7 +68,7 @@ public class ToNekoItems {
         NEKO_TAIL_HOLDER = ITEMS.register(NekoArmor.NekoTailItem.ID, ()->new NekoArmor.NekoTailItem(ToNekoArmorMaterials.NEKO));
 
         ADVENTURER_NEKO_SPAWN_EGG_HOLDER = ITEMS.register("adventurer_neko_spawn_egg",()->new DeferredSpawnEggItem(()->ToNekoEntities.ADVENTURER_NEKO_HOLDER.get(), 0x7e7e7e, 0xffffff,new Item.Properties()));
-        ADVENTURER_NEKO_SPAWN_EGG_HOLDER = ITEMS.register("ghost_neko_spawn_egg",()->new DeferredSpawnEggItem(()->ToNekoEntities.GHOST_NEKO_HOLDER.get(), 0x7e7e7e, 0xffffff,new Item.Properties()));
+        GHOST_NEKO_SPAWN_EGG_HOLDER = ITEMS.register("ghost_neko_spawn_egg",()->new DeferredSpawnEggItem(()->ToNekoEntities.GHOST_NEKO_HOLDER.get(), 0x7e7e7e, 0xffffff,new Item.Properties()));
 
         CATNIP_HOLDER = ITEMS.register("catnip", ()->new CatnipItem(new Item.Properties().component(DataComponents.FOOD,
                 new FoodProperties(2,1.0f,true,1.6f, Optional.empty(),
@@ -139,14 +140,6 @@ public class ToNekoItems {
         NEKO_POTION = NEKO_POTION_HOLDER.get();
         ToNekoBlocks.reg();
         ToNekoEntities.reg();
-    }
-
-    @SubscribeEvent
-    public static void registerEvent(FMLCommonSetupEvent event){
-        NEKO_POTION = NEKO_POTION_HOLDER.get();
-        NEKO_COLLECTOR = NEKO_COLLECTOR_HOLDER.get();
-        FURRY_BOHE = FURRY_BOHE_HOLDER.get();
-        NEKO_TAIL = NEKO_TAIL_HOLDER.get();
-        NEKO_EARS = NEKO_EARS_HOLDER.get();
+        ToNekoCriteriaNeoForge.reg();
     }
 }

@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:toneko/got_neko_potion",
+  "criteria": {
+    "catnip": {
+      "conditions": {
+        "items": [
+          {
+            "items": "toneko:catnip"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "description": {
+      "translate": "advancements.toneko.catnip.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "toneko:catnip"
+    },
+    "title": {
+      "translate": "advancements.toneko.catnip.title"
+    }
+  },
+  "requirements": [
+    [
+      "catnip"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

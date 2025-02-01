@@ -4,8 +4,6 @@ import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
 import net.minecraft.network.chat.Component;
 import org.cneko.toneko.common.api.Messaging;
-import org.cneko.toneko.common.api.NekoQuery;
-import org.cneko.toneko.common.mod.advencements.ToNekoCriteria;
 import org.cneko.toneko.common.mod.api.events.ChatEvents;
 import org.cneko.toneko.common.mod.commands.arguments.NekoArgument;
 import org.cneko.toneko.common.mod.events.CommonChatEvent;
@@ -23,7 +21,6 @@ public class ModBootstrap {
         Messaging.NEKO_MODIFY_INSTANCE = CommonChatEvent::modify;
         Messaging.ON_FORMAT_INSTANCE = (message, playerName, nickname,prefixes, format)-> ChatEvents.ON_CHAT_FORMAT.invoker().onFormat(message, playerName, nickname, prefixes,format);
         SchedulerPoolProvider.INSTANCE = new FabricSchedulerPoolImpl();
-        ToNekoCriteria.init();
         ArgumentTypeRegistry.registerArgumentType(
                 toNekoLoc("neko"),
                 NekoArgument.class, SingletonArgumentInfo.contextFree(NekoArgument::neko));
