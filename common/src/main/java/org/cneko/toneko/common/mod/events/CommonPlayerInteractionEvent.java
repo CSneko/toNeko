@@ -129,7 +129,7 @@ public class CommonPlayerInteractionEvent {
         NekoQuery.Neko neko = nekoEntity.getNeko();
         if (neko == null) return true;
 
-        return processEvent(
+        processEvent(
                 new DamageContext(entity, source, damage, neko),
                 (mq, ctx) ->{
                     if (ctx.entity() instanceof INeko iNeko) {
@@ -138,6 +138,9 @@ public class CommonPlayerInteractionEvent {
                 },
                 null
         );
+
+        // 无论是否有quirk处理，都允许伤害
+        return true;
     }
 
     // 攻击事件处理
@@ -152,16 +155,15 @@ public class CommonPlayerInteractionEvent {
             return InteractionResult.PASS;
         }
 
-        AttackContext context = new AttackContext(sp, level, hand, le, hitResult, neko);
-        boolean success = processEvent(context, (mq, ctx) -> {
-            InteractionResult result = mq.onNekoAttack(ctx.attacker(), ctx.level(),
-                    ctx.hand(), ctx.target(), ctx.hitResult());
-
-            if (result == InteractionResult.SUCCESS) {
-                neko.addXp(ctx.attacker().getUUID(), mq.getInteractionValue());
+        for (Quirk q : neko.getQuirks()) {
+            if (q instanceof ModQuirk mq) {
+                InteractionResult result = mq.onNekoAttack(sp, level, hand, le, hitResult);
+                if (result == InteractionResult.SUCCESS) {
+                    neko.addXp(sp.getUUID(), mq.getInteractionValue());
+                }
             }
-        }, mq -> {});
+        }
 
-        return success ? InteractionResult.SUCCESS : InteractionResult.PASS;
+        return InteractionResult.PASS;
     }
 }
