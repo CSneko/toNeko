@@ -101,7 +101,7 @@ public class AdvancementsProvider extends FabricAdvancementProvider {
                         false
                 )
                 .addCriterion("first_gift", GiftNekoTrigger.TriggerInstance.create())
-                .parent(NEKO_ARMOR)
+                .parent(CATNIP)
                 .save(consumer,MODID+"/first_gift");
 
         NEKO_LV100 = Advancement.Builder.advancement()
