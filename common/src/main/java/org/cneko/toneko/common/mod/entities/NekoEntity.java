@@ -35,6 +35,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.Vec3;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.mod.advencements.ToNekoCriteria;
+import org.cneko.toneko.common.mod.ai.PromptRegistry;
 import org.cneko.toneko.common.mod.api.NekoNameRegistry;
 import org.cneko.toneko.common.mod.api.NekoSkinRegistry;
 import org.cneko.toneko.common.mod.effects.ToNekoEffects;
@@ -629,21 +630,12 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     }
 
     public String generateAIPrompt(Player player) {
-        return ConfigUtil.getAIPrompt()
-                .replace("%neko_name%", this.getName().getString())
-                .replace("%neko_type%", getTypeName().getString())
-                .replace("%neko_des%", getDescription())
-                .replace("%neko_height%", new DecimalFormat("0.00").format(this.getBbHeight()))
-                .replace("%neko_moe_tags%", this.getMoeTagsString())
-
-                .replace("%player_name%", player.getName().getString())
-                .replace("%player_is_owner%",this.getNeko().hasOwner(player.getUUID())?Component.translatable("misc.toneko.is_or_not.is").getString():Component.translatable("misc.toneko.is_or_not.not").getString())
-                .replace("%player_is_neko%", player.isNeko()?Component.translatable("misc.toneko.is_or_not.is").getString():Component.translatable("misc.toneko.is_or_not.not").getString())
-
-                .replace("%world_time%",this.level().isDay()? Component.translatable("misc.toneko.time.day").getString():Component.translatable("misc.toneko.time.night").getString())
-                .replace("%world_weather",(this.level().isRainingAt(this.blockPosition())||this.level().isThundering())? Component.translatable("misc.toneko.weather.rain").getString():Component.translatable("misc.toneko.weather.sunny").getString())
-                ;
+        return PromptRegistry.generatePrompt(this,player,ConfigUtil.getAIPrompt());
     }
+
+    @Override
+    public @NotNull Component getTypeName() {return super.getTypeName();}
+
     public String getDescription() {
         return Component.translatable(getType().getDescriptionId()+".des").getString();
     }
