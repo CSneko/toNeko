@@ -3,6 +3,7 @@ package org.cneko.toneko.common.mod;
 import net.minecraft.network.chat.Component;
 import org.cneko.toneko.common.api.Messaging;
 import org.cneko.toneko.common.api.NekoQuery;
+import org.cneko.toneko.common.mod.advencements.ToNekoCriteria;
 import org.cneko.toneko.common.mod.api.events.ChatEvents;
 import org.cneko.toneko.common.mod.events.CommonChatEvent;
 import org.cneko.toneko.common.mod.util.PlayerUtil;
@@ -17,5 +18,6 @@ public class ModBootstrap {
         Messaging.NEKO_MODIFY_INSTANCE = CommonChatEvent::modify;
         Messaging.ON_FORMAT_INSTANCE = (message, playerName, nickname,prefixes, format)-> ChatEvents.ON_CHAT_FORMAT.invoker().onFormat(message, playerName, nickname, prefixes,format);
         SchedulerPoolProvider.INSTANCE = new FabricSchedulerPoolImpl();
+        ToNekoCriteria.init();
     }
 }

@@ -253,7 +253,7 @@ public class NekoQuery {
         }
 
         public void addLevel(double level) {
-            profile.setLevel(profile.getLevel() + level);
+            this.setLevel(profile.getLevel() + level);
         }
 
         public void setLevel(double level) {

@@ -52,6 +52,10 @@ public class ToNeko implements ModInitializer {
         // 注册网络数据包
         ToNekoPackets.init();
 
+        // 通用的启动
+        Bootstrap.bootstrap();
+        ModBootstrap.bootstrap();
+
         // 启动事件
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             ModMeta.INSTANCE.setServer(server);
@@ -60,9 +64,6 @@ public class ToNeko implements ModInitializer {
             ToNekoNetworkEvents.init();
             // 注册权限
             PermissionUtil.init();
-            // 通用的启动
-            Bootstrap.bootstrap();
-            ModBootstrap.bootstrap();
         });
     }
 }

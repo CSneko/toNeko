@@ -28,6 +28,15 @@ public class ClientTickEvent {
         while (ToNekoKeyBindings.QUIRK_KEY.consumeClick()) {
             client.player.connection.sendUnsignedCommand("quirk gui");
         }
+        while (ToNekoKeyBindings.SPEED_KEY.consumeClick()) {
+            client.player.connection.sendUnsignedCommand("neko speed");
+        }
+        while (ToNekoKeyBindings.JUMP_KEY.consumeClick()) {
+            client.player.connection.sendUnsignedCommand("neko jump");
+        }
+        while (ToNekoKeyBindings.VISION_KEY.consumeClick()) {
+            client.player.connection.sendUnsignedCommand("neko vision");
+        }
     }
 
     public static void onTick(Minecraft client) {

@@ -35,6 +35,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.Vec3;
 import org.cneko.toneko.common.api.NekoQuery;
+import org.cneko.toneko.common.mod.advencements.ToNekoCriteria;
 import org.cneko.toneko.common.mod.api.NekoNameRegistry;
 import org.cneko.toneko.common.mod.api.NekoSkinRegistry;
 import org.cneko.toneko.common.mod.effects.ToNekoEffects;
@@ -278,10 +279,10 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     }
     // 赠送物品
     public boolean giftItem(Player player, ItemStack stack){
-
-        this.drop(stack, true);
         // 如果是喜欢的物品
-        if (this.isLikedItem(stack)){
+        if (this.isLikedItem(stack) && player instanceof ServerPlayer sp){
+            // 达成进度
+            ToNekoCriteria.GIFT_NEKO.trigger(sp);
             // 如果是猫薄荷，则吃下它
             if (stack.is(ToNekoItems.CATNIP_TAG)){
                 this.addEffect(new MobEffectInstance(
@@ -292,18 +293,18 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
             } else if (this.getInventory().canAdd()) {
                 this.getInventory().add(stack);
                 player.getInventory().removeItem(player.getMainHandItem());
-                player.sendSystemMessage(randomTranslatabledComponent("message.toneko.neo.gift_full",2, Objects.requireNonNull(this.getCustomName()).getString()));
+            }else if (!this.getInventory().canAdd()) {
+                player.sendSystemMessage(randomTranslatabledComponent("message.toneko.neko.gift_full",2, Objects.requireNonNull(this.getCustomName()).getString()));
                 return false;
             }
             // 播放爱心粒子
             this.level().addParticle(ParticleTypes.HEART,this.getX()+1.8, this.getY(), this.getZ(),1,1,1);
-            if (player instanceof ServerPlayer sp){
-                // 发送给客户端
-                ClientboundLevelParticlesPacket packet = new ClientboundLevelParticlesPacket(ParticleTypes.HEART, true, this.getX() + 1.8, this.getY(), this.getZ(), 2, 2, 2, 1, 1);
-                sp.connection.send(packet);
-                // 随机发送感谢消息
-                player.sendSystemMessage(randomTranslatabledComponent("message.toneko.neko.gift_success",3, Objects.requireNonNull(this.getCustomName()).getString()));
-            }
+            // 发送给客户端
+            ClientboundLevelParticlesPacket packet = new ClientboundLevelParticlesPacket(ParticleTypes.HEART, true, this.getX() + 1.8, this.getY(), this.getZ(), 2, 2, 2, 1, 1);
+            sp.connection.send(packet);
+            // 随机发送感谢消息
+            player.sendSystemMessage(randomTranslatabledComponent("message.toneko.neko.gift_success",3, Objects.requireNonNull(this.getCustomName()).getString()));
+
             // 设置玩家为主人
             if (!this.getNeko().hasOwner(player.getUUID())){
                 this.getNeko().addOwner(player.getUUID());

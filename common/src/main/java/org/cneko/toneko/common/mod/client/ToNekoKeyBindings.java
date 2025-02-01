@@ -10,6 +10,9 @@ public class ToNekoKeyBindings {
     public static KeyMapping GET_DOWN_KEY;
     public static KeyMapping RIDE_KEY;
     public static KeyMapping QUIRK_KEY;
+    public static KeyMapping SPEED_KEY;
+    public static KeyMapping JUMP_KEY;
+    public static KeyMapping VISION_KEY;
 
     public static void init(){
         LIE_KEY = KeyBindingHelper.registerKeyBinding(
@@ -42,6 +45,30 @@ public class ToNekoKeyBindings {
                         InputConstants.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
                         GLFW.GLFW_KEY_J, // The keycode of the key
                         "key.toneko.lie.category" // The translation key of the keybinding's category.)
+                )
+        );
+        SPEED_KEY = KeyBindingHelper.registerKeyBinding(
+                new KeyMapping(
+                        "key.toneko.speed",
+                        InputConstants.Type.KEYSYM,
+                        GLFW.GLFW_KEY_UNKNOWN,
+                        "key.toneko.lie.category"
+                )
+        );
+        JUMP_KEY = KeyBindingHelper.registerKeyBinding(
+                new KeyMapping(
+                        "key.toneko.jump",
+                        InputConstants.Type.KEYSYM,
+                        GLFW.GLFW_KEY_UNKNOWN,
+                        "key.toneko.lie.category"
+                )
+        );
+        VISION_KEY = KeyBindingHelper.registerKeyBinding(
+                new KeyMapping(
+                        "key.toneko.vision",
+                        InputConstants.Type.KEYSYM,
+                        GLFW.GLFW_KEY_UNKNOWN,
+                        "key.toneko.lie.category"
                 )
         );
     }
