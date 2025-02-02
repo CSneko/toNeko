@@ -4,12 +4,17 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Leashable;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.Items;
 import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.packets.PlayerLeadByPlayerPayload;
@@ -74,5 +79,20 @@ public abstract class PlayerEntityMixin implements INeko, Leashable {
             }
         }
 
+    }
+
+    @Inject(method = "interactOn", at = @At("HEAD"), cancellable = true)
+    public void interactOn(Entity entityToInteractOn, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
+        if(entityToInteractOn instanceof INeko neko){
+            Player player = (Player)(Object)this;
+            ItemStack itemStack = player.getItemInHand(hand);
+            if (itemStack.is(Items.BUCKET) && !neko.getEntity().isBaby()) {
+                player.playSound(SoundEvents.COW_MILK, 1.0F, 1.0F);
+                ItemStack itemStack2 = ItemUtils.createFilledResult(itemStack, player, Items.MILK_BUCKET.getDefaultInstance());
+                player.setItemInHand(hand, itemStack2);
+                cir.setReturnValue(InteractionResult.sidedSuccess(player.level().isClientSide));
+                cir.cancel();
+            }
+        }
     }
 }
