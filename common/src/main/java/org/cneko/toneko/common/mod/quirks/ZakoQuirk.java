@@ -11,6 +11,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import org.cneko.toneko.common.mod.entities.INeko;
 import org.jetbrains.annotations.Nullable;
 
+import static org.cneko.toneko.common.mod.util.TextUtil.randomTranslatabledComponent;
 public class ZakoQuirk extends ToNekoQuirk{
     public static final String id = "zako";
     public ZakoQuirk() {
@@ -33,15 +34,15 @@ public class ZakoQuirk extends ToNekoQuirk{
         super.onDamage(neko, damageSource, amount);
         if (neko instanceof Player nekoPlayer) {
             if (nekoPlayer.getHealth() <= 4) {
-                nekoPlayer.displayClientMessage(Component.translatable("quirk.toneko.zako.damage.critical"), true);
+                nekoPlayer.displayClientMessage(randomTranslatabledComponent("quirk.toneko.zako.damage.critical",5), true);
                 return;
             }
             if (amount < 3) {
-                nekoPlayer.displayClientMessage(Component.translatable("quirk.toneko.zako.damage.low"), true);
+                nekoPlayer.displayClientMessage(randomTranslatabledComponent("quirk.toneko.zako.damage.low",5), true);
             } else if (amount < 6) {
-                nekoPlayer.displayClientMessage(Component.translatable("quirk.toneko.zako.damage.medium"), true);
+                nekoPlayer.displayClientMessage(randomTranslatabledComponent("quirk.toneko.zako.damage.medium",5), true);
             } else if (amount >= 6) {
-                nekoPlayer.displayClientMessage(Component.translatable("quirk.toneko.zako.damage.high"), true);
+                nekoPlayer.displayClientMessage(randomTranslatabledComponent("quirk.toneko.zako.damage.high",5), true);
             }
         }
     }
@@ -50,7 +51,7 @@ public class ZakoQuirk extends ToNekoQuirk{
     public void onJoin(INeko neko) {
         super.onJoin(neko);
         if (neko instanceof Player nekoPlayer) {
-            nekoPlayer.displayClientMessage(Component.translatable("quirk.toneko.zako.join"), true);
+            nekoPlayer.displayClientMessage(randomTranslatabledComponent("quirk.toneko.zako.join",5), true);
         }
     }
 
@@ -60,15 +61,15 @@ public class ZakoQuirk extends ToNekoQuirk{
         if (neko instanceof Player nekoPlayer) {
             float ratio = entity.getHealth() / entity.getMaxHealth(); // 比率
             if (ratio > 0.8) {
-                nekoPlayer.displayClientMessage(Component.translatable("quirk.toneko.zako.attack.high"), true);
+                nekoPlayer.displayClientMessage(randomTranslatabledComponent("quirk.toneko.zako.attack.high",5), true);
             } else if (ratio > 0.5) {
-                nekoPlayer.displayClientMessage(Component.translatable("quirk.toneko.zako.attack.medium"), true);
+                nekoPlayer.displayClientMessage(randomTranslatabledComponent("quirk.toneko.zako.attack.medium",5), true);
             } else if (ratio > 0.2) {
-                nekoPlayer.displayClientMessage(Component.translatable("quirk.toneko.zako.attack.low"), true);
+                nekoPlayer.displayClientMessage(randomTranslatabledComponent("quirk.toneko.zako.attack.low",5), true);
             } else if (ratio <= 0.2) {
-                nekoPlayer.displayClientMessage(Component.translatable("quirk.toneko.zako.attack.critical"), true);
+                nekoPlayer.displayClientMessage(randomTranslatabledComponent("quirk.toneko.zako.attack.critical",5), true);
             } else if (entity.getHealth() <= 0) {
-                nekoPlayer.displayClientMessage(Component.translatable("quirk.toneko.zako.attack.dead"), true);
+                nekoPlayer.displayClientMessage(randomTranslatabledComponent("quirk.toneko.zako.attack.dead",5), true);
             }
         }
         return InteractionResult.PASS;
