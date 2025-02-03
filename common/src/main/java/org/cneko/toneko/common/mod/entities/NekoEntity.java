@@ -57,7 +57,6 @@ import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -624,8 +623,22 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
 
     public void sendHurtMessageToPlayer(Player player){
         if (player instanceof ServerPlayer) {
-            int r = random.nextInt(6);
-            player.sendSystemMessage(Component.translatable("message.toneko.neko.on_hurt."+r, this.getName()));
+            var moe = this.getMoeTags();
+            var name = this.getName();
+            if (moe.contains("yandere")){
+                player.sendSystemMessage(randomTranslatabledComponent(random,"message.toneko.neko.on_hurt.yandere",5,name));
+            }else if (moe.contains("chunibyo")){
+                player.sendSystemMessage(randomTranslatabledComponent(random,"message.toneko.neko.on_hurt.chunibyo",5,name));
+            }else if (moe.contains("mesugaki")){
+                player.sendSystemMessage(randomTranslatabledComponent(random,"message.toneko.neko.on_hurt.mesugaki",5,name));
+            }else if (moe.contains("tsundere")){
+                player.sendSystemMessage(randomTranslatabledComponent(random,"message.toneko.neko.on_hurt.tsundere",5,name));
+            } else if (moe.contains("tennen_boke")) {
+                player.sendSystemMessage(randomTranslatabledComponent(random,"message.toneko.neko.on_hurt.tennen_boke",5,name));
+            }else {
+                int r = random.nextInt(6);
+                player.sendSystemMessage(Component.translatable("message.toneko.neko.on_hurt." + r, this.getName()));
+            }
         }
     }
 
