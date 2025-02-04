@@ -1,6 +1,8 @@
 package org.cneko.toneko.common.mod.quirks;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -73,5 +75,39 @@ public class CrystalNekoQuirk extends ToNekoQuirk{
             }
         }
         return InteractionResult.PASS;
+    }
+
+    @Override
+    public void onWeatherChange(INeko neko, ServerLevel serverLevel, int clearTime, int weatherTime, boolean isRaining, boolean isThundering) {
+        super.onWeatherChange(neko,serverLevel, clearTime, weatherTime, isRaining, isThundering);
+        if (neko instanceof Player player) {
+            if (isRaining) {
+                player.displayClientMessage(randomTranslatabledComponent("quirk.toneko.crystal_neko.weather.rain",5), true);
+            } else if (isThundering) {
+                player.displayClientMessage(randomTranslatabledComponent("quirk.toneko.crystal_neko.weather.thunder",5), true);
+            } else {
+                player.displayClientMessage(randomTranslatabledComponent("quirk.toneko.crystal_neko.weather.sunny",5), true);
+            }
+        }
+    }
+
+    @Override
+    public void startSleep(INeko neko, BlockPos pos) {
+        super.startSleep(neko, pos);
+        if (neko instanceof Player player) {
+            player.displayClientMessage(randomTranslatabledComponent("quirk.toneko.crystal_neko.sleep.start",5), true);
+        }
+    }
+
+    @Override
+    public void stopSleep(INeko neko, BlockPos pos) {
+        super.stopSleep(neko, pos);
+        if (neko instanceof Player player) {
+            if (player.level().isDay()){
+                player.displayClientMessage(randomTranslatabledComponent("quirk.toneko.crystal_neko.sleep.stop.day",5), true);
+            }else {
+                player.displayClientMessage(randomTranslatabledComponent("quirk.toneko.crystal_neko.sleep.stop.night",5), true);
+            }
+        }
     }
 }

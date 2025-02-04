@@ -1,5 +1,6 @@
 package org.cneko.toneko.common.mod.events;
 
+import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
@@ -19,6 +20,7 @@ import net.minecraft.world.item.trading.ItemCost;
 import net.minecraft.world.item.trading.MerchantOffer;
 import org.cneko.ctlib.common.util.ChatPrefix;
 import org.cneko.toneko.common.api.NekoQuery;
+import org.cneko.toneko.common.mod.api.events.WorldEvents;
 import org.cneko.toneko.common.mod.items.ToNekoItems;
 import org.cneko.toneko.common.mod.quirks.ModQuirk;
 import org.cneko.toneko.common.mod.util.TextUtil;
@@ -42,8 +44,11 @@ public class ToNekoEvents {
         UseEntityCallback.EVENT.register(CommonPlayerInteractionEvent::useEntity);
         ServerLivingEntityEvents.ALLOW_DAMAGE.register(CommonPlayerInteractionEvent::onDamage);
         AttackEntityCallback.EVENT.register(CommonPlayerInteractionEvent::onAttackEntity);
-        ServerTickEvents.START_SERVER_TICK.register(ToNekoEvents::startTick);
+        ServerTickEvents.START_SERVER_TICK.register(CommonPlayerEvent::startTick);
         ServerWorldEvents.UNLOAD.register(CommonWorldEvent::onWorldUnLoad);
+        WorldEvents.ON_WEATHER_CHANGE.register(CommonWorldEvent::onWeatherChange);
+        EntitySleepEvents.START_SLEEPING.register(CommonPlayerEvent::startSleep);
+        EntitySleepEvents.STOP_SLEEPING.register(CommonPlayerEvent::stopSleep);
         TradeOfferHelper.registerVillagerOffers(VillagerProfession.FARMER,
                 1,
                 (factories) -> factories.add((trader, random) -> new MerchantOffer(
@@ -57,16 +62,6 @@ public class ToNekoEvents {
 
     }
 
-    public static void startTick(MinecraftServer server) {
-        CommonPlayerTickEvent.startTick(server);
-        // 处理玩家潜行
-        for(ServerPlayer p: server.getPlayerList().getPlayers()){
-            // 如果是被骑乘的玩家，并且潜行，则取消骑乘
-            if(p.isShiftKeyDown()){
-                p.getPassengers().forEach(Entity::stopRiding);
-            }
-        }
-    }
 
 
     public static void onPlayerJoin(ServerGamePacketListenerImpl serverPlayNetworkHandler, PacketSender sender, MinecraftServer server) {
