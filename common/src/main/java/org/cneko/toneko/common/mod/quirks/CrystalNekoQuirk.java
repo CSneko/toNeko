@@ -103,7 +103,8 @@ public class CrystalNekoQuirk extends ToNekoQuirk{
     public void stopSleep(INeko neko, BlockPos pos) {
         super.stopSleep(neko, pos);
         if (neko instanceof Player player) {
-            if (player.level().isDay()){
+            int daytime = (int) (player.level().getDayTime() % 24000);
+            if (daytime>=0&&daytime<=12000){
                 player.displayClientMessage(randomTranslatabledComponent("quirk.toneko.crystal_neko.sleep.stop.day",5), true);
             }else {
                 player.displayClientMessage(randomTranslatabledComponent("quirk.toneko.crystal_neko.sleep.stop.night",5), true);
