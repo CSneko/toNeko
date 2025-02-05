@@ -9,6 +9,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import org.cneko.toneko.common.mod.entities.ai.goal.NekoCropGatheringGoal;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -24,6 +25,12 @@ public class AdventurerNeko extends NekoEntity{
         super(entityType, level);
     }
 
+
+    @Override
+    public void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(10, new NekoCropGatheringGoal(this));
+    }
 
     @Override
     public boolean isFavoriteItem(ItemStack stack) {

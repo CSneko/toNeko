@@ -209,8 +209,41 @@ public class NekoInventory implements Container, Nameable {
     }
 
     public boolean add(ItemStack stack) {
-        return this.add(-1, stack);
+        if (stack.isEmpty()){
+            return false;
+        }
+
+        // 尝试与已有的同类物品进行合并
+        for (ItemStack currentStack : this.items) {
+            // 判断槽位中已有物品，并且与待加入物品为同种（包括NBT数据）
+            if (!currentStack.isEmpty() && ItemStack.isSameItemSameComponents(currentStack, stack)) {
+                int maxStackSize = stack.getMaxStackSize();
+                int availableSpace = maxStackSize - currentStack.getCount();
+                if (availableSpace > 0) {
+                    int toAdd = Math.min(availableSpace, stack.getCount());
+                    currentStack.grow(toAdd);
+                    stack.shrink(toAdd);
+                    // 如果待加入物品已经全部合并，则返回成功
+                    if (stack.isEmpty()) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        // 如果合并后仍有剩余的物品，则寻找空槽位存放剩余部分
+        for (int i = 0; i < this.items.size(); ++i) {
+            if (this.items.get(i).isEmpty()) {
+                // 注意这里需要复制一份stack，防止引用问题
+                this.items.set(i, stack.copy());
+                // 清空原来的stack
+                stack.setCount(0);
+                return true;
+            }
+        }
+        return false;
     }
+
 
     public boolean add(int slot, ItemStack stack) {
         if (stack.isEmpty()) {

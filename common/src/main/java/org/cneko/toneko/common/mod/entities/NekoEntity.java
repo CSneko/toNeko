@@ -260,6 +260,22 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         this.entityData.set(MOE_TAGS_ID, String.join(":", moeTags));
     }
 
+    // 采集动力
+    protected int gatheringPower = 0;
+    // 添加采集动力
+    public void addGatheringPower(int power) {
+        this.gatheringPower += power;
+    }
+    // 获取采集动力
+    public int getGatheringPower() {
+        return this.gatheringPower;
+    }
+    // 消耗采集动力
+    public void consumeGatheringPower(int amount) {
+        this.gatheringPower = Math.max(0, this.gatheringPower - amount);
+    }
+
+
     // 最喜欢的物品
     public boolean isFavoriteItem(ItemStack stack){
         return stack.is(ToNekoItems.CATNIP_TAG);
@@ -280,6 +296,8 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     public boolean giftItem(Player player, ItemStack stack){
         // 如果是喜欢的物品
         if (this.isLikedItem(stack) && player instanceof ServerPlayer sp){
+            // 增长动力
+            this.addGatheringPower(20);
             // 达成进度
             ToNekoCriteria.GIFT_NEKO.trigger(sp);
             // 如果是猫薄荷，则吃下它

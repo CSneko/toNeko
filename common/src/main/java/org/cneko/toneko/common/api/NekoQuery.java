@@ -234,7 +234,9 @@ public class NekoQuery {
         }
 
         public void addXp(UUID owner, int xp) {
-            addLevel((double) xp / 1000.00d);
+            double level = (double) xp / 1000.00d;
+            addLevel(level);
+            getNeko(owner).addLevel(level);
             processOwners(owner, o -> o.xp += xp);
         }
 

@@ -11,10 +11,8 @@ import java.util.regex.Pattern;
 public class CustomStringArgument implements ArgumentType<String> {
     private final Pattern pattern;
     private final boolean allowEmpty;
-    // 支持所有字符（不包括Emoji），长度限制为1~20
-    private static final Pattern NO_EMOJI = Pattern.compile("^[\\x00-\\x7F\\u0080-\\uFFFF]{1,20}$");
     // 支持所有字符（包括Emoji），长度限制为1~40
-    public static final Pattern ALLOW_EMOJI = Pattern.compile("^.{1,40}$\n");
+    public static final Pattern ALLOW_EMOJI = Pattern.compile("^.{1,40}$");
 
     private CustomStringArgument(Pattern pattern, boolean allowEmpty) {
         this.pattern = pattern;
@@ -22,7 +20,7 @@ public class CustomStringArgument implements ArgumentType<String> {
     }
 
     public static CustomStringArgument blockWord() {
-        return new CustomStringArgument(NO_EMOJI, false);
+        return new CustomStringArgument(ALLOW_EMOJI, false);
     }
     public static CustomStringArgument replaceWord() {
         return new CustomStringArgument(ALLOW_EMOJI, true);
@@ -52,8 +50,7 @@ public class CustomStringArgument implements ArgumentType<String> {
             throw new SimpleCommandExceptionType(Component.literal("输入不能为空")).create();
         }
 
-        // 正则验证
-        if (pattern != null && !pattern.matcher(result).matches()) {
+        if (pattern == null || !pattern.matcher(result).matches()) {
             throw new SimpleCommandExceptionType(Component.literal("输入格式无效")).create();
         }
 

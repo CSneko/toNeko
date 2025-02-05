@@ -6,6 +6,7 @@ import net.minecraft.network.chat.Component;
 import org.cneko.toneko.common.api.Messaging;
 import org.cneko.toneko.common.mod.ai.Prompts;
 import org.cneko.toneko.common.mod.api.events.ChatEvents;
+import org.cneko.toneko.common.mod.commands.arguments.CustomStringArgument;
 import org.cneko.toneko.common.mod.commands.arguments.NekoArgument;
 import org.cneko.toneko.common.mod.events.CommonChatEvent;
 import org.cneko.toneko.common.mod.util.PlayerUtil;
@@ -25,6 +26,10 @@ public class ModBootstrap {
         ArgumentTypeRegistry.registerArgumentType(
                 toNekoLoc("neko"),
                 NekoArgument.class, SingletonArgumentInfo.contextFree(NekoArgument::neko));
+        ArgumentTypeRegistry.registerArgumentType(
+                toNekoLoc("custom_string"),
+                CustomStringArgument.class,SingletonArgumentInfo.contextFree(CustomStringArgument::replaceWord)
+        );
         Prompts.init();
     }
 }

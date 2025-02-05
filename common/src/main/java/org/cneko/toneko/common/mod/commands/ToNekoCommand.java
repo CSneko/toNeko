@@ -13,6 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import org.cneko.toneko.common.Bootstrap;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.api.Permissions;
+import org.cneko.toneko.common.mod.commands.arguments.CustomStringArgument;
 import org.cneko.toneko.common.mod.commands.arguments.NekoArgument;
 import org.cneko.toneko.common.mod.commands.arguments.NekoSuggestionProvider;
 import org.cneko.toneko.common.mod.commands.arguments.WordSuggestionProvider;
@@ -49,7 +50,7 @@ public class ToNekoCommand {
                                             .suggests(new NekoSuggestionProvider(true))
                                     //-------------------------------------add---------------------------------------
                                     .then(literal("add")
-                                            .then(argument("aliases", StringArgumentType.word())
+                                            .then(argument("aliases", CustomStringArgument.blockWord())
                                                     .executes(ToNekoCommand::AliasesAdd)
                                             )
                                     ).then(literal("remove")
@@ -67,8 +68,8 @@ public class ToNekoCommand {
                                             .suggests(new NekoSuggestionProvider(true))
                                     //--------------------------------add------------------------------------
                                     .then(literal("add")
-                                            .then(argument("block",StringArgumentType.word())
-                                                    .then(argument("replace",StringArgumentType.word())
+                                            .then(argument("block",CustomStringArgument.blockWord())
+                                                    .then(argument("replace",CustomStringArgument.replaceWord())
                                                             .then(argument("method",StringArgumentType.word())
                                                                     .suggests((context, builder) -> {
                                                                         builder.suggest("all");
@@ -82,7 +83,7 @@ public class ToNekoCommand {
                                     )
                                     //----------------------------remove----------------------------------
                                     .then(literal("remove")
-                                            .then(argument("block",StringArgumentType.word())
+                                            .then(argument("block",CustomStringArgument.blockWord())
                                                     .executes(ToNekoCommand::removeBlock)
                                                     .suggests(WordSuggestionProvider.blockWord())
                                             )
