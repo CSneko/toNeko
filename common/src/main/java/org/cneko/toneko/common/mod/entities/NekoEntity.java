@@ -94,6 +94,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
 
     public static final EntityDataAccessor<String> SKIN_DATA_ID = SynchedEntityData.defineId(NekoEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<String> MOE_TAGS_ID = SynchedEntityData.defineId(NekoEntity.class, EntityDataSerializers.STRING);
+    public static final EntityDataAccessor<Integer> GATHERING_POWER_ID = SynchedEntityData.defineId(NekoEntity.class, EntityDataSerializers.INT);
 
     public NekoEntity(EntityType<? extends NekoEntity> entityType, Level level) {
         super(entityType, level);
@@ -137,6 +138,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         super.defineSynchedData(builder);
         builder.define(SKIN_DATA_ID, this.getDefaultSkin());
         builder.define(MOE_TAGS_ID, "");
+        builder.define(GATHERING_POWER_ID, 0);
     }
 
 
@@ -146,6 +148,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         compound.putString("Skin", this.getSkin());
         compound.put("Inventory", this.inventory.save(new ListTag()));
         compound.putInt("SelectedItemSlot", this.inventory.selected);
+        compound.putInt("GatheringPower", this.getGatheringPower());
     }
 
     public void readAdditionalSaveData(@NotNull CompoundTag compound) {
@@ -154,6 +157,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         ListTag listTag = compound.getList("Inventory", 10);
         this.inventory.load(listTag);
         this.inventory.selected = compound.getInt("SelectedItemSlot");
+        this.setGatheringPower(compound.getInt("GatheringPower"));
     }
 
     @Override
@@ -260,19 +264,23 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         this.entityData.set(MOE_TAGS_ID, String.join(":", moeTags));
     }
 
-    // 采集动力
-    protected int gatheringPower = 0;
-    // 添加采集动力
-    public void addGatheringPower(int power) {
-        this.gatheringPower += power;
-    }
     // 获取采集动力
     public int getGatheringPower() {
-        return this.gatheringPower;
+        return this.entityData.get(GATHERING_POWER_ID);
     }
-    // 消耗采集动力
+
+    // 设置采集动力
+    public void setGatheringPower(int power) {
+        this.entityData.set(GATHERING_POWER_ID, Mth.clamp(power, 0, Integer.MAX_VALUE));
+    }
+
+    // 增大
+    public void addGatheringPower(int power) {
+        this.setGatheringPower(this.getGatheringPower() + power);
+    }
+
     public void consumeGatheringPower(int amount) {
-        this.gatheringPower = Math.max(0, this.gatheringPower - amount);
+        this.setGatheringPower(Math.max(0, this.getGatheringPower() - amount));
     }
 
 

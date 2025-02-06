@@ -412,6 +412,7 @@
   "screen.toneko.neko_entity_interactive.button.breed.des": "Let the nearest neko mate with a neko (or you)",
   "screen.toneko.neko_entity_interactive.tooltip.name": "Nekoのname：%s",
   "screen.toneko.neko_entity_interactive.tooltip.moe_tags": "Nekoのmoe tags：%s",
+  "screen.toneko.neko_entity_interactive.tooltip.gathering_power": "Nekoのgathering power: %s",
   "screen.toneko.chat_with_neko.button.send": "Say what you wanna say",
   "screen.toneko.crystal_neko_interactive.button.who": "Who are you?",
   "screen.toneko.crystal_neko_interactive.button.who.des": "Listen to me say about me",

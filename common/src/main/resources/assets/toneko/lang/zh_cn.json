@@ -412,6 +412,7 @@
   "screen.toneko.neko_entity_interactive.button.breed.des": "让猫猫和附近的猫猫交配（也可以是你哦）",
   "screen.toneko.neko_entity_interactive.tooltip.name": "猫猫の名字：%s",
   "screen.toneko.neko_entity_interactive.tooltip.moe_tags": "猫猫の萌属性：%s",
+  "screen.toneko.neko_entity_interactive.tooltip.gathering_power": "猫猫の干活动力：%s",
   "screen.toneko.chat_with_neko.button.send": "把你的话说给猫猫听",
   "screen.toneko.mate": "选择交配对象",
   "screen.toneko.crystal_neko_interactive.button.who": "你是?",

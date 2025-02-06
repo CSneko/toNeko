@@ -28,7 +28,7 @@ public class NekoCropGatheringGoal extends Goal {
     // 操作冷却计时器，防止操作太频繁
     private int cooldownTicks = 0;
 
-    // 新增：目标相关变量
+    // 目标相关变量
     private BlockPos targetPos = null;     // 目标作物（或上方）的坐标
     private TargetType targetType = null;    // 目标类型（收割或种植）
 
@@ -45,7 +45,7 @@ public class NekoCropGatheringGoal extends Goal {
     public NekoCropGatheringGoal(NekoEntity neko) {
         this.neko = neko;
         this.level = neko.level();
-        // 设置该 goal 可同时运行的条件（例如：移动、观察等）
+        // 设置该 goal 可同时运行的条件
         this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
     }
 
