@@ -29,7 +29,7 @@ public class AdventurerNeko extends NekoEntity{
     @Override
     public void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(10, new NekoCropGatheringGoal(this));
+        this.goalSelector.addGoal(5, new NekoCropGatheringGoal(this));
     }
 
     @Override

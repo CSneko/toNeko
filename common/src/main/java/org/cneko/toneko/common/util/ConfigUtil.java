@@ -21,12 +21,15 @@ public class ConfigUtil {
             .addBoolean("ai.enable",false,"https://s.cneko.org/toNekoAI",
                     "是否启用AI",
                     "Enable AI")
+            .addString("ai.model", "gemini-2.0-flash","https://s.cneko.org/toNekoAI")
             .addString("ai.key","","https://s.cneko.org/toNekoAI",
-                    "Gemini的密钥，请参阅https://s.cneko.org/toNekoAI",
-                    "API Key of Gemini,see https://s.cneko.org/toNekoAI")
+                    "AI的密钥，请参阅https://s.cneko.org/toNekoAI",
+                    "API Key of AI,see https://s.cneko.org/toNekoAI")
             .addString("ai.prompt","你是一只可爱的%neko_type%（%neko_des%），你的名字是%neko_name%，你的身高是%neko_height%米，你的属性有%neko_moe_tags%。在回复时请不要太长且不要有太多动作。我%player_is_owner%你的主人，我的名字是%player_name%，我%player_is_neko%一只猫娘。现在是%world_time%，天气为%world_weather%。","https://s.cneko.org/toNekoAI",
                     "AI提示词，参阅 https://s.cneko.org/toNekoAI",
                     "AI prompt,see https://s.cneko.org/toNekoAI")
+            .addString("ai.proxy.ip","","https://s.cneko.org/toNekoAI")
+            .addString("ai.proxy.port","","https://s.cneko.org/toNekoAI")
             .addBoolean("stats", true, "https://s.cneko.org/toNekoOnlineAPI",
                     "启用统计功能，统计数据将发送到 toneko API，如何使用api请查看 https://s.cneko.org/toNekoOnlineAPI",
                     "Enable statistics, statistics data will be sent to the toneko API, how to use the api please see https://s.cneko.org/toNekoOnlineAPI")
@@ -62,6 +65,15 @@ public class ConfigUtil {
     }
     public static String getAIKey(){
         return CONFIG.getString("ai.key");
+    }
+    public static String getAIModel(){
+        return CONFIG.getString("ai.model");
+    }
+    public static String getAIProxyIp(){
+        return CONFIG.getString("ai.proxy.ip");
+    }
+    public static String getAIProxyPort(){
+        return CONFIG.getString("ai.proxy.port");
     }
 
 

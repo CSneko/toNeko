@@ -53,6 +53,8 @@ subprojects {
                 includeGroup("software.bernie.geckolib")
             }
         }
+
+        maven { url 'https://jitpack.io' }
         flatDir {
             dirs 'libs'
         }
@@ -71,6 +73,13 @@ subprojects {
 
         modCompileOnly "me.lucko:fabric-permissions-api:0.2-SNAPSHOT"
         modImplementation "net.fabricmc.fabric-api:fabric-api:$rootProject.fabric_api_version"
+
+        implementation "com.github.CSneko:NekoAI:$rootProject.nekoai_version"
+
+        implementation 'io.netty:netty-codec-http:4.1.117.Final'
+
+        implementation 'io.netty:netty-handler-proxy:4.1.117.Final'
+
 
     }
 
