@@ -52,7 +52,7 @@ public class AIUtil {
                 var uuidStr = uuid.toString();
                 var userUuidStr = userUuid.toString();
                 // 判断是否使用代理
-                boolean useProxy = !proxyIp.isEmpty() && !proxyPort.isEmpty();
+                boolean useProxy = ConfigUtil.isAIProxyEnabled();
                 NetworkingProxy proxy = new NetworkingProxy(proxyIp, Integer.parseInt(proxyPort));
                 if (model.contains("gemini")){
                     // gemini模型，使用CNekoAI的服务

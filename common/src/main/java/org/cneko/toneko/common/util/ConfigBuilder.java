@@ -76,6 +76,14 @@ public class ConfigBuilder {
     public Entry getExist(String key){
         return Entry.of(config.get(key), get(key).comment, config.getString("url"));
     }
+    public String getKey(Entry entry){
+        for (String key : defaults.keySet()) {
+            if (defaults.get(key).equals(entry)) {
+                return key;
+            }
+        }
+        return null;
+    }
 
     public List<String> getKeys() {
         return new ArrayList<>(defaults.keySet());
