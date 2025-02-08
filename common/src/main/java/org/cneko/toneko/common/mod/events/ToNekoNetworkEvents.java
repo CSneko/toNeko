@@ -104,90 +104,120 @@ public class ToNekoNetworkEvents {
         });
     }
 
-    // 将完整文本分割成若干行，每行固定 lineLength 个字符
+    // 将完整文本分割成若干行，每行固定 lineLength 长度字符
     public static List<String> splitText(String text, int lineLength) {
         List<String> lines = new ArrayList<>();
-        for (int i = 0; i < text.length(); i += lineLength) {
-            int end = Math.min(i + lineLength, text.length());
-            lines.add(text.substring(i, end));
+        int currentLength = 0;
+        StringBuilder currentLine = new StringBuilder();
+
+        for (int i = 0; i < text.length(); i++) {
+            char c = text.charAt(i);
+
+            // 如果是换行符，立即分割
+            if (c == '\n') {
+                lines.add(currentLine.toString());
+                currentLine.setLength(0);  // 清空当前行
+                currentLength = 0;
+                continue;
+            }
+
+            // 判断字符的长度（英文字符为1，其他字符为2）
+            int charLength = (Character.isLetterOrDigit(c) || c == ' ' || c == '.' || c == ',' || c == '?' || c == '!' || c == ';' || c == ':' || c == '"') ? 1 : 2;
+
+            // 如果添加当前字符后，超过行长度，分割当前行
+            if (currentLength + charLength > lineLength) {
+                lines.add(currentLine.toString());
+                currentLine.setLength(0);  // 清空当前行
+                currentLength = 0;
+            }
+
+            // 添加当前字符
+            currentLine.append(c);
+            currentLength += charLength;
         }
+
+        // 添加最后一行（如果有的话）
+        if (currentLine.length() > 0) {
+            lines.add(currentLine.toString());
+        }
+
         return lines;
     }
+
 
     /**
      * 在目标实体上方生成多行 ArmorStand，每一行动画顺序依次显示。
      * @return 返回总的延时（tick数），用于后续任务调度（例如发送最终消息、清除文本）。
      */
     private static int spawnFloatingText(NekoEntity neko, AIResponse response, ServerLevel world) {
-        // 基础坐标：实体头部上方
         double baseY = neko.getY() + neko.getBbHeight() + 0.5;
         double baseX = neko.getX();
         double baseZ = neko.getZ();
 
-        // 将 AI 返回的“思考”文本按每 10 个字符分割成多行
-        List<String> lines = splitText(response.getThink(), 20);
+        List<String> lines = splitText(response.getThink(), 40);
         List<ArmorStand> armorStands = new ArrayList<>();
 
-        // 每行之间的垂直间距（显示位置用，不影响动画时间）
-        double lineSpacing = 0.25;
-        // 行间额外延时（单位：tick），保证前一行完全显示后再启动下一行动画
-        int gap = 1;
-        // 累计延时
+        int gap = 1; // 行间间隔时间（tick）
         int cumulativeDelay = 0;
 
         for (int i = 0; i < lines.size(); i++) {
-            double lineY = baseY - i * lineSpacing;
-            ArmorStand lineStand = new ArmorStand(world, baseX, lineY, baseZ);
+            // 所有行生成在相同Y坐标
+            ArmorStand lineStand = new ArmorStand(world, baseX, baseY, baseZ);
             lineStand.setInvisible(true);
             lineStand.setNoGravity(true);
             lineStand.setMarker(true);
             lineStand.setCustomNameVisible(true);
-            // 初始内容为空，动画过程中逐渐显示字符
             lineStand.setCustomName(Component.literal(""));
             world.addFreshEntity(lineStand);
             armorStands.add(lineStand);
 
-            // 对这一行文本采用打字机效果逐字显示，延时从 cumulativeDelay 开始
-            animateLine(lineStand, lines.get(i), cumulativeDelay);
-            // 累积延时 += 当前行字符数（1 tick/字符） + gap（行间间隔）
-            cumulativeDelay += lines.get(i).length() + gap;
+            String line = lines.get(i);
+            animateLine(lineStand, line, cumulativeDelay);
+
+            // 在行动画结束后移动所有已存在的盔甲架
+            int currentIndex = i;
+            int lineEndTime = cumulativeDelay + line.length();
+
+            TickTaskQueue moveUpQueue = new TickTaskQueue();
+            moveUpQueue.addTask(lineEndTime, () -> {
+                for (int j = 0; j <= currentIndex; j++) {
+                    ArmorStand as = armorStands.get(j);
+                    as.setPos(as.getX(), as.getY() + 0.3, as.getZ());
+                }
+            });
+            TickTasks.add(moveUpQueue);
+
+            cumulativeDelay += line.length() + gap;
         }
 
-        // 统一调度一个任务，在所有行动画结束后一定时间移除所有 ArmorStand（延时 100 tick 后）
-        TickTaskQueue removalQueue = new TickTaskQueue();
-        removalQueue.addTask(cumulativeDelay + 100, () -> {
-            for (ArmorStand as : armorStands) {
-                as.remove(Entity.RemovalReason.DISCARDED);
-            }
-        });
-        TickTasks.add(removalQueue);
+        // 调整移除任务：在最后一行移动后100tick移除
+        if (!lines.isEmpty()) {
+            int lastLineLength = lines.getLast().length();
+            int lastLineEndTime = cumulativeDelay - gap + lastLineLength;
+            int removalTime = lastLineEndTime + 100;
 
-        // 添加一个任务，在每行文本动画结束后将所有 ArmorStand 向上移动1个单位
-        TickTaskQueue moveUpQueue = new TickTaskQueue();
-        int finalCumulativeDelay = cumulativeDelay;
-        moveUpQueue.addTask(finalCumulativeDelay, () -> {
-            for (ArmorStand as : armorStands) {
-                as.setPos(as.getX(), as.getY() + 1, as.getZ());
-            }
-        });
-        TickTasks.add(moveUpQueue);
+            TickTaskQueue removalQueue = new TickTaskQueue();
+            removalQueue.addTask(removalTime, () -> {
+                for (ArmorStand as : armorStands) {
+                    as.remove(Entity.RemovalReason.DISCARDED);
+                }
+            });
+            TickTasks.add(removalQueue);
+        }
 
-        // 添加一个任务，每 tick 更新 ArmorStand 的位置以与 neko 同步
+        // 同步任务：持续到移除前
         TickTaskQueue syncQueue = new TickTaskQueue();
-        syncQueue.addRepeatingTask(0,cumulativeDelay, () -> {
+        int syncDuration = !lines.isEmpty() ? (cumulativeDelay - gap + lines.getLast().length() + 100) : 0;
+        syncQueue.addRepeatingTask(0, syncDuration, () -> {
+            double currentBaseX = neko.getX();
+            double currentBaseZ = neko.getZ();
             for (ArmorStand as : armorStands) {
-                as.setPos(neko.getX(), as.getY(), neko.getZ());
+                // 仅同步X和Z坐标，Y坐标由移动任务维护
+                as.setPos(currentBaseX, as.getY(), currentBaseZ);
             }
         });
         TickTasks.add(syncQueue);
-        // 添加一个任务，在结束后删除所有任务
-        TickTaskQueue cleanupQueue = new TickTaskQueue();
-        cleanupQueue.addTask(cumulativeDelay + 100, () -> {
-            TickTasks.remove(moveUpQueue);
-            TickTasks.remove(syncQueue);
-            TickTasks.remove(cleanupQueue);
-        });
-        // 返回总延时，供外部调度使用（例如发送最终消息）
+
         return cumulativeDelay;
     }
 
