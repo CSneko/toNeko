@@ -38,6 +38,16 @@ public class TickTaskQueue implements ITickable {
         }
     }
 
+    public void addRepeatingTask(int delayTicks, int durationTicks, Runnable task) {
+        int startTick = lastExecutionTick + delayTicks;
+        int endTick = startTick + durationTicks;
+
+        for (int tick = startTick; tick < endTick; tick++) {
+            tasks.offer(new TickTask(tick, task));
+        }
+    }
+
+
     @Override
     public boolean isRemoved() {
         // 检查当前队列是否为空

@@ -18,6 +18,14 @@ public class TickTasks {
         CLIENT_TASKS.add(task);
     }
 
+    public static void remove(ITickable task) {
+        TASKS.remove(task);
+    }
+
+    public static void removeClient(ITickable task) {
+        CLIENT_TASKS.remove(task);
+    }
+
     public static void tick() {
         TASKS.forEach(task -> task.addTick(1));
     }

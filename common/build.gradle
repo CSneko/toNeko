@@ -15,3 +15,8 @@ dependencies {
     //include "maven.modrinth:ctlibmod:0.1.13"
     modImplementation "software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}"
 }
+
+
+loom {
+    accessWidenerPath = file("src/main/resources/toneko.accesswidener")
+}

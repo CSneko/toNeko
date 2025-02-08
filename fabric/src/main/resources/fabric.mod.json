@@ -67,5 +67,6 @@
       },
       "update_checker": true
     }
-  }
+  },
+  "accessWidener" : "toneko.accesswidener"
 }
