@@ -2,6 +2,7 @@ package org.cneko.toneko.common.mod.entities;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -27,6 +28,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameRules;
@@ -290,7 +292,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     }
     // 是否喜欢这个物品
     public boolean isLikedItem(ItemStack stack){
-        return isFavoriteItem(stack);
+        return isFavoriteItem(stack) || stack.has(DataComponents.FOOD);
     }
     // 是否需要这个物品
     public boolean isNeededItem(ItemStack stack){
@@ -308,16 +310,12 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
             this.addGatheringPower(20);
             // 达成进度
             ToNekoCriteria.GIFT_NEKO.trigger(sp);
-            // 如果是猫薄荷，则吃下它
-            if (stack.is(ToNekoItems.CATNIP_TAG)){
-                this.addEffect(new MobEffectInstance(
-                        BuiltInRegistries.MOB_EFFECT.wrapAsHolder(ToNekoEffects.NEKO_EFFECT),
-                        10000,
-                        0
-                ));
-            } else if (this.getInventory().canAdd()) {
-                this.getInventory().add(stack);
-                player.getInventory().removeItem(player.getMainHandItem());
+            // 如果是食物，则吃掉并回血并获取对应的效果
+            this.eat(this.level(), stack);
+            if (this.getInventory().canAdd()) {
+                ItemStack s = stack.copy();
+                s.setCount(1);
+                this.getInventory().add(s);
             }else if (!this.getInventory().canAdd()) {
                 player.sendSystemMessage(randomTranslatabledComponent("message.toneko.neko.gift_full",2, Objects.requireNonNull(this.getCustomName()).getString()));
                 return false;

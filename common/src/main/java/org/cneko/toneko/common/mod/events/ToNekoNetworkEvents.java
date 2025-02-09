@@ -32,7 +32,6 @@ import org.cneko.toneko.common.mod.util.TickTaskQueue;
 import org.cneko.toneko.common.util.AIUtil;
 import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.common.util.LanguageUtil;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -137,7 +136,7 @@ public class ToNekoNetworkEvents {
         }
 
         // 添加最后一行（如果有的话）
-        if (currentLine.length() > 0) {
+        if (!currentLine.isEmpty()) {
             lines.add(currentLine.toString());
         }
 

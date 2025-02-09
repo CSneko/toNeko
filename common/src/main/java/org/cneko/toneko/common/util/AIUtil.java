@@ -60,6 +60,7 @@ public class AIUtil {
                     if (useProxy) {
                         config.setProxy(proxy);
                     }
+                    config.setModel(model);
                     config.setHost("chat.ai.cneko.org");
                     var service = new CNekoAIService(config);
                     AIResponse response = service.processRequest(new AIRequest(message,uuidStr,userUuidStr,prompt,FileStorageUtil.readConversation(uuidStr,userUuidStr)));
@@ -125,7 +126,8 @@ public class AIUtil {
             String encodedPrompt = URLEncoder.encode(request.getPrompt() != null ? request.getPrompt() : "无提示词", StandardCharsets.UTF_8);
             String encodedMessage = URLEncoder.encode(msg, StandardCharsets.UTF_8);
             String encodedKey = URLEncoder.encode(ConfigUtil.getAIKey(), StandardCharsets.UTF_8);
-            String query = String.format("p=%s&t=%s&key=%s&ver=1", encodedPrompt, encodedMessage, encodedKey);
+            String encodeModel = URLEncoder.encode(config.getModel(), StandardCharsets.UTF_8);
+            String query = String.format("p=%s&t=%s&key=%s&model=%s&ver=1", encodedPrompt, encodedMessage, encodedKey, encodeModel);
 
             // 将 jsonBody 进行 URL 编码并放入请求头
             String encodedJsonBody = URLEncoder.encode(jsonBody, StandardCharsets.UTF_8);

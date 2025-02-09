@@ -27,11 +27,12 @@ public class TickTasks {
     }
 
     public static void tick() {
-        TASKS.forEach(task -> task.addTick(1));
+        new ArrayList<>(TASKS).forEach(t -> t.addTick(1));
     }
 
+
     public static void tickClient() {
-        CLIENT_TASKS.forEach(task -> task.addTick(1));
+        new ArrayList<>(CLIENT_TASKS).forEach(t -> t.addTick(1));
     }
 
     public static void tick(int ticks) {
