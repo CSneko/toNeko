@@ -121,13 +121,35 @@ public class NekoQuery {
      * @param uuid 玩家UUID
      * @return 猫娘数据文件，不存在则返回默认的
      */
-    public static NekoDataModel getProfile(UUID uuid){
+    public static NekoDataModel getProfile(UUID uuid) {
         String profilePath = getProfilePath(uuid);
-        if(!FileUtil.FileExists(profilePath)){
+        if (!FileUtil.FileExists(profilePath)) {
             createProfile(uuid);
         }
-        return NekoParser.fromFile(Path.of(profilePath));
+
+        NekoDataModel model = NekoParser.fromFile(Path.of(profilePath));
+        // 如果解析失败或返回null，创建默认配置
+        if (model == null) {
+            model = createDefaultProfile(uuid);
+            // 保存默认配置到文件，防止下次读取失败
+            String json = NekoParser.toJson(model);
+            FileUtil.WriteFile(profilePath, json);
+        }
+        return model;
     }
+
+    private static NekoDataModel createDefaultProfile(UUID uuid) {
+        NekoDataModel defaultModel = new NekoDataModel();
+        defaultModel.setUuid(uuid);
+        defaultModel.setActive(false); // 默认非猫娘状态
+        defaultModel.setOwners(new ArrayList<>());
+        defaultModel.setBlockWords(new ArrayList<>());
+        defaultModel.setQuirks(new ArrayList<>());
+        defaultModel.setMoeTags(new ArrayList<>());
+        defaultModel.setLevel(0.0);
+        return defaultModel;
+    }
+
 
     public static Neko getNeko(UUID uuid){
         return NekoData.getNeko(uuid);

@@ -2,6 +2,7 @@ package org.cneko.toneko.common.mod.entities;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -44,6 +45,10 @@ public class GhostNekoEntity extends NekoEntity{
     @Override
     public boolean hurt(@NotNull DamageSource source, float amount) {
         if (source.getEntity() instanceof Player player && player.getMainHandItem().is(Items.LEAD)) {
+            return super.hurt(source, amount);
+        }
+        // 除非命令或魔法，否则不造成伤害
+        if (source.is(DamageTypes.GENERIC_KILL) || source.is(DamageTypes.MAGIC)){
             return super.hurt(source, amount);
         }
         return false;

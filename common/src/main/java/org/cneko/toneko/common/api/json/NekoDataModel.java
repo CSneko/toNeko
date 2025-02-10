@@ -86,12 +86,15 @@ public class NekoDataModel {
 
     // Getters
     public UUID getUuid() { return uuid; }
+    public void setUuid(UUID uuid) {this.uuid = uuid; }
     public boolean isActive() { return active; }
     public void setActive(boolean active) { this.active = active; }
     public double getLevel() { return level; }
     public void setLevel(double level) { this.level = level; }
     public List<BlockWord> getBlockWords() { return blockWords; }
+    public void setBlockWords(List<BlockWord> blockWords){ this.blockWords = blockWords; }
     public List<Owner> getOwners() { return owners; }
+    public void setOwners(List<Owner> owners){ this.owners = owners; }
     public List<String> getQuirks() { return quirks; }
     public void setQuirks(List<String> quirks) { this.quirks = quirks; }
     public List<String> getMoeTags() { return moeTags; }
