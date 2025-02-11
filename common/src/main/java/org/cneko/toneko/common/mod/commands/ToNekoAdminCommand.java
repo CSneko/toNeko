@@ -68,18 +68,18 @@ public class ToNekoAdminCommand {
     }
 
     public static int dataDeleteRubbish(CommandContext<CommandSourceStack> context) {
-        context.getSource().getServer().execute(() -> {
-            // 记录时间
-            long startTime = System.currentTimeMillis();
-            // 扫描服务器内所有世界的实体数据（包括未生成的）并生成列表
-            Set<UUID> uuids = new HashSet<>();
-            context.getSource().getServer().getAllLevels().forEach(level -> {
-                level.getAllEntities().forEach(entity -> {
-                    if (entity instanceof INeko neko) {
-                        uuids.add(neko.getEntity().getUUID());
-                    }
-                });
+        // 记录时间
+        long startTime = System.currentTimeMillis();
+        // 扫描服务器内所有世界的实体数据（包括未生成的）并生成列表
+        Set<UUID> uuids = new HashSet<>();
+        context.getSource().getServer().getAllLevels().forEach(level -> {
+            level.getAllEntities().forEach(entity -> {
+                if (entity instanceof INeko neko) {
+                    uuids.add(neko.getEntity().getUUID());
+                }
             });
+        });
+        NekoQuery.NekoData.executor.submit(()->{
             uuids.addAll(PlayerUtil.getPlayerUUIDs(context.getSource().getServer()));
             // 删除符合条件的
             int deletedCount = NekoQuery.NekoData.deleteIf(neko -> !uuids.contains(neko.uuid));
