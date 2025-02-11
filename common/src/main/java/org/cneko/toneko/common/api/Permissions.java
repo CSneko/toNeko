@@ -11,6 +11,8 @@ public class Permissions {
     public static String COMMAND_TONEKOADMIN_RELOAD = "command.tonekoadmin.reload";
     public static String COMMAND_TONEKOADMIN_DATA = "command.tonekoadmin.data";
     public static String COMMAND_TONEKO_PLAYER = "command.toneko.player";
+    public static String COMMAND_TONEKO_ACCEPT = "command.toneko.accept";
+    public static String COMMAND_TONEKO_DENY = "command.toneko.deny";
     public static String COMMAND_TONEKO_ALIAS = "command.toneko.alias";
     public static String COMMAND_TONEKO_BLOCK = "command.toneko.block";
     public static String COMMAND_TONEKO_XP = "command.toneko.xp";

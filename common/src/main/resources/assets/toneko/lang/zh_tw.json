@@ -219,6 +219,13 @@
   "command.toneko.player.success": "§a你現在成為了 §6%s §a的主人喵～",
   "command.toneko.player.notNeko": "§c玩家 %s 不是貓娘喵～",
   "command.toneko.player.alreadyOwner": "§a已經是 §6%s §a的主人了喵～",
+  "command.toneko.player.send_request": "§d已经向%s发出请求了喵",
+  "command.toneko.player.request": "%s §6想要成为你的主人",
+  "command.toneko.player.accept": "§a%s同意你的请求了喵",
+  "command.toneko.player.deny": "§c%s拒绝了你的请求了喵",
+  "command.toneko.accept": "§a你接受了 %s 的请求了喵",
+  "command.toneko.deny": "§c你拒绝了 %s 的请求了喵",
+  "command.toneko.not_request": "§c好像没有请求呢",
   "command.toneko.aliases.add": "§a成功設定別名 %s 了喵",
   "command.toneko.aliases.remove": "§a成功刪除別名 %s 了喵",
   "command.toneko.xp": "§a你與 %s 貓娘的好感經驗是 §a%s 喵～",
@@ -503,5 +510,7 @@
   "misc.toneko.time.day": "白天",
   "misc.toneko.time.night": "晚上",
   "misc.toneko.weather.rain": "雨天",
-  "misc.toneko.weather.sunny": "晴天"
+  "misc.toneko.weather.sunny": "晴天",
+  "misc.toneko.accept": "§a[同意]",
+  "misc.toneko.deny": "§c[拒绝]"
 }

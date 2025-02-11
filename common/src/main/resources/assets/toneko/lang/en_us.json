@@ -219,6 +219,13 @@
   "command.toneko.player.success": "§aYou become §6%s §a's owner now-nya",
   "command.toneko.player.notNeko": "§cPlayer %s §cisn't a neko~",
   "command.toneko.player.alreadyOwner": "§aYou have already been §6%s §a's owner~",
+  "command.toneko.player.send_request": "§dA request has been sent to %s, meow",
+  "command.toneko.player.request": "%s §6 wants to be your master",
+  "command.toneko.player.accept": "§a%s agrees to your request, meow",
+  "command.toneko.player.deny": "§c%s has denied your request, meow",
+  "command.toneko.accept": "§aYou accepted %s' request, meow",
+  "command.toneko.deny": "§cYou denied %s' request, meow",
+  "command.toneko.not_request": "§cSeems that there is no request",
   "command.toneko.aliases.add": "§aSet alias %s succeed!",
   "command.toneko.aliases.remove": "§aRemove alias %s succeed!",
   "command.toneko.xp": "§aThe xp between neko %s §a and you is %s-nya",
@@ -503,5 +510,7 @@
   "misc.toneko.time.day": "daytime",
   "misc.toneko.time.night": "night",
   "misc.toneko.weather.rain": "raining",
-  "misc.toneko.weather.sunny": "sunny"
+  "misc.toneko.weather.sunny": "sunny",
+  "misc.toneko.accept": "§a[accept]",
+  "misc.toneko.deny": "§c[deny]"
 }

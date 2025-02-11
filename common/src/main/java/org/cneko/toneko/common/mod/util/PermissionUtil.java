@@ -34,6 +34,8 @@ public class PermissionUtil {
         register(COMMAND_TONEKOADMIN_HELP);
         register(COMMAND_TONEKOADMIN_DATA);
         register(COMMAND_TONEKO_PLAYER);
+        register(COMMAND_TONEKO_ACCEPT);
+        register(COMMAND_TONEKO_DENY);
         register(COMMAND_TONEKO_ALIAS);
         register(COMMAND_TONEKO_BLOCK);
         register(COMMAND_TONEKO_XP);
@@ -59,24 +61,24 @@ public class PermissionUtil {
             if (installed) {
                 return Permissions.check(entity, perm);
             }
-            // 没有权限API，默认拥有非管理员权限，3级默认拥有管理员权限
-            if (entity.hasPermissions(3)) {
-                return true;
-            }
-            return !isAdminPerm(perm);
+            // 没有权限API
+            return entity.hasPermissions(getPermLevel(perm));
         }catch (Exception e){
             return false;
         }
     }
     // 权限是否属于管理员权限
-    public static boolean isAdminPerm(String perm){
-        return perm.startsWith("command.tonekoadmin");
+    public static int getPermLevel(String perm){
+        if( perm.startsWith("command.tonekoadmin")){
+            return 4;
+        }else if (perm.startsWith("command.neko") || perm.startsWith("command.quirk") || perm.startsWith("command.toneko")){
+            return 1;
+        }
+        return 1;
     }
 
+
     public static boolean has(CommandSourceStack source, String permission){
-        return has(permission,source);
-    }
-    public static boolean has(String permission, CommandSourceStack source) {
         try {
             // 如果是终端执行，则直接返回true
             if (source.getEntity() == null) {
@@ -85,13 +87,14 @@ public class PermissionUtil {
             if (installed) {
                 return Permissions.check(source, permission);
             }
-            // 没有权限API，默认拥有非管理员权限，3级默认拥有管理员权限
-            if (source.hasPermission(3)) {
-                return true;
-            }
-            return !isAdminPerm(permission);
+            // 没有权限API
+            return source.hasPermission(getPermLevel(permission));
         }catch (Exception e){
             return false;
         }
+    }
+    @Deprecated
+    public static boolean has(String permission, CommandSourceStack source) {
+        return has(source, permission);
     }
 }

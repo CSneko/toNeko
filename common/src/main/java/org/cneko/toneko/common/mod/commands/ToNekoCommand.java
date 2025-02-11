@@ -4,11 +4,14 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.EntityArgument;
-import net.minecraft.commands.synchronization.ArgumentTypeInfos;
-import net.minecraft.commands.synchronization.SingletonArgumentInfo;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.player.Player;
 import org.cneko.toneko.common.Bootstrap;
 import org.cneko.toneko.common.api.NekoQuery;
@@ -17,14 +20,14 @@ import org.cneko.toneko.common.mod.commands.arguments.CustomStringArgument;
 import org.cneko.toneko.common.mod.commands.arguments.NekoArgument;
 import org.cneko.toneko.common.mod.commands.arguments.NekoSuggestionProvider;
 import org.cneko.toneko.common.mod.commands.arguments.WordSuggestionProvider;
-import org.cneko.toneko.common.mod.util.PlayerUtil;
 
-import java.util.function.Predicate;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
 
-import static org.cneko.toneko.common.mod.util.CommandUtil.*;
 import static org.cneko.toneko.common.mod.util.TextUtil.translatable;
 import static org.cneko.toneko.common.mod.util.PermissionUtil.has;
 public class ToNekoCommand {
@@ -41,6 +44,20 @@ public class ToNekoCommand {
                             .then(argument("neko", NekoArgument.neko())
                                     .suggests(new NekoSuggestionProvider(false))
                                     .executes(ToNekoCommand::playerCommand)
+                            )
+                    )
+                    //--------------------------------------accept-----------------------------------------
+                    .then(literal("accept")
+                            .requires(source -> has(source, Permissions.COMMAND_TONEKO_ACCEPT))
+                            .then(argument("owner", EntityArgument.player())
+                                    .executes(ToNekoCommand::acceptCommand)
+                            )
+                    )
+                    //-----------------------------------------deny-----------------------------------------
+                    .then(literal("deny")
+                            .requires(source -> has(source, Permissions.COMMAND_TONEKO_DENY))
+                            .then(argument("owner",EntityArgument.player())
+                                    .executes(ToNekoCommand::denyCommand)
                             )
                     )
                     //--------------------------------------------------aliases--------------------------------------
@@ -116,6 +133,71 @@ public class ToNekoCommand {
                     .executes(ToNekoCommand::help)
             );
         });
+    }
+
+    public static int playerCommand(CommandContext<CommandSourceStack> context) {
+        try {
+            ServerPlayer player = context.getSource().getPlayer(); // 命令发送者
+            ServerPlayer nekoP = context.getArgument("neko", ServerPlayer.class);
+            String nekoName = nekoP.getName().getString();
+            NekoQuery.Neko neko = NekoQuery.getNeko(nekoP.getUUID());
+            assert player != null;
+            if (!neko.isNeko()) {
+                // 不是猫娘
+                player.sendSystemMessage(translatable("command.toneko.player.notNeko", nekoName));
+                return 1;
+            }
+            if (neko.hasOwner(player.getUUID())) {
+                // 已经是主人
+                player.sendSystemMessage(translatable("command.toneko.player.alreadyOwner", nekoName));
+                return 1;
+            }
+            ownerMap.put(player,nekoP);
+            player.sendSystemMessage(Component.translatable("command.toneko.player.send_request", nekoName).withStyle(ChatFormatting.LIGHT_PURPLE));
+            MutableComponent component = Component.translatable("command.toneko.player.request", player.getName().getString()).withStyle(ChatFormatting.GOLD);
+            MutableComponent denyButton = Component.translatable("misc.toneko.deny").withStyle(ChatFormatting.RED);
+            denyButton.setStyle(denyButton.getStyle().withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/toneko deny "+player.getName().getString())));
+            MutableComponent acceptButton = Component.translatable("misc.toneko.accept").withStyle(ChatFormatting.GREEN);
+            acceptButton.setStyle(acceptButton.getStyle().withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/toneko accept "+player.getName().getString())));
+            component.append(acceptButton);
+            component.append(denyButton);
+            nekoP.sendSystemMessage(component);
+            return 1;
+        }catch (Exception e){
+            Bootstrap.LOGGER.error(e);
+            return 1;
+        }
+    }
+
+    private static int denyCommand(CommandContext<CommandSourceStack> context) {
+        return acceptOwner(context,false);
+    }
+
+    private static int acceptCommand(CommandContext<CommandSourceStack> context) {
+        return acceptOwner(context,true);
+    }
+    private static Map<Player,Player> ownerMap = new HashMap<>(); // K为主人，V为Neko
+    private static int acceptOwner(CommandContext<CommandSourceStack> context,boolean accept){
+        Player neko = context.getSource().getPlayer();
+        Player owner = null;
+        try {
+            owner = EntityArgument.getPlayer(context, "owner");
+        } catch (CommandSyntaxException ignored) {
+        }
+        if (ownerMap.containsKey(owner) && ownerMap.get(owner).equals(neko)){
+            if (accept){
+                neko.getNeko().addOwner(owner.getUUID());
+                neko.sendSystemMessage(Component.translatable("command.toneko.accept", owner.getName()).withStyle(ChatFormatting.GREEN));
+                owner.sendSystemMessage(Component.translatable("command.toneko.player.accept", neko.getName()).withStyle(ChatFormatting.GREEN));
+            }else {
+                neko.sendSystemMessage(Component.translatable("command.toneko.accept", owner.getName()).withStyle(ChatFormatting.RED));
+                owner.sendSystemMessage(Component.translatable("command.toneko.player.deny", neko.getName()).withStyle(ChatFormatting.RED));
+            }
+            ownerMap.remove(owner);
+        }else {
+            neko.sendSystemMessage(translatable("command.toneko.not_request"));
+        }
+        return 1;
     }
 
     public static int help(CommandContext<CommandSourceStack> context) {
@@ -212,32 +294,6 @@ public class ToNekoCommand {
             String aliases = StringArgumentType.getString(context, "aliases");
             neko.addAlias(player.getUUID(), aliases);
             player.sendSystemMessage(translatable("command.toneko.aliases.add", aliases));
-            return 1;
-        }catch (Exception e){
-            Bootstrap.LOGGER.error(e);
-            return 1;
-        }
-    }
-
-    public static int playerCommand(CommandContext<CommandSourceStack> context) {
-        try {
-            ServerPlayer player = context.getSource().getPlayer(); // 命令发送者
-            ServerPlayer nekoP = context.getArgument("neko", ServerPlayer.class);
-            String nekoName = nekoP.getName().getString();
-            NekoQuery.Neko neko = NekoQuery.getNeko(nekoP.getUUID());
-            assert player != null;
-            if (!neko.isNeko()) {
-                // 不是猫娘
-                player.sendSystemMessage(translatable("command.toneko.player.notNeko", nekoName));
-                return 1;
-            }
-            if (neko.hasOwner(player.getUUID())) {
-                // 已经是主人
-                player.sendSystemMessage(translatable("command.toneko.player.alreadyOwner", nekoName));
-                return 1;
-            }
-            neko.addOwner(player.getUUID());
-            player.sendSystemMessage(translatable("command.toneko.player.success", nekoName));
             return 1;
         }catch (Exception e){
             Bootstrap.LOGGER.error(e);
