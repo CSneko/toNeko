@@ -21,6 +21,8 @@ NeoForge版本还需要[Forgified Fabric API](https://modrinth.com/mod/forgified
 ## 小提示
 如果你遇到了部分语言与你的实际语言不同,只需要修改[配置文件](#配置)中的`language`就可以了哦
 
+## 交流&支持渠道
+- [Discord](https://discord.gg/hQ6Mm7wtt4)
 ## 提供支持的版本(但不代表它不能在其它版本运行哦):
 - Fabric 1.21
 - Paper/Folia 1.21

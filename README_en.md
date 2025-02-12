@@ -24,6 +24,9 @@ If you found that some text isn't your language, just modify [the config file](#
 ## Supported versions (but it does not mean that it cannot run on other versions):
 - Fabric 1.21
 - Paper/Folia 1.21
+
+## Communication&Support
+- [Discord](https://discord.gg/hQ6Mm7wtt4)
 ## How to become a neko
 If you want to become a neko, it's very simple. You just need to make a neko collector and then get close to cats. When the energy is full, a bottle of neko potion will drop. Just drink it.
 
