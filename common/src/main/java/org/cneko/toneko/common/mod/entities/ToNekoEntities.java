@@ -29,7 +29,10 @@ public class ToNekoEntities {
         Set<String> names = Set.of(
                 "Luna","Mochi","Poppy","Misty","Snowy","Coco","Peaches","Bubbles","Daisy","Cherry",
                 "ひなた","もふこ","ちゃちゃまる","ひめにゃん",
-                "Felicity","Purrin","Catrina","Fluffy","Meowgical","Felina","Ayame","Cinnamon","Momo"
+                "Felicity","Purrin","Catrina","Fluffy","Meowgical","Felina","Ayame","Cinnamon","Momo",
+                "蜜柚柚","桃桃酥","璃玖喵","星奈铃","幽月小菓",
+                "にゃん子","綿菓子","千夏コメット","蜜波リリエル","月詠ネオン",
+                "Stardustle","Mewblette","Velvetpaw","Luminaeon"
         );
         NekoNameRegistry.register(names);
 
