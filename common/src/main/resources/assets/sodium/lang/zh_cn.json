@@ -43,7 +43,7 @@
   "sodium.options.cpu_render_ahead_limit.name": "CPU渲染预载帧数喵",
   "sodium.options.cpu_render_ahead_limit.tooltip": "调试用喵~调整这个会让帧率像猫抓毛线球一样不稳定，不建议改动啦~",
   "sodium.options.cpu_render_ahead_limit.value": "%s 帧喵~",
-  "sodium.options.performance_impact_string": "性能影响：%s 喵~",
+  "sodium.options.performance_impact_string": "性能影响：%s ",
   "sodium.options.use_persistent_mapping.name": "使用持久映射喵",
   "sodium.options.use_persistent_mapping.tooltip": "调试用喵~可以避免多余的内存复制，但遇到画面花屏时要关掉哦~（需要OpenGL 4.4+）",
   "sodium.options.chunk_update_threads.name": "区块更新线程数喵",

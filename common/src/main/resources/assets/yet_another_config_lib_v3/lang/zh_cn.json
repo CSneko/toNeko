@@ -1,0 +1,29 @@
+{
+  "yacl.control.boolean.true": "当然啦喵~",
+  "yacl.control.boolean.false": "不要喵！",
+
+  "yacl.control.action.execute": "给本喵动起来！",
+
+  "yacl.gui.save": "存起来啦喵~",
+  "yacl.gui.save.tooltip": "主人要记得永久保存喔小鱼干奖励呢？ฅ^•ﻌ•^ฅ",
+  "yacl.gui.finished.tooltip": "本喵困了要睡觉啦zzZ",
+  "yacl.gui.cancel.tooltip": "喵！不准反悔的哦！",
+  "yacl.gui.reset.tooltip": "全部重置的话...主人要陪我玩毛线球补偿喵！( •̥́ ˍ •̀ू )",
+  "yacl.gui.undo": "刚才不算喵！",
+  "yacl.gui.undo.tooltip": "主人大笨蛋！快点撤回啦＞︿＜",
+  "yacl.gui.fail_apply": "呜呜卡住惹QAQ",
+  "yacl.gui.fail_apply.tooltip": "都怪主人乱点！本喵才不会承认错误喵！",
+  "yacl.gui.save_before_exit": "不存就不理你啦！",
+  "yacl.gui.save_before_exit.tooltip": "不、不保存的话...本喵会挠花屏幕的喵！(╬◣д◢)",
+
+  "yacl.list.move_up": "往上爬~",
+  "yacl.list.move_down": "滑梯时间到~",
+  "yacl.list.remove": "丢掉不要的喵~",
+  "yacl.list.add_top": "新玩具出现ฅ•ω•ฅ",
+  "yacl.list.empty": "空空如也喵...好寂寞的说(´°̥̥̥̥̥̥̥̥ω°̥̥̥̥̥̥̥̥`)",
+
+  "yacl.restart.title": "要重新启动才能陪主人玩啦~",
+  "yacl.restart.message": "主、主人不许看其他猫娘！必须重启才能见到本喵！⁄(⁄ ⁄•⁄ω⁄•⁄ ⁄)⁄",
+  "yacl.restart.yes": "喵呜~要闭眼睛一会哦",
+  "yacl.restart.no": "哼！不听话就算啦！(；´д｀)ゞ"
+}
