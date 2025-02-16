@@ -21,6 +21,7 @@ public class ConfigUtil {
             .addBoolean("ai.enable",false,"https://s.cneko.org/toNekoAI",
                     "是否启用AI",
                     "Enable AI")
+            .addString("ai.service","neko","https://s.cneko.org/toNekoAI")
             .addString("ai.model", "gemini-2.0-flash","https://s.cneko.org/toNekoAI")
             .addString("ai.key","","https://s.cneko.org/toNekoAI",
                     "AI的密钥，请参阅https://s.cneko.org/toNekoAI",
@@ -28,6 +29,7 @@ public class ConfigUtil {
             .addString("ai.prompt","你是一只可爱的%neko_type%（%neko_des%），你的名字是%neko_name%，你的身高是%neko_height%米，你的属性有%neko_moe_tags%。在回复时请不要太长且不要有太多动作。我%player_is_owner%你的主人，我的名字是%player_name%，我%player_is_neko%一只猫娘。现在是%world_time%，天气为%world_weather%。","https://s.cneko.org/toNekoAI",
                     "AI提示词，参阅 https://s.cneko.org/toNekoAI",
                     "AI prompt,see https://s.cneko.org/toNekoAI")
+            .addBoolean("ai.show_think",true,"https://s.cneko.org/toNekoAI")
             .addBoolean("ai.proxy.enable",false,"https://s.cneko.org/toNekoAI")
             .addString("ai.proxy.ip","","https://s.cneko.org/toNekoAI")
             .addString("ai.proxy.port","","https://s.cneko.org/toNekoAI")
@@ -69,6 +71,12 @@ public class ConfigUtil {
     }
     public static String getAIModel(){
         return CONFIG.getString("ai.model");
+    }
+    public static String getAIService(){
+        return CONFIG.getString("ai.service");
+    }
+    public static boolean isAIShowThink(){
+        return CONFIG.getBoolean("ai.show_think");
     }
     public static boolean isAIProxyEnabled(){
         return CONFIG.getBoolean("ai.proxy.enable");

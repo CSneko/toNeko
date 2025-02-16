@@ -13,16 +13,14 @@ import org.cneko.ai.core.AIResponse;
 import org.cneko.ai.core.NetworkingProxy;
 import org.cneko.ai.providers.AbstractNettyAIService;
 import org.cneko.ai.providers.gemini.GeminiConfig;
+import org.cneko.ai.providers.gemini.GeminiService;
 import org.cneko.ai.providers.openai.OpenAIConfig;
 import org.cneko.ai.providers.openai.OpenAIService;
 import org.cneko.ai.util.FileStorageUtil;
 import io.netty.handler.codec.http.*;
-import org.cneko.ctlib.common.file.JsonConfiguration;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.*;
 
@@ -45,6 +43,7 @@ public class AIUtil {
         var future = executor.submit(()->{
             try{
                 // 获取AI模型
+                var s = ConfigUtil.getAIService();
                 var model = ConfigUtil.getAIModel();
                 var key = ConfigUtil.getAIKey();
                 var proxyIp = ConfigUtil.getAIProxyIp();
@@ -54,8 +53,8 @@ public class AIUtil {
                 // 判断是否使用代理
                 boolean useProxy = ConfigUtil.isAIProxyEnabled();
                 NetworkingProxy proxy = new NetworkingProxy(proxyIp, Integer.parseInt(proxyPort));
-                if (model.contains("gemini")){
-                    // gemini模型，使用CNekoAI的服务
+                if (s.equalsIgnoreCase("neko")){
+                    // CNekoAI的服务
                     var config = new GeminiConfig(key);
                     if (useProxy) {
                         config.setProxy(proxy);
@@ -65,8 +64,29 @@ public class AIUtil {
                     var service = new CNekoAIService(config);
                     AIResponse response = service.processRequest(new AIRequest(message,uuidStr,userUuidStr,prompt,FileStorageUtil.readConversation(uuidStr,userUuidStr)));
                     callback.execute(response);
-                } else {
-                    // 其他模型，使用groq的AI服务
+                }
+                if (s.equalsIgnoreCase("google")){
+                    // Google的服务
+                    var config = new GeminiConfig(key);
+                    if (useProxy) {
+                        config.setProxy(proxy);
+                    }
+                    config.setModel(model);
+                    var service = new GeminiService(config);
+                    AIResponse response = service.processRequest(new AIRequest(message,uuidStr,userUuidStr,prompt,FileStorageUtil.readConversation(uuidStr,userUuidStr)));
+                    callback.execute(response);
+                } else if (s.equalsIgnoreCase("openai")){
+                    // OpenAI的服务
+                    var config = new OpenAIConfig(key);
+                    if (useProxy) {
+                        config.setProxy(proxy);
+                    }
+                    config.setModel(model);
+                    var service = new OpenAIService(config);
+                    AIResponse response = service.processRequest(new AIRequest(message,uuidStr,userUuidStr,prompt,FileStorageUtil.readConversation(uuidStr,userUuidStr)));
+                    callback.execute(response);
+                } else if (s.equalsIgnoreCase("groq")) {
+                    // Groq的服务
                     var config = new OpenAIConfig(key);
                     if (useProxy) {
                         config.setProxy(proxy);
@@ -77,6 +97,20 @@ public class AIUtil {
                     var service = new OpenAIService(config);
                     AIResponse response = service.processRequest(new AIRequest(message,uuidStr,userUuidStr,prompt,FileStorageUtil.readConversation(uuidStr,userUuidStr)));
                     callback.execute(response);
+                }else if(s.equalsIgnoreCase("siliconflow")){
+                    // siliconflow的服务
+                    var config = new OpenAIConfig(key);
+                    if (useProxy) {
+                        config.setProxy(proxy);
+                    }
+                    config.setModel(model);
+                    config.setHost("api.siliconflow.cn");
+                    config.setEndpoint("/v1/chat/completions");
+                    var service = new OpenAIService(config);
+                    AIResponse response = service.processRequest(new AIRequest(message,uuidStr,userUuidStr,prompt,FileStorageUtil.readConversation(uuidStr,userUuidStr)));
+                    callback.execute(response);
+                }else {
+                    LOGGER.warn("Unsupported AI service: {} ,please read the docs: https://s.cneko.org/toNekoAI",s);
                 }
             }catch (Exception e){
                 LOGGER.warn("Failed to send message to AI service,{}",e.getMessage());
@@ -160,9 +194,9 @@ public class AIUtil {
             @Override
             protected void channelRead0(ChannelHandlerContext ctx, FullHttpResponse response) {
                 String content = response.content().toString(StandardCharsets.UTF_8);
-
-                if (response.status().code() != HttpResponseStatus.OK.code()) {
-                    future.complete(new AIResponse("API Error: " + content, false));
+                int code = response.status().code();
+                if (code != HttpResponseStatus.OK.code()) {
+                    future.complete(new AIResponse("API Error: " + content, code));
                     return;
                 }
 
@@ -187,16 +221,16 @@ public class AIUtil {
                         NekoLogger.LOGGER.error("Error saving conversation: {}", e.getMessage());
                     }
 
-                    future.complete(new AIResponse(responseText.trim(), true));
+                    future.complete(new AIResponse(responseText.trim(), code));
                 } catch (Exception e) {
-                    future.complete(new AIResponse("Response parsing error: " + e.getMessage(), false));
+                    future.complete(new AIResponse("Response parsing error: " + e.getMessage(), code));
                 }
             }
 
 
             @Override
             public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-                future.complete(new AIResponse("Network error: " + cause.getMessage(), false));
+                future.complete(new AIResponse("Network error: " + cause.getMessage(), 400));
                 ctx.close();
             }
 
@@ -205,92 +239,4 @@ public class AIUtil {
             }
         }
     }
-
-    /*
-    public static void sendMessage(UUID uuid,UUID userUuid, String prompt, String message, MessageCallback callback){
-        var future = executor.submit(()->{
-            try{
-                FileUtil.CreatePath(PAST_MESSAGE_PATH + uuid + "/");
-                String pastMessagePath = PAST_MESSAGE_PATH + uuid + "/" +userUuid + ".json";
-                FileUtil.CreateFile(pastMessagePath);
-                // 读取json
-                String json = FileUtil.readStringFromFile(pastMessagePath);
-                if (json.equalsIgnoreCase("")){
-                    FileUtil.WriteFile(pastMessagePath, "{\"contents\":[]}");
-                }
-                JsonConfiguration j = JsonConfiguration.fromFile(Path.of(pastMessagePath));
-                List<JsonConfiguration> contents = j.getJsonList("contents");
-                // 检查是否超过了20
-                if (contents.size() >= MAX_MESSAGE_COUNT){
-                    // 删除第一个
-                    contents.removeFirst();
-                    // 重新构建json
-                    j.set("contents", contents);
-                }
-
-                // 删除掉url中的&
-                String  msg = message.replaceAll("&", "");
-                // 构建查询参数
-                String encodedPrompt = URLEncoder.encode(prompt, StandardCharsets.UTF_8);
-                String encodedMessage = URLEncoder.encode(msg, StandardCharsets.UTF_8);
-                String encodedKey = URLEncoder.encode(ConfigUtil.getAIKey(), StandardCharsets.UTF_8);
-                String query = String.format("p=%s&t=%s&key=%s&ver=v1", encodedPrompt, encodedMessage, encodedKey);
-
-                // 构建完整的url
-                String url = API_URL + "?" + query;
-
-                // 发送请求
-                var post = new HttpPost.HttpPostObject(url,"","application/json");
-                post.setHeaders(Map.of("msg",URLEncoder.encode(j.toString(), StandardCharsets.UTF_8)));
-                post.connect();
-                int statusCode = post.getStatusCode();
-                if (statusCode == 200){
-                    String response = post.getResponse();
-                    JsonConfiguration resJson = JsonConfiguration.of(response);
-                    // 读取返回消息
-                    String resMsg = resJson.getString("response");
-                    // 写入json
-                    JsonConfiguration newJ = genNewJson(msg, resMsg);
-                    contents.addAll(newJ.getJsonList("contents"));
-                    j.set("contents", contents);
-                    // 保存到文件
-                    FileUtil.WriteFile(pastMessagePath, j.toString());
-                    // 回调
-                    callback.execute(resMsg.replace("\\n",""));
-                }
-            }catch (Exception e){
-                LOGGER.error("Failed to send message", e);
-            }
-        });
-        // 设置超时机制
-        executor.submit(() -> {
-            try {
-                future.get(REQUEST_TIMEOUT, TimeUnit.SECONDS);
-            } catch (TimeoutException e) {
-                future.cancel(true); // 超时后取消任务
-                LOGGER.warn("Message sending task timed out and was cancelled.");
-            } catch (Exception e) {
-                LOGGER.error("Unexpected error during message sending task.", e);
-            }
-        });
-    }
-
-    private static @NotNull JsonConfiguration genNewJson(String msg, String resMsg) {
-        String jsonString = """
-                {"contents":[{
-                    "role":"user",
-                    "parts":[
-                        {"text":"%s"}
-                    ]
-                },{
-                    "role":"model",
-                    "parts":[
-                        {"text":"%s"}
-                    ]
-                }]}
-                """;
-        jsonString = String.format(jsonString, msg, resMsg);
-        return new JsonConfiguration(jsonString);
-    }
-     */
 }
