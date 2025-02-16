@@ -9,11 +9,20 @@
   ],
   "contributors": [
     "MrHua269/Lora4967",
-    "pil0lo",
     "QWERTY770",
-    "yichifauzi",
     "HappyRespawnanchor",
-    "homewool"
+    {
+      "name": "homewool",
+      "role": "illustrator"
+    },
+    {
+      "name": "pil0lo",
+      "role": "translator"
+    },
+    {
+      "name": "yichifauzi",
+      "role": "translator"
+    }
   ],
   "contact": {
     "website": "https://github.com/CSNeko/toNeko",
