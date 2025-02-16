@@ -1,6 +1,7 @@
 package org.cneko.toneko.common.mod.events;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.server.level.ServerLevel;
@@ -81,7 +82,7 @@ public class ToNekoNetworkEvents {
             } else {
                 ServerPlayer player = context.player();
                 AIUtil.sendMessage(neko.getUUID(), player.getUUID(), neko.generateAIPrompt(context.player()), payload.message(), response -> {
-                    if (response.hasThink()){
+                    if (ConfigUtil.isAIShowThink() && response.hasThink()){
                         ServerLevel world = (ServerLevel) neko.level();
                         // 使用多行 ArmorStand 显示思考过程，顺序逐行显示
                         int totalDelay = spawnFloatingText(neko, response, world);
@@ -229,13 +230,13 @@ public class ToNekoNetworkEvents {
     private static void animateLine(ArmorStand stand, String fullLine, int delayOffset) {
         int totalLength = fullLine.length();
         TickTaskQueue queue = new TickTaskQueue();
-        // 每个 tick 显示一个新字符（可根据需求调整）
+        // 每个 tick 显示一个新字符
         for (int i = 0; i < totalLength; i++) {
             int currentIndex = i;
             queue.addTask(delayOffset + i, () -> {
                 // 显示从0到当前索引的子串
                 String currentText = fullLine.substring(0, currentIndex + 1);
-                stand.setCustomName(Component.literal(currentText));
+                stand.setCustomName(Component.literal(currentText).withStyle(ChatFormatting.GOLD));
             });
         }
         TickTasks.add(queue);

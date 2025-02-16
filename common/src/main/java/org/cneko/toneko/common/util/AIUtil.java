@@ -27,7 +27,6 @@ import java.util.concurrent.*;
 import static org.cneko.toneko.common.Bootstrap.LOGGER;
 
 public class AIUtil {
-    public static final String API_URL = "https://chat.ai.cneko.org";
     private static final ExecutorService executor = Executors.newFixedThreadPool(100, r -> {
         Thread thread = new Thread(r);
         thread.setDaemon(true); // 将线程设为守护线程
@@ -53,6 +52,7 @@ public class AIUtil {
                 // 判断是否使用代理
                 boolean useProxy = ConfigUtil.isAIProxyEnabled();
                 NetworkingProxy proxy = new NetworkingProxy(proxyIp, Integer.parseInt(proxyPort));
+                AIResponse response = null;
                 if (s.equalsIgnoreCase("neko")){
                     // CNekoAI的服务
                     var config = new GeminiConfig(key);
@@ -62,8 +62,7 @@ public class AIUtil {
                     config.setModel(model);
                     config.setHost("chat.ai.cneko.org");
                     var service = new CNekoAIService(config);
-                    AIResponse response = service.processRequest(new AIRequest(message,uuidStr,userUuidStr,prompt,FileStorageUtil.readConversation(uuidStr,userUuidStr)));
-                    callback.execute(response);
+                    response = service.processRequest(new AIRequest(message,uuidStr,userUuidStr,prompt,FileStorageUtil.readConversation(uuidStr,userUuidStr)));
                 }
                 if (s.equalsIgnoreCase("google")){
                     // Google的服务
@@ -73,8 +72,7 @@ public class AIUtil {
                     }
                     config.setModel(model);
                     var service = new GeminiService(config);
-                    AIResponse response = service.processRequest(new AIRequest(message,uuidStr,userUuidStr,prompt,FileStorageUtil.readConversation(uuidStr,userUuidStr)));
-                    callback.execute(response);
+                    response = service.processRequest(new AIRequest(message,uuidStr,userUuidStr,prompt,FileStorageUtil.readConversation(uuidStr,userUuidStr)));
                 } else if (s.equalsIgnoreCase("openai")){
                     // OpenAI的服务
                     var config = new OpenAIConfig(key);
@@ -83,8 +81,7 @@ public class AIUtil {
                     }
                     config.setModel(model);
                     var service = new OpenAIService(config);
-                    AIResponse response = service.processRequest(new AIRequest(message,uuidStr,userUuidStr,prompt,FileStorageUtil.readConversation(uuidStr,userUuidStr)));
-                    callback.execute(response);
+                    response = service.processRequest(new AIRequest(message,uuidStr,userUuidStr,prompt,FileStorageUtil.readConversation(uuidStr,userUuidStr)));
                 } else if (s.equalsIgnoreCase("groq")) {
                     // Groq的服务
                     var config = new OpenAIConfig(key);
@@ -95,8 +92,7 @@ public class AIUtil {
                     config.setHost("api.groq.com");
                     config.setEndpoint("/openai/v1/chat/completions");
                     var service = new OpenAIService(config);
-                    AIResponse response = service.processRequest(new AIRequest(message,uuidStr,userUuidStr,prompt,FileStorageUtil.readConversation(uuidStr,userUuidStr)));
-                    callback.execute(response);
+                    response = service.processRequest(new AIRequest(message,uuidStr,userUuidStr,prompt,FileStorageUtil.readConversation(uuidStr,userUuidStr)));
                 }else if(s.equalsIgnoreCase("siliconflow")){
                     // siliconflow的服务
                     var config = new OpenAIConfig(key);
@@ -107,10 +103,15 @@ public class AIUtil {
                     config.setHost("api.siliconflow.cn");
                     config.setEndpoint("/v1/chat/completions");
                     var service = new OpenAIService(config);
-                    AIResponse response = service.processRequest(new AIRequest(message,uuidStr,userUuidStr,prompt,FileStorageUtil.readConversation(uuidStr,userUuidStr)));
-                    callback.execute(response);
+                    response = service.processRequest(new AIRequest(message,uuidStr,userUuidStr,prompt,FileStorageUtil.readConversation(uuidStr,userUuidStr)));
                 }else {
                     LOGGER.warn("Unsupported AI service: {} ,please read the docs: https://s.cneko.org/toNekoAI",s);
+                }
+                if (response != null) {
+                    if (!response.isSuccess()){
+                        response.setResponse("服务器繁忙，请稍后再试。");
+                    }
+                    callback.execute(response);
                 }
             }catch (Exception e){
                 LOGGER.warn("Failed to send message to AI service,{}",e.getMessage());
