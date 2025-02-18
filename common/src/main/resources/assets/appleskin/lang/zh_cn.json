@@ -1,0 +1,26 @@
+{
+  "text.autoconfig.appleskin.title": "苹果皮皮小助手ヽ(✿ﾟ▽ﾟ)ノ",
+  "text.autoconfig.appleskin.option.showFoodValuesInTooltip": "显示食物的小肚肚容量和饱饱度～(≧∇≦)ﾉ",
+  "text.autoconfig.appleskin.option.showFoodValuesInTooltip.@Tooltip": "开启后，按住SHIFT键就可以偷偷看到食物的秘密小数据啦～（＞ω＜）",
+  "text.autoconfig.appleskin.option.showFoodValuesInTooltipAlways": "全天候直播食物的饱饱日记！",
+  "text.autoconfig.appleskin.option.showFoodValuesInTooltipAlways.@Tooltip": "不用按手手也能看到食物的营养报告单哦～(๑¯∀¯๑)",
+  "text.autoconfig.appleskin.option.showFoodValuesHudOverlay": "预测吃完后小肚肚的咕噜程度",
+  "text.autoconfig.appleskin.option.showFoodValuesHudOverlay.@Tooltip": "举着食物时会飘出小心心提示能填饱多少肚肚呢（开启饱饱度模式会变成双倍可爱！）",
+  "text.autoconfig.appleskin.option.showFoodValuesHudOverlayWhenOffhand": "副手手也要展示零食情报",
+  "text.autoconfig.appleskin.option.showFoodValuesHudOverlayWhenOffhand.@Tooltip": "左手拿食物时也会冒泡泡显示恢复力哦～像捧着魔法小蛋糕一样(´▽`ʃ♡ƪ)",
+  "text.autoconfig.appleskin.option.showFoodHealthHudOverlay": "预测吃完会不会变成元气满满",
+  "text.autoconfig.appleskin.option.showFoodHealthHudOverlay.@Tooltip": "食物吃完后小心心会biu～地涨多少呢",
+  "text.autoconfig.appleskin.option.showFoodExhaustionHudUnderlay": "显示肚肚饿饿的消耗度",
+  "text.autoconfig.appleskin.option.showFoodExhaustionHudUnderlay.@Tooltip": "在饥饿条后面画小幽灵～代表肚肚偷偷消耗的能量(´-ωก`)",
+  "text.autoconfig.appleskin.option.showSaturationHudOverlay": "显示隐藏的饱饱能量条",
+  "text.autoconfig.appleskin.option.showSaturationHudOverlay.@Tooltip": "在饥饿条上叠一层blingbling的魔法保护罩效果！✧*｡٩(ˊωˋ*)و✧*｡",
+  "text.autoconfig.appleskin.option.showFoodDebugInfo": "在调试屏幕暴露吃货属性",
+  "text.autoconfig.appleskin.option.showFoodDebugInfo.@Tooltip":"会把自己的肚肚机密数据写在调试屏上啦～羞羞(⁄ ⁄•⁄ω⁄•⁄ ⁄)",
+  "text.autoconfig.appleskin.option.showVanillaAnimationsOverlay": "开启原版风格的布丁抖动效果",
+  "text.autoconfig.appleskin.option.showVanillaAnimationsOverlay.@Tooltip": "让小心心和饥饿条像果冻一样duangduang弹动～(*´∀`)~♥",
+  "text.autoconfig.appleskin.option.maxHudOverlayFlashAlpha": "设置HUD小星星的眨眼亮度",
+  "text.autoconfig.appleskin.option.maxHudOverlayFlashAlpha.@Tooltip": "闪烁特效最亮时像小灯泡一样～（1.0=闪瞎眼 0.0=隐身小精灵）",
+
+  "modmenu.summaryTranslation.appleskin": "为MC的小吃货们量身定制的超萌食物HUD小助手！(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧",
+  "modmenu.descriptionTranslation.appleskin": "在饥饿条上画小蛋糕～在食物说明里藏小秘密～还有会跳舞的饱饱度提示！是吃货玩家的魔法美食图鉴呀～（捧脸）"
+}
