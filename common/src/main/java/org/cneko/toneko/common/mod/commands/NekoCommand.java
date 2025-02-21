@@ -174,7 +174,10 @@ public class NekoCommand {
     public static int levelCommand(CommandContext<CommandSourceStack> context) {
         NekoQuery.Neko neko = NekoQuery.getNeko(context.getSource().getPlayer().getUUID());
         if(neko.isNeko()){
-            context.getSource().getPlayer().sendSystemMessage(translatable("command.neko.level.success", neko.getLevel()));
+            double level = neko.getLevel();
+            // 保留小数点后两位
+            level = Math.round(level * 100) / 100.0;
+            context.getSource().getPlayer().sendSystemMessage(translatable("command.neko.level.success", level));
         }else{
             context.getSource().getPlayer().sendSystemMessage(translatable("command.neko.not_neko"));
         }
