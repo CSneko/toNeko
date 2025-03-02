@@ -104,7 +104,62 @@ public class AIUtil {
                     config.setEndpoint("/v1/chat/completions");
                     var service = new OpenAIService(config);
                     response = service.processRequest(new AIRequest(message,uuidStr,userUuidStr,prompt,FileStorageUtil.readConversation(uuidStr,userUuidStr)));
-                }else {
+                } else if (s.equalsIgnoreCase("elefant")) {
+                    // elefant的服务
+                    var config = new OpenAIConfig("");
+                    config.setHost("127.0.0.1");
+                    config.setPort(4315);
+                    config.setEndpoint("/v1/chat/completions");
+                    config.setTls(false);
+                    var service = new OpenAIService(config);
+                    response = service.processRequest(new AIRequest(message,uuidStr,userUuidStr,prompt,FileStorageUtil.readConversation(uuidStr,userUuidStr)));
+                } else if(!s.isEmpty()){
+                    // OpenAI格式
+                    // 把字符串分解为域名，端口（如果有）和endpoint（如果有）
+                    var config = new OpenAIConfig(key);
+                    // 如果是http开头
+                    if (s.startsWith("http://")){
+                        s = s.substring("http://".length());
+                        config.setTls(false);
+                    }else if (s.startsWith("https://")){
+                        s = s.substring("https://".length());
+                        config.setTls(true);
+                    }
+                    // 分割主机（和端口）部分与路径部分
+                    String[] hostPortAndPath = s.split("/", 2);
+                    String hostPortSection = hostPortAndPath[0];
+                    String endpoint = hostPortAndPath.length > 1 ? "/" + hostPortAndPath[1] : "/";
+
+                    // 处理主机和端口
+                    String host;
+                    Integer port = null;
+                    int colonIndex = hostPortSection.indexOf(':');
+                    if (colonIndex != -1) {
+                        // 分离主机和端口
+                        host = hostPortSection.substring(0, colonIndex);
+                        try {
+                            port = Integer.parseInt(hostPortSection.substring(colonIndex + 1));
+                        } catch (NumberFormatException e) {
+                            throw new IllegalArgumentException("Invalid port number in URL: " + s);
+                        }
+                    } else {
+                        host = hostPortSection;
+                    }
+
+                    // 设置配置
+                    config.setHost(host);
+                    if (port != null) {
+                        config.setPort(port);
+                    }
+                    config.setEndpoint(endpoint);
+                    if (useProxy) {
+                        config.setProxy(proxy);
+                    }
+                    config.setModel(model);
+                    var service = new OpenAIService(config);
+                    response = service.processRequest(new AIRequest(message,uuidStr,userUuidStr,prompt,FileStorageUtil.readConversation(uuidStr,userUuidStr)));
+                }
+                else {
                     LOGGER.warn("Unsupported AI service: {} ,please read the docs: https://s.cneko.org/toNekoAI",s);
                 }
                 if (response != null) {
