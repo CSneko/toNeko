@@ -223,6 +223,12 @@ public class NekoCommand {
 
         // 对((((等级+1)的开方)乘以(玩家的经验值的开方))/(玩家生命值/4))*20*(猫猫等级+1)/2来计算效果时间
         int time = (int)(((((Math.sqrt(level+1)) * (Math.sqrt(player.totalExperience+1))) / (player.getHealth()/4)))*100 * (nekoDegree+1)/2);
+
+        // 最大等级为10,时间为一小时
+        if(effectLevel > 10){
+            effectLevel = 10;
+            time = 20*3600;
+        }
         player.addEffect(new MobEffectInstance(effect, time, effectLevel));
         return 1;
     }

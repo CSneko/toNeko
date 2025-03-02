@@ -30,15 +30,13 @@ import org.cneko.toneko.common.util.LanguageUtil;
 
 public class ToNekoEvents {
     public static void init() {
-        if(ConfigUtil.isChatEnable()) {
-            ServerMessageEvents.ALLOW_CHAT_MESSAGE.register((message, sender, params) -> {
-                if (ConfigUtil.isChatEnable()) {
-                    CommonChatEvent.onChatMessage(message, sender, params);
-                    return false;
-                }
+        ServerMessageEvents.ALLOW_CHAT_MESSAGE.register((message, sender, params) -> {
+            if (ConfigUtil.isChatEnable()) {
+                CommonChatEvent.onChatMessage(message, sender, params);
+                return false;
+            }
                 return true;
-            });
-        }
+        });
         ServerPlayConnectionEvents.JOIN.register(ToNekoEvents::onPlayerJoin);
         ServerPlayConnectionEvents.DISCONNECT.register(ToNekoEvents::onPlayerQuit);
         UseEntityCallback.EVENT.register(CommonPlayerInteractionEvent::useEntity);

@@ -1,13 +1,32 @@
 # 这事toNeko的AI设置
+[简体中文](https://github.com/CSneko/toNeko/blob/main/docs/AI.md) | [English](https://github.com/CSneko/toNeko/blob/main/docs/AI_en.md)
 ## 服务设置
-当前一共支持以下5种服务
+当前一共支持以下服务
+- elefant （最简单，新手推荐）
 - neko（内置代理google）
 - google（可免费使用）
 - openai
 - siliconflow（有免费额度）
 - groq（可免费使用）
+- 其它服务
 
-如果你是中国大陆用户并且不会代理，那么你可以使用neko或siliconflow哦
+如果你是中国大陆用户并且不会代理，那么你可以使用elefant,neko或siliconflow哦
+
+### 其它服务
+如果服务使用OpenAI格式返回（通常情况下链接会像`https://api.xxx.com/v1/chat/completions `），那么填入链接即可
+
+--- 
+## elefant使用方法
+相比于其它服务，elefant较为简单，推荐新手使用
+
+首先，打开[elefant官网](https://elefant.gg/)并下载客户端，然后启动客户端
+
+接下来，在游戏内的toNeko配置页面将AI启用后并将服务设置为`elefant`即可直接使用啦。（也可以执行以下两个命令）
+```
+/tonekoadmin set ai.enable true
+/tonekoadmin set ai.service elefant
+```
+---
 ## 获取Key
 想要获取Key很简单哦，根据你使用模型的不同，需要到不同网站获取key
 
@@ -15,17 +34,20 @@
 你只需要一个谷歌帐号就可以直接免费获取到啦
 
 首先打开[Google AI Studio](https://aistudio.google.com)，在这个页面点击`Get API key`按钮后呢，一步步往下操作就好啦
-
 ### openai
 首先登陆[OpenAI管理面板](https://platform.openai.com/api-keys)，然后在这个页面点击`create new secret key`按钮，然后按照提示操作即可
 ### siliconflow
 首先注册[硅基流动](https://cloud.siliconflow.cn/i/2ZR74wDe)，使用这个链接注册可以获得一些免费额度，然后在[密钥页面](https://cloud.siliconflow.cn/account/ak)创建API密钥即可
 ### groq
 同样的，只需要一个邮箱就能免费获取到（注意：已知不支持outlook邮箱）
-请先去[groq官网](https://console.groq.com)注册一个账号，然后去[Keys](https://console.groq.com/keys)页面获取key即可
 
+请先去[groq官网](https://console.groq.com)注册一个账号，然后去[Keys](https://console.groq.com/keys)页面获取key即可
+### 其它服务
+请自行搜索相关文档喵
+---
 ## 模型设置
 不同服务支持的模型有所不同，你可以在以下页面查看所有支持的模型
+- elefant请留空
 - [google和neko](https://ai.google.dev/gemini-api/docs/models/gemini?hl=zh-cn)
 - [openai](https://platform.openai.com/docs/models)
 - [siliconflow](https://cloud.siliconflow.cn/models)
@@ -33,6 +55,8 @@
 
 ### 推荐模型
 这里给大家推荐以下几个模型
+#### elefant
+请留空
 #### neko或google
 - gemini-2.0-flash
 - gemini-1.5-pro
@@ -46,6 +70,7 @@
 - llama3-70b-8192
 - deepseek-r1-distill-llama-70b
 
+---
 ## 配置
 在toNeko配置页面（模组菜单->toNeko->配置）或配置文件（config/toneko.yml）启用AI功能，并填入你的模型和密钥就好啦。
 
@@ -55,7 +80,7 @@
 ## 代理
 这个功能是可选的，如果你无法访问外网，你可能需要用到。
 
-如果你使用neko或siliconflow，那么在游戏内是不需要代理的。
+如果你使用elefant，neko或siliconflow，那么在游戏内是不需要代理的。
 
 而中国大陆环境无法使用其它模型，这时候你可能需要设置代理。
 
@@ -67,6 +92,8 @@
 - 目前仅支持http代理
 - 目前暂不支持需要验证的代理
 - 如果你使用了代理客户端的 Tun 模式，请在游戏内不要设置代理
+
+---
 ## 提示词
 你可以自由设置提示词，并且可以使用占位符，以下是所有的占位符
 

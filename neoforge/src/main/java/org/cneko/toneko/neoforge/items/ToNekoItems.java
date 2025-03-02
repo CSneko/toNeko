@@ -7,10 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemNameBlockItem;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.*;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
@@ -48,6 +45,7 @@ public class ToNekoItems {
     public static DeferredHolder<Item, CatnipItem> CATNIP_SANDWICH_HOLDER;
     public static DeferredHolder<Item,Item> CATNIP_SEED_HOLDER;
     public static DeferredHolder<CreativeModeTab,CreativeModeTab> TONEKO_ITEM_GROUP_HOLDER;
+    public static DeferredHolder<Item,Item> MUSIC_DISC_KAWAII_HOLDER;
 
     public static void init() {
         registerWithOutConfig();
@@ -82,6 +80,8 @@ public class ToNekoItems {
 
         CATNIP_SEED_HOLDER = ITEMS.register("catnip_seed",()->new ItemNameBlockItem(ToNekoBlocks.CATNIP_HOLDER.get(), new Item.Properties()));
 
+        MUSIC_DISC_KAWAII_HOLDER = ITEMS.register("music_disc_kawaii",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ToNekoSongs.KAWAII)));
+
         ITEMS.register(NekoArmor.NekoPawsItem.ID, ()->new NekoArmor.NekoPawsItem(ToNekoArmorMaterials.NEKO)); // 此物品暂不添加
         // 注册物品组
         TONEKO_ITEM_GROUP_HOLDER = ToNekoNeoForge.CREATIVE_MODE_TABS.register("toneko_group", ()-> CreativeModeTab.builder()
@@ -98,6 +98,7 @@ public class ToNekoItems {
                     event.accept(CATNIP_HOLDER.get());
                     event.accept(CATNIP_SANDWICH_HOLDER.get());
                     event.accept(CATNIP_SEED_HOLDER.get());
+                    event.accept(MUSIC_DISC_KAWAII_HOLDER.get());
                 })
                 .build()
         );
@@ -125,6 +126,7 @@ public class ToNekoItems {
             event.accept(CATNIP_HOLDER.get());
             event.accept(CATNIP_SANDWICH_HOLDER.get());
             event.accept(CATNIP_SEED_HOLDER.get());
+            event.accept(MUSIC_DISC_KAWAII_HOLDER.get());
         }
         reg();
     }
@@ -138,6 +140,7 @@ public class ToNekoItems {
         NEKO_TAIL = NEKO_TAIL_HOLDER.get();
         NEKO_EARS = NEKO_EARS_HOLDER.get();
         NEKO_POTION = NEKO_POTION_HOLDER.get();
+        MUSIC_DISC_KAWAII = MUSIC_DISC_KAWAII_HOLDER.get();
         ToNekoBlocks.reg();
         ToNekoEntities.reg();
         ToNekoCriteriaNeoForge.reg();

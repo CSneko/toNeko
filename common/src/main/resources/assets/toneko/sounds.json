@@ -1,0 +1,11 @@
+{
+  "music.kawaii": {
+    "category": "record",
+    "sounds": [
+      {
+        "name": "toneko:music/kawaii",
+        "stream": true
+      }
+    ]
+  }
+}

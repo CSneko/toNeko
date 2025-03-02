@@ -334,6 +334,10 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
             }else {
                 // 如果是主人，则添加好感
                 this.getNeko().addXp(player.getUUID(), 100);
+                // 1%的几率掉落唱片
+                if (player.getRandom().nextInt(100) == 0) {
+                    player.drop(new ItemStack(ToNekoItems.MUSIC_DISC_KAWAII),false);
+                }
             }
             return true;
         }else {

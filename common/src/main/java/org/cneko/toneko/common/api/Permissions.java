@@ -10,6 +10,7 @@ public class Permissions {
     public static String COMMAND_TONEKOADMIN_SET = "command.tonekoadmin.set";
     public static String COMMAND_TONEKOADMIN_RELOAD = "command.tonekoadmin.reload";
     public static String COMMAND_TONEKOADMIN_DATA = "command.tonekoadmin.data";
+    public static String COMMAND_TONEKOADMIN_CONFIG = "command.tonekoadmin.config";
     public static String COMMAND_TONEKO_PLAYER = "command.toneko.player";
     public static String COMMAND_TONEKO_ACCEPT = "command.toneko.accept";
     public static String COMMAND_TONEKO_DENY = "command.toneko.deny";

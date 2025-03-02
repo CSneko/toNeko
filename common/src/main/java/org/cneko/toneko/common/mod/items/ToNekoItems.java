@@ -15,6 +15,7 @@ public class ToNekoItems {
     public static CatnipItem CATNIP;
     public static CatnipItem CATNIP_SANDWICH;
     public static Item CATNIP_SEED;
+    public static Item MUSIC_DISC_KAWAII;
 
     public static final TagKey<Item> CATNIP_TAG = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c","foods/catnip"));
 }

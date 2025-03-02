@@ -29,10 +29,12 @@ public class PermissionUtil {
     }
     // 注册所有权限
     public static void registerAll(){
+        register(COMMAND_TONEKOADMIN);
         register(COMMAND_TONEKOADMIN_SET);
         register(COMMAND_TONEKOADMIN_RELOAD);
         register(COMMAND_TONEKOADMIN_HELP);
         register(COMMAND_TONEKOADMIN_DATA);
+        register(COMMAND_TONEKOADMIN_CONFIG);
         register(COMMAND_TONEKO_PLAYER);
         register(COMMAND_TONEKO_ACCEPT);
         register(COMMAND_TONEKO_DENY);
