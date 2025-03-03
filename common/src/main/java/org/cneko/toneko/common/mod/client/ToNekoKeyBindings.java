@@ -13,6 +13,7 @@ public class ToNekoKeyBindings {
     public static KeyMapping SPEED_KEY;
     public static KeyMapping JUMP_KEY;
     public static KeyMapping VISION_KEY;
+    public static KeyMapping ROULETTE_KEY;
 
     public static void init(){
         LIE_KEY = KeyBindingHelper.registerKeyBinding(
@@ -68,6 +69,14 @@ public class ToNekoKeyBindings {
                         "key.toneko.vision",
                         InputConstants.Type.KEYSYM,
                         GLFW.GLFW_KEY_UNKNOWN,
+                        "key.toneko.lie.category"
+                )
+        );
+        ROULETTE_KEY = KeyBindingHelper.registerKeyBinding(
+                new KeyMapping(
+                        "key.toneko.roulette",
+                        InputConstants.Type.KEYSYM,
+                        GLFW.GLFW_KEY_Z,
                         "key.toneko.lie.category"
                 )
         );
