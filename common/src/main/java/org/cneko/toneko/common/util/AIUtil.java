@@ -51,7 +51,10 @@ public class AIUtil {
                 var userUuidStr = userUuid.toString();
                 // 判断是否使用代理
                 boolean useProxy = ConfigUtil.isAIProxyEnabled();
-                NetworkingProxy proxy = new NetworkingProxy(proxyIp, Integer.parseInt(proxyPort));
+                NetworkingProxy proxy = null;
+                if (proxyPort!=null&&!proxyIp.isEmpty()){
+                    proxy = new NetworkingProxy(proxyIp, Integer.parseInt(proxyPort));
+                }else useProxy =false;
                 AIResponse response = null;
                 if (s.equalsIgnoreCase("neko")){
                     // CNekoAI的服务
