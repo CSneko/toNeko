@@ -158,9 +158,9 @@ public class AIUtil {
                     config.setModel(model);
                     var service = new OpenAIService(config);
                     response = service.processRequest(new AIRequest(message,uuidStr,userUuidStr,prompt,FileStorageUtil.readConversation(uuidStr,userUuidStr)));
-                }
-                else {
+                } else {
                     LOGGER.warn("Unsupported AI service: {} ,please read the docs: https://s.cneko.org/toNekoAI",s);
+                    callback.execute(new AIResponse("Unsupported AI service: {} ,please read the docs: https://s.cneko.org/toNekoAI",400));
                 }
                 if (response != null) {
                     if (!response.isSuccess()){

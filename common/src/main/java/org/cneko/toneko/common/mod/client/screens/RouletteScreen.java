@@ -1,5 +1,6 @@
 package org.cneko.toneko.common.mod.client.screens;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -121,5 +122,138 @@ public class RouletteScreen extends Screen {
         ResourceLocation getIcon();
         Component getName();
         void rouletteAction();
+    }
+
+    public static void open() {
+        Minecraft.getInstance().setScreen(new RouletteScreen(getRouletteActions()));
+    }
+
+    private static List<RouletteScreen.IRouletteAction> getRouletteActions() {
+        return List.of(
+                new RouletteScreen.IRouletteAction() {
+                    @Override
+                    public ResourceLocation getIcon() {
+                        return ResourceLocation.withDefaultNamespace("textures/item/barrier.png");
+                    }
+
+                    @Override
+                    public Component getName() {
+                        return Component.translatable("gui.toneko.roulette.option.close");
+                    }
+
+                    @Override
+                    public void rouletteAction() {
+                        Minecraft.getInstance().setScreen(null);
+                    }
+                },
+                new RouletteScreen.IRouletteAction() {
+                    @Override
+                    public ResourceLocation getIcon() {
+                        return ResourceLocation.withDefaultNamespace("textures/mob_effect/speed.png");
+                    }
+
+                    @Override
+                    public Component getName() {
+                        return Component.translatable("gui.toneko.roulette.option.speed");
+                    }
+
+                    @Override
+                    public void rouletteAction() {
+                        if (Minecraft.getInstance().player != null) {
+                            Minecraft.getInstance().player.connection.sendUnsignedCommand("neko speed");
+                        }
+                    }
+                },
+                new RouletteScreen.IRouletteAction() {
+                    @Override
+                    public ResourceLocation getIcon() {
+                        return ResourceLocation.withDefaultNamespace("textures/mob_effect/jump_boost.png");
+                    }
+
+                    @Override
+                    public Component getName() {
+                        return Component.translatable("gui.toneko.roulette.option.jump");
+                    }
+
+                    @Override
+                    public void rouletteAction() {
+                        if (Minecraft.getInstance().player != null) {
+                            Minecraft.getInstance().player.connection.sendUnsignedCommand("neko jump");
+                        }
+                    }
+                },
+                new RouletteScreen.IRouletteAction() {
+                    @Override
+                    public ResourceLocation getIcon() {
+                        return ResourceLocation.withDefaultNamespace("textures/mob_effect/night_vision.png");
+                    }
+
+                    @Override
+                    public Component getName() {
+                        return Component.translatable("gui.toneko.roulette.option.vision");
+                    }
+
+                    @Override
+                    public void rouletteAction() {
+                        if (Minecraft.getInstance().player != null) {
+                            Minecraft.getInstance().player.connection.sendUnsignedCommand("neko vision");
+                        }
+                    }
+                },
+                new RouletteScreen.IRouletteAction() {
+                    @Override
+                    public ResourceLocation getIcon() {
+                        return ResourceLocation.withDefaultNamespace("textures/item/leather.png");
+                    }
+
+                    @Override
+                    public Component getName() {
+                        return Component.translatable("gui.toneko.roulette.option.lie");
+                    }
+
+                    @Override
+                    public void rouletteAction() {
+                        if (Minecraft.getInstance().player != null) {
+                            Minecraft.getInstance().player.connection.sendUnsignedCommand("neko lie");
+                        }
+                    }
+                },
+                new RouletteScreen.IRouletteAction() {
+                    @Override
+                    public ResourceLocation getIcon() {
+                        return ResourceLocation.withDefaultNamespace("textures/item/pink_dye.png");
+                    }
+
+                    @Override
+                    public Component getName() {
+                        return Component.translatable("gui.toneko.roulette.option.get_down");
+                    }
+
+                    @Override
+                    public void rouletteAction() {
+                        if (Minecraft.getInstance().player != null) {
+                            Minecraft.getInstance().player.connection.sendUnsignedCommand("neko getDown");
+                        }
+                    }
+                },
+                new RouletteScreen.IRouletteAction() {
+                    @Override
+                    public ResourceLocation getIcon() {
+                        return ResourceLocation.withDefaultNamespace("textures/item/saddle.png");
+                    }
+
+                    @Override
+                    public Component getName() {
+                        return Component.translatable("gui.toneko.roulette.option.ride");
+                    }
+
+                    @Override
+                    public void rouletteAction() {
+                        if (Minecraft.getInstance().player != null) {
+                            Minecraft.getInstance().player.connection.sendUnsignedCommand("neko ride");
+                        }
+                    }
+                }
+        );
     }
 }

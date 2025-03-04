@@ -23,9 +23,11 @@
 
 接下来，在游戏内的toNeko配置页面将AI启用后并将服务设置为`elefant`即可直接使用啦。（也可以执行以下两个命令）
 ```
-/tonekoadmin set ai.enable true
-/tonekoadmin set ai.service elefant
+/tonekoadmin config set ai.enable true
+/tonekoadmin config set ai.service elefant
 ```
+*如果没有生效，可以尝试输入`/tonekoadmin config set ai.service "http://localhost:4315/v1/chat/completions" `或者使用 `/tonekoadmin config reload` 重载配置文件*
+
 ---
 ## 获取Key
 想要获取Key很简单哦，根据你使用模型的不同，需要到不同网站获取key

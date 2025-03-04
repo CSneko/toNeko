@@ -19,15 +19,17 @@ If the service uses the OpenAI-compatible API format (typically with endpoints l
 ---
 
 ## How to Use elefant
-**elefant** is the easiest option for beginners.
+**Elefant** is the easiest option for beginners.
 
 1. Visit the [elefant Website](https://elefant.gg/), download and launch the client.
 2. In-game, enable AI in the toNeko configuration menu and set the service to `elefant`.  
    Alternatively, run these commands:  
 ```
-/tonekoadmin set ai.enable true
-/tonekoadmin set ai.service elefant
+/tonekoadmin config set ai.enable true
+/tonekoadmin config set ai.service elefant
 ```
+
+*If the command not work, try running `/tonekoadmin config set ai.service "http://localhost:4315/v1/chat/completions"` instead or running `/tonekoadmin config reload` to reload*
 
 ---
 
