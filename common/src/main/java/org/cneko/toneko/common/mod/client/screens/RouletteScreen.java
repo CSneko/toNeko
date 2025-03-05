@@ -3,14 +3,21 @@ package org.cneko.toneko.common.mod.client.screens;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
-public class RouletteScreen extends Screen {
+public class RouletteScreen extends Screen implements Music.NotePlayer{
     private static final int MAX_VISIBLE_OPTIONS = 7; // 1中心 + 3左 + 3右
     private static final int RADIUS = 60;
     private static final int OPTION_SIZE = 24;
@@ -18,6 +25,8 @@ public class RouletteScreen extends Screen {
     private final List<IRouletteAction> rouletteActions;
     private int selectedIndex;
     private long lastInputTime;
+
+    private final Music music = new Music();
 
     public RouletteScreen(List<IRouletteAction> rouletteActions) {
         super(Component.empty());
@@ -69,11 +78,12 @@ public class RouletteScreen extends Screen {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == GLFW.GLFW_MOUSE_BUTTON_LEFT) { // 左键
+        music.tryPlayNextNote(this);
+        if (keyCode == GLFW.GLFW_KEY_LEFT) { // 左键
             navigate(-1);
             return true;
         }
-        if (keyCode == GLFW.GLFW_MOUSE_BUTTON_RIGHT) { // 右键
+        if (keyCode == GLFW.GLFW_KEY_RIGHT) { // 右键
             navigate(1);
             return true;
         }
@@ -84,8 +94,24 @@ public class RouletteScreen extends Screen {
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
+    // 实现 NotePlayer 接口
+    @Override
+    public void playNote(NoteBlockInstrument instrument, float pitch, float volume) {
+        Minecraft.getInstance().getSoundManager().play(
+                new SimpleSoundInstance(
+                        instrument.getSoundEvent().value(),
+                        SoundSource.RECORDS,
+                        volume,
+                        pitch,
+                        SoundInstance.createUnseededRandom(),
+                        Minecraft.getInstance().player.blockPosition()
+                )
+        );
+    }
+
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
+        music.tryPlayNextNote(this);
         navigate(deltaY > 0 ? -1 : 1);
         return true;
     }
@@ -128,132 +154,38 @@ public class RouletteScreen extends Screen {
         Minecraft.getInstance().setScreen(new RouletteScreen(getRouletteActions()));
     }
 
-    private static List<RouletteScreen.IRouletteAction> getRouletteActions() {
+    private record DefaultRouletteAction(ResourceLocation icon, Component name, Runnable action) implements IRouletteAction {
+        @Override public ResourceLocation getIcon() { return icon; }
+        @Override public Component getName() { return name; }
+        @Override public void rouletteAction() { action.run(); }
+    }
+
+    private static List<IRouletteAction> getRouletteActions() {
         return List.of(
-                new RouletteScreen.IRouletteAction() {
-                    @Override
-                    public ResourceLocation getIcon() {
-                        return ResourceLocation.withDefaultNamespace("textures/item/barrier.png");
-                    }
+                new DefaultRouletteAction(
+                        ResourceLocation.withDefaultNamespace("textures/item/barrier.png"),
+                        Component.translatable("gui.toneko.roulette.option.close"),
+                        () -> Minecraft.getInstance().setScreen(null)
+                ),
+                createAction("mob_effect/speed.png", "speed", "neko speed"),
+                createAction("mob_effect/jump_boost.png", "jump", "neko jump"),
+                createAction("mob_effect/night_vision.png", "vision", "neko vision"),
+                createAction("item/leather.png", "lie", "neko lie"),
+                createAction("item/pink_dye.png", "get_down", "neko getDown"),
+                createAction("item/saddle.png", "ride", "neko ride")
+        );
+    }
 
-                    @Override
-                    public Component getName() {
-                        return Component.translatable("gui.toneko.roulette.option.close");
-                    }
-
-                    @Override
-                    public void rouletteAction() {
-                        Minecraft.getInstance().setScreen(null);
-                    }
-                },
-                new RouletteScreen.IRouletteAction() {
-                    @Override
-                    public ResourceLocation getIcon() {
-                        return ResourceLocation.withDefaultNamespace("textures/mob_effect/speed.png");
-                    }
-
-                    @Override
-                    public Component getName() {
-                        return Component.translatable("gui.toneko.roulette.option.speed");
-                    }
-
-                    @Override
-                    public void rouletteAction() {
-                        if (Minecraft.getInstance().player != null) {
-                            Minecraft.getInstance().player.connection.sendUnsignedCommand("neko speed");
-                        }
-                    }
-                },
-                new RouletteScreen.IRouletteAction() {
-                    @Override
-                    public ResourceLocation getIcon() {
-                        return ResourceLocation.withDefaultNamespace("textures/mob_effect/jump_boost.png");
-                    }
-
-                    @Override
-                    public Component getName() {
-                        return Component.translatable("gui.toneko.roulette.option.jump");
-                    }
-
-                    @Override
-                    public void rouletteAction() {
-                        if (Minecraft.getInstance().player != null) {
-                            Minecraft.getInstance().player.connection.sendUnsignedCommand("neko jump");
-                        }
-                    }
-                },
-                new RouletteScreen.IRouletteAction() {
-                    @Override
-                    public ResourceLocation getIcon() {
-                        return ResourceLocation.withDefaultNamespace("textures/mob_effect/night_vision.png");
-                    }
-
-                    @Override
-                    public Component getName() {
-                        return Component.translatable("gui.toneko.roulette.option.vision");
-                    }
-
-                    @Override
-                    public void rouletteAction() {
-                        if (Minecraft.getInstance().player != null) {
-                            Minecraft.getInstance().player.connection.sendUnsignedCommand("neko vision");
-                        }
-                    }
-                },
-                new RouletteScreen.IRouletteAction() {
-                    @Override
-                    public ResourceLocation getIcon() {
-                        return ResourceLocation.withDefaultNamespace("textures/item/leather.png");
-                    }
-
-                    @Override
-                    public Component getName() {
-                        return Component.translatable("gui.toneko.roulette.option.lie");
-                    }
-
-                    @Override
-                    public void rouletteAction() {
-                        if (Minecraft.getInstance().player != null) {
-                            Minecraft.getInstance().player.connection.sendUnsignedCommand("neko lie");
-                        }
-                    }
-                },
-                new RouletteScreen.IRouletteAction() {
-                    @Override
-                    public ResourceLocation getIcon() {
-                        return ResourceLocation.withDefaultNamespace("textures/item/pink_dye.png");
-                    }
-
-                    @Override
-                    public Component getName() {
-                        return Component.translatable("gui.toneko.roulette.option.get_down");
-                    }
-
-                    @Override
-                    public void rouletteAction() {
-                        if (Minecraft.getInstance().player != null) {
-                            Minecraft.getInstance().player.connection.sendUnsignedCommand("neko getDown");
-                        }
-                    }
-                },
-                new RouletteScreen.IRouletteAction() {
-                    @Override
-                    public ResourceLocation getIcon() {
-                        return ResourceLocation.withDefaultNamespace("textures/item/saddle.png");
-                    }
-
-                    @Override
-                    public Component getName() {
-                        return Component.translatable("gui.toneko.roulette.option.ride");
-                    }
-
-                    @Override
-                    public void rouletteAction() {
-                        if (Minecraft.getInstance().player != null) {
-                            Minecraft.getInstance().player.connection.sendUnsignedCommand("neko ride");
-                        }
+    private static DefaultRouletteAction createAction(String texturePath, String optionKey, String command) {
+        return new DefaultRouletteAction(
+                ResourceLocation.withDefaultNamespace("textures/" + texturePath),
+                Component.translatable("gui.toneko.roulette.option." + optionKey),
+                () -> {
+                    if (Minecraft.getInstance().player != null) {
+                        Minecraft.getInstance().player.connection.sendUnsignedCommand(command);
                     }
                 }
         );
     }
+
 }
