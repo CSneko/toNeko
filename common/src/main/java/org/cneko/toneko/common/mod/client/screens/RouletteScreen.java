@@ -7,17 +7,15 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
+import org.cneko.toneko.common.mod.client.ClientMusicPlayer;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
 
-public class RouletteScreen extends Screen implements Music.NotePlayer{
+public class RouletteScreen extends Screen implements ClientMusicPlayer.NotePlayer{
     private static final int MAX_VISIBLE_OPTIONS = 7; // 1中心 + 3左 + 3右
     private static final int RADIUS = 60;
     private static final int OPTION_SIZE = 24;
@@ -26,7 +24,7 @@ public class RouletteScreen extends Screen implements Music.NotePlayer{
     private int selectedIndex;
     private long lastInputTime;
 
-    private final Music music = new Music();
+    private final ClientMusicPlayer clientMusicPlayer = new ClientMusicPlayer();
 
     public RouletteScreen(List<IRouletteAction> rouletteActions) {
         super(Component.empty());
@@ -78,7 +76,6 @@ public class RouletteScreen extends Screen implements Music.NotePlayer{
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        music.tryPlayNextNote(this);
         if (keyCode == GLFW.GLFW_KEY_LEFT) { // 左键
             navigate(-1);
             return true;
@@ -86,6 +83,9 @@ public class RouletteScreen extends Screen implements Music.NotePlayer{
         if (keyCode == GLFW.GLFW_KEY_RIGHT) { // 右键
             navigate(1);
             return true;
+        }
+        if (keyCode == GLFW.GLFW_KEY_UP || keyCode == GLFW.GLFW_KEY_DOWN){ // 上下键
+            clientMusicPlayer.randomSwitchMusic();
         }
         if (keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_SPACE) { // 空格或回车
             executeSelected();
@@ -111,7 +111,7 @@ public class RouletteScreen extends Screen implements Music.NotePlayer{
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
-        music.tryPlayNextNote(this);
+        clientMusicPlayer.tryPlayNextNote(this);
         navigate(deltaY > 0 ? -1 : 1);
         return true;
     }
@@ -126,6 +126,7 @@ public class RouletteScreen extends Screen implements Music.NotePlayer{
     }
 
     private void navigate(int direction) {
+        clientMusicPlayer.tryPlayNextNote(this);
         if (System.currentTimeMillis() - lastInputTime < 100) return;
         lastInputTime = System.currentTimeMillis();
 
@@ -133,6 +134,7 @@ public class RouletteScreen extends Screen implements Music.NotePlayer{
     }
 
     private void executeSelected() {
+        clientMusicPlayer.tryPlayNextNote(this);
         if (!rouletteActions.isEmpty()) {
             rouletteActions.get(selectedIndex).rouletteAction();
             this.onClose();
