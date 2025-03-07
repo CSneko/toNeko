@@ -1,48 +1,21 @@
-package org.cneko.toneko.common.mod.client;
+package org.cneko.toneko.common.mod.client.music;
 
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-public class ClientMusicPlayer {
-    public static final List<Music> MUSICS = List.of(
-            // 《小星星》
-            new Music(
-                    new int[]{
-                            1,1,5,5,6,6,5, 4,4,3,3,2,2,1,
-                            5,5,4,4,3,3,2, 5,5,4,4,3,3,2,
-                            1,1,5,5,6,6,5, 4,4,3,3,2,2,1
-                    },
-                    NoteBlockInstrument.HARP,
-                    500
-            ),
-            // 《虫儿飞》
-            new Music(
-                    new int[]{
-                    },
-                    NoteBlockInstrument.HARP,
-                    500
-            )
-    );
+import static org.cneko.toneko.common.mod.client.music.ToNekoMusic.MUSICS;
+import static org.cneko.toneko.common.mod.client.music.ToNekoMusic.NOTE_MAP;
 
-    private static final Map<Integer, Integer> NOTE_MAP = Map.ofEntries(
-            Map.entry(0, 0),  // 休止符
-            Map.entry(1, 60), // C
-            Map.entry(2, 62), // D
-            Map.entry(3, 64), // E
-            Map.entry(4, 65), // F
-            Map.entry(5, 67), // G
-            Map.entry(6, 69),  // A
-            Map.entry(7, 71) // B
-    );
+public class ClientMusicPlayer {
+
 
     private static final Map<NoteBlockInstrument, Integer> INSTRUMENT_BASE_NOTE = Map.of(
             NoteBlockInstrument.HARP, 60
     );
 
-    private Music currentMusic;
+    private MusicRecord currentMusic;
     private int currentIndex;
     private long lastNoteTime;
 
@@ -85,5 +58,4 @@ public class ClientMusicPlayer {
         void playNote(NoteBlockInstrument instrument, float pitch, float volume);
     }
 
-    public record Music(int[] music, NoteBlockInstrument instrument, int noteDuration) {}
 }

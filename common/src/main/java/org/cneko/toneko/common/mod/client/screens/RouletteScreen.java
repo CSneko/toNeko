@@ -9,7 +9,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
-import org.cneko.toneko.common.mod.client.ClientMusicPlayer;
+import org.cneko.toneko.common.mod.client.music.ClientMusicPlayer;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
@@ -144,6 +144,10 @@ public class RouletteScreen extends Screen implements ClientMusicPlayer.NotePlay
     @Override
     public boolean isPauseScreen() {
         return false;
+    }
+
+    @Override
+    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
     }
 
     public interface IRouletteAction {
