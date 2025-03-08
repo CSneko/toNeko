@@ -1,5 +1,7 @@
 package org.cneko.toneko.common.util;
 
+import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
@@ -18,9 +20,12 @@ import org.cneko.ai.providers.openai.OpenAIConfig;
 import org.cneko.ai.providers.openai.OpenAIService;
 import org.cneko.ai.util.FileStorageUtil;
 import io.netty.handler.codec.http.*;
+import org.cneko.ctlib.common.network.HttpPost;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.*;
 
@@ -297,5 +302,60 @@ public class AIUtil {
                 public String response;
             }
         }
+    }
+
+    public static void playTTS(String text,String voice) {
+        var future =executor.submit(() -> {
+            try {
+                // Elefant的tts
+                // 构建请求体
+                var body = new ElefantTTSRequestBody();
+                body.text = text;
+                body.voiceIds.add(voice);
+
+                HttpClient client = new HttpClient();
+                // 发送请求
+                CompletableFuture<String> cf = client.sendPost(
+                        "http://127.0.0.1:4315/v1/tts/speak",
+                        body,
+                        String.class
+                );
+
+                cf.whenComplete((response, ex) -> {
+                    if (ex != null) {
+                        LOGGER.error("Request failed: {}" ,ex.getMessage());
+                    }
+                    client.close();
+                });
+
+                // 等待异步操作完成
+                cf.join();
+            } catch (Exception e) {
+                LOGGER.error("Unexpected error during message sending task.", e);
+            }
+        });
+
+        // 设置超时机制
+        executor.submit(() -> {
+            try {
+                future.get(REQUEST_TIMEOUT, TimeUnit.SECONDS);
+            } catch (TimeoutException e) {
+                future.cancel(true); // 超时后取消任务
+                LOGGER.warn("TTS sending task timed out and was cancelled.");
+            } catch (Exception e) {
+                LOGGER.error("Unexpected error during message sending task.", e);
+            }
+        });
+    }
+    private static class ElefantTTSRequestBody{
+        public static final Gson gson = new Gson();
+        @SerializedName("play_in_app")
+        private boolean playInApp = true;
+        @SerializedName("speed")
+        private int speed = 1;
+        @SerializedName("text")
+        private String text = "";
+        @SerializedName("voice_ids")
+        private List<String> voiceIds = new ArrayList<>();
     }
 }

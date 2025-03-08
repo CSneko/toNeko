@@ -7,6 +7,8 @@ import java.time.LocalDate;
 
 public class ConfigUtil {
     public static String CONFIG_FILE = "config/toneko.yml";
+    
+    public static String AI_URL = "https://s.cneko.org/toNekoAI";
 
     public static final ConfigBuilder CONFIG_BUILDER = ConfigBuilder.create(Path.of(CONFIG_FILE))
             .addString("language", "zh_cn", null,
@@ -18,21 +20,24 @@ public class ConfigUtil {
             .addString("chat.format","%prefix%§e%name% §d>> §f%msg%",null,
                     "聊天格式，占位符 %name% = 玩家名称, %msg% = 玩家消息, %prefix% = 前缀",
                     "Chat format, placeholder %name% = player name, %msg% = player message, %prefix% = prefix")
-            .addBoolean("ai.enable",false,"https://s.cneko.org/toNekoAI",
+            .addBoolean("ai.enable",false,AI_URL,
                     "是否启用AI",
                     "Enable AI")
-            .addString("ai.service","neko","https://s.cneko.org/toNekoAI")
-            .addString("ai.model", "gemini-2.0-flash","https://s.cneko.org/toNekoAI")
-            .addString("ai.key","","https://s.cneko.org/toNekoAI",
+            .addString("ai.service","neko",AI_URL)
+            .addString("ai.model", "gemini-2.0-flash",AI_URL)
+            .addString("ai.key","",AI_URL,
                     "AI的密钥，请参阅https://s.cneko.org/toNekoAI",
                     "API Key of AI,see https://s.cneko.org/toNekoAI")
-            .addString("ai.prompt","你是一只可爱的%neko_type%（%neko_des%），你的名字是%neko_name%，你的身高是%neko_height%米，你的属性有%neko_moe_tags%。在回复时请不要太长且不要有太多动作。我%player_is_owner%你的主人，我的名字是%player_name%，我%player_is_neko%一只猫娘。现在是%world_time%，天气为%world_weather%。","https://s.cneko.org/toNekoAI",
+            .addString("ai.prompt","你是一只可爱的%neko_type%（%neko_des%），你的名字是%neko_name%，你的身高是%neko_height%米，你的属性有%neko_moe_tags%。在回复时请不要太长且不要有太多动作。我%player_is_owner%你的主人，我的名字是%player_name%，我%player_is_neko%一只猫娘。现在是%world_time%，天气为%world_weather%。",AI_URL,
                     "AI提示词，参阅 https://s.cneko.org/toNekoAI",
                     "AI prompt,see https://s.cneko.org/toNekoAI")
-            .addBoolean("ai.show_think",true,"https://s.cneko.org/toNekoAI")
-            .addBoolean("ai.proxy.enable",false,"https://s.cneko.org/toNekoAI")
-            .addString("ai.proxy.ip","","https://s.cneko.org/toNekoAI")
-            .addString("ai.proxy.port","","https://s.cneko.org/toNekoAI")
+            .addBoolean("ai.show_think",true,AI_URL)
+            .addBoolean("ai.proxy.enable",false,AI_URL)
+            .addString("ai.proxy.ip","",AI_URL)
+            .addString("ai.proxy.port","2080",AI_URL)
+            .addBoolean("ai.tts.enable",false, AI_URL)
+            .addString("ai.tts.service","elefant",AI_URL)
+            .addString("ai.tts.voice","01955d76-ed5b-75ad-afe3-ac5eb3d0a16e",AI_URL)
             .addBoolean("stats", true, "https://s.cneko.org/toNekoOnlineAPI",
                     "启用统计功能，统计数据将发送到 toneko API，如何使用api请查看 https://s.cneko.org/toNekoOnlineAPI",
                     "Enable statistics, statistics data will be sent to the toneko API, how to use the api please see https://s.cneko.org/toNekoOnlineAPI")
@@ -86,6 +91,14 @@ public class ConfigUtil {
     }
     public static String getAIProxyPort(){
         return CONFIG.getString("ai.proxy.port");
+    }
+
+    public static boolean isAITTSEnabled(){
+        return CONFIG.getBoolean("ai.tts.enable");
+    }
+
+    public static String getAITTSVoice(){
+        return CONFIG.getString("ai.tts.voice");
     }
 
 

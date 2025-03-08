@@ -21,10 +21,7 @@ import org.cneko.toneko.common.api.TickTasks;
 import org.cneko.toneko.common.mod.api.EntityPoseManager;
 import org.cneko.toneko.common.mod.entities.CrystalNekoEntity;
 import org.cneko.toneko.common.mod.entities.INeko;
-import org.cneko.toneko.common.mod.packets.MateWithCrystalNekoPayload;
-import org.cneko.toneko.common.mod.packets.PlayerLeadByPlayerPayload;
-import org.cneko.toneko.common.mod.packets.PluginDetectPayload;
-import org.cneko.toneko.common.mod.packets.QuirkQueryPayload;
+import org.cneko.toneko.common.mod.packets.*;
 import org.cneko.toneko.common.mod.packets.interactives.*;
 import org.cneko.toneko.common.mod.util.PermissionUtil;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
@@ -98,6 +95,10 @@ public class ToNekoNetworkEvents {
                         String r = Messaging.format(response.getResponse(), neko.getCustomName().getString(), "",
                                 Collections.singletonList(LanguageUtil.prefix), ConfigUtil.getChatFormat());
                         context.player().sendSystemMessage(Component.literal(r));
+                    }
+                    // 如果启用了TTS
+                    if (ConfigUtil.isAITTSEnabled()){
+                        ServerPlayNetworking.send(player, new TTSSendPayload(response.getResponse()));
                     }
                 });
             }

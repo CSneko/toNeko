@@ -17,13 +17,12 @@ import org.cneko.toneko.common.mod.client.api.ClientEntityPoseManager;
 import org.cneko.toneko.common.mod.client.screens.InteractionScreen;
 import org.cneko.toneko.common.mod.client.screens.NekoScreenRegistry;
 import org.cneko.toneko.common.mod.client.util.ClientPlayerUtil;
-import org.cneko.toneko.common.mod.packets.PlayerLeadByPlayerPayload;
-import org.cneko.toneko.common.mod.packets.PluginDetectPayload;
+import org.cneko.toneko.common.mod.packets.*;
 import org.cneko.toneko.common.mod.packets.interactives.NekoEntityInteractivePayload;
 import org.cneko.toneko.common.mod.client.screens.QuirkScreen;
-import org.cneko.toneko.common.mod.packets.EntityPosePayload;
-import org.cneko.toneko.common.mod.packets.QuirkQueryPayload;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
+import org.cneko.toneko.common.util.AIUtil;
+import org.cneko.toneko.common.util.ConfigUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -32,11 +31,7 @@ import static org.cneko.toneko.common.mod.util.ResourceLocationUtil.toNekoLoc;
 
 public class ClientNetworkEvents {
     public static void init(){
-        ClientPlayNetworking.registerGlobalReceiver(EntityPosePayload.ID, (payload, context) -> {
-            context.client().execute(() -> {
-                setPose(payload,context);
-            });
-        });
+        ClientPlayNetworking.registerGlobalReceiver(EntityPosePayload.ID, (payload, context) -> context.client().execute(() -> setPose(payload,context)));
 
         ClientPlayNetworking.registerGlobalReceiver(QuirkQueryPayload.ID, (payload, context) ->{
             if (payload.isOpenScreen()) {
@@ -48,32 +43,34 @@ public class ClientNetworkEvents {
             }
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(NekoEntityInteractivePayload.ID, (payload, context) ->{
-            context.client().execute(() -> {
-                // 通过uuid寻找猫娘
-                String uuid = payload.uuid();
-                if(uuid != null && !uuid.isEmpty()) {
-                    NekoEntity neko = findNearbyNekoByUuid(UUID.fromString(uuid),NekoEntity.DEFAULT_FIND_RANGE);
-                    if(neko != null) {
-                        // 打开屏幕
-                        context.client().setScreen(new InteractionScreen(Component.empty(),neko,Minecraft.getInstance().screen, NekoScreenRegistry.get(neko.getType())));
-                    }
+        ClientPlayNetworking.registerGlobalReceiver(NekoEntityInteractivePayload.ID, (payload, context) -> context.client().execute(() -> {
+            // 通过uuid寻找猫娘
+            String uuid = payload.uuid();
+            if(uuid != null && !uuid.isEmpty()) {
+                NekoEntity neko = findNearbyNekoByUuid(UUID.fromString(uuid),NekoEntity.DEFAULT_FIND_RANGE);
+                if(neko != null) {
+                    // 打开屏幕
+                    context.client().setScreen(new InteractionScreen(Component.empty(),neko,Minecraft.getInstance().screen, NekoScreenRegistry.get(neko.getType())));
                 }
-            });
-        });
+            }
+        }));
 
 
-        ClientPlayNetworking.registerGlobalReceiver(PlayerLeadByPlayerPayload.ID, (payload, context) ->{
-            context.client().execute(()->{
-                // 获取玩家（如果存在的话）
-                Player holder = ClientPlayerUtil.getPlayerByUUID(UUID.fromString(payload.holder()));
-                Player target = ClientPlayerUtil.getPlayerByUUID(UUID.fromString(payload.target()));
-                // 拴上玩家
-                if (target != null && holder != null) {
-                    target.setLeashedTo(holder,false);
-                }
-            });
-        });
+        ClientPlayNetworking.registerGlobalReceiver(PlayerLeadByPlayerPayload.ID, (payload, context) -> context.client().execute(()->{
+            // 获取玩家（如果存在的话）
+            Player holder = ClientPlayerUtil.getPlayerByUUID(UUID.fromString(payload.holder()));
+            Player target = ClientPlayerUtil.getPlayerByUUID(UUID.fromString(payload.target()));
+            // 拴上玩家
+            if (target != null && holder != null) {
+                target.setLeashedTo(holder,false);
+            }
+        }));
+
+        ClientPlayNetworking.registerGlobalReceiver(TTSSendPayload.ID, ((payload, context) -> context.client().execute(()->{
+            if (ConfigUtil.isAITTSEnabled()){
+                AIUtil.playTTS(payload.text(),ConfigUtil.getAITTSVoice());
+            }
+        })));
 
 
     }
