@@ -87,6 +87,9 @@ public class RouletteScreen extends Screen implements ClientMusicPlayer.NotePlay
         if (keyCode == GLFW.GLFW_KEY_UP || keyCode == GLFW.GLFW_KEY_DOWN){ // 上下键
             clientMusicPlayer.randomSwitchMusic();
         }
+        if (keyCode == GLFW.GLFW_KEY_R){
+            clientMusicPlayer.restart();
+        }
         if (keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_SPACE) { // 空格或回车
             executeSelected();
             return true;

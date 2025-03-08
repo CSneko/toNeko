@@ -89,6 +89,20 @@ Optional. When enabled, the AI’s intermediate reasoning will be shown in-game 
 
 ---
 
+## TTS
+This feature is optional. AI will read text when enabled
+
+### Enable
+Open the toNeko configuration page in the game and set Enable TTS to true, or execute the following command
+```
+/tonekoadmin config set ai.tts.enable true
+```
+### How to use
+Currently only supports elefant, so you can use it directly after opening the elefant client.
+### Modify voice
+You can use a browser to open `http://127.0.0.1:4315/v1/tts/voices`, then select one you like and copy the id, then modify the voice in the game.
+
+---
 ## Proxy Setup (Optional)
 Required if you cannot access external networks directly.
 
@@ -108,15 +122,15 @@ Use tools like [NekoRay](https://github.com/MatsuriDayo/nekoray) or [Clash Meta]
 ## Prompt Customization
 Customize prompts using placeholders:
 
-| Placeholder          | Description               | Example Value            |  
-|----------------------|---------------------------|--------------------------|  
-| `%neko_name%`        | Neko's name               | `Ayame`, `cinamono`     |  
-| `%neko_type%`        | Neko's type               | `Adventurer Neko`        |  
-| `%neko_des%`         | Neko's description        | `An adventurous neko`   |  
-| `%neko_height%`      | Neko's height             | `1.50`                  |  
-| `%neko_moe_tags%`    | Neko's moe traits         | `Tsundere`, `Yuri`      |  
-| `%player_name%`      | Player's name             | `Crystal_Neko`          |  
-| `%player_is_owner%`  | Is the player the owner?  | `Yes`, `No`             |  
-| `%player_is_neko%`   | Is the player a neko?     | `Yes`, `No`             |  
-| `%world_time%`       | In-game time              | `Day`, `Night`          |  
-| `%world_weather%`    | In-game weather           | `Sunny`, `Rainy`        |  
+| Placeholder         | Description              | Example Value         |  
+|---------------------|--------------------------|-----------------------|  
+| `%neko_name%`       | Neko's name              | `Ayame`, `cinamono`   |  
+| `%neko_type%`       | Neko's type              | `Adventurer Neko`     |  
+| `%neko_des%`        | Neko's description       | `An adventurous neko` |  
+| `%neko_height%`     | Neko's height            | `1.50`                |  
+| `%neko_moe_tags%`   | Neko's moe traits        | `Tsundere`, `Yuri`    |  
+| `%player_name%`     | Player's name            | `Crystal_Neko`        |  
+| `%player_is_owner%` | Is the player the owner? | `Yes`, `No`           |  
+| `%player_is_neko%`  | Is the player a neko?    | `Yes`, `No`           |  
+| `%world_time%`      | In-game time             | `Day`, `Night`        |  
+| `%world_weather%`   | In-game weather          | `Sunny`, `Rainy`      |  

@@ -73,6 +73,21 @@
 - deepseek-r1-distill-llama-70b
 
 ---
+
+## TTS
+这个功能是可选的，启用后AI会读出文本
+
+### 启用
+在游戏内打开toNeko配置页面，将启用TTS设置为true即可，或者执行以下命令
+```
+/tonekoadmin config set ai.tts.enable true
+```
+### 如何使用
+目前只支持elefant，因此在打开elefant客户端后就可以直接使用。
+### 修改语音
+你可以使用浏览器打开`http://127.0.0.1:4315/v1/tts/voices `，然后选择一个你喜欢的并复制id，在游戏内修改语音即可。
+
+---
 ## 配置
 在toNeko配置页面（模组菜单->toNeko->配置）或配置文件（config/toneko.yml）启用AI功能，并填入你的模型和密钥就好啦。
 

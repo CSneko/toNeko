@@ -32,12 +32,12 @@ public class ConfigUtil {
                     "AI提示词，参阅 https://s.cneko.org/toNekoAI",
                     "AI prompt,see https://s.cneko.org/toNekoAI")
             .addBoolean("ai.show_think",true,AI_URL)
-            .addBoolean("ai.proxy.enable",false,AI_URL)
-            .addString("ai.proxy.ip","",AI_URL)
-            .addString("ai.proxy.port","2080",AI_URL)
             .addBoolean("ai.tts.enable",false, AI_URL)
             .addString("ai.tts.service","elefant",AI_URL)
             .addString("ai.tts.voice","01955d76-ed5b-75ad-afe3-ac5eb3d0a16e",AI_URL)
+            .addBoolean("ai.proxy.enable",false,AI_URL)
+            .addString("ai.proxy.ip","",AI_URL)
+            .addString("ai.proxy.port","2080",AI_URL)
             .addBoolean("stats", true, "https://s.cneko.org/toNekoOnlineAPI",
                     "启用统计功能，统计数据将发送到 toneko API，如何使用api请查看 https://s.cneko.org/toNekoOnlineAPI",
                     "Enable statistics, statistics data will be sent to the toneko API, how to use the api please see https://s.cneko.org/toNekoOnlineAPI")

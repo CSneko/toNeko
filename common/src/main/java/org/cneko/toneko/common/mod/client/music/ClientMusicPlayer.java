@@ -53,6 +53,10 @@ public class ClientMusicPlayer {
         this.currentIndex = (this.currentIndex + 1) % this.currentMusic.music().length;
         this.lastNoteTime = currentTime;
     }
+    public void restart() {
+        this.currentIndex = 0;
+        this.lastNoteTime = 0;
+    }
 
     public interface NotePlayer {
         void playNote(NoteBlockInstrument instrument, float pitch, float volume);
