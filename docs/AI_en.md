@@ -101,6 +101,8 @@ Open the toNeko configuration page in the game and set Enable TTS to true, or ex
 Currently only supports elefant, so you can use it directly after opening the elefant client.
 ### Modify voice
 You can use a browser to open `http://127.0.0.1:4315/v1/tts/voices`, then select one you like and copy the id, then modify the voice in the game.
+### Notes
+If you use multiplayer games, please also set tts on the client
 
 ---
 ## Proxy Setup (Optional)
