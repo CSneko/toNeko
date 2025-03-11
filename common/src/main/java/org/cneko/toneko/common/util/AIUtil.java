@@ -112,7 +112,7 @@ public class AIUtil {
                     config.setEndpoint("/v1/chat/completions");
                     var service = new OpenAIService(config);
                     response = service.processRequest(new AIRequest(message,uuidStr,userUuidStr,prompt,FileStorageUtil.readConversation(uuidStr,userUuidStr)));
-                } else if (s.equalsIgnoreCase("elefant")) {
+                } else if (s.equalsIgnoreCase("elefant") || s.equalsIgnoreCase("player2")) {
                     // elefant的服务
                     var config = new OpenAIConfig("");
                     config.setHost("127.0.0.1");

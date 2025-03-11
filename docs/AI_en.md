@@ -18,10 +18,10 @@ If the service uses the OpenAI-compatible API format (typically with endpoints l
 
 ---
 
-## How to Use elefant
+## How to Use elefant(player2)
 **Elefant** is the easiest option for beginners.
 
-1. Visit the [elefant Website](https://elefant.gg/), download and launch the client.
+1. Visit the [player2](https://player2.game/), download and launch the client.
 2. In-game, enable AI in the toNeko configuration menu and set the service to `elefant`.  
    Alternatively, run these commands:  
 ```

@@ -33,7 +33,7 @@ public class ConfigUtil {
                     "AI prompt,see https://s.cneko.org/toNekoAI")
             .addBoolean("ai.show_think",true,AI_URL)
             .addBoolean("ai.tts.enable",false, AI_URL)
-            .addString("ai.tts.service","elefant",AI_URL)
+            .addString("ai.tts.service","player2",AI_URL)
             .addString("ai.tts.voice","01955d76-ed5b-75ad-afe3-ac5eb3d0a16e",AI_URL)
             .addBoolean("ai.proxy.enable",false,AI_URL)
             .addString("ai.proxy.ip","",AI_URL)

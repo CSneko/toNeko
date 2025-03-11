@@ -16,10 +16,10 @@
 如果服务使用OpenAI格式返回（通常情况下链接会像`https://api.xxx.com/v1/chat/completions `），那么填入链接即可
 
 --- 
-## elefant使用方法
+## elefant（player2）使用方法
 相比于其它服务，elefant较为简单，推荐新手使用
 
-首先，打开[elefant官网](https://elefant.gg/)并下载客户端，然后启动客户端
+首先，打开[player2官网](https://player2.game/)并下载客户端，然后启动客户端
 
 接下来，在游戏内的toNeko配置页面将AI启用后并将服务设置为`elefant`即可直接使用啦。（也可以执行以下两个命令）
 ```
