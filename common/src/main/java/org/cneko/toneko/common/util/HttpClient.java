@@ -17,6 +17,9 @@ import io.netty.util.CharsetUtil;
 import javax.net.ssl.SSLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public class HttpClient {
@@ -107,6 +110,92 @@ public class HttpClient {
 
         return future;
     }
+
+    public <T> CompletableFuture<T> sendGet(String url, Map<String, String> queryParams, Class<T> responseType) {
+        CompletableFuture<T> future = new CompletableFuture<>();
+
+        try {
+            // 构建完整的URL（包含查询参数）
+            String fullUrl = url;
+            if (queryParams != null && !queryParams.isEmpty()) {
+                StringBuilder queryBuilder = new StringBuilder();
+                for (Map.Entry<String, String> entry : queryParams.entrySet()) {
+                    if (!queryBuilder.isEmpty()) {
+                        queryBuilder.append('&');
+                    }
+                    String encodedKey = URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8);
+                    String encodedValue = URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8);
+                    queryBuilder.append(encodedKey).append('=').append(encodedValue);
+                }
+                if (fullUrl.contains("?")) {
+                    fullUrl += "&" + queryBuilder;
+                } else {
+                    fullUrl += "?" + queryBuilder;
+                }
+            }
+            URI uri = new URI(fullUrl);
+
+            // 解析URI参数
+            String scheme = uri.getScheme() == null ? "http" : uri.getScheme();
+            String host = uri.getHost();
+            int port = uri.getPort() == -1 ? (scheme.equals("https") ? 443 : 80) : uri.getPort();
+
+            // 配置SSL
+            boolean ssl = "https".equalsIgnoreCase(scheme);
+            SslContext sslContext = null;
+            if (ssl) {
+                sslContext = SslContextBuilder.forClient()
+                        .trustManager(InsecureTrustManagerFactory.INSTANCE)
+                        .build();
+            }
+
+            // 创建Bootstrap
+            Bootstrap bootstrap = new Bootstrap();
+            SslContext finalSslContext = sslContext;
+            bootstrap.group(group)
+                    .channel(NioSocketChannel.class)
+                    .handler(new ChannelInitializer<SocketChannel>() {
+                        @Override
+                        protected void initChannel(SocketChannel ch) {
+                            ChannelPipeline p = ch.pipeline();
+                            if (finalSslContext != null) {
+                                p.addLast(finalSslContext.newHandler(ch.alloc(), host, port));
+                            }
+                            p.addLast(new HttpClientCodec());
+                            p.addLast(new HttpObjectAggregator(1048576));
+                            p.addLast(new HttpClientHandler((CompletableFuture<Object>) future, gson, responseType));
+                        }
+                    });
+
+            // 构建GET请求
+            String requestUri = uri.getRawPath();
+            String rawQuery = uri.getRawQuery();
+            if (rawQuery != null && !rawQuery.isEmpty()) {
+                requestUri += "?" + rawQuery;
+            }
+            FullHttpRequest request = new DefaultFullHttpRequest(
+                    HttpVersion.HTTP_1_1, HttpMethod.GET, requestUri, Unpooled.EMPTY_BUFFER);
+            request.headers()
+                    .set(HttpHeaderNames.HOST, host)
+                    .set(HttpHeaderNames.CONNECTION, HttpHeaderValues.CLOSE);
+
+            // 连接并发送请求
+            ChannelFuture connectFuture = bootstrap.connect(host, port);
+            connectFuture.addListener((ChannelFutureListener) f -> {
+                if (f.isSuccess()) {
+                    f.channel().writeAndFlush(request);
+                } else {
+                    future.completeExceptionally(f.cause());
+                }
+            });
+
+        } catch (URISyntaxException | SSLException e) {
+            future.completeExceptionally(e);
+        }
+
+        return future;
+    }
+
 
     private static class HttpClientHandler extends SimpleChannelInboundHandler<FullHttpResponse> {
         private final CompletableFuture<Object> future;

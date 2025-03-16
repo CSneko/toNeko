@@ -20,7 +20,7 @@ import org.cneko.ai.providers.openai.OpenAIConfig;
 import org.cneko.ai.providers.openai.OpenAIService;
 import org.cneko.ai.util.FileStorageUtil;
 import io.netty.handler.codec.http.*;
-import org.cneko.ctlib.common.network.HttpPost;
+import org.cneko.ctlib.common.network.HttpGet;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -41,6 +41,27 @@ public class AIUtil {
     private static final int REQUEST_TIMEOUT = 60;
 
     public static void init(){
+        // 向elefant发送一个简单的get请求
+        if (!ConfigUtil.isAIEnabled()) {
+            executor.submit(() -> {
+                HttpClient client = new HttpClient();
+                var response = client.sendGet("http://localhost:4315/v1/health",null, String.class);
+                response.whenComplete((response1, throwable) -> {
+                    boolean canUseElefant = throwable == null;
+                    // 如果可以使用elefant的话
+                    if (canUseElefant) {
+                        // 设置默认为elefant
+                        ConfigUtil.CONFIG.set("ai.service", "player2");
+                        ConfigUtil.CONFIG.set("ai.enable", true);
+                        ConfigUtil.CONFIG.set("ai.tts.enable", true);
+                        ConfigUtil.CONFIG.set("ai.tts.service", "player2");
+                        LOGGER.info("Found Elefant running,set AI to Flefant");
+                    }
+                });
+                response.join();
+            });
+        }
+
     }
 
     public static void sendMessage(UUID uuid,UUID userUuid, String prompt, String message, MessageCallback callback){

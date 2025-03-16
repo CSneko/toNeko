@@ -54,6 +54,7 @@ public class ConfigUtil {
         if (today.getMonthValue() == BIRTHDAY_MONTH && today.getDayOfMonth() == BIRTHDAY_DAY) {
             IS_BIRTHDAY = true;
         }
+        AIUtil.init();
     }
 
     public static boolean isChatEnable() {

@@ -21,13 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-/**
- * 修改说明：
- * 1. 根据配置 key 构建了一颗树，节点类型 ConfigNode。
- * 2. 重写了 init()，先构造滚动面板，再调用 buildConfigTree() 构造树，再递归添加组件（组头和叶节点）。
- * 3. 对折叠组使用了新的 FoldableGroupHeaderWidget，当点击时切换折叠状态，并重建滚动面板中的组件。
- * 4. 为子项添加缩进，每下一级缩进20px。
- */
+import static org.cneko.toneko.common.util.ConfigUtil.CONFIG;
+
 public class ConfigScreen extends Screen {
     private final Screen lastScreen;
     private ScrollPanel scrollPanel;
@@ -88,9 +83,6 @@ public class ConfigScreen extends Screen {
         addRenderableWidget(rightButton);
     }
 
-    /**
-     * 重建滚动面板内容，根据 configTree 递归添加组件。
-     */
     private void rebuildScrollPanel() {
         scrollPanel.clearWidgets();
 
@@ -123,7 +115,7 @@ public class ConfigScreen extends Screen {
      * 递归添加树节点对应的组件到滚动面板
      *
      * @param node   当前树节点
-     * @param indent 当前缩进像素数（每级建议20px）
+     * @param indent 当前缩进像素数
      */
     private void addNodeWidgets(ConfigNode node, int indent) {
         int widgetHeight = 20;
@@ -167,8 +159,8 @@ public class ConfigScreen extends Screen {
                 EditBox editBox = new EditBox(this.font, 0, 0, textWidth, widgetHeight,
                         Component.literal(node.fullKey));
                 editBox.setMaxLength(1000);
-                editBox.setValue(ConfigUtil.CONFIG_BUILDER.getExist(node.fullKey).string());
-                editBox.setResponder(text -> ConfigUtil.CONFIG_BUILDER.setString(node.fullKey, text));
+                editBox.setValue(ConfigUtil.CONFIG.getString(node.fullKey));
+                editBox.setResponder(text -> ConfigUtil.CONFIG.set(node.fullKey, text));
                 inputComponent = editBox;
             } else {
                 return; // 未知类型则跳过
@@ -241,15 +233,6 @@ public class ConfigScreen extends Screen {
         minecraft.setScreen(lastScreen);
     }
 
-    /*
-     * ================================
-     * 以下为内部辅助类，主要修改了：
-     * 1. 新增 ConfigNode 表示配置树的节点
-     * 2. 新增 FoldableGroupHeaderWidget 用于折叠组头显示
-     * 3. 修改 ScrollPanel，增加 clearWidgets() 方法以支持重建组件列表
-     * 其余组件基本沿用原有代码
-     * ================================
-     */
 
     /**
      * 配置树节点（注意：如果 node.fullKey != null 则表示这是一个实际配置项，不能作为父键）
@@ -278,7 +261,7 @@ public class ConfigScreen extends Screen {
     /**
      * 用于显示折叠组头的组件，点击时切换折叠状态并重建滚动面板
      */
-    public class FoldableGroupHeaderWidget extends AbstractWidget {
+    public static class FoldableGroupHeaderWidget extends AbstractWidget {
         private final ConfigNode node;
         private final Runnable onToggle;
         private final Font font;
@@ -315,9 +298,6 @@ public class ConfigScreen extends Screen {
         }
     }
 
-    /**
-     * 修改后的滚动面板，增加了 clearWidgets() 方法以便每次重建内容时清空已有组件
-     */
     public static class ScrollPanel extends AbstractContainerWidget {
         private final List<AbstractWidget> children = new ArrayList<>();
         private final int panelWidth;
@@ -496,14 +476,12 @@ public class ConfigScreen extends Screen {
             private int y;
             private int width;
             private int height;
-            private final ConfigBuilder config;
             private final String key;
             public boolean value;
             public Builder(String key, ConfigBuilder cfg) {
                 this.entry = cfg.getExist(key);
-                this.config = cfg;
                 this.key = key;
-                this.value = entry.bool();
+                this.value = CONFIG.getBoolean(key);
             }
             public Builder pos(int x, int y) {
                 this.x = x;
@@ -524,13 +502,13 @@ public class ConfigScreen extends Screen {
             }
             public ConfigButton build() {
                 Component message;
-                if (entry.bool()){
+                if (value){
                     message = Component.translatable("screen.toneko.config.button.true");
                 } else {
                     message = Component.translatable("screen.toneko.config.button.false");
                 }
                 return new ConfigButton(x, y, width, height, message, (btn) -> {
-                    config.setBoolean(key, !value);
+                    CONFIG.set(key, !value);
                     value = !value;
                     btn.setMessage(value ?
                             Component.translatable("screen.toneko.config.button.true") :

@@ -55,8 +55,6 @@ public class Bootstrap {
         LanguageUtil.load();
         // 注册所有癖好
         Quirks.init();
-        // 初始化AI
-        AIUtil.init();
         NekoQuery.NekoData.startAsyncAutoSave();
     }
 }
