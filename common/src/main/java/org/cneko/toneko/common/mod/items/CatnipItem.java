@@ -12,9 +12,11 @@ import org.cneko.toneko.common.mod.effects.ToNekoEffects;
 import org.cneko.toneko.common.mod.entities.INeko;
 import org.jetbrains.annotations.NotNull;
 
+import static org.cneko.toneko.common.mod.items.ToNekoItems.key;
+
 public class CatnipItem extends Item {
     public CatnipItem(Properties properties) {
-        super(properties);
+        super(properties.setId(key("catnip")));
     }
 
     @Override

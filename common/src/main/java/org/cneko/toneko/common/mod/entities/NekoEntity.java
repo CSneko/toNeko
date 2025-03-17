@@ -705,7 +705,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
 
 
     public static AttributeSupplier.Builder createNekoAttributes(){
-        return createMobAttributes().add(Attributes.ATTACK_DAMAGE);
+        return createMobAttributes().add(Attributes.ATTACK_DAMAGE).add(Attributes.TEMPT_RANGE);
     }
 
     public boolean isSitting() {

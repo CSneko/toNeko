@@ -18,11 +18,13 @@ import org.cneko.toneko.common.mod.misc.ToNekoAttributes;
 
 import java.util.List;
 
+import static org.cneko.toneko.common.mod.items.ToNekoItems.key;
+
 public class NekoCollectorItem extends Item {
     public static String ID = "neko_collector";
     public static CountCodecs.FloatCountCodec DEFAULT_NEKO_PROGRESS_COMPONENT = new CountCodecs.FloatCountCodec(0.0f, 5000.0f);
     public NekoCollectorItem() {
-        super(new Properties().stacksTo(1).component(ToNekoComponents.NEKO_PROGRESS_COMPONENT, DEFAULT_NEKO_PROGRESS_COMPONENT));
+        super(new Properties().stacksTo(1).component(ToNekoComponents.NEKO_PROGRESS_COMPONENT, DEFAULT_NEKO_PROGRESS_COMPONENT).setId(key(ID)));
     }
 
     @Override

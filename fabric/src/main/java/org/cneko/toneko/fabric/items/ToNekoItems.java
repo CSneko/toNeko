@@ -28,8 +28,8 @@ public class ToNekoItems {
     public static NekoCollectorItem NEKO_COLLECTOR;
     public static ResourceKey<CreativeModeTab> TONEKO_ITEM_GROUP_KEY;
     public static CreativeModeTab TONEKO_ITEM_GROUP;
-    public static final SpawnEggItem ADVENTURER_NEKO_SPAWN_EGG = new SpawnEggItem(ToNekoEntities.ADVENTURER_NEKO, new Item.Properties());
-    public static final SpawnEggItem GHOST_NEKO_SPAWN_EGG = new SpawnEggItem(ToNekoEntities.GHOST_NEKO, new Item.Properties());
+    public static final SpawnEggItem ADVENTURER_NEKO_SPAWN_EGG = new SpawnEggItem(ToNekoEntities.ADVENTURER_NEKO, new Item.Properties().setId(key("adventurer_neko_spawn_egg")));
+    public static final SpawnEggItem GHOST_NEKO_SPAWN_EGG = new SpawnEggItem(ToNekoEntities.GHOST_NEKO, new Item.Properties().setId(key("ghost_neko_spawn_egg")));
     public static boolean isTrinketsInstalled = tryClass("dev.emi.trinkets.api.Trinket");
     public static void init() {
         registerWithOutConfig();
@@ -45,8 +45,8 @@ public class ToNekoItems {
         CATNIP = new CatnipItem(new Item.Properties().component(DataComponents.FOOD,
                 new FoodProperties(2,1.0f,true)));
         CATNIP_SANDWICH = new CatnipItem(new Item.Properties().component(DataComponents.FOOD,new FoodProperties(10,12f,false)));
-        CATNIP_SEED = createBlockItemWithCustomItemName(ToNekoBlocks.CATNIP).apply(new Item.Properties());
-        MUSIC_DISC_KAWAII = new Item(new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ToNekoSongs.KAWAII));
+        CATNIP_SEED = createBlockItemWithCustomItemName(ToNekoBlocks.CATNIP).apply(new Item.Properties().setId(key("catnip_seed")));
+        MUSIC_DISC_KAWAII = new Item(new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ToNekoSongs.KAWAII).setId(key("music_disc_kawaii")));
         Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, NekoPotionItem.ID), NEKO_POTION);
         Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, NekoCollectorItem.ID), NEKO_COLLECTOR);
         Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, FurryBoheItem.ID), FURRY_BOHE);
@@ -59,6 +59,10 @@ public class ToNekoItems {
 
         // 注册物品组
         TONEKO_ITEM_GROUP_KEY = ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), ResourceLocation.fromNamespaceAndPath(MODID, "item_group"));
+        TONEKO_ITEM_GROUP = FabricItemGroup.builder()
+                .title(Component.translatable("itemGroup.toneko"))
+                .icon(() -> new ItemStack(NEKO_POTION))
+                .build();
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, TONEKO_ITEM_GROUP_KEY,TONEKO_ITEM_GROUP);
 
         ItemGroupEvents.modifyEntriesEvent(TONEKO_ITEM_GROUP_KEY).register(content -> {
@@ -78,6 +82,10 @@ public class ToNekoItems {
         return (properties) -> {
             return new BlockItem(block, properties.useItemDescriptionPrefix());
         };
+    }
+
+    public static ResourceKey<Item> key(String id){
+        return ResourceKey.create(BuiltInRegistries.ITEM.key(), ResourceLocation.fromNamespaceAndPath(MODID, id));
     }
 
     public static boolean tryClass(String clazz){

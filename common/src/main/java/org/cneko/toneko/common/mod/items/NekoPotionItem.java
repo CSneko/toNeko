@@ -22,7 +22,7 @@ public class NekoPotionItem extends PotionItem {
     public static final String ID = "neko_potion";
 
     public NekoPotionItem() {
-        super(new Properties().stacksTo(1));
+        super(new Properties().stacksTo(1).setId(ToNekoItems.key(ID)));
     }
 
 

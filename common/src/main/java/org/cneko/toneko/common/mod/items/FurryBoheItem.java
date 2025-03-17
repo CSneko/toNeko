@@ -7,11 +7,13 @@ import net.minecraft.world.item.TooltipFlag;
 
 import java.util.List;
 
+import static org.cneko.toneko.common.mod.items.ToNekoItems.key;
+
 public class FurryBoheItem extends Item {
     public static final String ID = "furry_bohe";
 
     public FurryBoheItem() {
-        super(new Properties());
+        super(new Properties().setId(key(ID)));
     }
 
     @Override
