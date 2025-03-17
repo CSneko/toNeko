@@ -55,7 +55,7 @@ public class NekoMateScreen extends Screen implements INekoScreen {
             Button button = Button.builder(entity.getEntity().getName(),(btn)->{
                 if (entity.getEntity().isBaby()) {
                     int i = new Random().nextInt(13);
-                    Minecraft.getInstance().player.sendSystemMessage(Component.translatable("message.toneko.neko.breed_fail_baby." + i));
+                    Minecraft.getInstance().player.displayClientMessage(Component.translatable("message.toneko.neko.breed_fail_baby." + i),true);
                 }else {
                     ClientPlayNetworking.send(new NekoMatePayload(neko.getUUID().toString(), entity.getEntity().getUUID().toString()));
                     onClose();

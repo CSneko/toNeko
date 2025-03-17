@@ -48,18 +48,18 @@ public class ButtonFactories {
         NekoEntity neko = screen.getNeko();
         if (neko.isBaby()){
             int i = new Random().nextInt(13);
-            player.sendSystemMessage(Component.translatable("message.toneko.neko.breed_fail_baby."+i));
+            //player.sendSystemMessage(Component.translatable("message.toneko.neko.breed_fail_baby."+i));
             return;
         }
         if (neko.getMoeTags().contains("mesugaki")){
             if (!player.getMainHandItem().is(ToNekoItems.CATNIP)) {
                 // 杂鱼，你还不配和我交配~
                 btn.setPosition(new Random().nextInt(screen.width - btn.getWidth()), new Random().nextInt(screen.height - btn.getHeight()));
-                player.sendSystemMessage(TextUtil.randomTranslatabledComponent("message.toneko.neko.breed_fail_zako", 10, neko.getName().getString()));
+                //player.sendSystemMessage(TextUtil.randomTranslatabledComponent("message.toneko.neko.breed_fail_zako", 10, neko.getName().getString()));
             }else {
                 // 哪只猫猫会拒绝猫薄荷呢
                 NekoMateScreen.open(neko, List.of(player),null);
-                player.sendSystemMessage(TextUtil.randomTranslatabledComponent("message.toneko.neko.breed_success_zako", 3, neko.getName().getString()));
+                //player.sendSystemMessage(TextUtil.randomTranslatabledComponent("message.toneko.neko.breed_success_zako", 3, neko.getName().getString()));
             }
             return;
         }
@@ -123,57 +123,57 @@ public class ButtonFactories {
     public static ButtonFactory CRYSTAL_NEKO_WHO_BUTTON = screen -> Button.builder(Component.translatable("screen.toneko.crystal_neko_interactive.button.who"),(btn)->{
         Player player = Minecraft.getInstance().player;
         TickTaskQueue messageQueue = new TickTaskQueue();
-        messageQueue.addTask(20, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.who.0")));
-        messageQueue.addTask(50, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.who.1")));  // 相对于上一个任务
-        messageQueue.addTask(80, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.who.2")));
-        messageQueue.addTask(120, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.who.3")));
-        messageQueue.addTask(170, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.who.4")));
-        messageQueue.addTask(210, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.who.5")));
-        messageQueue.addTask(270, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.who.6")));
-        TickTasks.addClient(messageQueue);
+//        messageQueue.addTask(20, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.who.0")));
+//        messageQueue.addTask(50, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.who.1")));  // 相对于上一个任务
+//        messageQueue.addTask(80, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.who.2")));
+//        messageQueue.addTask(120, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.who.3")));
+//        messageQueue.addTask(170, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.who.4")));
+//        messageQueue.addTask(210, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.who.5")));
+//        messageQueue.addTask(270, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.who.6")));
+//        TickTasks.addClient(messageQueue);
     });
     public static ButtonFactory CRYSTAL_NEKO_ABOUT_MOD_BUTTON = screen -> Button.builder(Component.translatable("screen.toneko.crystal_neko_interactive.button.about_mod"),(btn)->{
         Player player = Minecraft.getInstance().player;
         TickTaskQueue messageQueue = new TickTaskQueue();
-        messageQueue.addTask(20, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.about_mod.0")));
-        messageQueue.addTask(90, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.about_mod.1")));
-        messageQueue.addTask(140, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.about_mod.2")));
-        messageQueue.addTask(190, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.about_mod.3")));
-        messageQueue.addTask(230, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.about_mod.4")));
-        messageQueue.addTask(260, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.about_mod.5")));
-        messageQueue.addTask(300, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.about_mod.6")));
-        messageQueue.addTask(345, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.about_mod.7")));
-        messageQueue.addTask(380, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.about_mod.8")));
-        messageQueue.addTask(425, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.about_mod.9")));
-        messageQueue.addTask(455, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.about_mod.10")));
-        messageQueue.addTask(490, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.about_mod.11")));
-        messageQueue.addTask(535, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.about_mod.12")));
-        messageQueue.addTask(585, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.about_mod.13")));
-        messageQueue.addTask(625, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.about_mod.14")));
-        messageQueue.addTask(660, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.about_mod.15")));
-        messageQueue.addTask(705, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.about_mod.16")));
+//        messageQueue.addTask(20, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.about_mod.0")));
+//        messageQueue.addTask(90, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.about_mod.1")));
+//        messageQueue.addTask(140, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.about_mod.2")));
+//        messageQueue.addTask(190, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.about_mod.3")));
+//        messageQueue.addTask(230, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.about_mod.4")));
+//        messageQueue.addTask(260, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.about_mod.5")));
+//        messageQueue.addTask(300, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.about_mod.6")));
+//        messageQueue.addTask(345, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.about_mod.7")));
+//        messageQueue.addTask(380, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.about_mod.8")));
+//        messageQueue.addTask(425, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.about_mod.9")));
+//        messageQueue.addTask(455, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.about_mod.10")));
+//        messageQueue.addTask(490, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.about_mod.11")));
+//        messageQueue.addTask(535, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.about_mod.12")));
+//        messageQueue.addTask(585, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.about_mod.13")));
+//        messageQueue.addTask(625, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.about_mod.14")));
+//        messageQueue.addTask(660, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.about_mod.15")));
+//        messageQueue.addTask(705, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.about_mod.16")));
         TickTasks.addClient(messageQueue);
     });
     public static ButtonFactory CRYSTAL_NEKO_PLANS_BUTTON = screen -> Button.builder(Component.translatable("screen.toneko.crystal_neko_interactive.button.plans"),(btn)->{
         Player player = Minecraft.getInstance().player;
         TickTaskQueue messageQueue = new TickTaskQueue();
-        messageQueue.addTask(20, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.0")));
-        messageQueue.addTask(90, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.1")));
-        messageQueue.addTask(140, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.2")));
-        messageQueue.addTask(190, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.3")));
-        messageQueue.addTask(230, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.4")));
-        messageQueue.addTask(260, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.5")));
-        messageQueue.addTask(300, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.6")));
-        messageQueue.addTask(345, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.7")));
-        messageQueue.addTask(380, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.8")));
-        messageQueue.addTask(425, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.9")));
-        messageQueue.addTask(455, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.10")));
-        messageQueue.addTask(490, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.11")));
-        messageQueue.addTask(535, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.12")));
-        messageQueue.addTask(585, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.13")));
-        messageQueue.addTask(625, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.14")));
-        messageQueue.addTask(660, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.15")));
-        messageQueue.addTask(705, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.16")));
+//        messageQueue.addTask(20, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.0")));
+//        messageQueue.addTask(90, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.1")));
+//        messageQueue.addTask(140, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.2")));
+//        messageQueue.addTask(190, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.3")));
+//        messageQueue.addTask(230, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.4")));
+//        messageQueue.addTask(260, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.5")));
+//        messageQueue.addTask(300, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.6")));
+//        messageQueue.addTask(345, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.7")));
+//        messageQueue.addTask(380, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.8")));
+//        messageQueue.addTask(425, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.9")));
+//        messageQueue.addTask(455, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.10")));
+//        messageQueue.addTask(490, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.11")));
+//        messageQueue.addTask(535, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.12")));
+//        messageQueue.addTask(585, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.13")));
+//        messageQueue.addTask(625, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.14")));
+//        messageQueue.addTask(660, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.15")));
+//        messageQueue.addTask(705, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.plans.16")));
         TickTasks.addClient(messageQueue);
     });
     public static ButtonFactory CRYSTAL_NEKO_LINKS = screen -> Button.builder(Component.translatable("screen.toneko.crystal_neko_interactive.button.links"),(btn)->{
@@ -195,18 +195,18 @@ public class ButtonFactories {
             if (!player.getMainHandItem().is(ToNekoItems.CATNIP)) {
                 // 杂鱼，你还不配和我交配~
                 btn.setPosition(new Random().nextInt(screen.width - btn.getWidth()), new Random().nextInt(screen.height - btn.getHeight()));
-                player.sendSystemMessage(TextUtil.randomTranslatabledComponent("message.toneko.neko.breed_fail_zako", 10, neko.getName().getString()));
+//                player.sendSystemMessage(TextUtil.randomTranslatabledComponent("message.toneko.neko.breed_fail_zako", 10, neko.getName().getString()));
             }else {
                 // 哪只猫猫会拒绝猫薄荷呢
                 NekoMateScreen.open(neko,List.of(player),null);
-                player.sendSystemMessage(TextUtil.randomTranslatabledComponent("message.toneko.neko.breed_success_zako", 3, neko.getName().getString()));
+                //player.sendSystemMessage(TextUtil.randomTranslatabledComponent("message.toneko.neko.breed_success_zako", 3, neko.getName().getString()));
             }
         }else {
             TickTaskQueue messageQueue = new TickTaskQueue();
-            messageQueue.addTask(20, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.interactive.breed.0")));
-            messageQueue.addTask(50, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.interactive.breed.1")));
-            messageQueue.addTask(90, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.interactive.breed.2")));
-            messageQueue.addTask(120, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.interactive.breed.3")));
+//            messageQueue.addTask(20, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.interactive.breed.0")));
+//            messageQueue.addTask(50, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.interactive.breed.1")));
+//            messageQueue.addTask(90, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.interactive.breed.2")));
+//            messageQueue.addTask(120, () -> player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.interactive.breed.3")));
             TickTasks.addClient(messageQueue);
         }
     });

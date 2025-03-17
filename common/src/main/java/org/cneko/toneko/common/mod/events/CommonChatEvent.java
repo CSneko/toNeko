@@ -39,7 +39,9 @@ public class CommonChatEvent {
     }
     public static void sendMessage(Component message){
         for (Player player : PlayerUtil.getPlayerList()){
-            player.sendSystemMessage(message);
+            if (player instanceof ServerPlayer sp) {
+                sp.sendSystemMessage(message);
+            }
         }
         // 输出到控制台（并清除格式化代码）
         LOGGER.info(message.getString().replaceAll("§[0-9a-fk-or]",""));

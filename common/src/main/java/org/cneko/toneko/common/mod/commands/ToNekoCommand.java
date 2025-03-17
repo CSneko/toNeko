@@ -185,17 +185,19 @@ public class ToNekoCommand {
         } catch (CommandSyntaxException ignored) {
         }
         if (ownerMap.containsKey(owner) && ownerMap.get(owner).equals(neko)){
-            if (accept){
-                neko.getNeko().addOwner(owner.getUUID());
-                neko.sendSystemMessage(Component.translatable("command.toneko.accept", owner.getName()).withStyle(ChatFormatting.GREEN));
-                owner.sendSystemMessage(Component.translatable("command.toneko.player.accept", neko.getName()).withStyle(ChatFormatting.GREEN));
-            }else {
-                neko.sendSystemMessage(Component.translatable("command.toneko.accept", owner.getName()).withStyle(ChatFormatting.RED));
-                owner.sendSystemMessage(Component.translatable("command.toneko.player.deny", neko.getName()).withStyle(ChatFormatting.RED));
+            if (neko instanceof ServerPlayer sn && owner instanceof ServerPlayer so) {
+                if (accept) {
+                    neko.getNeko().addOwner(owner.getUUID());
+                    sn.sendSystemMessage(Component.translatable("command.toneko.accept", owner.getName()).withStyle(ChatFormatting.GREEN));
+                    so.sendSystemMessage(Component.translatable("command.toneko.player.accept", neko.getName()).withStyle(ChatFormatting.GREEN));
+                } else {
+                    sn.sendSystemMessage(Component.translatable("command.toneko.accept", owner.getName()).withStyle(ChatFormatting.RED));
+                    so.sendSystemMessage(Component.translatable("command.toneko.player.deny", neko.getName()).withStyle(ChatFormatting.RED));
+                }
             }
             ownerMap.remove(owner);
         }else {
-            neko.sendSystemMessage(translatable("command.toneko.not_request"));
+            //neko.sendSystemMessage(translatable("command.toneko.not_request"));
         }
         return 1;
     }
@@ -208,7 +210,7 @@ public class ToNekoCommand {
 
     public static int remove(CommandContext<CommandSourceStack> context) {
         try {
-            final Player player = context.getSource().getPlayer();
+            final ServerPlayer player = context.getSource().getPlayer();
             Player nekoP = context.getArgument("neko", ServerPlayer.class);
             NekoQuery.Neko neko = NekoQuery.getNeko(nekoP.getUUID());
             neko.removeOwner(player.getUUID());
@@ -224,7 +226,7 @@ public class ToNekoCommand {
     public static int addBlock(CommandContext<CommandSourceStack> context) {
         try {
             final CommandSourceStack source = context.getSource();
-            final Player player = source.getPlayer();
+            final ServerPlayer player = source.getPlayer();
             //获取关键信息
             ServerPlayer nekoP = context.getArgument("neko", ServerPlayer.class); //猫娘
             String block = context.getArgument("block", String.class); //屏蔽词
@@ -246,7 +248,7 @@ public class ToNekoCommand {
     public static int removeBlock(CommandContext<CommandSourceStack> context) {
         try {
             final CommandSourceStack source = context.getSource();
-            final Player player = source.getPlayer();
+            final ServerPlayer player = source.getPlayer();
             ServerPlayer nekoP = context.getArgument("neko", ServerPlayer.class); //猫娘的名称
             String block = context.getArgument("block", String.class); //屏蔽词
 

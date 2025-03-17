@@ -2,6 +2,7 @@ package org.cneko.toneko.common.mod.items;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.player.Player;
@@ -56,7 +57,9 @@ public class NekoCollectorItem extends Item {
         // 如果count >= maxCount，则清零并掉落一瓶猫娘药水
         if (count >= maxCount) {
             stack.set(ToNekoComponents.NEKO_PROGRESS_COMPONENT, new CountCodecs.FloatCountCodec(0.0f, maxCount));
-            entity.spawnAtLocation(ToNekoItems.NEKO_POTION);
+            if (entity.level() instanceof ServerLevel sl) {
+                entity.spawnAtLocation(sl, ToNekoItems.NEKO_POTION);
+            }
         }else {
             stack.set(ToNekoComponents.NEKO_PROGRESS_COMPONENT, new CountCodecs.FloatCountCodec(count, maxCount));
         }

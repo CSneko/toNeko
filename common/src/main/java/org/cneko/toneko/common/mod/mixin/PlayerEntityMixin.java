@@ -6,6 +6,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -63,11 +64,14 @@ public abstract class PlayerEntityMixin implements INeko, Leashable {
 
     @Inject(method = "tick", at = @At("HEAD"))
     public void tick(CallbackInfo ci) {
-        Leashable.tickLeash((Player)(Object)this);
+        Player player = (Player)(Object)this;
+        if (player instanceof ServerPlayer sp) {
+            Leashable.tickLeash((ServerLevel) sp.level(),sp);
+        }
     }
 
-    @Inject(method = "hurt", at = @At("HEAD"), cancellable = true)
-    public void hurt(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+    @Inject(method = "hurtServer", at = @At("HEAD"), cancellable = true)
+    public void hurt(ServerLevel level,DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         Player player = (Player)(Object)this;
         if(source.getEntity() instanceof Player holder){
             ItemStack stack = holder.getMainHandItem();
@@ -99,7 +103,7 @@ public abstract class PlayerEntityMixin implements INeko, Leashable {
                 // 显示来源
                 itemStack2.set(DataComponents.LORE, new ItemLore(Collections.singletonList(Component.translatable("item.minecraft.milk_bucket.source", neko.getEntity().getName()).withStyle(ChatFormatting.LIGHT_PURPLE))));
                 player.setItemInHand(hand, itemStack2);
-                cir.setReturnValue(InteractionResult.sidedSuccess(player.level().isClientSide));
+                //cir.setReturnValue(InteractionResult.sidedSuccess(player.level().isClientSide));
                 cir.cancel();
             }
         }

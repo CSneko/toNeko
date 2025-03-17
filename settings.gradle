@@ -11,6 +11,3 @@ rootProject.name = 'toneko'
 
 include 'common'
 include 'fabric'
-include 'neoforge'
-include 'bukkit'
-project(':bukkit').projectDir = file('bukkit')

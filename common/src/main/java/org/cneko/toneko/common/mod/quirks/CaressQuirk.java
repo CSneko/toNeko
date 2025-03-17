@@ -43,9 +43,9 @@ public class CaressQuirk extends ToNekoQuirk{
             nekoPlayer.level().addParticle(ParticleTypes.HEART,nekoPlayer.getX()+1.8, nekoPlayer.getY(), nekoPlayer.getZ(),1,1,1);
             if (owner instanceof ServerPlayer so && nekoPlayer instanceof ServerPlayer snp) {
                 // 发送给客户端
-                ClientboundLevelParticlesPacket packet = new ClientboundLevelParticlesPacket(ParticleTypes.HEART, true, owner.getX() + 1.8, owner.getY(), owner.getZ(), 2, 2, 2, 1, 1);
-                so.connection.send(packet);
-                snp.connection.send(packet);
+                //ClientboundLevelParticlesPacket packet = new ClientboundLevelParticlesPacket(ParticleTypes.HEART, true, owner.getX() + 1.8, owner.getY(), owner.getZ(), 2, 2, 2, 1, 1);
+                //so.connection.send(packet);
+                //snp.connection.send(packet);
             }
             // 增加互动值
             n.addXp(owner.getUUID(), CARESS.getInteractionValue());

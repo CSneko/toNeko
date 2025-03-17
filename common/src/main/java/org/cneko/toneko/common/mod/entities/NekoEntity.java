@@ -310,23 +310,20 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
             this.addGatheringPower(20);
             // 达成进度
             ToNekoCriteria.GIFT_NEKO.trigger(sp);
-            // 如果是食物，则吃掉并回血并获取对应的效果
-            this.eat(this.level(), stack);
             if (this.getInventory().canAdd()) {
                 ItemStack s = stack.copy();
                 s.setCount(1);
                 this.getInventory().add(s);
             }else if (!this.getInventory().canAdd()) {
-                player.sendSystemMessage(randomTranslatabledComponent("message.toneko.neko.gift_full",2, Objects.requireNonNull(this.getCustomName()).getString()));
                 return false;
             }
             // 播放爱心粒子
             this.level().addParticle(ParticleTypes.HEART,this.getX()+1.8, this.getY(), this.getZ(),1,1,1);
-            // 发送给客户端
-            ClientboundLevelParticlesPacket packet = new ClientboundLevelParticlesPacket(ParticleTypes.HEART, true, this.getX() + 1.8, this.getY(), this.getZ(), 2, 2, 2, 1, 1);
-            sp.connection.send(packet);
-            // 随机发送感谢消息
-            player.sendSystemMessage(randomTranslatabledComponent("message.toneko.neko.gift_success",3, Objects.requireNonNull(this.getCustomName()).getString()));
+//            // 发送给客户端
+//            ClientboundLevelParticlesPacket packet = new ClientboundLevelParticlesPacket(ParticleTypes.HEART, true, this.getX() + 1.8, this.getY(), this.getZ(), 2, 2, 2, 1, 1);
+//            sp.connection.send(packet);
+//            // 随机发送感谢消息
+//            player.sendSystemMessage(randomTranslatabledComponent("message.toneko.neko.gift_success",3, Objects.requireNonNull(this.getCustomName()).getString()));
 
             // 设置玩家为主人
             if (!this.getNeko().hasOwner(player.getUUID())){
@@ -341,8 +338,8 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
             }
             return true;
         }else {
-            if (player instanceof ServerPlayer) {
-                player.sendSystemMessage(randomTranslatabledComponent("message.toneko.neko.gift_fail", 3, Objects.requireNonNull(this.getCustomName()).getString()));
+            if (player instanceof ServerPlayer sp) {
+                sp.sendSystemMessage(randomTranslatabledComponent("message.toneko.neko.gift_fail", 3, Objects.requireNonNull(this.getCustomName()).getString()));
             }
             return false;
         }
@@ -484,9 +481,13 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     public void tryMating(ServerLevel level, INeko mate) {
         if (this.canMate(mate)) {
             this.nekoMateGoal.setTarget(mate);
-            mate.getEntity().sendSystemMessage(Component.translatable("message.toneko.neko.mate.start",this.getName(), mate.getEntity().getName()).withStyle(ChatFormatting.GREEN));
+            if (mate.getEntity() instanceof ServerPlayer sp) {
+                sp.sendSystemMessage(Component.translatable("message.toneko.neko.mate.start", this.getName(), mate.getEntity().getName()).withStyle(ChatFormatting.GREEN));
+            }
         }else {
-            mate.getEntity().sendSystemMessage(Component.translatable("message.toneko.neko.mate.fail",this.getName(), mate.getEntity().getName()).withStyle(ChatFormatting.RED));
+            if (mate.getEntity() instanceof ServerPlayer sp) {
+                sp.sendSystemMessage(Component.translatable("message.toneko.neko.mate.fail", this.getName(), mate.getEntity().getName()).withStyle(ChatFormatting.RED));
+            }
         }
     }
     public void afterMate() {
@@ -499,10 +500,10 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     public void breed(ServerLevel level, INeko mate) {
         // 冒爱心
         level.addParticle(ParticleTypes.HEART, this.getX(), this.getY(), this.getZ(), 1, 1, 1);
-        Packet<?> packet = new ClientboundLevelParticlesPacket(ParticleTypes.HEART,true, this.getX(), this.getY(), this.getZ(),3,3,3,0.2f,25);
-        if (mate instanceof ServerPlayer sp){
-            sp.connection.send(packet);
-        }
+        //Packet<?> packet = new ClientboundLevelParticlesPacket(ParticleTypes.HEART,true, this.getX(), this.getY(), this.getZ(),3,3,3,0.2f,25);
+//        if (mate instanceof ServerPlayer sp){
+//            sp.connection.send(packet);
+//        }
         // 增加等级
         this.getNeko().addLevel(0.1);
         mate.getNeko().addLevel(0.1);
@@ -623,12 +624,12 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     }
 
     @Override
-    public boolean hurt(@NotNull DamageSource source, float amount) {
+    public boolean hurtServer(@NotNull ServerLevel level, @NotNull DamageSource source, float amount) {
         if (source.getEntity() instanceof Player player){
             // 栓住玩家
             if (player.getMainHandItem().is(Items.LEAD)){
                 if (player.isLeashed()){
-                    player.dropLeash(true, true);
+                    player.dropLeash();
                 }else {
                     player.setLeashedTo(this, true);
                     // 减少栓绳
@@ -637,19 +638,19 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
                 return false;
             }
         }
-        boolean result = super.hurt(source, amount);
+        boolean result = super.hurtServer(level,source, amount);
         if (!result) return false;
-        if (source.getEntity() instanceof Player player){
+        if (source.getEntity() instanceof ServerPlayer player){
             hurtByPlayer(player);
         }
         return true;
     }
 
-    public void hurtByPlayer(Player player){
+    public void hurtByPlayer(ServerPlayer player){
         sendHurtMessageToPlayer(player);
     }
 
-    public void sendHurtMessageToPlayer(Player player){
+    public void sendHurtMessageToPlayer(ServerPlayer player){
         if (player instanceof ServerPlayer) {
             var moe = this.getMoeTags();
             var name = this.getName();
@@ -701,10 +702,6 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         return true;
     }
 
-    @Override
-    public boolean checkSpawnRules(@NotNull LevelAccessor level, @NotNull MobSpawnType reason) {
-        return true;
-    }
 
 
     public static AttributeSupplier.Builder createNekoAttributes(){

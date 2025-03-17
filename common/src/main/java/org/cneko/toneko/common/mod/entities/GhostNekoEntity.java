@@ -43,13 +43,13 @@ public class GhostNekoEntity extends NekoEntity{
     }
 
     @Override
-    public boolean hurt(@NotNull DamageSource source, float amount) {
+    public boolean hurtServer(ServerLevel level,@NotNull DamageSource source, float amount) {
         if (source.getEntity() instanceof Player player && player.getMainHandItem().is(Items.LEAD)) {
-            return super.hurt(source, amount);
+            return super.hurtServer(level,source, amount);
         }
         // 除非命令或魔法，否则不造成伤害
         if (source.is(DamageTypes.GENERIC_KILL) || source.is(DamageTypes.MAGIC)){
-            return super.hurt(source, amount);
+            return super.hurtServer(level,source, amount);
         }
         return false;
     }

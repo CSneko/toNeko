@@ -185,7 +185,7 @@ public class NekoCommand {
     }
 
     public static int nicknameCommand(CommandContext<CommandSourceStack> context) {
-        Player player = context.getSource().getPlayer();
+        ServerPlayer player = context.getSource().getPlayer();
         NekoQuery.Neko neko = NekoQuery.getNeko(player.getUUID());
         String nickname = StringArgumentType.getString(context, "nickname");
         // 设置昵称
@@ -208,7 +208,7 @@ public class NekoCommand {
     }
 
     public static int giveEffect(CommandContext<CommandSourceStack> context, Holder<MobEffect> effect) {
-        Player player = context.getSource().getPlayer();
+        ServerPlayer player = context.getSource().getPlayer();
         NekoQuery.Neko neko = NekoQuery.getNeko(player.getUUID());
         if(!neko.isNeko()){
             player.sendSystemMessage(translatable("command.neko.not_neko"));

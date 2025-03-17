@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityType;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.entity.MobCategory;
@@ -27,21 +28,21 @@ public class ToNekoEntities {
                 ADVENTURER_NEKO_ID,
                 FabricEntityType.Builder.createMob(AdventurerNeko::new, MobCategory.CREATURE, builder -> builder.defaultAttributes(AdventurerNeko::createAdventurerNekoAttributes)
                         ).
-                        sized(0.5f,1.7f).eyeHeight(1.6f).build()
+                        sized(0.5f,1.7f).eyeHeight(1.6f).build(ResourceKey.create(BuiltInRegistries.ENTITY_TYPE.key(),ADVENTURER_NEKO_ID))
         );
         CRYSTAL_NEKO = Registry.register(
                 BuiltInRegistries.ENTITY_TYPE,
                 CRYSTAL_NEKO_ID,
                 FabricEntityType.Builder.createMob(CrystalNekoEntity::new, MobCategory.CREATURE, builder -> builder.defaultAttributes(CrystalNekoEntity::createNekoAttributes)
                         )
-                        .sized(0.5f,1.7f).eyeHeight(1.6f).clientTrackingRange(8).build()
+                        .sized(0.5f,1.7f).eyeHeight(1.6f).clientTrackingRange(8).build(ResourceKey.create(BuiltInRegistries.ENTITY_TYPE.key(),CRYSTAL_NEKO_ID))
         );
         GHOST_NEKO = Registry.register(
                 BuiltInRegistries.ENTITY_TYPE,
                 GHOST_NEKO_ID,
                 FabricEntityType.Builder.createMob(GhostNekoEntity::new, MobCategory.CREATURE, builder -> builder.defaultAttributes(GhostNekoEntity::createGhostNekoAttributes)
                 )
-                        .sized(0.4f,1.2f).eyeHeight(1.5f).clientTrackingRange(8).build()
+                        .sized(0.4f,1.2f).eyeHeight(1.5f).clientTrackingRange(8).build(ResourceKey.create(BuiltInRegistries.ENTITY_TYPE.key(),GHOST_NEKO_ID))
         );
 
         org.cneko.toneko.common.mod.entities.ToNekoEntities.init();

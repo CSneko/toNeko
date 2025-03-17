@@ -68,7 +68,7 @@ subprojects {
         minecraft "net.minecraft:minecraft:$rootProject.minecraft_version"
         mappings loom.layered() {
             officialMojangMappings()
-            parchment("org.parchmentmc.data:parchment-1.21:2024.07.28@zip") // ParchmentMC版本，目前最新2024.07.28
+            parchment("org.parchmentmc.data:parchment-1.21.4:2025.03.16@zip") // ParchmentMC版本
         }
 
         modCompileOnly "me.lucko:fabric-permissions-api:0.2-SNAPSHOT"

@@ -54,7 +54,7 @@ public class NekoMateGoal extends Goal {
     public void breed(){
         if (nekoEntity.level() instanceof ServerLevel sl) {
             nekoEntity.breed(sl, target);
-            target.getEntity().sendSystemMessage(Component.translatable("message.toneko.neko.mate.finish").withStyle(ChatFormatting.GREEN));
+            //target.getEntity().sendSystemMessage(Component.translatable("message.toneko.neko.mate.finish").withStyle(ChatFormatting.GREEN));
             // 显示爱心粒子（加随机）
             RandomSource random = sl.random;
             sl.getLevel().addParticle(

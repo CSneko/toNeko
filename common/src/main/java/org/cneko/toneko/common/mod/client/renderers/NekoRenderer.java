@@ -15,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
+import software.bernie.geckolib.renderer.GeoRenderer;
 
 import java.util.Optional;
 
@@ -50,8 +51,9 @@ public class NekoRenderer<T extends NekoEntity> extends GeoEntityRenderer<T> {
     }
 
     public static class NekoModel<T extends NekoEntity> extends GeoModel<T> {
+
         @Override
-        public ResourceLocation getModelResource(T animatable) {
+        public ResourceLocation getModelResource(T animatable, @Nullable GeoRenderer<T> renderer) {
             // 检查文件是否存在
             ResourceLocation id = ResourceLocation.fromNamespaceAndPath(
                     MODID,"geo/neko/"+animatable.getSkin()+".geo.json"
@@ -69,7 +71,7 @@ public class NekoRenderer<T extends NekoEntity> extends GeoEntityRenderer<T> {
         }
 
         @Override
-        public ResourceLocation getTextureResource(T animatable) {
+        public ResourceLocation getTextureResource(T animatable, @Nullable GeoRenderer<T> renderer) {
             ResourceLocation id = ResourceLocation.fromNamespaceAndPath(
                     MODID,"textures/neko/"+animatable.getSkin()+".png"
             );

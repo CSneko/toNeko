@@ -32,10 +32,6 @@ public class ChestLootTablesProvider extends SimpleFabricLootTableProvider {
         lootTableBiConsumer.accept(ResourceKey.create(Registries.LOOT_TABLE, NEKO_CHEST), LootTable.lootTable()
                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(0.8F))
                         .add(LootItem.lootTableItem(ToNekoItems.NEKO_POTION)
-                                .apply(SetItemCountFunction.setCount(ConstantValue.exactly(3F))))
-                        .add(LootItem.lootTableItem(ToNekoItems.NEKO_EARS)
-                                .apply(SetItemCountFunction.setCount(ConstantValue.exactly(1F))))
-                        .add(LootItem.lootTableItem(ToNekoItems.NEKO_TAIL)
                                 .apply(SetItemCountFunction.setCount(ConstantValue.exactly(2F))))
                 )
         );

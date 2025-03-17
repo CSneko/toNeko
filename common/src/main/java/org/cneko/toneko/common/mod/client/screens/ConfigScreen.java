@@ -369,6 +369,16 @@ public class ConfigScreen extends Screen {
         }
 
         @Override
+        protected int contentHeight() {
+            return 0;
+        }
+
+        @Override
+        protected double scrollRate() {
+            return 0;
+        }
+
+        @Override
         public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
             if (totalContentHeight > panelHeight) {
                 scrollAmount = (int) Math.max(0, Math.min(totalContentHeight - panelHeight, scrollAmount - scrollY * 20));

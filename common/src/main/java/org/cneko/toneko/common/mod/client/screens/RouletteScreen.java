@@ -67,7 +67,7 @@ public class RouletteScreen extends Screen implements ClientMusicPlayer.NotePlay
                 x + OPTION_SIZE/2, y + OPTION_SIZE/2, color);
 
         // 绘制图标（需要实现纹理加载）
-        guiGraphics.blit(action.getIcon(), x - 8, y - 8, 0, 0, 16, 16, 16, 16);
+        //guiGraphics.blit(action.getIcon(), x - 8, y - 8, 0, 0, 16, 16, 16, 16);
 
         // 绘制名称
         Component name = action.getName();

@@ -28,7 +28,7 @@ public class CatnipItem extends Item {
                         0
                 ));
             }
-            return livingEntity.eat(level, stack, foodProperties);
+            //return livingEntity.eat(level, stack, foodProperties);
         }
         return stack;
     }

@@ -28,9 +28,4 @@ public class ExcitingEffect extends MobEffect {
     public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
         return true;
     }
-
-    @Override
-    public boolean applyEffectTick(@NotNull LivingEntity entity, int amplifier) {
-        return super.applyEffectTick(entity, amplifier);
-    }
 }

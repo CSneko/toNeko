@@ -3,6 +3,7 @@ package org.cneko.toneko.common.mod.util;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 
 import static org.cneko.toneko.common.api.Permissions.*;
@@ -64,7 +65,10 @@ public class PermissionUtil {
                 return Permissions.check(entity, perm);
             }
             // 没有权限API
-            return entity.hasPermissions(getPermLevel(perm));
+            if (entity instanceof ServerPlayer sp) {
+                return sp.hasPermissions(getPermLevel(perm));
+            }
+            return false;
         }catch (Exception e){
             return false;
         }

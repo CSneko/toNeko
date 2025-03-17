@@ -7,7 +7,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -43,14 +42,6 @@ public class CrystalNekoEntity extends NekoEntity{
     }
 
     public void nya(Player player){
-        if (nyaCount < 6) {
-            int r = random.nextInt(6);
-            player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.nya." + r));
-            nyaCount++;
-        }else {
-            int r = random.nextInt(5);
-            player.sendSystemMessage(Component.translatable("message.toneko.crystal_neko.nya_tried."+ r));
-        }
     }
 
     @Override
@@ -75,9 +66,6 @@ public class CrystalNekoEntity extends NekoEntity{
                 """);
     }
 
-    public static boolean checkCrystalNekoSpawnRules(EntityType<? extends net.minecraft.world.entity.Mob> entityType, LevelAccessor levelAccessor, MobSpawnType reason, BlockPos pos, RandomSource randomSource) {
-        return true;
-    }
 
     @Override
     public NekoQuery.Neko getNeko() {
