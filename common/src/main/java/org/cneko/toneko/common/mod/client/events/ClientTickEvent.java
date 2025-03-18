@@ -45,6 +45,9 @@ public class ClientTickEvent {
         while (ToNekoKeyBindings.VISION_KEY.consumeClick()) {
             client.player.connection.sendUnsignedCommand("neko vision");
         }
+        while (ToNekoKeyBindings.RIDE_HEAD_KEY.consumeClick()) {
+            client.player.connection.sendUnsignedCommand("neko rideHead");
+        }
         while (ToNekoKeyBindings.ROULETTE_KEY.consumeClick()) {
             RouletteScreen.open();
         }
@@ -62,7 +65,10 @@ public class ClientTickEvent {
 
             // 如果是被骑乘的玩家，并且潜行，则取消骑乘
             if(p.isShiftKeyDown()){
-                p.getPassengers().forEach(Entity::stopRiding);
+                // 1%的概率取消骑乘
+                if(Math.random() < 0.01){
+                    p.getPassengers().forEach(Entity::stopRiding);
+                }
             }
         }
     }

@@ -181,7 +181,8 @@ public class RouletteScreen extends Screen implements ClientMusicPlayer.NotePlay
                 createAction("mob_effect/night_vision.png", "vision", "neko vision"),
                 createAction("item/leather.png", "lie", "neko lie"),
                 createAction("item/pink_dye.png", "get_down", "neko getDown"),
-                createAction("item/saddle.png", "ride", "neko ride")
+                createAction("item/saddle.png", "ride", "neko ride"),
+                createAction("item/red_dye.png", "ride_head", "neko rideHead")
         );
     }
 

@@ -29,6 +29,7 @@ public class Permissions {
     public static String COMMAND_NEKO_LEVEL = "command.neko.level";
     public static String COMMAND_NEKO_LORE = "command.neko.lore";
     public static String COMMAND_NEKO_RIDE = "command.neko.ride";
+    public static final String COMMAND_NEKO_RIDE_HEAD = "command.neko.ride_head";
     public static String COMMAND_QUIRK = "command.quirk";
     public static String COMMAND_QUIRK_HELP = "command.quirk.help";
     public static String COMMAND_QUIRK_ADD = "command.quirk.add";

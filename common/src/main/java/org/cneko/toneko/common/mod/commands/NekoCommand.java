@@ -89,6 +89,10 @@ public class NekoCommand {
                             .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_NEKO_RIDE))
                             .executes(NekoCommand::rideCommand)
                     )
+                    .then(literal("rideHead")
+                            .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_NEKO_RIDE_HEAD))
+                            .executes(NekoCommand::rideHeadCommand)
+                    )
             );
         });
     }
@@ -100,22 +104,41 @@ public class NekoCommand {
         return 1;
     }
 
+    private static void handleRiding(Entity entity, LivingEntity target, boolean isRideHead) {
+        if (target != null && target != entity) {
+            if (isRideHead) {
+                target.startRiding(entity, true);
+            } else {
+                entity.startRiding(target, true);
+            }
+        }
+
+        Entity senderEntity = isRideHead ? entity : target;
+        if (senderEntity instanceof ServerPlayer sp) {
+            sp.connection.send(new ClientboundSetPassengersPacket(senderEntity));
+        }
+    }
+
     public static int rideCommand(CommandContext<CommandSourceStack> context) {
         Entity entity = context.getSource().getEntity();
         ServerLevel world = (ServerLevel) entity.level();
-        // 获取玩家3格方块内的实体
         float radius = 3.0f;
         LivingEntity target = EntityUtil.findNearestEntityInRange(entity, world, radius);
 
-        if (target != null && target != entity){
-            entity.startRiding(target,true);
-        }
-
-        if (target instanceof ServerPlayer sp){
-            sp.connection.send(new ClientboundSetPassengersPacket(target));
-        }
+        handleRiding(entity, target, false);
         return 1;
     }
+
+    private static int rideHeadCommand(CommandContext<CommandSourceStack> context) {
+        Entity entity = context.getSource().getEntity();
+        ServerLevel world = (ServerLevel) entity.level();
+        float radius = 3.0f;
+        LivingEntity target = EntityUtil.findNearestEntityInRange(entity, world, radius);
+
+        handleRiding(entity, target, true);
+        return 1;
+    }
+
 
     // 原始方法 getDownCommand
     public static int getDownCommand(CommandContext<CommandSourceStack> context) {
@@ -185,7 +208,7 @@ public class NekoCommand {
     }
 
     public static int nicknameCommand(CommandContext<CommandSourceStack> context) {
-        Player player = context.getSource().getPlayer();
+        ServerPlayer player = context.getSource().getPlayer();
         NekoQuery.Neko neko = NekoQuery.getNeko(player.getUUID());
         String nickname = StringArgumentType.getString(context, "nickname");
         // 设置昵称
@@ -208,7 +231,7 @@ public class NekoCommand {
     }
 
     public static int giveEffect(CommandContext<CommandSourceStack> context, Holder<MobEffect> effect) {
-        Player player = context.getSource().getPlayer();
+        ServerPlayer player = context.getSource().getPlayer();
         NekoQuery.Neko neko = NekoQuery.getNeko(player.getUUID());
         if(!neko.isNeko()){
             player.sendSystemMessage(translatable("command.neko.not_neko"));
