@@ -47,12 +47,20 @@ public class ConfigUtil {
     public static boolean IS_BIRTHDAY = false;
     private static final int BIRTHDAY_MONTH = 9;
     private static final int BIRTHDAY_DAY = 26;
+    public static boolean IS_FOOL_DAY = false;
+    private static final int FOOL_DAY_MONTH = 4;
+    private static final int FOOL_DAY_DAY = 1;
 
     public static void load(){
         CONFIG = CONFIG_BUILDER.createConfig();
         LocalDate today = LocalDate.now();
-        if (today.getMonthValue() == BIRTHDAY_MONTH && today.getDayOfMonth() == BIRTHDAY_DAY) {
+        int month = today.getMonthValue();
+        int day = today.getDayOfMonth();
+        if (month == BIRTHDAY_MONTH && day == BIRTHDAY_DAY) {
             IS_BIRTHDAY = true;
+        }
+        if (month == FOOL_DAY_MONTH && day == FOOL_DAY_DAY) {
+            IS_FOOL_DAY = true;
         }
         AIUtil.init();
     }

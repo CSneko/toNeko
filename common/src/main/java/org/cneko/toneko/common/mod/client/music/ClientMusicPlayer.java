@@ -1,6 +1,7 @@
 package org.cneko.toneko.common.mod.client.music;
 
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
+import org.cneko.toneko.common.util.ConfigUtil;
 
 import java.util.Map;
 import java.util.Random;
@@ -24,6 +25,10 @@ public class ClientMusicPlayer {
     }
 
     public void randomSwitchMusic() {
+        if (ConfigUtil.IS_FOOL_DAY){
+            // 愚人节播放Never Gonna Give You Up
+            this.currentMusic = ToNekoMusic.NEVER_GONNA_GIVE_YOU_UP;
+        }
         Random random = new Random();
         this.currentMusic = MUSICS.get(random.nextInt(MUSICS.size()));
         this.currentIndex = 0;
