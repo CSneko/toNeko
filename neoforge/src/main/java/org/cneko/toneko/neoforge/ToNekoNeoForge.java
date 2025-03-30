@@ -46,6 +46,12 @@ public final class ToNekoNeoForge {
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(Registries.ENTITY_TYPE, MODID);
     public static final DeferredRegister<CriterionTrigger<?>> CRITERION_TRIGGERS = DeferredRegister.create(Registries.TRIGGER_TYPE, "minecraft");
     public ToNekoNeoForge(IEventBus bus, ModContainer container) {
+        // 初始化语言和配置
+        LanguageUtil.INSTANCE = new FabricLanguageImpl();
+        // 通用的启动
+        Bootstrap.bootstrap();
+        ModBootstrap.bootstrap();
+
         ITEMS.register(bus);
         BLOCKS.register(bus);
         DATA_COMPONENTS.register(bus);
@@ -76,12 +82,7 @@ public final class ToNekoNeoForge {
         ToNekoAdminCommand.init();
 
         // 注册权限
-        PermissionUtil.init();
-        // 初始化语言和配置
-        LanguageUtil.INSTANCE = new FabricLanguageImpl();
-        // 通用的启动
-        Bootstrap.bootstrap();
-        ModBootstrap.bootstrap();
+        // PermissionUtil.init();
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             ModMeta.INSTANCE.setServer(server);
             ToNekoItems.reg();

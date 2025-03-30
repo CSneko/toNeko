@@ -7,5 +7,14 @@
         "stream": true
       }
     ]
+  },
+  "music.never_gonna_give_you_up": {
+    "category": "record",
+    "sounds": [
+      {
+        "name": "toneko:music/never_gonna_give_you_up",
+        "stream": true
+      }
+    ]
   }
 }

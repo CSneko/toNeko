@@ -13,6 +13,7 @@ import net.minecraft.world.item.*;
 import org.cneko.toneko.common.mod.blocks.ToNekoBlocks;
 import org.cneko.toneko.common.mod.items.*;
 import org.cneko.toneko.common.mod.entities.ToNekoEntities;
+import org.cneko.toneko.common.util.ConfigUtil;
 
 import java.util.List;
 import java.util.Optional;
@@ -47,6 +48,7 @@ public class ToNekoItems {
         CATNIP_SANDWICH = new CatnipItem(new Item.Properties().component(DataComponents.FOOD,new FoodProperties(10,12f,false,1.6f, Optional.empty(),List.of())));
         CATNIP_SEED = new ItemNameBlockItem(ToNekoBlocks.CATNIP, new Item.Properties());
         MUSIC_DISC_KAWAII = new Item(new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ToNekoSongs.KAWAII));
+        MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP = new Item(new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ToNekoSongs.NEVER_GONNA_GIVE_YOU_UP));
         Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, NekoPotionItem.ID), NEKO_POTION);
         Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, NekoCollectorItem.ID), NEKO_COLLECTOR);
         Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, FurryBoheItem.ID), FURRY_BOHE);
@@ -56,6 +58,7 @@ public class ToNekoItems {
         Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, "catnip_sandwich"), CATNIP_SANDWICH);
         Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, "catnip_seed"), CATNIP_SEED);
         Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, "music_disc_kawaii"), MUSIC_DISC_KAWAII);
+        Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, "music_disc_never_gonna_give_you_up"), MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP);
 
         // 如果安装了trinkets，则注册为TrinketItem
         if (isTrinketsInstalled){
@@ -88,6 +91,9 @@ public class ToNekoItems {
             content.accept(ADVENTURER_NEKO_SPAWN_EGG);
             content.accept(GHOST_NEKO_SPAWN_EGG);
             content.accept(MUSIC_DISC_KAWAII);
+            if (ConfigUtil.IS_FOOL_DAY){
+                content.accept(MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP);
+            }
         });
     }
 

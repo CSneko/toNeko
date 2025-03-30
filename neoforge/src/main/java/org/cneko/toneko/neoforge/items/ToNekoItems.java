@@ -46,6 +46,7 @@ public class ToNekoItems {
     public static DeferredHolder<Item,Item> CATNIP_SEED_HOLDER;
     public static DeferredHolder<CreativeModeTab,CreativeModeTab> TONEKO_ITEM_GROUP_HOLDER;
     public static DeferredHolder<Item,Item> MUSIC_DISC_KAWAII_HOLDER;
+    public static DeferredHolder<Item,Item> MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP_HOLDER;
 
     public static void init() {
         registerWithOutConfig();
@@ -81,8 +82,10 @@ public class ToNekoItems {
         CATNIP_SEED_HOLDER = ITEMS.register("catnip_seed",()->new ItemNameBlockItem(ToNekoBlocks.CATNIP_HOLDER.get(), new Item.Properties()));
 
         MUSIC_DISC_KAWAII_HOLDER = ITEMS.register("music_disc_kawaii",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ToNekoSongs.KAWAII)));
+        MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP_HOLDER = ITEMS.register("music_disc_never_gonna_give_you_up",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ToNekoSongs.NEVER_GONNA_GIVE_YOU_UP)));
 
         ITEMS.register(NekoArmor.NekoPawsItem.ID, ()->new NekoArmor.NekoPawsItem(ToNekoArmorMaterials.NEKO)); // 此物品暂不添加
+
         // 注册物品组
         TONEKO_ITEM_GROUP_HOLDER = ToNekoNeoForge.CREATIVE_MODE_TABS.register("toneko_group", ()-> CreativeModeTab.builder()
                 .icon(()->NEKO_EARS_HOLDER.get().getDefaultInstance())
@@ -99,6 +102,9 @@ public class ToNekoItems {
                     event.accept(CATNIP_SANDWICH_HOLDER.get());
                     event.accept(CATNIP_SEED_HOLDER.get());
                     event.accept(MUSIC_DISC_KAWAII_HOLDER.get());
+                    if (ConfigUtil.IS_FOOL_DAY){
+                        event.accept(MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP_HOLDER.get());
+                    }
                 })
                 .build()
         );
@@ -127,6 +133,9 @@ public class ToNekoItems {
             event.accept(CATNIP_SANDWICH_HOLDER.get());
             event.accept(CATNIP_SEED_HOLDER.get());
             event.accept(MUSIC_DISC_KAWAII_HOLDER.get());
+            if (ConfigUtil.IS_FOOL_DAY){
+                event.accept(MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP_HOLDER.get());
+            }
         }
         reg();
     }
@@ -141,6 +150,7 @@ public class ToNekoItems {
         NEKO_EARS = NEKO_EARS_HOLDER.get();
         NEKO_POTION = NEKO_POTION_HOLDER.get();
         MUSIC_DISC_KAWAII = MUSIC_DISC_KAWAII_HOLDER.get();
+        MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP = MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP_HOLDER.get();
         ToNekoBlocks.reg();
         ToNekoEntities.reg();
         ToNekoCriteriaNeoForge.reg();

@@ -29,6 +29,11 @@ public class ToNeko implements ModInitializer {
     public void onInitialize() {
         // 初始化语言和配置
         LanguageUtil.INSTANCE = new FabricLanguageImpl();
+
+        // 通用的启动
+        Bootstrap.bootstrap();
+        ModBootstrap.bootstrap();
+
         // 注册命令
         ToNekoCommand.init();
         ToNekoAdminCommand.init();
@@ -53,10 +58,6 @@ public class ToNeko implements ModInitializer {
         ToNekoQuirks.init();
         // 注册网络数据包
         ToNekoPackets.init();
-
-        // 通用的启动
-        Bootstrap.bootstrap();
-        ModBootstrap.bootstrap();
 
         // 启动事件
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
