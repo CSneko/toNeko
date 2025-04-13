@@ -7,10 +7,12 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BiomeTags;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import org.cneko.toneko.common.mod.api.NekoNameRegistry;
 import org.cneko.toneko.common.mod.api.NekoSkinRegistry;
 import org.cneko.toneko.common.mod.entities.AdventurerNeko;
+import org.cneko.toneko.common.mod.entities.AmmunitionEntity;
 import org.cneko.toneko.common.mod.entities.CrystalNekoEntity;
 import org.cneko.toneko.common.mod.entities.GhostNekoEntity;
 import org.cneko.toneko.common.util.ConfigUtil;
@@ -42,6 +44,13 @@ public class ToNekoEntities {
                 FabricEntityType.Builder.createMob(GhostNekoEntity::new, MobCategory.CREATURE, builder -> builder.defaultAttributes(GhostNekoEntity::createGhostNekoAttributes)
                 )
                         .sized(0.4f,1.2f).eyeHeight(1.5f).clientTrackingRange(8).build()
+        );
+
+        AMMUNITION_ENTITY = Registry.register(
+                BuiltInRegistries.ENTITY_TYPE,
+                AMMUNITION_ENTITY_ID,
+                EntityType.Builder.of(AmmunitionEntity::new, MobCategory.MISC)
+                        .sized(0.25f,0.25f).build()
         );
 
         org.cneko.toneko.common.mod.entities.ToNekoEntities.init();

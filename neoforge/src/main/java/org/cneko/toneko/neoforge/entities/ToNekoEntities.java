@@ -11,6 +11,7 @@ import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.cneko.toneko.common.mod.api.NekoSkinRegistry;
 import org.cneko.toneko.common.mod.entities.AdventurerNeko;
+import org.cneko.toneko.common.mod.entities.AmmunitionEntity;
 import org.cneko.toneko.common.mod.entities.CrystalNekoEntity;
 import org.cneko.toneko.common.mod.entities.GhostNekoEntity;
 import org.cneko.toneko.common.util.ConfigUtil;
@@ -21,6 +22,7 @@ public class ToNekoEntities {
     public static DeferredHolder<EntityType<?>, EntityType<CrystalNekoEntity>> CRYSTAL_NEKO_HOLDER;
     public static DeferredHolder<EntityType<?>, EntityType<AdventurerNeko>> ADVENTURER_NEKO_HOLDER;
     public static DeferredHolder<EntityType<?>, EntityType<GhostNekoEntity>> GHOST_NEKO_HOLDER;
+    public static DeferredHolder<EntityType<?>, EntityType<AmmunitionEntity>> AMMUNITION_ENTITY_HOLDER;
     public static void init(){
         CRYSTAL_NEKO_HOLDER = ToNekoNeoForge.ENTITY_TYPES.register(CRYSTAL_NEKO_ID.getPath(),
                 org.cneko.toneko.common.mod.entities.ToNekoEntities.getCrystalNeko()
@@ -30,6 +32,9 @@ public class ToNekoEntities {
         );
         GHOST_NEKO_HOLDER = ToNekoNeoForge.ENTITY_TYPES.register(GHOST_NEKO_ID.getPath(),
                 org.cneko.toneko.common.mod.entities.ToNekoEntities.getGhostNeko()
+        );
+        AMMUNITION_ENTITY_HOLDER = ToNekoNeoForge.ENTITY_TYPES.register(AMMUNITION_ENTITY_ID.getPath(),
+                org.cneko.toneko.common.mod.entities.ToNekoEntities.getAmmunitionEntity()
         );
 
         org.cneko.toneko.common.mod.entities.ToNekoEntities.init();
@@ -76,5 +81,6 @@ public class ToNekoEntities {
         CRYSTAL_NEKO = CRYSTAL_NEKO_HOLDER.get();
         ADVENTURER_NEKO = ADVENTURER_NEKO_HOLDER.get();
         GHOST_NEKO = GHOST_NEKO_HOLDER.get();
+        AMMUNITION_ENTITY = AMMUNITION_ENTITY_HOLDER.get();
     }
 }

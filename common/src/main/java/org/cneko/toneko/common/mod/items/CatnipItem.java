@@ -1,5 +1,6 @@
 package org.cneko.toneko.common.mod.items;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -12,7 +13,7 @@ import org.cneko.toneko.common.mod.effects.ToNekoEffects;
 import org.cneko.toneko.common.mod.entities.INeko;
 import org.jetbrains.annotations.NotNull;
 
-public class CatnipItem extends Item {
+public class CatnipItem extends Item implements BazookaItem.Ammunition {
     public CatnipItem(Properties properties) {
         super(properties);
     }
@@ -31,5 +32,41 @@ public class CatnipItem extends Item {
             return livingEntity.eat(level, stack, foodProperties);
         }
         return stack;
+    }
+
+    @Override
+    public void hitOnEntity(LivingEntity shooter, LivingEntity target, ItemStack bazooka, ItemStack ammunition) {
+        if (!shooter.level().isClientSide) {
+            if (target instanceof INeko neko && neko.isNeko()) {
+                target.addEffect(new MobEffectInstance(
+                        BuiltInRegistries.MOB_EFFECT.wrapAsHolder(ToNekoEffects.NEKO_EFFECT),
+                        10000,
+                        0
+                ));
+            }
+        }
+    }
+
+    @Override
+    public void hitOnBlock(LivingEntity shooter, BlockPos pos, ItemStack bazooka, ItemStack ammunition) {
+    }
+
+    @Override
+    public void hitOnAir(LivingEntity shooter, BlockPos pos, ItemStack bazooka, ItemStack ammunition) {
+    }
+
+    @Override
+    public float getSpeed(ItemStack bazooka, ItemStack ammunition) {
+        return 1;
+    }
+
+    @Override
+    public float getMaxDistance(ItemStack bazooka, ItemStack ammunition) {
+        return 30;
+    }
+
+    @Override
+    public int getCooldownTicks(ItemStack bazooka, ItemStack ammunition) {
+        return 5;
     }
 }

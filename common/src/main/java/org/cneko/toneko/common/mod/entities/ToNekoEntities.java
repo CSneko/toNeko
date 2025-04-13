@@ -23,7 +23,8 @@ public class ToNekoEntities {
     public static EntityType<CrystalNekoEntity> CRYSTAL_NEKO;
     public static ResourceLocation GHOST_NEKO_ID = toNekoLoc("ghost_neko");
     public static EntityType<GhostNekoEntity> GHOST_NEKO;
-
+    public static EntityType<AmmunitionEntity> AMMUNITION_ENTITY;
+    public static ResourceLocation AMMUNITION_ENTITY_ID = toNekoLoc("ammunition_entity");
     public static void init() {
         // 注册名字
         Set<String> names = Set.of(
@@ -59,6 +60,13 @@ public class ToNekoEntities {
                 ()-> EntityType.Builder.of(GhostNekoEntity::new, MobCategory.CREATURE)
                         .sized(0.5f,1.6f).eyeHeight(1.5f).clientTrackingRange(8)
                         .build("ghost_neko");
+    }
+    @ApiStatus.Internal
+    public static Supplier<EntityType<AmmunitionEntity>> getAmmunitionEntity(){
+        return
+                ()-> EntityType.Builder.of(AmmunitionEntity::new, MobCategory.MISC)
+                        .sized(0.25f,0.25f).clientTrackingRange(4).updateInterval(20)
+                        .build("ammunition_entity");
     }
 
 }
