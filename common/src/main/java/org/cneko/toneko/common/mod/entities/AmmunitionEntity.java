@@ -4,10 +4,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -16,6 +16,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.cneko.toneko.common.mod.items.BazookaItem;
+import org.cneko.toneko.common.mod.misc.ToNekoSoundEvents;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -97,6 +98,24 @@ public class AmmunitionEntity extends ThrowableProjectile implements GeoEntity {
     }
 
     @Override
+    public void remove(@NotNull RemovalReason reason) {
+        super.remove(reason);
+        if (reason == RemovalReason.DISCARDED){
+            if (!level().isClientSide) {
+                // 清除时播放喵叫
+                this.level().playSound(
+                        this,
+                        this.blockPosition(),
+                        ToNekoSoundEvents.BAZOOKA_MEOW,
+                        SoundSource.AMBIENT,
+                        1.0f,
+                        1.0f
+                );
+            }
+        }
+    }
+
+    @Override
     protected void onHitEntity(@NotNull EntityHitResult result) {
         super.onHitEntity(result);
         Entity shooter = getOwner();
@@ -130,7 +149,7 @@ public class AmmunitionEntity extends ThrowableProjectile implements GeoEntity {
     @Override
     protected void onHit(@NotNull HitResult hitResult) {
         super.onHit(hitResult);
-        // 处理碰撞逻辑（参考原有 onHitEntity/onHitBlock）
+        // 处理碰撞逻辑
         if (!this.level().isClientSide) {
             if (hitResult.getType() == HitResult.Type.ENTITY) {
                 this.onHitEntity((EntityHitResult) hitResult);

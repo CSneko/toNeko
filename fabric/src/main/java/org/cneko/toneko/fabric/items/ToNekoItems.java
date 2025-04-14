@@ -13,6 +13,7 @@ import net.minecraft.world.item.*;
 import org.cneko.toneko.common.mod.blocks.ToNekoBlocks;
 import org.cneko.toneko.common.mod.items.*;
 import org.cneko.toneko.common.mod.entities.ToNekoEntities;
+import org.cneko.toneko.common.mod.misc.ToNekoSongs;
 import org.cneko.toneko.common.util.ConfigUtil;
 
 import java.util.List;

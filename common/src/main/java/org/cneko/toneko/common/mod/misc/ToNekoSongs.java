@@ -1,4 +1,4 @@
-package org.cneko.toneko.common.mod.items;
+package org.cneko.toneko.common.mod.misc;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;

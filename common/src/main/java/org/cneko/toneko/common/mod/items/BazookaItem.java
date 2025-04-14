@@ -4,6 +4,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
@@ -16,6 +18,7 @@ import net.minecraft.world.phys.Vec3;
 import org.cneko.toneko.common.mod.entities.AmmunitionEntity;
 import org.cneko.toneko.common.mod.entities.ToNekoEntities;
 import org.cneko.toneko.common.mod.misc.ToNekoComponents;
+import org.cneko.toneko.common.mod.misc.ToNekoSoundEvents;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,6 +48,7 @@ public class BazookaItem extends Item {
         } else {
             tooltips.add(Component.translatable("item.toneko.bazooka.tip.no_ammo"));
         }
+        tooltips.add(Component.translatable("item.toneko.bazooka.tip.reload"));
     }
 
     public boolean isAmmunitionLegal(Item item) {
@@ -115,9 +119,24 @@ public class BazookaItem extends Item {
 
                 fire(player, bazookaStack, ammoStack);
                 player.getCooldowns().addCooldown(this, ammoType.getCooldownTicks(bazookaStack, ammoStack));
+
             }
+            // 播放音效
+            player.level().playSound(
+                    player,
+                    player.blockPosition(),
+                    ToNekoSoundEvents.BAZOOKA_BIU,
+                    SoundSource.PLAYERS,
+                    1.0f,
+                    1.0f
+            );
         }
         return InteractionResultHolder.success(bazookaStack);
+    }
+
+    @Override
+    public int getUseDuration(@NotNull ItemStack stack, @NotNull LivingEntity entity) {
+        return 0;
     }
 
     // 设置当前装填的弹药类型

@@ -1,22 +1,15 @@
 package org.cneko.toneko.neoforge.items;
 
-import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
-import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.NewRegistryEvent;
-import net.neoforged.neoforge.registries.RegisterEvent;
 import org.cneko.toneko.common.mod.items.*;
+import org.cneko.toneko.common.mod.misc.ToNekoSongs;
 import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.neoforge.ToNekoNeoForge;
 import org.cneko.toneko.neoforge.entities.ToNekoEntities;
@@ -26,9 +19,7 @@ import static org.cneko.toneko.common.mod.items.ToNekoItems.*;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
 
-import static org.cneko.toneko.common.Bootstrap.MODID;
 import static org.cneko.toneko.neoforge.ToNekoNeoForge.ITEMS;
 
 

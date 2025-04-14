@@ -16,5 +16,27 @@
         "stream": true
       }
     ]
+  },
+  "item.bazooka.biu": {
+    "category": "master",
+    "sounds": [
+      {"name": "toneko:item/bazooka/biu/biu0"},
+      {"name": "toneko:item/bazooka/biu/biu1"},
+      {"name": "toneko:item/bazooka/biu/biu2"},
+      {"name": "toneko:item/bazooka/biu/biu3"},
+      {"name": "toneko:item/bazooka/biu/biu4"},
+      {"name": "toneko:item/bazooka/biu/biu5"}
+    ]
+  },
+  "item.bazooka.meow": {
+    "category": "master",
+    "sounds": [
+      {"name": "toneko:item/bazooka/meow/meow0"},
+      {"name": "toneko:item/bazooka/meow/meow1"},
+      {"name": "toneko:item/bazooka/meow/meow2"},
+      {"name": "toneko:item/bazooka/meow/meow3"},
+      {"name": "toneko:item/bazooka/meow/meow4"}
+    ]
+}
   }
 }

@@ -13,6 +13,7 @@ import org.cneko.toneko.common.mod.effects.ToNekoEffects;
 import org.cneko.toneko.common.mod.events.ToNekoEvents;
 import org.cneko.toneko.common.mod.events.ToNekoNetworkEvents;
 import org.cneko.toneko.common.mod.impl.FabricLanguageImpl;
+import org.cneko.toneko.common.mod.misc.ToNekoSoundEvents;
 import org.cneko.toneko.fabric.items.ToNekoArmorMaterials;
 import org.cneko.toneko.common.mod.packets.ToNekoPackets;
 import org.cneko.toneko.common.mod.quirks.ToNekoQuirks;
