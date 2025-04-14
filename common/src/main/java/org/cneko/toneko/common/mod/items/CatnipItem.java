@@ -1,7 +1,10 @@
 package org.cneko.toneko.common.mod.items;
 
+import net.minecraft.client.particle.Particle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
@@ -49,15 +52,28 @@ public class CatnipItem extends Item implements BazookaItem.Ammunition {
 
     @Override
     public void hitOnBlock(LivingEntity shooter, BlockPos pos, ItemStack bazooka, ItemStack ammunition) {
+        hitOnAir(shooter, pos, bazooka, ammunition);
     }
 
     @Override
     public void hitOnAir(LivingEntity shooter, BlockPos pos, ItemStack bazooka, ItemStack ammunition) {
+        // 粒子
+        if (!shooter.level().isClientSide) {
+            shooter.level().addParticle(
+                    ()-> BuiltInRegistries.PARTICLE_TYPE.wrapAsHolder(ParticleTypes.EFFECT).value(),
+                    pos.getX() + 0.5,
+                    pos.getY() + 0.5,
+                    pos.getZ() + 0.5,
+                    0,
+                    0,
+                    0
+            );
+        }
     }
 
     @Override
     public float getSpeed(ItemStack bazooka, ItemStack ammunition) {
-        return 1;
+        return 0.8f;
     }
 
     @Override
