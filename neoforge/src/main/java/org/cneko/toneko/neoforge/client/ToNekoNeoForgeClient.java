@@ -15,6 +15,7 @@ import org.cneko.toneko.common.mod.client.ToNekoKeyBindings;
 import org.cneko.toneko.common.mod.client.events.ClientNetworkEvents;
 import org.cneko.toneko.common.mod.client.events.ClientPlayerJoinEvent;
 import org.cneko.toneko.common.mod.client.events.ClientTickEvent;
+import org.cneko.toneko.common.mod.client.renderers.AmmunitionRenderer;
 import org.cneko.toneko.common.mod.client.renderers.GhostNekoRenderer;
 import org.cneko.toneko.common.mod.client.renderers.NekoRenderer;
 import org.cneko.toneko.common.mod.client.screens.ConfigScreen;
@@ -52,6 +53,10 @@ public class ToNekoNeoForgeClient {
         event.registerEntityRenderer(
                 ToNekoEntities.GHOST_NEKO_HOLDER.get(),
                 GhostNekoRenderer::new
+        );
+        event.registerEntityRenderer(
+                ToNekoEntities.AMMUNITION_ENTITY_HOLDER.get(),
+                AmmunitionRenderer::new
         );
     }
 

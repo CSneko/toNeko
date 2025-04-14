@@ -38,6 +38,7 @@ public class ToNekoItems {
     public static DeferredHolder<CreativeModeTab,CreativeModeTab> TONEKO_ITEM_GROUP_HOLDER;
     public static DeferredHolder<Item,Item> MUSIC_DISC_KAWAII_HOLDER;
     public static DeferredHolder<Item,Item> MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP_HOLDER;
+    public static DeferredHolder<Item,Item> BAZOOKA_HOLDER;
 
     public static void init() {
         registerWithOutConfig();
@@ -75,6 +76,8 @@ public class ToNekoItems {
         MUSIC_DISC_KAWAII_HOLDER = ITEMS.register("music_disc_kawaii",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ToNekoSongs.KAWAII)));
         MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP_HOLDER = ITEMS.register("music_disc_never_gonna_give_you_up",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ToNekoSongs.NEVER_GONNA_GIVE_YOU_UP)));
 
+        BAZOOKA_HOLDER = ITEMS.register("bazooka",()->new BazookaItem(new Item.Properties().stacksTo(1).rarity(Rarity.RARE)));
+
         ITEMS.register(NekoArmor.NekoPawsItem.ID, ()->new NekoArmor.NekoPawsItem(ToNekoArmorMaterials.NEKO)); // 此物品暂不添加
 
         // 注册物品组
@@ -93,9 +96,11 @@ public class ToNekoItems {
                     event.accept(CATNIP_SANDWICH_HOLDER.get());
                     event.accept(CATNIP_SEED_HOLDER.get());
                     event.accept(MUSIC_DISC_KAWAII_HOLDER.get());
+                    event.accept(MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP_HOLDER.get());
                     if (ConfigUtil.IS_FOOL_DAY){
                         event.accept(MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP_HOLDER.get());
                     }
+                    event.accept(BAZOOKA_HOLDER.get());
                 })
                 .build()
         );
@@ -124,9 +129,11 @@ public class ToNekoItems {
             event.accept(CATNIP_SANDWICH_HOLDER.get());
             event.accept(CATNIP_SEED_HOLDER.get());
             event.accept(MUSIC_DISC_KAWAII_HOLDER.get());
+            event.accept(MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP_HOLDER.get());
             if (ConfigUtil.IS_FOOL_DAY){
                 event.accept(MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP_HOLDER.get());
             }
+            event.accept(BAZOOKA_HOLDER.get());
         }
         reg();
     }
@@ -142,6 +149,7 @@ public class ToNekoItems {
         NEKO_POTION = NEKO_POTION_HOLDER.get();
         MUSIC_DISC_KAWAII = MUSIC_DISC_KAWAII_HOLDER.get();
         MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP = MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP_HOLDER.get();
+        BAZOOKA = BAZOOKA_HOLDER.get();
         ToNekoBlocks.reg();
         ToNekoEntities.reg();
         ToNekoCriteriaNeoForge.reg();

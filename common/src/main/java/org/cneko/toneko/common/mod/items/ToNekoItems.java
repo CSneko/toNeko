@@ -17,7 +17,7 @@ public class ToNekoItems {
     public static Item CATNIP_SEED;
     public static Item MUSIC_DISC_KAWAII;
     public static Item MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP;
-    public static BazookaItem BAZOOKA;
+    public static Item BAZOOKA;
 
     public static final TagKey<Item> CATNIP_TAG = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c","foods/catnip"));
 }
