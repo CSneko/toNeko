@@ -1,15 +1,11 @@
 package org.cneko.toneko.common.mod.mixin;
 
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -21,11 +17,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.ItemLore;
+import org.cneko.toneko.common.mod.api.EntityPoseManager;
 import org.cneko.toneko.common.mod.entities.INeko;
+import org.cneko.toneko.common.mod.mixin.mixininterface.SlowTickable;
+import org.cneko.toneko.common.mod.packets.EntityPosePayload;
 import org.cneko.toneko.common.mod.packets.PlayerLeadByPlayerPayload;
+import org.cneko.toneko.common.mod.util.EntityUtil;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -35,8 +34,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Collections;
 
 @Mixin(Player.class)
-public abstract class PlayerEntityMixin implements INeko, Leashable {
-    @Shadow public abstract void playNotifySound(SoundEvent sound, SoundSource source, float volume, float pitch);
+public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickable {
+
+    @Unique
+    short toneko$tick = 20;
 
     @Unique
     private LeashData leashData;
@@ -63,7 +64,25 @@ public abstract class PlayerEntityMixin implements INeko, Leashable {
 
     @Inject(method = "tick", at = @At("HEAD"))
     public void tick(CallbackInfo ci) {
-        Leashable.tickLeash((Player)(Object)this);
+        Player player = (Player)(Object)this;
+        Leashable.tickLeash(player);
+        if (toneko$tick++>=20) {
+            toneko$slowTick();
+            toneko$tick = 0;
+        }
+
+    }
+
+    @Override
+    public void toneko$slowTick() {
+        if ((Object)this instanceof ServerPlayer sp){
+            ServerPlayNetworking.send(sp, new EntityPosePayload(EntityPoseManager.getPose(sp),sp.getUUID().toString(), true));
+            // 如果周围有其它玩家，则发送给周围的所有玩家
+            var players = EntityUtil.getPlayersInRange(sp,sp.level(),16);
+            for (Player player : players) {
+                ServerPlayNetworking.send((ServerPlayer) player, new EntityPosePayload(EntityPoseManager.getPose(sp),sp.getUUID().toString(), true));
+            }
+        }
     }
 
     @Inject(method = "hurt", at = @At("HEAD"), cancellable = true)
