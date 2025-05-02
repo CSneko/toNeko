@@ -8,7 +8,5 @@ import net.minecraft.world.effect.MobEffect;
 import static org.cneko.toneko.common.Bootstrap.MODID;
 
 public class ToNekoEffects {
-    public static final MobEffect NEKO_EFFECT = Registry.register(BuiltInRegistries.MOB_EFFECT, ExcitingEffect.LOCATION, new ExcitingEffect());
-
-    public static void init(){}
+    public static MobEffect NEKO_EFFECT;
 }

@@ -24,6 +24,7 @@ import org.cneko.toneko.fabric.items.ToNekoBlocks;
 import org.cneko.toneko.fabric.items.ToNekoItems;
 import org.cneko.toneko.common.mod.misc.ToNekoAttributes;
 import org.cneko.toneko.fabric.msic.ToNekoCriteriaFabric;
+import org.cneko.toneko.fabric.msic.ToNekoEffectFabric;
 
 public class ToNeko implements ModInitializer {
     @Override
@@ -50,7 +51,7 @@ public class ToNeko implements ModInitializer {
         ToNekoBlocks.init();
         ToNekoItems.init();
         // 注册状态
-        ToNekoEffects.init();
+        ToNekoEffectFabric.init();
         // 注册属性
         ToNekoAttributes.init();
         // 注册进度

@@ -3,6 +3,7 @@ package org.cneko.toneko.neoforge;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.CreativeModeTab;
@@ -31,6 +32,7 @@ import org.cneko.toneko.neoforge.items.ToNekoArmorMaterials;
 import org.cneko.toneko.neoforge.items.ToNekoItems;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import org.cneko.toneko.neoforge.msic.ToNekoCriteriaNeoForge;
+import org.cneko.toneko.neoforge.msic.ToNekoEffectNeoForge;
 
 import static org.cneko.toneko.common.Bootstrap.MODID;
 
@@ -38,6 +40,7 @@ import static org.cneko.toneko.common.Bootstrap.MODID;
 @Mod(MODID)
 public final class ToNekoNeoForge {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
+    public static final DeferredRegister<MobEffect> MOB_EFFECTS = DeferredRegister.create(Registries.MOB_EFFECT, MODID);
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
     public static final DeferredRegister.DataComponents DATA_COMPONENTS = DeferredRegister.createDataComponents(MODID);
     public static final DeferredRegister<ArmorMaterial> ARMOR_MATERIALS = DeferredRegister.create(Registries.ARMOR_MATERIAL, MODID);
@@ -53,6 +56,7 @@ public final class ToNekoNeoForge {
         ModBootstrap.bootstrap();
 
         ITEMS.register(bus);
+        MOB_EFFECTS.register(bus);
         BLOCKS.register(bus);
         DATA_COMPONENTS.register(bus);
         ARMOR_MATERIALS.register(bus);
@@ -63,6 +67,7 @@ public final class ToNekoNeoForge {
         // 注册装备
         ToNekoArmorMaterials.init();
         ToNekoItems.init();
+        ToNekoEffectNeoForge.init();
         ToNekoBlocks.init();
         ToNekoAttributes.init();
         ToNekoCriteriaNeoForge.init();

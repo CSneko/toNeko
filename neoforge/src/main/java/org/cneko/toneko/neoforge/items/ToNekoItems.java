@@ -14,6 +14,7 @@ import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.neoforge.ToNekoNeoForge;
 import org.cneko.toneko.neoforge.entities.ToNekoEntities;
 import org.cneko.toneko.neoforge.msic.ToNekoCriteriaNeoForge;
+import org.cneko.toneko.neoforge.msic.ToNekoEffectNeoForge;
 
 import static org.cneko.toneko.common.mod.items.ToNekoItems.*;
 
@@ -150,6 +151,7 @@ public class ToNekoItems {
         MUSIC_DISC_KAWAII = MUSIC_DISC_KAWAII_HOLDER.get();
         MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP = MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP_HOLDER.get();
         BAZOOKA = BAZOOKA_HOLDER.get();
+        ToNekoEffectNeoForge.reg();
         ToNekoBlocks.reg();
         ToNekoEntities.reg();
         ToNekoCriteriaNeoForge.reg();
