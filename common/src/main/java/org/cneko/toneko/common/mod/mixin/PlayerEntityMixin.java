@@ -72,18 +72,27 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
             toneko$slowTick();
             toneko$tick = 0;
         }
+        if (toneko$tick % 2 == 0){
+            if (player instanceof ServerPlayer sp) {
+                syncPose(sp);
+            }
+        }
 
+    }
+
+    @Unique
+    void syncPose(ServerPlayer sp){
+        ServerPlayNetworking.send(sp, new EntityPosePayload(sp.getPose(),sp.getUUID().toString(), true));
+        // 如果周围有其它玩家，则发送给周围的所有玩家
+        var players = EntityUtil.getPlayersInRange(sp,sp.level(),16);
+        for (Player player : players) {
+            ServerPlayNetworking.send((ServerPlayer) player, new EntityPosePayload(player.getPose(),player.getUUID().toString(), true));
+        }
     }
 
     @Override
     public void toneko$slowTick() {
         if ((Object)this instanceof ServerPlayer sp){
-            ServerPlayNetworking.send(sp, new EntityPosePayload(EntityPoseManager.getPose(sp),sp.getUUID().toString(), true));
-            // 如果周围有其它玩家，则发送给周围的所有玩家
-            var players = EntityUtil.getPlayersInRange(sp,sp.level(),16);
-            for (Player player : players) {
-                ServerPlayNetworking.send((ServerPlayer) player, new EntityPosePayload(EntityPoseManager.getPose(sp),sp.getUUID().toString(), true));
-            }
             // 同步信息给玩家
             syncNekoInfo(sp);
             this.serverNekoSlowTick();

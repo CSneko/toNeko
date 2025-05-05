@@ -3,6 +3,7 @@ package org.cneko.toneko.fabric.items;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
+import dev.emi.trinkets.api.SlotAttributes;
 import dev.emi.trinkets.api.SlotReference;
 import dev.emi.trinkets.api.Trinket;
 import dev.emi.trinkets.api.TrinketsApi;
@@ -49,6 +50,8 @@ public class NekoArmorTrinkets {
             Multimap<Holder<Attribute>, AttributeModifier> modifiers = Multimaps.newMultimap(Maps.newLinkedHashMap(), ArrayList::new);
             // 添加 10 的neko_degree
             modifiers.put(ToNekoAttributes.NEKO_DEGREE, new AttributeModifier(ToNekoAttributes.NEKO_DEGREE_ID, 10.0, AttributeModifier.Operation.ADD_VALUE));
+            // 额外的空间
+            SlotAttributes.addSlotModifier(modifiers, "chest/back", slotIdentifier, 1, AttributeModifier.Operation.ADD_VALUE);
             return modifiers;
         }
     }
@@ -70,6 +73,8 @@ public class NekoArmorTrinkets {
             Multimap<Holder<Attribute>, AttributeModifier> modifiers = Multimaps.newMultimap(Maps.newLinkedHashMap(), ArrayList::new);
             // 添加 10 的neko_degree
             modifiers.put(ToNekoAttributes.NEKO_DEGREE, new AttributeModifier(ToNekoAttributes.NEKO_DEGREE_ID, 10.0, AttributeModifier.Operation.ADD_VALUE));
+            // 额外的空间
+            SlotAttributes.addSlotModifier(modifiers, "head/hat", slotIdentifier, 1, AttributeModifier.Operation.ADD_VALUE);
             return modifiers;
         }
     }
