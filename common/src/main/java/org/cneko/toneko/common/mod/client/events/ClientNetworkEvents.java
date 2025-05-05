@@ -72,6 +72,10 @@ public class ClientNetworkEvents {
             }
         })));
 
+        ClientPlayNetworking.registerGlobalReceiver(NekoInfoSyncPayload.ID,(payload,context)-> context.client().execute(()->{
+            Player player = context.player();
+            player.setNekoEnergy(payload.energy());
+        }));
 
     }
     public static void setPose(EntityPosePayload payload, ClientPlayNetworking.Context context) {

@@ -14,7 +14,7 @@ public abstract class PlayerEntityMixin {
     @Inject(at = @At("RETURN"), method = "createAttributes", cancellable = true)
     private static void createAttributes(CallbackInfoReturnable<AttributeSupplier.Builder> cir) {
         AttributeSupplier.Builder builder = cir.getReturnValue();
-        builder = builder.add(ToNekoAttributes.NEKO_DEGREE);
+        builder = builder.add(ToNekoAttributes.NEKO_DEGREE).add(ToNekoAttributes.MAX_NEKO_ENERGY);
         builder = AttributeEvents.ON_REGISTER_PLAYER_ATTRIBUTES.invoker().onRegister(builder);
         cir.setReturnValue(builder);
     }

@@ -15,6 +15,7 @@ import org.cneko.toneko.common.mod.client.ToNekoKeyBindings;
 import org.cneko.toneko.common.mod.client.events.ClientNetworkEvents;
 import org.cneko.toneko.common.mod.client.events.ClientPlayerJoinEvent;
 import org.cneko.toneko.common.mod.client.events.ClientTickEvent;
+import org.cneko.toneko.common.mod.client.events.HudRenderEvent;
 import org.cneko.toneko.common.mod.client.renderers.AmmunitionRenderer;
 import org.cneko.toneko.common.mod.client.renderers.GhostNekoRenderer;
 import org.cneko.toneko.common.mod.client.renderers.NekoRenderer;
@@ -34,6 +35,7 @@ public class ToNekoNeoForgeClient {
         ClientNetworkEvents.init();
         ClientPlayerJoinEvent.init();
         ClientTickEvent.init();
+        HudRenderEvent.init();
         ToNekoKeyBindings.init();
         container.registerExtensionPoint(IConfigScreenFactory.class, (a,b)->new ConfigScreen());
 

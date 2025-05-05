@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import org.cneko.toneko.common.mod.blocks.ToNekoBlocks;
 import org.cneko.toneko.common.mod.client.ToNekoKeyBindings;
+import org.cneko.toneko.common.mod.client.events.HudRenderEvent;
 import org.cneko.toneko.common.mod.client.renderers.AmmunitionRenderer;
 import org.cneko.toneko.common.mod.client.renderers.GhostNekoRenderer;
 import org.cneko.toneko.common.mod.client.renderers.NekoRenderer;
@@ -25,6 +26,7 @@ public class ToNekoClient implements ClientModInitializer {
         ClientNetworkEvents.init();
         ClientTickEvent.init();
         ClientPlayerJoinEvent.init();
+        HudRenderEvent.init();
         // 注册trinkets渲染器
         if (ToNekoItems.isTrinketsInstalled){
             Minecraft.getInstance().execute(NekoArmorTrinketsRenderer::init);

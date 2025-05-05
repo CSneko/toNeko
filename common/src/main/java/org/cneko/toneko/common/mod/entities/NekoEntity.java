@@ -4,7 +4,6 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
@@ -28,7 +27,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameRules;
@@ -40,9 +38,9 @@ import org.cneko.toneko.common.mod.advencements.ToNekoCriteria;
 import org.cneko.toneko.common.mod.ai.PromptRegistry;
 import org.cneko.toneko.common.mod.api.NekoNameRegistry;
 import org.cneko.toneko.common.mod.api.NekoSkinRegistry;
-import org.cneko.toneko.common.mod.effects.ToNekoEffects;
 import org.cneko.toneko.common.mod.entities.ai.goal.NekoPickupItemGoal;
 import org.cneko.toneko.common.mod.items.ToNekoItems;
+import org.cneko.toneko.common.mod.misc.ToNekoAttributes;
 import org.cneko.toneko.common.mod.packets.interactives.NekoEntityInteractivePayload;
 import org.cneko.toneko.common.mod.util.EntityUtil;
 import org.cneko.toneko.common.mod.entities.ai.goal.NekoFollowOwnerGoal;
@@ -97,6 +95,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     public static final EntityDataAccessor<String> SKIN_DATA_ID = SynchedEntityData.defineId(NekoEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<String> MOE_TAGS_ID = SynchedEntityData.defineId(NekoEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Integer> GATHERING_POWER_ID = SynchedEntityData.defineId(NekoEntity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Float> NEKO_ENERGY_ID = SynchedEntityData.defineId(NekoEntity.class, EntityDataSerializers.FLOAT);
 
     public NekoEntity(EntityType<? extends NekoEntity> entityType, Level level) {
         super(entityType, level);
@@ -106,7 +105,6 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
             randomize();
         }
         this.cache = GeckoLibUtil.createInstanceCache(this);
-        this.setPersistenceRequired();
     }
 
 
@@ -141,6 +139,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         builder.define(SKIN_DATA_ID, this.getDefaultSkin());
         builder.define(MOE_TAGS_ID, "");
         builder.define(GATHERING_POWER_ID, 0);
+        builder.define(NEKO_ENERGY_ID, 0f);
     }
 
 
@@ -151,6 +150,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         compound.put("Inventory", this.inventory.save(new ListTag()));
         compound.putInt("SelectedItemSlot", this.inventory.selected);
         compound.putInt("GatheringPower", this.getGatheringPower());
+        this.saveNekoNBTData(compound);
     }
 
     public void readAdditionalSaveData(@NotNull CompoundTag compound) {
@@ -160,6 +160,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         this.inventory.load(listTag);
         this.inventory.selected = compound.getInt("SelectedItemSlot");
         this.setGatheringPower(compound.getInt("GatheringPower"));
+        this.loadNekoNBTData(compound);
     }
 
     @Override
@@ -266,6 +267,15 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         this.entityData.set(MOE_TAGS_ID, String.join(":", moeTags));
     }
 
+    public float getNekoEnergy() {
+        return this.entityData.get(NEKO_ENERGY_ID);
+    }
+
+    @Override
+    public void setNekoEnergy(float energy) {
+        this.entityData.set(NEKO_ENERGY_ID, Mth.clamp(energy, 0,this.getMaxNekoEnergy()));
+    }
+
     // 获取采集动力
     public int getGatheringPower() {
         return this.entityData.get(GATHERING_POWER_ID);
@@ -304,6 +314,8 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     }
     // 赠送物品
     public boolean giftItem(Player player, ItemStack stack){
+        // 设置持久性
+        this.setPersistenceRequired();
         // 如果是喜欢的物品
         if (this.isLikedItem(stack) && player instanceof ServerPlayer sp){
             // 增长动力
@@ -437,6 +449,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         if (!this.level().isClientSide()){
             this.setMoeTags(this.getMoeTags());
             this.setSkin(this.getSkin());
+            this.serverNekoSlowTick();
         }
     }
 
@@ -708,7 +721,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
 
 
     public static AttributeSupplier.Builder createNekoAttributes(){
-        return createMobAttributes().add(Attributes.ATTACK_DAMAGE);
+        return createMobAttributes().add(Attributes.ATTACK_DAMAGE).add(Attributes.ATTACK_SPEED).add(ToNekoAttributes.NEKO_DEGREE).add(ToNekoAttributes.MAX_NEKO_ENERGY);
     }
 
     public boolean isSitting() {

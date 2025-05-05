@@ -3,6 +3,7 @@ package org.cneko.toneko.common.mod.mixin;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -21,6 +22,7 @@ import org.cneko.toneko.common.mod.api.EntityPoseManager;
 import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.mixin.mixininterface.SlowTickable;
 import org.cneko.toneko.common.mod.packets.EntityPosePayload;
+import org.cneko.toneko.common.mod.packets.NekoInfoSyncPayload;
 import org.cneko.toneko.common.mod.packets.PlayerLeadByPlayerPayload;
 import org.cneko.toneko.common.mod.util.EntityUtil;
 import org.jetbrains.annotations.Nullable;
@@ -82,7 +84,36 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
             for (Player player : players) {
                 ServerPlayNetworking.send((ServerPlayer) player, new EntityPosePayload(EntityPoseManager.getPose(sp),sp.getUUID().toString(), true));
             }
+            // 同步信息给玩家
+            syncNekoInfo(sp);
+            this.serverNekoSlowTick();
         }
+    }
+
+    @Unique
+    private void syncNekoInfo(ServerPlayer sp){
+        ServerPlayNetworking.send(sp,new NekoInfoSyncPayload(this.getNekoEnergy()));
+    }
+
+    @Unique
+    float toneko$nekoEnergy = 0;
+    @Override
+    public float getNekoEnergy() {
+        return toneko$nekoEnergy;
+    }
+
+    @Override
+    public void setNekoEnergy(float energy) {
+        toneko$nekoEnergy = energy;
+    }
+
+    @Inject(method = "addAdditionalSaveData", at = @At("HEAD"))
+    public void addAdditionalSaveData(CompoundTag compound, CallbackInfo ci) {
+        this.saveNekoNBTData(compound);
+    }
+    @Inject(method = "readAdditionalSaveData", at = @At("HEAD"))
+    public void readAdditionalSaveData(CompoundTag compound, CallbackInfo ci) {
+        this.loadNekoNBTData(compound);
     }
 
     @Inject(method = "hurt", at = @At("HEAD"), cancellable = true)

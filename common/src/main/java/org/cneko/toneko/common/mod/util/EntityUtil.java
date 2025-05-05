@@ -10,7 +10,9 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import org.cneko.toneko.common.mod.entities.INeko;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EntityUtil {
@@ -61,6 +63,20 @@ public class EntityUtil {
         AABB box = new AABB(entity.getX() - radius, entity.getY() - radius, entity.getZ() - radius,
                 entity.getX() + radius, entity.getY() + radius, entity.getZ() + radius);
         return world.getEntitiesOfClass(ItemEntity.class, box);
+    }
+
+    // 获取范围内所有INeko
+    public static List<INeko> getNekoInRange(Entity entity, Level world, float radius) {
+        AABB box = new AABB(entity.getX() - radius, entity.getY() - radius, entity.getZ() - radius,
+                entity.getX() + radius, entity.getY() + radius, entity.getZ() + radius);
+        List<Entity> entities = world.getEntities(entity, box);
+        List<INeko> nekos = new ArrayList<>();
+        for (Entity entity1 : entities) {
+            if (entity1 instanceof INeko) {
+                nekos.add((INeko) entity1);
+            }
+        }
+        return nekos;
     }
 
 

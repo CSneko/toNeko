@@ -54,7 +54,6 @@ public class ClientTickEvent {
     }
 
 
-
     public static void onTick(Minecraft client) {
         TickTasks.executeDefaultClient();
         Player p = Minecraft.getInstance().player;

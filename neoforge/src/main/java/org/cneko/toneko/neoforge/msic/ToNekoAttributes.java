@@ -9,6 +9,7 @@ import org.cneko.toneko.common.mod.entities.CrystalNekoEntity;
 import org.cneko.toneko.common.mod.entities.GhostNekoEntity;
 import org.cneko.toneko.neoforge.entities.ToNekoEntities;
 
+import static org.cneko.toneko.common.mod.misc.ToNekoAttributes.MAX_NEKO_ENERGY;
 import static org.cneko.toneko.common.mod.misc.ToNekoAttributes.NEKO_DEGREE;
 
 
@@ -22,6 +23,7 @@ public class ToNekoAttributes {
     @SubscribeEvent
     public static void onRegisterAttributes(EntityAttributeModificationEvent event){
         event.add(EntityType.PLAYER,NEKO_DEGREE);
+        event.add(EntityType.PLAYER,MAX_NEKO_ENERGY);
     }
     public static void registerAttributes(EntityAttributeCreationEvent event){
         event.put(ToNekoEntities.ADVENTURER_NEKO_HOLDER.get(), AdventurerNeko.createAdventurerNekoAttributes().build());
