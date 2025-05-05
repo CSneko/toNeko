@@ -51,16 +51,16 @@ public class ToNekoEntities {
     public static void onCreatureSpawn(RegisterSpawnPlacementsEvent event) {
         event.register(ADVENTURER_NEKO_HOLDER.get(), (EntityType<AdventurerNeko> type, ServerLevelAccessor accessor, MobSpawnType spawnType, BlockPos pos, RandomSource random) -> {
             // 检查是否是在高山生物群系
-            if (accessor.getBiome(pos).is(BiomeTags.IS_MOUNTAIN)) {
-                // 控制生成概率，例如有20%的概率生成
+            if (accessor.getBiome(pos).is(BiomeTags.IS_MOUNTAIN)|| accessor.getBiome(pos).is(BiomeTags.IS_FOREST)) {
+                // 控制生成概率，有20%的概率生成
                 return random.nextFloat() < 0.2f;
             }
             return false; // 不在高山时不生成
         });
         event.register(GHOST_NEKO_HOLDER.get(), (EntityType<GhostNekoEntity> type, ServerLevelAccessor accessor, MobSpawnType spawnType, BlockPos pos, RandomSource random) -> {
             // 检查生物群系是否符合条件：允许史莱姆生成，或有丛林神庙
-            if (accessor.getBiome(pos).is(BiomeTags.ALLOWS_SURFACE_SLIME_SPAWNS) || accessor.getBiome(pos).is(BiomeTags.HAS_JUNGLE_TEMPLE)) {
-                // 控制生成概率，例如有15%的概率生成
+            if (accessor.getBiome(pos).is(BiomeTags.ALLOWS_SURFACE_SLIME_SPAWNS) || accessor.getBiome(pos).is(BiomeTags.HAS_JUNGLE_TEMPLE) || accessor.getBiome(pos).is(BiomeTags.HAS_NETHER_FOSSIL)) {
+                // 控制生成概率，有15%的概率生成
                 return random.nextFloat() < 0.15f;
             }
             return false; // 不符合条件时不生成
@@ -68,7 +68,7 @@ public class ToNekoEntities {
         event.register(CRYSTAL_NEKO_HOLDER.get(), (EntityType<CrystalNekoEntity> type, ServerLevelAccessor accessor, MobSpawnType spawnType, BlockPos pos, RandomSource random) -> {
             // 如果是生日，则在所有生物群系中随机生成
             if (ConfigUtil.IS_BIRTHDAY) {
-                // 控制生成概率，例如有10%的概率生成
+                // 控制生成概率，有10%的概率生成
                 return random.nextFloat() < 0.1f;
             }
             return false; // 不是生日时不生成
