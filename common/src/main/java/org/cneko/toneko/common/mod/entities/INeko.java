@@ -74,12 +74,12 @@ public interface INeko {
             return;
         }
         // 根据自身猫猫等级来增加
-        float increase = (float) (this.getNekoAbility() * 0.005);
+        float increase = (float) (this.getNekoAbility() * 0.01);
         // 根据周围猫猫数量来增加
         List<INeko> nekos = EntityUtil.getNekoInRange(this.getEntity(), this.getEntity().level(), 3);
         for (INeko neko : nekos){
             if (neko.isNeko()){
-                increase += (float) (neko.getNekoAbility() * 0.5);
+                increase += (float) (neko.getNekoAbility() * 0.1);
             }
         }
         this.setNekoEnergy(energy + increase);

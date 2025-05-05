@@ -31,6 +31,8 @@ public class CatnipItem extends Item implements BazookaItem.Ammunition {
                         10000,
                         0
                 ));
+                // 恢复一点猫猫能量
+                neko.setNekoEnergy(neko.getNekoEnergy() + 30);
             }
             return livingEntity.eat(level, stack, foodProperties);
         }

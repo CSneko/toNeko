@@ -33,7 +33,7 @@ public class NekoCollectorItem extends Item {
 
     @Override
     public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
-        if (! (entity instanceof Player player) ||(world.isClientSide())) return;
+        if (!(entity instanceof Player player) ||(world.isClientSide()) || player.isNeko()) return;
         // 获取玩家3格方块内的猫猫数量
         float radius = 3.0f;
         int catCount = 0;

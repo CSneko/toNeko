@@ -236,7 +236,11 @@ public class NekoCommand {
         if(!neko.isNeko()){
             player.sendSystemMessage(translatable("command.neko.not_neko"));
             return 1;
+        }else if (player.getNekoEnergy()<40){
+            player.sendSystemMessage(translatable("command.neko.effect.not_enough_energy"));
         }
+        // 消耗能量
+        player.setNekoEnergy(player.getNekoEnergy()-40);
         // 猫猫等级
         double nekoDegree = player.getAttributeValue(ToNekoAttributes.NEKO_DEGREE);
         // 获取玩家等级来计算效果

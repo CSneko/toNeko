@@ -30,6 +30,7 @@ public class HudRenderEvent {
         if (nekoEnergy >= maxNekoEnergy) return;
 
         // 获取屏幕尺寸
+        int width = context.guiWidth();
         int height = context.guiHeight();
 
         // 设置位置和尺寸
@@ -37,16 +38,8 @@ public class HudRenderEvent {
         int barHeight = 4;
         int iconSize = 8;
         int margin = 10;
-        int x = margin + iconSize + 2;
+        int x = width - margin - barWidth;
         int y = height - margin - barHeight;
-
-        // 绘制猫薄荷图标
-        context.blitSprite(CATNIP_ICON,
-                x - iconSize - 2,
-                y - (iconSize - barHeight) / 2,
-                0, 0,
-                iconSize, iconSize,
-                iconSize, iconSize);
 
         // 计算能量百分比
         float percent = nekoEnergy / maxNekoEnergy;
@@ -74,5 +67,13 @@ public class HudRenderEvent {
                     color
             );
         }
+
+        // 绘制猫薄荷图标（在能量条左侧）
+        context.blit(CATNIP_ICON,
+                x - iconSize - 2,  // 放在能量条左边，间隔2像素
+                y - (iconSize - barHeight) / 2,
+                0, 0,
+                iconSize, iconSize,
+                iconSize, iconSize);
     }
 }

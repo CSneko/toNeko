@@ -46,6 +46,9 @@ public class NekoPotionItem extends PotionItem {
                 player.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0F, 1.0F);
             }
             neko.save();
+        }else if (result.getResult() == InteractionResult.CONSUME &&neko.isNeko()){
+            // 恢复一些能量
+            user.setNekoEnergy(user.getNekoEnergy() + 100);
         }
     }
 

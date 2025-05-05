@@ -20,7 +20,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.ItemLore;
 import org.cneko.toneko.common.mod.api.EntityPoseManager;
 import org.cneko.toneko.common.mod.entities.INeko;
-import org.cneko.toneko.common.mod.mixin.mixininterface.SlowTickable;
+import org.cneko.toneko.common.mod.misc.mixininterface.SlowTickable;
 import org.cneko.toneko.common.mod.packets.EntityPosePayload;
 import org.cneko.toneko.common.mod.packets.NekoInfoSyncPayload;
 import org.cneko.toneko.common.mod.packets.PlayerLeadByPlayerPayload;

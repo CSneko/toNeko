@@ -1,7 +1,7 @@
 {
   "accessWidener": "toneko.accesswidener",
   "injected_interfaces": {
-    "net/minecraft/class_1657": ["org/cneko/toneko/common/mod/entities/INeko","net/minecraft/class_9817","org/cneko/toneko/common/mod/mixin/mixininterface/SlowTickable"],
+    "net/minecraft/class_1657": ["org/cneko/toneko/common/mod/entities/INeko","net/minecraft/class_9817","org/cneko/toneko/common/mod/misc/mixininterface/SlowTickable"],
     "net/minecraft_class_1451": ["org/cneko/toneko/common/mod/entities/INeko"]
   }
 }
