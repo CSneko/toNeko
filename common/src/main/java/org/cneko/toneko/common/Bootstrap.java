@@ -1,5 +1,6 @@
 package org.cneko.toneko.common;
 import org.cneko.ctlib.common.file.JsonConfiguration;
+import org.cneko.gal.common.client.GalClient;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.quirks.Quirks;
 import org.cneko.toneko.common.util.AIUtil;
@@ -56,5 +57,8 @@ public class Bootstrap {
         // 注册所有癖好
         Quirks.init();
         NekoQuery.NekoData.startAsyncAutoSave();
+
+        // 启动Gal
+        GalClient.init();
     }
 }

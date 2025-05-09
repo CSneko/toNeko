@@ -10,7 +10,9 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import org.cneko.gal.common.util.pack.ExternalPack;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.api.Permissions;
 import org.cneko.toneko.common.mod.entities.INeko;
@@ -20,6 +22,7 @@ import org.cneko.toneko.common.util.LanguageUtil;
 import org.cneko.toneko.common.mod.util.PermissionUtil;
 import org.cneko.toneko.common.mod.util.PlayerUtil;
 
+import java.nio.file.Path;
 import java.util.*;
 
 import static net.minecraft.commands.Commands.argument;
@@ -90,6 +93,17 @@ public class ToNekoAdminCommand {
                     .then(literal("help")
                             .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_TONEKOADMIN_HELP))
                             .executes(ToNekoAdminCommand::help)
+                    )
+            );
+
+            dispatcher.register(literal("testgal")
+                    .then(argument("loc", StringArgumentType.string())
+                            .then(argument("file", StringArgumentType.string())
+                                    .executes(context->{
+                                        ExternalPack.addResource(ResourceLocation.parse(StringArgumentType.getString(context, "loc")), Path.of(StringArgumentType.getString(context, "file")));
+                                        return 1;
+                                    })
+                            )
                     )
             );
         });
