@@ -43,6 +43,7 @@ dependencies {
     include "com.github.CSneko:NekoAI:$rootProject.nekoai_version"
     include "io.netty:netty-codec-http:4.1.117.Final"
     include "io.netty:netty-handler-proxy:4.1.117.Final"
+    include "com.github.umjammer:jlayer:1.0.3"
     modImplementation "dev.emi:trinkets:${trinkets_version}"
     modImplementation "software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}"
     modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")

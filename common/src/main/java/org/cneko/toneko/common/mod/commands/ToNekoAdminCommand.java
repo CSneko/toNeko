@@ -12,7 +12,6 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import org.cneko.gal.common.util.pack.ExternalPack;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.api.Permissions;
 import org.cneko.toneko.common.mod.entities.INeko;
@@ -93,17 +92,6 @@ public class ToNekoAdminCommand {
                     .then(literal("help")
                             .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_TONEKOADMIN_HELP))
                             .executes(ToNekoAdminCommand::help)
-                    )
-            );
-
-            dispatcher.register(literal("testgal")
-                    .then(argument("loc", StringArgumentType.string())
-                            .then(argument("file", StringArgumentType.string())
-                                    .executes(context->{
-                                        ExternalPack.addResource(ResourceLocation.parse(StringArgumentType.getString(context, "loc")), Path.of(StringArgumentType.getString(context, "file")));
-                                        return 1;
-                                    })
-                            )
                     )
             );
         });

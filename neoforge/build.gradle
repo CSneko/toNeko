@@ -44,9 +44,11 @@ dependencies {
     include "com.github.CSneko:NekoAI:$rootProject.nekoai_version"
     include "io.netty:netty-codec-http:4.1.117.Final"
     include "io.netty:netty-handler-proxy:4.1.117.Final"
+    include "com.github.umjammer:jlayer:1.0.3"
 
     implementation "org.sinytra.forgified-fabric-api:forgified-fabric-api:${forgified_fabric_api_version}"
     modImplementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
+
 }
 
 processResources {

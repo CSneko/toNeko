@@ -6,7 +6,6 @@
   "client": [
   ],
   "mixins": [
-    "PackRepositoryMixin"
   ],
   "injectors": {
     "defaultRequire": 1
