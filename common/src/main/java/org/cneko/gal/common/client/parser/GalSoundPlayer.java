@@ -24,17 +24,17 @@ public class GalSoundPlayer {
         instance.stopVoice();
     }
     public void playMusic(String name, boolean loop) {
-        instance.playMusic(name, loop);
+        instance.playMusic(getMusicPath(name), loop);
     }
     public void playVoice(String name) {
-        instance.playVoice(name);
+        instance.playVoice(getVoicePath(name));
     }
 
     private @NotNull String getMusicPath(String name) {
-        return soundPath.resolve("music").resolve(name + ".ogg").toString();
+        return soundPath.resolve("music").resolve(name + ".mp3").toString();
     }
 
     private @NotNull String getVoicePath(String name) {
-        return soundPath.resolve("voice").resolve(name + ".ogg").toString();
+        return soundPath.resolve("voices").resolve(name + ".mp3").toString();
     }
 }

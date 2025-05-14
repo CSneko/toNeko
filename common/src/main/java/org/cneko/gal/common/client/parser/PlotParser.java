@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
+import lombok.Getter;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.Reader;
 import java.lang.reflect.Type;
@@ -11,55 +13,29 @@ import java.util.List;
 import java.util.Map;
 
 public class PlotParser {
+    @Getter
     public static class DialogueNode {
+        // Getters
         @SerializedName("character")
-        private String character;
+        private String character; // 可选
 
         @SerializedName("stand_picture")
-        private String standPicture;
+        private String standPicture; // 可选
 
         @SerializedName("music")
-        private String music;
+        private String music; // 可选
 
         @SerializedName("text")
         private String text;
 
-        @SerializedName("time")
-        private int time;
-
         @SerializedName("voice")
-        private String voice;
+        private String voice; // 可选
 
         @SerializedName("choices")
-        private List<Choice> choices;
+        private List<Choice> choices; // 与next至少一个存在
 
         @SerializedName("next")
         private String next;
-
-        // Getters
-        public String getCharacter() {
-            return character;
-        }
-
-        public String getStandPicture() {
-            return standPicture;
-        }
-
-        public String getMusic() {
-            return music;
-        }
-
-        public String getText() {
-            return text;
-        }
-
-        public int getTime() {
-            return time;
-        }
-
-        public String getVoice() {
-            return voice;
-        }
 
         // 将voice出现的第一个 "/" 前的解析为 CV
         public String getCV() {
@@ -70,31 +46,28 @@ public class PlotParser {
             return split[0];
         }
 
-        public List<Choice> getChoices() {
-            return choices;
+        public boolean nextShouldEnd(){
+            return next == null || next.isEmpty() || next.equals("end");
+        }
+        @Nullable
+        public String getNextPlotIfShouldBeSwitch(){
+            if(next.startsWith("plot:")){
+                return next.substring(5);
+            }
+            return null;
         }
 
-        public String getNext() {
-            return next;
-        }
     }
 
     // 选择项类
+    @Getter
     public static class Choice {
+        // Getters
         @SerializedName("text")
         private String text;
 
         @SerializedName("next")
         private String next;
-
-        // Getters
-        public String getText() {
-            return text;
-        }
-
-        public String getNext() {
-            return next;
-        }
 
         @Override
         public String toString() {
@@ -102,6 +75,16 @@ public class PlotParser {
                     "text='" + text + '\'' +
                     ", next='" + next + '\'' +
                     '}';
+        }
+        public boolean nextShouldEnd(){
+            return next == null || next.isEmpty() || next.equals("end");
+        }
+        @Nullable
+        public String getNextPlotIfShouldBeSwitch(){
+            if(next.startsWith("plot:")){
+                return next.substring(5);
+            }
+            return null;
         }
     }
 

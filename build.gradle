@@ -81,6 +81,9 @@ subprojects {
         implementation 'io.netty:netty-handler-proxy:4.1.117.Final'
 
         implementation 'com.github.umjammer:jlayer:1.0.3'
+
+        compileOnly("org.projectlombok:lombok:1.18.38")
+        annotationProcessor("org.projectlombok:lombok:1.18.38")
     }
 
     java {

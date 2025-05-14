@@ -88,7 +88,6 @@ public class GalSoundInstance {
         }
     }
 
-    // --- 以下是公开方法 ---
 
     public void playMusic(String filePath, boolean loop) {
         synchronized (musicLock) {

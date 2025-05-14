@@ -1,14 +1,22 @@
 package org.cneko.gal.common.client.parser;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
+import org.cneko.gal.common.Gal;
+import org.cneko.gal.common.util.FileUtil;
+import org.jetbrains.annotations.NotNull;
 
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class GalInfo {
+    public static final Gson GSON = new Gson();
     @SerializedName("authors")
-    private List<AuthorInfo> authors;
+    private List<AuthorInfo> authors = new ArrayList<>();
     @SerializedName("plots")
-    private List<PlotInfo> plots;
+    private List<PlotInfo> plots = new ArrayList<>();
 
     public List<AuthorInfo> getAuthors() {
         return authors;
@@ -16,6 +24,8 @@ public class GalInfo {
     public void setAuthors(List<AuthorInfo> authors) {
         this.authors = authors;
     }
+
+    @NotNull
     public List<PlotInfo> getPlots() {
         return plots;
     }
@@ -63,6 +73,16 @@ public class GalInfo {
         }
         public void setDesc(String desc) {
             this.desc = desc;
+        }
+    }
+
+    public static GalInfo parse(Path path) {
+        try {
+            System.out.println();
+            return GSON.fromJson(FileUtil.inputStreamToString(FileUtil.readFile(path.toFile())), GalInfo.class);
+        } catch (Exception e) {
+            Gal.LOGGER.error("Failed to parse gal info", e);
+            return null;
         }
     }
 

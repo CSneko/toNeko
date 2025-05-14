@@ -62,8 +62,7 @@
   },
   "mixins": [
     "toneko.mixins.json",
-    "fabric.toneko.mixins.json",
-    "gal.mixins.json"
+    "fabric.toneko.mixins.json"
   ],
   "jars": [
     {
