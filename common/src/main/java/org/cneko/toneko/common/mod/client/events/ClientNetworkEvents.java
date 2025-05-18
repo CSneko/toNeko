@@ -16,6 +16,7 @@ import net.minecraft.world.phys.AABB;
 import org.cneko.toneko.common.mod.client.api.ClientEntityPoseManager;
 import org.cneko.toneko.common.mod.client.screens.InteractionScreen;
 import org.cneko.toneko.common.mod.client.screens.NekoScreenRegistry;
+import org.cneko.toneko.common.mod.client.screens.PlotScrollScreen;
 import org.cneko.toneko.common.mod.client.util.ClientPlayerUtil;
 import org.cneko.toneko.common.mod.packets.*;
 import org.cneko.toneko.common.mod.packets.interactives.NekoEntityInteractivePayload;
@@ -75,6 +76,10 @@ public class ClientNetworkEvents {
         ClientPlayNetworking.registerGlobalReceiver(NekoInfoSyncPayload.ID,(payload,context)-> context.client().execute(()->{
             Player player = context.player();
             player.setNekoEnergy(payload.energy());
+        }));
+
+        ClientPlayNetworking.registerGlobalReceiver(OpenPlotScreenPayload.ID,  (payload, context) -> context.client().execute(() -> {
+            context.client().setScreen(new PlotScrollScreen());
         }));
 
     }

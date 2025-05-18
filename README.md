@@ -2,6 +2,11 @@
 **[简体中文](README.md)** | [English](README_en.md)
 
 ![break with optifine](https://wsrv.nl/?url=https%3A%2F%2Fimages.teamresourceful.com%2Fu%2F8vCLgK.svg&n=-1)
+
+![Modrinth Downloads](https://img.shields.io/modrinth/dt/tonekomod)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/CSneko/toNeko)
+![Discord](https://img.shields.io/discord/1263358377606516867)
+
 ## 简单的介绍
 喵喵喵~
 

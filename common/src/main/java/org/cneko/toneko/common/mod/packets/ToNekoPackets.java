@@ -24,5 +24,6 @@ public class ToNekoPackets {
         PayloadTypeRegistry.playC2S().register(PluginDetectPayload.ID, PluginDetectPayload.CODEC);
         PayloadTypeRegistry.playS2C().register(TTSSendPayload.ID, TTSSendPayload.CODEC);
         PayloadTypeRegistry.playS2C().register(NekoInfoSyncPayload.ID, NekoInfoSyncPayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(OpenPlotScreenPayload.ID, OpenPlotScreenPayload.CODEC);
     }
 }

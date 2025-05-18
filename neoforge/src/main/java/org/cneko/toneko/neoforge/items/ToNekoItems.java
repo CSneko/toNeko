@@ -40,6 +40,7 @@ public class ToNekoItems {
     public static DeferredHolder<Item,Item> MUSIC_DISC_KAWAII_HOLDER;
     public static DeferredHolder<Item,Item> MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP_HOLDER;
     public static DeferredHolder<Item,Item> BAZOOKA_HOLDER;
+    public static DeferredHolder<Item,Item> PLOT_SCROLL_HOLDER;
 
     public static void init() {
         registerWithOutConfig();
@@ -78,6 +79,8 @@ public class ToNekoItems {
         MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP_HOLDER = ITEMS.register("music_disc_never_gonna_give_you_up",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ToNekoSongs.NEVER_GONNA_GIVE_YOU_UP)));
 
         BAZOOKA_HOLDER = ITEMS.register("bazooka",()->new BazookaItem(new Item.Properties().stacksTo(1).rarity(Rarity.RARE)));
+
+        PLOT_SCROLL_HOLDER = ITEMS.register("plot_scroll",()->new PlotScrollItem(new Item.Properties()));
 
         ITEMS.register(NekoArmor.NekoPawsItem.ID, ()->new NekoArmor.NekoPawsItem(ToNekoArmorMaterials.NEKO)); // 此物品暂不添加
 
@@ -135,6 +138,7 @@ public class ToNekoItems {
                 event.accept(MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP_HOLDER.get());
             }
             event.accept(BAZOOKA_HOLDER.get());
+            event.accept(PLOT_SCROLL_HOLDER.get());
         }
         reg();
     }
@@ -151,6 +155,7 @@ public class ToNekoItems {
         MUSIC_DISC_KAWAII = MUSIC_DISC_KAWAII_HOLDER.get();
         MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP = MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP_HOLDER.get();
         BAZOOKA = BAZOOKA_HOLDER.get();
+        PLOT_SCROLL = PLOT_SCROLL_HOLDER.get();
         ToNekoEffectNeoForge.reg();
         ToNekoBlocks.reg();
         ToNekoEntities.reg();
