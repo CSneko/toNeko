@@ -24,9 +24,11 @@ public class GalSoundPlayer {
         instance.stopVoice();
     }
     public void playMusic(String name, boolean loop) {
+        if (name == null || name.isEmpty()) return;
         instance.playMusic(getMusicPath(name), loop);
     }
     public void playVoice(String name) {
+        if (name == null || name.isEmpty()) return;
         instance.playVoice(getVoicePath(name));
     }
 

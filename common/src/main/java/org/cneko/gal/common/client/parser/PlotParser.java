@@ -19,8 +19,11 @@ public class PlotParser {
         @SerializedName("character")
         private String character; // 可选
 
+        @SerializedName("big_picture")
+        private BigPicture bigPicture; // 可选
+
         @SerializedName("stand_picture")
-        private String standPicture; // 可选
+        private StandPicture standPicture; // 可选
 
         @SerializedName("music")
         private String music; // 可选
@@ -86,6 +89,28 @@ public class PlotParser {
             }
             return null;
         }
+    }
+
+    @Getter
+    public static class StandPicture{
+        @SerializedName("name")
+        private String name;
+        @SerializedName("height")
+        private int height;
+        @SerializedName("width")
+        private int width;
+        @SerializedName("x_offset")
+        private float xOffset;
+        @SerializedName("y_offset")
+        private float yOffset;
+    }
+
+    @Getter
+    public static class BigPicture{
+        @SerializedName("name")
+        private String name;
+        @SerializedName("show_text")
+        private boolean showText;
     }
 
     // 解析整个对话树
