@@ -23,6 +23,8 @@ public class ToNekoEntities {
     public static EntityType<CrystalNekoEntity> CRYSTAL_NEKO;
     public static ResourceLocation GHOST_NEKO_ID = toNekoLoc("ghost_neko");
     public static EntityType<GhostNekoEntity> GHOST_NEKO;
+    public static ResourceLocation FIGHTING_NEKO_ID = toNekoLoc("fighting_neko");
+    public static EntityType<FightingNekoEntity> FIGHTING_NEKO;
     public static EntityType<AmmunitionEntity> AMMUNITION_ENTITY;
     public static ResourceLocation AMMUNITION_ENTITY_ID = toNekoLoc("ammunition_entity");
     public static void init() {
@@ -33,7 +35,8 @@ public class ToNekoEntities {
                 "Felicity","Purrin","Catrina","Fluffy","Meowgical","Felina","Ayame","Cinnamon","Momo",
                 "蜜柚柚","桃桃酥","璃玖喵","星奈铃","幽月小菓",
                 "にゃん子","綿菓子","千夏コメット","蜜波リリエル","月詠ネオン",
-                "Stardustle","Mewblette","Velvetpaw","Luminaeon"
+                "Stardustle","Mewblette","Velvetpaw","Luminaeon",
+                "にゃも","夢羽","みるき","鈴菜","小夜子","月見里","千代乃","雨鈴","未羽"
         );
         NekoNameRegistry.register(names);
 
@@ -60,6 +63,13 @@ public class ToNekoEntities {
                 ()-> EntityType.Builder.of(GhostNekoEntity::new, MobCategory.CREATURE)
                         .sized(0.5f,1.6f).eyeHeight(1.5f).clientTrackingRange(8)
                         .build("ghost_neko");
+    }
+    @ApiStatus.Internal
+     public static Supplier<EntityType<FightingNekoEntity>> getFightingNeko(){
+        return
+                ()-> EntityType.Builder.of(FightingNekoEntity::new, MobCategory.CREATURE)
+                        .sized(0.5f,1.7f).eyeHeight(1.6f).clientTrackingRange(8)
+                        .build("fighting_neko");
     }
     @ApiStatus.Internal
     public static Supplier<EntityType<AmmunitionEntity>> getAmmunitionEntity(){

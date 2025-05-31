@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "#c:tools/melee_weapon",
+    "#c:tools/ranged_weapon"
+  ]
+}

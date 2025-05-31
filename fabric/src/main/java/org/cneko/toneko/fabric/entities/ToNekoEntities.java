@@ -11,10 +11,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import org.cneko.toneko.common.mod.api.NekoNameRegistry;
 import org.cneko.toneko.common.mod.api.NekoSkinRegistry;
-import org.cneko.toneko.common.mod.entities.AdventurerNeko;
-import org.cneko.toneko.common.mod.entities.AmmunitionEntity;
-import org.cneko.toneko.common.mod.entities.CrystalNekoEntity;
-import org.cneko.toneko.common.mod.entities.GhostNekoEntity;
+import org.cneko.toneko.common.mod.entities.*;
 import org.cneko.toneko.common.util.ConfigUtil;
 
 import java.util.Set;
@@ -45,6 +42,13 @@ public class ToNekoEntities {
                 )
                         .sized(0.4f,1.2f).eyeHeight(1.5f).clientTrackingRange(8).build()
         );
+        FIGHTING_NEKO  = Registry.register(
+                BuiltInRegistries.ENTITY_TYPE,
+                FIGHTING_NEKO_ID,
+                FabricEntityType.Builder.createMob(FightingNekoEntity::new, MobCategory.CREATURE, builder -> builder.defaultAttributes(FightingNekoEntity::createFightingNekoAttributes)
+                        )
+                        .sized(0.5f,1.7f).eyeHeight(1.6f).build()
+        );
 
         AMMUNITION_ENTITY = Registry.register(
                 BuiltInRegistries.ENTITY_TYPE,
@@ -58,6 +62,7 @@ public class ToNekoEntities {
         // 注册皮肤
         NekoSkinRegistry.register(ADVENTURER_NEKO,AdventurerNeko.nekoSkins);
         NekoSkinRegistry.register(GHOST_NEKO,GhostNekoEntity.nekoSkins);
+        NekoSkinRegistry.register(FIGHTING_NEKO, FightingNekoEntity.NEKO_SKINS);
 
         /*
         不知道为什么喵，我测试的时候总是不生成，真的好奇怪的问题
@@ -74,5 +79,6 @@ public class ToNekoEntities {
         if (ConfigUtil.IS_BIRTHDAY){
             BiomeModifications.addSpawn(BiomeSelectors.all(), MobCategory.CREATURE, CRYSTAL_NEKO, 10, 1, 4); // 在所有世界生成一只
         }
+        BiomeModifications.addSpawn(BiomeSelectors.tag(BiomeTags.IS_NETHER).or(BiomeSelectors.tag(BiomeTags.HAS_ANCIENT_CITY)), MobCategory.CREATURE, FIGHTING_NEKO, 5, 0, 1);
     }
 }

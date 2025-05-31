@@ -1,9 +1,11 @@
 package org.cneko.toneko.common.mod.entities;
 
+import lombok.Getter;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
@@ -15,6 +17,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -27,6 +30,8 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameRules;
@@ -52,7 +57,6 @@ import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.util.GeckoLibUtil;
@@ -61,10 +65,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static org.cneko.toneko.common.mod.util.ResourceLocationUtil.toNekoLoc;
 import static org.cneko.toneko.common.mod.util.TextUtil.randomTranslatabledComponent;
 import static org.cneko.toneko.common.Bootstrap.LOGGER;
 
 public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko {
+    public static final TagKey<Item> NEKO_ARMOR = TagKey.create(Registries.ITEM,toNekoLoc("neko/armor"));
     public static double DEFAULT_FIND_RANGE = 16.0D;
     public static float DEFAULT_RIDE_RANGE = 3f;
     public static final List<String> MOE_TAGS = List.of(
@@ -88,7 +94,9 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     public NekoFollowOwnerGoal nekoFollowOwnerGoal;
     public NekoMateGoal nekoMateGoal;
     private final AnimatableInstanceCache cache;
+    @Getter
     private boolean isSitting = false;
+    @Getter
     final NekoInventory inventory = new NekoInventory(this);
     private short slowTimer = 20;
 
@@ -302,7 +310,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     }
     // 是否喜欢这个物品
     public boolean isLikedItem(ItemStack stack){
-        return isFavoriteItem(stack) || stack.has(DataComponents.FOOD);
+        return isFavoriteItem(stack) || stack.has(DataComponents.FOOD) || stack.is(NEKO_ARMOR);
     }
     // 是否需要这个物品
     public boolean isNeededItem(ItemStack stack){
@@ -320,6 +328,10 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         if (this.isLikedItem(stack) && player instanceof ServerPlayer sp){
             // 增长动力
             this.addGatheringPower(20);
+            if (this.equipArmors(stack)){
+                // 装备
+                return true;
+            }
             // 达成进度
             ToNekoCriteria.GIFT_NEKO.trigger(sp);
             // 如果是食物，则吃掉并回血并获取对应的效果
@@ -327,8 +339,8 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
             if (this.getInventory().canAdd()) {
                 ItemStack s = stack.copy();
                 s.setCount(1);
-                this.getInventory().add(s);
-            }else if (!this.getInventory().canAdd()) {
+                this.addItem(s);
+            }else {
                 player.sendSystemMessage(randomTranslatabledComponent("message.toneko.neko.gift_full",2, Objects.requireNonNull(this.getCustomName()).getString()));
                 return false;
             }
@@ -358,10 +370,6 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
             }
             return false;
         }
-    }
-
-    public NekoInventory getInventory() {
-        return this.inventory;
     }
 
     public @NotNull ItemStack getItemBySlot(@NotNull EquipmentSlot slot) {
@@ -395,10 +403,136 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     }
 
     public boolean addItem(ItemStack stack) {
+        // 先尝试装备防具
+        if (this.equipArmors(stack)) {
+            return true;
+        }
+        // 否则放入背包
         return this.inventory.add(stack);
     }
     public @NotNull Iterable<ItemStack> getArmorSlots() {
         return this.inventory.armor;
+    }
+
+    public boolean equipArmors(ItemStack stack) {
+        // 检查是否为防具
+        if (!stack.is(NEKO_ARMOR)) {
+            return false;
+        }
+
+        // 获取防具类型对应的槽位
+        EquipmentSlot slot = null;
+        if (stack.is(Items.LEATHER_HELMET) || stack.is(Items.CHAINMAIL_HELMET) ||
+                stack.is(Items.IRON_HELMET) || stack.is(Items.GOLDEN_HELMET) ||
+                stack.is(Items.DIAMOND_HELMET) || stack.is(Items.NETHERITE_HELMET)) {
+            slot = EquipmentSlot.HEAD;
+        } else if (stack.is(Items.LEATHER_CHESTPLATE) || stack.is(Items.CHAINMAIL_CHESTPLATE) ||
+                stack.is(Items.IRON_CHESTPLATE) || stack.is(Items.GOLDEN_CHESTPLATE) ||
+                stack.is(Items.DIAMOND_CHESTPLATE) || stack.is(Items.NETHERITE_CHESTPLATE)) {
+            slot = EquipmentSlot.CHEST;
+        } else if (stack.is(Items.LEATHER_LEGGINGS) || stack.is(Items.CHAINMAIL_LEGGINGS) ||
+                stack.is(Items.IRON_LEGGINGS) || stack.is(Items.GOLDEN_LEGGINGS) ||
+                stack.is(Items.DIAMOND_LEGGINGS) || stack.is(Items.NETHERITE_LEGGINGS)) {
+            slot = EquipmentSlot.LEGS;
+        } else if (stack.is(Items.LEATHER_BOOTS) || stack.is(Items.CHAINMAIL_BOOTS) ||
+                stack.is(Items.IRON_BOOTS) || stack.is(Items.GOLDEN_BOOTS) ||
+                stack.is(Items.DIAMOND_BOOTS) || stack.is(Items.NETHERITE_BOOTS)) {
+            slot = EquipmentSlot.FEET;
+        }
+
+        if (slot == null) return false;
+
+        // 获取当前装备
+        ItemStack currentArmor = this.getItemBySlot(slot);
+
+        // 计算防御值比较
+        int newDefense = calculateDefenseValue(stack);
+        int currentDefense = calculateDefenseValue(currentArmor);
+
+        // 如果新防具更好则替换
+        if (newDefense > currentDefense) {
+            // 替换装备
+            this.setItemSlot(slot, stack.copy().split(1)); // 只装备一个
+
+            // 丢弃旧装备（如果存在）
+            if (!currentArmor.isEmpty()) {
+                this.spawnAtLocation(currentArmor);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    // 计算防具的防御值
+    private int calculateDefenseValue(ItemStack stack) {
+        if (stack.isEmpty()) return 0;
+
+        // 基础防御值
+        int defense = 0;
+        if (stack.getItem() instanceof ArmorItem armorItem) {
+            defense = armorItem.getDefense();
+        }
+        return defense;
+    }
+
+    /**
+     * 获取当前装备的所有防具
+     * @return 包含四个ItemStack的列表，顺序为：头盔、胸甲、护腿、靴子
+     */
+    public List<ItemStack> getCurrentArmors() {
+        List<ItemStack> armors = new ArrayList<>(4);
+        armors.add(this.getItemBySlot(EquipmentSlot.HEAD));
+        armors.add(this.getItemBySlot(EquipmentSlot.CHEST));
+        armors.add(this.getItemBySlot(EquipmentSlot.LEGS));
+        armors.add(this.getItemBySlot(EquipmentSlot.FEET));
+        return armors;
+    }
+
+    /**
+     * 获取指定槽位的防具
+     * @param slot 装备槽位
+     * @return 对应槽位的防具ItemStack
+     */
+    public ItemStack getArmorInSlot(EquipmentSlot slot) {
+        if (slot.getType() != EquipmentSlot.Type.HUMANOID_ARMOR) {
+            return ItemStack.EMPTY;
+        }
+        return this.getItemBySlot(slot);
+    }
+
+    /**
+     * 获取当前装备的总防御值
+     * @return 所有防具的防御值总和
+     */
+    public int getTotalArmorValue() {
+        int total = 0;
+        for (ItemStack armor : getCurrentArmors()) {
+            total += calculateDefenseValue(armor);
+        }
+        return total;
+    }
+
+    /**
+     * 获取当前装备的防御值百分比（0.0-1.0）
+     * @return 伤害减免百分比（0.0表示无减免，1.0表示完全免疫）
+     */
+    public float getArmorProtectionPercentage() {
+        int totalDefense = getTotalArmorValue();
+        float reduction = totalDefense * 0.04f;
+        return Math.min(reduction, 0.8f); // 最高80%减免
+    }
+
+    /**
+     * 检查是否有穿戴任何防具
+     * @return 如果至少穿戴一件防具则返回true
+     */
+    public boolean isWearingAnyArmor() {
+        for (ItemStack armor : getCurrentArmors()) {
+            if (!armor.isEmpty()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -599,7 +733,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
                 // 是否为sit
                 if (this.isSitting()) return state.setAndContinue(RawAnimation.begin().thenLoop("misc.sit"));
                 return state.setAndContinue(DefaultAnimations.IDLE);
-            }else if (state.isMoving()){
+            }else {
                 // 如果速度较快
                 if (this.getDeltaMovement().length() > 0.2){
                     return state.setAndContinue(DefaultAnimations.RUN);
@@ -607,7 +741,6 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
                 return state.setAndContinue(DefaultAnimations.WALK);
             }
 
-            return PlayState.CONTINUE;
         }));
     }
 
@@ -637,6 +770,9 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
 
     @Override
     public boolean hurt(@NotNull DamageSource source, float amount) {
+        // 计算防具提供的伤害减免
+        float damageAfterArmor = calculateDamageAfterArmor(source, amount);
+
         if (source.getEntity() instanceof Player player){
             // 栓住玩家
             if (player.getMainHandItem().is(Items.LEAD)){
@@ -650,12 +786,52 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
                 return false;
             }
         }
-        boolean result = super.hurt(source, amount);
+
+        // 使用经过防具减免后的伤害值
+        boolean result = super.hurt(source, damageAfterArmor);
+
         if (!result) return false;
         if (source.getEntity() instanceof Player player){
             hurtByPlayer(player);
         }
         return true;
+    }
+
+    // 计算经过防具减免后的伤害值
+    private float calculateDamageAfterArmor(DamageSource source, float amount) {
+        // 基础伤害值
+        float damage = amount;
+
+        // 计算所有防具的总防御值
+        int totalDefense = 0;
+        for (ItemStack armor : this.inventory.armor) {
+            if (!armor.isEmpty()) {
+                totalDefense += calculateDefenseValue(armor);
+            }
+        }
+
+        // 应用防御值减免（每点防御值减少4%伤害）
+        if (totalDefense > 0) {
+            float reduction = totalDefense * 0.04f;
+            damage *= (1.0f - Math.min(reduction, 0.8f)); // 最多减免80%伤害
+        }
+
+        return Math.max(0, damage);
+    }
+
+    // 防具耐久损耗
+    protected void damageArmor(DamageSource source, float damageAmount) {
+        if (damageAmount <= 0.0F) return;
+
+        damageAmount /= 4.0F; // 伤害平均分配到四件防具上
+        if (damageAmount < 1.0F) damageAmount = 1.0F;
+
+        for (int i = 0; i < this.inventory.armor.size(); i++) {
+            ItemStack armor = this.inventory.armor.get(i);
+            if (!armor.isEmpty() && armor.getItem() instanceof ArmorItem  armorItem) {
+                armor.hurtAndBreak((int)damageAmount, this,armorItem.getEquipmentSlot());
+            }
+        }
     }
 
     public void hurtByPlayer(Player player){
@@ -719,12 +895,14 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         return true;
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public @NotNull EntityType<? extends NekoEntity> getType() {
+        return (EntityType<? extends NekoEntity>) super.getType();
+    }
 
     public static AttributeSupplier.Builder createNekoAttributes(){
         return createMobAttributes().add(Attributes.ATTACK_DAMAGE).add(Attributes.ATTACK_SPEED).add(ToNekoAttributes.NEKO_DEGREE).add(ToNekoAttributes.MAX_NEKO_ENERGY);
     }
 
-    public boolean isSitting() {
-        return isSitting;
-    }
 }

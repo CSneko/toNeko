@@ -25,7 +25,7 @@ public class NekoPickupItemGoal extends Goal {
             if (neko.isLikedItem(item.getItem()) && neko.getInventory().canAdd()){
                 // 如果在1格以内直接拾取
                 if (neko.distanceTo(item) < 1){
-                    neko.getInventory().add(item.getItem());
+                    neko.addItem(item.getItem());
                     item.remove(Entity.RemovalReason.DISCARDED);
                 }else {
                     neko.getNavigation().moveTo(item, 0.4);

@@ -1,5 +1,6 @@
 package org.cneko.toneko.common.api;
 
+import lombok.Getter;
 import org.cneko.ctlib.common.file.JsonConfiguration;
 import org.cneko.toneko.common.api.json.NekoDataModel;
 import org.cneko.toneko.common.api.json.NekoParser;
@@ -157,6 +158,7 @@ public class NekoQuery {
 
 
 
+    @Getter
     public static class Neko {
         public UUID uuid;
         private NekoDataModel profile;
@@ -175,10 +177,6 @@ public class NekoQuery {
 
         public String getProfilePath() {
             return NekoQuery.getProfilePath(uuid);
-        }
-
-        public NekoDataModel getProfile() {
-            return profile;
         }
 
         /**
@@ -384,10 +382,6 @@ public class NekoQuery {
             }
         }
 
-        public UUID getUuid() {
-            return uuid;
-        }
-
         public void delete() {
             NekoData.deleteNeko(uuid);
         }
@@ -398,7 +392,7 @@ public class NekoQuery {
      */
     public static class NekoData {
         public static final ExecutorService executor = Executors.newFixedThreadPool(
-                1000,
+                10000,
                 r -> {
                     Thread thread = new Thread(r);
                     thread.setDaemon(true); // 守护线程
