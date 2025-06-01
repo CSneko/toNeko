@@ -30,6 +30,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -335,7 +336,12 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
             // 达成进度
             ToNekoCriteria.GIFT_NEKO.trigger(sp);
             // 如果是食物，则吃掉并回血并获取对应的效果
-            this.eat(this.level(), stack);
+            FoodProperties food = stack.getItem().components().get(DataComponents.FOOD);
+            if (food!=null){
+                // 回血
+                this.heal(food.nutrition());
+                this.eat(this.level(), stack);
+            }
             if (this.getInventory().canAdd()) {
                 ItemStack s = stack.copy();
                 s.setCount(1);
@@ -835,7 +841,9 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     }
 
     public void hurtByPlayer(Player player){
-        sendHurtMessageToPlayer(player);
+        if (this.isAlive()) {
+            sendHurtMessageToPlayer(player);
+        }
     }
 
     public void sendHurtMessageToPlayer(Player player){

@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "NBC",
+    "RRC"
+  ],
+  "key": {
+    "N": {
+       "item": "minecraft:nether_wart"
+    },
+    "B": {
+      "item": "minecraft:blaze_gunpowder"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "C": {
+      "item": "toneko:catnip"
+    }
+  },
+  "result": {
+    "id": "toneko:lightning_bomb",
+    "count": 2
+  }
+}

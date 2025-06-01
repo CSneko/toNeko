@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "#c:foods/catnip",
+    "toneko:lightning_bomb",
+    "toneko:explosive_bomb"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GGC"
+  ],
+  "key": {
+    "G": {
+      "item": "minecraft:gunpowder"
+    },
+    "C": {
+      "item": "toneko:catnip"
+    }
+  },
+  "result": {
+    "id": "toneko:explosive_bomb",
+    "count": 1
+  }
+}

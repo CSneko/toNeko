@@ -126,6 +126,12 @@ public class AmmunitionEntity extends ThrowableProjectile implements GeoEntity {
                 ammoStack.getItem() instanceof BazookaItem.Ammunition ammo) {
 
             ammo.hitOnEntity(livingShooter, target, getBazookaStack(), ammoStack);
+
+
+            // 如果有害，则产生仇恨
+            if (ammo.isHarmful(getBazookaStack(), ammoStack)){
+                target.setLastHurtByMob(livingShooter);
+            }
         }
 
         this.discard();

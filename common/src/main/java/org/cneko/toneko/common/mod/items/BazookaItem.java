@@ -4,7 +4,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -167,10 +166,11 @@ public class BazookaItem extends Item {
             // 只在服务端执行
             if (!shooter.level().isClientSide()) {
                 // 消耗弹药
-                if (shooter instanceof Player player && !player.isCreative()) {
+                if ((shooter instanceof Player player && !player.isCreative())) {
+                    ammunition.shrink(1);
+                }else {
                     ammunition.shrink(1);
                 }
-
                 // 创建弹药物体
                 AmmunitionEntity projectile = new AmmunitionEntity(ToNekoEntities.AMMUNITION_ENTITY, shooter.level());
                 projectile.setBazookaStack(bazookaStack);
@@ -205,8 +205,17 @@ public class BazookaItem extends Item {
         void hitOnEntity(LivingEntity shooter, LivingEntity target, ItemStack bazooka, ItemStack ammunition);
         void hitOnBlock(LivingEntity shooter, BlockPos pos, ItemStack bazooka, ItemStack ammunition);
         void hitOnAir(LivingEntity shooter, BlockPos pos, ItemStack bazooka, ItemStack ammunition);
-        float getSpeed(ItemStack bazooka, ItemStack ammunition);
-        float getMaxDistance(ItemStack bazooka, ItemStack ammunition);
-        int getCooldownTicks(ItemStack bazooka, ItemStack ammunition);
+        default float getSpeed(ItemStack bazooka, ItemStack ammunition){
+            return 1.0f;
+        }
+        default float getMaxDistance(ItemStack bazooka, ItemStack ammunition){
+            return 32;
+        }
+        default int getCooldownTicks(ItemStack bazooka, ItemStack ammunition){
+             return 20;
+        }
+        default boolean isHarmful(ItemStack bazooka, ItemStack ammunition){
+            return false;
+        }
     }
 }
