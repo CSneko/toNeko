@@ -16,6 +16,7 @@ import org.cneko.toneko.common.api.TickTasks;
 import org.cneko.toneko.common.mod.api.EntityPoseManager;
 import org.cneko.toneko.common.mod.entities.CrystalNekoEntity;
 import org.cneko.toneko.common.mod.entities.INeko;
+import org.cneko.toneko.common.mod.misc.Messaging;
 import org.cneko.toneko.common.mod.packets.*;
 import org.cneko.toneko.common.mod.packets.interactives.*;
 import org.cneko.toneko.common.mod.quirks.QuirkRegister;
@@ -82,13 +83,13 @@ public class ToNekoNetworkEvents {
                         // 在所有行动画完成后，再发送最终消息
                         TickTaskQueue task = new TickTaskQueue();
                         task.addTask(totalDelay, () -> {
-                            String r = CommonChatEvent.Messaging.format(response.getResponse(), neko,
+                            String r = Messaging.format(response.getResponse(), neko,
                                     Collections.singletonList(LanguageUtil.prefix), ConfigUtil.getChatFormat());
                             player.sendSystemMessage(Component.literal(r));
                         });
                         TickTasks.add(task);
                     } else {
-                        String r = CommonChatEvent.Messaging.format(response.getResponse(), neko,
+                        String r = Messaging.format(response.getResponse(), neko,
                                 Collections.singletonList(LanguageUtil.prefix), ConfigUtil.getChatFormat());
                         context.player().sendSystemMessage(Component.literal(r));
                     }

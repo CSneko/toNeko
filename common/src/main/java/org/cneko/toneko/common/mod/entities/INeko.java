@@ -2,8 +2,11 @@ package org.cneko.toneko.common.mod.entities;
 
 import lombok.*;
 import net.minecraft.nbt.*;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import org.cneko.toneko.common.mod.misc.Messaging;
 import org.cneko.toneko.common.mod.misc.ToNekoAttributes;
 import org.cneko.toneko.common.mod.quirks.Quirk;
 import org.cneko.toneko.common.mod.quirks.QuirkRegister;
@@ -200,6 +203,13 @@ public interface INeko {
         if (this.getNekoEnergy() >= max){
             this.setNekoEnergy(max);
         }
+    }
+
+    default void sendMessageToTarget(String message, Entity target){
+        Messaging.modifyAndSendMessage(this, message, target);
+    }
+    default void sendMessageToAll(String message){
+        Messaging.modifyAndSendMessageToAll(this, message);
     }
 
     record BlockedWord(String block, String replace, BlockMethod method) {

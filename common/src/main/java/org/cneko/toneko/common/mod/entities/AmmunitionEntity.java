@@ -1,5 +1,6 @@
 package org.cneko.toneko.common.mod.entities;
 
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -10,6 +11,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -27,6 +30,7 @@ public class AmmunitionEntity extends ThrowableProjectile implements GeoEntity {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private static final EntityDataAccessor<ItemStack> BAZOOKA_STACK = SynchedEntityData.defineId(AmmunitionEntity.class, EntityDataSerializers.ITEM_STACK);
     private static final EntityDataAccessor<ItemStack> AMMUNITION_STACK = SynchedEntityData.defineId(AmmunitionEntity.class, EntityDataSerializers.ITEM_STACK);
+    private static final EntityDataAccessor<Boolean> RETURNING = SynchedEntityData.defineId(AmmunitionEntity.class, EntityDataSerializers.BOOLEAN);
     public Vec3 initialPosition;
 
     public AmmunitionEntity(EntityType<? extends ThrowableProjectile> entityType, Level level) {
@@ -39,6 +43,7 @@ public class AmmunitionEntity extends ThrowableProjectile implements GeoEntity {
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(BAZOOKA_STACK, ItemStack.EMPTY);
         builder.define(AMMUNITION_STACK, ItemStack.EMPTY);
+        builder.define(RETURNING, false);
     }
 
     public void setBazookaStack(ItemStack stack) {
@@ -86,12 +91,50 @@ public class AmmunitionEntity extends ThrowableProjectile implements GeoEntity {
             if (this.initialPosition == null) this.initialPosition = this.position();
 
             ItemStack ammoStack = getAmmunitionStack();
+            ItemStack bazookaStack = getBazookaStack();
+            Entity shooter = getOwner();
+
             if (ammoStack.getItem() instanceof BazookaItem.Ammunition ammo) {
-                // 检查最大距离
-                float maxDistance = ammo.getMaxDistance(getBazookaStack(), ammoStack);
-                if (this.position().distanceTo(initialPosition) >= maxDistance) {
-                    handleAirHit();
-                    this.discard();
+                float maxDistance = ammo.getMaxDistance(bazookaStack, ammoStack);
+
+                int loyalty = EnchantmentHelper.getItemEnchantmentLevel(
+                        this.registryAccess().lookup(Registries.ENCHANTMENT).flatMap(lookup -> lookup.get(Enchantments.LOYALTY)).get()
+                        , bazookaStack);
+
+                if (loyalty > 0 && shooter != null) {
+                    // 返还距离和速度
+                    float[] returnPercents = {0.6f, 0.4f, 0.2f};
+                    float[] speeds = {0.8f, 1.0f, 1.2f};
+                    float returnDistance = maxDistance * returnPercents[Math.min(loyalty, 3) - 1];
+                    float returnSpeed = speeds[Math.min(loyalty, 3) - 1];
+
+                    double dist = this.position().distanceTo(initialPosition);
+                    if (dist >= returnDistance && !this.getEntityData().get(RETURNING)) {
+                        // 标记为返还
+                        this.getEntityData().set(RETURNING, true);
+                    }
+
+                    if (this.getEntityData().get(RETURNING)) {
+                        // 朝发射者飞行
+                        Vec3 toShooter = shooter.position().add(0, shooter.getBbHeight() * 0.5, 0).subtract(this.position());
+                        Vec3 motion = toShooter.normalize().scale(returnSpeed);
+                        this.setDeltaMovement(motion);
+                        this.hasImpulse = true;
+
+                        // 检查是否击中发射者
+                        if (this.getBoundingBox().intersects(shooter.getBoundingBox())) {
+                            this.onHitEntity(new EntityHitResult(shooter));
+                            this.discard();
+                        }
+                    } else if (dist >= maxDistance) {
+                        handleAirHit();
+                        this.discard();
+                    }
+                } else {
+                    if (this.position().distanceTo(initialPosition) >= maxDistance) {
+                        handleAirHit();
+                        this.discard();
+                    }
                 }
             }
         }

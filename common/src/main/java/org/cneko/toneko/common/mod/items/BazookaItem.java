@@ -1,6 +1,8 @@
 package org.cneko.toneko.common.mod.items;
 
+import net.fabricmc.fabric.api.item.v1.EnchantingContext;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -12,6 +14,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.cneko.toneko.common.mod.entities.AmmunitionEntity;
@@ -197,7 +201,26 @@ public class BazookaItem extends Item {
                 shooter.level().addFreshEntity(projectile);
             }
         }
+    }
+
+
+    @Override
+    public boolean canBeEnchantedWith(ItemStack stack, Holder<Enchantment> enchantment, EnchantingContext context) {
+        if (enchantment.is(Enchantments.LOYALTY)){
+            return true;
         }
+        return super.canBeEnchantedWith(stack, enchantment, context);
+    }
+
+    @Override
+    public boolean isEnchantable(@NotNull ItemStack stack) {
+        return true; // 允许被附魔
+    }
+
+    @Override
+    public int getEnchantmentValue() {
+        return 10;
+    }
 
     public interface Ammunition {
         void hitOnEntity(LivingEntity shooter, LivingEntity target, ItemStack bazooka, ItemStack ammunition);

@@ -1,5 +1,6 @@
 package org.cneko.toneko.common.mod.items;
 
+import net.fabricmc.fabric.api.item.v1.EnchantingContext;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.core.Holder;
 import net.minecraft.world.InteractionHand;
@@ -13,8 +14,11 @@ import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import org.cneko.toneko.common.mod.client.items.NekoArmorRenderer;
+import org.cneko.toneko.common.mod.misc.ToNekoEnchantments;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
@@ -81,6 +85,24 @@ public abstract class NekoArmor<N extends Item & GeoItem> extends ArmorItem impl
                 return this.renderer;
             }
         });
+    }
+
+    @Override
+    public boolean isEnchantable(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public int getEnchantmentValue() {
+        return 10;
+    }
+
+    @Override
+    public boolean canBeEnchantedWith(ItemStack stack, Holder<Enchantment> enchantment, EnchantingContext context) {
+        if (enchantment.is(ToNekoEnchantments.REVERSION)){
+            return true;
+        }
+        return super.canBeEnchantedWith(stack, enchantment, context);
     }
 
     // 这里返回Object的原因是它会导致服务器没法启动 T_T

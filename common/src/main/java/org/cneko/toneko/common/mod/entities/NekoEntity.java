@@ -159,6 +159,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         compound.put("Inventory", this.inventory.save(new ListTag()));
         compound.putInt("SelectedItemSlot", this.inventory.selected);
         compound.putInt("GatheringPower", this.getGatheringPower());
+        compound.putString("MoeTags", String.join(":", this.getMoeTags()));
         this.saveNekoNBTData(compound);
     }
 
@@ -169,6 +170,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         this.inventory.load(listTag);
         this.inventory.selected = compound.getInt("SelectedItemSlot");
         this.setGatheringPower(compound.getInt("GatheringPower"));
+        this.entityData.set(MOE_TAGS_ID, compound.getString("MoeTags"));
         this.loadNekoNBTData(compound);
     }
 
@@ -254,7 +256,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         return result.toString();
     }
 
-    public  boolean hasAnyMoeTags(){
+    public boolean hasAnyMoeTags(){
         return !this.getMoeTags().isEmpty();
     }
     public void setMoeTags(List<String> moeTags){
