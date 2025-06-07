@@ -14,7 +14,7 @@ import org.cneko.toneko.common.mod.entities.INeko;
 import org.jetbrains.annotations.Nullable;
 
 import static org.cneko.toneko.common.mod.util.TextUtil.randomTranslatabledComponent;
-public class CrystalNekoQuirk extends ToNekoQuirk{
+public class CrystalNekoQuirk extends Quirk {
     public static final String ID = "crystal_neko";
     public CrystalNekoQuirk() {
         super(ID);

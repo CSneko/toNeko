@@ -10,14 +10,13 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
-import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.util.TextUtil;
 
 import static org.cneko.toneko.common.mod.quirks.ToNekoQuirks.CARESS;
 import static org.cneko.toneko.common.mod.util.TextUtil.translatable;
 
-public class CaressQuirk extends ToNekoQuirk{
+public class CaressQuirk extends Quirk {
     public CaressQuirk(String id) {
         super(id);
     }
@@ -38,7 +37,6 @@ public class CaressQuirk extends ToNekoQuirk{
         super.onNekoInteraction(owner, world, hand, neko, hitResult);
         if (owner.getMainHandItem().isEmpty()){
             LivingEntity nekoPlayer = neko.getEntity();
-            NekoQuery.Neko n = NekoQuery.getNeko(nekoPlayer.getUUID());
             // 播放爱心粒子
             nekoPlayer.level().addParticle(ParticleTypes.HEART,nekoPlayer.getX()+1.8, nekoPlayer.getY(), nekoPlayer.getZ(),1,1,1);
             if (owner instanceof ServerPlayer so && nekoPlayer instanceof ServerPlayer snp) {
@@ -48,7 +46,7 @@ public class CaressQuirk extends ToNekoQuirk{
                 snp.connection.send(packet);
             }
             // 增加互动值
-            n.addXp(owner.getUUID(), CARESS.getInteractionValue());
+            neko.setXpWithOwner(owner.getUUID(), CARESS.getInteractionValue()+ neko.getXpWithOwner(owner.getUUID()));
             // 发送消息文本
             if (neko instanceof Player player) {
                 owner.displayClientMessage(translatable("quirk.toneko.caress.use", TextUtil.getPlayerName(player)), true);

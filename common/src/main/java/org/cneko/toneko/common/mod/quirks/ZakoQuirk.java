@@ -14,7 +14,7 @@ import org.cneko.toneko.common.mod.entities.INeko;
 import org.jetbrains.annotations.Nullable;
 
 import static org.cneko.toneko.common.mod.util.TextUtil.randomTranslatabledComponent;
-public class ZakoQuirk extends ToNekoQuirk{
+public class ZakoQuirk extends Quirk {
     public static final String id = "zako";
     public ZakoQuirk() {
         super(id);

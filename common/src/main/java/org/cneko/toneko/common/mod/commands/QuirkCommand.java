@@ -7,14 +7,13 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import org.cneko.toneko.common.api.NekoQuery;
+import net.minecraft.world.entity.player.Player;
 import org.cneko.toneko.common.api.Permissions;
 import org.cneko.toneko.common.mod.packets.QuirkQueryPayload;
+import org.cneko.toneko.common.mod.quirks.Quirk;
 import org.cneko.toneko.common.mod.util.CommandUtil;
 import org.cneko.toneko.common.mod.util.PermissionUtil;
-import org.cneko.toneko.common.mod.util.TextUtil;
-import org.cneko.toneko.common.quirks.Quirk;
-import org.cneko.toneko.common.quirks.QuirkRegister;
+import org.cneko.toneko.common.mod.quirks.QuirkRegister;
 import org.cneko.toneko.common.util.QuirkUtil;
 
 import java.util.Collection;
@@ -59,23 +58,22 @@ public class QuirkCommand {
 
     public static int quirkGui(CommandContext<CommandSourceStack> context) {
         ServerPlayer player = context.getSource().getPlayer();
-        NekoQuery.Neko neko = NekoQuery.getNeko(player.getUUID());
         // 打开设置屏幕
         ServerPlayNetworking.send(player, new QuirkQueryPayload(
-                QuirkUtil.quirkToIds(neko.getQuirks()),
+                QuirkUtil.quirkToIds(player.getQuirks()),
                 QuirkRegister.getQuirkIds().stream().toList(),true)
         );
         return 1;
     }
 
     public static int listQuirks(CommandContext<CommandSourceStack> context) {
-        NekoQuery.Neko neko = NekoQuery.getNeko(context.getSource().getPlayer().getUUID());
-        if(neko.getQuirks().isEmpty()){
+       Player player = context.getSource().getPlayer();
+        if(player.getQuirks().isEmpty()){
             context.getSource().sendSystemMessage(translatable("command.quirk.no_any_quirk"));
             return 1;
         }
         // 列出quirks
-        Collection<Quirk> quirks = neko.getQuirks();
+        Collection<Quirk> quirks = player.getQuirks();
         // 转换为id
         List<String> quirkIds = quirks.stream().map(Quirk::getId).toList();
         // 翻译
@@ -89,7 +87,7 @@ public class QuirkCommand {
     }
 
     public static int addOrRemoveQuirk(CommandContext<CommandSourceStack> context) {
-        NekoQuery.Neko neko = NekoQuery.getNeko(context.getSource().getPlayer().getUUID());
+        Player neko = context.getSource().getPlayer();
         String quirk = StringArgumentType.getString(context, "quirk");
         if(!QuirkRegister.hasQuirk(quirk)){
             context.getSource().sendSystemMessage(translatable("command.quirk.not_quirk"));

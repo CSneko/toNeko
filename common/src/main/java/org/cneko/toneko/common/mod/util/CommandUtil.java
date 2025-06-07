@@ -6,9 +6,8 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
-import org.cneko.toneko.common.quirks.Quirk;
-import org.cneko.toneko.common.quirks.QuirkRegister;
+import org.cneko.toneko.common.mod.quirks.Quirk;
+import org.cneko.toneko.common.mod.quirks.QuirkRegister;
 
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;

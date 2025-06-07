@@ -10,7 +10,8 @@
     "CatEntityMixin",
     "EntityMixin",
     "PlayerEntityMixin",
-    "ServerLevelMixin"
+    "ServerLevelMixin",
+    "ServerPlayerEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1

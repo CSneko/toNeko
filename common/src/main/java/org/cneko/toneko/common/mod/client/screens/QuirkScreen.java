@@ -10,8 +10,8 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import org.cneko.toneko.common.mod.packets.QuirkQueryPayload;
-import org.cneko.toneko.common.mod.quirks.ToNekoQuirk;
-import org.cneko.toneko.common.quirks.QuirkRegister;
+import org.cneko.toneko.common.mod.quirks.Quirk;
+import org.cneko.toneko.common.mod.quirks.QuirkRegister;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -56,7 +56,7 @@ public class QuirkScreen extends Screen{
                     .build();
             // 添加悬浮文本
             try{
-                ToNekoQuirk q = (ToNekoQuirk) QuirkRegister.getById(quirk);
+                Quirk q = (Quirk) QuirkRegister.getById(quirk);
                 Component tooltip = q.getTooltip();
                 if (tooltip != null) {
                     button.setTooltip(Tooltip.create(tooltip));

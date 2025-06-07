@@ -166,9 +166,7 @@ public class BazookaItem extends Item {
             // 只在服务端执行
             if (!shooter.level().isClientSide()) {
                 // 消耗弹药
-                if ((shooter instanceof Player player && !player.isCreative())) {
-                    ammunition.shrink(1);
-                }else {
+                if ((shooter instanceof Player player && !player.isCreative()) ||  !(shooter instanceof Player)) {
                     ammunition.shrink(1);
                 }
                 // 创建弹药物体

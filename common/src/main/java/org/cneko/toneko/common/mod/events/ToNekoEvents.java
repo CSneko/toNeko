@@ -13,18 +13,16 @@ import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.ItemCost;
 import net.minecraft.world.item.trading.MerchantOffer;
 import org.cneko.ctlib.common.util.ChatPrefix;
-import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.mod.api.events.WorldEvents;
 import org.cneko.toneko.common.mod.items.ToNekoItems;
 import org.cneko.toneko.common.mod.quirks.ModQuirk;
 import org.cneko.toneko.common.mod.util.TextUtil;
-import org.cneko.toneko.common.quirks.Quirk;
+import org.cneko.toneko.common.mod.quirks.Quirk;
 import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.common.util.LanguageUtil;
 
@@ -64,13 +62,12 @@ public class ToNekoEvents {
 
     public static void onPlayerJoin(ServerGamePacketListenerImpl serverPlayNetworkHandler, PacketSender sender, MinecraftServer server) {
         ServerPlayer player = serverPlayNetworkHandler.getPlayer();
-        NekoQuery.Neko neko = NekoQuery.getNeko(player.getUUID());
-        if(neko.isNeko()){
+        if(player.isNeko()){
             // 修复quirks
-            neko.fixQuirks();
+            player.fixQuirks();
             String name = TextUtil.getPlayerName(player);
             ChatPrefix.addPrivatePrefix(name, LanguageUtil.prefix);
-            for (Quirk quirk : neko.getQuirks()){
+            for (Quirk quirk : player.getQuirks()){
                 if (quirk instanceof ModQuirk mq){
                     mq.onJoin(player);
                 }
@@ -80,13 +77,10 @@ public class ToNekoEvents {
 
     public static void onPlayerQuit(ServerGamePacketListenerImpl serverPlayNetworkHandler, MinecraftServer server) {
         ServerPlayer player = serverPlayNetworkHandler.getPlayer();
-        NekoQuery.Neko neko = NekoQuery.getNeko(player.getUUID());
-        if(neko.isNeko()){
+        if(player.isNeko()){
             String name = TextUtil.getPlayerName(player);
             ChatPrefix.removePrivatePrefix(name, LanguageUtil.prefix);
         }
-        // 保存猫娘数据
-        NekoQuery.NekoData.saveAndRemoveNeko(player.getUUID());
     }
 
 

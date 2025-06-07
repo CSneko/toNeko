@@ -2,19 +2,10 @@ package org.cneko.toneko.common.mod.commands.arguments;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
-import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.brigadier.suggestion.Suggestions;
-import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import net.minecraft.client.multiplayer.ClientSuggestionProvider;
-import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.mod.util.PlayerUtil;
-
-import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
 
 import static org.cneko.toneko.common.mod.util.TextUtil.translatable;
 
@@ -60,8 +51,7 @@ public class NekoArgument implements ArgumentType<ServerPlayer> {
     }
 
     private boolean checkNeko(Player player) {
-        NekoQuery.Neko neko = NekoQuery.getNeko(player.getUUID());
-        return neko.isNeko();
+        return player.isNeko();
     }
 
     @Override

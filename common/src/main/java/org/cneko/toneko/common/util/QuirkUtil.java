@@ -1,6 +1,6 @@
 package org.cneko.toneko.common.util;
 
-import org.cneko.toneko.common.quirks.Quirk;
+import org.cneko.toneko.common.mod.quirks.Quirk;
 
 import java.util.Collection;
 import java.util.List;

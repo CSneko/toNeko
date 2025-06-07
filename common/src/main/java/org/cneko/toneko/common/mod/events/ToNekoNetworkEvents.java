@@ -7,15 +7,10 @@ import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
 import org.cneko.ai.core.AIResponse;
-import org.cneko.toneko.common.api.Messaging;
-import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.api.Permissions;
 import org.cneko.toneko.common.api.TickTasks;
 import org.cneko.toneko.common.mod.api.EntityPoseManager;
@@ -23,6 +18,7 @@ import org.cneko.toneko.common.mod.entities.CrystalNekoEntity;
 import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.packets.*;
 import org.cneko.toneko.common.mod.packets.interactives.*;
+import org.cneko.toneko.common.mod.quirks.QuirkRegister;
 import org.cneko.toneko.common.mod.util.PermissionUtil;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
 import org.cneko.toneko.common.mod.util.PlayerUtil;
@@ -86,13 +82,13 @@ public class ToNekoNetworkEvents {
                         // 在所有行动画完成后，再发送最终消息
                         TickTaskQueue task = new TickTaskQueue();
                         task.addTask(totalDelay, () -> {
-                            String r = Messaging.format(response.getResponse(), neko.getCustomName().getString(), "",
+                            String r = CommonChatEvent.Messaging.format(response.getResponse(), neko,
                                     Collections.singletonList(LanguageUtil.prefix), ConfigUtil.getChatFormat());
                             player.sendSystemMessage(Component.literal(r));
                         });
                         TickTasks.add(task);
                     } else {
-                        String r = Messaging.format(response.getResponse(), neko.getCustomName().getString(), "",
+                        String r = CommonChatEvent.Messaging.format(response.getResponse(), neko,
                                 Collections.singletonList(LanguageUtil.prefix), ConfigUtil.getChatFormat());
                         context.player().sendSystemMessage(Component.literal(r));
                     }
@@ -155,44 +151,49 @@ public class ToNekoNetworkEvents {
         double baseX = neko.getX();
         double baseZ = neko.getZ();
 
-        List<String> lines = splitText(response.getThink(), 40);
+        List<String> lines = null;
+        if (response.getThink() != null) {
+            lines = splitText(response.getThink(), 40);
+        }
         List<ArmorStand> armorStands = new ArrayList<>();
 
         int gap = 1; // 行间间隔时间（tick）
         int cumulativeDelay = 0;
 
-        for (int i = 0; i < lines.size(); i++) {
-            // 所有行生成在相同Y坐标
-            ArmorStand lineStand = new ArmorStand(world, baseX, baseY, baseZ);
-            lineStand.setInvisible(true);
-            lineStand.setNoGravity(true);
-            lineStand.setMarker(true);
-            lineStand.setCustomNameVisible(true);
-            lineStand.setCustomName(Component.literal(""));
-            world.addFreshEntity(lineStand);
-            armorStands.add(lineStand);
+        if (lines != null) {
+            for (int i = 0; i < lines.size(); i++) {
+                // 所有行生成在相同Y坐标
+                ArmorStand lineStand = new ArmorStand(world, baseX, baseY, baseZ);
+                lineStand.setInvisible(true);
+                lineStand.setNoGravity(true);
+                lineStand.setMarker(true);
+                lineStand.setCustomNameVisible(true);
+                lineStand.setCustomName(Component.literal(""));
+                world.addFreshEntity(lineStand);
+                armorStands.add(lineStand);
 
-            String line = lines.get(i);
-            animateLine(lineStand, line, cumulativeDelay);
+                String line = lines.get(i);
+                animateLine(lineStand, line, cumulativeDelay);
 
-            // 在行动画结束后移动所有已存在的盔甲架
-            int currentIndex = i;
-            int lineEndTime = cumulativeDelay + line.length();
+                // 在行动画结束后移动所有已存在的盔甲架
+                int currentIndex = i;
+                int lineEndTime = cumulativeDelay + line.length();
 
-            TickTaskQueue moveUpQueue = new TickTaskQueue();
-            moveUpQueue.addTask(lineEndTime, () -> {
-                for (int j = 0; j <= currentIndex; j++) {
-                    ArmorStand as = armorStands.get(j);
-                    as.setPos(as.getX(), as.getY() + 0.3, as.getZ());
-                }
-            });
-            TickTasks.add(moveUpQueue);
+                TickTaskQueue moveUpQueue = new TickTaskQueue();
+                moveUpQueue.addTask(lineEndTime, () -> {
+                    for (int j = 0; j <= currentIndex; j++) {
+                        ArmorStand as = armorStands.get(j);
+                        as.setPos(as.getX(), as.getY() + 0.3, as.getZ());
+                    }
+                });
+                TickTasks.add(moveUpQueue);
 
-            cumulativeDelay += line.length() + gap;
+                cumulativeDelay += line.length() + gap;
+            }
         }
 
         // 调整移除任务：在最后一行移动后100tick移除
-        if (!lines.isEmpty()) {
+        if (lines != null && !lines.isEmpty()) {
             int lastLineLength = lines.getLast().length();
             int lastLineEndTime = cumulativeDelay - gap + lastLineLength;
             int removalTime = lastLineEndTime + 100;
@@ -208,7 +209,10 @@ public class ToNekoNetworkEvents {
 
         // 同步任务：持续到移除前
         TickTaskQueue syncQueue = new TickTaskQueue();
-        int syncDuration = !lines.isEmpty() ? (cumulativeDelay - gap + lines.getLast().length() + 100) : 0;
+        int syncDuration = 0;
+        if (lines != null) {
+            syncDuration = !lines.isEmpty() ? (cumulativeDelay - gap + lines.getLast().length() + 100) : 0;
+        }
         syncQueue.addRepeatingTask(0, syncDuration, () -> {
             double currentBaseX = neko.getX();
             double currentBaseZ = neko.getZ();
@@ -284,15 +288,11 @@ public class ToNekoNetworkEvents {
     }
 
     public static void onFollowOwner(FollowOwnerPayload payload, ServerPlayNetworking.Context context) {
-        processNekoInteractive(context.player(), payload.uuid(), neko -> {
-            neko.followOwner(context.player());
-        });
+        processNekoInteractive(context.player(), payload.uuid(), neko -> neko.followOwner(context.player()));
     }
 
     public static void onGiftItem(GiftItemPayload payload, ServerPlayNetworking.Context context) {
-        processNekoInteractive(context.player(), payload.uuid(), neko -> {
-            neko.giftItem(context.player(), payload.slot());
-        });
+        processNekoInteractive(context.player(), payload.uuid(), neko -> neko.giftItem(context.player(), payload.slot()));
     }
 
     private static void processNekoInteractive(ServerPlayer player, String uuid, EntityFinder finder) {
@@ -307,7 +307,6 @@ public class ToNekoNetworkEvents {
                 finder.find(nekoEntity);
             }
         }catch (Exception ignored){
-            return;
         }
     }
 
@@ -323,8 +322,9 @@ public class ToNekoNetworkEvents {
             return;
         }
         // 保存数据
-        NekoQuery.Neko neko = NekoQuery.getNeko(player.getUUID());
-        neko.setQuirksById(payload.getQuirks());
+        var quirks = player.getQuirks();
+        quirks.clear();
+        quirks.addAll(payload.getQuirks().stream().map(QuirkRegister::getById).toList());
     }
 
 

@@ -4,8 +4,8 @@ import lombok.Getter;
 import org.cneko.ctlib.common.file.JsonConfiguration;
 import org.cneko.toneko.common.api.json.NekoDataModel;
 import org.cneko.toneko.common.api.json.NekoParser;
-import org.cneko.toneko.common.quirks.Quirk;
-import org.cneko.toneko.common.quirks.QuirkRegister;
+import org.cneko.toneko.common.mod.quirks.Quirk;
+import org.cneko.toneko.common.mod.quirks.QuirkRegister;
 import org.cneko.toneko.common.util.FileUtil;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,6 +21,7 @@ import java.util.function.Predicate;
 
 import static org.cneko.toneko.common.Bootstrap.*;
 
+@Deprecated
 public class NekoQuery {
     /**
      * 查询是否是猫娘
@@ -152,7 +153,7 @@ public class NekoQuery {
     }
 
 
-    public static Neko getNeko(UUID uuid){
+    static Neko getNeko(UUID uuid){
         return NekoData.getNeko(uuid);
     }
 
@@ -519,28 +520,6 @@ public class NekoQuery {
                     nekoMap.put(neko.getUuid(), neko);
                 } catch (Exception e) {
                     LOGGER.error("Failed to load neko data from file: {}", file, e);
-                }
-            });
-        }
-
-        public static void startAsyncAutoSave() {
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                executor.shutdownNow();
-                saveAll();
-                LOGGER.info("Stopped async auto save");
-            }));
-            executor.submit(() -> {
-                try {
-                    while (!Thread.currentThread().isInterrupted()) {
-                        Thread.sleep(1000 * 60 * 30);
-                        saveAll();
-                        removeAll();
-                        LOGGER.info("Saved all neko data");
-                    }
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                } catch (Exception e) {
-                    LOGGER.error("Failed to save neko data", e);
                 }
             });
         }

@@ -20,9 +20,9 @@ import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemLore;
-import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.api.Permissions;
 import org.cneko.toneko.common.mod.api.EntityPoseManager;
+import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.misc.ToNekoAttributes;
 import org.cneko.toneko.common.mod.packets.EntityPosePayload;
 import org.cneko.toneko.common.mod.util.EntityUtil;
@@ -98,8 +98,7 @@ public class NekoCommand {
     }
 
     private static int removeNicknameCommand(CommandContext<CommandSourceStack> context) {
-        UUID uuid = context.getSource().getEntity().getUUID();
-        NekoQuery.Neko neko = NekoQuery.getNeko(uuid);
+        ServerPlayer neko = context.getSource().getPlayer();
         neko.setNickName("");
         return 1;
     }
@@ -175,7 +174,7 @@ public class NekoCommand {
 
     public static int loreCommand(CommandContext<CommandSourceStack> context) {
         ServerPlayer player = context.getSource().getPlayer();
-        if (!NekoQuery.isNeko(player.getUUID())){
+        if (!player.isNeko()){
             context.getSource().getPlayer().sendSystemMessage(translatable("command.neko.not_neko"));
         }else {
             // 获取玩家手中的物品
@@ -195,9 +194,9 @@ public class NekoCommand {
     }
 
     public static int levelCommand(CommandContext<CommandSourceStack> context) {
-        NekoQuery.Neko neko = NekoQuery.getNeko(context.getSource().getPlayer().getUUID());
+        INeko neko = context.getSource().getPlayer();
         if(neko.isNeko()){
-            double level = neko.getLevel();
+            double level = neko.getNekoLevel();
             // 保留小数点后两位
             level = Math.round(level * 100) / 100.0;
             context.getSource().getPlayer().sendSystemMessage(translatable("command.neko.level.success", level));
@@ -208,12 +207,11 @@ public class NekoCommand {
     }
 
     public static int nicknameCommand(CommandContext<CommandSourceStack> context) {
-        ServerPlayer player = context.getSource().getPlayer();
-        NekoQuery.Neko neko = NekoQuery.getNeko(player.getUUID());
+        ServerPlayer neko = context.getSource().getPlayer();
         String nickname = StringArgumentType.getString(context, "nickname");
         // 设置昵称
         neko.setNickName(nickname);
-        player.sendSystemMessage(translatable("command.neko.nickname.success", nickname));
+        neko.sendSystemMessage(translatable("command.neko.nickname.success", nickname));
         return 1;
     }
 
@@ -232,8 +230,7 @@ public class NekoCommand {
 
     public static int giveEffect(CommandContext<CommandSourceStack> context, Holder<MobEffect> effect) {
         ServerPlayer player = context.getSource().getPlayer();
-        NekoQuery.Neko neko = NekoQuery.getNeko(player.getUUID());
-        if(!neko.isNeko()){
+        if(!player.isNeko()){
             player.sendSystemMessage(translatable("command.neko.not_neko"));
             return 1;
         }else if (player.getNekoEnergy()<40){
@@ -244,7 +241,7 @@ public class NekoCommand {
         // 猫猫等级
         double nekoDegree = player.getAttributeValue(ToNekoAttributes.NEKO_DEGREE);
         // 获取玩家等级来计算效果
-        double level = neko.getLevel();
+        double level = player.getNekoLevel();
         // (等级+猫猫等级)开方/2
         int effectLevel = (int) (Math.sqrt(level+nekoDegree)/2.00);
 

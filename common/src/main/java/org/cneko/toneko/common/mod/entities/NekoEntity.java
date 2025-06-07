@@ -39,7 +39,6 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.Vec3;
-import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.mod.advencements.ToNekoCriteria;
 import org.cneko.toneko.common.mod.ai.PromptRegistry;
 import org.cneko.toneko.common.mod.api.NekoNameRegistry;
@@ -48,6 +47,7 @@ import org.cneko.toneko.common.mod.entities.ai.goal.NekoPickupItemGoal;
 import org.cneko.toneko.common.mod.items.ToNekoItems;
 import org.cneko.toneko.common.mod.misc.ToNekoAttributes;
 import org.cneko.toneko.common.mod.packets.interactives.NekoEntityInteractivePayload;
+import org.cneko.toneko.common.mod.quirks.Quirk;
 import org.cneko.toneko.common.mod.util.EntityUtil;
 import org.cneko.toneko.common.mod.entities.ai.goal.NekoFollowOwnerGoal;
 import org.cneko.toneko.common.mod.entities.ai.goal.NekoMateGoal;
@@ -62,13 +62,10 @@ import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static org.cneko.toneko.common.mod.util.ResourceLocationUtil.toNekoLoc;
 import static org.cneko.toneko.common.mod.util.TextUtil.randomTranslatabledComponent;
-import static org.cneko.toneko.common.Bootstrap.LOGGER;
 
 public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko {
     public static final TagKey<Item> NEKO_ARMOR = TagKey.create(Registries.ITEM,toNekoLoc("neko/armor"));
@@ -109,8 +106,6 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     public NekoEntity(EntityType<? extends NekoEntity> entityType, Level level) {
         super(entityType, level);
         if (!this.level().isClientSide()){
-            NekoQuery.Neko neko = this.getNeko();
-            neko.setNeko(true);
             randomize();
         }
         this.cache = GeckoLibUtil.createInstanceCache(this);
@@ -118,7 +113,6 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
 
 
     public void randomize(){
-        NekoQuery.Neko neko = this.getNeko();
         // 设置名字（如果没有）
         if (!this.hasCustomName()) {
             this.setCustomName(Component.literal(NekoNameRegistry.getRandomName()));
@@ -129,7 +123,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
 
 
         // 初始化萌属性喵
-        if (!neko.hasAnyMoeTags()){
+        if (!this.hasAnyMoeTags()){
             // 随机设置2~3个萌属性喵
             List<String> tags = new ArrayList<>();
             for (int i = 0; i < Mth.nextInt(this.random, 2, 3); i++) {
@@ -140,7 +134,11 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
             this.setMoeTags(getMoeTags());
         }
 
+        // 随机皮肤
+        this.setSkin(NekoSkinRegistry.getRandomSkin(getType()));
+
     }
+
 
     @Override
     protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
@@ -149,6 +147,8 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         builder.define(MOE_TAGS_ID, "");
         builder.define(GATHERING_POWER_ID, 0);
         builder.define(NEKO_ENERGY_ID, 0f);
+        builder.define(NEKO_LEVEL_ID, 0f);
+        builder.define(NICKNAME_ID, "");
     }
 
 
@@ -195,15 +195,6 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         this.goalSelector.addGoal(5, new TemptGoal(this, 0.5D, this::isFavoriteItem,false));
     }
 
-    public NekoQuery.Neko getNeko() {
-        if (this.isAlive()) {
-            return NekoQuery.getNeko(this.getUUID());
-        }else {
-            // 返回默认值
-            return NekoQuery.NekoData.getNeko(NekoQuery.NekoData.EMPTY_UUID);
-        }
-    }
-
     public void followOwner(Player followingOwner,double maxDistance, double followSpeed) {
         if (nekoFollowOwnerGoal !=null) {
             nekoFollowOwnerGoal.setTarget(followingOwner);
@@ -244,14 +235,10 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     }
 
     public List<String> getMoeTags(){
-        // 服务器可以直接从猫娘数据文件中读取，客户端必须从服务器获取
-        if (this.level().isClientSide){
-            String moeTagsString = this.entityData.get(MOE_TAGS_ID);
-            return moeTagsString.isEmpty() ? List.of() : List.of(moeTagsString.split(":"));
-        } else {
-            return this.getNeko().getMoeTags();
-        }
+        String moeTagsString = this.entityData.get(MOE_TAGS_ID);
+        return moeTagsString.isEmpty() ? List.of() : List.of(moeTagsString.split(":"));
     }
+
 
     // 翻译后的String的萌属性
     public String getMoeTagsString(){
@@ -266,12 +253,11 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         }
         return result.toString();
     }
+
+    public  boolean hasAnyMoeTags(){
+        return !this.getMoeTags().isEmpty();
+    }
     public void setMoeTags(List<String> moeTags){
-        // 服务器需要更新猫娘数据，客户端不需要
-        if (!this.level().isClientSide){
-            // 同时更新猫娘数据
-            this.getNeko().setMoeTags(moeTags);
-        }
         // 更新数据
         this.entityData.set(MOE_TAGS_ID, String.join(":", moeTags));
     }
@@ -284,6 +270,8 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     public void setNekoEnergy(float energy) {
         this.entityData.set(NEKO_ENERGY_ID, Mth.clamp(energy, 0,this.getMaxNekoEnergy()));
     }
+
+
 
     // 获取采集动力
     public int getGatheringPower() {
@@ -335,13 +323,6 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
             }
             // 达成进度
             ToNekoCriteria.GIFT_NEKO.trigger(sp);
-            // 如果是食物，则吃掉并回血并获取对应的效果
-            FoodProperties food = stack.getItem().components().get(DataComponents.FOOD);
-            if (food!=null){
-                // 回血
-                this.heal(food.nutrition());
-                this.eat(this.level(), stack);
-            }
             if (this.getInventory().canAdd()) {
                 ItemStack s = stack.copy();
                 s.setCount(1);
@@ -359,11 +340,11 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
             player.sendSystemMessage(randomTranslatabledComponent("message.toneko.neko.gift_success",3, Objects.requireNonNull(this.getCustomName()).getString()));
 
             // 设置玩家为主人
-            if (!this.getNeko().hasOwner(player.getUUID())){
-                this.getNeko().addOwner(player.getUUID());
+            if (!this.hasOwner(player.getUUID())){
+                this.addOwner(player.getUUID(),new Owner(new ArrayList<>(), 0));
             }else {
                 // 如果是主人，则添加好感
-                this.getNeko().addXp(player.getUUID(), 100);
+                this.setXpWithOwner(player.getUUID(), this.getXpWithOwner(player.getUUID()) +100);
                 // 1%的几率掉落唱片
                 if (player.getRandom().nextInt(100) == 0) {
                     player.drop(new ItemStack(ToNekoItems.MUSIC_DISC_KAWAII),false);
@@ -412,6 +393,13 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         // 先尝试装备防具
         if (this.equipArmors(stack)) {
             return true;
+        }
+        // 如果是食物，则吃掉回血并获取对应的效果
+        FoodProperties food = stack.getItem().components().get(DataComponents.FOOD);
+        if (food!=null && (this.getHealth() < this.getMaxHealth() || !food.effects().isEmpty())){
+            // 回血
+            this.heal(food.nutrition());
+            this.eat(this.level(), stack);
         }
         // 否则放入背包
         return this.inventory.add(stack);
@@ -551,28 +539,6 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         }
     }
 
-    @Override
-    public void remove(@NotNull RemovalReason reason) {
-        super.remove(reason);
-
-        // 获取猫猫对象
-        NekoQuery.Neko neko = this.getNeko();
-        if (neko == null) {
-            LOGGER.warn("Neko instance is null for UUID: {}", this.getUUID());
-            return;
-        }
-
-        if (reason.shouldDestroy()) {
-            // 需要销毁数据
-            NekoQuery.NekoData.deleteNeko(this.getUUID());
-        } else if (reason.shouldSave()) {
-            // 需要保存数据
-            NekoQuery.NekoData.saveAndRemoveNeko(this.getUUID());
-        } else {
-            // 既不需要销毁也不需要保存
-            NekoQuery.NekoData.deleteNeko(this.getUUID());
-        }
-    }
 
 
     @Override
@@ -646,7 +612,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         this.nekoMateGoal.mating = 0;
     }
     public boolean canMate(INeko other){
-        return (other.getNeko().isNeko() || other.allowMateIfNotNeko()) && !this.hasEffect(MobEffects.WEAKNESS) && !other.getEntity().hasEffect(MobEffects.WEAKNESS);
+        return (other.isNeko() || other.allowMateIfNotNeko()) && !this.hasEffect(MobEffects.WEAKNESS) && !other.getEntity().hasEffect(MobEffects.WEAKNESS);
     }
 
     public void breed(ServerLevel level, INeko mate) {
@@ -657,8 +623,8 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
             sp.connection.send(packet);
         }
         // 增加等级
-        this.getNeko().addLevel(0.1);
-        mate.getNeko().addLevel(0.1);
+        this.setNekoLevel(this.getNekoLevel()+0.1f);
+        mate.setNekoLevel(this.getNekoLevel()+0.1f);
         NekoEntity baby = this.spawnChildFromBreeding(level, mate);
         // 分别给予虚弱效果
         this.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 3000, 0));
@@ -776,9 +742,6 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
 
     @Override
     public boolean hurt(@NotNull DamageSource source, float amount) {
-        // 计算防具提供的伤害减免
-        float damageAfterArmor = calculateDamageAfterArmor(source, amount);
-
         if (source.getEntity() instanceof Player player){
             // 栓住玩家
             if (player.getMainHandItem().is(Items.LEAD)){
@@ -793,52 +756,28 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
             }
         }
 
-        // 使用经过防具减免后的伤害值
-        boolean result = super.hurt(source, damageAfterArmor);
+
+        boolean result = super.hurt(source, amount);
 
         if (!result) return false;
         if (source.getEntity() instanceof Player player){
             hurtByPlayer(player);
         }
+        // 寻找回血食物
+        for (ItemStack stack : this.getInventory().items){
+            // 如果是食物，则吃掉回血并获取对应的效果
+            FoodProperties food = stack.getItem().components().get(DataComponents.FOOD);
+            if (food!=null && (this.getHealth() < this.getMaxHealth() || !food.effects().isEmpty())){
+                // 回血
+                this.heal(food.nutrition());
+                this.eat(this.level(), stack);
+                return true;
+            }
+        }
         return true;
     }
 
-    // 计算经过防具减免后的伤害值
-    private float calculateDamageAfterArmor(DamageSource source, float amount) {
-        // 基础伤害值
-        float damage = amount;
 
-        // 计算所有防具的总防御值
-        int totalDefense = 0;
-        for (ItemStack armor : this.inventory.armor) {
-            if (!armor.isEmpty()) {
-                totalDefense += calculateDefenseValue(armor);
-            }
-        }
-
-        // 应用防御值减免（每点防御值减少4%伤害）
-        if (totalDefense > 0) {
-            float reduction = totalDefense * 0.04f;
-            damage *= (1.0f - Math.min(reduction, 0.8f)); // 最多减免80%伤害
-        }
-
-        return Math.max(0, damage);
-    }
-
-    // 防具耐久损耗
-    protected void damageArmor(DamageSource source, float damageAmount) {
-        if (damageAmount <= 0.0F) return;
-
-        damageAmount /= 4.0F; // 伤害平均分配到四件防具上
-        if (damageAmount < 1.0F) damageAmount = 1.0F;
-
-        for (int i = 0; i < this.inventory.armor.size(); i++) {
-            ItemStack armor = this.inventory.armor.get(i);
-            if (!armor.isEmpty() && armor.getItem() instanceof ArmorItem  armorItem) {
-                armor.hurtAndBreak((int)damageAmount, this,armorItem.getEquipmentSlot());
-            }
-        }
-    }
 
     public void hurtByPlayer(Player player){
         if (this.isAlive()) {
@@ -897,6 +836,46 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     public boolean isNeko() {
         return true;
     }
+
+    public static final EntityDataAccessor<Float> NEKO_LEVEL_ID = SynchedEntityData.defineId(NekoEntity.class, EntityDataSerializers.FLOAT);
+    @Override
+    public float getNekoLevel() {
+        return entityData.get(NEKO_LEVEL_ID);
+    }
+    @Override
+    public void setNekoLevel(float nekoLevel) {
+        entityData.set(NEKO_LEVEL_ID, nekoLevel);
+    }
+
+    private Map<UUID,Owner> owners = new HashMap<>();
+    @Override
+    public Map<UUID, Owner> getOwners() {
+        return owners;
+    }
+
+    private List<BlockedWord> blockedWords = new ArrayList<>();
+    @Override
+    public List<BlockedWord> getBlockedWords() {
+        return blockedWords;
+    }
+
+    public static final EntityDataAccessor<String> NICKNAME_ID = SynchedEntityData.defineId(NekoEntity.class, EntityDataSerializers.STRING);
+    @Override
+    public @NotNull String getNickName() {
+        return entityData.get(NICKNAME_ID);
+    }
+    @Override
+    public void setNickName(String name) {
+        entityData.set(NICKNAME_ID,name);
+    }
+
+    private List<Quirk> quirks = new ArrayList<>();
+    @Override
+    public List<Quirk> getQuirks() {
+        return quirks;
+    }
+
+
 
     @Override
     public boolean checkSpawnRules(@NotNull LevelAccessor level, @NotNull MobSpawnType reason) {

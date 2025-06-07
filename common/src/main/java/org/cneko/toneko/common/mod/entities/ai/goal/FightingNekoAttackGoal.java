@@ -2,6 +2,7 @@ package org.cneko.toneko.common.mod.entities.ai.goal;
 
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.monster.Enemy;
@@ -107,27 +108,43 @@ public class FightingNekoAttackGoal extends Goal {
             this.seeTime = 0;
         }
 
-        // 检查是否有远程武器
-        boolean hasRangedWeapon = hasRangedWeaponInInventory();
+        // ========== 武器策略逻辑 ==========
+        CombatStrategy strategy = determineCombatStrategy();
 
-        // 修改移动逻辑
+        // 逃跑策略优先处理
+        if (strategy == CombatStrategy.FLEE) {
+            fleeFromTarget();
+            return; // 逃跑时不执行后续攻击逻辑
+        }
+
+        // 根据策略切换武器
+        if (strategy == CombatStrategy.RANGED) {
+            switchToRangedWeapon();
+        } else if (strategy == CombatStrategy.MELEE) {
+            switchToMeleeWeapon();
+        }
+
+        // ========== 移动逻辑 ==========
         if (canSee) {
-            if (hasRangedWeapon) {
-                // 有远程武器时的移动策略
+            if (strategy == CombatStrategy.RANGED) {
+                // 远程策略：仅在距离过近时后退
                 if (distanceSqr > RANGED_ATTACK_RANGE * RANGED_ATTACK_RANGE) {
                     // 距离过远，向目标移动
-                    neko.getNavigation().moveTo(target, 1.3);
-                } else if (distanceSqr < RANGED_MAINTAIN_DISTANCE * RANGED_MAINTAIN_DISTANCE) {
-                    // 距离过近，后退保持距离
-                    moveAwayFromTarget();
+                    neko.getNavigation().moveTo(target, neko.getAttributeValue(Attributes.MOVEMENT_SPEED)*1.3);
                 } else {
-                    // 在理想距离内，停止移动
-                    neko.getNavigation().stop();
+                    // 计算当前距离与保持距离的比例
+                    double currentDistance = Math.sqrt(distanceSqr);
+                    if (currentDistance < RANGED_MAINTAIN_DISTANCE * 0.5) {
+                        // 目标距离小于保持距离的50%，才后退
+                        moveAwayFromTarget(2.0);
+                    } else {
+                        // 在理想距离内，停止移动
+                        neko.getNavigation().stop();
+                    }
                 }
-            } else {
-                // 没有远程武器，只能近战
+            } else { // 近战策略
                 if (distanceSqr > MELEE_ATTACK_RANGE * MELEE_ATTACK_RANGE) {
-                    neko.getNavigation().moveTo(target, 1.3);
+                    neko.getNavigation().moveTo(target, neko.getAttributeValue(Attributes.MOVEMENT_SPEED)*1.3);
                 } else {
                     neko.getNavigation().stop();
                 }
@@ -135,36 +152,104 @@ public class FightingNekoAttackGoal extends Goal {
         } else {
             // 目标不可见时的移动策略
             if (distanceSqr > MELEE_ATTACK_RANGE * MELEE_ATTACK_RANGE) {
-                neko.getNavigation().moveTo(target, 1.3);
+                neko.getNavigation().moveTo(target, neko.getAttributeValue(Attributes.MOVEMENT_SPEED)*1.3);
             }
         }
         // 移动逻辑结束
 
-        // 武器切换逻辑
-        if (hasRangedWeapon && distanceSqr > MELEE_ATTACK_RANGE * MELEE_ATTACK_RANGE) {
-            switchToRangedWeapon();
-
-            // 切换到火箭筒时自动换弹
-            ItemStack held = neko.getInventory().getSelected();
-            if (held.getItem() instanceof BazookaItem bazooka) {
-                reloadIfNeeded(held);
-            }
-        } else if (distanceSqr <= MELEE_ATTACK_RANGE * MELEE_ATTACK_RANGE) {
-            switchToMeleeWeapon();
-        }
-
-        // 攻击逻辑
+        // ========== 攻击逻辑 ==========
         attackCooldown = Math.max(attackCooldown - 1, 0);
         if (attackCooldown == 0 && canSee) {
-            if (distanceSqr <= MELEE_ATTACK_RANGE * MELEE_ATTACK_RANGE) {
+            if (strategy == CombatStrategy.MELEE && distanceSqr <= MELEE_ATTACK_RANGE * MELEE_ATTACK_RANGE) {
                 performMeleeAttack();
                 attackCooldown = attackInterval;
-            } else if (isUsingRangedWeapon() && distanceSqr <= RANGED_ATTACK_RANGE * RANGED_ATTACK_RANGE) {
+            } else if (strategy == CombatStrategy.RANGED && distanceSqr <= RANGED_ATTACK_RANGE * RANGED_ATTACK_RANGE) {
                 performRangedAttack();
                 attackCooldown = attackInterval * 2;
             }
         }
     }
+
+    private CombatStrategy determineCombatStrategy() {
+        boolean hasRanged = hasUsableRangedWeapon();
+        boolean hasMelee = hasMeleeWeapon();
+        float selfHealthRatio = getHealthRatio(neko);
+        float targetHealthRatio = getHealthRatio(target);
+
+        // 规则1: 只有远程武器且有子弹
+        if (hasRanged && !hasMelee) {
+            return CombatStrategy.RANGED;
+        }
+
+        // 规则2: 只有近战武器
+        if (!hasRanged && hasMelee) {
+            return CombatStrategy.MELEE;
+        }
+
+        // 规则3: 都没有武器
+        if (!hasRanged) {
+            // 对方生命值百分比 <= 自己时攻击，否则逃跑
+            return (targetHealthRatio <= selfHealthRatio) ?
+                    CombatStrategy.MELEE : CombatStrategy.FLEE;
+        }
+
+        // 规则4: 两种武器都有
+        // 对方生命值百分比 > 自己时用远程，否则用近战
+        return (targetHealthRatio > selfHealthRatio) ?
+                CombatStrategy.RANGED : CombatStrategy.MELEE;
+
+    }
+
+    private float getHealthRatio(LivingEntity entity) {
+        return entity.getHealth() / entity.getMaxHealth();
+    }
+
+    private boolean hasUsableRangedWeapon() {
+        // 检查是否有火箭筒
+        boolean hasBazooka = false;
+        for (int i = 0; i < neko.getInventory().getContainerSize(); i++) {
+            ItemStack stack = neko.getInventory().getItem(i);
+            if (stack.getItem() instanceof BazookaItem) {
+                hasBazooka = true;
+                break;
+            }
+        }
+        // 有火箭筒且至少有一个弹药
+        return hasBazooka && !findAmmo().isEmpty();
+    }
+
+    private boolean hasMeleeWeapon() {
+        for (int i = 0; i < neko.getInventory().getContainerSize(); i++) {
+            ItemStack stack = neko.getInventory().getItem(i);
+            if (stack.is(FightingNekoEntity.MELEE_WEAPON) &&
+                    !(stack.getItem() instanceof BazookaItem)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void fleeFromTarget() {
+        // 计算远离目标的移动方向
+        double dx = neko.getX() - target.getX();
+        double dz = neko.getZ() - target.getZ();
+        double distance = Math.sqrt(dx * dx + dz * dz);
+
+        if (distance > 0) {
+            // 计算单位向量并放大
+            dx /= distance;
+            dz /= distance;
+
+            // 设置逃跑距离（10格）
+            double fleeDistance = 10.0;
+            double fleeX = neko.getX() + dx * fleeDistance;
+            double fleeZ = neko.getZ() + dz * fleeDistance;
+
+            // 移动到逃跑位置
+            neko.getNavigation().moveTo(fleeX, neko.getY(), fleeZ, neko.getAttributeValue(Attributes.MOVEMENT_SPEED)*1.5);
+        }
+    }
+
 
     // 检查背包中是否有远程武器
     private boolean hasRangedWeaponInInventory() {
@@ -178,23 +263,19 @@ public class FightingNekoAttackGoal extends Goal {
     }
 
     // 后退保持距离
-    private void moveAwayFromTarget() {
-        // 计算从目标指向自己的方向向量
+    private void moveAwayFromTarget(double distance) {
         double dx = neko.getX() - target.getX();
         double dz = neko.getZ() - target.getZ();
         double len = Math.sqrt(dx * dx + dz * dz);
 
         if (len > 0) {
-            // 单位化向量
             dx /= len;
             dz /= len;
 
-            // 计算后退位置（当前位置后退2格）
-            double backX = neko.getX() + dx * 2;
-            double backZ = neko.getZ() + dz * 2;
+            double backX = neko.getX() + dx * distance;
+            double backZ = neko.getZ() + dz * distance;
 
-            // 移动到后退位置
-            neko.getNavigation().moveTo(backX, neko.getY(), backZ, 1.3);
+            neko.getNavigation().moveTo(backX, neko.getY(), backZ, neko.getAttributeValue(Attributes.MOVEMENT_SPEED)*1.3);
         }
     }
 
@@ -226,13 +307,14 @@ public class FightingNekoAttackGoal extends Goal {
         }
 
         // 遍历背包寻找近战武器
-        for (int i = 0; i < neko.getInventory().getContainerSize(); i++) {
-            ItemStack stack = neko.getInventory().getItem(i);
+        int i =0;
+        for (ItemStack stack : neko.getInventory().items) {
+            i++;
             if (stack.is(FightingNekoEntity.MELEE_WEAPON) && !(stack.getItem() instanceof BazookaItem)) {
-                // 切换选中槽位到近战武器
-                neko.getInventory().selected = i;
                 // 强制更新手持物品
+                ItemStack oldStack = neko.getItemInHand();
                 neko.setItemSlot(EquipmentSlot.MAINHAND, stack);
+                neko.getInventory().setItem(i,oldStack);
                 return;
             }
         }
@@ -240,7 +322,7 @@ public class FightingNekoAttackGoal extends Goal {
 
     // 检查是否使用近战武器
     private boolean isUsingMeleeWeapon() {
-        ItemStack held = neko.getInventory().getSelected();
+        ItemStack held = neko.getInventory().getItem(neko.getInventory().selected);
         return held.is(FightingNekoEntity.MELEE_WEAPON) && !(held.getItem() instanceof BazookaItem);
     }
 
@@ -315,5 +397,11 @@ public class FightingNekoAttackGoal extends Goal {
             }
         }
         return ItemStack.EMPTY;
+    }
+
+    private enum CombatStrategy {
+        RANGED,
+        MELEE,
+        FLEE
     }
 }

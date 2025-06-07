@@ -64,11 +64,11 @@ public class NekoRenderer<T extends NekoEntity> extends GeoEntityRenderer<T> {
                 // 调整物品位置
                 poseStack.translate(0.1, -0.6, -0.1);
 
-                // 绕X轴旋转45度
-                poseStack.mulPose(Axis.XP.rotationDegrees(45F));
+                // 绕X轴旋转75度
+                poseStack.mulPose(Axis.XP.rotationDegrees(285F));
 
                 // 调整物品大小
-                poseStack.scale(0.5F, 0.5F, 0.5F);
+                poseStack.scale(0.8F, 0.8F, 0.8F);
 
                 // 渲染物品
                 ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();

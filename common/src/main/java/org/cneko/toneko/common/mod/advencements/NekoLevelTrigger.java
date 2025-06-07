@@ -7,22 +7,19 @@ import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
-import org.cneko.toneko.common.api.NekoQuery;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
 public class NekoLevelTrigger extends SimpleCriterionTrigger<NekoLevelTrigger.TriggerInstance> {
 
     @Override
-    public Codec<TriggerInstance> codec() {
+    public @NotNull Codec<TriggerInstance> codec() {
         return TriggerInstance.CODEC;
     }
 
     public void trigger(ServerPlayer player) {
-        trigger(player, triggerInstance -> {
-            NekoQuery.Neko neko = player.getNeko();
-            return triggerInstance.matches(neko.getLevel());
-        });
+        trigger(player, triggerInstance -> triggerInstance.matches(player.getNekoLevel()));
     }
 
     public record TriggerInstance(Optional<ContextAwarePredicate> player, double level) implements SimpleCriterionTrigger.SimpleInstance {

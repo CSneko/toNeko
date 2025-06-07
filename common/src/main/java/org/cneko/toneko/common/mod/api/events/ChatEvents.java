@@ -3,6 +3,7 @@ package org.cneko.toneko.common.mod.api.events;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.world.entity.player.Player;
+import org.cneko.toneko.common.mod.entities.INeko;
 
 import java.util.List;
 
@@ -30,18 +31,18 @@ public class ChatEvents {
      * - chatFormat: 聊天格式
      */
     public static Event<OnChatFormat> ON_CHAT_FORMAT = EventFactory.createArrayBacked(OnChatFormat.class,
-            (listeners) -> (message, playerName, nickname, prefixes, chatFormat) -> {
+            (listeners) -> (message, sender, prefixes, chatFormat) -> {
                 for (OnChatFormat listener : listeners) {
-                    message = listener.onFormat(message, playerName, nickname, prefixes, chatFormat);
+                    message = listener.onFormat(message, sender, prefixes, chatFormat);
                 }
                 return message;
             }
     );
 
     public interface CreateChatPrefixes{
-        void onCreate(Player player, List<String> prefixes);
+        void onCreate(INeko sender, List<String> prefixes);
     }
     public interface OnChatFormat{
-        String onFormat(String message, String playerName, String nickname, List<String> prefixes, String chatFormat);
+        String onFormat(String message, INeko sender, List<String> prefixes, String chatFormat);
     }
 }

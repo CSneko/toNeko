@@ -1,4 +1,4 @@
-package org.cneko.toneko.common.quirks;
+package org.cneko.toneko.common.mod.quirks;
 
 public class Quirks {
 

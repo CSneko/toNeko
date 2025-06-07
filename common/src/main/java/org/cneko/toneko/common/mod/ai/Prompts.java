@@ -13,7 +13,7 @@ public class Prompts {
     public static final PromptFactory NEKO_HEIGHT = (neko,other)-> new DecimalFormat("0.00").format(neko.getBbHeight());
     public static final PromptFactory NEKO_MOE_TAGS = (neko,other)-> neko.getMoeTagsString();
     public static final PromptFactory PLAYER_NAME = (neko,other)-> other.getEntity().getName().getString();
-    public static final PromptFactory PLAYER_IS_OWNER = (neko,other)-> neko.getNeko().hasOwner(other.getEntity().getUUID())? Component.translatable("misc.toneko.is_or_not.is").getString():Component.translatable("misc.toneko.is_or_not.not").getString();
+    public static final PromptFactory PLAYER_IS_OWNER = (neko,other)-> neko.hasOwner(other.getEntity().getUUID())? Component.translatable("misc.toneko.is_or_not.is").getString():Component.translatable("misc.toneko.is_or_not.not").getString();
     public static final PromptFactory PLAYER_IS_NEKO = (neko,other)-> other.isNeko()?Component.translatable("misc.toneko.is_or_not.is").getString():Component.translatable("misc.toneko.is_or_not.not").getString();
     public static final PromptFactory WORLD_TIME = (neko,other)-> neko.level().isDay()? Component.translatable("misc.toneko.time.day").getString():Component.translatable("misc.toneko.time.night").getString();
     public static final PromptFactory WORLD_WEATHER = (neko,other)-> (neko.level().isRainingAt(neko.blockPosition())||neko.level().isThundering())? Component.translatable("misc.toneko.weather.rain").getString():Component.translatable("misc.toneko.weather.sunny").getString();

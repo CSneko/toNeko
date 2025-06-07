@@ -18,25 +18,48 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.ItemLore;
-import org.cneko.toneko.common.mod.api.EntityPoseManager;
 import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.misc.mixininterface.SlowTickable;
 import org.cneko.toneko.common.mod.packets.EntityPosePayload;
 import org.cneko.toneko.common.mod.packets.NekoInfoSyncPayload;
 import org.cneko.toneko.common.mod.packets.PlayerLeadByPlayerPayload;
+import org.cneko.toneko.common.mod.quirks.Quirk;
 import org.cneko.toneko.common.mod.util.EntityUtil;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Collections;
+import java.util.*;
 
 @Mixin(Player.class)
 public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickable {
+
+    @Shadow private boolean reducedDebugInfo;
+
+    @Shadow public abstract void remove(Entity.RemovalReason reason);
+
+    // ------- 需要死亡不重置 --------
+    @Unique
+    boolean toneko$isNeko = false;
+    @Unique
+    float toneko$nekoLevel = 0;
+    @Unique
+    float toneko$nekoEnergy = 0;
+    @Unique
+    Map<UUID,Owner> toneko$owners = new HashMap<>();
+    @Unique
+    List<BlockedWord> toneko$blockedWords = new ArrayList<>();
+    @Unique
+    String toneko$nickName = "";
+    @Unique
+    List<Quirk> toneko$quirks = new ArrayList<>();
+    // ---------------------------
 
     @Unique
     short toneko$tick = 20;
@@ -74,14 +97,14 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
         }
         if (toneko$tick % 2 == 0){
             if (player instanceof ServerPlayer sp) {
-                syncPose(sp);
+                toneko$syncPose(sp);
             }
         }
 
     }
 
     @Unique
-    void syncPose(ServerPlayer sp){
+    void toneko$syncPose(ServerPlayer sp){
         ServerPlayNetworking.send(sp, new EntityPosePayload(sp.getPose(),sp.getUUID().toString(), true));
         // 如果周围有其它玩家，则发送给周围的所有玩家
         var players = EntityUtil.getPlayersInRange(sp,sp.level(),16);
@@ -94,18 +117,36 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
     public void toneko$slowTick() {
         if ((Object)this instanceof ServerPlayer sp){
             // 同步信息给玩家
-            syncNekoInfo(sp);
+            toneko$syncNekoInfo(sp);
             this.serverNekoSlowTick();
         }
     }
 
     @Unique
-    private void syncNekoInfo(ServerPlayer sp){
+    private void toneko$syncNekoInfo(ServerPlayer sp){
         ServerPlayNetworking.send(sp,new NekoInfoSyncPayload(this.getNekoEnergy()));
     }
 
-    @Unique
-    float toneko$nekoEnergy = 0;
+    @Override
+    public boolean isNeko() {
+        return toneko$isNeko;
+    }
+
+    @Override
+    public void setNeko(boolean isNeko) {
+        toneko$isNeko = isNeko;
+    }
+
+    @Override
+    public float getNekoLevel() {
+        return toneko$nekoLevel;
+    }
+
+    @Override
+    public void setNekoLevel(float level) {
+        toneko$nekoLevel = level;
+    }
+
     @Override
     public float getNekoEnergy() {
         return toneko$nekoEnergy;
@@ -114,6 +155,30 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
     @Override
     public void setNekoEnergy(float energy) {
         toneko$nekoEnergy = energy;
+    }
+
+    @Override
+    public Map<UUID, Owner> getOwners() {
+        return toneko$owners;
+    }
+
+    @Override
+    public List<BlockedWord> getBlockedWords() {
+        return toneko$blockedWords;
+    }
+
+    @Override
+    public @NotNull String getNickName() {
+        return toneko$nickName;
+    }
+
+    @Override
+    public List<Quirk> getQuirks() {
+        return toneko$quirks;
+    }
+    @Override
+    public void setNickName(@NotNull String nickName) {
+        toneko$nickName = nickName;
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("HEAD"))
@@ -163,4 +228,5 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
             }
         }
     }
+
 }

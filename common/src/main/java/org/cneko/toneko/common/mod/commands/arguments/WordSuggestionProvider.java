@@ -1,13 +1,12 @@
 package org.cneko.toneko.common.mod.commands.arguments;
 
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
-import org.cneko.toneko.common.api.NekoQuery;
+
 
 import java.util.concurrent.CompletableFuture;
 
@@ -27,16 +26,15 @@ public class WordSuggestionProvider implements SuggestionProvider<CommandSourceS
         String remaining = builder.getRemaining().toLowerCase();
         CommandSourceStack source = context.getSource();
         ServerPlayer commander = source.getPlayer(); // 命令执行者（可能是主人）
-        ServerPlayer nekoP = context.getArgument("neko", ServerPlayer.class);
-        if (nekoP == null){
+        ServerPlayer neko = context.getArgument("neko", ServerPlayer.class);
+        if (neko == null){
             return builder.buildFuture();
         }else {
-            if (!isValidNeko(nekoP, commander)) return builder.buildFuture();
-            NekoQuery.Neko neko = NekoQuery.getNeko(nekoP.getUUID());
+            if (!isValidNeko(neko, commander)) return builder.buildFuture();
             if (type == Types.BLOCK) {
-                neko.getProfile().getBlockWords().forEach(blockWord -> {
-                    if (blockWord.getReplace().toLowerCase().startsWith(remaining)) {
-                        builder.suggest(blockWord.getReplace());
+                neko.getBlockedWords().forEach(blockWord -> {
+                    if (blockWord.replace().toLowerCase().startsWith(remaining)) {
+                        builder.suggest(blockWord.replace());
                     }
                 });
             } else if (type == Types.ALIASES) {
@@ -50,9 +48,8 @@ public class WordSuggestionProvider implements SuggestionProvider<CommandSourceS
         return builder.buildFuture();
     }
 
-    private boolean isValidNeko(ServerPlayer target, ServerPlayer commander) {
+    private boolean isValidNeko(ServerPlayer neko, ServerPlayer commander) {
         // 服务器端检查是否为Neko
-        NekoQuery.Neko neko = NekoQuery.getNeko(target.getUUID());
         if (!neko.isNeko()) return false;
 
         // 若需要检查主人关系

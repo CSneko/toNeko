@@ -8,7 +8,7 @@ import net.minecraft.world.entity.LivingEntity;
 import org.cneko.toneko.common.api.TickTasks;
 import org.cneko.toneko.common.mod.advencements.ToNekoCriteria;
 import org.cneko.toneko.common.mod.quirks.ModQuirk;
-import org.cneko.toneko.common.quirks.Quirk;
+import org.cneko.toneko.common.mod.quirks.Quirk;
 
 public class CommonPlayerEvent {
     private static final int SLOW_TICK_TIMES = 100;
@@ -30,7 +30,7 @@ public class CommonPlayerEvent {
 
     public static void startSleep(LivingEntity entity, BlockPos pos) {
         if(entity instanceof ServerPlayer player){
-            for (Quirk quirk : player.getNeko().getQuirks()){
+            for (Quirk quirk : player.getQuirks()){
                 if(quirk instanceof ModQuirk modQuirk){
                     modQuirk.startSleep(player,pos);
                 }
@@ -40,7 +40,7 @@ public class CommonPlayerEvent {
 
     public static void stopSleep(LivingEntity entity, BlockPos pos) {
         if(entity instanceof ServerPlayer player){
-            for (Quirk quirk : player.getNeko().getQuirks()){
+            for (Quirk quirk : player.getQuirks()){
                 if(quirk instanceof ModQuirk modQuirk){
                     modQuirk.stopSleep(player,pos);
                 }
