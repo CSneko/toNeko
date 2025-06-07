@@ -121,19 +121,6 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         EntityUtil.randomizeAttributeValue(this, Attributes.SCALE,1,0.65,1.05); // 实体的体型为0.65~1.05间
         EntityUtil.randomizeAttributeValue(this, Attributes.MOVEMENT_SPEED,0.7,0.5,0.6); // 实体速度为0.5~0.6间
 
-
-        // 初始化萌属性喵
-        if (!this.hasAnyMoeTags()){
-            // 随机设置2~3个萌属性喵
-            List<String> tags = new ArrayList<>();
-            for (int i = 0; i < Mth.nextInt(this.random, 2, 3); i++) {
-                tags.add(MOE_TAGS.get(Mth.nextInt(this.random, 0, MOE_TAGS.size() - 1)));
-            }
-            this.setMoeTags(tags);
-        }else {
-            this.setMoeTags(getMoeTags());
-        }
-
         // 随机皮肤
         this.setSkin(NekoSkinRegistry.getRandomSkin(getType()));
 
@@ -165,12 +152,30 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
 
     public void readAdditionalSaveData(@NotNull CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-        this.setSkin(compound.getString("Skin"));
-        ListTag listTag = compound.getList("Inventory", 10);
-        this.inventory.load(listTag);
-        this.inventory.selected = compound.getInt("SelectedItemSlot");
-        this.setGatheringPower(compound.getInt("GatheringPower"));
-        this.entityData.set(MOE_TAGS_ID, compound.getString("MoeTags"));
+        if (compound.contains("Skin")) {
+            this.setSkin(compound.getString("Skin"));
+        }
+        if (compound.contains("Inventory")) {
+            ListTag listTag = compound.getList("Inventory", 10);
+            this.inventory.load(listTag);
+            if (compound.contains("SelectedItemSlot")) {
+                this.inventory.selected = compound.getInt("SelectedItemSlot");
+            }
+        }
+        if (compound.contains("GatheringPower")){
+            this.setGatheringPower(compound.getInt("GatheringPower"));
+        }
+        if (compound.contains("MoeTags")) {
+            this.entityData.set(MOE_TAGS_ID, compound.getString("MoeTags"));
+        }else {
+            // 随机设置2~3个萌属性喵
+            List<String> tags = new ArrayList<>();
+            for (int i = 0; i < Mth.nextInt(this.random, 2, 3); i++) {
+                tags.add(MOE_TAGS.get(Mth.nextInt(this.random, 0, MOE_TAGS.size() - 1)));
+            }
+            this.setMoeTags(tags);
+
+        }
         this.loadNekoNBTData(compound);
     }
 
@@ -218,14 +223,14 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     }
 
     public String getSkin(){
-        if (this.entityData.get(SKIN_DATA_ID).isEmpty()){
+        if (this.entityData.get(SKIN_DATA_ID)== null || this.entityData.get(SKIN_DATA_ID).isEmpty()) {
             this.setSkin(getRandomSkin());
         }
         return this.entityData.get(SKIN_DATA_ID);
     }
     public void setSkin(String skin) {
         //noinspection ConstantValue
-        if (this.entityData != null) {
+        if (this.entityData != null && skin != null && !skin.isEmpty()) {
             this.entityData.set(SKIN_DATA_ID, skin);
         }
     }
@@ -260,8 +265,8 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         return !this.getMoeTags().isEmpty();
     }
     public void setMoeTags(List<String> moeTags){
-        // 更新数据
-        this.entityData.set(MOE_TAGS_ID, String.join(":", moeTags));
+        String tags = moeTags != null ? String.join(":", moeTags) : "";
+        this.entityData.set(MOE_TAGS_ID, tags);
     }
 
     public float getNekoEnergy() {
@@ -868,7 +873,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     }
     @Override
     public void setNickName(String name) {
-        entityData.set(NICKNAME_ID,name);
+        this.entityData.set(NICKNAME_ID, name != null ? name : "");
     }
 
     private List<Quirk> quirks = new ArrayList<>();

@@ -34,7 +34,7 @@ public class NekoInventory implements Container, Nameable {
     public final NonNullList<ItemStack> armor;
     public final NonNullList<ItemStack> offhand;
     private final List<NonNullList<ItemStack>> compartments;
-    public int selected;
+    public int selected = 0;
     public final NekoEntity neko;
     private int timesChanged;
 
