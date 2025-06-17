@@ -84,6 +84,8 @@ subprojects {
 
         compileOnly("org.projectlombok:lombok:1.18.38")
         annotationProcessor("org.projectlombok:lombok:1.18.38")
+
+        implementation 'dev.architectury:architectury-transformer:5.2.88'
     }
 
     java {

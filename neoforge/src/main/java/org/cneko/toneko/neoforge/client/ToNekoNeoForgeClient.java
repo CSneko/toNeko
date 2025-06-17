@@ -57,6 +57,10 @@ public class ToNekoNeoForgeClient {
                 GhostNekoRenderer::new
         );
         event.registerEntityRenderer(
+                ToNekoEntities.FIGHTING_NEKO_HOLDER.get(),
+                NekoRenderer::new
+        );
+        event.registerEntityRenderer(
                 ToNekoEntities.AMMUNITION_ENTITY_HOLDER.get(),
                 AmmunitionRenderer::new
         );

@@ -4,6 +4,7 @@ build/*
 /.gradle/
 /common/.gradle/
 /common/build/
+/common/run/
 /neoforge/.gradle/
 /neoforge/build/
 /neoforge/run/

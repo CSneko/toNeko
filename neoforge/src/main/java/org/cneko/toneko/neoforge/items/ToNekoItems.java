@@ -9,6 +9,8 @@ import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.cneko.toneko.common.mod.items.*;
+import org.cneko.toneko.common.mod.items.ammo.ExplosiveBombItem;
+import org.cneko.toneko.common.mod.items.ammo.LightningBombItem;
 import org.cneko.toneko.common.mod.misc.ToNekoSongs;
 import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.neoforge.ToNekoNeoForge;
@@ -86,9 +88,9 @@ public class ToNekoItems {
 
         PLOT_SCROLL_HOLDER = ITEMS.register("plot_scroll",()->new PlotScrollItem(new Item.Properties()));
 
-        LIGHTNING_BOMB_HOLDER = ITEMS.register("lightning_bomb",()->new Item(new Item.Properties()));
+        LIGHTNING_BOMB_HOLDER = ITEMS.register("lightning_bomb",()->new LightningBombItem(new Item.Properties()));
 
-        EXPLOSIVE_BOMB_HOLDER = ITEMS.register("explosive_bomb",()->new Item(new Item.Properties()));
+        EXPLOSIVE_BOMB_HOLDER = ITEMS.register("explosive_bomb",()->new ExplosiveBombItem(new Item.Properties()));
 
         ITEMS.register(NekoArmor.NekoPawsItem.ID, ()->new NekoArmor.NekoPawsItem(ToNekoArmorMaterials.NEKO)); // 此物品暂不添加
 
@@ -104,15 +106,17 @@ public class ToNekoItems {
                     event.accept(NEKO_TAIL_HOLDER.get());
                     event.accept(ADVENTURER_NEKO_SPAWN_EGG_HOLDER.get());
                     event.accept(GHOST_NEKO_SPAWN_EGG_HOLDER.get());
+                    event.accept(FIGHTING_NEKO_SPAWN_EGG_HOLDER.get());
                     event.accept(CATNIP_HOLDER.get());
                     event.accept(CATNIP_SANDWICH_HOLDER.get());
                     event.accept(CATNIP_SEED_HOLDER.get());
                     event.accept(MUSIC_DISC_KAWAII_HOLDER.get());
-                    event.accept(MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP_HOLDER.get());
                     if (ConfigUtil.IS_FOOL_DAY){
                         event.accept(MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP_HOLDER.get());
                     }
                     event.accept(BAZOOKA_HOLDER.get());
+                    event.accept(EXPLOSIVE_BOMB_HOLDER.get());
+                    event.accept(LIGHTNING_BOMB_HOLDER.get());
                 })
                 .build()
         );
@@ -137,6 +141,7 @@ public class ToNekoItems {
             event.accept(NEKO_TAIL_HOLDER.get());
             event.accept(ADVENTURER_NEKO_SPAWN_EGG_HOLDER.get());
             event.accept(GHOST_NEKO_SPAWN_EGG_HOLDER.get());
+            event.accept(FIGHTING_NEKO_SPAWN_EGG_HOLDER.get());
             event.accept(PLOT_SCROLL_HOLDER.get());
             event.accept(CATNIP_HOLDER.get());
             event.accept(CATNIP_SANDWICH_HOLDER.get());
