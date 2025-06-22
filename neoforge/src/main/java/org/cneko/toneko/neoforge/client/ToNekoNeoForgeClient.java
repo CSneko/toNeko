@@ -4,6 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.RenderType;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
@@ -27,6 +28,7 @@ import static org.cneko.toneko.common.Bootstrap.MODID;
 
 @Environment(EnvType.CLIENT)
 @Mod(value = MODID, dist = Dist.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class ToNekoNeoForgeClient {
 
     public ToNekoNeoForgeClient(IEventBus bus, ModContainer container){

@@ -43,27 +43,36 @@ public class FightingNekoAttackGoal extends Goal {
             return true;
         }
 
-        // 查找附近怪物作为目标
-        AABB area = neko.getBoundingBox().inflate(TARGETING_RANGE);
-        List<LivingEntity> monsters = neko.level().getEntitiesOfClass(
-                LivingEntity.class, area,
-                e -> e instanceof Enemy && e.isAlive() && !e.isAlliedTo(neko)
-        );
+        // 判断是否有武器
+        boolean hasWeapon = hasUsableRangedWeapon() || hasMeleeWeapon();
 
-        LivingEntity closestVisible = null;
-        double closestDistSq = Double.MAX_VALUE;
+        if (hasWeapon) {
+            // 有武器时主动攻击怪物
+            AABB area = neko.getBoundingBox().inflate(TARGETING_RANGE);
+            List<LivingEntity> monsters = neko.level().getEntitiesOfClass(
+                    LivingEntity.class, area,
+                    e -> e instanceof Enemy && e.isAlive() && !e.isAlliedTo(neko)
+            );
 
-        for (LivingEntity m : monsters) {
-            if (neko.hasLineOfSight(m)) {
-                double distSq = neko.distanceToSqr(m);
-                if (distSq < closestDistSq) {
-                    closestVisible = m;
-                    closestDistSq = distSq;
+            LivingEntity closestVisible = null;
+            double closestDistSq = Double.MAX_VALUE;
+
+            for (LivingEntity m : monsters) {
+                if (neko.hasLineOfSight(m)) {
+                    double distSq = neko.distanceToSqr(m);
+                    if (distSq < closestDistSq) {
+                        closestVisible = m;
+                        closestDistSq = distSq;
+                    }
                 }
             }
+            this.target = closestVisible;
+            return target != null;
+        } else {
+            // 没有武器时不主动攻击怪物，只攻击仇恨目标
+            this.target = null;
+            return false;
         }
-        this.target = closestVisible;
-        return target != null;
     }
 
     @Override
@@ -175,6 +184,13 @@ public class FightingNekoAttackGoal extends Goal {
         boolean hasMelee = hasMeleeWeapon();
         float selfHealthRatio = getHealthRatio(neko);
         float targetHealthRatio = getHealthRatio(target);
+
+        // 血量低于(12-护甲值)时必定逃跑
+        double armorValue = neko.getArmorValue();
+        double fleeThreshold = 12.0 - armorValue;
+        if (neko.getHealth() < fleeThreshold) {
+            return CombatStrategy.FLEE;
+        }
 
         // 规则1: 只有远程武器且有子弹
         if (hasRanged && !hasMelee) {

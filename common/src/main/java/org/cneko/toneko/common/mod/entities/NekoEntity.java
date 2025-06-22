@@ -322,6 +322,10 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         this.setPersistenceRequired();
         // 如果是喜欢的物品
         if (this.isLikedItem(stack) && player instanceof ServerPlayer sp){
+            if (this.getLastHurtByMob()==player){
+                // 消除仇恨=
+                this.setLastHurtByMob(null);
+            }
             // 增长动力
             this.addGatheringPower(20);
             if (this.equipArmors(stack)){
@@ -364,6 +368,14 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
             }
             return false;
         }
+    }
+
+    @Override
+    public void setLastHurtByPlayer(@Nullable Player player) {
+        if (player == null || !this.hasOwner(player.getUUID())) {
+            super.setLastHurtByPlayer(player);
+        }
+        super.setLastHurtByPlayer(null);
     }
 
     public @NotNull ItemStack getItemBySlot(@NotNull EquipmentSlot slot) {

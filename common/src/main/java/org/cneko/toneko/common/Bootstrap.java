@@ -1,6 +1,4 @@
 package org.cneko.toneko.common;
-import org.cneko.gal.common.client.GalClient;
-import org.cneko.toneko.common.mod.quirks.Quirks;
 import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.common.util.FileUtil;
 import org.cneko.toneko.common.util.LanguageUtil;
@@ -23,10 +21,6 @@ public class Bootstrap {
         ConfigUtil.load();
         // 加载语言文件
         LanguageUtil.load();
-        // 注册所有癖好
-        Quirks.init();
 
-        // 启动Gal
-        GalClient.init();
     }
 }

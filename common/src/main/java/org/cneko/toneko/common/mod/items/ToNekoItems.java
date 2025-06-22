@@ -23,6 +23,7 @@ public class ToNekoItems {
     public static Item PLOT_SCROLL;
     public static Item LIGHTNING_BOMB;
     public static Item EXPLOSIVE_BOMB;
+    public static Item CONTRACT;
 
     public static final TagKey<Item> CATNIP_TAG = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c","foods/catnip"));
     public static final TagKey<Item> BAZOOKA_AMMO_TAG = TagKey.create(Registries.ITEM, toNekoLoc("bazooka_ammo"));

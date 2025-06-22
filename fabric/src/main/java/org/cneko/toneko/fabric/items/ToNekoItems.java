@@ -56,6 +56,7 @@ public class ToNekoItems {
         PLOT_SCROLL = new PlotScrollItem(new Item.Properties());
         LIGHTNING_BOMB = new LightningBombItem(new Item.Properties());
         EXPLOSIVE_BOMB  = new ExplosiveBombItem(new Item.Properties());
+        CONTRACT = new ContractItem(new Item.Properties());
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NekoPotionItem.ID), NEKO_POTION);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NekoCollectorItem.ID), NEKO_COLLECTOR);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(FurryBoheItem.ID), FURRY_BOHE);
@@ -71,6 +72,7 @@ public class ToNekoItems {
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("plot_scroll"), PLOT_SCROLL);
         Registry .register(BuiltInRegistries.ITEM, toNekoLoc("lightning_bomb"), LIGHTNING_BOMB);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("explosive_bomb"), EXPLOSIVE_BOMB);
+        Registry.register(BuiltInRegistries.ITEM, toNekoLoc("contract"), CONTRACT);
 
         // 如果安装了trinkets，则注册为TrinketItem
         if (isTrinketsInstalled){
@@ -111,6 +113,7 @@ public class ToNekoItems {
             // content.accept(PLOT_SCROLL);
             content.accept(LIGHTNING_BOMB);
             content.accept(EXPLOSIVE_BOMB);
+            content.accept(CONTRACT);
         });
     }
 

@@ -8,6 +8,9 @@ import org.cneko.toneko.common.mod.api.events.ChatEvents;
 import org.cneko.toneko.common.mod.commands.arguments.CustomStringArgument;
 import org.cneko.toneko.common.mod.commands.arguments.NekoArgument;
 import org.cneko.toneko.common.mod.events.CommonChatEvent;
+import org.cneko.toneko.common.mod.quirks.QuirkRegister;
+import org.cneko.toneko.common.mod.quirks.Quirks;
+import org.cneko.toneko.common.mod.quirks.ToNekoQuirks;
 import org.cneko.toneko.common.mod.util.PlayerUtil;
 import org.cneko.toneko.common.util.scheduled.FabricSchedulerPoolImpl;
 import org.cneko.toneko.common.util.scheduled.SchedulerPoolProvider;
@@ -25,5 +28,6 @@ public class ModBootstrap {
                 CustomStringArgument.class,SingletonArgumentInfo.contextFree(CustomStringArgument::replaceWord)
         );
         Prompts.init();
+        ToNekoQuirks.init();
     }
 }

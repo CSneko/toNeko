@@ -3,7 +3,10 @@ package org.cneko.toneko.neoforge.items;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemNameBlockItem;
+import net.minecraft.world.item.Rarity;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
@@ -18,11 +21,10 @@ import org.cneko.toneko.neoforge.entities.ToNekoEntities;
 import org.cneko.toneko.neoforge.msic.ToNekoCriteriaNeoForge;
 import org.cneko.toneko.neoforge.msic.ToNekoEffectNeoForge;
 
-import static org.cneko.toneko.common.mod.items.ToNekoItems.*;
-
 import java.util.List;
 import java.util.Optional;
 
+import static org.cneko.toneko.common.mod.items.ToNekoItems.*;
 import static org.cneko.toneko.neoforge.ToNekoNeoForge.ITEMS;
 
 
@@ -46,6 +48,7 @@ public class ToNekoItems {
     public static DeferredHolder<Item,Item> PLOT_SCROLL_HOLDER;
     public static DeferredHolder<Item,Item> LIGHTNING_BOMB_HOLDER;
     public static DeferredHolder<Item,Item> EXPLOSIVE_BOMB_HOLDER;
+    public static DeferredHolder<Item,Item> CONTRACT_HOLDER;
 
     public static void init() {
         registerWithOutConfig();
@@ -92,6 +95,8 @@ public class ToNekoItems {
 
         EXPLOSIVE_BOMB_HOLDER = ITEMS.register("explosive_bomb",()->new ExplosiveBombItem(new Item.Properties()));
 
+        CONTRACT_HOLDER = ITEMS.register("contract",()->new ContractItem(new Item.Properties()));
+
         ITEMS.register(NekoArmor.NekoPawsItem.ID, ()->new NekoArmor.NekoPawsItem(ToNekoArmorMaterials.NEKO)); // 此物品暂不添加
 
         // 注册物品组
@@ -117,6 +122,7 @@ public class ToNekoItems {
                     event.accept(BAZOOKA_HOLDER.get());
                     event.accept(EXPLOSIVE_BOMB_HOLDER.get());
                     event.accept(LIGHTNING_BOMB_HOLDER.get());
+                    event.accept(PLOT_SCROLL_HOLDER.get());
                 })
                 .build()
         );
@@ -155,6 +161,7 @@ public class ToNekoItems {
             // event.accept(PLOT_SCROLL_HOLDER.get());
             event.accept(LIGHTNING_BOMB_HOLDER.get());
             event.accept(EXPLOSIVE_BOMB_HOLDER.get());
+            event.accept(CONTRACT_HOLDER.get());
         }
         reg();
     }
@@ -174,6 +181,7 @@ public class ToNekoItems {
         PLOT_SCROLL = PLOT_SCROLL_HOLDER.get();
         LIGHTNING_BOMB = LIGHTNING_BOMB_HOLDER.get();
         EXPLOSIVE_BOMB = EXPLOSIVE_BOMB_HOLDER.get();
+        CONTRACT = CONTRACT_HOLDER.get();
         ToNekoEffectNeoForge.reg();
         ToNekoBlocks.reg();
         ToNekoEntities.reg();
