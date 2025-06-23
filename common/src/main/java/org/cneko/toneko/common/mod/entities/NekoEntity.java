@@ -793,6 +793,14 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
                 return true;
             }
         }
+        // 寻找附近武备猫娘
+        List<FightingNekoEntity> nearbyNekos = this.level().getEntitiesOfClass(FightingNekoEntity.class,
+                this.getBoundingBox().inflate(10), LivingEntity::isAlive
+        );
+        // 设置仇恨
+        for (FightingNekoEntity neko : nearbyNekos) {
+            if (source.getEntity() instanceof LivingEntity entity) neko.setLastHurtByMob(entity);
+        }
         return true;
     }
 
