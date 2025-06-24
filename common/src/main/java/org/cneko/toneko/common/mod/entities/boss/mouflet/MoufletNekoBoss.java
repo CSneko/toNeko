@@ -1,5 +1,6 @@
 package org.cneko.toneko.common.mod.entities.boss.mouflet;
 
+import lombok.Getter;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -21,6 +22,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.cneko.toneko.common.mod.effects.ToNekoEffects;
 import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
 import org.cneko.toneko.common.mod.entities.boss.NekoBoss;
@@ -92,6 +94,7 @@ public class MoufletNekoBoss extends NekoEntity implements NekoBoss {
     private int despairTicks = 0; // 绝望状态剩余tick数
     private int skillCooldown = 0; // 技能冷却
     private int charmTicks = 0;    // 魅惑状态持续tick
+    @Getter
     private boolean isCharmed = false; // 是否处于魅惑状态
     private MoufletAttackGoal attackGoal; // 攻击目标
 
@@ -123,7 +126,7 @@ public class MoufletNekoBoss extends NekoEntity implements NekoBoss {
         super.registerGoals();
         this.attackGoal = new MoufletAttackGoal(this); // 创建攻击目标
         this.goalSelector.addGoal(4, new MoufletStealItemGoal(this)); // 添加偷窃物品的目标
-        this.goalSelector.addGoal(3, attackGoal); // 添加攻击目标
+        this.goalSelector.addGoal(1, attackGoal); // 添加攻击目标
     }
 
     @Override
@@ -156,8 +159,8 @@ public class MoufletNekoBoss extends NekoEntity implements NekoBoss {
     public boolean hurt(@NotNull DamageSource source, float amount) {
         // 只在服务端处理
         if (!level().isClientSide) {
-            // 单次伤害大于6，触发防御架势
-            if (amount > 6.0f && defenseStanceTicks <= 0) {
+            // 单次伤害大于5，触发防御架势
+            if (amount > 5.0f && defenseStanceTicks <= 0) {
                 this.defenseStanceTicks = 15 * 20; // 15秒
                 this.thornsTicks = 10 * 20;        // 10秒
                 // 抗性IV
@@ -169,7 +172,7 @@ public class MoufletNekoBoss extends NekoEntity implements NekoBoss {
                 // 反弹80%伤害
                 float reflect = amount * 0.8f;
                 player.hurt(player.damageSources().thorns(this), reflect);
-                // 攻击者失去饱食8+能量10
+                // 攻击者失去饱食8能量10
                 player.getFoodData().eat(-8, 0.0f); // 饱食度减少
                 if (player.getNekoEnergy() > 50) {
                     player.setNekoEnergy(player.getNekoEnergy() - 50); // 能量减少
@@ -225,8 +228,6 @@ public class MoufletNekoBoss extends NekoEntity implements NekoBoss {
             charmTicks--;
             if (charmTicks <= 0) {
                 isCharmed = false;
-                this.setInvisible(false);
-                this.setNoAi(false);
             } else {
                 // 潜行加速
                 this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(2.7); // +30%
@@ -236,7 +237,7 @@ public class MoufletNekoBoss extends NekoEntity implements NekoBoss {
         }
 
         // 随机主动技能触发（仅战斗中且冷却结束）
-        if (isFighting() && skillCooldown <= 0 && this.getTarget() != null && this.getTarget().isAlive()) {
+        if (isFighting() && skillCooldown <= 0 && this.attackGoal.getTarget() != null && this.attackGoal.getTarget().isAlive()) {
             int skill = this.getRandom().nextInt(2); // 0:撒娇 1:魅惑
             if (skill == 0) {
                 useSpoilSkill();
@@ -252,9 +253,13 @@ public class MoufletNekoBoss extends NekoEntity implements NekoBoss {
                 this.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 40, 2, true, false));
             }
             // 清除所有正面buff
-            this.getActiveEffects().stream()
+            List<MobEffect> toRemove = this.getActiveEffects().stream()
                     .filter(e -> e.getEffect().value().isBeneficial() && e.getEffect() != MobEffects.WEAKNESS)
-                    .forEach(e -> this.removeEffect(e.getEffect()));
+                    .map(e -> e.getEffect().value())
+                    .toList();
+            for (MobEffect mobEffect : toRemove) {
+                removeEffect(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(mobEffect));
+            }
 
             despairTicks++;
             if (despairTicks == 20 * 20) { // 20秒后自爆
@@ -275,7 +280,7 @@ public class MoufletNekoBoss extends NekoEntity implements NekoBoss {
         this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 10 * 20, 2)); // 10秒，60%减伤
         // 清除debuff
         List<MobEffect> toRemove = this.getActiveEffects().stream()
-                .filter(e -> e.getEffect().value().isBeneficial() && e.getEffect() != MobEffects.WEAKNESS)
+                .filter(e -> !e.getEffect().value().isBeneficial() && e.getEffect() != MobEffects.WEAKNESS)
                 .map(e -> e.getEffect().value())
                 .toList();
         for (MobEffect mobEffect : toRemove) {
@@ -287,9 +292,11 @@ public class MoufletNekoBoss extends NekoEntity implements NekoBoss {
     private void useCharmSkill() {
         this.isCharmed = true;
         this.charmTicks = 10 * 20; // 10秒
-        this.setNoAi(true); // 停止攻击
         // 血条消失
         bossEvent.removeAllPlayers();
+        // 给予周围玩家魅惑效果
+        this.level().getEntitiesOfClass(Player.class, this.getBoundingBox().inflate(16))
+                .forEach(p -> p.addEffect(new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(ToNekoEffects.BEWITCHED_EFFECT), 20 * 20, 0, true, false)));
         this.sendSkillMessage("charm", this.getName().getString());
     }
 

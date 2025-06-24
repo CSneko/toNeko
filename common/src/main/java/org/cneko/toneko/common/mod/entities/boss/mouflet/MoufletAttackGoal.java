@@ -14,6 +14,10 @@ public class MoufletAttackGoal extends NekoAttackGoal {
             // 如果是宠物模式且是主人，则不攻击
             return false;
         }
+        //　魅惑技能下不攻击
+        if (neko.isCharmed()) {
+            return false;
+        }
         return super.canUse();
     }
 
