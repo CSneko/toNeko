@@ -13,7 +13,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import org.cneko.toneko.common.mod.entities.ai.goal.FightingNekoAttackGoal;
+import org.cneko.toneko.common.mod.entities.ai.goal.NekoAttackGoal;
 import org.cneko.toneko.common.mod.items.ToNekoItems;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -47,11 +47,7 @@ public class FightingNekoEntity extends NekoEntity{
     @Override
     public void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(2, new FightingNekoAttackGoal(this));
-    }
-
-    public boolean hasWeapon(){
-        return this.getInventory().contains(NEKO_WEAPON);
+        this.goalSelector.addGoal(2, new NekoAttackGoal(this));
     }
 
     private int unhurtTime = 0;

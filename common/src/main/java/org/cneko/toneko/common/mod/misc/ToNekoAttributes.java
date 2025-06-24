@@ -19,7 +19,7 @@ public class ToNekoAttributes {
     public static final ResourceLocation MAX_NEKO_ENERGY_ID = ResourceLocation.fromNamespaceAndPath(MODID, "neko.max_energy");
     public static final @NotNull Holder<Attribute> MAX_NEKO_ENERGY = register(MAX_NEKO_ENERGY_ID,
         new RangedAttribute("attribute.name.neko.max_energy",
-        1000.0, 0.0, 10000.0
+        1000.0, 0.0, 100000.0
         ).setSyncable(true)
     );
 

@@ -1,5 +1,6 @@
 package org.cneko.toneko.common.mod.events;
 
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -38,6 +39,7 @@ public class ToNekoEvents {
         ServerPlayConnectionEvents.JOIN.register(ToNekoEvents::onPlayerJoin);
         ServerPlayConnectionEvents.DISCONNECT.register(ToNekoEvents::onPlayerQuit);
         UseEntityCallback.EVENT.register(CommonPlayerInteractionEvent::useEntity);
+        UseBlockCallback.EVENT.register(CommonPlayerInteractionEvent::useBlock);
         ServerLivingEntityEvents.ALLOW_DAMAGE.register(CommonPlayerInteractionEvent::onDamage);
         AttackEntityCallback.EVENT.register(CommonPlayerInteractionEvent::onAttackEntity);
         ServerTickEvents.START_SERVER_TICK.register(CommonPlayerEvent::startTick);

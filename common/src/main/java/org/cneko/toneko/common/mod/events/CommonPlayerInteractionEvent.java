@@ -1,6 +1,7 @@
 package org.cneko.toneko.common.mod.events;
 
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -8,8 +9,10 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import org.cneko.toneko.common.mod.entities.INeko;
+import org.cneko.toneko.common.mod.entities.boss.mouflet.MoufletNekoBoss;
 import org.cneko.toneko.common.mod.quirks.Quirk;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,6 +20,19 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class CommonPlayerInteractionEvent {
+
+    public static InteractionResult useBlock(Player player, Level level, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+        // 如果附近32格有战斗状态的MoufletNekoBoss实体，则不允许使用容器
+        if (level.getEntitiesOfClass(MoufletNekoBoss.class, player.getBoundingBox().inflate(32)).stream()
+                .anyMatch(MoufletNekoBoss::isFighting)) {
+            // 获取方块实体
+            var block = level.getBlockEntity(blockHitResult.getBlockPos());
+            if (block instanceof Container) {
+                return InteractionResult.FAIL;
+            }
+        }
+        return InteractionResult.PASS;
+    }
 
     // 基础事件上下文接口
     private sealed interface EventContext permits DamageContext, AttackContext, InteractionContext {

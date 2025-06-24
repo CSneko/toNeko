@@ -12,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
+import org.cneko.toneko.common.mod.entities.boss.NekoBoss;
 import org.cneko.toneko.common.mod.misc.ToNekoEnchantments;
 import org.cneko.toneko.common.mod.util.EnchantmentUtil;
 import org.cneko.toneko.common.mod.util.RandomUtil;
@@ -27,6 +28,17 @@ public class ContractItem extends Item {
     @Override
     public @NotNull InteractionResult interactLivingEntity(@NotNull ItemStack stack, @NotNull Player player, @NotNull LivingEntity interactionTarget, @NotNull InteractionHand usedHand) {
         if (player.level().isClientSide) return super.interactLivingEntity(stack,player,interactionTarget,usedHand);
+        if (interactionTarget instanceof NekoBoss boss) {
+            if (boss.canBeTamed(player, stack)) {
+                if (boss.tame(player, stack)) {
+                    return InteractionResult.SUCCESS;
+                } else {
+                    player.sendSystemMessage(Component.translatable("item.toneko.contract.tame_fail"));
+                    return InteractionResult.FAIL;
+                }
+            }
+            return InteractionResult.FAIL;
+        }
         if (interactionTarget instanceof INeko neko){
             if (!neko.isNeko()){
                 player.sendSystemMessage(Component.translatable("item.toneko.contract.not_a_neko"));

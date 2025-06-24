@@ -8,6 +8,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import org.cneko.toneko.common.mod.api.NekoNameRegistry;
 import org.cneko.toneko.common.mod.api.NekoSkinRegistry;
+import org.cneko.toneko.common.mod.entities.boss.mouflet.MoufletNekoBoss;
 import org.cneko.toneko.common.util.ConfigUtil;
 import org.jetbrains.annotations.ApiStatus;
 
@@ -25,6 +26,8 @@ public class ToNekoEntities {
     public static EntityType<GhostNekoEntity> GHOST_NEKO;
     public static ResourceLocation FIGHTING_NEKO_ID = toNekoLoc("fighting_neko");
     public static EntityType<FightingNekoEntity> FIGHTING_NEKO;
+    public static ResourceLocation MOUFLET_NEKO_BOSS_ID = toNekoLoc("mouflet_neko_boss");
+    public static EntityType<MoufletNekoBoss> MOUFLET_NEKO_BOSS;
     public static EntityType<AmmunitionEntity> AMMUNITION_ENTITY;
     public static ResourceLocation AMMUNITION_ENTITY_ID = toNekoLoc("ammunition_entity");
     public static void init() {
@@ -70,6 +73,13 @@ public class ToNekoEntities {
                 ()-> EntityType.Builder.of(FightingNekoEntity::new, MobCategory.CREATURE)
                         .sized(0.5f,1.7f).eyeHeight(1.6f).clientTrackingRange(8)
                         .build("fighting_neko");
+    }
+    @ApiStatus.Internal
+    public static Supplier<EntityType<MoufletNekoBoss>> getMoufletNekoBoss(){
+        return
+                ()-> EntityType.Builder.of(MoufletNekoBoss::new, MobCategory.MONSTER)
+                        .sized(0.5f,1.6f).clientTrackingRange(8).updateInterval(3)
+                        .build("mouflet_neko_boss");
     }
     @ApiStatus.Internal
     public static Supplier<EntityType<AmmunitionEntity>> getAmmunitionEntity(){

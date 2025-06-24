@@ -1,5 +1,7 @@
 package org.cneko.toneko.common.mod.entities.ai.goal;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -9,14 +11,16 @@ import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import org.cneko.toneko.common.mod.entities.FightingNekoEntity;
+import org.cneko.toneko.common.mod.entities.NekoEntity;
 import org.cneko.toneko.common.mod.items.BazookaItem;
 
 import java.util.EnumSet;
 import java.util.List;
 
-public class FightingNekoAttackGoal extends Goal {
-    private final FightingNekoEntity neko;
-    private LivingEntity target;
+public class NekoAttackGoal extends Goal {
+    protected final NekoEntity neko;
+    @Getter @Setter
+    protected LivingEntity target;
     private final TargetingConditions targetConditions;
     private static final double RANGED_ATTACK_RANGE = 15.0; // 远程武器使用距离
     private static final double MELEE_ATTACK_RANGE = 3.0;   // 近战武器使用距离
@@ -26,7 +30,7 @@ public class FightingNekoAttackGoal extends Goal {
     private int seeTime; // 记录看到目标的时间
     private int attackInterval = 20; // 基础攻击间隔
 
-    public FightingNekoAttackGoal(FightingNekoEntity neko) {
+    public NekoAttackGoal(NekoEntity neko) {
         this.neko = neko;
         this.targetConditions = TargetingConditions.forCombat()
                 .range(20.0) // 目标选择范围
@@ -179,7 +183,7 @@ public class FightingNekoAttackGoal extends Goal {
         }
     }
 
-    private CombatStrategy determineCombatStrategy() {
+    protected CombatStrategy determineCombatStrategy() {
         boolean hasRanged = hasUsableRangedWeapon();
         boolean hasMelee = hasMeleeWeapon();
         float selfHealthRatio = getHealthRatio(neko);
@@ -216,11 +220,11 @@ public class FightingNekoAttackGoal extends Goal {
 
     }
 
-    private float getHealthRatio(LivingEntity entity) {
+    protected float getHealthRatio(LivingEntity entity) {
         return entity.getHealth() / entity.getMaxHealth();
     }
 
-    private boolean hasUsableRangedWeapon() {
+    protected boolean hasUsableRangedWeapon() {
         // 检查是否有火箭筒
         boolean hasBazooka = false;
         for (int i = 0; i < neko.getInventory().getContainerSize(); i++) {
@@ -234,7 +238,7 @@ public class FightingNekoAttackGoal extends Goal {
         return hasBazooka && !findAmmo().isEmpty();
     }
 
-    private boolean hasMeleeWeapon() {
+    protected boolean hasMeleeWeapon() {
         for (int i = 0; i < neko.getInventory().getContainerSize(); i++) {
             ItemStack stack = neko.getInventory().getItem(i);
             if (stack.is(FightingNekoEntity.MELEE_WEAPON) &&
@@ -415,7 +419,7 @@ public class FightingNekoAttackGoal extends Goal {
         return ItemStack.EMPTY;
     }
 
-    private enum CombatStrategy {
+    public enum CombatStrategy {
         RANGED,
         MELEE,
         FLEE

@@ -43,6 +43,7 @@ import org.cneko.toneko.common.mod.advencements.ToNekoCriteria;
 import org.cneko.toneko.common.mod.ai.PromptRegistry;
 import org.cneko.toneko.common.mod.api.NekoNameRegistry;
 import org.cneko.toneko.common.mod.api.NekoSkinRegistry;
+import org.cneko.toneko.common.mod.entities.ai.goal.NekoEscapeDangerGoal;
 import org.cneko.toneko.common.mod.entities.ai.goal.NekoPickupItemGoal;
 import org.cneko.toneko.common.mod.items.ToNekoItems;
 import org.cneko.toneko.common.mod.misc.ToNekoAttributes;
@@ -200,6 +201,8 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         this.goalSelector.addGoal(5, new NekoPickupItemGoal(this));
         // 会被拿着喜欢物品的玩家吸引
         this.goalSelector.addGoal(5, new TemptGoal(this, 0.5D, this::isFavoriteItem,false));
+        // 逃生
+        this.goalSelector.addGoal(1, new NekoEscapeDangerGoal(this));
     }
 
     public void followOwner(Player followingOwner,double maxDistance, double followSpeed) {
@@ -802,6 +805,25 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
             if (source.getEntity() instanceof LivingEntity entity) neko.setLastHurtByMob(entity);
         }
         return true;
+    }
+
+    public boolean eatOrStoreFood(ItemStack stack){
+        if (stack.isEmpty() || !stack.has(DataComponents.FOOD)) {
+            // 不处理
+            return false;
+        }
+        FoodProperties food = stack.getItem().components().get(DataComponents.FOOD);
+        if (food != null){
+            if(this.getHealth() < this.getMaxHealth() || !food.effects().isEmpty()){
+                this.heal(food.nutrition());
+                this.eat(this.level(), stack);
+            }else {
+                if (this.getInventory().isFull()) return false;
+                this.getInventory().add(stack.copy());
+            }
+            return true;
+        }
+        return false;
     }
 
 

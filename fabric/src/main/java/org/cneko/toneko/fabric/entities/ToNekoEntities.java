@@ -12,6 +12,7 @@ import net.minecraft.world.entity.MobCategory;
 import org.cneko.toneko.common.mod.api.NekoNameRegistry;
 import org.cneko.toneko.common.mod.api.NekoSkinRegistry;
 import org.cneko.toneko.common.mod.entities.*;
+import org.cneko.toneko.common.mod.entities.boss.mouflet.MoufletNekoBoss;
 import org.cneko.toneko.common.util.ConfigUtil;
 
 import java.util.Set;
@@ -49,6 +50,12 @@ public class ToNekoEntities {
                         )
                         .sized(0.5f,1.7f).eyeHeight(1.6f).build()
         );
+        MOUFLET_NEKO_BOSS = Registry.register(
+                BuiltInRegistries.ENTITY_TYPE,
+                MOUFLET_NEKO_BOSS_ID,
+                FabricEntityType.Builder.createMob(MoufletNekoBoss::new, MobCategory.MONSTER,builder -> builder.defaultAttributes(MoufletNekoBoss::createMoufletNekoAttributes))
+                        .sized(0.5f,1.7f).clientTrackingRange(8).build()
+        );
 
         AMMUNITION_ENTITY = Registry.register(
                 BuiltInRegistries.ENTITY_TYPE,
@@ -63,6 +70,7 @@ public class ToNekoEntities {
         NekoSkinRegistry.register(ADVENTURER_NEKO,AdventurerNeko.nekoSkins);
         NekoSkinRegistry.register(GHOST_NEKO,GhostNekoEntity.nekoSkins);
         NekoSkinRegistry.register(FIGHTING_NEKO, FightingNekoEntity.NEKO_SKINS);
+        NekoSkinRegistry.register(MOUFLET_NEKO_BOSS, FightingNekoEntity.NEKO_SKINS);
 
         /*
         不知道为什么喵，我测试的时候总是不生成，真的好奇怪的问题
