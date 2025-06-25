@@ -24,7 +24,7 @@ public class CommonPlayerInteractionEvent {
     public static InteractionResult useBlock(Player player, Level level, InteractionHand interactionHand, BlockHitResult blockHitResult) {
         // 如果附近32格有战斗状态的MoufletNekoBoss实体，则不允许使用容器
         if (level.getEntitiesOfClass(MoufletNekoBoss.class, player.getBoundingBox().inflate(32)).stream()
-                .anyMatch(MoufletNekoBoss::isFighting)) {
+                .anyMatch(neko -> !neko.isPetMode())) {
             // 获取方块实体
             var block = level.getBlockEntity(blockHitResult.getBlockPos());
             if (block instanceof Container) {

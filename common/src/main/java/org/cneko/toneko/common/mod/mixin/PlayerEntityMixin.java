@@ -119,6 +119,7 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
             // 同步信息给玩家
             toneko$syncNekoInfo(sp);
             this.serverNekoSlowTick();
+            this.updateNekoLevelModifiers();
         }
     }
 

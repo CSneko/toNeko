@@ -33,6 +33,10 @@ public class NekoRenderer<T extends NekoEntity> extends GeoEntityRenderer<T> {
         super(renderManager, new NekoModel<>());
     }
 
+    public NekoRenderer(EntityRendererProvider.Context renderManager, GeoModel<T> model) {
+        super(renderManager, model);
+    }
+
     @Override
     public void preRender(PoseStack poseStack, T animatable, BakedGeoModel model, @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
         if (animatable.isBaby()){

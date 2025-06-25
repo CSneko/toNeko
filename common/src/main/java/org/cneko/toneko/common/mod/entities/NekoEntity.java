@@ -1,8 +1,10 @@
 package org.cneko.toneko.common.mod.entities;
 
+import com.llamalad7.mixinextras.sugar.impl.SugarWrapperImpl;
 import lombok.Getter;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
@@ -25,6 +27,8 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
@@ -185,8 +189,6 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         super.registerGoals();
         // 猫娘会观察玩家
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Player.class, 8.0F));
-        // 猫娘会近战攻击
-        this.goalSelector.addGoal(10, new MeleeAttackGoal(this, 1.0D, false));
         // 猫娘需要呼吸才能活呀
         this.goalSelector.addGoal(5, new BreathAirGoal(this));
         // 猫娘会闲逛
@@ -203,6 +205,8 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         this.goalSelector.addGoal(5, new TemptGoal(this, 0.5D, this::isFavoriteItem,false));
         // 逃生
         this.goalSelector.addGoal(1, new NekoEscapeDangerGoal(this));
+        // 会游泳
+        this.goalSelector.addGoal(1,new RandomSwimmingGoal(this,0.1,2));
     }
 
     public void followOwner(Player followingOwner,double maxDistance, double followSpeed) {
@@ -326,7 +330,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         // 如果是喜欢的物品
         if (this.isLikedItem(stack) && player instanceof ServerPlayer sp){
             if (this.getLastHurtByMob()==player){
-                // 消除仇恨=
+                // 消除仇恨
                 this.setLastHurtByMob(null);
             }
             // 增长动力
@@ -353,12 +357,13 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
             // 随机发送感谢消息
             player.sendSystemMessage(randomTranslatabledComponent("message.toneko.neko.gift_success",3, Objects.requireNonNull(this.getCustomName()).getString()));
 
-            // 设置玩家为主人
-            if (!this.hasOwner(player.getUUID())){
-                this.addOwner(player.getUUID(),new Owner(new ArrayList<>(), 0));
-            }else {
+            if (this.hasOwner(player.getUUID())){
                 // 如果是主人，则添加好感
-                this.setXpWithOwner(player.getUUID(), this.getXpWithOwner(player.getUUID()) +100);
+                this.setXpWithOwner(player.getUUID(), this.getXpWithOwner(player.getUUID()) + 20);
+                if (player.isNeko()){
+                    player.setNekoLevel(player.getNekoLevel()+0.05f);
+                }
+                this.setNekoLevel(this.getNekoLevel()+0.03f);
                 // 1%的几率掉落唱片
                 if (player.getRandom().nextInt(100) == 0) {
                     player.drop(new ItemStack(ToNekoItems.MUSIC_DISC_KAWAII),false);
@@ -561,7 +566,13 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         }
     }
 
-
+    @Override
+    public void travel(@NotNull Vec3 travelVector) {
+        if (this.isInWater()) {
+            this.setDeltaMovement(this.getDeltaMovement().add(0, 0.02, 0)); // 增加上浮力
+        }
+        super.travel(travelVector);
+    }
 
     @Override
     public void baseTick() {
@@ -578,6 +589,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
             this.setMoeTags(this.getMoeTags());
             this.setSkin(this.getSkin());
             this.serverNekoSlowTick();
+            this.updateNekoLevelModifiers();
         }
     }
 
@@ -759,7 +771,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     }
 
     public boolean canMove() {
-        return this.getPose() != Pose.SWIMMING && !this.isSitting() || this.isInLiquid();
+        return !this.isSitting() || this.isInLiquid();
     }
 
     @Override
@@ -923,8 +935,6 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     public List<Quirk> getQuirks() {
         return quirks;
     }
-
-
 
     @Override
     public boolean checkSpawnRules(@NotNull LevelAccessor level, @NotNull MobSpawnType reason) {

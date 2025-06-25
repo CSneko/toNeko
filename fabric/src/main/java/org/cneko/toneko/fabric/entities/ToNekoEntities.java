@@ -70,7 +70,7 @@ public class ToNekoEntities {
         NekoSkinRegistry.register(ADVENTURER_NEKO,AdventurerNeko.nekoSkins);
         NekoSkinRegistry.register(GHOST_NEKO,GhostNekoEntity.nekoSkins);
         NekoSkinRegistry.register(FIGHTING_NEKO, FightingNekoEntity.NEKO_SKINS);
-        NekoSkinRegistry.register(MOUFLET_NEKO_BOSS, FightingNekoEntity.NEKO_SKINS);
+        NekoSkinRegistry.register(MOUFLET_NEKO_BOSS, MoufletNekoBoss.NEKO_SKINS);
 
         /*
         不知道为什么喵，我测试的时候总是不生成，真的好奇怪的问题

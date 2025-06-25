@@ -1,5 +1,6 @@
 package org.cneko.toneko.common.mod.entities;
 
+import lombok.Setter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -32,6 +33,8 @@ public class AmmunitionEntity extends ThrowableProjectile implements GeoEntity {
     private static final EntityDataAccessor<ItemStack> AMMUNITION_STACK = SynchedEntityData.defineId(AmmunitionEntity.class, EntityDataSerializers.ITEM_STACK);
     private static final EntityDataAccessor<Boolean> RETURNING = SynchedEntityData.defineId(AmmunitionEntity.class, EntityDataSerializers.BOOLEAN);
     public Vec3 initialPosition;
+    @Setter
+    private LivingEntity homingTarget = null;
 
     public AmmunitionEntity(EntityType<? extends ThrowableProjectile> entityType, Level level) {
         super(entityType, level);
@@ -137,6 +140,15 @@ public class AmmunitionEntity extends ThrowableProjectile implements GeoEntity {
                     }
                 }
             }
+
+            // 追踪目标逻辑
+            if (homingTarget != null && homingTarget.isAlive()) {
+                Vec3 toTarget = homingTarget.position().add(0, homingTarget.getBbHeight() * 0.5, 0).subtract(this.position());
+                Vec3 motion = toTarget.normalize().scale(1.5); // 速度可调整
+                this.setDeltaMovement(motion);
+                this.hasImpulse = true;
+            }
+
         }
     }
 

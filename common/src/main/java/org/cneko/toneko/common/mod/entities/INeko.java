@@ -3,8 +3,12 @@ package org.cneko.toneko.common.mod.entities;
 import lombok.*;
 import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import org.cneko.toneko.common.mod.misc.Messaging;
 import org.cneko.toneko.common.mod.misc.ToNekoAttributes;
@@ -14,6 +18,8 @@ import org.cneko.toneko.common.mod.util.EntityUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+
+import static org.cneko.toneko.common.mod.util.ResourceLocationUtil.toNekoLoc;
 
 public interface INeko {
 
@@ -172,6 +178,45 @@ public interface INeko {
         }
         if (nbt.contains("NickName")){
             this.setNickName(this.getNickName());
+        }
+    }
+
+    ResourceLocation ATTACK_MODIFIER_ID = toNekoLoc("neko_level_attack_modifier");
+    ResourceLocation MAX_NEKO_ENERGY_MODIFIER_ID = toNekoLoc("neko_level_max_neko_energy_modifier");
+    ResourceLocation MAX_HEALTH_MODIFIER_ID = toNekoLoc("neko_level_max_health_modifier");
+    default void updateNekoLevelModifiers() {
+        float nekoLevel = this.getNekoLevel();
+
+        applyModifier(
+                this.getEntity().getAttribute(Attributes.ATTACK_DAMAGE),
+                ATTACK_MODIFIER_ID,
+                nekoLevel * 0.005
+        );
+
+        applyModifier(
+                this.getEntity().getAttribute(ToNekoAttributes.MAX_NEKO_ENERGY),
+                MAX_NEKO_ENERGY_MODIFIER_ID,
+                nekoLevel * 0.5
+        );
+
+        applyModifier(
+                this.getEntity().getAttribute(Attributes.MAX_HEALTH),
+                MAX_HEALTH_MODIFIER_ID,
+                nekoLevel * 0.02
+        );
+    }
+
+    static void applyModifier(AttributeInstance attr, ResourceLocation id, double bonus) {
+        if (attr != null) {
+            attr.removeModifier(id);
+            if (bonus > 0) {
+                AttributeModifier modifier = new AttributeModifier(
+                        id,
+                        bonus,
+                        AttributeModifier.Operation.ADD_VALUE
+                );
+                attr.addPermanentModifier(modifier);
+            }
         }
     }
 

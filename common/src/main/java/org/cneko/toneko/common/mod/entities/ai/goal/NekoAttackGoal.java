@@ -23,7 +23,7 @@ public class NekoAttackGoal extends Goal {
     protected LivingEntity target;
     private final TargetingConditions targetConditions;
     private static final double RANGED_ATTACK_RANGE = 15.0; // 远程武器使用距离
-    private static final double MELEE_ATTACK_RANGE = 3.0;   // 近战武器使用距离
+    private static final double MELEE_ATTACK_RANGE = 4.0;   // 近战武器使用距离
     private static final double TARGETING_RANGE = 30.0;
     private static final double RANGED_MAINTAIN_DISTANCE = 10.0; // 远程战斗理想距离
     private int attackCooldown;
@@ -92,7 +92,7 @@ public class NekoAttackGoal extends Goal {
 
     @Override
     public void start() {
-        neko.getNavigation().moveTo(target, 1.3); // 提高移动速度
+        neko.getNavigation().moveTo(target, neko.getAttributeValue(Attributes.MOVEMENT_SPEED)*1.2); // 提高移动速度
         attackCooldown = 0;
         seeTime = 0;
         neko.setAggressive(true); // 设置为敌对状态
@@ -143,7 +143,7 @@ public class NekoAttackGoal extends Goal {
                 // 远程策略：仅在距离过近时后退
                 if (distanceSqr > RANGED_ATTACK_RANGE * RANGED_ATTACK_RANGE) {
                     // 距离过远，向目标移动
-                    neko.getNavigation().moveTo(target, neko.getAttributeValue(Attributes.MOVEMENT_SPEED)*1.3);
+                    neko.getNavigation().moveTo(target, neko.getAttributeValue(Attributes.MOVEMENT_SPEED)*1.2);
                 } else {
                     // 计算当前距离与保持距离的比例
                     double currentDistance = Math.sqrt(distanceSqr);
@@ -157,7 +157,7 @@ public class NekoAttackGoal extends Goal {
                 }
             } else { // 近战策略
                 if (distanceSqr > MELEE_ATTACK_RANGE * MELEE_ATTACK_RANGE) {
-                    neko.getNavigation().moveTo(target, neko.getAttributeValue(Attributes.MOVEMENT_SPEED)*1.3);
+                    neko.getNavigation().moveTo(target, neko.getAttributeValue(Attributes.MOVEMENT_SPEED)*1.2);
                 } else {
                     neko.getNavigation().stop();
                 }
@@ -165,7 +165,7 @@ public class NekoAttackGoal extends Goal {
         } else {
             // 目标不可见时的移动策略
             if (distanceSqr > MELEE_ATTACK_RANGE * MELEE_ATTACK_RANGE) {
-                neko.getNavigation().moveTo(target, neko.getAttributeValue(Attributes.MOVEMENT_SPEED)*1.3);
+                neko.getNavigation().moveTo(target, neko.getAttributeValue(Attributes.MOVEMENT_SPEED)*1.1);
             }
         }
         // 移动逻辑结束
@@ -249,7 +249,7 @@ public class NekoAttackGoal extends Goal {
         return false;
     }
 
-    private void fleeFromTarget() {
+    protected void fleeFromTarget() {
         // 计算远离目标的移动方向
         double dx = neko.getX() - target.getX();
         double dz = neko.getZ() - target.getZ();
@@ -266,7 +266,7 @@ public class NekoAttackGoal extends Goal {
             double fleeZ = neko.getZ() + dz * fleeDistance;
 
             // 移动到逃跑位置
-            neko.getNavigation().moveTo(fleeX, neko.getY(), fleeZ, neko.getAttributeValue(Attributes.MOVEMENT_SPEED)*1.5);
+            neko.getNavigation().moveTo(fleeX, neko.getY(), fleeZ, neko.getAttributeValue(Attributes.MOVEMENT_SPEED)*1.1);
         }
     }
 
@@ -295,7 +295,7 @@ public class NekoAttackGoal extends Goal {
             double backX = neko.getX() + dx * distance;
             double backZ = neko.getZ() + dz * distance;
 
-            neko.getNavigation().moveTo(backX, neko.getY(), backZ, neko.getAttributeValue(Attributes.MOVEMENT_SPEED)*1.3);
+            neko.getNavigation().moveTo(backX, neko.getY(), backZ, neko.getAttributeValue(Attributes.MOVEMENT_SPEED)*1.1);
         }
     }
 
@@ -358,7 +358,7 @@ public class NekoAttackGoal extends Goal {
     }
 
     // 执行远程攻击
-    private void performRangedAttack() {
+    protected void performRangedAttack() {
         // 强制面向目标
         double dx = target.getX() - neko.getX();
         double dz = target.getZ() - neko.getZ();
@@ -387,7 +387,7 @@ public class NekoAttackGoal extends Goal {
         }
     }
 
-    private void reloadIfNeeded(ItemStack bazooka) {
+    protected void reloadIfNeeded(ItemStack bazooka) {
         BazookaItem bazookaItem = (BazookaItem) bazooka.getItem();
         BazookaItem.Ammunition currentAmmo = bazookaItem.getAmmunition(bazooka);
 
@@ -409,7 +409,7 @@ public class NekoAttackGoal extends Goal {
     }
 
     // 查找弹药
-    private ItemStack findAmmo() {
+    protected ItemStack findAmmo() {
         for (int i = 0; i < neko.getInventory().getContainerSize(); i++) {
             ItemStack stack = neko.getInventory().getItem(i);
             if (stack.getItem() instanceof BazookaItem.Ammunition) {

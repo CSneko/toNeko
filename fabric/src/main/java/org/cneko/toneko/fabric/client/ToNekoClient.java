@@ -11,6 +11,7 @@ import org.cneko.toneko.common.mod.client.ToNekoKeyBindings;
 import org.cneko.toneko.common.mod.client.events.HudRenderEvent;
 import org.cneko.toneko.common.mod.client.renderers.AmmunitionRenderer;
 import org.cneko.toneko.common.mod.client.renderers.GhostNekoRenderer;
+import org.cneko.toneko.common.mod.client.renderers.NekoBossRenderer;
 import org.cneko.toneko.common.mod.client.renderers.NekoRenderer;
 import org.cneko.toneko.common.mod.client.events.ClientNetworkEvents;
 import org.cneko.toneko.common.mod.client.events.ClientPlayerJoinEvent;
@@ -38,7 +39,7 @@ public class ToNekoClient implements ClientModInitializer {
         EntityRendererRegistry.register(ToNekoEntities.FIGHTING_NEKO, (EntityRendererProvider<? super FightingNekoEntity>) NekoRenderer::new);
         EntityRendererRegistry.register(ToNekoEntities.AMMUNITION_ENTITY, (EntityRendererProvider<? super AmmunitionEntity>) AmmunitionRenderer::new);
 
-        EntityRendererRegistry.register(ToNekoEntities.MOUFLET_NEKO_BOSS, (EntityRendererProvider<? super MoufletNekoBoss>) NekoRenderer::new);
+        EntityRendererRegistry.register(ToNekoEntities.MOUFLET_NEKO_BOSS, (EntityRendererProvider<? super MoufletNekoBoss>) NekoBossRenderer::new);
 
         BlockRenderLayerMap.INSTANCE.putBlock(ToNekoBlocks.CATNIP, RenderType.cutout());
 

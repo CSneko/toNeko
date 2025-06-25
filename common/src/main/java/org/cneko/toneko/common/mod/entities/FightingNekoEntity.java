@@ -59,7 +59,7 @@ public class FightingNekoEntity extends NekoEntity{
         if (unhurtTime > 1280) {
             // 给予生命回复效果
             this.addEffect(new MobEffectInstance(
-                    MobEffects.HEAL,
+                    MobEffects.REGENERATION,
                     1, // 持续时间为1 tick
                     0 // 强度为0
             ));
