@@ -3,3 +3,4 @@ accessible method net/minecraft/world/entity/decoration/ArmorStand setMarker (Z)
 accessible class net/minecraft/client/sounds/SoundManager$Preparations
 accessible field net/minecraft/client/sounds/SoundManager registry Ljava/util/Map;
 accessible method net/minecraft/client/sounds/SoundManager prepare (Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)Lnet/minecraft/client/sounds/SoundManager$Preparations;
+accessible method net/minecraft/client/renderer/GameRenderer loadEffect (Lnet/minecraft/resources/ResourceLocation;)V

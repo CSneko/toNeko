@@ -24,16 +24,16 @@ public class NekoAttackGoal extends Goal {
     private final TargetingConditions targetConditions;
     private static final double RANGED_ATTACK_RANGE = 15.0; // 远程武器使用距离
     private static final double MELEE_ATTACK_RANGE = 4.0;   // 近战武器使用距离
-    private static final double TARGETING_RANGE = 30.0;
+    private static final double TARGETING_RANGE = 100.0;
     private static final double RANGED_MAINTAIN_DISTANCE = 10.0; // 远程战斗理想距离
-    private int attackCooldown;
-    private int seeTime; // 记录看到目标的时间
-    private int attackInterval = 20; // 基础攻击间隔
+    protected int attackCooldown;
+    protected int seeTime; // 记录看到目标的时间
+    protected int attackInterval = 20; // 基础攻击间隔
 
     public NekoAttackGoal(NekoEntity neko) {
         this.neko = neko;
         this.targetConditions = TargetingConditions.forCombat()
-                .range(20.0) // 目标选择范围
+                .range(100.0) // 目标选择范围
                 .ignoreLineOfSight();
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
     }
@@ -299,7 +299,7 @@ public class NekoAttackGoal extends Goal {
         }
     }
 
-    private void switchToRangedWeapon() {
+    protected void switchToRangedWeapon() {
         // 检查当前是否已使用远程武器
         if (isUsingRangedWeapon()) {
             return;
@@ -320,7 +320,7 @@ public class NekoAttackGoal extends Goal {
         switchToMeleeWeapon();
     }
 
-    private void switchToMeleeWeapon() {
+    protected void switchToMeleeWeapon() {
         // 检查当前是否已使用近战武器
         if (isUsingMeleeWeapon()) {
             return;
@@ -353,7 +353,7 @@ public class NekoAttackGoal extends Goal {
     }
 
     // 执行近战攻击
-    private void performMeleeAttack() {
+    protected void performMeleeAttack() {
         neko.doHurtTarget(target);
     }
 

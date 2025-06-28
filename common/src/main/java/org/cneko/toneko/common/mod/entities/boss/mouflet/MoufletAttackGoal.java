@@ -95,6 +95,54 @@ public class MoufletAttackGoal extends NekoAttackGoal {
     }
 
     @Override
+    public void tick() {
+        if (target == null || !target.isAlive()) return;
+
+        // 更新朝向
+        neko.getLookControl().setLookAt(target, 30.0F, 30.0F);
+
+        double distanceSqr = neko.distanceToSqr(target);
+        boolean canSee = neko.hasLineOfSight(target);
+
+        if (canSee) {
+            ++this.seeTime;
+        } else {
+            this.seeTime = 0;
+        }
+
+        // 战斗策略
+        CombatStrategy strategy = determineCombatStrategy();
+
+        // 逃跑策略优先
+        if (strategy == CombatStrategy.FLEE) {
+            fleeFromTarget();
+            return;
+        }
+
+        // 切换武器
+        if (strategy == CombatStrategy.RANGED) {
+            switchToRangedWeapon();
+        } else if (strategy == CombatStrategy.MELEE) {
+            switchToMeleeWeapon();
+        }
+
+        // 始终靠近目标
+        neko.getNavigation().moveTo(target, neko.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED) * 1.2);
+
+        // 攻击逻辑
+        attackCooldown = Math.max(attackCooldown - 1, 0);
+        if (attackCooldown == 0 && canSee) {
+            if (strategy == CombatStrategy.MELEE && distanceSqr <= 16) {
+                performMeleeAttack();
+                attackCooldown = attackInterval;
+            } else if (strategy == CombatStrategy.RANGED && distanceSqr <= 225) {
+                performRangedAttack();
+                attackCooldown = attackInterval * 2;
+            }
+        }
+    }
+
+    @Override
     protected void performRangedAttack() {
         // 强制面向目标
         double dx = target.getX() - neko.getX();
@@ -143,5 +191,11 @@ public class MoufletAttackGoal extends NekoAttackGoal {
                 ammo.shrink(1);
             }
         }
+    }
+
+    @Override
+    public void stop() {
+        neko.getNavigation().stop();
+        neko.setAggressive(false); // 取消敌对状态
     }
 }

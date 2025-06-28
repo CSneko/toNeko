@@ -355,7 +355,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
             ClientboundLevelParticlesPacket packet = new ClientboundLevelParticlesPacket(ParticleTypes.HEART, true, this.getX() + 1.8, this.getY(), this.getZ(), 2, 2, 2, 1, 1);
             sp.connection.send(packet);
             // 随机发送感谢消息
-            player.sendSystemMessage(randomTranslatabledComponent("message.toneko.neko.gift_success",3, Objects.requireNonNull(this.getCustomName()).getString()));
+            sendGiftMessageToPlayer(player);
 
             if (this.hasOwner(player.getUUID())){
                 // 如果是主人，则添加好感
@@ -376,6 +376,9 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
             }
             return false;
         }
+    }
+    public void sendGiftMessageToPlayer(Player player){
+        player.sendSystemMessage(randomTranslatabledComponent("message.toneko.neko.gift_success",3, Objects.requireNonNull(this.getCustomName()).getString()));
     }
 
     @Override
@@ -805,6 +808,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
                 // 回血
                 this.heal(food.nutrition());
                 this.eat(this.level(), stack);
+                stack.shrink(1);
                 return true;
             }
         }

@@ -33,6 +33,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
+
+import static org.cneko.toneko.common.mod.util.TextUtil.randomTranslatabledComponent;
 
 /**
  graph TD
@@ -382,9 +385,24 @@ public class MoufletNekoBoss extends NekoEntity implements NekoBoss {
 
     // 技能消息工具
     private void sendSkillMessage(String key,Object... args) {
-        Component msg = Component.translatable("boss.toneko.mouflet.skill." + key,args);
+        int i = random.nextInt(10);
+        Component msg = Component.translatable("boss.toneko.mouflet.skill." + key+"."+i,args);
         this.level().getEntitiesOfClass(Player.class, this.getBoundingBox().inflate(32))
                 .forEach(p -> p.sendSystemMessage(msg));
+    }
+
+    @Override
+    public void sendGiftMessageToPlayer(Player player) {
+        player.sendSystemMessage(randomTranslatabledComponent("boss.toneko.mouflet.gift",10, Objects.requireNonNull(this.getCustomName()).getString()));
+    }
+    @Override
+    public void sendHurtMessageToPlayer(Player player) {
+        player.sendSystemMessage(randomTranslatabledComponent("boss.toneko.mouflet.hurt",10, Objects.requireNonNull(this.getCustomName()).getString()));
+    }
+
+    @Override
+    public List<String> getMoeTags() {
+        return List.of("shoakuma","tsundere"); // 小恶魔
     }
 
     @Override
@@ -392,6 +410,10 @@ public class MoufletNekoBoss extends NekoEntity implements NekoBoss {
         if (!despairTriggered && this.getHealth() <= 0.0F) {
             triggerDespairState(damageSource);
             return; // 阻止正常死亡
+        }
+        // 关掉boss血条
+        if (this.bossEvent != null) {
+            this.bossEvent.removeAllPlayers();
         }
         super.die(damageSource);
     }
@@ -415,6 +437,7 @@ public class MoufletNekoBoss extends NekoEntity implements NekoBoss {
                 .forEach(p -> p.getFoodData().setFoodLevel(0));
 
         // TODO 播放特效/消息
+        this.sendSkillMessage("despair", this.getName().getString());
     }
 
     @Override
@@ -457,7 +480,7 @@ public class MoufletNekoBoss extends NekoEntity implements NekoBoss {
         player.giveExperienceLevels(-30); // 按照契约消耗经验
 
         // 发送收服成功消息
-        player.sendSystemMessage(net.minecraft.network.chat.Component.translatable("item.toneko.contract.success", this.getName()));
+        player.sendSystemMessage(randomTranslatabledComponent("boss.toneko.mouflet.tamed",10, Objects.requireNonNull(this.getCustomName()).getString()));
 
         // 进入宠物模式
         this.setPetMode(true);
@@ -495,10 +518,6 @@ public class MoufletNekoBoss extends NekoEntity implements NekoBoss {
         if (this.isPetMode()) {
             super.openInteractiveMenu(player);
         }
-    }
-
-    @Override
-    public void sendHurtMessageToPlayer(Player player) {
     }
 
     public static AttributeSupplier.Builder createMoufletNekoAttributes() {
