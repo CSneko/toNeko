@@ -19,7 +19,6 @@ import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.ItemCost;
 import net.minecraft.world.item.trading.MerchantOffer;
-import org.cneko.ctlib.common.util.ChatPrefix;
 import org.cneko.toneko.common.mod.api.events.WorldEvents;
 import org.cneko.toneko.common.mod.items.ToNekoItems;
 import org.cneko.toneko.common.mod.quirks.ModQuirk;
@@ -69,7 +68,6 @@ public class ToNekoEvents {
             // 修复quirks
             player.fixQuirks();
             String name = TextUtil.getPlayerName(player);
-            ChatPrefix.addPrivatePrefix(name, LanguageUtil.prefix);
             for (Quirk quirk : player.getQuirks()){
                 if (quirk instanceof ModQuirk mq){
                     mq.onJoin(player);
@@ -82,7 +80,6 @@ public class ToNekoEvents {
         ServerPlayer player = serverPlayNetworkHandler.getPlayer();
         if(player.isNeko()){
             String name = TextUtil.getPlayerName(player);
-            ChatPrefix.removePrivatePrefix(name, LanguageUtil.prefix);
         }
     }
 

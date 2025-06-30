@@ -49,8 +49,7 @@
   "depends": {
     "fabricloader": "*",
     "fabric": "*",
-    "minecraft": "1.21.x",
-    "ctlib": "*",
+    "minecraft": "1.21.1",
     "geckolib": "*"
   },
   "suggests": {

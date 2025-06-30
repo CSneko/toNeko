@@ -16,4 +16,8 @@ public class StringUtil {
 
         return builder.toString();
     }
+
+    public static int getCount(String content,String chars){
+        return content.length() - content.replace(chars, "").length();
+    }
 }

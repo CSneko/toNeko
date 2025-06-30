@@ -40,7 +40,6 @@ dependencies {
     common(project(path: ':common', configuration: 'namedElements')) { transitive false }
     shadowBundle project(path: ':common', configuration: 'transformProductionNeoForge')
     //implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
-    include modApi("maven.modrinth:ctlibmod:0.1.13")
     include "com.github.CSneko:NekoAI:$rootProject.nekoai_version"
     include "io.netty:netty-codec-http:4.1.117.Final"
     include "io.netty:netty-handler-proxy:4.1.117.Final"

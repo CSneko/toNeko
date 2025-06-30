@@ -1,7 +1,4 @@
 package org.cneko.toneko.common.util;
-
-import org.cneko.ctlib.common.file.JsonConfiguration;
-import org.cneko.ctlib.common.file.Resources;
 import org.cneko.toneko.common.Bootstrap;
 
 import java.nio.file.Path;

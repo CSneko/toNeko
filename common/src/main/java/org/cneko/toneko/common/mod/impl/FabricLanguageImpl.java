@@ -1,7 +1,7 @@
 package org.cneko.toneko.common.mod.impl;
 
-import org.cneko.ctlib.common.file.JsonConfiguration;
 import org.cneko.toneko.common.util.FileUtil;
+import org.cneko.toneko.common.util.JsonConfiguration;
 import org.cneko.toneko.common.util.LanguageUtil.Language;
 import java.nio.file.Path;
 import java.util.List;

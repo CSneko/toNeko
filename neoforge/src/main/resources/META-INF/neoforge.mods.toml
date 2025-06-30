@@ -26,19 +26,12 @@ side = "BOTH"
 [[dependencies.toneko]]
 modId = "minecraft"
 type = "required"
-versionRange = "[1.21,1.22)"
+versionRange = "[1.21,1.21.2)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.toneko]]
 modId = "fabric_api"
-type = "required"
-versionRange = "*"
-ordering = "NONE"
-side = "BOTH"
-
-[[dependencies.toneko]]
-modId = "ctlib"
 type = "required"
 versionRange = "*"
 ordering = "NONE"

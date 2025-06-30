@@ -2,16 +2,10 @@ package org.cneko.toneko.common.mod;
 
 import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
-import net.minecraft.network.chat.Component;
 import org.cneko.toneko.common.mod.ai.Prompts;
-import org.cneko.toneko.common.mod.api.events.ChatEvents;
 import org.cneko.toneko.common.mod.commands.arguments.CustomStringArgument;
 import org.cneko.toneko.common.mod.commands.arguments.NekoArgument;
-import org.cneko.toneko.common.mod.events.CommonChatEvent;
-import org.cneko.toneko.common.mod.quirks.QuirkRegister;
-import org.cneko.toneko.common.mod.quirks.Quirks;
 import org.cneko.toneko.common.mod.quirks.ToNekoQuirks;
-import org.cneko.toneko.common.mod.util.PlayerUtil;
 import org.cneko.toneko.common.util.scheduled.FabricSchedulerPoolImpl;
 import org.cneko.toneko.common.util.scheduled.SchedulerPoolProvider;
 

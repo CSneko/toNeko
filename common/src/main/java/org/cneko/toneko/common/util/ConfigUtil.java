@@ -1,12 +1,10 @@
 package org.cneko.toneko.common.util;
 
-import org.cneko.ctlib.common.file.YamlConfiguration;
-
 import java.nio.file.Path;
 import java.time.LocalDate;
 
 public class ConfigUtil {
-    public static String CONFIG_FILE = "config/toneko.yml";
+    public static String CONFIG_FILE = "config/toneko.json";
     
     public static String AI_URL = "https://s.cneko.org/toNekoAI";
 
@@ -42,7 +40,7 @@ public class ConfigUtil {
                     "启用统计功能，统计数据将发送到 toneko API，如何使用api请查看 https://s.cneko.org/toNekoOnlineAPI",
                     "Enable statistics, statistics data will be sent to the toneko API, how to use the api please see https://s.cneko.org/toNekoOnlineAPI")
             .build();
-    public static ConfigBuilder.YamlC CONFIG = CONFIG_BUILDER.createConfig();
+    public static JsonConfiguration CONFIG = CONFIG_BUILDER.createConfig();
 
     public static boolean IS_BIRTHDAY = false;
     private static final int BIRTHDAY_MONTH = 9;

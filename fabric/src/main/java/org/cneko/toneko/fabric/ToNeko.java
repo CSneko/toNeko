@@ -9,22 +9,20 @@ import org.cneko.toneko.common.mod.commands.NekoCommand;
 import org.cneko.toneko.common.mod.commands.QuirkCommand;
 import org.cneko.toneko.common.mod.commands.ToNekoAdminCommand;
 import org.cneko.toneko.common.mod.commands.ToNekoCommand;
-import org.cneko.toneko.common.mod.effects.ToNekoEffects;
 import org.cneko.toneko.common.mod.events.ToNekoEvents;
 import org.cneko.toneko.common.mod.events.ToNekoNetworkEvents;
 import org.cneko.toneko.common.mod.impl.FabricLanguageImpl;
-import org.cneko.toneko.common.mod.misc.ToNekoSoundEvents;
-import org.cneko.toneko.fabric.items.ToNekoArmorMaterials;
+import org.cneko.toneko.fabric.items.*;
 import org.cneko.toneko.common.mod.packets.ToNekoPackets;
 import org.cneko.toneko.common.mod.quirks.ToNekoQuirks;
 import org.cneko.toneko.common.mod.util.PermissionUtil;
 import org.cneko.toneko.common.util.LanguageUtil;
 import org.cneko.toneko.fabric.entities.ToNekoEntities;
-import org.cneko.toneko.fabric.items.ToNekoBlocks;
-import org.cneko.toneko.fabric.items.ToNekoItems;
 import org.cneko.toneko.common.mod.misc.ToNekoAttributes;
 import org.cneko.toneko.fabric.msic.ToNekoCriteriaFabric;
 import org.cneko.toneko.fabric.msic.ToNekoEffectFabric;
+import org.cneko.toneko.fabric.msic.ToNekoMenuTypes;
+import org.cneko.toneko.fabric.msic.ToNekoRecipes;
 
 public class ToNeko implements ModInitializer {
     @Override
@@ -60,6 +58,9 @@ public class ToNeko implements ModInitializer {
         ToNekoQuirks.init();
         // 注册网络数据包
         ToNekoPackets.init();
+        // 注册配方
+        ToNekoRecipes.init();
+        ToNekoMenuTypes.init();
 
         // 启动事件
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {

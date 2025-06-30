@@ -7,11 +7,13 @@
   },
 
   "pattern": [
-    "I"
+    "   ",
+    " I ",
+    "   "
   ],
-  "energy": 15.0,
+  "energy": 5.0,
   "result": {
-    "item": "toneko:neko_ingot",
+    "id": "toneko:neko_ingot",
     "count": 1
   }
 }

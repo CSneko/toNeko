@@ -20,7 +20,6 @@ import org.cneko.ai.providers.openai.OpenAIConfig;
 import org.cneko.ai.providers.openai.OpenAIService;
 import org.cneko.ai.util.FileStorageUtil;
 import io.netty.handler.codec.http.*;
-import org.cneko.ctlib.common.network.HttpGet;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;

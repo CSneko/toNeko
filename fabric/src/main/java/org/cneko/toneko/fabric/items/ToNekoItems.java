@@ -57,6 +57,8 @@ public class ToNekoItems {
         LIGHTNING_BOMB = new LightningBombItem(new Item.Properties());
         EXPLOSIVE_BOMB  = new ExplosiveBombItem(new Item.Properties());
         CONTRACT = new ContractItem(new Item.Properties());
+        NEKO_AGGREGATOR_ITEM = new ItemNameBlockItem(ToNekoBlocks.NEKO_AGGREGATOR, new Item.Properties());
+        NEKO_INGOT = new Item(new Item.Properties());
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NekoPotionItem.ID), NEKO_POTION);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NekoCollectorItem.ID), NEKO_COLLECTOR);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(FurryBoheItem.ID), FURRY_BOHE);
@@ -73,6 +75,8 @@ public class ToNekoItems {
         Registry .register(BuiltInRegistries.ITEM, toNekoLoc("lightning_bomb"), LIGHTNING_BOMB);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("explosive_bomb"), EXPLOSIVE_BOMB);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("contract"), CONTRACT);
+        Registry.register(BuiltInRegistries.ITEM, toNekoLoc("neko_aggregator"), NEKO_AGGREGATOR_ITEM);
+        Registry.register(BuiltInRegistries.ITEM, toNekoLoc("neko_ingot"), NEKO_INGOT);
 
         // 如果安装了trinkets，则注册为TrinketItem
         if (isTrinketsInstalled){
@@ -114,6 +118,8 @@ public class ToNekoItems {
             content.accept(LIGHTNING_BOMB);
             content.accept(EXPLOSIVE_BOMB);
             content.accept(CONTRACT);
+            content.accept(NEKO_AGGREGATOR_ITEM);
+            content.accept(NEKO_INGOT);
         });
     }
 

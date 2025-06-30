@@ -1,7 +1,7 @@
 package org.cneko.toneko.common;
 
-import org.cneko.ctlib.common.util.base.StringUtil;
-import org.cneko.ctlib.common.network.HttpGet;
+import org.cneko.toneko.common.util.StringUtil;
+import org.cneko.toneko.common.util.network.HttpGet;
 import org.cneko.toneko.common.util.scheduled.SchedulerPoolProvider;
 
 import java.io.IOException;

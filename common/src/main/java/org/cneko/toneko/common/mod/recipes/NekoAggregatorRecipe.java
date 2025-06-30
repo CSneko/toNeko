@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 public class NekoAggregatorRecipe implements Recipe<NekoAggregatorInput> {
     final NekoAggregatorRecipePattern pattern;
     final ItemStack result;
-    final double energy;
+    public final double energy;
     public NekoAggregatorRecipe(NekoAggregatorRecipePattern pattern,double energy,ItemStack result){
         this.pattern = pattern;
         this.result = result;
@@ -23,7 +23,7 @@ public class NekoAggregatorRecipe implements Recipe<NekoAggregatorInput> {
     }
     @Override
     public boolean matches(@NotNull NekoAggregatorInput input, @NotNull Level level) {
-        return this.pattern.matches(input) && input.getEnergy() >= this.energy;
+        return this.pattern.matches(input);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class NekoAggregatorRecipe implements Recipe<NekoAggregatorInput> {
 
     @Override
     public @NotNull ItemStack getResultItem(HolderLookup.@NotNull Provider registries) {
-        return this.result;
+        return this.result.copy();
     }
 
     @Override
@@ -53,10 +53,10 @@ public class NekoAggregatorRecipe implements Recipe<NekoAggregatorInput> {
 
     public static class Serializer implements RecipeSerializer<NekoAggregatorRecipe> {
         public static final MapCodec<NekoAggregatorRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-                NekoAggregatorRecipePattern.MAP_CODEC.fieldOf("pattern").forGetter(recipe -> recipe.pattern),
-                ItemStack.STRICT_CODEC.fieldOf("result").forGetter(recipe -> recipe.result),
-                Codec.DOUBLE.fieldOf("energy").forGetter(recipe -> recipe.energy)
-        ).apply(instance, (pattern, result, energy) -> new NekoAggregatorRecipe(pattern, energy, result)));
+                NekoAggregatorRecipePattern.MAP_CODEC.forGetter(recipe -> recipe.pattern),
+                Codec.DOUBLE.fieldOf("energy").forGetter(recipe -> recipe.energy),
+                ItemStack.STRICT_CODEC.fieldOf("result").forGetter(recipe -> recipe.result)
+        ).apply(instance, NekoAggregatorRecipe::new));
 
 
         public static final StreamCodec<RegistryFriendlyByteBuf, NekoAggregatorRecipe> STREAM_CODEC = StreamCodec.of(NekoAggregatorRecipe.Serializer::toNetwork, NekoAggregatorRecipe.Serializer::fromNetwork);

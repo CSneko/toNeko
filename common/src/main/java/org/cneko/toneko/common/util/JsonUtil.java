@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.cneko.ctlib.common.file.JsonConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;

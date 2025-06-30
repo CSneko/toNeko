@@ -20,6 +20,8 @@ import org.cneko.toneko.neoforge.ToNekoNeoForge;
 import org.cneko.toneko.neoforge.entities.ToNekoEntities;
 import org.cneko.toneko.neoforge.msic.ToNekoCriteriaNeoForge;
 import org.cneko.toneko.neoforge.msic.ToNekoEffectNeoForge;
+import org.cneko.toneko.neoforge.msic.ToNekoMenuTypesNeo;
+import org.cneko.toneko.neoforge.msic.ToNekoRecipesNeo;
 
 import java.util.List;
 import java.util.Optional;
@@ -49,6 +51,8 @@ public class ToNekoItems {
     public static DeferredHolder<Item,Item> LIGHTNING_BOMB_HOLDER;
     public static DeferredHolder<Item,Item> EXPLOSIVE_BOMB_HOLDER;
     public static DeferredHolder<Item,Item> CONTRACT_HOLDER;
+    public static DeferredHolder<Item,Item> NEKO_AGGREGATOR_ITEM_HOLDER;
+    public static DeferredHolder<Item,Item> NEKO_INGOT_HOLDER;
 
     public static void init() {
         registerWithOutConfig();
@@ -97,6 +101,10 @@ public class ToNekoItems {
 
         CONTRACT_HOLDER = ITEMS.register("contract",()->new ContractItem(new Item.Properties()));
 
+        NEKO_AGGREGATOR_ITEM_HOLDER = ITEMS.register("neko_aggregator",()->new ItemNameBlockItem(ToNekoBlocks.NEKO_AGGREGATOR_BLOCK_HOLDER.get(), new Item.Properties()));
+
+        NEKO_INGOT_HOLDER = ITEMS.register("neko_ingot",()->new Item(new Item.Properties()));
+
         ITEMS.register(NekoArmor.NekoPawsItem.ID, ()->new NekoArmor.NekoPawsItem(ToNekoArmorMaterials.NEKO)); // 此物品暂不添加
 
         // 注册物品组
@@ -122,7 +130,9 @@ public class ToNekoItems {
                     event.accept(BAZOOKA_HOLDER.get());
                     event.accept(EXPLOSIVE_BOMB_HOLDER.get());
                     event.accept(LIGHTNING_BOMB_HOLDER.get());
-                    event.accept(PLOT_SCROLL_HOLDER.get());
+                    // event.accept(PLOT_SCROLL_HOLDER.get());
+                    event.accept(CONTRACT_HOLDER.get());
+                    event.accept(NEKO_AGGREGATOR_ITEM_HOLDER.get());
                 })
                 .build()
         );
@@ -162,6 +172,8 @@ public class ToNekoItems {
             event.accept(LIGHTNING_BOMB_HOLDER.get());
             event.accept(EXPLOSIVE_BOMB_HOLDER.get());
             event.accept(CONTRACT_HOLDER.get());
+            event.accept(NEKO_AGGREGATOR_ITEM_HOLDER.get());
+            event.accept(NEKO_INGOT_HOLDER.get());
         }
         reg();
     }
@@ -182,9 +194,13 @@ public class ToNekoItems {
         LIGHTNING_BOMB = LIGHTNING_BOMB_HOLDER.get();
         EXPLOSIVE_BOMB = EXPLOSIVE_BOMB_HOLDER.get();
         CONTRACT = CONTRACT_HOLDER.get();
+        NEKO_AGGREGATOR_ITEM = NEKO_AGGREGATOR_ITEM_HOLDER.get();
+        NEKO_INGOT = NEKO_INGOT_HOLDER.get();
         ToNekoEffectNeoForge.reg();
         ToNekoBlocks.reg();
         ToNekoEntities.reg();
         ToNekoCriteriaNeoForge.reg();
+        ToNekoMenuTypesNeo.reg();
+        ToNekoRecipesNeo.reg();
     }
 }

@@ -11,6 +11,7 @@ import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.cneko.toneko.common.mod.api.NekoSkinRegistry;
 import org.cneko.toneko.common.mod.entities.*;
+import org.cneko.toneko.common.mod.entities.boss.mouflet.MoufletNekoBoss;
 import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.neoforge.ToNekoNeoForge;
 
@@ -21,6 +22,7 @@ public class ToNekoEntities {
     public static DeferredHolder<EntityType<?>, EntityType<GhostNekoEntity>> GHOST_NEKO_HOLDER;
     public static DeferredHolder<EntityType<?>, EntityType<FightingNekoEntity>> FIGHTING_NEKO_HOLDER;
     public static DeferredHolder<EntityType<?>, EntityType<AmmunitionEntity>> AMMUNITION_ENTITY_HOLDER;
+    public static DeferredHolder<EntityType<?>, EntityType<MoufletNekoBoss>> MOUFLET_NEKO_BOSS_HOLDER;
     public static void init(){
         CRYSTAL_NEKO_HOLDER = ToNekoNeoForge.ENTITY_TYPES.register(CRYSTAL_NEKO_ID.getPath(),
                 org.cneko.toneko.common.mod.entities.ToNekoEntities.getCrystalNeko()
@@ -37,6 +39,9 @@ public class ToNekoEntities {
         AMMUNITION_ENTITY_HOLDER = ToNekoNeoForge.ENTITY_TYPES.register(AMMUNITION_ENTITY_ID.getPath(),
                 org.cneko.toneko.common.mod.entities.ToNekoEntities.getAmmunitionEntity()
         );
+        MOUFLET_NEKO_BOSS_HOLDER = ToNekoNeoForge.ENTITY_TYPES.register(MOUFLET_NEKO_BOSS_ID.getPath(),
+                org.cneko.toneko.common.mod.entities.ToNekoEntities.getMoufletNekoBoss()
+        );
 
         org.cneko.toneko.common.mod.entities.ToNekoEntities.init();
 
@@ -44,6 +49,7 @@ public class ToNekoEntities {
         NekoSkinRegistry.register("entity.toneko.adventurer_neko",AdventurerNeko.nekoSkins);
         NekoSkinRegistry.register("entity.toneko.ghost_neko",GhostNekoEntity.nekoSkins);
         NekoSkinRegistry.register("entity.toneko.fighting_neko",FightingNekoEntity.NEKO_SKINS);
+        NekoSkinRegistry.register("entity.toneko.mouflet_neko_boss",MoufletNekoBoss.NEKO_SKINS);
 
 
     }
@@ -89,5 +95,6 @@ public class ToNekoEntities {
         GHOST_NEKO = GHOST_NEKO_HOLDER.get();
         FIGHTING_NEKO = FIGHTING_NEKO_HOLDER.get();
         AMMUNITION_ENTITY = AMMUNITION_ENTITY_HOLDER.get();
+        MOUFLET_NEKO_BOSS = MOUFLET_NEKO_BOSS_HOLDER.get();
     }
 }

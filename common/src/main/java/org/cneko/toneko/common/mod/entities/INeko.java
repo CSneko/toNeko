@@ -41,7 +41,7 @@ public interface INeko {
     }
 
     default int getNekoAbility(){
-        return (int)(this.getNekoLevel() + this.getEntity().getAttributeValue(ToNekoAttributes.NEKO_DEGREE));
+        return (int)(this.getNekoLevel() * this.getEntity().getAttributeValue(ToNekoAttributes.NEKO_DEGREE));
     }
 
     default float getNekoLevel(){
@@ -196,7 +196,7 @@ public interface INeko {
         applyModifier(
                 this.getEntity().getAttribute(ToNekoAttributes.MAX_NEKO_ENERGY),
                 MAX_NEKO_ENERGY_MODIFIER_ID,
-                nekoLevel * 0.5
+                nekoLevel *2
         );
 
         applyModifier(
@@ -236,12 +236,12 @@ public interface INeko {
             return;
         }
         // 根据自身猫猫等级来增加
-        float increase = (float) (this.getNekoAbility() * 0.01);
+        float increase = (float) (this.getNekoAbility() * 0.1);
         // 根据周围猫猫数量来增加
         List<INeko> nekoes = EntityUtil.getNekoInRange(this.getEntity(), this.getEntity().level(), 3);
         for (INeko neko : nekoes){
             if (neko.isNeko()){
-                increase += (float) (neko.getNekoAbility() * 0.1);
+                increase += (float) (neko.getNekoAbility() * 0.05);
             }
         }
         this.setNekoEnergy(energy + increase);

@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CNC",
+    "TES",
+    "CIC"
+  ],
+  "key": {
+    "N": {
+      "item": "neko_collector"
+    },
+    "C": {
+      "item": "toneko:catnip"
+    },
+    "E": {
+      "item": "minecraft:enchanting_table"
+    },
+    "S": {
+      "item": "minecraft:smithing_table"
+    },
+    "T": {
+      "item": "minecraft:crafting_table"
+    },
+    "I": {
+      "item": "minecraft:iron_block"
+    }
+  },
+  "result": {
+    "id": "toneko:neko_aggregator",
+    "count": 1
+  }
+}

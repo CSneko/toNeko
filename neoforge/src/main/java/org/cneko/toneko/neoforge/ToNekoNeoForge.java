@@ -6,8 +6,11 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -23,14 +26,13 @@ import org.cneko.toneko.common.mod.events.ToNekoEvents;
 import org.cneko.toneko.common.mod.events.ToNekoNetworkEvents;
 import org.cneko.toneko.common.mod.impl.FabricLanguageImpl;
 import org.cneko.toneko.common.mod.packets.ToNekoPackets;
+import org.cneko.toneko.common.mod.recipes.ToNekoMenuTypes;
 import org.cneko.toneko.common.util.LanguageUtil;
 import org.cneko.toneko.neoforge.entities.ToNekoEntities;
 import org.cneko.toneko.neoforge.items.ToNekoArmorMaterials;
 import org.cneko.toneko.neoforge.items.ToNekoBlocks;
 import org.cneko.toneko.neoforge.items.ToNekoItems;
-import org.cneko.toneko.neoforge.msic.ToNekoAttributes;
-import org.cneko.toneko.neoforge.msic.ToNekoCriteriaNeoForge;
-import org.cneko.toneko.neoforge.msic.ToNekoEffectNeoForge;
+import org.cneko.toneko.neoforge.msic.*;
 
 import static org.cneko.toneko.common.Bootstrap.MODID;
 
@@ -46,6 +48,9 @@ public final class ToNekoNeoForge {
     public static final DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(Registries.ATTRIBUTE, MODID);
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(Registries.ENTITY_TYPE, MODID);
     public static final DeferredRegister<CriterionTrigger<?>> CRITERION_TRIGGERS = DeferredRegister.create(Registries.TRIGGER_TYPE, "minecraft");
+    public static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(Registries.MENU, MODID);
+    public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(Registries.RECIPE_TYPE, MODID);
+    public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(Registries.RECIPE_SERIALIZER, MODID);
     public ToNekoNeoForge(IEventBus bus, ModContainer container) {
         // 初始化语言和配置
         LanguageUtil.INSTANCE = new FabricLanguageImpl();
@@ -62,6 +67,9 @@ public final class ToNekoNeoForge {
         ENTITY_TYPES.register(bus);
         CREATIVE_MODE_TABS.register(bus);
         CRITERION_TRIGGERS.register(bus);
+        MENU_TYPES.register(bus);
+        RECIPE_TYPES.register(bus);
+        RECIPE_SERIALIZERS.register(bus);
         // 注册装备
         ToNekoArmorMaterials.init();
         ToNekoItems.init();
@@ -69,6 +77,8 @@ public final class ToNekoNeoForge {
         ToNekoBlocks.init();
         ToNekoAttributes.init();
         ToNekoCriteriaNeoForge.init();
+        ToNekoRecipesNeo.init();
+        ToNekoMenuTypesNeo.init();
         bus.addListener(ToNekoAttributes::onRegisterAttributes);
         bus.addListener(ToNekoAttributes::registerAttributes);
         ToNekoEvents.init();
