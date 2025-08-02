@@ -40,4 +40,10 @@ public class ScreenBuilders {
             .addButton(ButtonFactories.LINKS_MODRINTH_BUTTON)
             .addButton(ButtonFactories.LINKS_DISCORD_BUTTON)
             .addButton(ButtonFactories.LINKS_BILIBILI_BUTTON);
+    public static final NekoScreenBuilder RAVENN_SCREEN = COMMON_START.clone()
+            .addButton(ButtonFactories.GIFT_BUTTON)
+            .addButton(ButtonFactories.ACTION_BUTTON)
+            .addButton(ButtonFactories.LINKS_RAVENN_BILIBILI_BUTTON)
+            ;
+
 }

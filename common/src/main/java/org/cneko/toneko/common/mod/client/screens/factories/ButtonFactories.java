@@ -10,6 +10,7 @@ import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.cneko.toneko.common.api.TickTasks;
+import org.cneko.toneko.common.mod.api.EntityPoseManager;
 import org.cneko.toneko.common.mod.client.api.ClientEntityPoseManager;
 import org.cneko.toneko.common.mod.client.screens.*;
 import org.cneko.toneko.common.mod.client.screens.NekoScreenBuilder.ButtonFactory;
@@ -98,26 +99,12 @@ public class ButtonFactories {
     public static ButtonFactory ACTION_LIE_BUTTON = screen -> Button.builder(Component.translatable("screen.toneko.neko_entity_interactive.button.lie"),(btn)->{
         NekoEntity neko = screen.getNeko();
         // 把猫娘设置为躺
-        if (ClientEntityPoseManager.contains(neko)){
-            ClientEntityPoseManager.remove(neko);
-            neko.setPose(Pose.STANDING);
-        }else {
-            ClientEntityPoseManager.setPose(neko, Pose.SLEEPING);
-            neko.setPose(Pose.SLEEPING);
-        }
-        ClientPlayNetworking.send(new NekoPosePayload(Pose.SLEEPING,neko.getUUID().toString(),true));
+        ClientPlayNetworking.send(new NekoPosePayload(Pose.SLEEPING,neko.getUUID().toString()));
     });
     public static ButtonFactory ACTION_GET_DOWN_BUTTON = screen -> Button.builder(Component.translatable("screen.toneko.neko_entity_interactive.button.get_down"),(btn)->{
         NekoEntity neko = screen.getNeko();
         // 把猫娘设置为趴
-        if (ClientEntityPoseManager.contains(neko)){
-            ClientEntityPoseManager.remove(neko);
-            neko.setPose(Pose.STANDING);
-        }else {
-            ClientEntityPoseManager.setPose(neko, Pose.SWIMMING);
-            neko.setPose(Pose.SWIMMING);
-        }
-        ClientPlayNetworking.send(new NekoPosePayload(Pose.SWIMMING,neko.getUUID().toString(),true));
+        ClientPlayNetworking.send(new NekoPosePayload(Pose.SWIMMING,neko.getUUID().toString()));
     });
 
     // ------------------------------------------------------ CrystalNeko ------------------------------------------------------------
@@ -220,4 +207,5 @@ public class ButtonFactories {
     public static ButtonFactory LINKS_MODRINTH_BUTTON = screen -> Button.builder(Component.translatable("screen.toneko.links.button.modrinth"),(btn)-> Util.getPlatform().openUri("https://modrinth.com/mod/tonekomod"));
     public static ButtonFactory LINKS_DISCORD_BUTTON = screen -> Button.builder(Component.translatable("screen.toneko.links.button.discord"),(btn)-> Util.getPlatform().openUri("https://discord.gg/hQ6Mm7wtt4"));
     public static ButtonFactory LINKS_BILIBILI_BUTTON = screen -> Button.builder(Component.translatable("screen.toneko.links.button.bilibili"),(btn)-> Util.getPlatform().openUri("https://space.bilibili.com/3461580710742160"));
+    public static ButtonFactory LINKS_RAVENN_BILIBILI_BUTTON = screen -> Button.builder(Component.translatable("screen.toneko.links.button.ravenn_bilibili"),(btn)-> Util.getPlatform().openUri("https://space.bilibili.com/3546795212802660"));
 }

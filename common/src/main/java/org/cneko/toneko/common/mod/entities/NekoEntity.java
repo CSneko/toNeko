@@ -1,10 +1,8 @@
 package org.cneko.toneko.common.mod.entities;
 
-import com.llamalad7.mixinextras.sugar.impl.SugarWrapperImpl;
 import lombok.Getter;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
@@ -27,8 +25,6 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
@@ -47,15 +43,12 @@ import org.cneko.toneko.common.mod.advencements.ToNekoCriteria;
 import org.cneko.toneko.common.mod.ai.PromptRegistry;
 import org.cneko.toneko.common.mod.api.NekoNameRegistry;
 import org.cneko.toneko.common.mod.api.NekoSkinRegistry;
-import org.cneko.toneko.common.mod.entities.ai.goal.NekoEscapeDangerGoal;
-import org.cneko.toneko.common.mod.entities.ai.goal.NekoPickupItemGoal;
+import org.cneko.toneko.common.mod.entities.ai.goal.*;
 import org.cneko.toneko.common.mod.items.ToNekoItems;
 import org.cneko.toneko.common.mod.misc.ToNekoAttributes;
 import org.cneko.toneko.common.mod.packets.interactives.NekoEntityInteractivePayload;
 import org.cneko.toneko.common.mod.quirks.Quirk;
 import org.cneko.toneko.common.mod.util.EntityUtil;
-import org.cneko.toneko.common.mod.entities.ai.goal.NekoFollowOwnerGoal;
-import org.cneko.toneko.common.mod.entities.ai.goal.NekoMateGoal;
 import org.cneko.toneko.common.util.ConfigUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -207,6 +200,8 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         this.goalSelector.addGoal(1, new NekoEscapeDangerGoal(this));
         // 会游泳
         this.goalSelector.addGoal(1,new RandomSwimmingGoal(this,0.1,2));
+        // 猫娘会睡觉
+        //this.goalSelector.addGoal(2, new NekoSleepInBedGoal(this));
     }
 
     public void followOwner(Player followingOwner,double maxDistance, double followSpeed) {

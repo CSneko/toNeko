@@ -1,10 +1,7 @@
 package org.cneko.toneko.common.mod.client.events;
 
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
@@ -13,6 +10,7 @@ import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import org.cneko.toneko.common.mod.api.EntityPoseManager;
 import org.cneko.toneko.common.mod.client.api.ClientEntityPoseManager;
 import org.cneko.toneko.common.mod.client.screens.InteractionScreen;
 import org.cneko.toneko.common.mod.client.screens.NekoScreenRegistry;
@@ -27,8 +25,6 @@ import org.cneko.toneko.common.util.ConfigUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
-
-import static org.cneko.toneko.common.mod.util.ResourceLocationUtil.toNekoLoc;
 
 public class ClientNetworkEvents {
     public static void init(){
@@ -88,9 +84,6 @@ public class ClientNetworkEvents {
         LivingEntity entity;
         if (uuid !=null){
             entity = findNearbyEntityByUuid(UUID.fromString(uuid),128);
-            if (entity == null){
-                entity = context.player();
-            }
         }else {
             entity = context.player();
         }

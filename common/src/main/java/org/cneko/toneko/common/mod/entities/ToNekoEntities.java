@@ -28,6 +28,8 @@ public class ToNekoEntities {
     public static EntityType<FightingNekoEntity> FIGHTING_NEKO;
     public static ResourceLocation MOUFLET_NEKO_BOSS_ID = toNekoLoc("mouflet_neko_boss");
     public static EntityType<MoufletNekoBoss> MOUFLET_NEKO_BOSS;
+    public static ResourceLocation RAVENN_ID = toNekoLoc("ravenn");
+    public static EntityType<RavennEntity> RAVENN_ENTITY;
     public static EntityType<AmmunitionEntity> AMMUNITION_ENTITY;
     public static ResourceLocation AMMUNITION_ENTITY_ID = toNekoLoc("ammunition_entity");
     public static void init() {
@@ -87,6 +89,13 @@ public class ToNekoEntities {
                 ()-> EntityType.Builder.of(AmmunitionEntity::new, MobCategory.MISC)
                         .sized(0.25f,0.25f).clientTrackingRange(4).updateInterval(20)
                         .build("ammunition_entity");
+    }
+    @ApiStatus.Internal
+    public static Supplier<EntityType<RavennEntity>> getRavennEntity(){
+        return
+                ()-> EntityType.Builder.of(RavennEntity::new,MobCategory.CREATURE)
+                        .sized(0.5f,1.7f).clientTrackingRange(8)
+                        .build("ravenn");
     }
 
 }

@@ -3,18 +3,18 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import org.cneko.toneko.common.api.TickTasks;
-import org.cneko.toneko.common.mod.client.api.ClientEntityPoseManager;
 import org.cneko.toneko.common.mod.client.ToNekoKeyBindings;
+import org.cneko.toneko.common.mod.client.api.ClientEntityPoseManager;
 import org.cneko.toneko.common.mod.client.screens.RouletteScreen;
+import org.cneko.toneko.common.mod.util.EntityUtil;
 
-import java.util.List;
-
-import static org.cneko.toneko.common.Bootstrap.MODID;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Environment(EnvType.CLIENT)
 public class ClientTickEvent {
@@ -54,14 +54,28 @@ public class ClientTickEvent {
     }
 
 
+    private static int tick = 0;
     public static void onTick(Minecraft client) {
         TickTasks.executeDefaultClient();
+        // 寻找16格内的生物
         Player p = Minecraft.getInstance().player;
         if (p != null) {
-            if (ClientEntityPoseManager.contains(p)) {
-                p.setPose(ClientEntityPoseManager.getPose(p));
+            var entities = EntityUtil.getLivingEntitiesInRange(p,p.level(),16);
+            tick++;
+            if (tick==100){
+                tick = 0;
+                // 删除16格外实体的所有姿势
+                ClientEntityPoseManager.poseMap.entrySet().removeIf(entry -> {
+                    Entity entity = entry.getKey();
+                    return entity == null || entity.distanceTo(p) > 16;
+                });
             }
-
+            for (Entity entity : entities){
+                // 设置姿势
+                if (ClientEntityPoseManager.contains(entity)){
+                    ClientEntityPoseManager.setPose(entity, ClientEntityPoseManager.getPose(entity));
+                }
+            }
             // 如果是被骑乘的玩家，并且潜行，则取消骑乘
             if(p.isShiftKeyDown()){
                 // 1%的概率取消骑乘

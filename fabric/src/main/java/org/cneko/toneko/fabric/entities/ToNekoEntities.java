@@ -56,6 +56,12 @@ public class ToNekoEntities {
                 FabricEntityType.Builder.createMob(MoufletNekoBoss::new, MobCategory.MONSTER,builder -> builder.defaultAttributes(MoufletNekoBoss::createMoufletNekoAttributes))
                         .sized(0.5f,1.7f).clientTrackingRange(8).build()
         );
+        RAVENN_ENTITY = Registry.register(
+                BuiltInRegistries.ENTITY_TYPE,
+                RAVENN_ID,
+                FabricEntityType.Builder.createMob(RavennEntity::new, MobCategory.MONSTER, builder -> builder.defaultAttributes(RavennEntity::createRavennAttributes))
+                        .sized(0.5f,1.7f).clientTrackingRange(8).build()
+        );
 
         AMMUNITION_ENTITY = Registry.register(
                 BuiltInRegistries.ENTITY_TYPE,

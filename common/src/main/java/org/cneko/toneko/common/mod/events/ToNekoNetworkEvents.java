@@ -262,12 +262,10 @@ public class ToNekoNetworkEvents {
 
     public static void onSetPose(NekoPosePayload payload, ServerPlayNetworking.Context context) {
         processNekoInteractive(context.player(), payload.uuid(), neko -> {
-            // 如果已经有姿势了，则移除
-            if (EntityPoseManager.contains(neko)){
-                EntityPoseManager.remove(neko);
-                neko.setPose(Pose.STANDING);
-            }else {
+            if (!EntityPoseManager.contains(neko)){
                 EntityPoseManager.setPose(neko, payload.pose());
+            }else {
+                EntityPoseManager.remove(neko);
             }
         });
     }

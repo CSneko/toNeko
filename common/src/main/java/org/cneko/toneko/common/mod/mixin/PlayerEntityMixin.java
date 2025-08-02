@@ -13,11 +13,13 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Leashable;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.ItemLore;
+import org.cneko.toneko.common.mod.api.EntityPoseManager;
 import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.misc.mixininterface.SlowTickable;
 import org.cneko.toneko.common.mod.packets.EntityPosePayload;
@@ -95,23 +97,22 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
             toneko$slowTick();
             toneko$tick = 0;
         }
-        if (toneko$tick % 2 == 0){
-            if (player instanceof ServerPlayer sp) {
-                toneko$syncPose(sp);
+        if (toneko$tick %2 == 0){
+            if (player instanceof ServerPlayer sp){
+                Pose pose = EntityPoseManager.getPose(player);
+                boolean status;
+                if (pose == null){
+                    status = false;
+                    pose = Pose.STANDING;
+                }else {
+                    status = true;
+                }
+                ServerPlayNetworking.send(sp,new EntityPosePayload(pose,player.getUUID().toString(),status));
             }
         }
 
     }
 
-    @Unique
-    void toneko$syncPose(ServerPlayer sp){
-        ServerPlayNetworking.send(sp, new EntityPosePayload(sp.getPose(),sp.getUUID().toString(), true));
-        // 如果周围有其它玩家，则发送给周围的所有玩家
-        var players = EntityUtil.getPlayersInRange(sp,sp.level(),16);
-        for (Player player : players) {
-            ServerPlayNetworking.send((ServerPlayer) player, new EntityPosePayload(player.getPose(),player.getUUID().toString(), true));
-        }
-    }
 
     @Override
     public void toneko$slowTick() {
