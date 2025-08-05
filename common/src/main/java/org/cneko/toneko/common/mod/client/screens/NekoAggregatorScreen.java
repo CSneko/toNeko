@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import static org.cneko.toneko.common.mod.util.ResourceLocationUtil.toNekoLoc;
 
 public class NekoAggregatorScreen extends AbstractContainerScreen<NekoAggregatorBlock.NekoAggregatorMenu> {
-    private static final ResourceLocation TEXTURE = toNekoLoc("textures/item/empty.png");
+    private static final ResourceLocation TEXTURE = toNekoLoc("textures/gui/container/crafter.png");
 
     public NekoAggregatorScreen(NekoAggregatorBlock.NekoAggregatorMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);

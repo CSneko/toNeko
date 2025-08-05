@@ -65,7 +65,7 @@ public class NekoAggregatorBlock extends Block {
             this.player = playerInventory.player;
 
 
-            // 添加输入槽 (3x3 网格) -
+            // 添加输入槽 (3x3 网格)
             for (int row = 0; row < 3; ++row) {
                 for (int col = 0; col < 3; ++col) {
 
