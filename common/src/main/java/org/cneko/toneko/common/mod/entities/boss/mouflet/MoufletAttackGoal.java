@@ -4,7 +4,10 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.levelgen.Heightmap;
+import org.cneko.toneko.common.mod.entities.AmmunitionEntity;
+import org.cneko.toneko.common.mod.entities.ToNekoEntities;
 import org.cneko.toneko.common.mod.entities.ai.goal.NekoAttackGoal;
+import org.cneko.toneko.common.mod.items.BazookaItem;
 
 public class MoufletAttackGoal extends NekoAttackGoal {
     public MoufletAttackGoal(MoufletNekoBoss neko) {
@@ -37,27 +40,27 @@ public class MoufletAttackGoal extends NekoAttackGoal {
             return CombatStrategy.FLEE;
         }
 
+        if (hasRanged && hasMelee){
+            // 两种武器都有
+            // 对方生命值百分比 > 自己时用远程，否则用近战
+            return (targetHealthRatio > selfHealthRatio) ?
+                    CombatStrategy.RANGED : CombatStrategy.MELEE;
+        }
+
         // 只有远程武器且有子弹
-        if (hasRanged && !hasMelee) {
+        if (hasRanged) {
             return CombatStrategy.RANGED;
         }
 
         // 只有近战武器
-        if (!hasRanged && hasMelee) {
+        if (hasMelee) {
             return CombatStrategy.MELEE;
         }
 
-        // 都没有武器
-        if (!hasRanged) {
-            // 对方生命值百分比-30% <= 自己时攻击，否则逃跑
-            return (targetHealthRatio-0.3 <= selfHealthRatio) ?
-                    CombatStrategy.MELEE : CombatStrategy.FLEE;
-        }
 
-        // 两种武器都有
-        // 对方生命值百分比 > 自己时用远程，否则用近战
-        return (targetHealthRatio > selfHealthRatio) ?
-                CombatStrategy.RANGED : CombatStrategy.MELEE;
+        // 对方生命值百分比-30% <= 自己时攻击，否则逃跑
+        return (targetHealthRatio-0.3 <= selfHealthRatio) ?
+                CombatStrategy.MELEE : CombatStrategy.FLEE;
     }
 
     @Override
@@ -159,15 +162,15 @@ public class MoufletAttackGoal extends NekoAttackGoal {
         neko.yBodyRot = targetYaw;
 
         ItemStack bazooka = neko.getInventory().getSelected();
-        if (bazooka.getItem() instanceof org.cneko.toneko.common.mod.items.BazookaItem) {
+        if (bazooka.getItem() instanceof BazookaItem) {
             reloadIfNeeded(bazooka);
 
-            ItemStack ammo = findAmmo();
+            ItemStack ammo = findHarmfulAmmo(bazooka);
             if (!ammo.isEmpty()) {
                 // 创建弹药实体
-                org.cneko.toneko.common.mod.entities.AmmunitionEntity projectile =
-                        new org.cneko.toneko.common.mod.entities.AmmunitionEntity(
-                                org.cneko.toneko.common.mod.entities.ToNekoEntities.AMMUNITION_ENTITY,
+                AmmunitionEntity projectile =
+                        new AmmunitionEntity(
+                                ToNekoEntities.AMMUNITION_ENTITY,
                                 neko.level()
                         );
                 projectile.setBazookaStack(bazooka);

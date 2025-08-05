@@ -23,6 +23,7 @@ public class ToNekoEntities {
     public static DeferredHolder<EntityType<?>, EntityType<FightingNekoEntity>> FIGHTING_NEKO_HOLDER;
     public static DeferredHolder<EntityType<?>, EntityType<AmmunitionEntity>> AMMUNITION_ENTITY_HOLDER;
     public static DeferredHolder<EntityType<?>, EntityType<MoufletNekoBoss>> MOUFLET_NEKO_BOSS_HOLDER;
+    public static DeferredHolder<EntityType<?>, EntityType<RavennEntity>> RAVENN_HOLDER;
     public static void init(){
         CRYSTAL_NEKO_HOLDER = ToNekoNeoForge.ENTITY_TYPES.register(CRYSTAL_NEKO_ID.getPath(),
                 org.cneko.toneko.common.mod.entities.ToNekoEntities.getCrystalNeko()
@@ -41,6 +42,9 @@ public class ToNekoEntities {
         );
         MOUFLET_NEKO_BOSS_HOLDER = ToNekoNeoForge.ENTITY_TYPES.register(MOUFLET_NEKO_BOSS_ID.getPath(),
                 org.cneko.toneko.common.mod.entities.ToNekoEntities.getMoufletNekoBoss()
+        );
+        RAVENN_HOLDER = ToNekoNeoForge.ENTITY_TYPES.register(RAVENN_ID.getPath(),
+                org.cneko.toneko.common.mod.entities.ToNekoEntities.getRavennEntity()
         );
 
         org.cneko.toneko.common.mod.entities.ToNekoEntities.init();
@@ -96,5 +100,6 @@ public class ToNekoEntities {
         FIGHTING_NEKO = FIGHTING_NEKO_HOLDER.get();
         AMMUNITION_ENTITY = AMMUNITION_ENTITY_HOLDER.get();
         MOUFLET_NEKO_BOSS = MOUFLET_NEKO_BOSS_HOLDER.get();
+        RAVENN_ENTITY = RAVENN_HOLDER.get();
     }
 }

@@ -227,15 +227,17 @@ public class NekoAttackGoal extends Goal {
     protected boolean hasUsableRangedWeapon() {
         // 检查是否有火箭筒
         boolean hasBazooka = false;
+        ItemStack ba = ItemStack.EMPTY;
         for (int i = 0; i < neko.getInventory().getContainerSize(); i++) {
             ItemStack stack = neko.getInventory().getItem(i);
             if (stack.getItem() instanceof BazookaItem) {
                 hasBazooka = true;
+                ba = stack;
                 break;
             }
         }
         // 有火箭筒且至少有一个弹药
-        return hasBazooka && !findAmmo().isEmpty();
+        return hasBazooka && !findHarmfulAmmo(ba).isEmpty();
     }
 
     protected boolean hasMeleeWeapon() {
@@ -380,7 +382,7 @@ public class NekoAttackGoal extends Goal {
             // 换弹检查
             reloadIfNeeded(bazooka);
 
-            ItemStack ammo = findAmmo();
+            ItemStack ammo = findHarmfulAmmo(bazooka);
             if (!ammo.isEmpty()) {
                 ((BazookaItem) bazooka.getItem()).fire(neko, bazooka, ammo);
             }
@@ -409,10 +411,10 @@ public class NekoAttackGoal extends Goal {
     }
 
     // 查找弹药
-    protected ItemStack findAmmo() {
+    protected ItemStack findHarmfulAmmo(ItemStack bazooka) {
         for (int i = 0; i < neko.getInventory().getContainerSize(); i++) {
             ItemStack stack = neko.getInventory().getItem(i);
-            if (stack.getItem() instanceof BazookaItem.Ammunition) {
+            if (stack.getItem() instanceof BazookaItem.Ammunition item && item.isHarmful(bazooka,stack)) {
                 return stack;
             }
         }
