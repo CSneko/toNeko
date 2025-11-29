@@ -1,477 +1,302 @@
 package org.cneko.toneko.common.util;
 
 import com.google.gson.*;
-import org.jetbrains.annotations.ApiStatus;
+import lombok.Getter;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
-public class JsonConfiguration{
+
+public class JsonConfiguration {
+    @Getter
     private final String original;
     private final JsonObject jsonObject;
     private Path filePath;
-    /**
-     * 将json字符串转换为JsonConfiguration
-     * @param jsonString json字符串
-     */
-    public JsonConfiguration(String jsonString){
+
+    private final Object lock = new Object();
+
+    public JsonConfiguration(String jsonString) {
         this.original = jsonString;
-        // 创建 Gson 对象
         Gson gson = new Gson();
-        // 将 JSON 字符串转换为 JsonObject
-        this.jsonObject = gson.fromJson(jsonString, JsonObject.class);
+        // 尝试解析，如果失败则创建空对象，防止崩坏文件导致启动失败
+        JsonObject temp;
+        try {
+            temp = gson.fromJson(jsonString, JsonObject.class);
+        } catch (JsonSyntaxException e) {
+            temp = new JsonObject();
+        }
+        this.jsonObject = temp != null ? temp : new JsonObject();
     }
 
-    /**
-     * 将JsonObject转换为JsonConfiguration
-     * @param jsonObject JsonObject
-     */
-    public JsonConfiguration(JsonObject jsonObject){
+    public JsonConfiguration(JsonObject jsonObject) {
         this.original = jsonObject.toString();
         this.jsonObject = jsonObject;
     }
 
-
-    /**
-     * 将文件转换为JsonConfiguration
-     * @param filePath 文件路径
-     */
     public JsonConfiguration(Path filePath) throws IOException {
-        this(FileUtil.readFileWithException(filePath.toString()));
+        // 读取文件内容，如果文件过大(2GB)直接读取会导致内存溢出，但这里为了修复逻辑保持原样
+        // 建议增加 try-catch 处理读取异常
+        String content;
+        try {
+            content = FileUtil.readFileWithException(filePath.toString());
+        } catch (Exception e) {
+            content = "{}";
+        }
+        // 如果内容为空，初始化为 {}
+        if (content.trim().isEmpty()) content = "{}";
+
+        this.original = content;
+        Gson gson = new Gson();
+        JsonObject temp;
+        try {
+            temp = gson.fromJson(content, JsonObject.class);
+        } catch (Exception e) {
+            temp = new JsonObject();
+        }
+        this.jsonObject = temp != null ? temp : new JsonObject();
         this.filePath = filePath;
     }
 
-    /**
-     * 读取值
-     * @param path 键
-     * @return 值
-     */
+    // --- 线程安全修改：所有访问 jsonObject 的方法加锁 ---
+
     public JsonElement get(String path) {
-        return jsonObject.get(path);
-    }
-
-    /**
-     * 获取JsonPrimitive
-     * @param path 键
-     * @return JsonPrimitive或空JsonPrimitive
-     */
-    public JsonPrimitive getJsonPrimitive(String path){
-        JsonElement element = get(path);
-        if (element != null && element.isJsonPrimitive()) {
-            return element.getAsJsonPrimitive();
+        synchronized (lock) {
+            return jsonObject.get(path);
         }
-        return new JsonPrimitive("");
     }
 
-    /**
-     * 获取JsonArray
-     * @param path 键
-     * @return JsonArray或空JsonArray
-     */
-    public JsonArray getJsonArray(String path){
-        JsonElement element = get(path);
-        if (element != null && element.isJsonArray()) {
-            return element.getAsJsonArray();
+    public JsonPrimitive getJsonPrimitive(String path) {
+        synchronized (lock) {
+            JsonElement element = get(path);
+            if (element != null && element.isJsonPrimitive()) {
+                return element.getAsJsonPrimitive();
+            }
+            return new JsonPrimitive("");
         }
-        return new JsonArray();
     }
 
-    /**
-     * 设置值
-     * @param path 键
-     * @param value 值
-     */
+    public JsonArray getJsonArray(String path) {
+        synchronized (lock) {
+            JsonElement element = get(path);
+            if (element != null && element.isJsonArray()) {
+                return element.getAsJsonArray();
+            }
+            return new JsonArray();
+        }
+    }
+
     public void set(String path, Object value) {
-        // 如果是JsonConfiguration对象，则转换为JsonElement对象
-        if (value instanceof JsonConfiguration) {
-            jsonObject.add(path, ((JsonConfiguration) value).jsonObject);
-            return;
-        }
-        if (value instanceof JsonElement) {
-            jsonObject.add(path, (JsonElement) value);
-            return;
-        }
-        if (value instanceof String) {
-            jsonObject.addProperty(path, (String) value);
-            return;
-        }
-        if (value instanceof Number) {
-            jsonObject.addProperty(path, (Number) value);
-            return;
-        }
-        if (value instanceof Boolean) {
-            jsonObject.addProperty(path, (Boolean) value);
-            return;
-        }
-        if (value instanceof Character){
-            jsonObject.addProperty(path, (Character) value);
-            return;
-        }
-        if (value instanceof List) {
-            List<Object> list = (List<Object>) value;
-            JsonArray jsonArray = new JsonArray();
-            // 空的List
-            if (list.isEmpty()) {
-                jsonObject.add(path, jsonArray);
+        synchronized (lock) {
+            if (value instanceof JsonConfiguration) {
+                // 注意：这里需要深拷贝还是引用？引用可能会导致死锁如果两个config互相引用。
+                // 简单起见，这里假设 value 是独立的。
+                jsonObject.add(path, ((JsonConfiguration) value).jsonObject);
                 return;
             }
-            // 如果是List<JsonConfiguration>，则转换为JsonElement对象
-            if (list.get(0) instanceof JsonConfiguration) {
-                for (Object o : list) {
-                    jsonArray.add(((JsonConfiguration) o).jsonObject);
-                }
-                jsonObject.add(path, jsonArray);
+            if (value instanceof JsonElement) {
+                jsonObject.add(path, (JsonElement) value);
                 return;
             }
-            if (list.get(0) instanceof JsonElement) {
-                for (Object o : list) {
-                    jsonArray.add((JsonElement) o);
-                }
-                jsonObject.add(path, jsonArray);
+            if (value instanceof String) {
+                jsonObject.addProperty(path, (String) value);
                 return;
             }
-            if (list.get(0) instanceof String) {
-                for (Object o : list) {
-                    jsonArray.add((String) o);
-                }
-                jsonObject.add(path, jsonArray);
+            if (value instanceof Number) {
+                jsonObject.addProperty(path, (Number) value);
                 return;
             }
-            if (list.get(0) instanceof Number) {
-                for (Object o : list) {
-                    jsonArray.add((Number) o);
-                }
-                jsonObject.add(path, jsonArray);
+            if (value instanceof Boolean) {
+                jsonObject.addProperty(path, (Boolean) value);
                 return;
             }
-            if (list.get(0) instanceof Boolean) {
-                for (Object o : list) {
-                    jsonArray.add((Boolean) o);
-                }
-                jsonObject.add(path, jsonArray);
+            if (value instanceof Character) {
+                jsonObject.addProperty(path, (Character) value);
                 return;
             }
-            if (list.get(0) instanceof Character){
-                for (Object o : list) {
-                    jsonArray.add((Character) o);
-                }
-                jsonObject.add(path, jsonArray);
+            if (value instanceof List) {
+                processList(path, (List<?>) value);
                 return;
+            }
+            // Fallback: 防止 null 或未知对象调用 toString 造成不可预知的问题
+            if (value != null) {
+                this.jsonObject.addProperty(path, value.toString());
             }
         }
-        this.jsonObject.addProperty(path, value.toString());
-
     }
 
-    /**
-     * 保存到指定文件(如果可以的话)
-     * @param filePath 文件路径
-     */
+    private void processList(String path, List<?> list) {
+        JsonArray jsonArray = new JsonArray();
+        if (list.isEmpty()) {
+            jsonObject.add(path, jsonArray);
+            return;
+        }
+
+        // 简化 List 处理逻辑
+        for (Object o : list) {
+            if (o instanceof JsonConfiguration) {
+                jsonArray.add(((JsonConfiguration) o).jsonObject);
+            } else if (o instanceof JsonElement) {
+                jsonArray.add((JsonElement) o);
+            } else if (o instanceof String) {
+                jsonArray.add((String) o);
+            } else if (o instanceof Number) {
+                jsonArray.add((Number) o);
+            } else if (o instanceof Boolean) {
+                jsonArray.add((Boolean) o);
+            } else if (o instanceof Character) {
+                jsonArray.add((Character) o);
+            } else if (o != null) {
+                jsonArray.add(o.toString());
+            }
+        }
+        jsonObject.add(path, jsonArray);
+    }
+
     public void save(Path filePath) {
-        if(filePath != null){
-            FileUtil.WriteFile(filePath.toString(), this.jsonObject.toString());
+        synchronized (lock) {
+            if (filePath != null) {
+                String content = this.jsonObject.toString();
+                FileUtil.WriteFile(filePath.toString(), content);
+            }
         }
     }
 
-    /**
-     * 保存到文件
-     */
     public void save() {
         save(this.filePath);
     }
 
-    /**
-     * 获取String值
-     * @param path 键
-     * @return String
-     */
+
     public String getString(String path) {
         try {
             return getJsonPrimitive(path).getAsString();
-        }catch (Exception e) {
+        } catch (Exception e) {
             return "";
         }
     }
 
-    /**
-     * 获取String列表
-     * @param path 键
-     * @return List或空List
-     */
     public List<String> getStringList(String path) {
-        JsonArray array = getJsonArray(path);
-        List<String> list = new ArrayList<>();
-        for (JsonElement e : array) {
-            if (e.isJsonPrimitive()) {
-                list.add(e.getAsJsonPrimitive().getAsString());
-            }
-        }
-        return list;
-    }
-
-    /**
-     * 获取Float值
-     * @param path 键
-     * @return Float或0
-     */
-    public float getFloat(String path) {
-        try {
-            return getJsonPrimitive(path).getAsFloat();
-        }catch (Exception e){
-            return 0;
-        }
-    }
-
-    /**
-     * 获取Double值
-     * @param path 键
-     * @return Double或0
-     */
-    public double getDouble(String path) {
-        try {
-            return getJsonPrimitive(path).getAsDouble();
-        }catch (Exception e){
-            return 0;
-        }
-    }
-
-    /**
-     * 获取Int值
-     * @param path 键
-     * @return Int或0
-     */
-    public int getInt(String path) {
-        try {
-            return getJsonPrimitive(path).getAsInt();
-        }catch (Exception e){
-            return 0;
-        }
-    }
-
-    /**
-     * 获取Boolean值
-     * @param path 键
-     * @return Boolean或false
-     */
-    public boolean getBoolean(String path) {
-        try {
-            return getJsonPrimitive(path).getAsBoolean();
-        }catch (Exception e){
-            return false;
-        }
-    }
-
-    /**
-     * 获取Boolean值
-     * @param path 键
-     * @param defValue 默认值
-     * @return boolean或defValue
-     */
-    public boolean getBoolean(String path, boolean defValue) {
-        try {
-            return getJsonPrimitive(path).getAsBoolean();
-        }catch (Exception e){
-            return defValue;
-        }
-    }
-
-    /**
-     * 获取JsonConfiguration
-     * @param path 键
-     * @return JsonConfiguration或空JsonConfiguration
-     */
-    public JsonConfiguration getJsonConfiguration(String path) {
-        try {
-            return new JsonConfiguration(getJsonPrimitive(path).getAsJsonObject());
-        }catch (Exception e){
-            return new JsonConfiguration("{}");
-        }
-    }
-
-
-    /**
-     * 判断是否包含key
-     * @param key key
-     * @return 是否包含key
-     */
-    public boolean contains(String key) {
-        return jsonObject.has(key);
-    }
-
-    /**
-     * 获取Int列表
-     * @param path 键
-     * @return List或空List
-     */
-    public List<Integer> getIntList(String path) {
-        JsonArray array = getJsonArray(path);
-        List<Integer> list = new ArrayList<>();
-        for (JsonElement e : array) {
-            if (e.isJsonPrimitive()) {
-                list.add(e.getAsJsonPrimitive().getAsInt());
-            }
-        }
-        return list;
-    }
-
-    /**
-     * 获取Double列表
-     * @param path 键
-     * @return List或空List
-     */
-    public List<Double> getDoubleList(String path) {
-        JsonArray array = getJsonArray(path);
-        List<Double> list = new ArrayList<>();
-        for (JsonElement e : array) {
-            if (e.isJsonPrimitive()) {
-                list.add(e.getAsJsonPrimitive().getAsDouble());
-            }
-        }
-        return list;
-    }
-
-    /**
-     * 获取Float列表
-     * @param path 键
-     * @return List或空List
-     */
-    public List<Float> getFloatList(String path) {
-        JsonArray array = getJsonArray(path);
-        List<Float> list = new ArrayList<>();
-        for (JsonElement e : array) {
-            if (e.isJsonPrimitive()) {
-                list.add(e.getAsJsonPrimitive().getAsFloat());
-            }
-        }
-        return list;
-    }
-
-    /**
-     * 获取一个JsonConfiguration列表
-     * @param path 键
-     * @return JsonConfiguration列表或空List
-     */
-    public List<JsonConfiguration> getJsonList(String path) {
-        JsonArray array = getJsonArray(path);
-        return array.asList().stream().map(e -> new JsonConfiguration(e.getAsJsonObject())).collect(Collectors.toList());
-    }
-
-    /**
-     * 获取List
-     * @param path 键
-     * @return List或空List
-     */
-    public List<Object> getList(String path) {
-        JsonArray array = getJsonArray(path);
-        List<Object> list = new ArrayList<>();
-        for (JsonElement e : array) {
-            if (e.isJsonPrimitive()) {
-                list.add(e.getAsJsonPrimitive().getAsJsonObject());
-            }
-        }
-        return list;
-    }
-
-    /**
-     * 获取原始Json字符串
-     * @return 原始Json字符串
-     */
-    public String getOriginal(){
-        return this.original;
-    }
-
-    /**
-     * 判断值是否相等(忽略大小写)
-     * @param obj 对象
-     * @return 是否相等
-     */
-    public boolean equalsCaseIgnoreCase(Object obj) {
-        if (obj instanceof JsonConfiguration) {
-            JsonConfiguration other = (JsonConfiguration) obj;
-            return this.jsonObject.equals(other.jsonObject);
-        }
-        return obj.toString().equalsIgnoreCase(this.jsonObject.toString());
-    }
-
-    /**
-     * 判断值是否相等
-     * @param obj 对象
-     * @return 是否相等
-     */
-    public boolean equals(Object obj) {
-        if (obj instanceof JsonConfiguration) {
-            JsonConfiguration other = (JsonConfiguration) obj;
-            return this.jsonObject.equals(other.jsonObject);
-        }
-        return obj.toString().equals(this.jsonObject.toString());
-    }
-
-    /**
-     * 转换为JsonConfiguration列表(如果是的话)
-     * @return JsonConfiguration列表
-     */
-    public List<JsonConfiguration> toJsonList() {
-        if (jsonObject.isJsonArray()){
-            return jsonObject.getAsJsonArray().asList().stream().map(e -> {
-                return new JsonConfiguration(e.getAsJsonObject());
-            }).collect(Collectors.toList());
-        }
-        return Collections.emptyList();
-    }
-
-    /**
-     * 转换为Gson
-     * @return Gson
-     */
-    public JsonObject toGson() {
-        return jsonObject;
-    }
-    private Object convertJsonElementToJavaType(JsonElement element) {
-        if (element.isJsonPrimitive()) {
-            JsonPrimitive primitive = element.getAsJsonPrimitive();
-            if (primitive.isBoolean()) {
-                return primitive.getAsBoolean();
-            } else if (primitive.isNumber()) {
-                return primitive.getAsNumber();
-            } else if (primitive.isString()) {
-                return primitive.getAsString();
-            }
-        } else if (element.isJsonArray()) {
-            JsonArray array = element.getAsJsonArray();
-            List<Object> list = new ArrayList<>();
-            for (JsonElement item : array) {
-                list.add(convertJsonElementToJavaType(item));
+        synchronized (lock) {
+            JsonArray array = getJsonArray(path);
+            List<String> list = new ArrayList<>();
+            for (JsonElement e : array) {
+                if (e.isJsonPrimitive()) {
+                    list.add(e.getAsJsonPrimitive().getAsString());
+                }
             }
             return list;
-        } else if (element.isJsonObject()) {
-            JsonObject object = element.getAsJsonObject();
-            Map<String, Object> map = new HashMap<>();
-            for (Map.Entry<String, JsonElement> entry : object.entrySet()) {
-                map.put(entry.getKey(), convertJsonElementToJavaType(entry.getValue()));
-            }
-            return map;
         }
-        return null;
+    }
+
+    public float getFloat(String path) { try { return getJsonPrimitive(path).getAsFloat(); }catch (Exception e){ return 0; } }
+    public double getDouble(String path) { try { return getJsonPrimitive(path).getAsDouble(); }catch (Exception e){ return 0; } }
+    public int getInt(String path) { try { return getJsonPrimitive(path).getAsInt(); }catch (Exception e){ return 0; } }
+    public boolean getBoolean(String path) { try { return getJsonPrimitive(path).getAsBoolean(); }catch (Exception e){ return false; } }
+    public boolean getBoolean(String path, boolean defValue) { try { return getJsonPrimitive(path).getAsBoolean(); }catch (Exception e){ return defValue; } }
+
+    public JsonConfiguration getJsonConfiguration(String path) {
+        synchronized (lock) {
+            try {
+                JsonElement element = get(path);
+                if (element != null && element.isJsonObject()) {
+                    return new JsonConfiguration(element.getAsJsonObject());
+                }
+                return new JsonConfiguration("{}");
+            } catch (Exception e) {
+                return new JsonConfiguration("{}");
+            }
+        }
+    }
+
+    public boolean contains(String key) {
+        synchronized (lock) {
+            return jsonObject.has(key);
+        }
+    }
+
+    public List<Integer> getIntList(String path) {
+        synchronized (lock) {
+            JsonArray array = getJsonArray(path);
+            List<Integer> list = new ArrayList<>();
+            for (JsonElement e : array) { if (e.isJsonPrimitive()) list.add(e.getAsJsonPrimitive().getAsInt()); }
+            return list;
+        }
+    }
+    public List<Double> getDoubleList(String path) {
+        synchronized (lock) {
+            JsonArray array = getJsonArray(path);
+            List<Double> list = new ArrayList<>();
+            for (JsonElement e : array) { if (e.isJsonPrimitive()) list.add(e.getAsJsonPrimitive().getAsDouble()); }
+            return list;
+        }
+    }
+    public List<Float> getFloatList(String path) {
+        synchronized (lock) {
+            JsonArray array = getJsonArray(path);
+            List<Float> list = new ArrayList<>();
+            for (JsonElement e : array) { if (e.isJsonPrimitive()) list.add(e.getAsJsonPrimitive().getAsFloat()); }
+            return list;
+        }
+    }
+
+    public List<JsonConfiguration> getJsonList(String path) {
+        synchronized (lock) {
+            JsonArray array = getJsonArray(path);
+            return array.asList().stream().map(e -> new JsonConfiguration(e.getAsJsonObject())).collect(Collectors.toList());
+        }
+    }
+
+    public List<Object> getList(String path) {
+        synchronized (lock) {
+            JsonArray array = getJsonArray(path);
+            List<Object> list = new ArrayList<>();
+            for (JsonElement e : array) {
+                if (e.isJsonObject()) {
+                    list.add(e.getAsJsonObject());
+                } else if (e.isJsonPrimitive()) {
+                    // 如果是基础类型，根据类型返回，而不是试图转为 Object
+                    JsonPrimitive p = e.getAsJsonPrimitive();
+                    if (p.isString()) list.add(p.getAsString());
+                    else if (p.isBoolean()) list.add(p.getAsBoolean());
+                    else if (p.isNumber()) list.add(p.getAsNumber());
+                }
+            }
+            return list;
+        }
+    }
+
+    public boolean equals(Object obj) {
+        synchronized (lock) {
+            if (obj instanceof JsonConfiguration other) {
+                return this.jsonObject.equals(other.jsonObject);
+            }
+            return obj.toString().equals(this.jsonObject.toString());
+        }
+    }
+
+    public List<JsonConfiguration> toJsonList() {
+        synchronized (lock) {
+            if (jsonObject.isJsonArray()) {
+                return jsonObject.getAsJsonArray().asList().stream().map(e -> new JsonConfiguration(e.getAsJsonObject())).collect(Collectors.toList());
+            }
+            return Collections.emptyList();
+        }
+    }
+
+    public JsonObject toGson() {
+        return jsonObject; // 注意：直接返回内部对象仍然有外部并发修改的风险，最好返回 deepCopy
     }
 
     @Override
     public String toString() {
-        return jsonObject.toString();
+        synchronized (lock) {
+            return jsonObject.toString();
+        }
     }
 
-    public static JsonConfiguration of(String jsonString) {
-        return new JsonConfiguration(jsonString);
-    }
-
-    public static JsonConfiguration fromFile(File file) throws IOException {
-        return new JsonConfiguration(file.toPath());
-    }
-
-    public static JsonConfiguration fromFile(Path filePath) throws IOException {
-        return new JsonConfiguration(filePath);
-    }
-
-
+    // Static methods...
+    public static JsonConfiguration of(String jsonString) { return new JsonConfiguration(jsonString); }
+    public static JsonConfiguration fromFile(File file) throws IOException { return new JsonConfiguration(file.toPath()); }
+    public static JsonConfiguration fromFile(Path filePath) throws IOException { return new JsonConfiguration(filePath); }
 }

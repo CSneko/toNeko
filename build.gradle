@@ -71,7 +71,7 @@ subprojects {
             parchment("org.parchmentmc.data:parchment-1.21:2024.07.28@zip") // ParchmentMC版本，目前最新2024.07.28
         }
 
-        modCompileOnly "me.lucko:fabric-permissions-api:0.2-SNAPSHOT"
+        modCompileOnly "me.lucko:fabric-permissions-api:0.3.1"
         modImplementation "net.fabricmc.fabric-api:fabric-api:$rootProject.fabric_api_version"
 
         implementation "com.github.CSneko:NekoAI:$rootProject.nekoai_version"

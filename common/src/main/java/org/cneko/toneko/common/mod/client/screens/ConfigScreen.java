@@ -73,10 +73,18 @@ public class ConfigScreen extends Screen {
         int btnSpacing = (int) (this.width * 0.05);
 
         Button leftButton = Button.builder(Component.translatable("screen.toneko.config.button.quit"),
-                        btn -> minecraft.setScreen(lastScreen))
+                        btn -> {
+                            minecraft.setScreen(lastScreen);
+                        })
                 .bounds(this.width / 2 - btnWidth - btnSpacing / 2, btnY, btnWidth, btnHeight).build();
+
         Button rightButton = Button.builder(Component.translatable("screen.toneko.config.button.apply"),
-                        btn -> ConfigUtil.load())
+                        btn -> {
+                            // 1. 保存内存中的配置到文件
+                            ConfigUtil.CONFIG.save();
+                            // 2. 重新加载以应用更改
+                            ConfigUtil.load();
+                        })
                 .bounds(this.width / 2 + btnSpacing / 2, btnY, btnWidth, btnHeight).build();
 
         addRenderableWidget(leftButton);
@@ -316,10 +324,11 @@ public class ConfigScreen extends Screen {
         public void clearWidgets() {
             children.clear();
             totalContentHeight = 0;
+            scrollAmount = 0; // 清空时重置滚动位置
         }
 
         public void addWidget(AbstractWidget widget) {
-            widget.setX((int) (this.getX() + width * 0.5)); // 该方法调用后可在外部调整 x 坐标
+            widget.setX((int) (this.getX() + width * 0.5));
             widget.setY(this.getY() + totalContentHeight - scrollAmount + 5);
             this.children.add(widget);
         }
@@ -330,15 +339,16 @@ public class ConfigScreen extends Screen {
             totalContentHeight += widget.getHeight() + 10;
         }
 
-
         @Override
         public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
             guiGraphics.pose().pushPose();
+            // 限制渲染区域
             guiGraphics.enableScissor(this.getX(), this.getY(), this.getX() + this.panelWidth, this.getY() + this.panelHeight);
 
             for (AbstractWidget widget : children) {
                 int widgetY = widget.getY();
-                if (widgetY >= this.getY() && widgetY <= this.getY() + this.panelHeight) {
+                // 简单的视锥剔除：只渲染可见范围内的组件
+                if (widgetY + widget.getHeight() >= this.getY() && widgetY <= this.getY() + this.panelHeight) {
                     widget.render(guiGraphics, mouseX, mouseY, partialTick);
                 }
             }
@@ -346,32 +356,74 @@ public class ConfigScreen extends Screen {
             guiGraphics.disableScissor();
             guiGraphics.pose().popPose();
 
+            // 绘制滚动条
             if (totalContentHeight > panelHeight) {
                 int scrollbarHeight = Math.max((int) ((double) panelHeight / totalContentHeight * panelHeight), 10);
                 int scrollbarX = this.getX() + this.panelWidth - scrollbarWidth;
                 int scrollbarY = this.getY() + (int) ((double) scrollAmount / totalContentHeight * panelHeight);
-                guiGraphics.fill(scrollbarX, scrollbarY, scrollbarX + scrollbarWidth, scrollbarY + scrollbarHeight, 0xFFAAAAAA);
+
+
+                guiGraphics.fill(scrollbarX, this.getY(), scrollbarX + scrollbarWidth, this.getY() + this.panelHeight, 0x33000000);
+
+                // 绘制滑块
+                // 拖动时颜色变亮
+                int color = isDragging ? 0xFFDDDDDD : 0xFFAAAAAA;
+                guiGraphics.fill(scrollbarX, scrollbarY, scrollbarX + scrollbarWidth, scrollbarY + scrollbarHeight, color);
             }
         }
 
+        /**
+         * 新增：处理鼠标点击事件
+         * 检测是否点击到了滚动条区域
+         */
+        @Override
+        public boolean mouseClicked(double mouseX, double mouseY, int button) {
+            if (totalContentHeight > panelHeight) {
+                int scrollbarHeight = Math.max((int) ((double) panelHeight / totalContentHeight * panelHeight), 10);
+                int scrollbarX = this.getX() + this.panelWidth - scrollbarWidth;
+                int scrollbarY = this.getY() + (int) ((double) scrollAmount / totalContentHeight * panelHeight);
+
+                // 判断点击坐标是否在滚动条滑块范围内（适当放宽X轴判定范围方便点击）
+                if (mouseX >= scrollbarX - 2 && mouseX <= scrollbarX + scrollbarWidth + 2 &&
+                        mouseY >= scrollbarY && mouseY <= scrollbarY + scrollbarHeight) {
+                    isDragging = true;
+                    return true; // 消费事件，防止穿透
+                }
+            }
+            // 如果没点到滚动条，将事件传递给子组件（比如按钮、输入框）
+            return super.mouseClicked(mouseX, mouseY, button);
+        }
+
+        /**
+         * 修复：处理鼠标拖动事件
+         * 使用 deltaY 计算偏移量
+         */
         @Override
         public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-            if (isDragging) {
-                int dragStartY = 0;
-                int dragDelta = (int) (mouseY - dragStartY);
-                double scrollRatio = (double) totalContentHeight / panelHeight;
-                int initialScrollAmount = 0;
-                scrollAmount = (int) Math.max(0, Math.min(totalContentHeight - panelHeight, initialScrollAmount + dragDelta * scrollRatio));
+            // 如果正在拖动滚动条
+            if (isDragging && totalContentHeight > panelHeight) {
+                // 计算比例：内容高度 / 面板高度
+                // 例如：内容是面板的2倍高，那么鼠标移动1像素，内容应该移动2像素
+                double scale = (double) totalContentHeight / panelHeight;
+
+                // 累加滚动量
+                scrollAmount += (int) (deltaY * scale);
+
+                // 限制范围
+                scrollAmount = Math.max(0, Math.min(totalContentHeight - panelHeight, scrollAmount));
+
                 updateChildrenPositions();
                 return true;
             }
-            return false;
+            return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
         }
 
         @Override
         public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
             if (totalContentHeight > panelHeight) {
-                scrollAmount = (int) Math.max(0, Math.min(totalContentHeight - panelHeight, scrollAmount - scrollY * 20));
+                // 滚轮速度
+                int scrollSpeed = 20;
+                scrollAmount = (int) Math.max(0, Math.min(totalContentHeight - panelHeight, scrollAmount - scrollY * scrollSpeed));
                 updateChildrenPositions();
                 return true;
             }
@@ -380,27 +432,29 @@ public class ConfigScreen extends Screen {
 
         @Override
         public boolean mouseReleased(double mouseX, double mouseY, int button) {
-            if (button == 0 && isDragging) {
-                isDragging = false;
-                return true;
+            if (button == 0) {
+                isDragging = false; // 释放鼠标，停止拖动
             }
-            return false;
+            return super.mouseReleased(mouseX, mouseY, button);
         }
 
         public void updateChildrenPositions() {
             int currentY = this.getY() + 5 - scrollAmount;
             for (int i = 0; i < children.size(); i++) {
                 AbstractWidget widget = children.get(i);
+                // 特殊处理 ConfigWidget 和右侧控件的对齐逻辑
                 if (widget instanceof ConfigWidget &&
                         i + 1 < children.size() &&
                         (children.get(i + 1) instanceof EditBox || children.get(i + 1) instanceof Button)) {
-                    // 将标签和输入组件对齐在同一行
+
                     widget.setY(currentY);
                     AbstractWidget inputWidget = children.get(i + 1);
                     int labelHeight = widget.getHeight();
+                    // 垂直居中对齐
                     inputWidget.setY(currentY + (labelHeight - inputWidget.getHeight()) / 2);
-                    currentY += labelHeight + 10;
-                    i++; // 跳过下一个组件（已处理）
+
+                    currentY += Math.max(labelHeight, inputWidget.getHeight()) + 10;
+                    i++;
                 } else {
                     widget.setY(currentY);
                     currentY += widget.getHeight() + 10;

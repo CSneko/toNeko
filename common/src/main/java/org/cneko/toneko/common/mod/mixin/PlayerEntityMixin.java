@@ -107,7 +107,7 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
                 }else {
                     status = true;
                 }
-                ServerPlayNetworking.send(sp,new EntityPosePayload(pose,player.getUUID().toString(),status));
+                ServerPlayNetworking.send(sp,new EntityPosePayload(pose,"self",status));
             }
         }
 
@@ -141,7 +141,7 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
 
     @Override
     public float getNekoLevel() {
-        return toneko$nekoLevel;
+        return Math.min(100,toneko$nekoLevel);
     }
 
     @Override

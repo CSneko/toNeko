@@ -81,11 +81,14 @@ public class ClientNetworkEvents {
     }
     public static void setPose(EntityPosePayload payload, ClientPlayNetworking.Context context) {
         String uuid = payload.uuid();
+        if (uuid==null){
+            return;
+        }
         LivingEntity entity;
-        if (uuid !=null){
-            entity = findNearbyEntityByUuid(UUID.fromString(uuid),128);
-        }else {
+        if (uuid.equalsIgnoreCase("self")){
             entity = context.player();
+        }else {
+            entity = findNearbyEntityByUuid(UUID.fromString(uuid),128);
         }
         Pose pose = payload.pose();
         boolean status = payload.status();
