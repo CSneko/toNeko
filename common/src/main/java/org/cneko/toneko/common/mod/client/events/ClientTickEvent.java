@@ -71,7 +71,8 @@ public class ClientTickEvent {
                 });
             }
             if (ClientEntityPoseManager.contains(p)){
-                System.out.println(ClientEntityPoseManager.getPose(p));
+                //检查姿态但不打印日志
+                //System.out.println(ClientEntityPoseManager.getPose(p));
             }
             // 如果是被骑乘的玩家，并且潜行，则取消骑乘
             if(p.isShiftKeyDown()){
