@@ -122,6 +122,29 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         // 随机皮肤
         this.setSkin(NekoSkinRegistry.getRandomSkin(getType()));
 
+        if (!this.hasAnyMoeTags()) {
+            this.generateRandomMoeTags();
+        }
+    }
+
+    /**
+     * 辅助方法：随机生成 2~3 个不重复的萌属性
+     */
+    public void generateRandomMoeTags() {
+        // 1. 创建标签列表的副本（因为我们要打乱它，不能直接改静态的常量列表）
+        List<String> availableTags = new ArrayList<>(MOE_TAGS);
+
+        // 2. 打乱列表顺序 (使用实体的随机种子)
+        Collections.shuffle(availableTags, new java.util.Random(this.random.nextLong()));
+
+        // 3. 随机决定数量：1~3
+        int count = Mth.nextInt(this.random, 1, 3);
+
+        // 4. 截取前 count 个元素作为结果
+        List<String> selectedTags = availableTags.subList(0, count);
+
+        // 5. 设置属性
+        this.setMoeTags(selectedTags);
     }
 
 
@@ -850,16 +873,37 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
             var moe = this.getMoeTags();
             var name = this.getName();
             if (moe.contains("yandere")){
-                player.sendSystemMessage(randomTranslatabledComponent(random,"message.toneko.neko.on_hurt.yandere",5,name));
+                player.sendSystemMessage(randomTranslatabledComponent(random,"message.toneko.neko.on_hurt.yandere",15,name));
             }else if (moe.contains("chunibyo")){
                 player.sendSystemMessage(randomTranslatabledComponent(random,"message.toneko.neko.on_hurt.chunibyo",5,name));
             }else if (moe.contains("mesugaki")){
-                player.sendSystemMessage(randomTranslatabledComponent(random,"message.toneko.neko.on_hurt.mesugaki",5,name));
+                player.sendSystemMessage(randomTranslatabledComponent(random,"message.toneko.neko.on_hurt.mesugaki",14,name));
             }else if (moe.contains("tsundere")){
                 player.sendSystemMessage(randomTranslatabledComponent(random,"message.toneko.neko.on_hurt.tsundere",5,name));
             } else if (moe.contains("tennen_boke")) {
                 player.sendSystemMessage(randomTranslatabledComponent(random,"message.toneko.neko.on_hurt.tennen_boke",5,name));
-            }else {
+            }else if (moe.contains("shoakuma")) {
+                player.sendSystemMessage(randomTranslatabledComponent(random,"message.toneko.neko.on_hurt.shoakuma",14,name));
+            }else if (moe.contains("haraguro")) {
+                player.sendSystemMessage(randomTranslatabledComponent(random,"message.toneko.neko.on_hurt.haraguro",13,name));
+            }else if (moe.contains("narenareshi")){
+                player.sendSystemMessage(randomTranslatabledComponent(random,"message.toneko.neko.on_hurt.narenareshi",15,name));
+            }else if (moe.contains("shizukana")){
+                player.sendSystemMessage(randomTranslatabledComponent(random,"message.toneko.neko.on_hurt.shizukana",15,name));
+            }else if (moe.contains("gentleness")){
+                player.sendSystemMessage(randomTranslatabledComponent(random,"message.toneko.neko.on_hurt.gentleness",15,name));
+            }else if (moe.contains("baka")){
+                player.sendSystemMessage(randomTranslatabledComponent(random,"message.toneko.neko.on_hurt.baka",13,name));
+            }else if (moe.contains("dojikko")){
+                player.sendSystemMessage(randomTranslatabledComponent(random,"message.toneko.neko.on_hurt.dojikko",12,name));
+            }else if (moe.contains("yowaki")){
+                player.sendSystemMessage(randomTranslatabledComponent(random,"message.toneko.neko.on_hurt.yowaki",14,name));
+            }else if (moe.contains("paranoia")){
+                player.sendSystemMessage(randomTranslatabledComponent(random,"message.toneko.neko.on_hurt.paranoia",15,name));
+            }else if (moe.contains("yuri")){
+                player.sendSystemMessage(randomTranslatabledComponent(random,"message.toneko.neko.on_hurt.yuri",12,name));
+            }
+            else {
                 int r = random.nextInt(6);
                 player.sendSystemMessage(Component.translatable("message.toneko.neko.on_hurt." + r, this.getName()));
             }
