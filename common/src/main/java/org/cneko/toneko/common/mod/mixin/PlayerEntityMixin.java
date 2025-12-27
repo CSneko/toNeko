@@ -99,13 +99,14 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
         }
         if (toneko$tick %2 == 0){
             if (player instanceof ServerPlayer sp){
-                Pose pose = EntityPoseManager.getPose(player);
+                Pose pose;
                 boolean status;
-                if (pose == null){
+                if (!EntityPoseManager.contains(player)){
                     status = false;
                     pose = Pose.STANDING;
                 }else {
                     status = true;
+                    pose = EntityPoseManager.getPose(player);
                 }
                 ServerPlayNetworking.send(sp,new EntityPosePayload(pose,"self",status));
             }

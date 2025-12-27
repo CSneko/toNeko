@@ -94,7 +94,9 @@ public class ClientNetworkEvents {
         boolean status = payload.status();
         if(status) {
             ClientEntityPoseManager.setPose(entity, pose);
-        }else ClientEntityPoseManager.remove(entity);
+        }else{
+            ClientEntityPoseManager.remove(entity);
+        }
     }
 
 

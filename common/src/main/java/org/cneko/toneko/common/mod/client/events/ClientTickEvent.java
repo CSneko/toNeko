@@ -70,9 +70,6 @@ public class ClientTickEvent {
                     return entity == null || entity.distanceTo(p) > 16;
                 });
             }
-            if (ClientEntityPoseManager.contains(p)){
-                System.out.println(ClientEntityPoseManager.getPose(p));
-            }
             // 如果是被骑乘的玩家，并且潜行，则取消骑乘
             if(p.isShiftKeyDown()){
                 // 1%的概率取消骑乘
