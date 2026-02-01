@@ -1,0 +1,114 @@
+{
+  "advancement.farm_and_charm.root": "欢迎来到沉浸农艺呀！",
+  "advancement.farm_and_charm.root.desc": "感谢你把沉浸农艺带回家～一起快乐种田吧！",
+
+  "advancement.farm_and_charm.find_wild_crops": "荒野小探险",
+  "advancement.farm_and_charm.find_wild_crops.desc": "在大自然里发现并采集可爱的野生作物",
+
+  "advancement.farm_and_charm.eat_tomato": "红彤彤的一口",
+  "advancement.farm_and_charm.eat_tomato.desc": "啊呜～吃下一颗新鲜番茄",
+
+  "advancement.farm_and_charm.place_feeding_trough": "叮铃铃，开饭啦",
+  "advancement.farm_and_charm.place_feeding_trough.desc": "放好食槽，让小动物们排队吃饭",
+
+  "advancement.farm_and_charm.place_fertilized_soil": "软乎乎的地面",
+  "advancement.farm_and_charm.place_fertilized_soil.desc": "制作并铺设营养满满的肥沃泥土",
+
+  "advancement.farm_and_charm.use_hoe_on_fertilized_soil": "田地整理中",
+  "advancement.farm_and_charm.use_hoe_on_fertilized_soil.desc": "在肥沃泥土上挥一挥小锄头",
+
+  "advancement.farm_and_charm.use_pitchfork_on_fertilized_soil": "叉叉很专业",
+  "advancement.farm_and_charm.use_pitchfork_on_fertilized_soil.desc": "用干草叉让土地更整齐",
+
+  "advancement.farm_and_charm.place_water_sprinkler": "哗啦啦小雨",
+  "advancement.farm_and_charm.place_water_sprinkler.desc": "安置洒水器，让作物喝饱水",
+
+  "advancement.farm_and_charm.place_stove": "厨师上线",
+  "advancement.farm_and_charm.place_stove.desc": "安置火炉，准备开始做饭啦",
+
+  "advancement.farm_and_charm.place_cooking_pot": "宴会准备中",
+  "advancement.farm_and_charm.place_cooking_pot.desc": "制作并放好烹饪锅",
+
+  "advancement.farm_and_charm.place_roaster": "香味要出来了",
+  "advancement.farm_and_charm.place_roaster.desc": "制作并安置烘焙机",
+
+  "advancement.farm_and_charm.introduction_drying": "小知识：风干Ⅰ",
+  "advancement.farm_and_charm.introduction_drying.desc": "把骨粉放进木制筒仓试试看",
+
+  "advancement.farm_and_charm.get_fertilizer": "小知识：风干Ⅱ",
+  "advancement.farm_and_charm.get_fertilizer.desc": "成功获得风干效果啦",
+
+  "advancement.farm_and_charm.introduction_mincing": "小知识：绞碎Ⅰ",
+  "advancement.farm_and_charm.introduction_mincing.desc": "把牛肉放进绞肉机吧",
+
+  "advancement.farm_and_charm.get_minced_beef": "小知识：绞碎Ⅱ",
+  "advancement.farm_and_charm.get_minced_beef.desc": "成功得到绞碎效果",
+
+  "advancement.farm_and_charm.make_everything": "大厨待办清单",
+  "advancement.farm_and_charm.make_everything.desc": "把沉浸农艺的菜谱都做一遍吧",
+
+  "advancement.farm_and_charm.cook_everything": "厨房征服者",
+  "advancement.farm_and_charm.cook_everything.desc": "用烹饪锅做出所有料理",
+
+  "advancement.farm_and_charm.bake_everything": "烘焙小能手",
+  "advancement.farm_and_charm.bake_everything.desc": "努力烘焙每一种食谱",
+
+  "advancement.farm_and_charm.roast_everything": "火候刚刚好",
+  "advancement.farm_and_charm.roast_everything.desc": "把所有食物都烤得香喷喷",
+
+  "effect.farm_and_charm.cluck": "咯咯咯",
+  "effect.farm_and_charm.cluck.description": "鸡吃饱后会更勤快地下蛋和掉羽毛～玩家也能吃，但后果嘛…嘿嘿",
+
+  "effect.farm_and_charm.farmers_blessing": "农夫的祝福",
+  "effect.farm_and_charm.farmers_blessing.description": "持续期间，坏状态统统拜拜",
+
+  "effect.farm_and_charm.feast": "热闹的筵席",
+  "effect.farm_and_charm.feast.description": "融合了“美餐”和“饱腹”的幸福效果",
+
+  "effect.farm_and_charm.grandmas_blessing": "奶奶的祝福",
+  "effect.farm_and_charm.grandmas_blessing.description": "和农夫的祝福一样温暖，还额外带来幸运Ⅱ",
+
+  "effect.farm_and_charm.horse_fodder": "马儿精神满满",
+  "effect.farm_and_charm.horse_fodder.description": "让马跑得更快、跳得更高",
+
+  "effect.farm_and_charm.rested": "小小休息",
+  "effect.farm_and_charm.rested.description": "获得经验的时候会更开心",
+
+  "effect.farm_and_charm.satiation": "肚子很满足",
+  "effect.farm_and_charm.satiation.description": "饥饿值下降得更慢，受伤时也不怕饿",
+
+  "effect.farm_and_charm.dog_food": "汪汪加油",
+  "effect.farm_and_charm.dog_food.description": "狼的攻击更猛，动作更快，也更稳重",
+
+  "effect.farm_and_charm.sustenance": "美滋滋的一餐",
+  "effect.farm_and_charm.sustenance.description": "每6秒恢复饥饿值，满了就回血",
+
+  "effect.farm_and_charm.sweets": "甜甜的力量",
+  "effect.farm_and_charm.sweets.description": "提升多种属性，探险和战斗都更轻松，可叠加10次",
+
+  "tooltip.farm_and_charm.canbeplaced": "可以乖乖放在地上",
+  "tooltip.farm_and_charm.canbeplacedwall": "也可以贴在墙上哦",
+
+  "tooltip.farm_and_charm.animal_fed_to_cat": "喂给小猫后：",
+  "tooltip.farm_and_charm.animal_fed_to_chicken": "喂给小鸡后：",
+  "tooltip.farm_and_charm.animal_fed_to_dog": "喂给小狗后：",
+  "tooltip.farm_and_charm.animal_fed_to_horse": "喂给马儿后：",
+
+  "tooltip.farm_and_charm.cat_effect_1": "更容易和野猫成为朋友",
+  "tooltip.farm_and_charm.dog_effect_1": "攻击力提升（3:00）",
+  "tooltip.farm_and_charm.dog_effect_2": "攻击速度提升（3:00）",
+  "tooltip.farm_and_charm.dog_effect_3": "更不容易被击退（3:00）",
+  "tooltip.farm_and_charm.horse_effect_1": "速度提升（5:00）",
+  "tooltip.farm_and_charm.horse_effect_2": "跳得更高（5:00）",
+
+  "tooltip.farm_and_charm.thankyou_1": "这是你完成所有料理的奖励哦",
+  "tooltip.farm_and_charm.thankyou_2": "放置后效果：",
+  "tooltip.farm_and_charm.thankyou_3": "谢谢你游玩沉浸农艺～",
+  "tooltip.farm_and_charm.thankyou_4": "周围的种子会长得更快",
+
+  "gui.farm_and_charm.recipebook.toggleRecipes.cookable": "看看能做什么好吃的",
+
+  "key.categories.farm_and_charm": "沉浸农艺",
+  "key.farm_and_charm.couple_pick_up_cart": "放下或拿起小推车",
+  "key.farm_and_charm.openChest": "打开推车的小箱子"
+}

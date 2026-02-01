@@ -1,0 +1,82 @@
+{
+  "beachparty.config.title": "沙滩派对设置啦~",
+  "creativetab.beachparty.tab": "沙滩派对♪",
+
+  "subtitles.beachparty.sound.radio_click": "收音机：咔哒一下~",
+  "subtitles.beachparty.sound.radio_tune": "收音机：奇怪又神秘的声音…",
+
+  "tooltip.beachparty.canbeplaced": "可以乖乖放下哦~",
+  "tooltip.beachparty.dyeable": "能染成喜欢的颜色呢！",
+  "tooltip.beachparty.message": "右键点我一下啦~",
+
+  "advancement.beachparty.root": "欢迎来到沙滩派对！",
+  "advancement.beachparty.root.desc": "谢谢你下载沙滩派对模组喔，嘿嘿~",
+
+  "advancement.beachparty.welcome_to_the_beach": "不穿上衣？不穿鞋？完全没问题啦！",
+  "advancement.beachparty.welcome_to_the_beach.desc": "第一次踏进软绵绵的沙滩，好开心！",
+
+  "advancement.beachparty.build_a_tower": "沙子堆出来的城堡！",
+  "advancement.beachparty.build_a_tower.desc": "先盖一个沙堡，再把它堆得更更更大吧！",
+
+  "advancement.beachparty.reinforce_the_castle": "沙堡也要变得很结实！",
+  "advancement.beachparty.reinforce_the_castle.desc": "用水瓶让沙堡变得超级牢固哟~",
+
+  "advancement.beachparty.get_a_seashell": "她在卖贝壳耶！",
+  "advancement.beachparty.get_a_seashell.desc": "捡到一枚闪闪发光的小贝壳♪",
+
+  "advancement.beachparty.get_any_artifact": "捡到宝贝啦！",
+  "advancement.beachparty.get_any_artifact.desc": "随便拿到一个神秘的小东西~",
+
+  "advancement.beachparty.get_all_beach_items": "沙滩的大秘宝！",
+  "advancement.beachparty.get_all_beach_items.desc": "把目前所有的宝物都收集齐啦！",
+
+  "advancement.beachparty.get_any_cocktail": "摇一摇，不要搅拌！",
+  "advancement.beachparty.get_any_cocktail.desc": "喝到任意一杯美味饮料~",
+
+  "advancement.beachparty.get_all_cocktails": "吨吨吨大师！",
+  "advancement.beachparty.get_all_cocktails.desc": "所有饮料都喝过一遍啦！",
+
+  "advancement.beachparty.hoarder": "我的！都是我的！",
+  "advancement.beachparty.hoarder.desc": "宝物和饮料全都抱走，嘿嘿~",
+
+  "advancement.beachparty.place_palm_bar": "不管几点，现在就是快乐时间！",
+  "advancement.beachparty.place_palm_bar.desc": "摆好一个超有度假感的吧台♪",
+
+  "advancement.beachparty.place_radio": "沙滩BGM开启！",
+  "advancement.beachparty.place_radio.desc": "放下收音机，让音乐响起来吧~",
+
+  "advancement.beachparty.find_a_overgrown_disc": "这音乐也太古老了吧？！",
+  "advancement.beachparty.find_a_overgrown_disc.desc": "找到一张神秘又复古的唱片",
+
+  "text.autoconfig.beachparty.title": "沙滩派对设置面板",
+  "text.autoconfig.beachparty.category.default": "游戏里的一般设置",
+  "text.autoconfig.beachparty.category.worldgen": "世界生成相关",
+
+  "text.autoconfig.beachparty.option.destroySandcastle": "沙堡的小脾气",
+  "text.autoconfig.beachparty.option.destroySandcastle.@PrefixText": "杂项设置",
+  "text.autoconfig.beachparty.option.destroySandcastle.@Tooltip": "碰到沙堡时，要不要让它碎掉呀？",
+
+  "text.autoconfig.beachparty.option.spawnMessageInABottle": "生成漂流瓶小信件",
+  "text.autoconfig.beachparty.option.spawnSeashells": "生成可爱的贝壳",
+
+  "tooltip.beachparty.banner.thankyou_1": "集齐所有宝物和饮料的奖励哟！",
+  "tooltip.beachparty.banner.thankyou_2": "当它被放下时：",
+  "tooltip.beachparty.banner.thankyou_3": "谢谢你游玩沙滩派对，爱你哟~",
+  "tooltip.beachparty.banner.thankyou_4": "在 6 格范围内获得水下呼吸效果！",
+
+  "tooltip.beachparty.curiosslot": "戴在 Curios 栏位时：",
+  "tooltip.beachparty.trinketsslot": "装备在 Trinket 栏位时：",
+
+  "effect.beachparty.ocean_walk": "踏浪而行",
+  "effect.beachparty.ocean_walk.description": "冲刺的时候，可以在水面上跑步耶！",
+
+  "tooltip.beachparty.toggle.hide": "§e[右键]§r 把 3D 模型藏起来啦~",
+  "tooltip.beachparty.toggle.show": "§e[右键]§r 把 3D 模型再放出来！",
+
+  "subtitles.beachparty.sound.beachparty": "♪ 快乐的沙滩音乐",
+  "subtitles.beachparty.sound.caribbean_beach": "♪ 热带风情沙滩",
+  "subtitles.beachparty.sound.over_the_rainbow": "♪ 彩虹那一边",
+  "subtitles.beachparty.sound.pridelands": "♪ 温柔又辽阔的旋律",
+  "subtitles.beachparty.sound.vocalista": "♪ 轻快的人声旋律",
+  "subtitles.beachparty.sound.wild_veins": "♪ 活力满满的音乐"
+}

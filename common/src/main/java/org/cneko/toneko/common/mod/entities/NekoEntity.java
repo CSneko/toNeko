@@ -363,6 +363,10 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
                 ItemStack s = stack.copy();
                 s.setCount(1);
                 this.addItem(s);
+
+                if (!player.isCreative()) {
+                    stack.shrink(1);
+                }
             }else {
                 player.sendSystemMessage(randomTranslatabledComponent("message.toneko.neko.gift_full",2, Objects.requireNonNull(this.getCustomName()).getString()));
                 return false;

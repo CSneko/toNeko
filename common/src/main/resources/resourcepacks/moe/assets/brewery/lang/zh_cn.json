@@ -1,0 +1,94 @@
+{
+  "itemGroup.brewery.creative_tab": "[Let's Do]盛节精酿～嗨啤时间♪",
+
+  "disclaimer.brewery.disclaimer": "盛节精酿·小小提示",
+  "disclaimer.brewery.drugs": "为这场像素酿造举杯～♪\n现实世界要乖乖负责哦",
+  "disclaimer.brewery.drive": "虚拟啤酒很好喝！\n但现实中要当乖宝宝～",
+  "disclaimer.brewery.alcohol": "这些都是像素饮料啦～\n现实请适量饮酒喔♡",
+
+  "effect.brewery.drunk": "晕乎乎～",
+  "effect.brewery.blackout": "眼前一黑…咕咚",
+
+  "tooltip.brewery.beer_quality": "啤酒品质：%s 哇～",
+
+  "advancement.brewery.root": "欢迎来到盛节精酿♪",
+  "advancement.brewery.root.desc": "谢谢你下载盛节精酿～一起玩吧！",
+
+  "advancement.brewery.wild_crops": "野外小发现",
+  "advancement.brewery.wild_crops.desc": "找到盛节精酿里的神秘种子或作物～",
+
+  "advancement.brewery.place_brewingstation": "酿造初学者",
+  "advancement.brewery.place_brewingstation.desc": "第一次放下酿造站啦，好紧张！",
+
+  "advancement.brewery.place_silo_wood": "烘干新手上路",
+  "advancement.brewery.place_silo_wood.desc": "成功放置烘干仓，暖呼呼～",
+
+  "advancement.brewery.place_copper_brewingstation": "进阶酿酒师",
+  "advancement.brewery.place_copper_brewingstation.desc": "铜制酿造站完成！好厉害～",
+
+  "advancement.brewery.place_netherite_brewingstation": "最强酿造大师！",
+  "advancement.brewery.place_netherite_brewingstation.desc": "下界合金级别！闪闪发光～",
+
+  "advancement.brewery.place_silo_copper": "完美烘制",
+  "advancement.brewery.place_silo_copper.desc": "高级烘干仓完成啦～",
+
+  "advancement.brewery.crop_collector": "作物收集小达人",
+  "advancement.brewery.crop_collector.desc": "把所有作物都找齐啦！好满足～",
+
+  "advancement.brewery.get_beer_wheat": "小麦酿造成功！",
+  "advancement.brewery.get_beer_wheat.desc": "第一杯小麦啤酒诞生啦～",
+
+  "advancement.brewery.get_beer_haley": "海莉的最爱",
+  "advancement.brewery.get_beer_haley.desc": "海莉风味完成！闻起来好香～",
+
+  "advancement.brewery.get_beer_hops": "酒花大丰收",
+  "advancement.brewery.get_beer_hops.desc": "满满酒花～开心到转圈圈！",
+
+  "advancement.brewery.get_beer_barley": "大麦冠军",
+  "advancement.brewery.get_beer_barley.desc": "大麦啤酒完成啦！",
+
+  "advancement.brewery.beer_elemental.title": "泡泡怪退散！",
+  "advancement.brewery.beer_elemental.desc": "召唤并打倒那个泡泡家伙！",
+
+  "advancement.brewery.get_dried_barley": "大麦变干啦",
+  "advancement.brewery.get_dried_barley.desc": "用烘干仓把大麦烘好～",
+
+  "advancement.brewery.get_dried_corn": "玉米暖烘烘",
+  "advancement.brewery.get_dried_corn.desc": "玉米也乖乖烘干完成啦！",
+
+  "advancement.brewery.get_dried_wheat": "小麦香香",
+  "advancement.brewery.get_dried_wheat.desc": "小麦烘干成功～",
+
+  "advancement.brewery.get_whiskey_lilitusinglemalt": "敬礼～Lilitu！",
+  "advancement.brewery.get_whiskey_lilitusinglemalt.desc": "为Lilitu酿造的特别威士忌♡",
+
+  "advancement.brewery.get_whiskey_maggoallan": "举杯～Satisfy！",
+  "advancement.brewery.get_whiskey_maggoallan.desc": "Maggoallan威士忌完成啦！",
+
+  "advancement.brewery.get_whiskey_jojannik": "干杯～Jo！",
+  "advancement.brewery.get_whiskey_jojannik.desc": "JoJannik威士忌酿好咯～",
+
+  "advancement.brewery.get_whiskey_cristelwalker": "献给Cristel！",
+  "advancement.brewery.get_whiskey_cristelwalker.desc": "CristelWalker威士忌完成～",
+
+  "advancement.brewery.get_whiskey_carrasconlabel": "为EC干杯！",
+  "advancement.brewery.get_whiskey_carrasconlabel.desc": "Carrasconlabel威士忌完成啦～",
+
+  "advancement.brewery.completionist": "全部完成啦！",
+  "advancement.brewery.completionist.desc": "你把盛节精酿的成就都收集齐啦！超棒～谢谢游玩♡",
+
+  "advancement.brewery.get_saturated": "啊呜～好好吃",
+  "advancement.brewery.get_saturated.desc": "别想太多，吃就对啦！",
+
+  "advancement.brewery.eat_everything.title": "啤酒节吃货王",
+  "advancement.brewery.eat_everything.desc": "把所有美食都尝一遍啦～",
+
+  "effect.brewery.healingtouch": "治愈小手手",
+  "effect.brewery.renewingtouch": "焕然一新～",
+  "effect.brewery.partystarter": "派对开始啦！",
+  "effect.brewery.toxictouch": "小心有毒哦…",
+  "effect.brewery.protectivetouch": "被保护着呢",
+  "effect.brewery.snowwhite": "白白净净～",
+  "effect.brewery.pintcharisma": "一杯的魅力♡",
+  "effect.brewery.haley": "心动滑行～"
+}

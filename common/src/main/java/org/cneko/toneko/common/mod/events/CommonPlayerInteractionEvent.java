@@ -122,9 +122,7 @@ public class CommonPlayerInteractionEvent {
         }
 
         // 处理玩家自身的特性
-        processEvent(new InteractionContext(
-                sp, world, hand, sp, hitResult
-        ), (mq, ctx) ->
+        processEvent(context, (mq, ctx) ->
                 mq.onInteractionOther(ctx.player(), ctx.world(), ctx.hand(),
                         ctx.targetEntity(), ctx.hitResult()),
                 q -> sp.setXpWithOwner(sp.getUUID(), q.getInteractionValue() + sp.getXpWithOwner(sp.getUUID()))
