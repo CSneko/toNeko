@@ -3,12 +3,17 @@ package org.cneko.toneko.common.util;
 import com.google.gson.*;
 import lombok.Getter;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.cneko.toneko.common.Bootstrap.LOGGER;
 public class JsonConfiguration {
     @Getter
     private final String original;
@@ -36,18 +41,20 @@ public class JsonConfiguration {
     }
 
     public JsonConfiguration(Path filePath) throws IOException {
-        // 读取文件内容，如果文件过大(2GB)直接读取会导致内存溢出，但这里为了修复逻辑保持原样
-        // 建议增加 try-catch 处理读取异常
-        String content;
+        String content = "{}";
         try {
-            content = FileUtil.readFileWithException(filePath.toString());
+            if (Files.exists(filePath)) {
+                // 关键修复：强制使用 UTF-8 读取
+                byte[] bytes = Files.readAllBytes(filePath);
+                content = new String(bytes, StandardCharsets.UTF_8);
+            }
         } catch (Exception e) {
-            content = "{}";
+            LOGGER.error(e);
         }
-        // 如果内容为空，初始化为 {}
-        if (content.trim().isEmpty()) content = "{}";
 
+        if (content.trim().isEmpty()) content = "{}";
         this.original = content;
+
         Gson gson = new Gson();
         JsonObject temp;
         try {
@@ -59,7 +66,7 @@ public class JsonConfiguration {
         this.filePath = filePath;
     }
 
-    // --- 线程安全修改：所有访问 jsonObject 的方法加锁 ---
+    // --- 所有访问 jsonObject 的方法加锁 ---
 
     public JsonElement get(String path) {
         synchronized (lock) {
@@ -90,8 +97,6 @@ public class JsonConfiguration {
     public void set(String path, Object value) {
         synchronized (lock) {
             if (value instanceof JsonConfiguration) {
-                // 注意：这里需要深拷贝还是引用？引用可能会导致死锁如果两个config互相引用。
-                // 简单起见，这里假设 value 是独立的。
                 jsonObject.add(path, ((JsonConfiguration) value).jsonObject);
                 return;
             }
@@ -119,7 +124,6 @@ public class JsonConfiguration {
                 processList(path, (List<?>) value);
                 return;
             }
-            // Fallback: 防止 null 或未知对象调用 toString 造成不可预知的问题
             if (value != null) {
                 this.jsonObject.addProperty(path, value.toString());
             }
@@ -132,8 +136,6 @@ public class JsonConfiguration {
             jsonObject.add(path, jsonArray);
             return;
         }
-
-        // 简化 List 处理逻辑
         for (Object o : list) {
             if (o instanceof JsonConfiguration) {
                 jsonArray.add(((JsonConfiguration) o).jsonObject);
@@ -157,8 +159,24 @@ public class JsonConfiguration {
     public void save(Path filePath) {
         synchronized (lock) {
             if (filePath != null) {
-                String content = this.jsonObject.toString();
-                FileUtil.WriteFile(filePath.toString(), content);
+                try {
+                    // 1. 确保父目录存在
+                    if (filePath.getParent() != null) {
+                        Files.createDirectories(filePath.getParent());
+                    }
+
+                    // 2. 建议开启 PrettyPrinting (格式化输出)，否则配置文件挤在一行很难看
+                    Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+                    String content = gson.toJson(this.jsonObject);
+
+                    // 3. 关键修复：强制使用 UTF-8 写入
+                    try (BufferedWriter writer = Files.newBufferedWriter(filePath, StandardCharsets.UTF_8,
+                            StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
+                        writer.write(content);
+                    }
+                } catch (IOException e) {
+                    LOGGER.error(e);
+                }
             }
         }
     }

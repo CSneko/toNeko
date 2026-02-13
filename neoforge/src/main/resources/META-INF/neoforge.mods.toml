@@ -46,7 +46,7 @@ side = "BOTH"
 
 [[dependencies.toneko]]
 modId = "geckolib"
-type = "optional"
+type = "required"
 versionRange = "*"
 ordering = "NONE"
 side = "BOTH"

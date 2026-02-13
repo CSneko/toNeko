@@ -48,7 +48,7 @@ public class NekoAggregatorBlock extends Block {
         private final Container container;
         private final ContainerData data;
         private final ContainerLevelAccess access;
-        private final Player player;
+        public final Player player;
 
 
         public NekoAggregatorMenu(int containerId, Inventory playerInventory) {

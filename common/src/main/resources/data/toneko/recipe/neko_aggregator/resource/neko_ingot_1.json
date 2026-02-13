@@ -1,0 +1,19 @@
+{
+  "type": "toneko:neko_aggregator",
+  "key": {
+    "I": {
+      "item": "toneko:neko_block"
+    }
+  },
+
+  "pattern": [
+    "   ",
+    " I ",
+    "   "
+  ],
+  "energy": -9.0,
+  "result": {
+    "id": "toneko:neko_ingot",
+    "count": 9
+  }
+}

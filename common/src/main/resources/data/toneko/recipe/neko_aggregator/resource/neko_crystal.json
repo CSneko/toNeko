@@ -1,0 +1,19 @@
+{
+  "type": "toneko:neko_aggregator",
+  "key": {
+    "I": {
+      "item": "minecraft:amethyst_shard"
+    }
+  },
+
+  "pattern": [
+    "   ",
+    " I ",
+    "   "
+  ],
+  "energy": 10.0,
+  "result": {
+    "id": "toneko:neko_crystal",
+    "count": 1
+  }
+}

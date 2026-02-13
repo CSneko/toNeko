@@ -12,18 +12,9 @@
     "QWERTY770",
     "HappyRespawnanchor",
     "ΗγΤζΡβΒι",
-    {
-      "name": "homewool",
-      "role": "illustrator"
-    },
-    {
-      "name": "pil0lo",
-      "role": "translator"
-    },
-    {
-      "name": "yichifauzi",
-      "role": "translator"
-    }
+    "homewool",
+    "pil0lo",
+    "yichifauzi"
   ],
   "contact": {
     "website": "https://github.com/CSNeko/toNeko",

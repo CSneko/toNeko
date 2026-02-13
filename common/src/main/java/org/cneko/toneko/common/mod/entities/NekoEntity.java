@@ -215,7 +215,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         // 猫娘有繁殖欲望
         nekoMateGoal = new NekoMateGoal(this,null,30,this.followLeashSpeed() / 2);
         this.goalSelector.addGoal(3,nekoMateGoal);
-        // 会尝试捡起附近的物品
+        // 会尝试捡起附近的物品yin 
         this.goalSelector.addGoal(5, new NekoPickupItemGoal(this));
         // 会被拿着喜欢物品的玩家吸引
         this.goalSelector.addGoal(5, new TemptGoal(this, 0.5D, this::isFavoriteItem,false));

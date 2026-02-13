@@ -1,0 +1,19 @@
+{
+  "type": "toneko:neko_aggregator",
+  "key": {
+    "I": {
+      "item": "minecraft:diamond"
+    }
+  },
+
+  "pattern": [
+    "   ",
+    " I ",
+    "   "
+  ],
+  "energy": 15.0,
+  "result": {
+    "id": "toneko:neko_diamond",
+    "count": 1
+  }
+}

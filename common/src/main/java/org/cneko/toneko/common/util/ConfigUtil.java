@@ -5,7 +5,7 @@ import java.time.LocalDate;
 
 public class ConfigUtil {
     public static String CONFIG_FILE = "config/toneko.json";
-    
+
     public static String AI_URL = "https://s.cneko.org/toNekoAI";
 
     public static final ConfigBuilder CONFIG_BUILDER = ConfigBuilder.create(Path.of(CONFIG_FILE))
@@ -22,7 +22,7 @@ public class ConfigUtil {
                     "是否启用AI",
                     "Enable AI")
             .addString("ai.service","neko",AI_URL)
-            .addString("ai.model", "gemini-2.0-flash",AI_URL)
+            .addString("ai.model", "gemini-3.0-flash",AI_URL)
             .addString("ai.key","",AI_URL,
                     "AI的密钥，请参阅https://s.cneko.org/toNekoAI",
                     "API Key of AI,see https://s.cneko.org/toNekoAI")

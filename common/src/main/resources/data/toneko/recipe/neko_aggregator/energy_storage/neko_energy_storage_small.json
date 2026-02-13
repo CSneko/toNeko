@@ -1,0 +1,22 @@
+{
+  "type": "toneko:neko_aggregator",
+  "key": {
+    "I": {
+      "item": "toneko:neko_ingot"
+    },
+    "C": {
+      "item": "minecraft:crying_obsidian"
+    }
+  },
+
+  "pattern": [
+    " I ",
+    "ICI",
+    " I "
+  ],
+  "energy": 50.0,
+  "result": {
+    "id": "toneko:neko_energy_storage_small",
+    "count": 1
+  }
+}

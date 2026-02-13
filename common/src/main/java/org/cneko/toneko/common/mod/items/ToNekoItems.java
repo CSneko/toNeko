@@ -26,6 +26,16 @@ public class ToNekoItems {
     public static Item CONTRACT;
     public static Item NEKO_AGGREGATOR_ITEM;
     public static Item NEKO_INGOT;
+    public static Item NEKO_BLOCK;
+    public static Item NEKO_DIAMOND;
+    public static Item NEKO_DIAMOND_BLOCK;
+    public static Item NEKO_CRYSTAL;
+    public static Item NEKO_ENERGY_STORAGE_SMALL;
+    public static Item NEKO_ENERGY_STORAGE_SMALL_CHARGED;
+    public static Item NEKO_ENERGY_STORAGE_MEDIUM;
+    public static Item NEKO_ENERGY_STORAGE_MEDIUM_CHARGED;
+    public static Item NEKO_ENERGY_STORAGE_LARGE;
+    public static Item NEKO_ENERGY_STORAGE_LARGE_CHARGED;
 
     public static final TagKey<Item> CATNIP_TAG = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c","foods/catnip"));
     public static final TagKey<Item> BAZOOKA_AMMO_TAG = TagKey.create(Registries.ITEM, toNekoLoc("bazooka_ammo"));

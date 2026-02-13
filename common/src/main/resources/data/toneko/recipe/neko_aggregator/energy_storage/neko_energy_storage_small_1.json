@@ -1,0 +1,19 @@
+{
+  "type": "toneko:neko_aggregator",
+  "key": {
+    "I": {
+      "item": "toneko:neko_energy_storage_small_charged"
+    }
+  },
+
+  "pattern": [
+    "   ",
+    " I ",
+    "   "
+  ],
+  "energy": -150.0,
+  "result": {
+    "id": "toneko:neko_energy_storage_small",
+    "count": 1
+  }
+}
