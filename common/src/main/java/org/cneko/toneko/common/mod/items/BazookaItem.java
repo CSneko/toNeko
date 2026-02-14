@@ -4,11 +4,13 @@ import net.fabricmc.fabric.api.item.v1.EnchantingContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -21,7 +23,9 @@ import net.minecraft.world.phys.Vec3;
 import org.cneko.toneko.common.mod.entities.AmmunitionEntity;
 import org.cneko.toneko.common.mod.entities.ToNekoEntities;
 import org.cneko.toneko.common.mod.misc.ToNekoComponents;
+import org.cneko.toneko.common.mod.misc.ToNekoDamageTypes;
 import org.cneko.toneko.common.mod.misc.ToNekoSoundEvents;
+import org.cneko.toneko.common.mod.util.EnchantmentUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -206,7 +210,7 @@ public class BazookaItem extends Item {
 
     @Override
     public boolean canBeEnchantedWith(ItemStack stack, Holder<Enchantment> enchantment, EnchantingContext context) {
-        if (enchantment.is(Enchantments.LOYALTY)){
+        if (enchantment.is(Enchantments.LOYALTY) || enchantment.is(Enchantments.POWER)){
             return true;
         }
         return super.canBeEnchantedWith(stack, enchantment, context);
@@ -238,5 +242,16 @@ public class BazookaItem extends Item {
         default boolean isHarmful(ItemStack bazooka, ItemStack ammunition){
             return false;
         }
+    }
+
+    public static float getAttackDamage(ItemStack bazooka,ItemStack ammunition,Level level){
+        float base = 4;
+        float finalDamage = base;
+        int powerLevel = EnchantmentUtil.getEnchantmentLevel(Enchantments.POWER, bazooka,level);
+        finalDamage += base*0.25f*powerLevel + 0.5f*powerLevel;
+        return finalDamage;
+    }
+    public static DamageSource getDamageSource(LivingEntity shooter){
+        return ToNekoDamageTypes.bazookaDamage(shooter);
     }
 }

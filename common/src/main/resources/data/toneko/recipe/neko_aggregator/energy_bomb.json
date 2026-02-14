@@ -1,0 +1,22 @@
+{
+  "type": "toneko:neko_aggregator",
+  "key": {
+    "I": {
+      "item": "minecraft:snowball"
+    },
+    "C": {
+      "item": "toneko:catnip"
+    }
+  },
+
+  "pattern": [
+    " C ",
+    " I ",
+    "   "
+  ],
+  "energy": 50.0,
+  "result": {
+    "id": "toneko:energy_bomb",
+    "count": 1
+  }
+}

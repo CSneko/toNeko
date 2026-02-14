@@ -1,0 +1,28 @@
+{
+  "type": "toneko:neko_aggregator",
+  "key": {
+    "I": {
+      "item": "toneko:neko_ingot"
+    },
+    "D": {
+      "item": "toneko:neko_diamond"
+    },
+    "L": {
+      "item": "toneko:neko_crystal"
+    },
+    "C": {
+      "item": "toneko:catnip"
+    }
+  },
+
+  "pattern": [
+    "ICI",
+    "DCD",
+    "LCL"
+  ],
+  "energy": 500.0,
+  "result": {
+    "id": "toneko:infinite_catnip",
+    "count": 1
+  }
+}

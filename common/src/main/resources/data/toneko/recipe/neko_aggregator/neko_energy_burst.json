@@ -1,0 +1,34 @@
+{
+  "type": "toneko:neko_aggregator",
+  "key": {
+    "I": {
+      "item": "toneko:neko_ingot"
+    },
+    "D": {
+      "item": "toneko:neko_diamond"
+    },
+    "L": {
+      "item": "toneko:neko_crystal"
+    },
+    "C": {
+      "item": "toneko:catnip"
+    },
+    "R": {
+      "item": "minecraft:lightning_rod"
+    },
+    "G": {
+      "item": "minecraft:glass_bottle"
+    }
+  },
+
+  "pattern": [
+    "IRI",
+    "DGD",
+    "LCL"
+  ],
+  "energy": 1000.0,
+  "result": {
+    "id": "toneko:neko_energy_burst",
+    "count": 1
+  }
+}

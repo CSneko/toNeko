@@ -21,6 +21,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.cneko.toneko.common.mod.items.BazookaItem;
 import org.cneko.toneko.common.mod.misc.ToNekoSoundEvents;
+import org.cneko.toneko.common.mod.util.EnchantmentUtil;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -100,9 +101,7 @@ public class AmmunitionEntity extends ThrowableProjectile implements GeoEntity {
             if (ammoStack.getItem() instanceof BazookaItem.Ammunition ammo) {
                 float maxDistance = ammo.getMaxDistance(bazookaStack, ammoStack);
 
-                int loyalty = EnchantmentHelper.getItemEnchantmentLevel(
-                        this.registryAccess().lookup(Registries.ENCHANTMENT).flatMap(lookup -> lookup.get(Enchantments.LOYALTY)).get()
-                        , bazookaStack);
+                int loyalty = EnchantmentUtil.getEnchantmentLevel(Enchantments.LOYALTY, bazookaStack,this.level());
 
                 if (loyalty > 0 && shooter != null) {
                     // 返还距离和速度

@@ -14,6 +14,7 @@ import org.cneko.toneko.common.mod.items.*;
 import org.cneko.toneko.common.mod.entities.ToNekoEntities;
 import org.cneko.toneko.common.mod.items.ammo.ExplosiveBombItem;
 import org.cneko.toneko.common.mod.items.ammo.LightningBombItem;
+import org.cneko.toneko.common.mod.items.ammo.NekoEnergyBombItem;
 import org.cneko.toneko.common.mod.misc.ToNekoSongs;
 import org.cneko.toneko.common.util.ConfigUtil;
 
@@ -48,6 +49,7 @@ public class ToNekoItems {
                 new FoodProperties(2,1.0f,true,1.6f, Optional.empty(),
                         List.of()
                 )));
+        INFINITE_CATNIP = new CatnipItem.InfiniteCatnipItem(new Item.Properties().component(DataComponents.FOOD,new FoodProperties(2,1.0f,false,1.6f, Optional.empty(),List.of())).rarity(Rarity.UNCOMMON));
         CATNIP_SANDWICH = new CatnipItem(new Item.Properties().component(DataComponents.FOOD,new FoodProperties(10,12f,false,1.6f, Optional.empty(),List.of())));
         CATNIP_SEED = new ItemNameBlockItem(ToNekoBlocks.CATNIP, new Item.Properties());
         MUSIC_DISC_KAWAII = new Item(new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ToNekoSongs.KAWAII));
@@ -56,6 +58,7 @@ public class ToNekoItems {
         PLOT_SCROLL = new PlotScrollItem(new Item.Properties());
         LIGHTNING_BOMB = new LightningBombItem(new Item.Properties());
         EXPLOSIVE_BOMB  = new ExplosiveBombItem(new Item.Properties());
+        ENERGY_BOMB = new NekoEnergyBombItem();
         CONTRACT = new ContractItem(new Item.Properties());
         NEKO_AGGREGATOR_ITEM = new ItemNameBlockItem(ToNekoBlocks.NEKO_AGGREGATOR, new Item.Properties());
         NEKO_INGOT = new Item(new Item.Properties());
@@ -69,6 +72,7 @@ public class ToNekoItems {
         NEKO_ENERGY_STORAGE_MEDIUM_CHARGED = new NekoEnergyStorageItem(400,true);
         NEKO_ENERGY_STORAGE_LARGE = new NekoEnergyStorageItem(1000,false);
         NEKO_ENERGY_STORAGE_LARGE_CHARGED = new NekoEnergyStorageItem(1000,true);
+        NEKO_ENERGY_BURST = new NekoEnergyBurstItem(2f,3f,50f);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NekoPotionItem.ID), NEKO_POTION);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NekoCollectorItem.ID), NEKO_COLLECTOR);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(FurryBoheItem.ID), FURRY_BOHE);
@@ -76,14 +80,16 @@ public class ToNekoItems {
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("ghost_neko_spawn_egg"),GHOST_NEKO_SPAWN_EGG);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("fighting_neko_spawn_egg"), FIGHTING_NEKO_SPAWN_EGG);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("catnip"), CATNIP);
+        Registry.register(BuiltInRegistries.ITEM, toNekoLoc("infinite_catnip"), INFINITE_CATNIP);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("catnip_sandwich"), CATNIP_SANDWICH);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("catnip_seed"), CATNIP_SEED);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("music_disc_kawaii"), MUSIC_DISC_KAWAII);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("music_disc_never_gonna_give_you_up"), MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(BazookaItem.ID), BAZOOKA);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("plot_scroll"), PLOT_SCROLL);
-        Registry .register(BuiltInRegistries.ITEM, toNekoLoc("lightning_bomb"), LIGHTNING_BOMB);
+        Registry.register(BuiltInRegistries.ITEM, toNekoLoc("lightning_bomb"), LIGHTNING_BOMB);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("explosive_bomb"), EXPLOSIVE_BOMB);
+        Registry.register(BuiltInRegistries.ITEM, toNekoLoc("energy_bomb"), ENERGY_BOMB);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("contract"), CONTRACT);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("neko_aggregator"), NEKO_AGGREGATOR_ITEM);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("neko_ingot"), NEKO_INGOT);
@@ -97,6 +103,7 @@ public class ToNekoItems {
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("neko_energy_storage_medium_charged"), NEKO_ENERGY_STORAGE_MEDIUM_CHARGED);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("neko_energy_storage_large"), NEKO_ENERGY_STORAGE_LARGE);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("neko_energy_storage_large_charged"), NEKO_ENERGY_STORAGE_LARGE_CHARGED);
+        Registry.register(BuiltInRegistries.ITEM, toNekoLoc("neko_energy_burst"), NEKO_ENERGY_BURST);
 
         // 如果安装了trinkets，则注册为TrinketItem
         if (isTrinketsInstalled){
@@ -124,6 +131,7 @@ public class ToNekoItems {
             content.accept(NEKO_TAIL);
             content.accept(FURRY_BOHE);
             content.accept(CATNIP);
+            content.accept(INFINITE_CATNIP);
             content.accept(CATNIP_SANDWICH);
             content.accept(CATNIP_SEED);
             content.accept(ADVENTURER_NEKO_SPAWN_EGG);
@@ -137,6 +145,7 @@ public class ToNekoItems {
             // content.accept(PLOT_SCROLL);
             content.accept(LIGHTNING_BOMB);
             content.accept(EXPLOSIVE_BOMB);
+            content.accept(ENERGY_BOMB);
             content.accept(CONTRACT);
             content.accept(NEKO_AGGREGATOR_ITEM);
             content.accept(NEKO_INGOT);
@@ -150,6 +159,7 @@ public class ToNekoItems {
             content.accept(NEKO_ENERGY_STORAGE_MEDIUM_CHARGED);
             content.accept(NEKO_ENERGY_STORAGE_LARGE);
             content.accept(NEKO_ENERGY_STORAGE_LARGE_CHARGED);
+                content.accept(NEKO_ENERGY_BURST);
         });
     }
 

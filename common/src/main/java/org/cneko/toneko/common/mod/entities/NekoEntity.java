@@ -352,7 +352,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
                 this.setLastHurtByMob(null);
             }
             // 增长动力
-            this.addGatheringPower(20);
+            this.addGatheringPower(10);
             if (this.equipArmors(stack)){
                 // 装备
                 return true;
@@ -382,10 +382,6 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
             if (this.hasOwner(player.getUUID())){
                 // 如果是主人，则添加好感
                 this.setXpWithOwner(player.getUUID(), this.getXpWithOwner(player.getUUID()) + 20);
-                if (player.isNeko()){
-                    player.setNekoLevel(player.getNekoLevel()+0.03f);
-                }
-                this.setNekoLevel(this.getNekoLevel()+0.5f);
                 // 1%的几率掉落唱片
                 if (player.getRandom().nextInt(100) == 0) {
                     player.drop(new ItemStack(ToNekoItems.MUSIC_DISC_KAWAII),false);
