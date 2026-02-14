@@ -15,10 +15,10 @@ public class ToNekoBlocks {
         CATNIP = Registry.register(BuiltInRegistries.BLOCK, ResourceLocation.fromNamespaceAndPath(MODID, "catnip"),
                 new CatnipBlock());
         NEKO_AGGREGATOR = Registry.register(BuiltInRegistries.BLOCK, ResourceLocation.fromNamespaceAndPath(MODID, "neko_aggregator"),
-                new NekoAggregatorBlock(BlockBehaviour.Properties.of()));
+                new NekoAggregatorBlock(BlockBehaviour.Properties.of().strength(5.0f).requiresCorrectToolForDrops()));
         NEKO_BLOCK = Registry.register(BuiltInRegistries.BLOCK, ResourceLocation.fromNamespaceAndPath(MODID, "neko_block"),
-                new Block(BlockBehaviour.Properties.of()));
+                new Block(BlockBehaviour.Properties.of().strength(5.0f).requiresCorrectToolForDrops()));
         NEKO_DIAMOND_BLOCK = Registry.register(BuiltInRegistries.BLOCK, ResourceLocation.fromNamespaceAndPath(MODID, "neko_diamond_block"),
-                new Block(BlockBehaviour.Properties.of()));
+                new Block(BlockBehaviour.Properties.of().strength(5.0f).requiresCorrectToolForDrops()));
     }
 }

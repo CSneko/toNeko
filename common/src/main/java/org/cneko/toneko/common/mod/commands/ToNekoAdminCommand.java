@@ -1,6 +1,7 @@
 package org.cneko.toneko.common.mod.commands;
 
 import com.mojang.brigadier.arguments.BoolArgumentType;
+import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -38,6 +39,14 @@ public class ToNekoAdminCommand {
                             )
 
                     )
+                    .then(literal("setLevel")
+                            .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_TONEKOADMIN_SET_LEVEL))
+                            .then(argument("neko",EntityArgument.player())
+                                    .then(argument("level", FloatArgumentType.floatArg(0f,1000f))
+                                            .executes(ToNekoAdminCommand::setLevel)
+                                    )
+                            )
+                    )
                     .then(literal("reload")
                             .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_TONEKOADMIN_RELOAD))
                             .executes(ToNekoAdminCommand::reload)
@@ -71,6 +80,20 @@ public class ToNekoAdminCommand {
                     )
             );
         });
+    }
+
+    private static int setLevel(CommandContext<CommandSourceStack> context) {
+        CommandSourceStack source = context.getSource();
+        ServerPlayer neko;
+        try {
+            neko = EntityArgument.getPlayer(context, "neko");
+        } catch (CommandSyntaxException e) {
+            return 0;
+        }
+        float level = FloatArgumentType.getFloat(context, "level");
+        neko.setNekoLevel(level);
+        source.sendSystemMessage(translatable("command.tonekoadmin.set_level", neko.getName().getString(), level));
+        return 1;
     }
 
     private static int setConfig(CommandContext<CommandSourceStack> context) {

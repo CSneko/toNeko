@@ -8,6 +8,7 @@ public class Permissions {
     public static String COMMAND_TONEKOADMIN = "command.tonekoadmin";
     public static String COMMAND_TONEKOADMIN_HELP = "command.tonekoadmin.help";
     public static String COMMAND_TONEKOADMIN_SET = "command.tonekoadmin.set";
+    public static String COMMAND_TONEKOADMIN_SET_LEVEL = "command.tonekoadmin.setLevel";
     public static String COMMAND_TONEKOADMIN_RELOAD = "command.tonekoadmin.reload";
     public static String COMMAND_TONEKOADMIN_DATA = "command.tonekoadmin.data";
     public static String COMMAND_TONEKOADMIN_CONFIG = "command.tonekoadmin.config";
@@ -29,7 +30,7 @@ public class Permissions {
     public static String COMMAND_NEKO_LEVEL = "command.neko.level";
     public static String COMMAND_NEKO_LORE = "command.neko.lore";
     public static String COMMAND_NEKO_RIDE = "command.neko.ride";
-    public static final String COMMAND_NEKO_RIDE_HEAD = "command.neko.ride_head";
+    public static String COMMAND_NEKO_RIDE_HEAD = "command.neko.ride_head";
     public static String COMMAND_QUIRK = "command.quirk";
     public static String COMMAND_QUIRK_HELP = "command.quirk.help";
     public static String COMMAND_QUIRK_ADD = "command.quirk.add";

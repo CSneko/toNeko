@@ -86,6 +86,8 @@ subprojects {
         annotationProcessor("org.projectlombok:lombok:1.18.38")
 
         implementation 'dev.architectury:architectury-transformer:5.2.88'
+
+        modCompileOnly "dev.emi:emi-xplat-intermediary:${emi_version}:api"
     }
 
     java {

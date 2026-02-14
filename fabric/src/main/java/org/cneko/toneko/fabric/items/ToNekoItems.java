@@ -63,12 +63,12 @@ public class ToNekoItems {
         NEKO_DIAMOND = new Item(new Item.Properties());
         NEKO_DIAMOND_BLOCK = new BlockItem(ToNekoBlocks.NEKO_DIAMOND_BLOCK, new Item.Properties());
         NEKO_CRYSTAL = new Item(new Item.Properties());
-        NEKO_ENERGY_STORAGE_SMALL = new Item(new Item.Properties());
-        NEKO_ENERGY_STORAGE_SMALL_CHARGED = new Item(new Item.Properties());
-        NEKO_ENERGY_STORAGE_MEDIUM = new Item(new Item.Properties());
-        NEKO_ENERGY_STORAGE_MEDIUM_CHARGED = new Item(new Item.Properties());
-        NEKO_ENERGY_STORAGE_LARGE = new Item(new Item.Properties());
-        NEKO_ENERGY_STORAGE_LARGE_CHARGED = new Item(new Item.Properties());
+        NEKO_ENERGY_STORAGE_SMALL = new NekoEnergyStorageItem(150,false);
+        NEKO_ENERGY_STORAGE_SMALL_CHARGED = new NekoEnergyStorageItem(150,true);
+        NEKO_ENERGY_STORAGE_MEDIUM = new NekoEnergyStorageItem(400,false);
+        NEKO_ENERGY_STORAGE_MEDIUM_CHARGED = new NekoEnergyStorageItem(400,true);
+        NEKO_ENERGY_STORAGE_LARGE = new NekoEnergyStorageItem(1000,false);
+        NEKO_ENERGY_STORAGE_LARGE_CHARGED = new NekoEnergyStorageItem(1000,true);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NekoPotionItem.ID), NEKO_POTION);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NekoCollectorItem.ID), NEKO_COLLECTOR);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(FurryBoheItem.ID), FURRY_BOHE);

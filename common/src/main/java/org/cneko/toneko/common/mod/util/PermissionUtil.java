@@ -31,6 +31,7 @@ public class PermissionUtil {
     public static void registerAll(){
         register(COMMAND_TONEKOADMIN);
         register(COMMAND_TONEKOADMIN_SET);
+        register(COMMAND_TONEKOADMIN_SET_LEVEL);
         register(COMMAND_TONEKOADMIN_RELOAD);
         register(COMMAND_TONEKOADMIN_HELP);
         register(COMMAND_TONEKOADMIN_DATA);

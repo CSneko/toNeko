@@ -13,7 +13,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 public class NekoAggregatorRecipe implements Recipe<NekoAggregatorInput> {
-    final NekoAggregatorRecipePattern pattern;
+    public final NekoAggregatorRecipePattern pattern;
     final ItemStack result;
     public final double energy;
     public NekoAggregatorRecipe(NekoAggregatorRecipePattern pattern,double energy,ItemStack result){

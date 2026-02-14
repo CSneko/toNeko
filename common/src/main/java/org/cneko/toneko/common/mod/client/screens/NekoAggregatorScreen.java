@@ -165,13 +165,13 @@ public class NekoAggregatorScreen extends AbstractContainerScreen<NekoAggregator
         int required = getClientSideRequiredEnergy();
 
         List<Component> tooltip = new ArrayList<>();
-        tooltip.add(Component.literal(String.format("Neko Energy: %d / %d", (int)current, (int)max)));
+        tooltip.add(Component.literal(String.format("%d / %d", (int)current, (int)max)));
 
         if (required > 0) {
             int color = (current >= required) ? 0xFFAAAAAA : 0xFFFF5555;
-            tooltip.add(Component.literal("Cost: " + required).withStyle(s -> s.withColor(color)));
+            tooltip.add(Component.literal("-" + required).withStyle(s -> s.withColor(color)));
         } else if (required < 0) {
-            tooltip.add(Component.literal("Gain: " + Math.abs(required)).withStyle(s -> s.withColor(0xFF55FF55)));
+            tooltip.add(Component.literal("+" + Math.abs(required)).withStyle(s -> s.withColor(0xFF55FF55)));
         }
 
         guiGraphics.renderComponentTooltip(this.font, tooltip, mouseX, mouseY);

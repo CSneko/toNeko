@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "toneko:neko_aggregator",
+    "toneko:neko_block",
+    "toneko:neko_diamond_block"
+  ]
+}

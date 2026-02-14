@@ -121,7 +121,6 @@ public class NekoAggregatorBlock extends Block {
             this.access.execute((level, blockPos) -> {
                 // 确保在服务器端执行配方检查
                 if (!level.isClientSide) {
-                    System.out.println("[NekoAggregator] onInputChanged triggered on SERVER.");
                     updateResult(level);
                 }
             });
@@ -136,7 +135,6 @@ public class NekoAggregatorBlock extends Block {
             for (int i = 0; i < INPUT_SLOTS; i++) {
                 inputs.add(this.container.getItem(i).copy());
             }
-            System.out.println("[NekoAggregator] Current inputs: " + inputs);
             NekoAggregatorInput recipeInput = NekoAggregatorInput.of(3, 3, inputs, 0); // 这里的 energy 只是占位符
 
             // 查找配方
@@ -145,21 +143,17 @@ public class NekoAggregatorBlock extends Block {
 
             if (recipeHolder.isPresent()) {
                 NekoAggregatorRecipe recipe = recipeHolder.get().value();
-                System.out.println("[NekoAggregator] ==> Recipe FOUND: " + recipeHolder.get().id());
                 // 检查能量是否足够
                 if (this.player.getNekoEnergy() >= recipe.energy) {
                     // 合成并设置结果
                     ItemStack resultStack = recipe.assemble(recipeInput, level.registryAccess());
                     resultSlot.set(resultStack);
-                    System.out.println("[NekoAggregator] Assembled result: " + resultStack);
                 } else {
-                    System.out.println("[NekoAggregator] Energy check FAILED.");
                     // 能量不足，清空结果槽
                     resultSlot.set(ItemStack.EMPTY);
                 }
             } else {
                 // 没有匹配的配方，清空结果槽
-                System.out.println("[NekoAggregator] ==> Recipe NOT FOUND.");
                 resultSlot.set(ItemStack.EMPTY);
             }
 
@@ -167,7 +161,6 @@ public class NekoAggregatorBlock extends Block {
             if (player instanceof ServerPlayer serverPlayer) {
                 serverPlayer.connection.send(new ClientboundContainerSetSlotPacket(containerId, incrementStateId(), 9, resultSlot.getItem()));
             }
-            System.out.println("[NekoAggregator] --- Finished updateResult ---");
         }
 
         @Override

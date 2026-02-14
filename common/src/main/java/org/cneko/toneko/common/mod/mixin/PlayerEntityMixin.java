@@ -142,7 +142,7 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
 
     @Override
     public float getNekoLevel() {
-        return Math.min(100,toneko$nekoLevel);
+        return Math.min(200,toneko$nekoLevel);
     }
 
     @Override

@@ -196,13 +196,13 @@ public interface INeko {
         applyModifier(
                 this.getEntity().getAttribute(ToNekoAttributes.MAX_NEKO_ENERGY),
                 MAX_NEKO_ENERGY_MODIFIER_ID,
-                nekoLevel *2
+                nekoLevel *10
         );
 
         applyModifier(
                 this.getEntity().getAttribute(Attributes.MAX_HEALTH),
                 MAX_HEALTH_MODIFIER_ID,
-                nekoLevel * 0.02
+                nekoLevel * 0.05
         );
     }
 
