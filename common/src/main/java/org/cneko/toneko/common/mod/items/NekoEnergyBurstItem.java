@@ -18,6 +18,7 @@ import org.cneko.toneko.common.mod.misc.ToNekoDamageTypes;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class NekoEnergyBurstItem extends Item {
     @Getter
@@ -49,12 +50,14 @@ public class NekoEnergyBurstItem extends Item {
         player.setNekoEnergy(player.getNekoEnergy()-energyCost);
         // 扩散粒子喵~ 超炫酷的呢~
         spawnBurstParticles((ServerLevel) level, player, finalRadius);
+        AtomicReference<Float> levelUp = new AtomicReference<>((float) 0);
         // 获取周围的实体并造成伤害
         player.level().getEntities(player, player.getBoundingBox().inflate(finalRadius), entity -> entity.isAlive() && entity != player)
                 .forEach(entity -> {
                     if (entity instanceof LivingEntity livingEntity) {
                         if (entity instanceof INeko neko && neko.isNeko()) {
                             livingEntity.heal(finalDamage * 0.5f);
+                            levelUp.updateAndGet(v -> v+0.01f);
                             // 爱心粒子
                             for (int i = 0; i < 10; i++) {
                                 double offsetX = (entity.getRandom().nextDouble() - 0.5) * entity.getBbWidth();
@@ -72,6 +75,7 @@ public class NekoEnergyBurstItem extends Item {
                                 double offsetZ = (entity.getRandom().nextDouble() - 0.5) * entity.getBbWidth();
                                 entity.level().addParticle(ParticleTypes.DAMAGE_INDICATOR, entity.getX() + offsetX, entity.getY() + offsetY, entity.getZ() + offsetZ, 0, 0.1, 0);
                             }
+                            levelUp.updateAndGet(v -> v+0.005f);
                         }
                     }
 
@@ -80,6 +84,8 @@ public class NekoEnergyBurstItem extends Item {
         player.getItemInHand(usedHand).hurtAndBreak(1, player,usedHand == InteractionHand.MAIN_HAND ?  EquipmentSlot.MAINHAND: EquipmentSlot.OFFHAND);
         // 设置冷却
         player.getCooldowns().addCooldown(this, 10);
+        // 升级
+        player.setNekoLevel(player.getNekoLevel() + levelUp.get());
         return InteractionResultHolder.success(player.getItemInHand(usedHand));
     }
 

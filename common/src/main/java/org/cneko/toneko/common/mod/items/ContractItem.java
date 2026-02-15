@@ -61,6 +61,9 @@ public class ContractItem extends Item {
                 }else {
                     neko.addOwner(player.getUUID(), new INeko.Owner(List.of(),0));
                     player.giveExperienceLevels(-30);
+                    if (player.isNeko()){
+                        player.setNekoLevel(player.getNekoLevel()+0.5f);
+                    }
                     player.sendSystemMessage(Component.translatable("item.toneko.contract.success",neko.getEntity().getName()));
                     // 删除物品
                     if (!player.isCreative()) {
