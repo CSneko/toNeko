@@ -1,0 +1,8 @@
+{
+  "parent": "block/cube_bottom_top",
+  "textures": {
+    "bottom": "toneko:block/neko_aggregator/neko_aggregator_bottom",
+    "top": "toneko:block/neko_aggregator/neko_aggregator_top",
+    "side": "toneko:block/neko_aggregator/neko_aggregator_side"
+  }
+}

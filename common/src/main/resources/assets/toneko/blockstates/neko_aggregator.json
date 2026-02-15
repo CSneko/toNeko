@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "toneko:block/neko_aggregator" }
+  }
+}
