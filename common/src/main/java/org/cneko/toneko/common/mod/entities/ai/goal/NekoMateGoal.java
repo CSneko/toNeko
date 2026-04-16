@@ -19,6 +19,8 @@ public class NekoMateGoal extends Goal {
     private double maxDistanceSq;
     public INeko target;
     public short mating = 0;
+    // 寻路冷却计时器
+    private int timeToRecalcPath;
 
     public NekoMateGoal(NekoEntity nekoEntity, INeko target, double maxDistance, double followSpeed) {
         this.nekoEntity = nekoEntity;
@@ -26,6 +28,12 @@ public class NekoMateGoal extends Goal {
         this.followSpeed = followSpeed;
         this.maxDistanceSq = maxDistance * maxDistance;
         this.setFlags(EnumSet.of(Flag.MOVE));
+    }
+
+    @Override
+    public void start() {
+        super.start();
+        this.timeToRecalcPath = 0;
     }
 
     @Override
@@ -40,6 +48,11 @@ public class NekoMateGoal extends Goal {
     @Override
     public void tick() {
         if (target != null) {
+            // 每 10 tick 重新计算一次路径
+            if (--this.timeToRecalcPath <= 0) {
+                this.timeToRecalcPath = 10;
+                nekoEntity.getNavigation().moveTo(target.getEntity(), followSpeed);
+            }
             nekoEntity.getNavigation().moveTo(target.getEntity(), followSpeed);
             // 当距离小于1时，开始贴贴
             if (nekoEntity.distanceToSqr(target.getEntity()) < 1) {

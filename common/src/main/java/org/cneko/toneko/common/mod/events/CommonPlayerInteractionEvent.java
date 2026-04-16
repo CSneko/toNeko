@@ -16,16 +16,14 @@ import org.cneko.toneko.common.mod.entities.boss.mouflet.MoufletNekoBoss;
 import org.cneko.toneko.common.mod.quirks.Quirk;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 public class CommonPlayerInteractionEvent {
 
     public static InteractionResult useBlock(Player player, Level level, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-        // 如果附近32格有战斗状态的MoufletNekoBoss实体，则不允许使用容器
         if (level.getEntitiesOfClass(MoufletNekoBoss.class, player.getBoundingBox().inflate(32)).stream()
                 .anyMatch(neko -> !neko.isPetMode())) {
-            // 获取方块实体
             var block = level.getBlockEntity(blockHitResult.getBlockPos());
             if (block instanceof Container) {
                 return InteractionResult.FAIL;
@@ -34,12 +32,10 @@ public class CommonPlayerInteractionEvent {
         return InteractionResult.PASS;
     }
 
-    // 基础事件上下文接口
     private sealed interface EventContext permits DamageContext, AttackContext, InteractionContext {
         LivingEntity entity();
     }
 
-    // 交互事件上下文
     private record InteractionContext(
             ServerPlayer player,
             Level world,
@@ -53,14 +49,12 @@ public class CommonPlayerInteractionEvent {
         }
     }
 
-    // 伤害事件上下文
     private record DamageContext(
             LivingEntity entity,
             DamageSource damageSource,
             float damageValue
     ) implements EventContext {}
 
-    // 攻击事件上下文
     private record AttackContext(
             ServerPlayer attacker,
             Level level,
@@ -74,78 +68,81 @@ public class CommonPlayerInteractionEvent {
         }
     }
 
-    // 通用事件处理器
-    private static <T extends EventContext> boolean processEvent(
+    private static <T extends EventContext> InteractionResult processInteractEvent(
             T context,
-            BiConsumer<Quirk, T> eventAction,
+            BiFunction<Quirk, T, InteractionResult> eventAction,
             @Nullable Consumer<Quirk> xpHandler
     ) {
-        boolean triggered = false;
         INeko neko = null;
-        // 尝试从context.entity()获取INeko实例
         if (context.entity() instanceof INeko n) {
             neko = n;
         }
-        if (neko == null) return false;
+        if (neko == null) return InteractionResult.PASS;
+
         for (Quirk q : neko.getQuirks()) {
-            if (q instanceof Quirk mq) {
-                eventAction.accept(mq, context);
-                if (xpHandler != null) {
-                    xpHandler.accept(mq);
+            if (q != null) {
+                // 捕获 Quirk 执行的结果
+                InteractionResult result = eventAction.apply(q, context);
+
+                // 如果 Quirk 返回了 SUCCESS 或 CONSUME (消耗了此次操作)
+                if (result.consumesAction()) {
+                    if (xpHandler != null && result == InteractionResult.SUCCESS) {
+                        xpHandler.accept(q);
+                    }
+                    // 立即拦截并返回给游戏引擎，阻止副手触发或后续冲突
+                    return result;
                 }
-                triggered = true;
             }
         }
-        return triggered;
+        return InteractionResult.PASS;
     }
 
-    // 实体交互件处理
     public static InteractionResult useEntity(Player player, Level world, InteractionHand hand,
                                               Entity entity, EntityHitResult hitResult) {
         if (!(entity instanceof INeko targetNeko) || !(player instanceof ServerPlayer sp)) {
             return InteractionResult.PASS;
         }
 
-        InteractionContext context = new InteractionContext(
-                sp, world, hand, targetNeko, hitResult
+        InteractionContext context = new InteractionContext(sp, world, hand, targetNeko, hitResult);
+
+        // 【修改点】：创建一个统一的 XP 处理器，在这里判断是否有主人
+        Consumer<Quirk> xpHandler = q -> {
+            if (targetNeko.hasOwner(sp.getUUID())) {
+                sp.setXpWithOwner(sp.getUUID(), q.getInteractionValue() + sp.getXpWithOwner(sp.getUUID()));
+            }
+        };
+
+        // 处理目标 neko 的特性 (无条件触发，但传进去的 xpHandler 会做主人判断)
+        InteractionResult targetResult = processInteractEvent(context,
+                (mq, ctx) -> mq.onNekoInteraction(ctx.player(), ctx.world(), ctx.hand(), ctx.targetEntity(), ctx.hitResult()),
+                xpHandler
         );
 
-        // 处理目标neko的特性
-        if (targetNeko.hasOwner(player.getUUID())) {
-            boolean success = processEvent(context, (mq, ctx) ->
-                    mq.onNekoInteraction(ctx.player(), ctx.world(), ctx.hand(),
-                            ctx.targetEntity(), ctx.hitResult()),
-                    q -> sp.setXpWithOwner(sp.getUUID(), q.getInteractionValue() + sp.getXpWithOwner(sp.getUUID()))
-            );
+        if (targetResult.consumesAction()) return targetResult;
 
-            if (success) return InteractionResult.SUCCESS;
-        }
-
-        // 处理玩家自身的特性
-        processEvent(context, (mq, ctx) ->
-                mq.onInteractionOther(ctx.player(), ctx.world(), ctx.hand(),
-                        ctx.targetEntity(), ctx.hitResult()),
-                q -> sp.setXpWithOwner(sp.getUUID(), q.getInteractionValue() + sp.getXpWithOwner(sp.getUUID()))
+        // 处理玩家自身的特性 (无条件触发，但传进去的 xpHandler 会做主人判断)
+        InteractionResult playerResult = processInteractEvent(context,
+                (mq, ctx) -> mq.onInteractionOther(ctx.player(), ctx.world(), ctx.hand(), ctx.targetEntity(), ctx.hitResult()),
+                xpHandler
         );
+
+        if (playerResult.consumesAction()) return playerResult;
 
         return InteractionResult.PASS;
     }
 
-    // 伤害事件处理
+    // 伤害事件由于原版要求返回 boolean，单独处理循环
     public static boolean onDamage(LivingEntity entity, DamageSource source, float damage) {
         if (!(entity instanceof INeko neko)) return true;
 
-        processEvent(
-                new DamageContext(entity, source, damage),
-                (mq, ctx) -> mq.onDamage(neko, ctx.damageSource(), ctx.damageValue()),
-                null
-        );
-
-        // 无论是否有quirk处理，都允许伤害
+        for (Quirk q : neko.getQuirks()) {
+            if (q != null) {
+                q.onDamage(neko, source, damage);
+            }
+        }
         return true;
     }
 
-    // 攻击事件处理
     public static InteractionResult onAttackEntity(Player attacker, Level level, InteractionHand hand,
                                                    Entity target, EntityHitResult hitResult) {
         if (!(attacker instanceof ServerPlayer sp) || !(target instanceof LivingEntity le)) {
@@ -153,14 +150,13 @@ public class CommonPlayerInteractionEvent {
         }
 
         for (Quirk q : sp.getQuirks()) {
-            if (q instanceof Quirk mq) {
-                InteractionResult result = mq.onNekoAttack(sp, level, hand, le, hitResult);
+            if (q != null) {
+                InteractionResult result = q.onNekoAttack(sp, level, hand, le, hitResult);
                 if (result == InteractionResult.SUCCESS) {
-                    sp.setXpWithOwner(sp.getUUID(), mq.getInteractionValue() + sp.getXpWithOwner(sp.getUUID()));
+                    sp.setXpWithOwner(sp.getUUID(), q.getInteractionValue() + sp.getXpWithOwner(sp.getUUID()));
                 }
             }
         }
-
         return InteractionResult.PASS;
     }
 }

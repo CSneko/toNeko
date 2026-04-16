@@ -19,6 +19,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -38,12 +39,14 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
 import org.cneko.toneko.common.mod.advencements.ToNekoCriteria;
 import org.cneko.toneko.common.mod.ai.PromptRegistry;
 import org.cneko.toneko.common.mod.api.NekoNameRegistry;
 import org.cneko.toneko.common.mod.api.NekoSkinRegistry;
 import org.cneko.toneko.common.mod.entities.ai.goal.*;
+import org.cneko.toneko.common.mod.genetics.api.*;
 import org.cneko.toneko.common.mod.items.ToNekoItems;
 import org.cneko.toneko.common.mod.misc.ToNekoAttributes;
 import org.cneko.toneko.common.mod.packets.interactives.NekoEntityInteractivePayload;
@@ -65,7 +68,7 @@ import java.util.*;
 import static org.cneko.toneko.common.mod.util.ResourceLocationUtil.toNekoLoc;
 import static org.cneko.toneko.common.mod.util.TextUtil.randomTranslatabledComponent;
 
-public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko {
+public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko, IGeneticEntity {
     public static final TagKey<Item> NEKO_ARMOR = TagKey.create(Registries.ITEM,toNekoLoc("neko/armor"));
     public static double DEFAULT_FIND_RANGE = 16.0D;
     public static float DEFAULT_RIDE_RANGE = 3f;
@@ -87,6 +90,23 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
             "yuri" // 百合
     );
 
+    // 萌属性缓存
+    private String lastMoeTagsStringCache = null;
+    private List<String> cachedMoeTagsList = null;
+
+    // 受伤求救冷却时间，避免被连击时疯狂扫描附近实体
+    private long lastHelpCallTime = 0;
+
+    // 用于动画渲染的客户端状态缓存，避免每帧都去查方块状态
+    private boolean clientIsInLiquid = false;
+    private boolean clientIsEyeInWater = false;
+
+    // 遗传
+    private Genome genome = new Genome();
+    private final CompoundTag geneticData = new CompoundTag();
+    private final List<ExpressedTrait> activeTraits = new ArrayList<>();
+    private final List<Goal> activeGeneticGoals = new ArrayList<>();
+
     public NekoFollowOwnerGoal nekoFollowOwnerGoal;
     public NekoMateGoal nekoMateGoal;
     private final AnimatableInstanceCache cache;
@@ -103,9 +123,6 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
 
     public NekoEntity(EntityType<? extends NekoEntity> entityType, Level level) {
         super(entityType, level);
-        if (!this.level().isClientSide()){
-            randomize();
-        }
         this.cache = GeckoLibUtil.createInstanceCache(this);
     }
 
@@ -169,6 +186,8 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         compound.putInt("GatheringPower", this.getGatheringPower());
         compound.putString("MoeTags", String.join(":", this.getMoeTags()));
         this.saveNekoNBTData(compound);
+        compound.put("Genome", this.genome.save());
+        compound.put("GeneticData", this.geneticData);
     }
 
     public void readAdditionalSaveData(@NotNull CompoundTag compound) {
@@ -198,6 +217,15 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
 
         }
         this.loadNekoNBTData(compound);
+        if (compound.contains("Genome")) {
+            this.genome.load(compound.getCompound("Genome"));
+        }
+        if (compound.contains("GeneticData")) {
+            this.geneticData.merge(compound.getCompound("GeneticData"));
+        }
+
+        // 载入完成后必须表达基因
+        this.expressTraits();
     }
 
     @Override
@@ -205,7 +233,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         super.registerGoals();
         // 猫娘会观察玩家
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Player.class, 8.0F));
-        // 猫娘需要呼吸才能活呀
+        // 吸吸吸吸吸~ 我要做个深呼吸~
         this.goalSelector.addGoal(5, new BreathAirGoal(this));
         // 猫娘会闲逛
         this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 0.3, 1));
@@ -215,7 +243,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         // 猫娘有繁殖欲望
         nekoMateGoal = new NekoMateGoal(this,null,30,this.followLeashSpeed() / 2);
         this.goalSelector.addGoal(3,nekoMateGoal);
-        // 会尝试捡起附近的物品yin 
+        // 会尝试捡起附近的物品
         this.goalSelector.addGoal(5, new NekoPickupItemGoal(this));
         // 会被拿着喜欢物品的玩家吸引
         this.goalSelector.addGoal(5, new TemptGoal(this, 0.5D, this::isFavoriteItem,false));
@@ -223,8 +251,6 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         this.goalSelector.addGoal(1, new NekoEscapeDangerGoal(this));
         // 会游泳
         this.goalSelector.addGoal(1,new RandomSwimmingGoal(this,0.1,2));
-        // 猫娘会睡觉
-        //this.goalSelector.addGoal(2, new NekoSleepInBedGoal(this));
     }
 
     public void followOwner(Player followingOwner,double maxDistance, double followSpeed) {
@@ -268,8 +294,14 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
 
     public List<String> getMoeTags(){
         String moeTagsString = this.entityData.get(MOE_TAGS_ID);
-        return moeTagsString.isEmpty() ? List.of() : List.of(moeTagsString.split(":"));
+        // 如果同步数据没有变，直接返回缓存的 List
+        if (cachedMoeTagsList == null || !moeTagsString.equals(lastMoeTagsStringCache)) {
+            lastMoeTagsStringCache = moeTagsString;
+            cachedMoeTagsList = moeTagsString.isEmpty() ? List.of() : List.of(moeTagsString.split(":"));
+        }
+        return cachedMoeTagsList;
     }
+
 
 
     // 翻译后的String的萌属性
@@ -677,10 +709,29 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
         if (mate instanceof ServerPlayer sp){
             sp.connection.send(packet);
         }
-        // 增加等级
-        this.setNekoLevel(this.getNekoLevel()+0.1f);
-        mate.setNekoLevel(this.getNekoLevel()+0.1f);
-        NekoEntity baby = this.spawnChildFromBreeding(level, mate);
+
+        // 生成配子
+        Gamete paternalGamete = this.getGenome().createGamete(this.getRandom());
+        Gamete maternalGamete;
+
+        // 如果另一半也实现了遗传接口
+        if (mate.getEntity() instanceof IGeneticEntity geneticMate) {
+            maternalGamete = geneticMate.getGenome().createGamete(mate.getEntity().getRandom());
+        } else {
+            // 对另一半进行随机降级处理
+            maternalGamete = Genome.generateFallbackGamete(mate.getEntity().getRandom());
+        }
+
+        // 基因组合并
+        Genome childGenome = Genome.combine(paternalGamete, maternalGamete);
+
+        // 生成子代实体
+        NekoEntity child = this.spawnChildFromBreeding(level, mate);
+        if (child != null) {
+            child.setGenome(childGenome);
+            child.expressTraits(); // 让基因立刻生效，改变属性和外观
+        }
+
         // 分别给予虚弱效果
         this.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 3000, 0));
         mate.getEntity().addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 3000, 0));
@@ -744,11 +795,11 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, 20, state -> {
             // 地上趴着
-            if (this.getPose() == Pose.SWIMMING && !this.isInLiquid()){
+            if (this.getPose() == Pose.SWIMMING && !this.clientIsInLiquid){
                 return state.setAndContinue(DefaultAnimations.CRAWL);
             }
             // 在水里
-            if (this.isInLiquid() && this.isEyeInFluid(FluidTags.WATER)){
+            if (this.clientIsInLiquid && this.clientIsEyeInWater){
                 if (state.isMoving()) {
                     return state.setAndContinue(DefaultAnimations.SWIM);
                 }else {
@@ -775,6 +826,11 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     public void tick() {
         super.tick();
         this.inventory.tick();
+        // 在 tick() 中更新流体状态，每秒只查20次，而不是让动画控制器每帧都查
+        if (this.level().isClientSide()) {
+            this.clientIsInLiquid = this.isInLiquid();
+            this.clientIsEyeInWater = this.isEyeInFluid(FluidTags.WATER);
+        }
     }
 
     @Override
@@ -827,16 +883,20 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
                 this.heal(food.nutrition());
                 this.eat(this.level(), stack);
                 stack.shrink(1);
-                return true;
             }
         }
-        // 寻找附近武备猫娘
-        List<FightingNekoEntity> nearbyNekos = this.level().getEntitiesOfClass(FightingNekoEntity.class,
-                this.getBoundingBox().inflate(10), LivingEntity::isAlive
-        );
-        // 设置仇恨
-        for (FightingNekoEntity neko : nearbyNekos) {
-            if (source.getEntity() instanceof LivingEntity entity) neko.setLastHurtByMob(entity);
+        // 40tick冷却喵，这样应该会省性能吧
+        long currentTime = this.level().getGameTime();
+        if (currentTime - this.lastHelpCallTime > 40) {
+            this.lastHelpCallTime = currentTime;
+            // 寻找附近武备猫娘
+            List<FightingNekoEntity> nearbyNekos = this.level().getEntitiesOfClass(FightingNekoEntity.class,
+                    this.getBoundingBox().inflate(10), LivingEntity::isAlive
+            );
+            // 设置仇恨
+            for (FightingNekoEntity neko : nearbyNekos) {
+                if (source.getEntity() instanceof LivingEntity entity) neko.setLastHurtByMob(entity);
+            }
         }
         return true;
     }
@@ -989,6 +1049,54 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko 
     public @NotNull EntityType<? extends NekoEntity> getType() {
         return (EntityType<? extends NekoEntity>) super.getType();
     }
+
+    // ------------------------------- 遗传系统相关 -------------------------------
+
+    @Override
+    public Genome getGenome() { return this.genome; }
+
+    @Override
+    public void setGenome(Genome genome) { this.genome = genome; }
+
+    @Override
+    public CompoundTag getGeneticData() { return this.geneticData; }
+
+    @Override
+    public List<ExpressedTrait> getActiveTraits() { return this.activeTraits; }
+
+    @Override
+    public List<Goal> getActiveGeneticGoals() { return this.activeGeneticGoals; }
+
+    @Override
+    public void expressTraits() {
+        if (!this.level().isClientSide) {
+            this.genome.express(this);
+
+            // 同步给客户端
+            this.setSkin(this.getSkin());
+            this.setMoeTags(this.getMoeTags());
+        }
+    }
+
+    // 初始生成时的随机基因分配
+    @Override
+    public @NotNull SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType reason, @Nullable SpawnGroupData spawnData) {
+        if (reason == MobSpawnType.NATURAL || reason == MobSpawnType.SPAWN_EGG || reason == MobSpawnType.COMMAND) {
+            // 自然生成时，生成两套随机配子并结合，模拟“野生猫娘基因库”
+            Gamete gamete1 = Genome.generateFallbackGamete(this.random);
+            Gamete gamete2 = Genome.generateFallbackGamete(this.random);
+            this.setGenome(Genome.combine(gamete1, gamete2));
+
+            // 初始化名字等基础信息
+            if (!this.hasCustomName()) {
+                this.setCustomName(Component.literal(NekoNameRegistry.getRandomName()));
+            }
+            this.expressTraits();
+        }
+        return super.finalizeSpawn(level, difficulty, reason, spawnData);
+    }
+
+
 
     public static AttributeSupplier.Builder createNekoAttributes(){
         return createMobAttributes().add(Attributes.ATTACK_DAMAGE).add(Attributes.ATTACK_SPEED).add(ToNekoAttributes.NEKO_DEGREE).add(ToNekoAttributes.MAX_NEKO_ENERGY);
