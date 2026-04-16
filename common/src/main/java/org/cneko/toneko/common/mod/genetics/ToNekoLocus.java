@@ -14,5 +14,7 @@ public class ToNekoLocus {
     public static void init(){
         GeneticsRegistry.registerLocus(SPEED_SLOT_0);
         GeneticsRegistry.registerLocus(SPEED_SLOT_1);
+        GeneticsRegistry.registerLocus(ATTACK_SLOT_0);
+        GeneticsRegistry.registerLocus(AGILITY_SLOT_0);
     }
 }

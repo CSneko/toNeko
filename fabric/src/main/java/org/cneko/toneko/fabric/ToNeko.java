@@ -5,10 +5,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import org.cneko.toneko.common.Bootstrap;
 import org.cneko.toneko.common.mod.ModBootstrap;
 import org.cneko.toneko.common.mod.ModMeta;
-import org.cneko.toneko.common.mod.commands.NekoCommand;
-import org.cneko.toneko.common.mod.commands.QuirkCommand;
-import org.cneko.toneko.common.mod.commands.ToNekoAdminCommand;
-import org.cneko.toneko.common.mod.commands.ToNekoCommand;
+import org.cneko.toneko.common.mod.commands.*;
 import org.cneko.toneko.common.mod.events.ToNekoEvents;
 import org.cneko.toneko.common.mod.events.ToNekoNetworkEvents;
 import org.cneko.toneko.common.mod.impl.FabricLanguageImpl;
@@ -39,6 +36,7 @@ public class ToNeko implements ModInitializer {
         ToNekoAdminCommand.init();
         NekoCommand.init();
         QuirkCommand.init();
+        GeneticsCommand.init();
 
         // 注册实体
         ToNekoEntities.init();

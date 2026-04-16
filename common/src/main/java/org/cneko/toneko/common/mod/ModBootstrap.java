@@ -5,6 +5,8 @@ import net.minecraft.commands.synchronization.SingletonArgumentInfo;
 import org.cneko.toneko.common.mod.ai.Prompts;
 import org.cneko.toneko.common.mod.commands.arguments.CustomStringArgument;
 import org.cneko.toneko.common.mod.commands.arguments.NekoArgument;
+import org.cneko.toneko.common.mod.genetics.ToNekoAlleles;
+import org.cneko.toneko.common.mod.genetics.ToNekoLocus;
 import org.cneko.toneko.common.mod.quirks.ToNekoQuirks;
 import org.cneko.toneko.common.util.scheduled.FabricSchedulerPoolImpl;
 import org.cneko.toneko.common.util.scheduled.SchedulerPoolProvider;
@@ -23,5 +25,7 @@ public class ModBootstrap {
         );
         Prompts.init();
         ToNekoQuirks.init();
+        ToNekoLocus.init();
+        ToNekoAlleles.init();
     }
 }

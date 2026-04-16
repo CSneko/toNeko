@@ -12,13 +12,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.cneko.toneko.common.mod.api.EntityPoseManager;
 import org.cneko.toneko.common.mod.client.api.ClientEntityPoseManager;
-import org.cneko.toneko.common.mod.client.screens.InteractionScreen;
-import org.cneko.toneko.common.mod.client.screens.NekoScreenRegistry;
-import org.cneko.toneko.common.mod.client.screens.PlotScrollScreen;
+import org.cneko.toneko.common.mod.client.screens.*;
 import org.cneko.toneko.common.mod.client.util.ClientPlayerUtil;
 import org.cneko.toneko.common.mod.packets.*;
 import org.cneko.toneko.common.mod.packets.interactives.NekoEntityInteractivePayload;
-import org.cneko.toneko.common.mod.client.screens.QuirkScreen;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
 import org.cneko.toneko.common.util.AIUtil;
 import org.cneko.toneko.common.util.ConfigUtil;
@@ -77,6 +74,13 @@ public class ClientNetworkEvents {
         ClientPlayNetworking.registerGlobalReceiver(OpenPlotScreenPayload.ID,  (payload, context) -> context.client().execute(() -> {
             context.client().setScreen(new PlotScrollScreen());
         }));
+
+        ClientPlayNetworking.registerGlobalReceiver(GenomeDataPayload.ID, (payload, context) -> {
+            context.client().execute(() -> {
+                // 打开 GUI
+                context.client().setScreen(new GeneticsScreen(payload.genomeNbt()));
+            });
+        });
 
     }
     public static void setPose(EntityPosePayload payload, ClientPlayNetworking.Context context) {
