@@ -73,6 +73,7 @@ public class ToNekoItems {
         NEKO_ENERGY_STORAGE_LARGE = new NekoEnergyStorageItem(1000,false);
         NEKO_ENERGY_STORAGE_LARGE_CHARGED = new NekoEnergyStorageItem(1000,true);
         NEKO_ENERGY_BURST = new NekoEnergyBurstItem(2f,3f,50f);
+        GENE_EDITOR = new GeneEditorItem(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NekoPotionItem.ID), NEKO_POTION);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NekoCollectorItem.ID), NEKO_COLLECTOR);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(FurryBoheItem.ID), FURRY_BOHE);
@@ -104,6 +105,7 @@ public class ToNekoItems {
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("neko_energy_storage_large"), NEKO_ENERGY_STORAGE_LARGE);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("neko_energy_storage_large_charged"), NEKO_ENERGY_STORAGE_LARGE_CHARGED);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("neko_energy_burst"), NEKO_ENERGY_BURST);
+            Registry.register(BuiltInRegistries.ITEM, toNekoLoc("gene_editor"), GENE_EDITOR);
 
         // 如果安装了trinkets，则注册为TrinketItem
         if (isTrinketsInstalled){
@@ -159,7 +161,8 @@ public class ToNekoItems {
             content.accept(NEKO_ENERGY_STORAGE_MEDIUM_CHARGED);
             content.accept(NEKO_ENERGY_STORAGE_LARGE);
             content.accept(NEKO_ENERGY_STORAGE_LARGE_CHARGED);
-                content.accept(NEKO_ENERGY_BURST);
+            content.accept(NEKO_ENERGY_BURST);
+            content.accept(GENE_EDITOR);
         });
     }
 

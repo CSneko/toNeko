@@ -77,8 +77,8 @@ public class ClientNetworkEvents {
 
         ClientPlayNetworking.registerGlobalReceiver(GenomeDataPayload.ID, (payload, context) -> {
             context.client().execute(() -> {
-                // 打开 GUI
-                context.client().setScreen(new GeneticsScreen(payload.genomeNbt()));
+                // 打开 UI，把数据传进去
+                context.client().setScreen(new GeneticsScreen(payload.entityId(), payload.genomeNbt(), payload.canEdit()));
             });
         });
 

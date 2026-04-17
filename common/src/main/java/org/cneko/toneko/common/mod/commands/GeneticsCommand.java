@@ -8,13 +8,16 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import org.cneko.toneko.common.api.Permissions;
 import org.cneko.toneko.common.mod.genetics.api.IGeneticEntity;
 import org.cneko.toneko.common.mod.packets.GenomeDataPayload;
+import org.cneko.toneko.common.mod.util.PermissionUtil;
 
 public class GeneticsCommand {
     public static void init() {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             dispatcher.register(Commands.literal("genetics")
+                    .requires(s -> PermissionUtil.has(s, Permissions.COMMAND_GENETICS))
                     .then(Commands.argument("target", EntityArgument.entity())
                                     .executes(context -> {
                                         Entity target = EntityArgument.getEntity(context, "target");
@@ -24,7 +27,8 @@ public class GeneticsCommand {
                                             // 发送数据给客户端
                                             ServerPlayNetworking.send(player, new GenomeDataPayload(
                                                     target.getId(),
-                                                    geneticEntity.getGenome().save()
+                                                    geneticEntity.getGenome().save(),
+                                                    false
                                             ));
                                             return 1;
                                         } else {

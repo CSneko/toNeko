@@ -16,6 +16,8 @@ import org.cneko.toneko.common.api.TickTasks;
 import org.cneko.toneko.common.mod.api.EntityPoseManager;
 import org.cneko.toneko.common.mod.entities.CrystalNekoEntity;
 import org.cneko.toneko.common.mod.entities.INeko;
+import org.cneko.toneko.common.mod.genetics.api.IGeneticEntity;
+import org.cneko.toneko.common.mod.items.GeneEditorItem;
 import org.cneko.toneko.common.mod.misc.Messaging;
 import org.cneko.toneko.common.mod.packets.*;
 import org.cneko.toneko.common.mod.packets.interactives.*;
@@ -46,6 +48,31 @@ public class ToNekoNetworkEvents {
         ServerPlayNetworking.registerGlobalReceiver(MateWithCrystalNekoPayload.ID, ToNekoNetworkEvents::onMateWithCrystalNeko);
         ServerPlayNetworking.registerGlobalReceiver(PlayerLeadByPlayerPayload.ID,ToNekoNetworkEvents::onPlayerLeadByPlayer);
         ServerPlayNetworking.registerGlobalReceiver(PluginDetectPayload.ID,(a,b)->{});// 什么也不干
+        ServerPlayNetworking.registerGlobalReceiver(GenomeDataPayload.ID, (payload, context) -> {
+            ServerPlayer player = context.player();
+
+            // 防作弊校验 1：必须拥有修改权限 (只有发包带有 canEdit 且手持物品，或者有管理员权限才行)
+            boolean holdingEditor = player.getMainHandItem().getItem() instanceof GeneEditorItem
+                    || player.getOffhandItem().getItem() instanceof GeneEditorItem;
+
+            if (!holdingEditor && (!player.hasPermissions(2) && !PermissionUtil.has(player, Permissions.GENETICS_EDIT))) {
+                player.sendSystemMessage(Component.literal("§c安全拒绝：你没有手持基因编辑器，无法修改基因！"));
+                return;
+            }
+
+            context.server().execute(() -> {
+                // 防作弊校验 2：实体必须存在且在有效范围内
+                Entity target = player.level().getEntity(payload.entityId());
+
+                if (target != null && target.distanceToSqr(player) < 64 && target instanceof IGeneticEntity geneticEntity) {
+                    // 核心逻辑：应用 NBT 并强制重计算表现型
+                    geneticEntity.getGenome().load(payload.genomeNbt());
+                    geneticEntity.expressTraits();
+
+                    player.sendSystemMessage(Component.literal("§a基因重组成功！实体的属性已实时更新。"));
+                }
+            });
+        });
     }
 
     public static void onPlayerLeadByPlayer(PlayerLeadByPlayerPayload payload, ServerPlayNetworking.Context context) {

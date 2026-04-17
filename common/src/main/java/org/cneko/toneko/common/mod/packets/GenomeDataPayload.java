@@ -7,16 +7,16 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 import static org.cneko.toneko.common.mod.util.ResourceLocationUtil.toNekoLoc;
 
-public record GenomeDataPayload(int entityId, CompoundTag genomeNbt) implements CustomPacketPayload {
+public record GenomeDataPayload(int entityId, CompoundTag genomeNbt,boolean canEdit) implements CustomPacketPayload {
     public static final Type<GenomeDataPayload> ID = new Type<>(toNekoLoc("genome_data"));
 
-    // 1.21+ 的流式编解码器
     public static final StreamCodec<FriendlyByteBuf, GenomeDataPayload> CODEC = CustomPacketPayload.codec(
             (payload, buf) -> {
                 buf.writeInt(payload.entityId);
                 buf.writeNbt(payload.genomeNbt);
+                buf.writeBoolean(payload.canEdit);
             },
-            buf -> new GenomeDataPayload(buf.readInt(), buf.readNbt())
+            buf -> new GenomeDataPayload(buf.readInt(), buf.readNbt(), buf.readBoolean())
     );
 
     @Override

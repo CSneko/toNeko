@@ -37,4 +37,6 @@ public class Permissions {
     public static String COMMAND_QUIRK_REMOVE = "command.quirk.remove";
     public static String COMMAND_QUIRK_LIST = "command.quirk.list";
     public static String COMMAND_QUIRK_GUI = "command.quirk.gui";
+    public static String COMMAND_GENETICS = "command.genetics";
+    public static String GENETICS_EDIT = "genetics.edit";
 }

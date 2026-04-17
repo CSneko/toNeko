@@ -57,6 +57,7 @@ public class PermissionUtil {
         register(COMMAND_QUIRK_GUI);
         register(COMMAND_QUIRK_LIST);
         register(COMMAND_QUIRK_HELP);
+        register(COMMAND_GENETICS);
     }
     // 是否拥有权限
     public static boolean has(Entity entity, String perm){
