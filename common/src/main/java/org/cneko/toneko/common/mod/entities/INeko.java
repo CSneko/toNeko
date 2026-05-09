@@ -82,11 +82,16 @@ public interface INeko {
 
 
 
-    default int getXpWithOwner(UUID uuid){
-        return getOwner(uuid).getXp();
+    default int getXpWithOwner(UUID uuid) {
+        Owner owner = getOwner(uuid);
+        return owner != null ? owner.getXp() : 0;
     }
-    default void setXpWithOwner(UUID uuid, int xp){
-         this.getOwner(uuid).setXp(xp);
+
+    default void setXpWithOwner(UUID uuid, int xp) {
+        Owner owner = getOwner(uuid);
+        if (owner != null) {
+            owner.setXp(xp);
+        }
     }
 
     default List<BlockedWord> getBlockedWords(){

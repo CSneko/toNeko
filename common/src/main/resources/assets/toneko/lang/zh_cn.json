@@ -226,6 +226,7 @@
   "item.toneko.neko_energy_burst.tip.damage": "§a基础伤害: %d",
   "item.toneko.neko_energy_burst.tip.radius": "§b基础范围: %d",
   "item.toneko.neko_energy_burst.tip.energy_cost": "§d能量消耗: %d",
+  "item.toneko.gene_editor": "基因编辑器",
   "itemGroup.toneko": "猫猫",
   "key.toneko.get_down": "趴下",
   "key.toneko.jump": "获取跳跃提升",
