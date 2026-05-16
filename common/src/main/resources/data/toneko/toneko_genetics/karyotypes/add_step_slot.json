@@ -1,0 +1,6 @@
+{
+  "target": "toneko:base_mob",
+  "add_loci": {
+    "6": ["toneko:step_slot"]
+  }
+}

@@ -5,6 +5,10 @@ import net.minecraft.commands.synchronization.SingletonArgumentInfo;
 import org.cneko.toneko.common.mod.ai.Prompts;
 import org.cneko.toneko.common.mod.commands.arguments.CustomStringArgument;
 import org.cneko.toneko.common.mod.commands.arguments.NekoArgument;
+import org.cneko.toneko.common.mod.api.BaseLevelFactor;
+import org.cneko.toneko.common.mod.api.CombatLevelFactor;
+import org.cneko.toneko.common.mod.api.InteractionLevelFactor;
+import org.cneko.toneko.common.mod.api.NekoLevelRegistry;
 import org.cneko.toneko.common.mod.genetics.ToNekoAlleles;
 import org.cneko.toneko.common.mod.genetics.ToNekoLocus;
 import org.cneko.toneko.common.mod.quirks.ToNekoQuirks;
@@ -27,5 +31,9 @@ public class ModBootstrap {
         ToNekoQuirks.init();
         ToNekoLocus.init();
         ToNekoAlleles.init();
+
+        NekoLevelRegistry.register(new BaseLevelFactor());
+        NekoLevelRegistry.register(new InteractionLevelFactor());
+        NekoLevelRegistry.register(new CombatLevelFactor());
     }
 }

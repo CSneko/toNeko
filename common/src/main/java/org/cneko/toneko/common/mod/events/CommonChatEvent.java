@@ -28,7 +28,7 @@ public class CommonChatEvent {
 
         // 3. 统计与经验逻辑
         int meowCount = Stats.getMeow(finalString);
-        sender.setNekoLevel((float) (sender.getNekoLevel() + meowCount / 1000.00));
+        org.cneko.toneko.common.mod.api.NekoLevelRegistry.interaction().addRaw(sender, meowCount / 1000.0);
 
         if (ConfigUtil.isStatsEnable()) {
             Stats.meowInChat(playerName, meowCount);

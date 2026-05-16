@@ -1,12 +1,15 @@
 package org.cneko.toneko.common.mod.genetics.api;
 
+import net.minecraft.resources.ResourceLocation;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class SpeciesKaryotype {
-    private final int chromosomePairs;
+    private ResourceLocation id;
+    private int chromosomePairs;
     private final Map<Integer, List<Locus>> chromosomes = new HashMap<>();
 
     // 基础构造函数
@@ -51,5 +54,24 @@ public class SpeciesKaryotype {
 
     public List<Locus> getLociOnChromosome(int chromosomeId) {
         return chromosomes.getOrDefault(chromosomeId, List.of());
+    }
+
+    public ResourceLocation getId() { return id; }
+
+    public void setId(ResourceLocation id) { this.id = id; }
+
+    /**
+     * 确保核型支持指定的染色体编号，如果目标编号超出当前范围则自动扩展。
+     * 用于数据包动态添加新染色体到现有核型。
+     */
+    public SpeciesKaryotype ensureChromosomeCapacity(int chromosomeId) {
+        if (chromosomeId < 1) throw new IllegalArgumentException("染色体ID必须大于0: " + chromosomeId);
+        if (chromosomeId > chromosomePairs) {
+            for (int i = chromosomePairs + 1; i <= chromosomeId; i++) {
+                chromosomes.put(i, new ArrayList<>());
+            }
+            this.chromosomePairs = chromosomeId;
+        }
+        return this;
     }
 }

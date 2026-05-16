@@ -15,11 +15,17 @@ import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.ItemCost;
 import net.minecraft.world.item.trading.MerchantOffer;
+import org.cneko.toneko.common.mod.api.NekoLevelRegistry;
 import org.cneko.toneko.common.mod.api.events.WorldEvents;
+import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.items.ToNekoItems;
 import org.cneko.toneko.common.mod.quirks.ModQuirk;
 import org.cneko.toneko.common.mod.util.TextUtil;
@@ -41,6 +47,14 @@ public class ToNekoEvents {
         UseEntityCallback.EVENT.register(CommonPlayerInteractionEvent::useEntity);
         UseBlockCallback.EVENT.register(CommonPlayerInteractionEvent::useBlock);
         ServerLivingEntityEvents.ALLOW_DAMAGE.register(CommonPlayerInteractionEvent::onDamage);
+        ServerLivingEntityEvents.AFTER_DEATH.register((entity, source) -> {
+            if (entity instanceof INeko || !(entity instanceof Monster)) return;
+            Entity killer = source.getEntity();
+            if (killer instanceof INeko neko && neko.isNeko()) {
+                double xp = Math.max(1, entity.getMaxHealth() / 2.0);
+                NekoLevelRegistry.combat().addRaw(neko, xp);
+            }
+        });
         AttackEntityCallback.EVENT.register(CommonPlayerInteractionEvent::onAttackEntity);
         ServerTickEvents.START_SERVER_TICK.register(CommonPlayerEvent::startTick);
         ServerWorldEvents.UNLOAD.register(CommonWorldEvent::onWorldUnLoad);

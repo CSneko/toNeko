@@ -63,7 +63,7 @@ public class Allele {
     // --- 引擎调用的生命周期方法 ---
 
     public void apply(LivingEntity entity, Locus locus, CompoundTag geneticData, List<Goal> trackedGoals) {
-        // 1. 执行自定义逻辑 (如添加 MoeTags)
+        // 1. 执行自定义逻辑
         this.onExpress.accept(entity, geneticData);
 
         // 2. 注入并叠加 Attribute Modifier

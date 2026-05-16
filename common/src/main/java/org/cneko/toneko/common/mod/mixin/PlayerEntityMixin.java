@@ -20,6 +20,7 @@ import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.ItemLore;
 import org.cneko.toneko.common.mod.api.EntityPoseManager;
+import org.cneko.toneko.common.mod.api.NekoLevelRegistry;
 import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.misc.mixininterface.SlowTickable;
 import org.cneko.toneko.common.mod.packets.EntityPosePayload;
@@ -50,7 +51,7 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
     @Unique
     boolean toneko$isNeko = false;
     @Unique
-    float toneko$nekoLevel = 0;
+    CompoundTag toneko$nekoLevelFactorData = new CompoundTag();
     @Unique
     float toneko$nekoEnergy = 0;
     @Unique
@@ -127,7 +128,14 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
 
     @Unique
     private void toneko$syncNekoInfo(ServerPlayer sp){
-        ServerPlayNetworking.send(sp,new NekoInfoSyncPayload(this.getNekoEnergy()));
+        ServerPlayNetworking.send(sp, new NekoInfoSyncPayload(
+                this.getNekoEnergy(),
+                this.getMaxNekoEnergy(),
+                this.getNekoLevelFactorRaw("interaction"),
+                this.getNekoLevelFactorRaw("combat"),
+                this.getNekoLevelFactorRaw("base"),
+                this.isNeko()
+        ));
     }
 
     @Override
@@ -141,13 +149,19 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
     }
 
     @Override
-    public float getNekoLevel() {
-        return Math.min(200,toneko$nekoLevel);
+    @Deprecated
+    public void setNekoLevel(float level) {
+        // no-op — retained for binary compatibility only
     }
 
     @Override
-    public void setNekoLevel(float level) {
-        toneko$nekoLevel = level;
+    public CompoundTag getNekoLevelFactorData() {
+        return toneko$nekoLevelFactorData;
+    }
+
+    @Override
+    public void setNekoLevelFactorData(CompoundTag data) {
+        toneko$nekoLevelFactorData = data;
     }
 
     @Override

@@ -137,7 +137,7 @@ public class MoufletNekoBoss extends NekoEntity implements NekoBoss {
                 this.addItem(ammo);
                 this.addItem(explosiveAmmo);
             }
-            this.setNekoLevel(1000);
+            org.cneko.toneko.common.mod.api.NekoLevelRegistry.base().setRaw(this, 1000);
         }
     }
 
@@ -473,7 +473,7 @@ public class MoufletNekoBoss extends NekoEntity implements NekoBoss {
         this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(3.0);
         this.getAttribute(Attributes.SCALE).setBaseValue(1.5);
         this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.12);
-        this.setNekoLevel(0);
+        org.cneko.toneko.common.mod.api.NekoLevelRegistry.base().setRaw(this, 0);
 
         // 添加玩家为主人
         this.addOwner(player.getUUID(), new INeko.Owner(java.util.List.of(), 0));

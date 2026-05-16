@@ -1065,5 +1065,21 @@
   "gui.toneko.genetics_viewer.pool.recommended": "Recommended Pool",
   "gui.toneko.genetics_viewer.locus": "Locus: %s",
   "gui.toneko.genetics_viewer.paternal": "♂: %s",
-  "gui.toneko.genetics_viewer.maternal": "♀: %s"
+  "gui.toneko.genetics_viewer.maternal": "♀: %s",
+  "screen.toneko.neko_info.title": "Neko Info",
+  "screen.toneko.neko_info.yes": "Yes",
+  "screen.toneko.neko_info.no": "No",
+  "screen.toneko.neko_info.status": "Neko Status: %s",
+  "screen.toneko.neko_info.not_neko": "You are not a neko!",
+  "screen.toneko.neko_info.nickname": "Nickname: %s",
+  "screen.toneko.neko_info.level_section": "=== Level ===",
+  "screen.toneko.neko_info.total_level": "Total Level: %s",
+  "screen.toneko.neko_info.base_factor": "Base: %s (raw: %s)",
+  "screen.toneko.neko_info.interaction_factor": "Interaction: %s (raw: %s)",
+  "screen.toneko.neko_info.combat_factor": "Combat: %s (raw: %s)",
+  "screen.toneko.neko_info.energy_section": "=== Energy ===",
+  "screen.toneko.neko_info.energy": "%s / %s",
+  "screen.toneko.neko_info.ability_section": "=== Ability ===",
+  "screen.toneko.neko_info.ability": "Neko Ability: %s",
+  "key.toneko.neko_info": "Neko Info"
 }

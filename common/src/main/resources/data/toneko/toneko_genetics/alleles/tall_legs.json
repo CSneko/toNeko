@@ -1,0 +1,14 @@
+{
+  "dominance": 20,
+  "attributes": [
+    {
+      "attribute": "minecraft:generic.step_height",
+      "suffix": "step_boost",
+      "operation": "add_value",
+      "amount": 0.5
+    }
+  ],
+  "wild_pool": [
+    { "locus": "toneko:body_size_slot_0", "weight": 5 }
+  ]
+}

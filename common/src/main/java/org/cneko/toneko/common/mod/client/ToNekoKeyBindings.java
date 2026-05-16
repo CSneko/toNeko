@@ -15,6 +15,7 @@ public class ToNekoKeyBindings {
     public static KeyMapping VISION_KEY;
     public static KeyMapping RIDE_HEAD_KEY;
     public static KeyMapping ROULETTE_KEY;
+    public static KeyMapping NEKO_INFO_KEY;
 
     public static void init(){
         LIE_KEY = KeyBindingHelper.registerKeyBinding(
@@ -86,6 +87,14 @@ public class ToNekoKeyBindings {
                         "key.toneko.roulette",
                         InputConstants.Type.KEYSYM,
                         GLFW.GLFW_KEY_Z,
+                        "key.toneko.lie.category"
+                )
+        );
+        NEKO_INFO_KEY = KeyBindingHelper.registerKeyBinding(
+                new KeyMapping(
+                        "key.toneko.neko_info",
+                        InputConstants.Type.KEYSYM,
+                        GLFW.GLFW_KEY_U,
                         "key.toneko.lie.category"
                 )
         );

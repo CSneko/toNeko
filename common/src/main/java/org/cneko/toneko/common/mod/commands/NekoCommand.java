@@ -93,6 +93,10 @@ public class NekoCommand {
                             .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_NEKO_RIDE_HEAD))
                             .executes(NekoCommand::rideHeadCommand)
                     )
+                    .then(literal("gui")
+                            .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_NEKO_GUI))
+                            .executes(NekoCommand::guiCommand)
+                    )
             );
         });
     }
@@ -203,6 +207,16 @@ public class NekoCommand {
         }else{
             context.getSource().getPlayer().sendSystemMessage(translatable("command.neko.not_neko"));
         }
+        return 1;
+    }
+
+    public static int guiCommand(CommandContext<CommandSourceStack> context) {
+        ServerPlayer player = context.getSource().getPlayer();
+        if (!player.isNeko()) {
+            player.sendSystemMessage(translatable("command.neko.not_neko"));
+            return 1;
+        }
+        ServerPlayNetworking.send(player, new org.cneko.toneko.common.mod.packets.OpenNekoInfoScreenPayload());
         return 1;
     }
 

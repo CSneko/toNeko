@@ -9,10 +9,22 @@ import org.jetbrains.annotations.NotNull;
 
 import static org.cneko.toneko.common.Bootstrap.MODID;
 
-public record NekoInfoSyncPayload(float energy) implements CustomPacketPayload {
+public record NekoInfoSyncPayload(
+        float energy,
+        float maxEnergy,
+        double interactionRaw,
+        double combatRaw,
+        double baseRaw,
+        boolean isNeko
+) implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<NekoInfoSyncPayload> ID = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(MODID, "neko_info_sync"));
     public static final StreamCodec<RegistryFriendlyByteBuf, NekoInfoSyncPayload> CODEC = StreamCodec.composite(
             ByteBufCodecs.FLOAT, NekoInfoSyncPayload::energy,
+            ByteBufCodecs.FLOAT, NekoInfoSyncPayload::maxEnergy,
+            ByteBufCodecs.DOUBLE, NekoInfoSyncPayload::interactionRaw,
+            ByteBufCodecs.DOUBLE, NekoInfoSyncPayload::combatRaw,
+            ByteBufCodecs.DOUBLE, NekoInfoSyncPayload::baseRaw,
+            ByteBufCodecs.BOOL, NekoInfoSyncPayload::isNeko,
             NekoInfoSyncPayload::new);
     @Override
     public @NotNull Type<? extends CustomPacketPayload> type() {

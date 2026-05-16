@@ -9,6 +9,7 @@ import net.minecraft.world.entity.player.Player;
 import org.cneko.toneko.common.api.TickTasks;
 import org.cneko.toneko.common.mod.client.ToNekoKeyBindings;
 import org.cneko.toneko.common.mod.client.api.ClientEntityPoseManager;
+import org.cneko.toneko.common.mod.client.screens.NekoInfoScreen;
 import org.cneko.toneko.common.mod.client.screens.RouletteScreen;
 import org.cneko.toneko.common.mod.util.EntityUtil;
 
@@ -50,6 +51,9 @@ public class ClientTickEvent {
         }
         while (ToNekoKeyBindings.ROULETTE_KEY.consumeClick()) {
             RouletteScreen.open();
+        }
+        while (ToNekoKeyBindings.NEKO_INFO_KEY.consumeClick()) {
+            NekoInfoScreen.open();
         }
     }
 

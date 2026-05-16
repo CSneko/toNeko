@@ -69,10 +69,20 @@ public class ClientNetworkEvents {
         ClientPlayNetworking.registerGlobalReceiver(NekoInfoSyncPayload.ID,(payload,context)-> context.client().execute(()->{
             Player player = context.player();
             player.setNekoEnergy(payload.energy());
+            if (player instanceof org.cneko.toneko.common.mod.entities.INeko neko) {
+                neko.setNeko(payload.isNeko());
+                neko.setNekoLevelFactorRaw("interaction", payload.interactionRaw());
+                neko.setNekoLevelFactorRaw("combat", payload.combatRaw());
+                neko.setNekoLevelFactorRaw("base", payload.baseRaw());
+            }
         }));
 
         ClientPlayNetworking.registerGlobalReceiver(OpenPlotScreenPayload.ID,  (payload, context) -> context.client().execute(() -> {
             context.client().setScreen(new PlotScrollScreen());
+        }));
+
+        ClientPlayNetworking.registerGlobalReceiver(OpenNekoInfoScreenPayload.ID, (payload, context) -> context.client().execute(() -> {
+            NekoInfoScreen.open();
         }));
 
         ClientPlayNetworking.registerGlobalReceiver(GenomeDataPayload.ID, (payload, context) -> {

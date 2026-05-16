@@ -91,7 +91,7 @@ public class ToNekoAdminCommand {
             return 0;
         }
         float level = FloatArgumentType.getFloat(context, "level");
-        neko.setNekoLevel(level);
+        org.cneko.toneko.common.mod.api.NekoLevelRegistry.base().setRaw(neko, level);
         source.sendSystemMessage(translatable("command.tonekoadmin.set_level", neko.getName().getString(), level));
         return 1;
     }

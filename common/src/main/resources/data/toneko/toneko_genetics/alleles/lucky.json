@@ -1,0 +1,11 @@
+{
+  "dominance": 5,
+  "attributes": [
+    {
+      "attribute": "minecraft:generic.luck",
+      "suffix": "luck_boost",
+      "operation": "add_value",
+      "amount": 1.0
+    }
+  ]
+}

@@ -43,6 +43,7 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
 import org.cneko.toneko.common.mod.advencements.ToNekoCriteria;
 import org.cneko.toneko.common.mod.ai.PromptRegistry;
+import org.cneko.toneko.common.mod.api.NekoLevelRegistry;
 import org.cneko.toneko.common.mod.api.NekoNameRegistry;
 import org.cneko.toneko.common.mod.api.NekoSkinRegistry;
 import org.cneko.toneko.common.mod.entities.ai.goal.*;
@@ -118,6 +119,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     @Getter
     final NekoInventory inventory = new NekoInventory(this);
     private short slowTimer = 20;
+    private CompoundTag nekoLevelFactorData = new CompoundTag();
 
     public static final EntityDataAccessor<String> SKIN_DATA_ID = SynchedEntityData.defineId(NekoEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<String> MOE_TAGS_ID = SynchedEntityData.defineId(NekoEntity.class, EntityDataSerializers.STRING);
@@ -424,6 +426,11 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
                     player.drop(new ItemStack(ToNekoItems.MUSIC_DISC_KAWAII),false);
                 }
             }
+            // 增加互动等级因子
+            NekoLevelRegistry.interaction().addRaw(this, 15.0);
+            if (player.isNeko()) {
+                NekoLevelRegistry.interaction().addRaw(player, 15.0);
+            }
             return true;
         }else {
             if (player instanceof ServerPlayer) {
@@ -648,6 +655,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
             this.setSkin(this.getSkin());
             this.serverNekoSlowTick();
             this.updateNekoLevelModifiers();
+            this.entityData.set(NEKO_LEVEL_ID, this.getNekoLevel());
         }
     }
 
@@ -1010,11 +1018,26 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     public static final EntityDataAccessor<Float> NEKO_LEVEL_ID = SynchedEntityData.defineId(NekoEntity.class, EntityDataSerializers.FLOAT);
     @Override
     public float getNekoLevel() {
-        return entityData.get(NEKO_LEVEL_ID);
+        if (this.level() != null && this.level().isClientSide()) {
+            return entityData.get(NEKO_LEVEL_ID);
+        }
+        return (float) NekoLevelRegistry.computeTotal(this);
     }
+
     @Override
+    @Deprecated
     public void setNekoLevel(float nekoLevel) {
-        entityData.set(NEKO_LEVEL_ID, nekoLevel);
+        // no-op — retained for binary compatibility only
+    }
+
+    @Override
+    public CompoundTag getNekoLevelFactorData() {
+        return nekoLevelFactorData;
+    }
+
+    @Override
+    public void setNekoLevelFactorData(CompoundTag data) {
+        this.nekoLevelFactorData = data;
     }
 
     private Map<UUID,Owner> owners = new HashMap<>();

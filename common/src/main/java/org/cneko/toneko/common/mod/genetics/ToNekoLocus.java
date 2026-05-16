@@ -59,9 +59,9 @@ public class ToNekoLocus {
     private static void registerKaryotypes() {
 
         // 注册给所有 Mob，这意味着原版的僵尸、猪，甚至其他Mod的实体都能通过此系统获得属性修改！
-        GeneticsRegistry.registerKaryotype(Mob.class, BASE_MOB_KARYOTYPE);
+        GeneticsRegistry.registerKaryotype(toNekoLoc("base_mob"), Mob.class, BASE_MOB_KARYOTYPE);
 
         // 为猫娘（NekoEntity）注册【派生核型】
-         GeneticsRegistry.registerKaryotype(NekoEntity.class, NEKO_KARYOTYPE);
+         GeneticsRegistry.registerKaryotype(toNekoLoc("neko"), NekoEntity.class, NEKO_KARYOTYPE);
     }
 }

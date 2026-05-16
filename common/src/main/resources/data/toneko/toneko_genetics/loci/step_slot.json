@@ -1,0 +1,6 @@
+{
+  "wild_pool": [
+    { "allele": "toneko:wild_type", "weight": 95 },
+    { "allele": "toneko:tall_legs", "weight": 5 }
+  ]
+}

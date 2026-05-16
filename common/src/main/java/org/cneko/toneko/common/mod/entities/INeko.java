@@ -10,6 +10,8 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import org.cneko.toneko.common.mod.api.NekoLevelFactor;
+import org.cneko.toneko.common.mod.api.NekoLevelRegistry;
 import org.cneko.toneko.common.mod.misc.Messaging;
 import org.cneko.toneko.common.mod.misc.ToNekoAttributes;
 import org.cneko.toneko.common.mod.quirks.Quirk;
@@ -40,14 +42,35 @@ public interface INeko {
     default void setNeko(boolean isNeko){
     }
 
+    default CompoundTag getNekoLevelFactorData() { return new CompoundTag(); }
+    default void setNekoLevelFactorData(CompoundTag data) {}
+
+    default double getNekoLevelFactorRaw(String factorId) {
+        CompoundTag data = this.getNekoLevelFactorData();
+        if (data.contains(factorId, CompoundTag.TAG_DOUBLE)) {
+            return data.getDouble(factorId);
+        }
+        NekoLevelFactor factor = NekoLevelRegistry.getFactor(factorId);
+        return factor != null ? factor.getDefaultRawValue() : 0;
+    }
+
+    default void setNekoLevelFactorRaw(String factorId, double value) {
+        CompoundTag data = this.getNekoLevelFactorData();
+        data.putDouble(factorId, value);
+        this.setNekoLevelFactorData(data);
+    }
+
     default int getNekoAbility(){
         return (int)(this.getNekoLevel() * this.getEntity().getAttributeValue(ToNekoAttributes.NEKO_DEGREE));
     }
 
-    default float getNekoLevel(){
-        return 0;
+    default float getNekoLevel() {
+        return (float) NekoLevelRegistry.computeTotal(this);
     }
-    default void setNekoLevel(float level){
+
+    @Deprecated
+    default void setNekoLevel(float level) {
+        // no-op — retained for binary compatibility only
     }
 
     default float getMaxNekoEnergy(){
@@ -136,7 +159,7 @@ public interface INeko {
     default void saveNekoNBTData(@NotNull CompoundTag nbt){
         nbt.putBoolean("IsNeko", this.isNeko());
         nbt.putDouble("NekoEnergy", this.getNekoEnergy());
-        nbt.putInt("NekoLevel", (int) this.getNekoLevel());
+        nbt.put("NekoLevelFactors", this.getNekoLevelFactorData());
         CompoundTag owners = new CompoundTag();
         this.getOwners().forEach((uuid, owner) -> {
             CompoundTag ownerInfo = new CompoundTag();
@@ -159,8 +182,13 @@ public interface INeko {
         if (nbt.contains("NekoEnergy")) {
             this.setNekoEnergy(nbt.getFloat("NekoEnergy"));
         }
-        if (nbt.contains("NekoLevel")) {
-            this.setNekoLevel(nbt.getFloat("NekoLevel"));
+        if (nbt.contains("NekoLevelFactors", CompoundTag.TAG_COMPOUND)) {
+            this.setNekoLevelFactorData(nbt.getCompound("NekoLevelFactors"));
+        } else if (nbt.contains("NekoLevel")) {
+            // Legacy migration: wrap old single-value level into the base factor
+            CompoundTag migrated = new CompoundTag();
+            migrated.putDouble("base", nbt.getFloat("NekoLevel"));
+            this.setNekoLevelFactorData(migrated);
         }
         if (nbt.contains("Owners")){
             CompoundTag owners = nbt.getCompound("Owners");
