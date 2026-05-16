@@ -1031,6 +1031,9 @@
   "allele.toneko.moe_narenareshi": "Moe: Narenareshi",
   "allele.toneko.moe_paranoia": "Moe: Paranoia",
   "allele.toneko.moe_yuri": "Moe: Yuri",
+  "allele.toneko.flat_chest": "Flat Chest",
+  "allele.toneko.large_chest": "Large Chest",
+  "locus.toneko.chest_size_slot_0": "Chest Size",
   "screen.toneko.config.random.29": "I... I am not so sexy~♡",
   "screen.toneko.config.random.30": "It's true that I like to eat fish meow",
   "screen.toneko.config.random.31": "Want to stick together meow~~♡",
@@ -1053,5 +1056,14 @@
   "screen.toneko.config.random.48": "I always seem to be considered a lesbian... although I do have some yuri attributes~",
   "gui.toneko.genetics_viewer": "Genetics Viewer",
   "gui.toneko.genetics_viewer.save": "Save and Inject Genes",
-  "gui.toneko.genetics_viewer.gene_pool": "Alternative Gene Pool"
+  "gui.toneko.genetics_viewer.gene_pool": "Alternative Gene Pool",
+  "gui.toneko.genetics_viewer.filter": "Filter",
+  "gui.toneko.genetics_viewer.mode.all": "All Alleles",
+  "gui.toneko.genetics_viewer.mode.recommended": "Recommended",
+  "gui.toneko.genetics_viewer.chromosome": "◆ Chromosome %s ◆",
+  "gui.toneko.genetics_viewer.pool.all": "All Gene Pool",
+  "gui.toneko.genetics_viewer.pool.recommended": "Recommended Pool",
+  "gui.toneko.genetics_viewer.locus": "Locus: %s",
+  "gui.toneko.genetics_viewer.paternal": "♂: %s",
+  "gui.toneko.genetics_viewer.maternal": "♀: %s"
 }

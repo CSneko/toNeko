@@ -68,6 +68,9 @@ public class Allele {
 
         // 2. 注入并叠加 Attribute Modifier
         for (ModifierTemplate template : modifierTemplates) {
+            if (!entity.getAttributes().hasAttribute(template.attribute)) {
+                continue;
+            }
             AttributeInstance instance = entity.getAttribute(template.attribute);
             if (instance != null) {
                 ResourceLocation modifierId = getDynamicModifierId(locus.id(), template.suffix);
@@ -93,6 +96,9 @@ public class Allele {
 
         // 2. 移除 Modifier
         for (ModifierTemplate template : modifierTemplates) {
+            if (!entity.getAttributes().hasAttribute(template.attribute)) {
+                continue;
+            }
             AttributeInstance instance = entity.getAttribute(template.attribute);
             if (instance != null) {
                 ResourceLocation modifierId = getDynamicModifierId(locus.id(), template.suffix);

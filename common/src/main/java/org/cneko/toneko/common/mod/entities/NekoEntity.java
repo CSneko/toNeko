@@ -46,6 +46,7 @@ import org.cneko.toneko.common.mod.ai.PromptRegistry;
 import org.cneko.toneko.common.mod.api.NekoNameRegistry;
 import org.cneko.toneko.common.mod.api.NekoSkinRegistry;
 import org.cneko.toneko.common.mod.entities.ai.goal.*;
+import org.cneko.toneko.common.mod.genetics.ToNekoLocus;
 import org.cneko.toneko.common.mod.genetics.api.*;
 import org.cneko.toneko.common.mod.items.ToNekoItems;
 import org.cneko.toneko.common.mod.misc.ToNekoAttributes;
@@ -100,6 +101,8 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     // 用于动画渲染的客户端状态缓存，避免每帧都去查方块状态
     private boolean clientIsInLiquid = false;
     private boolean clientIsEyeInWater = false;
+    // 服务端液体状态缓存，避免 canMove() 被高频率调用时反复查方块状态
+    private boolean serverIsInLiquid = false;
 
     // 遗传
     private Genome genome = new Genome();
@@ -120,6 +123,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     public static final EntityDataAccessor<String> MOE_TAGS_ID = SynchedEntityData.defineId(NekoEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Integer> GATHERING_POWER_ID = SynchedEntityData.defineId(NekoEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> NEKO_ENERGY_ID = SynchedEntityData.defineId(NekoEntity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> CHEST_SCALE_ID = SynchedEntityData.defineId(NekoEntity.class, EntityDataSerializers.FLOAT);
 
     public NekoEntity(EntityType<? extends NekoEntity> entityType, Level level) {
         super(entityType, level);
@@ -174,6 +178,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
         builder.define(NEKO_ENERGY_ID, 0f);
         builder.define(NEKO_LEVEL_ID, 0f);
         builder.define(NICKNAME_ID, "");
+        builder.define(CHEST_SCALE_ID, 1.0f);
     }
 
 
@@ -719,11 +724,11 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
             maternalGamete = geneticMate.getGenome().createGamete(mate.getEntity().getRandom());
         } else {
             // 对另一半进行随机降级处理
-            maternalGamete = Genome.generateFallbackGamete(mate.getEntity().getRandom());
+            maternalGamete = Genome.generateFallbackGamete(mate.getEntity().getRandom(), ToNekoLocus.NEKO_KARYOTYPE);
         }
 
         // 基因组合并
-        Genome childGenome = Genome.combine(paternalGamete, maternalGamete);
+        Genome childGenome = Genome.combine(paternalGamete, maternalGamete,ToNekoLocus.NEKO_KARYOTYPE);
 
         // 生成子代实体
         NekoEntity child = this.spawnChildFromBreeding(level, mate);
@@ -826,10 +831,12 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     public void tick() {
         super.tick();
         this.inventory.tick();
-        // 在 tick() 中更新流体状态，每秒只查20次，而不是让动画控制器每帧都查
+        // 在 tick() 中缓存流体状态，避免 AI/动画每帧都查方块状态
         if (this.level().isClientSide()) {
             this.clientIsInLiquid = this.isInLiquid();
             this.clientIsEyeInWater = this.isEyeInFluid(FluidTags.WATER);
+        } else {
+            this.serverIsInLiquid = this.isInLiquid();
         }
     }
 
@@ -842,13 +849,12 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
 
     @Override
     public void moveTo(double x, double y, double z, float yRot, float xRot) {
-        if (this.canMove()){
-            super.moveTo(x, y, z, yRot, xRot);
-        }
+        // moveTo 是直接设置位置的 teleport/生成 API，不是 AI 移动，不应用 canMove 限制
+        super.moveTo(x, y, z, yRot, xRot);
     }
 
     public boolean canMove() {
-        return !this.isSitting() || this.isInLiquid();
+        return !this.isSitting() || this.serverIsInLiquid;
     }
 
     @Override
@@ -1072,10 +1078,20 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
         if (!this.level().isClientSide) {
             this.genome.express(this);
 
+            // 同步胸部大小缩放值到客户端
+            float chestScale = this.geneticData.contains("chest_scale", CompoundTag.TAG_FLOAT)
+                    ? this.geneticData.getFloat("chest_scale")
+                    : 1.0f;
+            this.entityData.set(CHEST_SCALE_ID, chestScale);
+
             // 同步给客户端
             this.setSkin(this.getSkin());
             this.setMoeTags(this.getMoeTags());
         }
+    }
+
+    public float getChestScale() {
+        return this.entityData.get(CHEST_SCALE_ID);
     }
 
     // 初始生成时的随机基因分配
@@ -1083,9 +1099,9 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     public @NotNull SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType reason, @Nullable SpawnGroupData spawnData) {
         if (reason == MobSpawnType.NATURAL || reason == MobSpawnType.SPAWN_EGG || reason == MobSpawnType.COMMAND) {
             // 自然生成时，生成两套随机配子并结合，模拟“野生猫娘基因库”
-            Gamete gamete1 = Genome.generateFallbackGamete(this.random);
-            Gamete gamete2 = Genome.generateFallbackGamete(this.random);
-            this.setGenome(Genome.combine(gamete1, gamete2));
+            Gamete gamete1 = Genome.generateFallbackGamete(this.random, ToNekoLocus.NEKO_KARYOTYPE);
+            Gamete gamete2 = Genome.generateFallbackGamete(this.random, ToNekoLocus.NEKO_KARYOTYPE);
+            this.setGenome(Genome.combine(gamete1, gamete2, ToNekoLocus.NEKO_KARYOTYPE));
 
             // 初始化名字等基础信息
             if (!this.hasCustomName()) {

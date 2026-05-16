@@ -67,8 +67,8 @@ Supported models vary by service. Check the links below:
 #### elefant
 Leave blank.
 #### neko/google
-- `gemini-2.0-flash`
-- `gemini-1.5-pro`
+- `gemini-3.0-flash`
+- `gemini-3.1-pro`
 #### openai
 - `gpt-4o-2024-08-06`
 - `o3-mini-2025-01-31`

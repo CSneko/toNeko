@@ -57,6 +57,14 @@ public class NekoRenderer<T extends NekoEntity> extends GeoEntityRenderer<T> {
     public void renderRecursively(PoseStack poseStack, T animatable, GeoBone bone, RenderType renderType,
                                   MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender,
                                   float partialTick, int packedLight, int packedOverlay, int colour) {
+        // 根据基因表达缩放胸部骨骼
+        if (bone.getName().equals("chest")) {
+            float scale = animatable.getChestScale();
+            bone.setScaleX(scale);
+            bone.setScaleY(scale);
+            bone.setScaleZ(scale);
+        }
+
         super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
 
         if (bone.getName().equals("RightArm")) {

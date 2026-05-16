@@ -9,7 +9,9 @@ import net.minecraft.world.entity.ai.goal.Goal;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map; /**
+import java.util.Map;
+
+/**
  * 完整基因组
  */
 public class Genome {
@@ -34,12 +36,14 @@ public class Genome {
     }
 
     /**
-     * 受精作用：合并两个配子
+     * 受精作用：根据具体的物种核型，合并两个配子
      */
-    public static Genome combine(Gamete paternal, Gamete maternal) {
+    public static Genome combine(Gamete paternal, Gamete maternal, SpeciesKaryotype karyotype) {
         Genome genome = new Genome();
-        // 遍历模板中的所有染色体ID，确保对齐
-        for (Integer chrId : GeneticsRegistry.CHROMOSOME_TEMPLATES.keySet()) {
+        if (karyotype == null) return genome; // 安全校验：如果不属于基因系统的生物，返回空基因组
+
+        // 遍历该物种核型定义的所有染色体
+        for (int chrId = 1; chrId <= karyotype.getChromosomePairs(); chrId++) {
             ChromosomePair pair = new ChromosomePair();
             if (paternal.chromosomes.containsKey(chrId)) pair.strandA.putAll(paternal.chromosomes.get(chrId));
             if (maternal.chromosomes.containsKey(chrId)) pair.strandB.putAll(maternal.chromosomes.get(chrId));
@@ -49,14 +53,30 @@ public class Genome {
     }
 
     /**
-     * 为没有遗传接口的实体生成降级配子（随机/野生型）
+     * 根据目标物种的核型，直接生成一份完整的野生基因组
+     * (相当于结合了两个随机野生配子，用于实体自然生成时初始化)
      */
-    public static Gamete generateFallbackGamete(RandomSource random) {
+    public static Genome generateWildGenome(RandomSource random, SpeciesKaryotype karyotype) {
+        if (karyotype == null) return new Genome();
+        Gamete paternal = generateFallbackGamete(random, karyotype);
+        Gamete maternal = generateFallbackGamete(random, karyotype);
+        return combine(paternal, maternal, karyotype);
+    }
+
+    /**
+     * 为没有父母遗传实体的生物，根据它的核型生成降级/野生型配子
+     */
+    public static Gamete generateFallbackGamete(RandomSource random, SpeciesKaryotype karyotype) {
         Gamete gamete = new Gamete();
-        for (Map.Entry<Integer, List<ResourceLocation>> entry : GeneticsRegistry.CHROMOSOME_TEMPLATES.entrySet()) {
+        if (karyotype == null) return gamete;
+
+        // 遍历该物种核型定义的所有染色体
+        for (int chrId = 1; chrId <= karyotype.getChromosomePairs(); chrId++) {
             Map<ResourceLocation, ResourceLocation> strand = new HashMap<>();
 
-            for (ResourceLocation locusId : entry.getValue()) {
+            // 遍历该条染色体上的所有基因座（坑位）
+            for (Locus locus : karyotype.getLociOnChromosome(chrId)) {
+                ResourceLocation locusId = locus.id();
                 List<GeneticsRegistry.WeightedAllele> pool = GeneticsRegistry.WILD_POOLS.get(locusId);
 
                 if (pool != null && !pool.isEmpty()) {
@@ -73,7 +93,7 @@ public class Genome {
                     }
                 }
             }
-            gamete.chromosomes.put(entry.getKey(), strand);
+            gamete.chromosomes.put(chrId, strand);
         }
         return gamete;
     }
@@ -171,5 +191,13 @@ public class Genome {
                 pairs.put(chrId, pair);
             } catch (NumberFormatException ignored) {}
         }
+    }
+
+    /**
+     * 内部类：同源染色体对
+     */
+    public static class ChromosomePair {
+        public final Map<ResourceLocation, ResourceLocation> strandA = new HashMap<>(); // 来自父亲
+        public final Map<ResourceLocation, ResourceLocation> strandB = new HashMap<>(); // 来自母亲
     }
 }

@@ -1,13 +1,8 @@
 package org.cneko.toneko.common.mod.genetics.api;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
