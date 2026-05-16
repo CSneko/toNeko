@@ -238,26 +238,25 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     @Override
     public void registerGoals() {
         super.registerGoals();
-        // 猫娘会观察玩家
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Player.class, 8.0F));
-        // 吸吸吸吸吸~ 我要做个深呼吸~
-        this.goalSelector.addGoal(5, new BreathAirGoal(this));
-        // 猫娘会闲逛
+        this.goalSelector.addGoal(8, new org.cneko.toneko.common.mod.entities.ai.goal.NekoChunibyoGoal(this));
         this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 0.3, 1));
-        // 猫娘会跟主人
-        nekoFollowOwnerGoal = new NekoFollowOwnerGoal(this,null,30,Math.min(0.1,this.followLeashSpeed() / 1.5));
-        this.goalSelector.addGoal(4,nekoFollowOwnerGoal);
-        // 猫娘有繁殖欲望
-        nekoMateGoal = new NekoMateGoal(this,null,30,this.followLeashSpeed() / 2);
-        this.goalSelector.addGoal(3,nekoMateGoal);
-        // 会尝试捡起附近的物品
+        this.goalSelector.addGoal(6, new org.cneko.toneko.common.mod.entities.ai.goal.NekoSelfPreservationGoal(this));
+        this.goalSelector.addGoal(6, new org.cneko.toneko.common.mod.entities.ai.goal.NekoLivelyGoal(this));
+        this.goalSelector.addGoal(5, new BreathAirGoal(this));
         this.goalSelector.addGoal(5, new NekoPickupItemGoal(this));
-        // 会被拿着喜欢物品的玩家吸引
-        this.goalSelector.addGoal(5, new TemptGoal(this, 0.5D, this::isFavoriteItem,false));
-        // 逃生
+        this.goalSelector.addGoal(5, new TemptGoal(this, 0.5D,
+                stack -> this.getMoeTags().contains("narenareshi") || this.isFavoriteItem(stack), false));
+        nekoFollowOwnerGoal = new NekoFollowOwnerGoal(this, null, 30, Math.min(0.1, this.followLeashSpeed() / 1.5));
+        this.goalSelector.addGoal(4, nekoFollowOwnerGoal);
+        this.goalSelector.addGoal(4, new org.cneko.toneko.common.mod.entities.ai.goal.NekoHealGoal(this));
+        nekoMateGoal = new NekoMateGoal(this, null, 30, this.followLeashSpeed() / 2);
+        this.goalSelector.addGoal(3, nekoMateGoal);
+        this.goalSelector.addGoal(2, new NekoSleepInBedGoal(this));
+        this.goalSelector.addGoal(2, new org.cneko.toneko.common.mod.entities.ai.goal.NekoParanoiaGoal(this));
         this.goalSelector.addGoal(1, new NekoEscapeDangerGoal(this));
-        // 会游泳
-        this.goalSelector.addGoal(1,new RandomSwimmingGoal(this,0.1,2));
+        this.goalSelector.addGoal(1, new org.cneko.toneko.common.mod.entities.ai.goal.NekoYandereDefenseGoal(this));
+        this.goalSelector.addGoal(1, new RandomSwimmingGoal(this, 0.1, 2));
     }
 
     public void followOwner(Player followingOwner,double maxDistance, double followSpeed) {
@@ -642,7 +641,16 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     @Override
     public void baseTick() {
         super.baseTick();
-        // 啊不要学我
+        if (!this.level().isClientSide() && this.getMoeTags().contains("baka")
+                && this.random.nextFloat() < 0.002f) {
+            // baka: occasionally get distracted and stop navigating
+            this.getNavigation().stop();
+            this.getLookControl().setLookAt(
+                    this.getX() + this.random.nextGaussian() * 3,
+                    this.getY() + this.random.nextFloat() * 2,
+                    this.getZ() + this.random.nextGaussian() * 3
+            );
+        }
         slowTimer++;
         if (slowTimer >= 20){
             slowTimer = 0;
@@ -656,7 +664,41 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
             this.serverNekoSlowTick();
             this.updateNekoLevelModifiers();
             this.entityData.set(NEKO_LEVEL_ID, this.getNekoLevel());
+            this.updateMoeTagAwareGoals();
+            // dojikko: 0.5% chance per second to drop a random item
+            if (this.getMoeTags().contains("dojikko") && this.random.nextFloat() < 0.005f) {
+                ItemStack dropped = this.getRandomInventoryItem();
+                if (!dropped.isEmpty()) {
+                    this.spawnAtLocation(dropped.split(1));
+                }
+            }
         }
+    }
+
+    private void updateMoeTagAwareGoals() {
+        if (nekoFollowOwnerGoal == null) return;
+        List<String> tags = this.getMoeTags();
+        double dist = 30;
+        double speed = Math.min(0.1, this.followLeashSpeed() / 1.5);
+        if (tags.contains("yandere")) {
+            dist = 40;
+            speed *= 1.5;
+        } else if (tags.contains("yowaki")) {
+            dist = 15;
+            speed *= 0.9;
+        } else if (tags.contains("shizukana")) {
+            speed *= 0.7;
+        }
+        nekoFollowOwnerGoal.setMaxDistance(dist);
+        nekoFollowOwnerGoal.setFollowSpeed(speed);
+    }
+
+    public ItemStack getRandomInventoryItem() {
+        for (int i = 0; i < this.inventory.getContainerSize(); i++) {
+            ItemStack stack = this.inventory.getItem(i);
+            if (!stack.isEmpty()) return stack.copy();
+        }
+        return ItemStack.EMPTY;
     }
 
     @Nullable
