@@ -755,6 +755,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
                 itemEntity.setDeltaMovement((double)(-i * h * 0.3F) + Math.cos(k) * (double)l, -g * 0.3F + 0.1F + (this.random.nextFloat() - this.random.nextFloat()) * 0.1F, (double)(j * h * 0.3F) + Math.sin(k) * (double)l);
             }
 
+            this.level().addFreshEntity(itemEntity);
             return itemEntity;
         }
     }
