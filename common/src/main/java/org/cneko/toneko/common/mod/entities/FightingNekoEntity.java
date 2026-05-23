@@ -8,10 +8,12 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import org.cneko.toneko.common.mod.entities.ai.goal.NekoAttackGoal;
 import org.cneko.toneko.common.mod.items.ToNekoItems;
@@ -45,9 +47,34 @@ public class FightingNekoEntity extends NekoEntity{
     }
 
     @Override
+    public void randomize() {
+        super.randomize();
+        // 随机近战武器（铁~钻石品质）
+        Item[] meleeWeapons = {Items.IRON_SWORD, Items.DIAMOND_SWORD};
+        Item weapon = meleeWeapons[this.random.nextInt(meleeWeapons.length)];
+        if (this.getInventory().items.stream().noneMatch(s -> s.is(weapon))) {
+            this.getInventory().add(new ItemStack(weapon));
+        }
+        // 概率获得Bazooka及弹药
+        if (this.random.nextFloat() < 0.4f) {
+            if (this.getInventory().items.stream().noneMatch(s -> s.is(ToNekoItems.BAZOOKA))) {
+                this.getInventory().add(new ItemStack(ToNekoItems.BAZOOKA));
+            }
+            // 随机弹药类型（爆炸弹或闪电弹），放入一组
+            Item ammo = this.random.nextBoolean() ? ToNekoItems.EXPLOSIVE_BOMB : ToNekoItems.LIGHTNING_BOMB;
+            if (this.getInventory().items.stream().noneMatch(s -> s.is(ammo))) {
+                this.getInventory().add(new ItemStack(ammo, 64));
+            }
+        }
+    }
+
+    private NekoAttackGoal attackGoal;
+
+    @Override
     public void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(2, new NekoAttackGoal(this));
+        this.attackGoal = new NekoAttackGoal(this);
+        this.goalSelector.addGoal(2, this.attackGoal);
     }
 
     private int unhurtTime = 0;
@@ -70,6 +97,36 @@ public class FightingNekoEntity extends NekoEntity{
     public boolean hurt(@NotNull DamageSource source, float amount) {
         unhurtTime = 0; // 重置未受伤时间
         return super.hurt(source, amount);
+    }
+
+    @Override
+    protected void setHatredTarget(LivingEntity target, int duration) {
+        super.setHatredTarget(target, duration);
+        // 直接将仇恨目标传入NekoAttackGoal，让goal系统接管战斗逻辑
+        if (attackGoal != null) {
+            attackGoal.setTarget(target);
+        }
+    }
+
+    @Override
+    protected void clearHatred() {
+        LivingEntity wasTarget = this.hatredTarget;
+        super.clearHatred();
+        // 仅当goal追踪的正是仇恨目标时才清除，避免干扰goal自主狩猎的怪物目标
+        if (attackGoal != null && wasTarget != null && wasTarget.equals(attackGoal.getTarget())) {
+            attackGoal.setTarget(null);
+        }
+    }
+
+    @Override
+    protected void tickHatred() {
+        if (this.hatredTarget == null) return;
+        if (!this.hatredTarget.isAlive()) {
+            clearHatred();
+            return;
+        }
+        this.hatredCooldown--;
+        // 战斗由NekoAttackGoal完全接管（通过setHatredTarget已传入目标）
     }
 
     public static AttributeSupplier.Builder createFightingNekoAttributes() {

@@ -19,4 +19,5 @@ build/*
 /fabric/src/main/java/com/crystalneko/tonekofabric/test/
 /fabric/src/main/generated/
 /remappedSrc/
+/.claude
 /.idea/

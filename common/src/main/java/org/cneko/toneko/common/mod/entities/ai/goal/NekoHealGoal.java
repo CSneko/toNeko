@@ -2,6 +2,7 @@ package org.cneko.toneko.common.mod.entities.ai.goal;
 
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
@@ -53,7 +54,7 @@ public class NekoHealGoal extends Goal {
         } else {
             if (--timeToRecalcPath <= 0) {
                 timeToRecalcPath = 10;
-                neko.getNavigation().moveTo(target, 0.6);
+                neko.getNavigation().moveTo(target, neko.getAttributeValue(Attributes.MOVEMENT_SPEED));
             }
         }
     }

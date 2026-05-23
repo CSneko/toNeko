@@ -15,6 +15,7 @@ import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
 
@@ -57,10 +58,14 @@ public class NekoCropGatheringGoal extends Goal {
 
     @Override
     public void start() {
-        // 开始时重置冷却计时器与目标
         this.cooldownTicks = 0;
         this.targetPos = null;
         this.targetType = null;
+    }
+
+    @Override
+    public boolean canContinueToUse() {
+        return this.neko.getGatheringPower() > 0;
     }
 
     @Override
@@ -107,7 +112,7 @@ public class NekoCropGatheringGoal extends Goal {
                 // 若操作失败，则继续后续流程
             } else {
                 // 目标还未到达，指示猫娘朝目标移动
-                this.neko.getNavigation().moveTo(targetPos.getX() + 0.5, targetPos.getY() + 0.5, targetPos.getZ() + 0.5, 0.3);
+                this.neko.getNavigation().moveTo(targetPos.getX() + 0.5, targetPos.getY() + 0.5, targetPos.getZ() + 0.5, neko.getAttributeValue(Attributes.MOVEMENT_SPEED) * 0.5);
                 this.cooldownTicks = 10;
                 return;
             }
@@ -167,7 +172,7 @@ public class NekoCropGatheringGoal extends Goal {
                 this.targetPos = foundTarget;
                 this.targetType = foundType;
                 // 同时指示猫娘开始移动
-                this.neko.getNavigation().moveTo(foundTarget.getX() + 0.5, foundTarget.getY() + 0.5, foundTarget.getZ() + 0.5, 0.3);
+                this.neko.getNavigation().moveTo(foundTarget.getX() + 0.5, foundTarget.getY() + 0.5, foundTarget.getZ() + 0.5, neko.getAttributeValue(Attributes.MOVEMENT_SPEED) * 0.5);
                 this.cooldownTicks = 10;
                 return;
             }

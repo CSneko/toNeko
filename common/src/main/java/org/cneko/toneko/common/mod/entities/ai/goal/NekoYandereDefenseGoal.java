@@ -1,6 +1,7 @@
 package org.cneko.toneko.common.mod.entities.ai.goal;
 
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
 import org.cneko.toneko.common.mod.entities.INeko;
@@ -52,7 +53,7 @@ public class NekoYandereDefenseGoal extends Goal {
         } else {
             if (--timeToRecalcPath <= 0) {
                 timeToRecalcPath = 10;
-                neko.getNavigation().moveTo(target, 1.2);
+                neko.getNavigation().moveTo(target, neko.getAttributeValue(Attributes.MOVEMENT_SPEED) * 1.2);
             }
         }
     }

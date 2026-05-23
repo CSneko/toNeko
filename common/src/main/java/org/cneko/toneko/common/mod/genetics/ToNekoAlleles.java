@@ -15,12 +15,12 @@ import static org.cneko.toneko.common.mod.genetics.ToNekoLocus.*;
 public class ToNekoAlleles {
     // 全局通用的野生型占位基因。不修改任何属性，权重默认为 10 (通常作为隐性)
     public static final Allele WILD_TYPE = new Allele(toNekoLoc("wild_type"), 10, null, null);
-    // 慢速基因，减0.05移速
+    // 慢速基因，减0.03移速
     public static final Allele SLOW_SPEED = new Allele(toNekoLoc("slow_speed"), 20, null, null)
-            .addAttributeModifier(Attributes.MOVEMENT_SPEED,"speed_boost",-0.05, AttributeModifier.Operation.ADD_VALUE);
-    // 超速基因，加0.05移速
+            .addAttributeModifier(Attributes.MOVEMENT_SPEED,"speed_boost",-0.03, AttributeModifier.Operation.ADD_VALUE);
+    // 超速基因，加0.03移速
     public static final Allele SUPER_SPEED = new Allele(toNekoLoc("super_speed"), 20, null, null)
-            .addAttributeModifier(Attributes.MOVEMENT_SPEED,"speed_boost",0.05, AttributeModifier.Operation.ADD_VALUE);
+            .addAttributeModifier(Attributes.MOVEMENT_SPEED,"speed_boost",0.03, AttributeModifier.Operation.ADD_VALUE);
     // 大力基因，加3攻击力
     public static final Allele STRONG_ATTACK = new Allele(toNekoLoc("strong_attack"), 20, null, null)
             .addAttributeModifier(Attributes.ATTACK_DAMAGE,"attack_boost",3, AttributeModifier.Operation.ADD_VALUE);

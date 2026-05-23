@@ -37,5 +37,12 @@
       {"name": "toneko:item/bazooka/meow/meow3"},
       {"name": "toneko:item/bazooka/meow/meow4"}
     ]
+  },
+  "entity.neko.alarm": {
+    "category": "hostile",
+    "sounds": [
+      {"name": "toneko:entity/neko/alarm0", "volume": 0.8},
+      {"name": "toneko:entity/neko/alarm1", "volume": 0.8}
+    ]
   }
 }

@@ -9,6 +9,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -16,6 +17,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
@@ -26,6 +28,8 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
@@ -51,6 +55,7 @@ import org.cneko.toneko.common.mod.genetics.ToNekoLocus;
 import org.cneko.toneko.common.mod.genetics.api.*;
 import org.cneko.toneko.common.mod.items.ToNekoItems;
 import org.cneko.toneko.common.mod.misc.ToNekoAttributes;
+import org.cneko.toneko.common.mod.misc.ToNekoSoundEvents;
 import org.cneko.toneko.common.mod.packets.interactives.NekoEntityInteractivePayload;
 import org.cneko.toneko.common.mod.quirks.Quirk;
 import org.cneko.toneko.common.mod.util.EntityUtil;
@@ -98,6 +103,17 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
 
     // 受伤求救冷却时间，避免被连击时疯狂扫描附近实体
     private long lastHelpCallTime = 0;
+    private long lastLoliAlarmTime = 0;
+    // ====== 通用仇恨系统（绕过GoalSystem，直接在tick中处理）=======
+    protected static final ResourceLocation HATRED_ATTACK_BOOST_ID = toNekoLoc("hatred_attack_boost");
+    protected static final double HATRED_ATTACK_BOOST = 0.2; // 攻击力倍率（×1.2）
+    protected static final double HATRED_ATTACK_RANGE = 4.0; // 攻击距离（平方根后为2格）
+    protected static final int HATRED_ATTACK_COOLDOWN = 20; // 攻击间隔（tick）
+    protected static final int HATRED_DEFAULT_DURATION = 600; // 默认追击持续时间
+    @Nullable
+    protected LivingEntity hatredTarget = null;
+    protected int hatredCooldown = 0;
+    protected int hatredAttackCooldown = 0;
 
     // 用于动画渲染的客户端状态缓存，避免每帧都去查方块状态
     private boolean clientIsInLiquid = false;
@@ -142,8 +158,10 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
         EntityUtil.randomizeAttributeValue(this, Attributes.SCALE,1,0.65,1.05); // 实体的体型为0.65~1.05间
         EntityUtil.randomizeAttributeValue(this, Attributes.MOVEMENT_SPEED,0.7,0.5,0.6); // 实体速度为0.5~0.6间
 
-        // 随机皮肤
-        this.setSkin(NekoSkinRegistry.getRandomSkin(getType()));
+        // 随机皮肤（仅在未被基因系统等修改过时生效）
+        if (this.getSkin().equals(this.getDefaultSkin())) {
+            this.setSkin(NekoSkinRegistry.getRandomSkin(getType()));
+        }
 
         if (!this.hasAnyMoeTags()) {
             this.generateRandomMoeTags();
@@ -256,7 +274,6 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
         this.goalSelector.addGoal(2, new org.cneko.toneko.common.mod.entities.ai.goal.NekoParanoiaGoal(this));
         this.goalSelector.addGoal(1, new NekoEscapeDangerGoal(this));
         this.goalSelector.addGoal(1, new org.cneko.toneko.common.mod.entities.ai.goal.NekoYandereDefenseGoal(this));
-        this.goalSelector.addGoal(1, new RandomSwimmingGoal(this, 0.1, 2));
     }
 
     public void followOwner(Player followingOwner,double maxDistance, double followSpeed) {
@@ -804,6 +821,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     public void finalizeSpawnChildFromBreeding(ServerLevel level, INeko mate, NekoEntity child) {
         level.broadcastEntityEvent(this, (byte)18);
         child.setAge(-72000);
+        child.randomize(); // 随机化名字、皮肤、体型、速度、萌属性
         if (level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)) {
             level.addFreshEntity(new ExperienceOrb(level, this.getX(), this.getY(), this.getZ(), this.getRandom().nextInt(7) + 1));
         }
@@ -814,7 +832,21 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     @Override
     public AgeableMob getBreedOffspring(@NotNull ServerLevel level, @NotNull AgeableMob otherParent) {
         if (otherParent instanceof INeko neko){
-            return this.getBreedOffspring(level, neko);
+            NekoEntity child = this.getBreedOffspring(level, neko);
+            if (child != null) {
+                // 分配随机基因（兼容刷怪蛋、繁殖等不走finalizeSpawn的路径）
+                Gamete gamete1 = Genome.generateFallbackGamete(child.random, ToNekoLocus.NEKO_KARYOTYPE);
+                Gamete gamete2 = Genome.generateFallbackGamete(child.random, ToNekoLocus.NEKO_KARYOTYPE);
+                child.setGenome(Genome.combine(gamete1, gamete2, ToNekoLocus.NEKO_KARYOTYPE));
+                child.expressTraits();
+                // 强制随机化名字、皮肤、萌属性
+                child.setCustomName(Component.literal(NekoNameRegistry.getRandomName()));
+                child.setSkin(NekoSkinRegistry.getRandomSkin(child.getType()));
+                child.generateRandomMoeTags();
+                EntityUtil.randomizeAttributeValue(child, Attributes.SCALE,1,0.65,1.05);
+                EntityUtil.randomizeAttributeValue(child, Attributes.MOVEMENT_SPEED,0.7,0.5,0.6);
+            }
+            return child;
         }
         return null;
     }
@@ -887,6 +919,24 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
             this.clientIsEyeInWater = this.isEyeInFluid(FluidTags.WATER);
         } else {
             this.serverIsInLiquid = this.isInLiquid();
+            // ====== 通用仇恨系统（子类可重写此方法来自定义攻击行为）=======
+            tickHatred();
+
+            // 萝莉猫娘防狼：检测玩家侵犯意图（持武器接近）
+            if (this.isBaby() && this.tickCount % 40 == 0) {
+                long currentTime = this.level().getGameTime();
+                if (currentTime - this.lastLoliAlarmTime > 1200) { // 60秒冷却，防止误触
+                    for (Player player : this.level().getEntitiesOfClass(Player.class,
+                            this.getBoundingBox().inflate(5),
+                            p -> p.isAlive() && !p.isCreative() && !p.isSpectator())) {
+                        if (this.hasLineOfSight(player) && isWeapon(player.getMainHandItem())) {
+                            this.lastLoliAlarmTime = currentTime;
+                            triggerLoliAlarm(player);
+                            break;
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -923,12 +973,21 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
             }
         }
 
+        // 萝莉猫娘防狼警报：如果被玩家攻击且是幼体（萝莉）
+        if (source.getEntity() instanceof Player player && this.isBaby()) {
+            triggerLoliAlarm(player);
+        }
 
         boolean result = super.hurt(source, amount);
 
         if (!result) return false;
         if (source.getEntity() instanceof Player player){
             hurtByPlayer(player);
+        }
+        // 被攻击时对攻击者产生仇恨（不攻击主人）
+        if (source.getEntity() instanceof LivingEntity attacker
+                && !this.hasOwner(attacker.getUUID())) {
+            this.setHatredTarget(attacker, HATRED_DEFAULT_DURATION);
         }
         // 寻找回血食物
         for (ItemStack stack : this.getInventory().items){
@@ -951,10 +1010,150 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
             );
             // 设置仇恨
             for (FightingNekoEntity neko : nearbyNekos) {
-                if (source.getEntity() instanceof LivingEntity entity) neko.setLastHurtByMob(entity);
+                if (source.getEntity() instanceof LivingEntity entity) {
+                    neko.setLastHurtByMob(entity);
+                    neko.setHatredTarget(entity, HATRED_DEFAULT_DURATION);
+                }
             }
         }
         return true;
+    }
+
+    // ====== 通用仇恨系统 API ========
+
+    /**
+     * 设置仇恨目标（通用接口）
+     * @param target 要攻击的目标
+     * @param duration 持续tick数
+     */
+    protected void setHatredTarget(LivingEntity target, int duration) {
+        this.hatredTarget = target;
+        this.hatredCooldown = duration;
+        this.hatredAttackCooldown = 0;
+        this.setTarget(target);
+        this.setAggressive(true);
+        // 伤害加成
+        this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, duration, 1, false, false));
+        AttributeInstance attr = this.getAttribute(Attributes.ATTACK_DAMAGE);
+        if (attr != null && attr.getModifier(HATRED_ATTACK_BOOST_ID) == null) {
+            attr.addTransientModifier(new AttributeModifier(
+                    HATRED_ATTACK_BOOST_ID,
+                    HATRED_ATTACK_BOOST,
+                    AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
+            ));
+        }
+    }
+
+    /**
+     * 尝试对当前仇恨目标发动攻击
+     * @return 是否成功造成伤害
+     */
+    protected boolean tryHatredAttack() {
+        if (this.hatredTarget == null || !this.hatredTarget.isAlive()) return false;
+        if (this.distanceToSqr(this.hatredTarget) > HATRED_ATTACK_RANGE) return false;
+        if (this.hatredAttackCooldown > 0) {
+            this.hatredAttackCooldown--;
+            return false;
+        }
+
+        // 标准mob攻击
+        boolean damaged = this.doHurtTarget(this.hatredTarget);
+        if (!damaged) {
+            // 备用方案：使用通用伤害类型（绕过可能的mobAttack免疫）
+            damaged = this.hatredTarget.hurt(this.damageSources().generic(), 4.0f);
+        }
+        if (damaged) {
+            this.hatredAttackCooldown = HATRED_ATTACK_COOLDOWN;
+            // 攻击粒子效果（愤怒村民粒子）
+            if (this.level() instanceof ServerLevel serverLevel) {
+                serverLevel.sendParticles(ParticleTypes.ANGRY_VILLAGER,
+                        this.getX(), this.getY() + this.getBbHeight() * 0.8, this.getZ(),
+                        1, 0.2, 0.2, 0.2, 0);
+            }
+        }
+        return damaged;
+    }
+
+    /**
+     * 仇恨系统tick处理（protected以便子类重写自定义攻击行为）
+     * 在super.tick()之后运行，默认提供导航追击+近战攻击，
+     * 子类（如FightingNeko）可重写此方法使用自己的攻击AI
+     */
+    protected void tickHatred() {
+        if (this.hatredTarget == null) return;
+        if (!this.hatredTarget.isAlive() || this.hatredCooldown <= 0) {
+            clearHatred();
+            return;
+        }
+        this.hatredCooldown--;
+        // 仅在当前没有活跃导航路径时设置追击路径，避免每tick覆盖GoalSystem的导航指令
+        if (this.getNavigation().isDone()) {
+            this.getNavigation().moveTo(this.hatredTarget, this.getAttributeValue(Attributes.MOVEMENT_SPEED) * 1.2);
+        }
+        tryHatredAttack();
+    }
+
+    /**
+     * 清除仇恨状态
+     */
+    protected void clearHatred() {
+        this.hatredTarget = null;
+        this.hatredAttackCooldown = 0;
+        this.setTarget(null);
+        this.setAggressive(false);
+        // 移除攻击力加成
+        AttributeInstance attr = this.getAttribute(Attributes.ATTACK_DAMAGE);
+        if (attr != null) {
+            attr.removeModifier(HATRED_ATTACK_BOOST_ID);
+        }
+        this.removeEffect(MobEffects.DAMAGE_BOOST);
+    }
+
+    /**
+     * 是否有活跃的仇恨目标
+     */
+    private boolean hasHatredTarget() {
+        return this.hatredTarget != null && this.hatredTarget.isAlive() && this.hatredCooldown > 0;
+    }
+
+    /**
+     * 触发萝莉防狼警报：播放警报声音，并使周围所有Neko对攻击者产生攻击欲望
+     */
+    private void triggerLoliAlarm(Player attacker) {
+        if (!this.level().isClientSide) {
+            // 播放警报声音
+            this.level().playSound(
+                    null,
+                    this.blockPosition(),
+                    ToNekoSoundEvents.NEKO_ALARM,
+                    SoundSource.HOSTILE,
+                    1.0F,
+                    1.0F
+            );
+
+            // 使周围所有Neko对攻击者产生攻击欲望（20格范围）
+            List<NekoEntity> nearbyNekos = this.level().getEntitiesOfClass(NekoEntity.class,
+                    this.getBoundingBox().inflate(20), LivingEntity::isAlive);
+            for (NekoEntity neko : nearbyNekos) {
+                if (neko.hasOwner(attacker.getUUID())) continue; // 不攻击自己的主人
+                // 使用通用仇恨系统设置追击
+                neko.setLastHurtByMob(attacker);
+                neko.setHatredTarget(attacker, HATRED_DEFAULT_DURATION);
+                // 立即发动一次攻击，确保即时反馈
+                neko.doHurtTarget(attacker);
+            }
+        }
+    }
+
+    /**
+     * 判断物品是否为武器（剑、斧、远程武器等）
+     */
+    private boolean isWeapon(ItemStack stack) {
+        return stack.is(net.minecraft.tags.ItemTags.SWORDS)
+                || stack.is(net.minecraft.tags.ItemTags.AXES)
+                || stack.is(Items.BOW)
+                || stack.is(Items.CROSSBOW)
+                || stack.is(Items.TRIDENT);
     }
 
     public boolean eatOrStoreFood(ItemStack stack){
@@ -1162,8 +1361,10 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     // 初始生成时的随机基因分配
     @Override
     public @NotNull SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType reason, @Nullable SpawnGroupData spawnData) {
-        if (reason == MobSpawnType.NATURAL || reason == MobSpawnType.SPAWN_EGG || reason == MobSpawnType.COMMAND) {
-            // 自然生成时，生成两套随机配子并结合，模拟“野生猫娘基因库”
+        // 对所有非繁殖的生成方式分配基因（覆盖刷怪蛋、SPAWNER、TRIGGERED、指令等）
+        // 繁殖走的 mate()→spawnChildFromBreeding() 流程已单独处理基因
+        if (reason != MobSpawnType.BREEDING) {
+            // 生成两套随机配子并结合，模拟”野生猫娘基因库”
             Gamete gamete1 = Genome.generateFallbackGamete(this.random, ToNekoLocus.NEKO_KARYOTYPE);
             Gamete gamete2 = Genome.generateFallbackGamete(this.random, ToNekoLocus.NEKO_KARYOTYPE);
             this.setGenome(Genome.combine(gamete1, gamete2, ToNekoLocus.NEKO_KARYOTYPE));
@@ -1174,6 +1375,8 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
             }
             this.expressTraits();
         }
+        // 随机化皮肤、体型、速度、萌属性等（对所有生成方式生效）
+        this.randomize();
         return super.finalizeSpawn(level, difficulty, reason, spawnData);
     }
 

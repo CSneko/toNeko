@@ -23,7 +23,7 @@ public class NekoAttackGoal extends Goal {
     protected LivingEntity target;
     private final TargetingConditions targetConditions;
     private static final double RANGED_ATTACK_RANGE = 15.0; // 远程武器使用距离
-    private static final double MELEE_ATTACK_RANGE = 4.0;   // 近战武器使用距离
+    private static final double MELEE_ATTACK_RANGE = 2.0;   // 近战武器使用距离
     private static final double TARGETING_RANGE = 100.0;
     private static final double RANGED_MAINTAIN_DISTANCE = 10.0; // 远程战斗理想距离
     protected int attackCooldown;
@@ -44,6 +44,13 @@ public class NekoAttackGoal extends Goal {
         LivingEntity revengeTarget = neko.getLastHurtByMob();
         if (revengeTarget != null && revengeTarget.isAlive() && !revengeTarget.isAlliedTo(neko)) {
             this.target = revengeTarget;
+            return true;
+        }
+
+        // 检查通过仇恨系统（setHatredTarget）设置的Brain目标，弥补lastHurtByMob过期后目标丢失的问题
+        LivingEntity brainTarget = neko.getTarget();
+        if (brainTarget != null && brainTarget.isAlive() && !brainTarget.isAlliedTo(neko)) {
+            this.target = brainTarget;
             return true;
         }
 
@@ -82,11 +89,10 @@ public class NekoAttackGoal extends Goal {
     @Override
     public boolean canContinueToUse() {
         if (target == null || !target.isAlive()) return false;
-
-        // 如果目标太远则放弃
         if (neko.distanceToSqr(target) > TARGETING_RANGE * TARGETING_RANGE) return false;
-
-        // 如果目标不可见但距离较近，继续追击
+        // 仇恨目标（由FightingNekoEntity.setHatredTarget传入）：持续追击，不要求视线或近距离
+        if (target.equals(neko.getTarget())) return true;
+        // 自主狩猎目标：需要视线或近距离才继续追击
         return neko.hasLineOfSight(target) || neko.distanceToSqr(target) < MELEE_ATTACK_RANGE * MELEE_ATTACK_RANGE * 4;
     }
 
@@ -243,7 +249,7 @@ public class NekoAttackGoal extends Goal {
     protected boolean hasMeleeWeapon() {
         for (int i = 0; i < neko.getInventory().getContainerSize(); i++) {
             ItemStack stack = neko.getInventory().getItem(i);
-            if (stack.is(FightingNekoEntity.MELEE_WEAPON) &&
+            if ((stack.is(FightingNekoEntity.MELEE_WEAPON) || stack.getItem() instanceof net.minecraft.world.item.SwordItem) &&
                     !(stack.getItem() instanceof BazookaItem)) {
                 return true;
             }
@@ -329,14 +335,13 @@ public class NekoAttackGoal extends Goal {
         }
 
         // 遍历背包寻找近战武器
-        int i =0;
-        for (ItemStack stack : neko.getInventory().items) {
-            i++;
+        for (int i = 0; i < neko.getInventory().getContainerSize(); i++) {
+            ItemStack stack = neko.getInventory().getItem(i);
             if (stack.is(FightingNekoEntity.MELEE_WEAPON) && !(stack.getItem() instanceof BazookaItem)) {
+                // 与远程武器切换逻辑保持一致，直接更改 selected 槽位
+                neko.getInventory().selected = i;
                 // 强制更新手持物品
-                ItemStack oldStack = neko.getItemInHand();
                 neko.setItemSlot(EquipmentSlot.MAINHAND, stack);
-                neko.getInventory().setItem(i,oldStack);
                 return;
             }
         }

@@ -1,5 +1,6 @@
 package org.cneko.toneko.common.mod.entities.ai.goal;
 
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
@@ -30,7 +31,7 @@ public class NekoSelfPreservationGoal extends Goal {
         eatTicks = 60;
         // move to a safe spot
         Vec3 target = neko.position().add(neko.getRandom().nextDouble() * 4 - 2, 0, neko.getRandom().nextDouble() * 4 - 2);
-        neko.getNavigation().moveTo(target.x, target.y, target.z, 0.8);
+        neko.getNavigation().moveTo(target.x, target.y, target.z, neko.getAttributeValue(Attributes.MOVEMENT_SPEED));
     }
 
     @Override

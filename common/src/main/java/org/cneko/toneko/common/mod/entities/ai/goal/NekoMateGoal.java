@@ -46,20 +46,24 @@ public class NekoMateGoal extends Goal {
     }
 
     @Override
+    public boolean canContinueToUse() {
+        return target != null && target.getEntity().isAlive()
+                && nekoEntity.distanceToSqr(target.getEntity()) < maxDistanceSq * 1.44;
+    }
+
+    @Override
     public void tick() {
-        if (target != null) {
-            // 每 10 tick 重新计算一次路径
-            if (--this.timeToRecalcPath <= 0) {
-                this.timeToRecalcPath = 10;
-                nekoEntity.getNavigation().moveTo(target.getEntity(), followSpeed);
-            }
+        if (target == null || !target.getEntity().isAlive()) return;
+        // 每 10 tick 重新计算一次路径
+        if (--this.timeToRecalcPath <= 0) {
+            this.timeToRecalcPath = 10;
             nekoEntity.getNavigation().moveTo(target.getEntity(), followSpeed);
-            // 当距离小于1时，开始贴贴
-            if (nekoEntity.distanceToSqr(target.getEntity()) < 1) {
-                if (mating >= 30) {
-                    breed();
-                }
-                mating++;
+        }
+        // 当距离小于1时，开始贴贴
+        if (nekoEntity.distanceToSqr(target.getEntity()) < 1) {
+            mating++;
+            if (mating >= 30) {
+                breed();
             }
         }
     }

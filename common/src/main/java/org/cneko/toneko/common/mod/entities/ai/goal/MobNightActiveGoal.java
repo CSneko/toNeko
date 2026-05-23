@@ -2,6 +2,7 @@ package org.cneko.toneko.common.mod.entities.ai.goal;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.level.Level;
@@ -59,7 +60,7 @@ public class MobNightActiveGoal extends Goal {
     @Override
     public void start() {
         // 开始向目标点移动
-        this.mob.getNavigation().moveTo(this.wantedX, this.wantedY, this.wantedZ, 1.0);
+        this.mob.getNavigation().moveTo(this.wantedX, this.wantedY, this.wantedZ, mob.getAttributeValue(Attributes.MOVEMENT_SPEED));
     }
 
     @Override

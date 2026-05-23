@@ -27,19 +27,30 @@ public class NekoFollowOwnerGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        if (owner == null) return false;
+        if (owner == null || !owner.isAlive()) return false;
+        if (nekoEntity.isSitting()) return false;
         List<String> tags = nekoEntity.getMoeTags();
-        // tsundere: 8% chance to refuse ("Hmph!")
         if (tags.contains("tsundere") && nekoEntity.getRandom().nextFloat() < 0.08f) {
-            tsundereTicks = 20; // don't re-check for 1 second
+            tsundereTicks = 20;
             return false;
         }
-        // shizukana: 30% chance to stay still
         if (tags.contains("shizukana") && nekoEntity.getRandom().nextFloat() < 0.3f) {
             return false;
         }
         double distSq = nekoEntity.distanceToSqr(owner);
         return distSq < getEffectiveMaxDistanceSq();
+    }
+
+    @Override
+    public boolean canContinueToUse() {
+        if (owner == null || !owner.isAlive()) return false;
+        if (tsundereTicks > 0) {
+            tsundereTicks--;
+            return false;
+        }
+        if (nekoEntity.isSitting()) return false;
+        // 20% 滞后距离，防止边界震荡
+        return nekoEntity.distanceToSqr(owner) < getEffectiveMaxDistanceSq() * 1.44;
     }
 
     @Override
@@ -49,7 +60,7 @@ public class NekoFollowOwnerGoal extends Goal {
 
     @Override
     public void tick() {
-        if (owner != null && --this.timeToRecalcPath <= 0) {
+        if (owner != null && owner.isAlive() && --this.timeToRecalcPath <= 0) {
             this.timeToRecalcPath = 10;
             nekoEntity.getNavigation().moveTo(owner, getEffectiveSpeed());
         }
@@ -57,7 +68,6 @@ public class NekoFollowOwnerGoal extends Goal {
 
     @Override
     public void stop() {
-        owner = null;
         nekoEntity.getNavigation().stop();
     }
 

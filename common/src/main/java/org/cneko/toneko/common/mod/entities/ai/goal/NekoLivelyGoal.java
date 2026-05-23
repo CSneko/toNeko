@@ -1,5 +1,6 @@
 package org.cneko.toneko.common.mod.entities.ai.goal;
 
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
@@ -51,7 +52,7 @@ public class NekoLivelyGoal extends Goal {
             neko.getLookControl().setLookAt(target, 30, 30);
             stayTicks--;
         } else {
-            neko.getNavigation().moveTo(target, 0.5);
+            neko.getNavigation().moveTo(target, neko.getAttributeValue(Attributes.MOVEMENT_SPEED) * 0.7);
         }
     }
 

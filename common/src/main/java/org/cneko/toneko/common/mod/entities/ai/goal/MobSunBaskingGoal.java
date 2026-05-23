@@ -3,6 +3,7 @@ package org.cneko.toneko.common.mod.entities.ai.goal;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.level.Level;
@@ -89,7 +90,7 @@ public class MobSunBaskingGoal extends Goal {
         this.isBasking = false;
         this.baskingTicks = 0;
         // 开始向阳光点移动
-        this.mob.getNavigation().moveTo(this.wantedX, this.wantedY, this.wantedZ, 0.8);
+        this.mob.getNavigation().moveTo(this.wantedX, this.wantedY, this.wantedZ, mob.getAttributeValue(Attributes.MOVEMENT_SPEED));
     }
 
     @Override
