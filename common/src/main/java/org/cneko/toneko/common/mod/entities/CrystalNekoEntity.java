@@ -49,6 +49,15 @@ public class CrystalNekoEntity extends NekoEntity{
         }
     }
 
+    /**
+     * 仅同步nya计数到服务端，不发送消息（消息由客户端本地显示）
+     */
+    public void syncNya() {
+        if (nyaCount < 6) {
+            nyaCount++;
+        }
+    }
+
     @Override
     public String generateAIPrompt(Player player) {
         return PromptRegistry.generatePrompt(this,player, """

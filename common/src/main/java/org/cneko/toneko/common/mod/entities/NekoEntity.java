@@ -1001,19 +1001,23 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
                 stack.shrink(1);
             }
         }
-        // 40tick冷却喵，这样应该会省性能吧
-        long currentTime = this.level().getGameTime();
-        if (currentTime - this.lastHelpCallTime > 40) {
-            this.lastHelpCallTime = currentTime;
-            // 寻找附近武备猫娘
-            List<FightingNekoEntity> nearbyNekos = this.level().getEntitiesOfClass(FightingNekoEntity.class,
-                    this.getBoundingBox().inflate(10), LivingEntity::isAlive
-            );
-            // 设置仇恨
-            for (FightingNekoEntity neko : nearbyNekos) {
-                if (source.getEntity() instanceof LivingEntity entity) {
-                    neko.setLastHurtByMob(entity);
-                    neko.setHatredTarget(entity, HATRED_DEFAULT_DURATION);
+        // 召集附近猫娘共同作战（40tick冷却）
+        // 只在攻击者是生物实体且不是主人的情况下召集
+        if (source.getEntity() instanceof LivingEntity attacker
+                && !this.hasOwner(attacker.getUUID())) {
+            long currentTime = this.level().getGameTime();
+            if (currentTime - this.lastHelpCallTime > 40) {
+                this.lastHelpCallTime = currentTime;
+                // 寻找附近所有猫娘（不限于FightingNeko）
+                List<NekoEntity> nearbyNekos = this.level().getEntitiesOfClass(NekoEntity.class,
+                        this.getBoundingBox().inflate(DEFAULT_FIND_RANGE), LivingEntity::isAlive
+                );
+                // 设置仇恨（如果攻击者是某只猫娘的主人，则该猫娘不参与反击）
+                for (NekoEntity neko : nearbyNekos) {
+                    if (neko != this && !neko.hasOwner(attacker.getUUID())) {
+                        neko.setLastHurtByMob(attacker);
+                        neko.setHatredTarget(attacker, HATRED_DEFAULT_DURATION);
+                    }
                 }
             }
         }
@@ -1057,6 +1061,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
             return false;
         }
 
+        equipBestMeleeWeapon();
         // 标准mob攻击
         boolean damaged = this.doHurtTarget(this.hatredTarget);
         if (!damaged) {
@@ -1141,6 +1146,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
                 neko.setLastHurtByMob(attacker);
                 neko.setHatredTarget(attacker, HATRED_DEFAULT_DURATION);
                 // 立即发动一次攻击，确保即时反馈
+                neko.equipBestMeleeWeapon();
                 neko.doHurtTarget(attacker);
             }
         }
@@ -1155,6 +1161,49 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
                 || stack.is(Items.BOW)
                 || stack.is(Items.CROSSBOW)
                 || stack.is(Items.TRIDENT);
+    }
+
+    /**
+     * 在背包中寻找攻击伤害最高的近战武器并切换到该武器
+     */
+    protected void equipBestMeleeWeapon() {
+        int bestSlot = -1;
+        double bestDamage = 0.0;
+
+        for (int i = 0; i < this.inventory.items.size(); i++) {
+            ItemStack stack = this.inventory.items.get(i);
+            if (!stack.isEmpty()) {
+                double damage = getMeleeWeaponDamage(stack);
+                if (damage > bestDamage) {
+                    bestDamage = damage;
+                    bestSlot = i;
+                }
+            }
+        }
+
+        if (bestSlot >= 0) {
+            this.inventory.selected = bestSlot;
+            this.setItemSlot(EquipmentSlot.MAINHAND, this.inventory.items.get(bestSlot));
+        }
+    }
+
+    /**
+     * 计算物品作为近战武器的攻击伤害，非近战武器返回0
+     */
+    protected double getMeleeWeaponDamage(ItemStack stack) {
+        if (!stack.is(net.minecraft.tags.ItemTags.SWORDS)
+                && !stack.is(net.minecraft.tags.ItemTags.AXES)
+                && !stack.is(Items.TRIDENT)
+                && !stack.is(Items.MACE)) {
+            return 0.0;
+        }
+        double[] damage = {0.0};
+        stack.forEachModifier(EquipmentSlot.MAINHAND, (attribute, modifier) -> {
+            if (attribute.is(Attributes.ATTACK_DAMAGE)) {
+                damage[0] += modifier.amount();
+            }
+        });
+        return damage[0];
     }
 
     public boolean eatOrStoreFood(ItemStack stack){

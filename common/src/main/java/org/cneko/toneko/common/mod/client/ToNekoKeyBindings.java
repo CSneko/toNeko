@@ -16,6 +16,7 @@ public class ToNekoKeyBindings {
     public static KeyMapping RIDE_HEAD_KEY;
     public static KeyMapping ROULETTE_KEY;
     public static KeyMapping NEKO_INFO_KEY;
+    public static KeyMapping DISMOUNT_PASSENGER_KEY;
 
     public static void init(){
         LIE_KEY = KeyBindingHelper.registerKeyBinding(
@@ -95,6 +96,14 @@ public class ToNekoKeyBindings {
                         "key.toneko.neko_info",
                         InputConstants.Type.KEYSYM,
                         GLFW.GLFW_KEY_U,
+                        "key.toneko.lie.category"
+                )
+        );
+        DISMOUNT_PASSENGER_KEY = KeyBindingHelper.registerKeyBinding(
+                new KeyMapping(
+                        "key.toneko.dismount_passenger",
+                        InputConstants.Type.KEYSYM,
+                        GLFW.GLFW_KEY_G,
                         "key.toneko.lie.category"
                 )
         );

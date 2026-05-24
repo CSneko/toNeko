@@ -3,7 +3,6 @@ package org.cneko.toneko.common.mod.events;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import org.cneko.toneko.common.api.TickTasks;
 import org.cneko.toneko.common.mod.advencements.ToNekoCriteria;
@@ -20,10 +19,6 @@ public class CommonPlayerEvent {
             // 触发进度
             for (ServerPlayer p : server.getPlayerList().getPlayers()) {
                 ToNekoCriteria.NEKO_LV100.trigger(p);
-                // 处理玩家潜行
-                if(p.isShiftKeyDown()){
-                    p.getPassengers().forEach(Entity::stopRiding);
-                }
             }
         }
     }

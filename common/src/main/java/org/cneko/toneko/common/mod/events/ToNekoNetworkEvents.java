@@ -46,6 +46,8 @@ public class ToNekoNetworkEvents {
         ServerPlayNetworking.registerGlobalReceiver(NekoMatePayload.ID, ToNekoNetworkEvents::onBreed);
         ServerPlayNetworking.registerGlobalReceiver(ChatWithNekoPayload.ID, ToNekoNetworkEvents::onChatWithNeko);
         ServerPlayNetworking.registerGlobalReceiver(MateWithCrystalNekoPayload.ID, ToNekoNetworkEvents::onMateWithCrystalNeko);
+        ServerPlayNetworking.registerGlobalReceiver(CrystalNekoNyaPayload.ID, ToNekoNetworkEvents::onCrystalNekoNya);
+        ServerPlayNetworking.registerGlobalReceiver(DismountPassengerPayload.ID, ToNekoNetworkEvents::onDismountPassenger);
         ServerPlayNetworking.registerGlobalReceiver(PlayerLeadByPlayerPayload.ID,ToNekoNetworkEvents::onPlayerLeadByPlayer);
         ServerPlayNetworking.registerGlobalReceiver(PluginDetectPayload.ID,(a,b)->{});// 什么也不干
         ServerPlayNetworking.registerGlobalReceiver(GenomeDataPayload.ID, (payload, context) -> {
@@ -93,6 +95,21 @@ public class ToNekoNetworkEvents {
                 cneko.tryMating((ServerLevel) neko.level(), context.player());
             }
         });
+    }
+
+    public static void onCrystalNekoNya(CrystalNekoNyaPayload payload, ServerPlayNetworking.Context context) {
+        processNekoInteractive(context.player(), payload.uuid(), neko -> {
+            if (neko instanceof CrystalNekoEntity cneko) {
+                cneko.syncNya();
+            }
+        });
+    }
+
+    public static void onDismountPassenger(DismountPassengerPayload payload, ServerPlayNetworking.Context context) {
+        ServerPlayer player = context.player();
+        player.getPassengers().forEach(Entity::stopRiding);
+        // 显式同步乘客列表到客户端，避免客户端未及时更新的问题
+        player.connection.send(new ClientboundSetPassengersPacket(player));
     }
 
     public static void onChatWithNeko(ChatWithNekoPayload payload, ServerPlayNetworking.Context context) {

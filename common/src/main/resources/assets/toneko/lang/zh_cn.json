@@ -1075,5 +1075,7 @@
   "screen.toneko.neko_info.energy": "%s / %s",
   "screen.toneko.neko_info.ability_section": "=== 能力 ===",
   "screen.toneko.neko_info.ability": "猫猫能力: %s",
-  "key.toneko.neko_info": "猫娘信息"
+  "key.toneko.neko_info": "猫娘信息",
+  "key.toneko.dismount_passenger": "让头上的乘客下来",
+  "hint.toneko.dismount_passenger": "按 %s 让头上的猫娘下来"
 }

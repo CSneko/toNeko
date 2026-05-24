@@ -11,9 +11,11 @@ import net.minecraft.client.renderer.PostChain;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
+import org.cneko.toneko.common.mod.client.ToNekoKeyBindings;
 import org.cneko.toneko.common.mod.effects.ToNekoEffects;
 import org.joml.Matrix4f;
 
@@ -33,6 +35,10 @@ public class HudRenderEvent {
             // 检查玩家是否有魅惑效果
             if (player.hasEffect(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(ToNekoEffects.BEWITCHED_EFFECT))) {
                 renderBewitchedOverlay(guiGraphics,player);
+            }
+            // 玩家被骑乘时显示提示
+            if (!player.getPassengers().isEmpty()) {
+                renderDismountHint(guiGraphics);
             }
         });
     }
@@ -115,6 +121,26 @@ public class HudRenderEvent {
 
 
 
+
+    /**
+     * 当玩家被骑乘时，在屏幕右侧显示按键提示
+     */
+    private static void renderDismountHint(GuiGraphics guiGraphics) {
+        Minecraft client = Minecraft.getInstance();
+        if (client.options.hideGui) return;
+
+        int width = guiGraphics.guiWidth();
+        int height = guiGraphics.guiHeight();
+
+        Component hint = Component.translatable("hint.toneko.dismount_passenger",
+                ToNekoKeyBindings.DISMOUNT_PASSENGER_KEY.getTranslatedKeyMessage());
+
+        int textWidth = client.font.width(hint);
+        int x = width - textWidth - 10;
+        int y = height / 2 - 20;
+
+        guiGraphics.drawString(client.font, hint, x, y, 0xAAFFFFFF);
+    }
 
     private static final ResourceLocation CATNIP_ICON = ResourceLocation.fromNamespaceAndPath(MODID,"textures/item/catnip.png");
     public static void renderNekoEnergyBar(GuiGraphics context) {

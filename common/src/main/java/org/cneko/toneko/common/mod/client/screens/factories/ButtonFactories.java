@@ -23,6 +23,7 @@ import org.cneko.toneko.common.mod.packets.interactives.FollowOwnerPayload;
 import org.cneko.toneko.common.mod.packets.interactives.GiftItemPayload;
 import org.cneko.toneko.common.mod.packets.interactives.NekoPosePayload;
 import org.cneko.toneko.common.mod.packets.interactives.RideEntityPayload;
+import org.cneko.toneko.common.mod.packets.interactives.CrystalNekoNyaPayload;
 import org.cneko.toneko.common.mod.util.EntityUtil;
 import org.cneko.toneko.common.mod.util.TextUtil;
 import org.cneko.toneko.common.mod.util.TickTaskQueue;
@@ -98,12 +99,24 @@ public class ButtonFactories {
     });
     public static ButtonFactory ACTION_LIE_BUTTON = screen -> Button.builder(Component.translatable("screen.toneko.neko_entity_interactive.button.lie"),(btn)->{
         NekoEntity neko = screen.getNeko();
-        // 把猫娘设置为躺
+        // 客户端立即更新姿态
+        if (!ClientEntityPoseManager.contains(neko)) {
+            ClientEntityPoseManager.setPose(neko, Pose.SLEEPING);
+        } else {
+            ClientEntityPoseManager.remove(neko);
+        }
+        // 同步到服务端
         ClientPlayNetworking.send(new NekoPosePayload(Pose.SLEEPING,neko.getUUID().toString()));
     });
     public static ButtonFactory ACTION_GET_DOWN_BUTTON = screen -> Button.builder(Component.translatable("screen.toneko.neko_entity_interactive.button.get_down"),(btn)->{
         NekoEntity neko = screen.getNeko();
-        // 把猫娘设置为趴
+        // 客户端立即更新姿态
+        if (!ClientEntityPoseManager.contains(neko)) {
+            ClientEntityPoseManager.setPose(neko, Pose.SWIMMING);
+        } else {
+            ClientEntityPoseManager.remove(neko);
+        }
+        // 同步到服务端
         ClientPlayNetworking.send(new NekoPosePayload(Pose.SWIMMING,neko.getUUID().toString()));
     });
 
@@ -199,7 +212,11 @@ public class ButtonFactories {
         }
     });
     public static ButtonFactory CRYSTAL_NEKO_MORE_INTERACTION_NYA_BUTTON = screen -> Button.builder(Component.translatable("screen.toneko.crystal_neko_more_interactive.button.nya"),(btn)->{
-        ((CrystalNekoEntity)screen.getNeko()).nya(Minecraft.getInstance().player);
+        CrystalNekoEntity neko = (CrystalNekoEntity) screen.getNeko();
+        // 客户端本地显示消息（立即反馈）
+        neko.nya(Minecraft.getInstance().player);
+        // 同步nya计数到服务端
+        ClientPlayNetworking.send(new CrystalNekoNyaPayload(neko.getUUID().toString()));
     });
 
     // --------------------------------- 链接 ---------------------------------

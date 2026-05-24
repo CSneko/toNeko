@@ -18,6 +18,8 @@ public class ToNekoPackets {
         PayloadTypeRegistry.playC2S().register(NekoMatePayload.ID, NekoMatePayload.CODEC);
         PayloadTypeRegistry.playC2S().register(ChatWithNekoPayload.ID, ChatWithNekoPayload.CODEC);
         PayloadTypeRegistry.playC2S().register(MateWithCrystalNekoPayload.ID, MateWithCrystalNekoPayload.CODEC);
+        PayloadTypeRegistry.playC2S().register(CrystalNekoNyaPayload.ID, CrystalNekoNyaPayload.CODEC);
+        PayloadTypeRegistry.playC2S().register(DismountPassengerPayload.ID, DismountPassengerPayload.CODEC);
         PayloadTypeRegistry.playC2S().register(PlayerLeadByPlayerPayload.ID, PlayerLeadByPlayerPayload.CODEC);
         PayloadTypeRegistry.playS2C().register(PlayerLeadByPlayerPayload.ID, PlayerLeadByPlayerPayload.CODEC);
         PayloadTypeRegistry.playS2C().register(PluginDetectPayload.ID, PluginDetectPayload.CODEC);

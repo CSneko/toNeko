@@ -2,6 +2,7 @@ package org.cneko.toneko.common.mod.client.events;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Pose;
@@ -11,6 +12,7 @@ import org.cneko.toneko.common.mod.client.ToNekoKeyBindings;
 import org.cneko.toneko.common.mod.client.api.ClientEntityPoseManager;
 import org.cneko.toneko.common.mod.client.screens.NekoInfoScreen;
 import org.cneko.toneko.common.mod.client.screens.RouletteScreen;
+import org.cneko.toneko.common.mod.packets.interactives.DismountPassengerPayload;
 import org.cneko.toneko.common.mod.util.EntityUtil;
 
 import java.util.Iterator;
@@ -55,6 +57,12 @@ public class ClientTickEvent {
         while (ToNekoKeyBindings.NEKO_INFO_KEY.consumeClick()) {
             NekoInfoScreen.open();
         }
+        while (ToNekoKeyBindings.DISMOUNT_PASSENGER_KEY.consumeClick()) {
+            var player = client.player;
+            if (player != null && !player.getPassengers().isEmpty()) {
+                ClientPlayNetworking.send(new DismountPassengerPayload());
+            }
+        }
     }
 
 
@@ -73,13 +81,6 @@ public class ClientTickEvent {
                     Entity entity = entry.getKey();
                     return entity == null || entity.distanceTo(p) > 16;
                 });
-            }
-            // 如果是被骑乘的玩家，并且潜行，则取消骑乘
-            if(p.isShiftKeyDown()){
-                // 1%的概率取消骑乘
-                if(Math.random() < 0.01){
-                    p.getPassengers().forEach(Entity::stopRiding);
-                }
             }
         }
     }

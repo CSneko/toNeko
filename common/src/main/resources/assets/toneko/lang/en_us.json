@@ -1081,5 +1081,7 @@
   "screen.toneko.neko_info.energy": "%s / %s",
   "screen.toneko.neko_info.ability_section": "=== Ability ===",
   "screen.toneko.neko_info.ability": "Neko Ability: %s",
-  "key.toneko.neko_info": "Neko Info"
+  "key.toneko.neko_info": "Neko Info",
+  "key.toneko.dismount_passenger": "Dismount Passenger",
+  "hint.toneko.dismount_passenger": "Press %s to dismount passenger"
 }
