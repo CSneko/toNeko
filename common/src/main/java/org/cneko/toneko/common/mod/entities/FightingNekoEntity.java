@@ -8,7 +8,9 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
@@ -78,6 +80,7 @@ public class FightingNekoEntity extends NekoEntity{
     }
 
     private int unhurtTime = 0;
+    private int loliLightningCooldown = 0;
 
     @Override
     public void tick() {
@@ -127,6 +130,22 @@ public class FightingNekoEntity extends NekoEntity{
         }
         this.hatredCooldown--;
         // 战斗由NekoAttackGoal完全接管（通过setHatredTarget已传入目标）
+
+        // 萝莉形态：周期性对仇恨玩家释放闪电攻击
+        if (this.isBaby() && this.hatredTarget instanceof Player && !this.level().isClientSide) {
+            if (loliLightningCooldown > 0) {
+                loliLightningCooldown--;
+            } else {
+                loliLightningCooldown = 100; // 5秒冷却
+                LightningBolt lightning = new LightningBolt(EntityType.LIGHTNING_BOLT, this.level());
+                lightning.setPos(this.hatredTarget.getX(), this.hatredTarget.getY(), this.hatredTarget.getZ());
+                lightning.setVisualOnly(true);
+                this.level().addFreshEntity(lightning);
+                this.hatredTarget.hurt(this.damageSources().lightningBolt(), 5.0f);
+            }
+        }
+
+        trySendHatredMessage();
     }
 
     public static AttributeSupplier.Builder createFightingNekoAttributes() {

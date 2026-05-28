@@ -298,8 +298,15 @@ public class ToNekoNetworkEvents {
         processNekoInteractive(context.player(), payload.uuid(), neko -> {
             Entity mate = findNearbyEntityByUuid(context.player(),UUID.fromString(payload.mateUuid()),10);
             if (mate instanceof INeko m){
-                if (neko != m)
-                    neko.tryMating((ServerLevel) context.player().level(), m);
+                if (neko != m) {
+                    if (neko.isBaby() || m.getEntity().isBaby()) {
+                        neko.triggerLoliAlarm(context.player());
+                        int i = new java.util.Random().nextInt(25);
+                        context.player().sendSystemMessage(Component.translatable("message.toneko.neko.breed_fail_baby." + i));
+                    } else {
+                        neko.tryMating((ServerLevel) context.player().level(), m);
+                    }
+                }
             }
         });
     }

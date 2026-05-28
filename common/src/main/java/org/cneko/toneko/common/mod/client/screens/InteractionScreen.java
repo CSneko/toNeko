@@ -100,6 +100,10 @@ public class InteractionScreen extends Screen implements INekoScreen {
             }
         } catch (Exception ignored) {
         }
+        if (redFlashTimer > 0) {
+            int alpha = (int) (76 * redFlashTimer / 10.0f);
+            guiGraphics.fill(0, 0, width, height, (alpha << 24) | 0xFF0000);
+        }
     }
 
     // 打开时不暂停游戏
@@ -116,6 +120,17 @@ public class InteractionScreen extends Screen implements INekoScreen {
     @Override
     public void onClose() {
         Minecraft.getInstance().setScreen(lastScreen);
+    }
+
+    private int redFlashTimer = 0;
+
+    public void triggerRedFlash() {
+        redFlashTimer = 10;
+    }
+
+    @Override
+    public void tick() {
+        if (redFlashTimer > 0) redFlashTimer--;
     }
 
     public record TooltipWidget(int x, int y, NekoScreenBuilder.TooltipFactory tooltip) {

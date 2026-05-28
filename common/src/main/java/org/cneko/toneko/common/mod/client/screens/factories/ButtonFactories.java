@@ -46,13 +46,25 @@ public class ButtonFactories {
     public static ButtonFactory ACTION_BUTTON = screen -> Button.builder(Component.translatable("screen.toneko.neko_entity_interactive.button.action"),(btn)->{
         Minecraft.getInstance().setScreen(new InteractionScreen(screen.getTitle(), screen.getNeko(), screen, ScreenBuilders.COMMON_ACTION_SCREEN));
     });
-    public static ButtonFactory BREED_BUTTON = screen -> Button.builder(Component.translatable("screen.toneko.neko_entity_interactive.button.breed"),(btn)->{
+    public static ButtonFactory BREED_BUTTON = screen -> {
+        int[] warnLevel = {0};
+        return Button.builder(Component.translatable("screen.toneko.neko_entity_interactive.button.breed"),(btn)->{
         Player player = Minecraft.getInstance().player;
         NekoEntity neko = screen.getNeko();
         if (neko.isBaby()){
-            int i = new Random().nextInt(13);
-            player.displayClientMessage(Component.translatable("message.toneko.neko.breed_fail_baby."+i),ACTION_BAR);
-            return;
+            warnLevel[0]++;
+            if (warnLevel[0] < 5) {
+                if (warnLevel[0] == 1) {
+                    btn.setMessage(Component.literal("§c").append(Component.translatable("screen.toneko.neko_entity_interactive.button.breed")));
+                } else {
+                    btn.setMessage(Component.literal("§c§l").append(Component.translatable("screen.toneko.neko_entity_interactive.button.breed")));
+                }
+                btn.setPosition(new Random().nextInt(Math.max(1, screen.width - btn.getWidth())), new Random().nextInt(Math.max(1, screen.height - btn.getHeight())));
+                screen.triggerRedFlash();
+                int i = new Random().nextInt(25);
+                player.displayClientMessage(Component.translatable("message.toneko.neko.breed_fail_baby."+i),ACTION_BAR);
+                return;
+            }
         }
         if (neko.getMoeTags().contains("mesugaki")){
             if (!player.getMainHandItem().is(ToNekoItems.CATNIP)) {
@@ -75,7 +87,7 @@ public class ButtonFactories {
             }
         }
         NekoMateScreen.open(neko,entities,null);
-    });
+    });};
     
     // ---------------------------------------------------- 动作 -----------------------------------------------------------------
     public static ButtonFactory ACTION_FOLLOW_BUTTON = screen -> Button.builder(Component.translatable("screen.toneko.neko_entity_interactive.button.follow"),(btn)->{

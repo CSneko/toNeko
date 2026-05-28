@@ -114,6 +114,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     protected LivingEntity hatredTarget = null;
     protected int hatredCooldown = 0;
     protected int hatredAttackCooldown = 0;
+    protected int hatredMessageCooldown = 0;
 
     // 用于动画渲染的客户端状态缓存，避免每帧都去查方块状态
     private boolean clientIsInLiquid = false;
@@ -761,6 +762,10 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     }
 
     public void tryMating(ServerLevel level, INeko mate) {
+        if (this.isBaby() || mate.getEntity().isBaby()) {
+            mate.getEntity().sendSystemMessage(Component.translatable("message.toneko.neko.mate.fail",this.getName(), mate.getEntity().getName()).withStyle(ChatFormatting.RED));
+            return;
+        }
         if (this.canMate(mate)) {
             this.nekoMateGoal.setTarget(mate);
             mate.getEntity().sendSystemMessage(Component.translatable("message.toneko.neko.mate.start",this.getName(), mate.getEntity().getName()).withStyle(ChatFormatting.GREEN));
@@ -772,6 +777,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
         this.nekoMateGoal.mating = 0;
     }
     public boolean canMate(INeko other){
+        if (this.isBaby() || other.getEntity().isBaby()) return false;
         return (other.isNeko() || other.allowMateIfNotNeko()) && !this.hasEffect(MobEffects.WEAKNESS) && !other.getEntity().hasEffect(MobEffects.WEAKNESS);
     }
 
@@ -1097,6 +1103,30 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
             this.getNavigation().moveTo(this.hatredTarget, this.getAttributeValue(Attributes.MOVEMENT_SPEED) * 1.2);
         }
         tryHatredAttack();
+        trySendHatredMessage();
+    }
+
+    /**
+     * 战斗中向仇恨目标发送消息，群殴时自动降低频率避免刷屏
+     */
+    protected void trySendHatredMessage() {
+        if (this.level().isClientSide) return;
+        if (!(this.hatredTarget instanceof Player player)) return;
+        if (this.getCustomName() == null || this.getName().getString().equals("null")) {
+            this.setCustomName(Component.literal(NekoNameRegistry.getRandomName()));
+        }
+        if (hatredMessageCooldown > 0) {
+            hatredMessageCooldown--;
+            return;
+        }
+        // 统计附近同样在攻击该玩家的猫娘数量，越多则每只发消息间隔越长
+        long attackingNekos = this.level().getEntitiesOfClass(NekoEntity.class,
+                this.getBoundingBox().inflate(20),
+                n -> n != this && player.equals(n.hatredTarget) && n.isAlive()
+        ).size();
+        hatredMessageCooldown = 60 + (int)(attackingNekos * 30);
+        int i = this.random.nextInt(15);
+        player.sendSystemMessage(Component.translatable("message.toneko.neko.hatred_attack." + i, this.getName()));
     }
 
     /**
@@ -1125,7 +1155,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     /**
      * 触发萝莉防狼警报：播放警报声音，并使周围所有Neko对攻击者产生攻击欲望
      */
-    private void triggerLoliAlarm(Player attacker) {
+    public void triggerLoliAlarm(Player attacker) {
         if (!this.level().isClientSide) {
             // 播放警报声音
             this.level().playSound(
@@ -1140,14 +1170,24 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
             // 使周围所有Neko对攻击者产生攻击欲望（20格范围）
             List<NekoEntity> nearbyNekos = this.level().getEntitiesOfClass(NekoEntity.class,
                     this.getBoundingBox().inflate(20), LivingEntity::isAlive);
+            boolean hasFightingNeko = false;
             for (NekoEntity neko : nearbyNekos) {
                 if (neko.hasOwner(attacker.getUUID())) continue; // 不攻击自己的主人
+                if (neko instanceof FightingNekoEntity) hasFightingNeko = true;
                 // 使用通用仇恨系统设置追击
                 neko.setLastHurtByMob(attacker);
                 neko.setHatredTarget(attacker, HATRED_DEFAULT_DURATION);
                 // 立即发动一次攻击，确保即时反馈
                 neko.equipBestMeleeWeapon();
                 neko.doHurtTarget(attacker);
+            }
+            // 附近有FightingNeko时，召唤一道纯视觉闪电劈向玩家，伤害仅对玩家生效
+            if (hasFightingNeko) {
+                LightningBolt lightning = new LightningBolt(EntityType.LIGHTNING_BOLT, this.level());
+                lightning.setPos(attacker.getX(), attacker.getY(), attacker.getZ());
+                lightning.setVisualOnly(true);
+                this.level().addFreshEntity(lightning);
+                attacker.hurt(this.damageSources().lightningBolt(), 5.0f);
             }
         }
     }
