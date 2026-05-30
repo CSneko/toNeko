@@ -51,7 +51,7 @@ public class ButtonFactories {
         return Button.builder(Component.translatable("screen.toneko.neko_entity_interactive.button.breed"),(btn)->{
         Player player = Minecraft.getInstance().player;
         NekoEntity neko = screen.getNeko();
-        if (neko.isBaby()){
+        if (neko.isNekoBaby()){
             warnLevel[0]++;
             if (warnLevel[0] < 5) {
                 if (warnLevel[0] == 1) {

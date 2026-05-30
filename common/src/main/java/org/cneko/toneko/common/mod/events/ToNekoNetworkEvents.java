@@ -299,7 +299,7 @@ public class ToNekoNetworkEvents {
             Entity mate = findNearbyEntityByUuid(context.player(),UUID.fromString(payload.mateUuid()),10);
             if (mate instanceof INeko m){
                 if (neko != m) {
-                    if (neko.isBaby() || m.getEntity().isBaby()) {
+                    if (neko.isNekoBaby() || m.isNekoBaby()) {
                         neko.triggerLoliAlarm(context.player());
                         int i = new java.util.Random().nextInt(25);
                         context.player().sendSystemMessage(Component.translatable("message.toneko.neko.breed_fail_baby." + i));

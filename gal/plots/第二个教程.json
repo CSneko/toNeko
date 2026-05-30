@@ -1,0 +1,180 @@
+{
+    "0":{
+        "character": "CrystalNeko",
+        "stand_picture":"main",
+        "music":"kawaii",
+        "text":"让我们来更详细的了解",
+        "time": 3,
+        "voice": "CrystalNeko/2_sentence1",
+        "next": "1"
+    },
+    "1":{
+        "text":"在这个教程中，我们将详细的了解文件格式",
+        "time": 3,
+        "voice": "CrystalNeko/2_sentence2",
+        "next": "2"
+    },
+    "2":{
+        "text":"我们先来看看main.json",
+        "time": 3,
+        "voice": "CrystalNeko/2_sentence3",
+        "next": "main_json_0" 
+    },
+    "main_json_0":{
+        "text":"这个json文件中记录的是主要信息，包括剧情，作者等",
+        "time": 3,
+        "voice": "CrystalNeko/2_main_json_0",
+        "next": "main_json_1"
+    },
+    "main_json_1":{
+        "text":"authors这个列表里面主要有两个字段，name和role，分别代表名字和角色",
+        "time": 3,
+        "voice": "CrystalNeko/2_main_json_1",
+        "next": "main_json_2" 
+    },
+    "main_json_2":{
+        "text":"其中，role字段可以选写editor,cv,musician,other，表示这个作者的角色",
+        "time": 3,
+        "voice": "CrystalNeko/2_main_json_2",
+        "next": "main_json_3"
+    },
+    "main_json_3":{
+        "text":"plots这个列表里面主要记录了剧情的名字和描述",
+        "time": 3,
+        "voice": "CrystalNeko/2_main_json_3",
+        "next": "main_json_4"
+    },
+    "main_json_4":{
+        "text":"name为剧情名字，必须和文件名一致（不包括后缀）。desc为剧情描述",
+        "time": 3,
+        "voice": "CrystalNeko/2_main_json_4",
+        "next": "main_json_5"
+    },
+    "main_json_5":{
+        "stand_picture":"second",
+        "text":"好的，接下来我们来了解下其它文件，选择你要了解的内容",
+        "time": 3,
+        "voice": "CrystalNeko/2_main_json_5",
+        "choices":[
+            {
+                "text":"plots",
+                "next":"plots_0"
+            },
+            {
+                "text":"sounds",
+                "next":"sounds_0"
+            },
+            {
+                "text":"pictures",
+                "next":"pictures_0"
+            },
+            {
+                "text":"离开",
+                "next":"end"
+            }
+        ]
+    },
+    "plots_0":{
+        "text":"plots文件夹里面主要记录了剧情内容，由一些json文件组成",
+        "time": 3,
+        "voice": "CrystalNeko/2_plots_0",
+        "next": "plots_1"
+    },
+    "plots_1":{
+        "text":"每个json文件里面主要记录了剧情内容，我们来详细了解下",
+        "time": 3,
+        "voice": "CrystalNeko/2_plots_1",
+        "next": "plots_2"
+    },
+    "plots_2":{
+        "text":"先来看每一节，它的键值为名称，可以是除了一些关键字（如end，plot）以外的任何字符串",
+        "time": 5,
+        "voice": "CrystalNeko/2_plots_2",
+        "next": "plots_3"
+    },
+    "plots_3":{
+        "text":"然后是text，它的值是文本，也就是你现在看到的这句话",
+        "time": 5,
+        "voice": "CrystalNeko/2_plots_3",
+        "next": "plots_4"
+    },
+    "plots_4":{
+        "text":"time表示这段要播放的时间，单位是秒，过了多少秒就会自动播放下一段",
+        "time": 3,
+        "voice": "CrystalNeko/2_plots_4",
+        "next": "plots_5"
+    },
+    "plots_5":{
+        "text":"voice表示这段文本的语音，voice的值是voice文件夹下的文件名,其中第一个斜杠前面的文件名是作者的名字",
+        "time": 4,
+        "voice": "CrystalNeko/2_plots_5",
+        "next": "plots_6"
+    },
+    "plots_6":{
+        "text":"然后是next，表示下一句的id，如果next的值是end，那么就是结束剧情，如果是plot:plot_name，那么就是跳转到下一个剧情",
+        "time": 7,
+        "voice": "CrystalNeko/2_plots_6",
+        "next": "plots_7"
+    },
+    "plots_7":{
+        "text":"最后是choices，它是一个数组，里面是选项，选项的text是选项的文字，next是点击选项后跳转到的id。choices一般不和next一起使用",
+        "time": 6,
+        "voice": "CrystalNeko/2_plots_7",
+        "next": "plots_8"
+    },
+    "plots_8":{
+        "text":"除此之外，还有另外三个可选的字段，分别是music，stand_picture，character，其中music是切换音乐，stand_picture是切换立绘",
+        "time": 11,
+        "voice": "CrystalNeko/2_plots_8",
+        "next": "plots_8"
+    },
+    "plots_9":{
+        "stand_picture":"null",
+        "text":"三个字段默认会继承上一段剧情的设置，你可以设置为null来清除",
+        "time": 7,
+        "voice": "CrystalNeko/2_plots_9",
+        "next": "main_json_5"
+    },
+    "sounds_0":{
+        "text":"sounds文件夹记录声音信息，里面包含语音和音乐，使用ogg文件",
+        "time": 9,
+        "voice": "CrystalNeko/2_sounds_0",
+        "next": "sounds_1"
+    },
+    "sounds_1":{
+        "text":"voices文件夹为语音，里面包含所有语音",
+        "time": 6,
+        "voice": "CrystalNeko/2_sounds_1",
+        "next": "sounds_2"
+    },
+    "sounds_2":{
+        "text":"目录结构为 CV名称/语音名称.ogg",
+        "time": 6,
+        "voice": "CrystalNeko/2_sounds_2",
+        "next": "sounds_3"
+    },
+    "sounds_3":{
+        "text":"music文件夹为背景音乐，没有目录结构",
+        "time": 6,
+        "voice": "CrystalNeko/2_sounds_3",
+        "next": "main_json_5"
+    },
+    "pictures_0":{
+        "text":"pictures为图片文件夹，存储的图片使用png格式",
+        "time": 7,
+        "voice": "CrystalNeko/2_pictures_0",
+        "next": "pictures_1"
+    },
+    "pictures_1":{
+        "text":"图片文件夹下的stand_pictures为立绘文件夹，里面存储的是立绘",
+        "time": 7,
+        "voice": "CrystalNeko/2_pictures_1",
+        "next": "pictures_2"
+    },
+    "pictures_2":{
+        "text":"更多的咱目前还在制作中，所以敬请期待哦",
+        "time": 7,
+        "voice": "CrystalNeko/2_pictures_2",
+        "next": "main_json_5"
+    }
+}

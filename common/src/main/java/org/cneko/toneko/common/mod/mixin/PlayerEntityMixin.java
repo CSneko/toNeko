@@ -51,6 +51,8 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
     @Unique
     boolean toneko$isNeko = false;
     @Unique
+    int toneko$nekoAge = 0;
+    @Unique
     CompoundTag toneko$nekoLevelFactorData = new CompoundTag();
     @Unique
     float toneko$nekoEnergy = 0;
@@ -149,6 +151,21 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
     }
 
     @Override
+    public int getNekoAge() {
+        return toneko$nekoAge;
+    }
+
+    @Override
+    public void setNekoAge(int age) {
+        toneko$nekoAge = age;
+    }
+
+    @Override
+    public int getMaxAge() {
+        return 240000; // 10 game days for players
+    }
+
+    @Override
     @Deprecated
     public void setNekoLevel(float level) {
         // no-op — retained for binary compatibility only
@@ -234,7 +251,7 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
         if(entityToInteractOn instanceof INeko neko){
             Player player = (Player)(Object)this;
             ItemStack itemStack = player.getItemInHand(hand);
-            if (itemStack.is(Items.BUCKET) && !neko.getEntity().isBaby()) {
+            if (itemStack.is(Items.BUCKET) && !neko.isNekoBaby()) {
                 player.playSound(SoundEvents.COW_MILK, 1.0F, 1.0F);
                 ItemStack itemStack2 = ItemUtils.createFilledResult(itemStack, player, Items.MILK_BUCKET.getDefaultInstance());
                 // 显示来源

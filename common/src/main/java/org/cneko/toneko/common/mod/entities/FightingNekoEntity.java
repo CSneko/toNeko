@@ -132,7 +132,7 @@ public class FightingNekoEntity extends NekoEntity{
         // 战斗由NekoAttackGoal完全接管（通过setHatredTarget已传入目标）
 
         // 萝莉形态：周期性对仇恨玩家释放闪电攻击
-        if (this.isBaby() && this.hatredTarget instanceof Player && !this.level().isClientSide) {
+        if (this.isNekoBaby() && this.hatredTarget instanceof Player && !this.level().isClientSide) {
             if (loliLightningCooldown > 0) {
                 loliLightningCooldown--;
             } else {

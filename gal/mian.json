@@ -1,0 +1,18 @@
+{
+    "authors":[
+        {
+            "name":"CrystalNeko",
+            "role":"editor"
+        }
+    ],
+    "plots":[
+        {
+            "name":"教程",
+            "desc":"教程剧情"
+        },
+        {
+            "name":"第二个教程",
+            "desc":"第二个教程剧情"
+        }
+    ]
+}

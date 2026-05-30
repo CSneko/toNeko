@@ -42,6 +42,25 @@ public interface INeko {
     default void setNeko(boolean isNeko){
     }
 
+    default int getNekoAge() {
+        return 0;
+    }
+    default void setNekoAge(int age) {
+    }
+    default int getMaxAge() {
+        return 24000; // 1 game day for NekoEntity
+    }
+    default boolean isNekoBaby() {
+        return this.getNekoAge() < 0;
+    }
+    default void setNekoBaby(boolean baby) {
+        if (baby) {
+            this.setNekoAge(-this.getMaxAge());
+        } else {
+            this.setNekoAge(0);
+        }
+    }
+
     default CompoundTag getNekoLevelFactorData() { return new CompoundTag(); }
     default void setNekoLevelFactorData(CompoundTag data) {}
 
@@ -172,12 +191,16 @@ public interface INeko {
 
             owners.put(uuid.toString(), ownerInfo);
         });
+        nbt.putInt("NekoAge", this.getNekoAge());
         nbt.putString("NickName", this.getNickName());
         nbt.put("Owners", owners);
     }
     default void loadNekoNBTData(@NotNull CompoundTag nbt){
         if(nbt.contains("IsNeko")){
             this.setNeko(nbt.getBoolean("IsNeko"));
+        }
+        if (nbt.contains("NekoAge")) {
+            this.setNekoAge(nbt.getInt("NekoAge"));
         }
         if (nbt.contains("NekoEnergy")) {
             this.setNekoEnergy(nbt.getFloat("NekoEnergy"));
@@ -217,6 +240,18 @@ public interface INeko {
     ResourceLocation ATTACK_MODIFIER_ID = toNekoLoc("neko_level_attack_modifier");
     ResourceLocation MAX_NEKO_ENERGY_MODIFIER_ID = toNekoLoc("neko_level_max_neko_energy_modifier");
     ResourceLocation MAX_HEALTH_MODIFIER_ID = toNekoLoc("neko_level_max_health_modifier");
+    ResourceLocation AGE_SCALE_MODIFIER_ID = toNekoLoc("neko_age_scale_modifier");
+
+    /**
+     * 根据年龄计算缩放因子，从幼年的 0.3 线性过渡到成年的 1.0
+     */
+    default double getNekoAgeScale() {
+        int age = this.getNekoAge();
+        int maxAge = this.getMaxAge();
+        if (age >= 0) return 1.0;
+        // age 范围: [-maxAge, 0) → scale 范围: [0.3, 1.0)
+        return 0.3 + 0.7 * (1.0 + (double) age / maxAge);
+    }
     default void updateNekoLevelModifiers() {
         float nekoLevel = this.getNekoLevel();
 
@@ -237,19 +272,29 @@ public interface INeko {
                 MAX_HEALTH_MODIFIER_ID,
                 nekoLevel * 0.05
         );
+
+        // 年龄缩放: 幼年 0.3 → 成年 1.0
+        applyModifier(
+                this.getEntity().getAttribute(Attributes.SCALE),
+                AGE_SCALE_MODIFIER_ID,
+                this.getNekoAgeScale() - 1.0,
+                AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
+        );
     }
 
     static void applyModifier(AttributeInstance attr, ResourceLocation id, double bonus) {
+        applyModifier(attr, id, bonus, AttributeModifier.Operation.ADD_VALUE);
+    }
+
+    static void applyModifier(AttributeInstance attr, ResourceLocation id, double bonus, AttributeModifier.Operation operation) {
         if (attr != null) {
             attr.removeModifier(id);
-            if (bonus > 0) {
-                AttributeModifier modifier = new AttributeModifier(
-                        id,
-                        bonus,
-                        AttributeModifier.Operation.ADD_VALUE
-                );
-                attr.addPermanentModifier(modifier);
-            }
+            AttributeModifier modifier = new AttributeModifier(
+                    id,
+                    bonus,
+                    operation
+            );
+            attr.addPermanentModifier(modifier);
         }
     }
 

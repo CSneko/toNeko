@@ -143,6 +143,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     public static final EntityDataAccessor<Integer> GATHERING_POWER_ID = SynchedEntityData.defineId(NekoEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> NEKO_ENERGY_ID = SynchedEntityData.defineId(NekoEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> CHEST_SCALE_ID = SynchedEntityData.defineId(NekoEntity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> AGE_SCALE_ID = SynchedEntityData.defineId(NekoEntity.class, EntityDataSerializers.FLOAT);
 
     public NekoEntity(EntityType<? extends NekoEntity> entityType, Level level) {
         super(entityType, level);
@@ -200,6 +201,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
         builder.define(NEKO_LEVEL_ID, 0f);
         builder.define(NICKNAME_ID, "");
         builder.define(CHEST_SCALE_ID, 1.0f);
+        builder.define(AGE_SCALE_ID, 1.0f);
     }
 
 
@@ -680,6 +682,8 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
             this.setMoeTags(this.getMoeTags());
             this.setSkin(this.getSkin());
             this.serverNekoSlowTick();
+            // 先同步年龄缩放再更新 modifier，保证 getNekoAgeScale() 读到最新值
+            this.entityData.set(AGE_SCALE_ID, (float) computeAgeScale());
             this.updateNekoLevelModifiers();
             this.entityData.set(NEKO_LEVEL_ID, this.getNekoLevel());
             this.updateMoeTagAwareGoals();
@@ -762,7 +766,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     }
 
     public void tryMating(ServerLevel level, INeko mate) {
-        if (this.isBaby() || mate.getEntity().isBaby()) {
+        if (this.isNekoBaby() || mate.isNekoBaby()) {
             mate.getEntity().sendSystemMessage(Component.translatable("message.toneko.neko.mate.fail",this.getName(), mate.getEntity().getName()).withStyle(ChatFormatting.RED));
             return;
         }
@@ -777,7 +781,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
         this.nekoMateGoal.mating = 0;
     }
     public boolean canMate(INeko other){
-        if (this.isBaby() || other.getEntity().isBaby()) return false;
+        if (this.isNekoBaby() || other.isNekoBaby()) return false;
         return (other.isNeko() || other.allowMateIfNotNeko()) && !this.hasEffect(MobEffects.WEAKNESS) && !other.getEntity().hasEffect(MobEffects.WEAKNESS);
     }
 
@@ -818,7 +822,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     public NekoEntity spawnChildFromBreeding(ServerLevel level, INeko mate) {
         NekoEntity child = this.getBreedOffspring(level, mate);
         if (child != null) {
-            child.setBaby(true);
+            child.setNekoBaby(true);
             child.moveTo(this.getX(), this.getY(), this.getZ(), 0.0F, 0.0F);
             this.finalizeSpawnChildFromBreeding(level, mate, child);
             level.addFreshEntityWithPassengers(child);
@@ -827,7 +831,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     }
     public void finalizeSpawnChildFromBreeding(ServerLevel level, INeko mate, NekoEntity child) {
         level.broadcastEntityEvent(this, (byte)18);
-        child.setAge(-72000);
+        child.setNekoBaby(true); // 使用 INeko 统一的 MaxAge 机制
         child.randomize(); // 随机化名字、皮肤、体型、速度、萌属性
         if (level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)) {
             level.addFreshEntity(new ExperienceOrb(level, this.getX(), this.getY(), this.getZ(), this.getRandom().nextInt(7) + 1));
@@ -930,7 +934,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
             tickHatred();
 
             // 萝莉猫娘防狼：检测玩家侵犯意图（持武器接近）
-            if (this.isBaby() && this.tickCount % 40 == 0) {
+            if (this.isNekoBaby() && this.tickCount % 40 == 0) {
                 long currentTime = this.level().getGameTime();
                 if (currentTime - this.lastLoliAlarmTime > 1200) { // 60秒冷却，防止误触
                     for (Player player : this.level().getEntitiesOfClass(Player.class,
@@ -981,7 +985,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
         }
 
         // 萝莉猫娘防狼警报：如果被玩家攻击且是幼体（萝莉）
-        if (source.getEntity() instanceof Player player && this.isBaby()) {
+        if (source.getEntity() instanceof Player player && this.isNekoBaby()) {
             triggerLoliAlarm(player);
         }
 
@@ -1346,6 +1350,16 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
         return true;
     }
 
+    @Override
+    public int getNekoAge() {
+        return this.getAge();
+    }
+
+    @Override
+    public void setNekoAge(int age) {
+        this.setAge(age);
+    }
+
     public static final EntityDataAccessor<Float> NEKO_LEVEL_ID = SynchedEntityData.defineId(NekoEntity.class, EntityDataSerializers.FLOAT);
     @Override
     public float getNekoLevel() {
@@ -1446,6 +1460,18 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
 
     public float getChestScale() {
         return this.entityData.get(CHEST_SCALE_ID);
+    }
+
+    @Override
+    public double getNekoAgeScale() {
+        return this.entityData.get(AGE_SCALE_ID);
+    }
+
+    private double computeAgeScale() {
+        int age = this.getNekoAge();
+        int maxAge = this.getMaxAge();
+        if (age >= 0) return 1.0;
+        return 0.3 + 0.7 * (1.0 + (double) age / maxAge);
     }
 
     // 初始生成时的随机基因分配

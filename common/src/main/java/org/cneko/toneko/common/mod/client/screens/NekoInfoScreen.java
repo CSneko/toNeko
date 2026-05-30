@@ -74,6 +74,34 @@ public class NekoInfoScreen extends Screen {
 
         y += 4;
 
+        // === Age Section ===
+        guiGraphics.drawString(this.font, translatable("screen.toneko.neko_info.age_section"),
+                left, y, SECTION_COLOR, true);
+        y += lineHeight;
+
+        int age = player.getNekoAge();
+        int maxAge = player.getMaxAge();
+        boolean isBaby = player.isNekoBaby();
+        double ageScale = player.getNekoAgeScale();
+        int growthPercent = (int) Math.round((ageScale - 0.3) / 0.7 * 100);
+
+        guiGraphics.drawString(this.font, translatable("screen.toneko.neko_info.is_baby",
+                        translatable(isBaby ? "screen.toneko.neko_info.yes" : "screen.toneko.neko_info.no")),
+                left + 10, y, VALUE_COLOR, false);
+        y += lineHeight;
+
+        guiGraphics.drawString(this.font, translatable("screen.toneko.neko_info.age",
+                        age, maxAge),
+                left + 10, y, VALUE_COLOR, false);
+        y += lineHeight;
+
+        guiGraphics.drawString(this.font, translatable("screen.toneko.neko_info.age_scale",
+                        String.format("%.2f", ageScale), growthPercent),
+                left + 10, y, VALUE_COLOR, false);
+        y += lineHeight;
+
+        y += 4;
+
         // === Level Section ===
         guiGraphics.drawString(this.font, translatable("screen.toneko.neko_info.level_section"),
                 left, y, SECTION_COLOR, true);

@@ -1,0 +1,90 @@
+{
+    "0":{
+        "character": "CrystalNeko",
+        "stand_picture":"main",
+        "music":"kawaii",
+        "text":"本文件位于plots/教程.json，你可以初步了解一下哦",
+        "time": 3,
+        "voice": "CrystalNeko/sentence1",
+        "choices": [],
+        "next": "1"
+    },
+    "1":{
+        "text":"这是第二句话,接下来有两个选项",
+        "time": 5,
+        "voice": "CrystalNeko/second_sentence2",
+        "choices": [
+            {
+                "text":"选项1",
+                "next":"2_1"
+            },
+            {
+                "text":"选项2",
+                "next":"2_2"
+            }
+        ]
+    },
+    "2_1":{
+        "text":"这是选项1",
+        "time": 2,
+        "voice": "CrystalNeko/option1",
+        "next": "3"
+    },
+    "2_2":{
+        "text":"这是选项2",
+        "time": 2,
+        "voice": "CrystalNeko/option2",
+        "next": "3"
+    },
+    "3":{
+        "text":"如果没有choice，那么就会读取next，有的话就会直接读取choice",
+        "time": 6,
+        "voice": "CrystalNeko/sentence3",
+        "next": "4"
+    },
+    "4":{
+        "stand_picture":"second",
+        "text":"这里换上第二张立绘，你可以通过修改stand_picture来更换立绘",
+        "time": 3,
+        "voice": "CrystalNeko/sentence4",
+        "next": "5"
+    },
+    "5":{
+        "music":"kawaii2",
+        "text":"同样的，切换音乐也是一样",
+        "time": 3,
+        "voice": "CrystalNeko/sentence5",
+        "next": "6"
+    },
+    "6":{
+        "text":"恭喜你，完成了第一个教程",
+        "time": 3,
+        "voice": "CrystalNeko/sentence6",
+        "choices": [
+            {
+                "text":"结束",
+                "next":"7_0"
+            },
+            {
+                "text":"下一个教程",
+                "next":"7_1"
+            },
+            {
+                "text":"再来一遍",
+                "next":"0"
+            }
+        ]
+    },
+    "7_0":{
+        "text":"要结束剧情，只需要在next中写为end即可",
+        "time": 3,
+        "voice": "CrystalNeko/sentence7",
+        "next": "end"
+    },
+    "7_1":{
+        "text":"要跳转到下一个剧情，只需要在next中写为plot:plot_name即可",
+        "time": 6,
+        "voice": "CrystalNeko/sentence8",
+        "next": "plot:第二个教程"
+    }
+}

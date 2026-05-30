@@ -5,7 +5,8 @@ public class ScreenBuilders {
     public static final NekoScreenBuilder COMMON_TOOLTIP = new NekoScreenBuilder()
             .addTooltip(TooltipFactories.NAME_TOOLTIP)
             .addTooltip(TooltipFactories.MOE_TAGS_TOOLTIP)
-            .addTooltip(TooltipFactories.GATHERING_POWER_TOOLTIP);
+            .addTooltip(TooltipFactories.GATHERING_POWER_TOOLTIP)
+            .addTooltip(TooltipFactories.AGE_SCALE_TOOLTIP);
     public static final NekoScreenBuilder COMMON_START = COMMON_TOOLTIP.clone()
             .setStartY(5)
             .addButton(ButtonFactories.BACK_BUTTON);
