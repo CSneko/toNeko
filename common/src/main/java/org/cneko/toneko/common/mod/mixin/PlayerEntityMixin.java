@@ -136,7 +136,8 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
                 this.getNekoLevelFactorRaw("interaction"),
                 this.getNekoLevelFactorRaw("combat"),
                 this.getNekoLevelFactorRaw("base"),
-                this.isNeko()
+                this.isNeko(),
+                this.getNekoAge()
         ));
     }
 

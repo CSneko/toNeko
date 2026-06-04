@@ -79,19 +79,18 @@ public class NekoInfoScreen extends Screen {
                 left, y, SECTION_COLOR, true);
         y += lineHeight;
 
-        int age = player.getNekoAge();
-        int maxAge = player.getMaxAge();
         boolean isBaby = player.isNekoBaby();
         double ageScale = player.getNekoAgeScale();
         int growthPercent = (int) Math.round((ageScale - 0.3) / 0.7 * 100);
+        int apparentAge = getApparentAge(ageScale);
 
         guiGraphics.drawString(this.font, translatable("screen.toneko.neko_info.is_baby",
                         translatable(isBaby ? "screen.toneko.neko_info.yes" : "screen.toneko.neko_info.no")),
                 left + 10, y, VALUE_COLOR, false);
         y += lineHeight;
 
-        guiGraphics.drawString(this.font, translatable("screen.toneko.neko_info.age",
-                        age, maxAge),
+        guiGraphics.drawString(this.font, translatable("screen.toneko.neko_info.apparent_age",
+                        apparentAge),
                 left + 10, y, VALUE_COLOR, false);
         y += lineHeight;
 
@@ -159,6 +158,15 @@ public class NekoInfoScreen extends Screen {
 
         guiGraphics.drawString(this.font, translatable("screen.toneko.neko_info.ability", player.getNekoAbility()),
                 left + 10, y, VALUE_COLOR, false);
+    }
+
+    /**
+     * Map the growth scale (0.3 ~ 1.0) to a human-readable apparent age (6 ~ 18).
+     */
+    private static int getApparentAge(double ageScale) {
+        if (ageScale >= 1.0) return 18;
+        if (ageScale <= 0.3) return 6;
+        return 6 + (int) Math.round((ageScale - 0.3) / 0.7 * 12);
     }
 
     @Override

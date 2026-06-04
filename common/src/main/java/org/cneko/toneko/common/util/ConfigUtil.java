@@ -39,6 +39,25 @@ public class ConfigUtil {
             .addBoolean("stats", true, "https://s.cneko.org/toNekoOnlineAPI",
                     "启用统计功能，统计数据将发送到 toneko API，如何使用api请查看 https://s.cneko.org/toNekoOnlineAPI",
                     "Enable statistics, statistics data will be sent to the toneko API, how to use the api please see https://s.cneko.org/toNekoOnlineAPI")
+            // ===== LoliHead 配置 =====
+            .addBoolean("lolihead.enable", true, null,
+                    "启用萝莉头功能（玩家缩小时自动调整头部大小）",
+                    "Enable LoliHead feature (auto-adjust head size when player is scaled down)")
+            .addBoolean("lolihead.algorithm.enable", true, null,
+                    "启用动态算法模式（根据缩放比例自动补偿头部大小）",
+                    "Enable dynamic algorithm mode (auto-compensate head size based on scale)")
+            .addFloat("lolihead.algorithm.ratio", 1.0f, null,
+                    "头部缩放比例（身体每缩小1倍，头部放大多少倍）",
+                    "Head scale ratio (how much to enlarge head per body scale reduction)")
+            .addFloat("lolihead.custom_head_scale.xScale", 1.0f, null,
+                    "自定义头部X轴缩放",
+                    "Custom head X-axis scale")
+            .addFloat("lolihead.custom_head_scale.yScale", 1.0f, null,
+                    "自定义头部Y轴缩放",
+                    "Custom head Y-axis scale")
+            .addFloat("lolihead.custom_head_scale.zScale", 1.0f, null,
+                    "自定义头部Z轴缩放",
+                    "Custom head Z-axis scale")
             .build();
     public static JsonConfiguration CONFIG = CONFIG_BUILDER.createConfig();
 
@@ -106,6 +125,26 @@ public class ConfigUtil {
 
     public static String getAITTSVoice(){
         return CONFIG.getString("ai.tts.voice");
+    }
+
+    // ===== LoliHead 配置访问方法 =====
+    public static boolean isLoliHeadEnabled() {
+        return CONFIG.getBoolean("lolihead.enable");
+    }
+    public static boolean isLoliHeadAlgorithmEnabled() {
+        return CONFIG.getBoolean("lolihead.algorithm.enable");
+    }
+    public static float getLoliHeadAlgorithmRatio() {
+        return CONFIG.getFloat("lolihead.algorithm.ratio");
+    }
+    public static float getLoliHeadCustomXScale() {
+        return CONFIG.getFloat("lolihead.custom_head_scale.xScale");
+    }
+    public static float getLoliHeadCustomYScale() {
+        return CONFIG.getFloat("lolihead.custom_head_scale.yScale");
+    }
+    public static float getLoliHeadCustomZScale() {
+        return CONFIG.getFloat("lolihead.custom_head_scale.zScale");
     }
 
 

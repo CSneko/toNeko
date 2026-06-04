@@ -15,17 +15,30 @@ public record NekoInfoSyncPayload(
         double interactionRaw,
         double combatRaw,
         double baseRaw,
-        boolean isNeko
+        boolean isNeko,
+        int age
 ) implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<NekoInfoSyncPayload> ID = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(MODID, "neko_info_sync"));
-    public static final StreamCodec<RegistryFriendlyByteBuf, NekoInfoSyncPayload> CODEC = StreamCodec.composite(
-            ByteBufCodecs.FLOAT, NekoInfoSyncPayload::energy,
-            ByteBufCodecs.FLOAT, NekoInfoSyncPayload::maxEnergy,
-            ByteBufCodecs.DOUBLE, NekoInfoSyncPayload::interactionRaw,
-            ByteBufCodecs.DOUBLE, NekoInfoSyncPayload::combatRaw,
-            ByteBufCodecs.DOUBLE, NekoInfoSyncPayload::baseRaw,
-            ByteBufCodecs.BOOL, NekoInfoSyncPayload::isNeko,
-            NekoInfoSyncPayload::new);
+    public static final StreamCodec<RegistryFriendlyByteBuf, NekoInfoSyncPayload> CODEC = StreamCodec.of(
+            (buf, payload) -> {
+                ByteBufCodecs.FLOAT.encode(buf, payload.energy());
+                ByteBufCodecs.FLOAT.encode(buf, payload.maxEnergy());
+                ByteBufCodecs.DOUBLE.encode(buf, payload.interactionRaw());
+                ByteBufCodecs.DOUBLE.encode(buf, payload.combatRaw());
+                ByteBufCodecs.DOUBLE.encode(buf, payload.baseRaw());
+                ByteBufCodecs.BOOL.encode(buf, payload.isNeko());
+                ByteBufCodecs.INT.encode(buf, payload.age());
+            },
+            buf -> new NekoInfoSyncPayload(
+                    ByteBufCodecs.FLOAT.decode(buf),
+                    ByteBufCodecs.FLOAT.decode(buf),
+                    ByteBufCodecs.DOUBLE.decode(buf),
+                    ByteBufCodecs.DOUBLE.decode(buf),
+                    ByteBufCodecs.DOUBLE.decode(buf),
+                    ByteBufCodecs.BOOL.decode(buf),
+                    ByteBufCodecs.INT.decode(buf)
+            )
+    );
     @Override
     public @NotNull Type<? extends CustomPacketPayload> type() {
         return ID;

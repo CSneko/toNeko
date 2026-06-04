@@ -52,6 +52,15 @@ public class ConfigBuilder {
     public ConfigBuilder addBoolean(String key, Boolean value,String url, String... comments) {
         return this.add(key, Entry.of(value, String.join("\n", comments),url), comments);
     }
+
+    public ConfigBuilder addFloat(String key, float value, String url, String comment) {
+        return this.add(key, Entry.of(value, comment, url), comment);
+    }
+
+    public ConfigBuilder addFloat(String key, float value, String url, String... comments) {
+        return this.add(key, Entry.of(value, String.join("\n", comments), url), comments);
+    }
+
     public void setBoolean(String key, boolean value) {
         config.set(key, value);
         config.save(path);

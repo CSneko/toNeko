@@ -17,6 +17,7 @@ public class ServerPlayerEntityMixin {
         INeko newNeko = (INeko) this;
 
         newNeko.setNeko(oldPlayer.isNeko());
+        newNeko.setNekoAge(oldPlayer.getNekoAge());
         newNeko.setNekoLevelFactorData(oldPlayer.getNekoLevelFactorData());
         newNeko.setNekoEnergy(oldPlayer.getNekoEnergy());
         newNeko.setNickName(oldPlayer.getNickName());
