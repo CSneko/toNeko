@@ -33,6 +33,7 @@ public class ToNekoItems {
     public static final SpawnEggItem ADVENTURER_NEKO_SPAWN_EGG = new SpawnEggItem(ToNekoEntities.ADVENTURER_NEKO, 0x7e7e7e, 0xffffff,new Item.Properties());
     public static final SpawnEggItem GHOST_NEKO_SPAWN_EGG = new SpawnEggItem(ToNekoEntities.GHOST_NEKO, 0x7e7e7e, 0xffffff,new Item.Properties());
     public static final SpawnEggItem FIGHTING_NEKO_SPAWN_EGG = new SpawnEggItem(ToNekoEntities.FIGHTING_NEKO, 0x7e7e7e, 0xffffff,new Item.Properties());
+    public static final SpawnEggItem NOELLE_MAID_NEKO_SPAWN_EGG = new SpawnEggItem(ToNekoEntities.NOELLE_MAID_NEKO, 0xffc0cb, 0xffffff,new Item.Properties());
     public static boolean isTrinketsInstalled = tryClass("dev.emi.trinkets.api.Trinket");
     public static void init() {
         registerWithOutConfig();
@@ -88,6 +89,7 @@ public class ToNekoItems {
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("adventurer_neko_spawn_egg"), ADVENTURER_NEKO_SPAWN_EGG);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("ghost_neko_spawn_egg"),GHOST_NEKO_SPAWN_EGG);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("fighting_neko_spawn_egg"), FIGHTING_NEKO_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, toNekoLoc("noelle_maid_neko_spawn_egg"), NOELLE_MAID_NEKO_SPAWN_EGG);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("catnip"), CATNIP);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("infinite_catnip"), INFINITE_CATNIP);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("catnip_sandwich"), CATNIP_SANDWICH);
@@ -149,6 +151,7 @@ public class ToNekoItems {
             content.accept(ADVENTURER_NEKO_SPAWN_EGG);
             content.accept(GHOST_NEKO_SPAWN_EGG);
             content.accept(FIGHTING_NEKO_SPAWN_EGG);
+            content.accept(NOELLE_MAID_NEKO_SPAWN_EGG);
             content.accept(MUSIC_DISC_KAWAII);
             if (ConfigUtil.IS_FOOL_DAY){
                 content.accept(MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP);

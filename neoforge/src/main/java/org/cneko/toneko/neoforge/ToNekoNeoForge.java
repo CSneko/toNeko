@@ -117,7 +117,8 @@ public final class ToNekoNeoForge {
                     ToNekoEntities.ADVENTURER_NEKO_HOLDER.get(),
                     ToNekoEntities.GHOST_NEKO_HOLDER.get(),
                     ToNekoEntities.CRYSTAL_NEKO_HOLDER.get(),
-                    ToNekoEntities.FIGHTING_NEKO_HOLDER.get()
+                    ToNekoEntities.FIGHTING_NEKO_HOLDER.get(),
+                    ToNekoEntities.NOELLE_MAID_NEKO_HOLDER.get()
             );
         });
 

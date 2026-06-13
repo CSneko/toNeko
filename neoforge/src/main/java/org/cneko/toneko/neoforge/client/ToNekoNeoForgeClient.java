@@ -75,6 +75,10 @@ public class ToNekoNeoForgeClient {
                 ToNekoEntities.RAVENN_HOLDER.get(),
                 NekoRenderer::new
         );
+        event.registerEntityRenderer(
+                ToNekoEntities.NOELLE_MAID_NEKO_HOLDER.get(),
+                NekoRenderer::new
+        );
     }
 
     @SubscribeEvent

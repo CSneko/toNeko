@@ -31,6 +31,8 @@ public class ToNekoEntities {
     public static EntityType<MoufletNekoBoss> MOUFLET_NEKO_BOSS;
     public static ResourceLocation RAVENN_ID = toNekoLoc("ravenn");
     public static EntityType<RavennEntity> RAVENN_ENTITY;
+    public static ResourceLocation NOELLE_MAID_NEKO_ID = toNekoLoc("noelle_maid_neko");
+    public static EntityType<NoelleMaidNekoEntity> NOELLE_MAID_NEKO;
     public static EntityType<AmmunitionEntity> AMMUNITION_ENTITY;
     public static ResourceLocation AMMUNITION_ENTITY_ID = toNekoLoc("ammunition_entity");
     public static void init() {
@@ -98,6 +100,13 @@ public class ToNekoEntities {
                         .sized(0.5f,1.7f).clientTrackingRange(8)
                         .build("ravenn");
     }
+    @ApiStatus.Internal
+    public static Supplier<EntityType<NoelleMaidNekoEntity>> getNoelleMaidNeko(){
+        return
+                ()-> EntityType.Builder.of(NoelleMaidNekoEntity::new, MobCategory.CREATURE)
+                        .sized(0.5f,1.7f).eyeHeight(1.6f).clientTrackingRange(8)
+                        .build("noelle_maid_neko");
+    }
 
     /**
      * 注册猫娘在各群系的生成规则。由各平台的实体注册完成后调用。
@@ -107,7 +116,8 @@ public class ToNekoEntities {
             EntityType<AdventurerNeko> adventurer,
             EntityType<GhostNekoEntity> ghost,
             EntityType<CrystalNekoEntity> crystal,
-            EntityType<FightingNekoEntity> fighting) {
+            EntityType<FightingNekoEntity> fighting,
+            EntityType<NoelleMaidNekoEntity> noelle) {
 
         // ===== 冒险猫娘：广泛群系 =====
         BiomeModifications.addSpawn(
@@ -173,6 +183,23 @@ public class ToNekoEntities {
                         .or(BiomeSelectors.tag(BiomeTags.IS_MOUNTAIN)),
                 MobCategory.CREATURE, fighting,
                 25, 1, 4
+        );
+
+        // ===== 诺艾尔女仆猫娘：花海、森林、平原 =====
+        BiomeModifications.addSpawn(
+                BiomeSelectors.includeByKey(Biomes.CHERRY_GROVE)
+                        .or(BiomeSelectors.includeByKey(Biomes.FLOWER_FOREST))
+                        .or(BiomeSelectors.includeByKey(Biomes.MEADOW))
+                        .or(BiomeSelectors.includeByKey(Biomes.SUNFLOWER_PLAINS)),
+                MobCategory.CREATURE, noelle,
+                35, 1, 3
+        );
+        BiomeModifications.addSpawn(
+                BiomeSelectors.tag(BiomeTags.IS_FOREST)
+                        .or(BiomeSelectors.includeByKey(Biomes.PLAINS))
+                        .or(BiomeSelectors.tag(BiomeTags.IS_RIVER)),
+                MobCategory.CREATURE, noelle,
+                15, 1, 2
         );
     }
 

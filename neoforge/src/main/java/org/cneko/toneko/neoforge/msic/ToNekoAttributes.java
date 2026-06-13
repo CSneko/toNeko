@@ -8,6 +8,7 @@ import org.cneko.toneko.common.mod.entities.AdventurerNeko;
 import org.cneko.toneko.common.mod.entities.CrystalNekoEntity;
 import org.cneko.toneko.common.mod.entities.FightingNekoEntity;
 import org.cneko.toneko.common.mod.entities.GhostNekoEntity;
+import org.cneko.toneko.common.mod.entities.NoelleMaidNekoEntity;
 import org.cneko.toneko.common.mod.entities.boss.mouflet.MoufletNekoBoss;
 import org.cneko.toneko.neoforge.entities.ToNekoEntities;
 
@@ -33,6 +34,7 @@ public class ToNekoAttributes {
         event.put(ToNekoEntities.GHOST_NEKO_HOLDER.get(), GhostNekoEntity.createGhostNekoAttributes().build());
         event.put(ToNekoEntities.FIGHTING_NEKO_HOLDER.get(), FightingNekoEntity.createFightingNekoAttributes().build());
         event.put(ToNekoEntities.MOUFLET_NEKO_BOSS_HOLDER.get(), MoufletNekoBoss.createMoufletNekoAttributes().build());
+        event.put(ToNekoEntities.NOELLE_MAID_NEKO_HOLDER.get(), NoelleMaidNekoEntity.createNoelleAttributes().build());
     }
 
 

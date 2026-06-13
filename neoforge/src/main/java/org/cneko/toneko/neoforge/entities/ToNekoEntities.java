@@ -27,6 +27,7 @@ public class ToNekoEntities {
     public static DeferredHolder<EntityType<?>, EntityType<AmmunitionEntity>> AMMUNITION_ENTITY_HOLDER;
     public static DeferredHolder<EntityType<?>, EntityType<MoufletNekoBoss>> MOUFLET_NEKO_BOSS_HOLDER;
     public static DeferredHolder<EntityType<?>, EntityType<RavennEntity>> RAVENN_HOLDER;
+    public static DeferredHolder<EntityType<?>, EntityType<NoelleMaidNekoEntity>> NOELLE_MAID_NEKO_HOLDER;
     public static void init(){
         CRYSTAL_NEKO_HOLDER = ToNekoNeoForge.ENTITY_TYPES.register(CRYSTAL_NEKO_ID.getPath(),
                 org.cneko.toneko.common.mod.entities.ToNekoEntities.getCrystalNeko()
@@ -49,6 +50,9 @@ public class ToNekoEntities {
         RAVENN_HOLDER = ToNekoNeoForge.ENTITY_TYPES.register(RAVENN_ID.getPath(),
                 org.cneko.toneko.common.mod.entities.ToNekoEntities.getRavennEntity()
         );
+        NOELLE_MAID_NEKO_HOLDER = ToNekoNeoForge.ENTITY_TYPES.register(NOELLE_MAID_NEKO_ID.getPath(),
+                org.cneko.toneko.common.mod.entities.ToNekoEntities.getNoelleMaidNeko()
+        );
 
         org.cneko.toneko.common.mod.entities.ToNekoEntities.init();
 
@@ -57,6 +61,7 @@ public class ToNekoEntities {
         NekoSkinRegistry.register("entity.toneko.ghost_neko",GhostNekoEntity.nekoSkins);
         NekoSkinRegistry.register("entity.toneko.fighting_neko",FightingNekoEntity.NEKO_SKINS);
         NekoSkinRegistry.register("entity.toneko.mouflet_neko_boss",MoufletNekoBoss.NEKO_SKINS);
+        NekoSkinRegistry.register("entity.toneko.noelle_maid_neko",FightingNekoEntity.NEKO_SKINS);
 
 
     }
@@ -130,6 +135,24 @@ public class ToNekoEntities {
                      && random.nextFloat() < 0.45f;
         }, RegisterSpawnPlacementsEvent.Operation.OR);
 
+        event.register(NOELLE_MAID_NEKO_HOLDER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                (EntityType<NoelleMaidNekoEntity> type, ServerLevelAccessor accessor, MobSpawnType spawnType, BlockPos pos, RandomSource random) -> {
+            // 樱花林、花海、草甸、向日葵平原：85% 高概率
+            if (accessor.getBiome(pos).is(Biomes.CHERRY_GROVE)
+                    || accessor.getBiome(pos).is(Biomes.FLOWER_FOREST)
+                    || accessor.getBiome(pos).is(Biomes.MEADOW)
+                    || accessor.getBiome(pos).is(Biomes.SUNFLOWER_PLAINS)) {
+                return random.nextFloat() < 0.85f;
+            }
+            // 森林、平原、河流：50% 概率生成
+            if (accessor.getBiome(pos).is(BiomeTags.IS_FOREST)
+                    || accessor.getBiome(pos).is(Biomes.PLAINS)
+                    || accessor.getBiome(pos).is(BiomeTags.IS_RIVER)) {
+                return random.nextFloat() < 0.5f;
+            }
+            return false;
+        }, RegisterSpawnPlacementsEvent.Operation.OR);
+
 
     }
 
@@ -141,5 +164,6 @@ public class ToNekoEntities {
         AMMUNITION_ENTITY = AMMUNITION_ENTITY_HOLDER.get();
         MOUFLET_NEKO_BOSS = MOUFLET_NEKO_BOSS_HOLDER.get();
         RAVENN_ENTITY = RAVENN_HOLDER.get();
+        NOELLE_MAID_NEKO = NOELLE_MAID_NEKO_HOLDER.get();
     }
 }

@@ -63,6 +63,13 @@ public class ToNekoEntities {
                 FabricEntityType.Builder.createMob(RavennEntity::new, MobCategory.MONSTER, builder -> builder.defaultAttributes(RavennEntity::createRavennAttributes))
                         .sized(0.5f,1.7f).clientTrackingRange(8).build()
         );
+        NOELLE_MAID_NEKO = Registry.register(
+                BuiltInRegistries.ENTITY_TYPE,
+                NOELLE_MAID_NEKO_ID,
+                FabricEntityType.Builder.createMob(NoelleMaidNekoEntity::new, MobCategory.CREATURE, builder -> builder.defaultAttributes(NoelleMaidNekoEntity::createNoelleAttributes)
+                        )
+                        .sized(0.5f,1.7f).eyeHeight(1.6f).build()
+        );
 
         AMMUNITION_ENTITY = Registry.register(
                 BuiltInRegistries.ENTITY_TYPE,
@@ -78,8 +85,9 @@ public class ToNekoEntities {
         NekoSkinRegistry.register(GHOST_NEKO,GhostNekoEntity.nekoSkins);
         NekoSkinRegistry.register(FIGHTING_NEKO, FightingNekoEntity.NEKO_SKINS);
         NekoSkinRegistry.register(MOUFLET_NEKO_BOSS, MoufletNekoBoss.NEKO_SKINS);
+        NekoSkinRegistry.register(NOELLE_MAID_NEKO, FightingNekoEntity.NEKO_SKINS);
 
         // 注册群系生成（委托 common 方法）
-        registerBiomeSpawns(ADVENTURER_NEKO, GHOST_NEKO, CRYSTAL_NEKO, FIGHTING_NEKO);
+        registerBiomeSpawns(ADVENTURER_NEKO, GHOST_NEKO, CRYSTAL_NEKO, FIGHTING_NEKO, NOELLE_MAID_NEKO);
     }
 }

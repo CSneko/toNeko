@@ -37,6 +37,7 @@ public class ToNekoItems {
     public static DeferredHolder<Item,DeferredSpawnEggItem> ADVENTURER_NEKO_SPAWN_EGG_HOLDER;
     public static DeferredHolder<Item,DeferredSpawnEggItem> GHOST_NEKO_SPAWN_EGG_HOLDER;
     public static DeferredHolder<Item,DeferredSpawnEggItem> FIGHTING_NEKO_SPAWN_EGG_HOLDER;
+    public static DeferredHolder<Item,DeferredSpawnEggItem> NOELLE_MAID_NEKO_SPAWN_EGG_HOLDER;
     public static DeferredHolder<Item,NekoPotionItem> NEKO_POTION_HOLDER;
     public static DeferredHolder<Item,NekoCollectorItem> NEKO_COLLECTOR_HOLDER;
     public static DeferredHolder<Item,FurryBoheItem> FURRY_BOHE_HOLDER;
@@ -94,6 +95,7 @@ public class ToNekoItems {
         ADVENTURER_NEKO_SPAWN_EGG_HOLDER = ITEMS.register("adventurer_neko_spawn_egg",()->new DeferredSpawnEggItem(()->ToNekoEntities.ADVENTURER_NEKO_HOLDER.get(), 0x7e7e7e, 0xffffff,new Item.Properties()));
         GHOST_NEKO_SPAWN_EGG_HOLDER = ITEMS.register("ghost_neko_spawn_egg",()->new DeferredSpawnEggItem(()->ToNekoEntities.GHOST_NEKO_HOLDER.get(), 0x7e7e7e, 0xffffff,new Item.Properties()));
         FIGHTING_NEKO_SPAWN_EGG_HOLDER = ITEMS.register("fighting_neko_spawn_egg",()->new DeferredSpawnEggItem(()->ToNekoEntities.FIGHTING_NEKO_HOLDER.get(), 0x7e7e7e, 0xffffff,new Item.Properties()));
+        NOELLE_MAID_NEKO_SPAWN_EGG_HOLDER = ITEMS.register("noelle_maid_neko_spawn_egg",()->new DeferredSpawnEggItem(()->ToNekoEntities.NOELLE_MAID_NEKO_HOLDER.get(), 0xffc0cb, 0xffffff,new Item.Properties()));
 
         CATNIP_HOLDER = ITEMS.register("catnip", ()->new CatnipItem(new Item.Properties().component(DataComponents.FOOD,
                 new FoodProperties(2,1.0f,true,1.6f, Optional.empty(),
@@ -177,6 +179,7 @@ public class ToNekoItems {
                     event.accept(ADVENTURER_NEKO_SPAWN_EGG_HOLDER.get());
                     event.accept(GHOST_NEKO_SPAWN_EGG_HOLDER.get());
                     event.accept(FIGHTING_NEKO_SPAWN_EGG_HOLDER.get());
+                    event.accept(NOELLE_MAID_NEKO_SPAWN_EGG_HOLDER.get());
                     event.accept(CATNIP_HOLDER.get());
                     event.accept(CATNIP_SANDWICH_HOLDER.get());
                     event.accept(CATNIP_SEED_HOLDER.get());
@@ -232,6 +235,7 @@ public class ToNekoItems {
             event.accept(ADVENTURER_NEKO_SPAWN_EGG_HOLDER.get());
             event.accept(GHOST_NEKO_SPAWN_EGG_HOLDER.get());
             event.accept(FIGHTING_NEKO_SPAWN_EGG_HOLDER.get());
+            event.accept(NOELLE_MAID_NEKO_SPAWN_EGG_HOLDER.get());
             event.accept(PLOT_SCROLL_HOLDER.get());
             event.accept(CATNIP_HOLDER.get());
             event.accept(CATNIP_SANDWICH_HOLDER.get());

@@ -28,6 +28,7 @@ public class NekoScreenRegistry {
         register(FIGHTING_NEKO_ID, ScreenBuilders.COMMON_INTERACTION_SCREEN);
         register(MOUFLET_NEKO_BOSS_ID, ScreenBuilders.COMMON_INTERACTION_SCREEN);
         register(RAVENN_ID,ScreenBuilders.RAVENN_SCREEN);
+        register(NOELLE_MAID_NEKO_ID, ScreenBuilders.NOELLE_INTERACTION_SCREEN);
     }
 
 }

@@ -40,6 +40,7 @@ public class ToNekoClient implements ClientModInitializer {
         EntityRendererRegistry.register(ToNekoEntities.AMMUNITION_ENTITY, (EntityRendererProvider<? super AmmunitionEntity>) AmmunitionRenderer::new);
         EntityRendererRegistry.register(ToNekoEntities.MOUFLET_NEKO_BOSS, (EntityRendererProvider<? super MoufletNekoBoss>) NekoBossRenderer::new);
         EntityRendererRegistry.register(ToNekoEntities.RAVENN_ENTITY, (EntityRendererProvider<? super RavennEntity>) NekoRenderer::new);
+        EntityRendererRegistry.register(ToNekoEntities.NOELLE_MAID_NEKO, (EntityRendererProvider<? super NoelleMaidNekoEntity>) NekoRenderer::new);
 
         BlockRenderLayerMap.INSTANCE.putBlock(ToNekoBlocks.CATNIP, RenderType.cutout());
 

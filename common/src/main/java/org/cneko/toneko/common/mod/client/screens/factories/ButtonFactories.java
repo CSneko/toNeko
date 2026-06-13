@@ -17,6 +17,7 @@ import org.cneko.toneko.common.mod.client.screens.NekoScreenBuilder.ButtonFactor
 import org.cneko.toneko.common.mod.entities.CrystalNekoEntity;
 import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
+import org.cneko.toneko.common.mod.entities.NoelleMaidNekoEntity;
 import org.cneko.toneko.common.mod.items.ToNekoItems;
 import org.cneko.toneko.common.mod.packets.MateWithCrystalNekoPayload;
 import org.cneko.toneko.common.mod.packets.interactives.FollowOwnerPayload;
@@ -237,4 +238,36 @@ public class ButtonFactories {
     public static ButtonFactory LINKS_DISCORD_BUTTON = screen -> Button.builder(Component.translatable("screen.toneko.links.button.discord"),(btn)-> Util.getPlatform().openUri("https://discord.gg/hQ6Mm7wtt4"));
     public static ButtonFactory LINKS_BILIBILI_BUTTON = screen -> Button.builder(Component.translatable("screen.toneko.links.button.bilibili"),(btn)-> Util.getPlatform().openUri("https://space.bilibili.com/3461580710742160"));
     public static ButtonFactory LINKS_RAVENN_BILIBILI_BUTTON = screen -> Button.builder(Component.translatable("screen.toneko.links.button.ravenn_bilibili"),(btn)-> Util.getPlatform().openUri("https://space.bilibili.com/3546795212802660"));
+
+    // --------------------------------- 诺艾尔 ---------------------------------
+    /** 查看当前阶段 */
+    public static ButtonFactory NOELLE_STAGE_BUTTON = screen -> {
+        NekoEntity neko = screen.getNeko();
+        String stageName = neko instanceof NoelleMaidNekoEntity noelle
+                ? noelle.getStage().getDisplayName()
+                : neko.getName().getString();
+        String group = neko instanceof NoelleMaidNekoEntity noelle
+                ? noelle.getStage().getMessageGroup()
+                : "early";
+        return Button.builder(Component.translatable("screen.toneko.noelle_interactive.button.stage"), btn -> {
+            Player player = Minecraft.getInstance().player;
+            player.displayClientMessage(Component.translatable("message.toneko.noelle.stage.title", stageName), false);
+            player.displayClientMessage(Component.translatable("message.toneko.noelle.stage.desc." + group), false);
+        });
+    };
+
+    /** 聆听她的故事 */
+    public static ButtonFactory NOELLE_MEMORY_BUTTON = screen -> Button.builder(
+            Component.translatable("screen.toneko.noelle_interactive.button.memory"), btn -> {
+        Player player = Minecraft.getInstance().player;
+        TickTaskQueue messageQueue = new TickTaskQueue();
+        messageQueue.addTask(20,  () -> player.displayClientMessage(Component.translatable("message.toneko.noelle.memory.0"), false));
+        messageQueue.addTask(80,  () -> player.displayClientMessage(Component.translatable("message.toneko.noelle.memory.1"), false));
+        messageQueue.addTask(150, () -> player.displayClientMessage(Component.translatable("message.toneko.noelle.memory.2"), false));
+        messageQueue.addTask(220, () -> player.displayClientMessage(Component.translatable("message.toneko.noelle.memory.3"), false));
+        messageQueue.addTask(290, () -> player.displayClientMessage(Component.translatable("message.toneko.noelle.memory.4"), false));
+        messageQueue.addTask(360, () -> player.displayClientMessage(Component.translatable("message.toneko.noelle.memory.5"), false));
+        messageQueue.addTask(430, () -> player.displayClientMessage(Component.translatable("message.toneko.noelle.memory.6"), false));
+        TickTasks.addClient(messageQueue);
+    });
 }
