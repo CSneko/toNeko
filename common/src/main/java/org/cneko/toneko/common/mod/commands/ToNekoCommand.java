@@ -4,9 +4,13 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -20,6 +24,7 @@ import org.cneko.toneko.common.mod.commands.arguments.NekoArgument;
 import org.cneko.toneko.common.mod.commands.arguments.NekoSuggestionProvider;
 import org.cneko.toneko.common.mod.commands.arguments.WordSuggestionProvider;
 import org.cneko.toneko.common.mod.entities.INeko;
+import org.cneko.toneko.common.mod.packets.ToNekoManagementDataPayload;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -123,6 +128,11 @@ public class ToNekoCommand {
                                     .suggests(new NekoSuggestionProvider(true))
                                     .executes(ToNekoCommand::remove)
                             )
+                    )
+                    //-------------------------------------gui---------------------------------------------------
+                    .then(literal("gui")
+                            .requires(source -> has(source, Permissions.COMMAND_TONEKO_GUI) && source.isPlayer())
+                            .executes(ToNekoCommand::guiCommand)
                     )
                     //-------------------------------------help---------------------------------------------------
                     .then(literal("help")
@@ -294,5 +304,119 @@ public class ToNekoCommand {
             Bootstrap.LOGGER.error(e);
             return 1;
         }
+    }
+
+    // ---- GUI support ----
+
+    public static int guiCommand(CommandContext<CommandSourceStack> context) {
+        ServerPlayer player = context.getSource().getPlayer();
+        CompoundTag data = buildManagementData(player);
+        ServerPlayNetworking.send(player, new ToNekoManagementDataPayload(data));
+        return 1;
+    }
+
+    /**
+     * Build the CompoundTag with all management screen data for the given player.
+     */
+    public static CompoundTag buildManagementData(ServerPlayer player) {
+        CompoundTag data = new CompoundTag();
+        data.putBoolean("isNeko", player.isNeko());
+
+        // Pending incoming requests (as a neko: owners who sent requests to this player)
+        ListTag pendingRequests = new ListTag();
+        // Outgoing requests (as an owner: requests this player sent to nekos)
+        ListTag outgoingRequests = new ListTag();
+        for (Map.Entry<Player, Player> entry : ownerMap.entrySet()) {
+            Player owner = entry.getKey();
+            Player neko = entry.getValue();
+            if (neko.equals(player)) {
+                // Someone wants to own this player
+                CompoundTag req = new CompoundTag();
+                req.putUUID("uuid", owner.getUUID());
+                req.putString("name", owner.getName().getString());
+                pendingRequests.add(req);
+            }
+            if (owner.equals(player)) {
+                // This player has sent a request to someone
+                CompoundTag req = new CompoundTag();
+                req.putUUID("uuid", neko.getUUID());
+                req.putString("name", neko.getName().getString());
+                outgoingRequests.add(req);
+            }
+        }
+        data.put("pendingRequests", pendingRequests);
+        data.put("outgoingRequests", outgoingRequests);
+
+        // Owned nekos (players who have this player as an owner)
+        ListTag ownedNekos = new ListTag();
+        for (ServerPlayer onlinePlayer : player.getServer().getPlayerList().getPlayers()) {
+            if (onlinePlayer.isNeko() && onlinePlayer.hasOwner(player.getUUID())) {
+                CompoundTag nekoTag = new CompoundTag();
+                nekoTag.putUUID("uuid", onlinePlayer.getUUID());
+                nekoTag.putString("name", onlinePlayer.getName().getString());
+                INeko.Owner ownerData = onlinePlayer.getOwner(player.getUUID());
+                nekoTag.putInt("xp", ownerData != null ? ownerData.getXp() : 0);
+                ListTag aliases = new ListTag();
+                if (ownerData != null) {
+                    for (String alias : ownerData.getAliases()) {
+                        aliases.add(StringTag.valueOf(alias));
+                    }
+                }
+                nekoTag.put("aliases", aliases);
+                // Blocked words
+                ListTag blockedWords = new ListTag();
+                for (INeko.BlockedWord bw : onlinePlayer.getBlockedWords()) {
+                    CompoundTag bwTag = new CompoundTag();
+                    bwTag.putString("block", bw.block());
+                    bwTag.putString("replace", bw.replace());
+                    bwTag.putString("method", bw.method().name().toLowerCase());
+                    blockedWords.add(bwTag);
+                }
+                nekoTag.put("blockedWords", blockedWords);
+                ownedNekos.add(nekoTag);
+            }
+        }
+        data.put("ownedNekos", ownedNekos);
+
+        // My owners (if this player is a neko)
+        ListTag myOwners = new ListTag();
+        if (player.isNeko()) {
+            for (Map.Entry<UUID, INeko.Owner> entry : player.getOwners().entrySet()) {
+                CompoundTag ownerTag = new CompoundTag();
+                ownerTag.putUUID("uuid", entry.getKey());
+                // Try to get the owner's name
+                Player ownerPlayer = player.getServer().getPlayerList().getPlayer(entry.getKey());
+                ownerTag.putString("name", ownerPlayer != null ? ownerPlayer.getName().getString() : entry.getKey().toString());
+                ownerTag.putInt("xp", entry.getValue().getXp());
+                ListTag aliases = new ListTag();
+                for (String alias : entry.getValue().getAliases()) {
+                    aliases.add(StringTag.valueOf(alias));
+                }
+                ownerTag.put("aliases", aliases);
+                myOwners.add(ownerTag);
+            }
+        }
+        data.put("myOwners", myOwners);
+
+        // Online nekos (for sending new requests)
+        ListTag onlineNekos = new ListTag();
+        for (ServerPlayer onlinePlayer : player.getServer().getPlayerList().getPlayers()) {
+            if (onlinePlayer.isNeko() && !onlinePlayer.equals(player)) {
+                CompoundTag onlineTag = new CompoundTag();
+                onlineTag.putUUID("uuid", onlinePlayer.getUUID());
+                onlineTag.putString("name", onlinePlayer.getName().getString());
+                onlineNekos.add(onlineTag);
+            }
+        }
+        data.put("onlineNekos", onlineNekos);
+
+        return data;
+    }
+
+    /**
+     * Get the owner-neko request map (package-private for use by ToNekoNetworkEvents).
+     */
+    public static Map<Player, Player> getOwnerMap() {
+        return ownerMap;
     }
 }

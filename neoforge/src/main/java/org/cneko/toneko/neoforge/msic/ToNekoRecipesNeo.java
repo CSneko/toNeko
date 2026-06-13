@@ -1,27 +1,38 @@
 package org.cneko.toneko.neoforge.msic;
 
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.RegisterEvent;
 import org.cneko.toneko.common.mod.recipes.NekoAggregatorRecipe;
 
 import static org.cneko.toneko.common.mod.recipes.ToNekoRecipes.*;
-import static org.cneko.toneko.neoforge.ToNekoNeoForge.RECIPE_TYPES;
-import static org.cneko.toneko.neoforge.ToNekoNeoForge.RECIPE_SERIALIZERS;
+import static org.cneko.toneko.common.mod.util.ResourceLocationUtil.toNekoLoc;
+
 public class ToNekoRecipesNeo {
-    static DeferredHolder<RecipeType<?>,RecipeType<NekoAggregatorRecipe>> NEKO_AGGREGATOR_HOLDER;
-    static DeferredHolder<RecipeSerializer<?>,RecipeSerializer<NekoAggregatorRecipe>> NEKO_AGGREGATOR_SERIALIZER_HOLDER;
-    public static void init(){
-        NEKO_AGGREGATOR_HOLDER = RECIPE_TYPES.register("neko_aggregator", ()-> new RecipeType<>() {
+    public static void init(IEventBus bus){
+        // 立即创建对象并赋值，避免后续调用时静态字段为 null
+        NEKO_AGGREGATOR = new RecipeType<NekoAggregatorRecipe>() {
             public String toString() {
                 return "neko_aggregator";
             }
+        };
+        NEKO_AGGREGATOR_SERIALIZER = new NekoAggregatorRecipe.Serializer();
+        // 延迟到 RegisterEvent 再注册到原版注册表
+        bus.addListener(ToNekoRecipesNeo::onRegisterRecipes);
+    }
+
+    public static void onRegisterRecipes(RegisterEvent event) {
+        event.register(Registries.RECIPE_TYPE, helper -> {
+            helper.register(toNekoLoc("neko_aggregator"), NEKO_AGGREGATOR);
         });
-        NEKO_AGGREGATOR_SERIALIZER_HOLDER = RECIPE_SERIALIZERS.register("neko_aggregator", NekoAggregatorRecipe.Serializer::new);
+        event.register(Registries.RECIPE_SERIALIZER, helper -> {
+            helper.register(toNekoLoc("neko_aggregator"), NEKO_AGGREGATOR_SERIALIZER);
+        });
     }
 
     public static void reg(){
-        NEKO_AGGREGATOR = NEKO_AGGREGATOR_HOLDER.get();
-        NEKO_AGGREGATOR_SERIALIZER = NEKO_AGGREGATOR_SERIALIZER_HOLDER.get();
+        // 已在 init 中赋值，无需额外操作
     }
 }

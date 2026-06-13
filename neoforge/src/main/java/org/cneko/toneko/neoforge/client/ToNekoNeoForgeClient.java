@@ -71,6 +71,10 @@ public class ToNekoNeoForgeClient {
                 ToNekoEntities.MOUFLET_NEKO_BOSS_HOLDER.get(),
                 NekoBossRenderer::new
         );
+        event.registerEntityRenderer(
+                ToNekoEntities.RAVENN_HOLDER.get(),
+                NekoRenderer::new
+        );
     }
 
     @SubscribeEvent

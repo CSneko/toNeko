@@ -12,8 +12,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.cneko.toneko.common.mod.entities.INeko;
 
+import net.minecraft.world.phys.Vec3;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class EntityUtil {
     /**
@@ -34,14 +37,56 @@ public class EntityUtil {
     }
 
 
-    // 从范围获取实体
+    // 从范围获取最近的实体
     public static LivingEntity findNearestEntityInRange(Entity entity, Level world, float radius) {
         List<LivingEntity> entities = getLivingEntitiesInRange(entity, world, radius);
-
-        for (LivingEntity entity1 : entities) {
-            return entity1;
+        LivingEntity nearest = null;
+        double nearestDist = Double.MAX_VALUE;
+        for (LivingEntity e : entities) {
+            if (e != entity) {
+                double dist = entity.distanceToSqr(e);
+                if (dist < nearestDist) {
+                    nearestDist = dist;
+                    nearest = e;
+                }
+            }
         }
-        return null;
+        return nearest;
+    }
+
+    /**
+     * 获取玩家视线指向的实体（射线检测）
+     * @param entity 射线起点实体（通常是玩家）
+     * @param world 所在世界
+     * @param reach 射线最大距离
+     * @return 视线命中的最近实体，若无则返回 null
+     */
+    public static LivingEntity findLookedAtEntity(Entity entity, Level world, double reach) {
+        Vec3 eyePos = entity.getEyePosition();
+        Vec3 lookVec = entity.getLookAngle();
+        Vec3 reachPos = eyePos.add(lookVec.x * reach, lookVec.y * reach, lookVec.z * reach);
+
+        // 粗筛：reach 范围内的所有实体
+        AABB searchBox = entity.getBoundingBox().inflate(reach);
+        List<LivingEntity> entities = world.getEntitiesOfClass(LivingEntity.class, searchBox,
+                e -> e != entity && e.isAlive());
+
+        LivingEntity closest = null;
+        double closestDist = reach;
+
+        for (LivingEntity e : entities) {
+            AABB entityBox = e.getBoundingBox().inflate(0.2);
+            Optional<Vec3> hit = entityBox.clip(eyePos, reachPos);
+            if (hit.isPresent()) {
+                double dist = eyePos.distanceToSqr(hit.get());
+                if (dist < closestDist * closestDist) {
+                    closestDist = Math.sqrt(dist);
+                    closest = e;
+                }
+            }
+        }
+
+        return closest;
     }
 
     // 获取范围内所有LivingEntity

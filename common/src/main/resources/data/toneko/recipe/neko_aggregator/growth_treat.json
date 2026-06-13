@@ -1,0 +1,25 @@
+{
+  "type": "toneko:neko_aggregator",
+  "key": {
+    "I": {
+      "item": "toneko:neko_ingot"
+    },
+    "C": {
+      "item": "toneko:catnip"
+    },
+    "M": {
+      "item": "minecraft:milk_bucket"
+    }
+  },
+
+  "pattern": [
+    "ICI",
+    "CMC",
+    "ICI"
+  ],
+  "energy": 500.0,
+  "result": {
+    "id": "toneko:growth_treat",
+    "count": 1
+  }
+}

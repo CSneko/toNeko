@@ -16,19 +16,21 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.common.NeoForge;
 import org.cneko.toneko.common.Bootstrap;
 import org.cneko.toneko.common.mod.ModBootstrap;
 import org.cneko.toneko.common.mod.ModMeta;
-import org.cneko.toneko.common.mod.commands.NekoCommand;
-import org.cneko.toneko.common.mod.commands.QuirkCommand;
-import org.cneko.toneko.common.mod.commands.ToNekoAdminCommand;
-import org.cneko.toneko.common.mod.commands.ToNekoCommand;
+import org.cneko.toneko.common.mod.commands.*;
 import org.cneko.toneko.common.mod.events.ToNekoEvents;
 import org.cneko.toneko.common.mod.events.ToNekoNetworkEvents;
+import org.cneko.toneko.common.mod.genetics.api.GeneticsDataLoader;
 import org.cneko.toneko.common.mod.impl.FabricLanguageImpl;
 import org.cneko.toneko.common.mod.packets.ToNekoPackets;
-import org.cneko.toneko.common.mod.recipes.ToNekoMenuTypes;
+import org.cneko.toneko.common.mod.quirks.ToNekoQuirks;
+import org.cneko.toneko.common.mod.util.PermissionUtil;
 import org.cneko.toneko.common.util.LanguageUtil;
 import org.cneko.toneko.neoforge.entities.ToNekoEntities;
 import org.cneko.toneko.neoforge.items.ToNekoArmorMaterials;
@@ -79,13 +81,20 @@ public final class ToNekoNeoForge {
         ToNekoBlocks.init();
         ToNekoAttributes.init();
         ToNekoCriteriaNeoForge.init();
-        ToNekoRecipesNeo.init();
-        ToNekoMenuTypesNeo.init();
+        ToNekoRecipesNeo.init(bus);
+        ToNekoMenuTypesNeo.init(bus);
+        // 注册Quirks
+        ToNekoQuirks.init();
         bus.addListener(ToNekoAttributes::onRegisterAttributes);
         bus.addListener(ToNekoAttributes::registerAttributes);
+        bus.addListener(ToNekoEntities::onCreatureSpawn);
         ToNekoEvents.init();
         ToNekoEntities.init();
-        //bus.addListener(ToNekoEntities::onCreatureSpawn);
+
+        // 注册遗传学数据包加载器（支持 /reload 热重载）
+        NeoForge.EVENT_BUS.addListener(AddReloadListenerEvent.class, event -> {
+            event.addListener(new GeneticsDataLoader());
+        });
 
         // 注册网络数据包
         ToNekoPackets.init();
@@ -95,12 +104,25 @@ public final class ToNekoNeoForge {
         NekoCommand.init();
         QuirkCommand.init();
         ToNekoAdminCommand.init();
+        GeneticsCommand.init();
 
         // 注册权限
-        // PermissionUtil.init();
+        PermissionUtil.init();
+
+        // 在所有注册表完成后：解析 DeferredRegister 值并注册群系生成
+        bus.addListener(FMLLoadCompleteEvent.class, event -> {
+            ToNekoItems.reg();
+            // 调用 common 中的群系生成注册（使用 FFAPI 桥接的 BiomeModifications）
+            org.cneko.toneko.common.mod.entities.ToNekoEntities.registerBiomeSpawns(
+                    ToNekoEntities.ADVENTURER_NEKO_HOLDER.get(),
+                    ToNekoEntities.GHOST_NEKO_HOLDER.get(),
+                    ToNekoEntities.CRYSTAL_NEKO_HOLDER.get(),
+                    ToNekoEntities.FIGHTING_NEKO_HOLDER.get()
+            );
+        });
+
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             ModMeta.INSTANCE.setServer(server);
-            ToNekoItems.reg();
         });
     }
 

@@ -12,6 +12,7 @@ import org.cneko.toneko.common.mod.client.ToNekoKeyBindings;
 import org.cneko.toneko.common.mod.client.api.ClientEntityPoseManager;
 import org.cneko.toneko.common.mod.client.screens.NekoInfoScreen;
 import org.cneko.toneko.common.mod.client.screens.RouletteScreen;
+import org.cneko.toneko.common.mod.client.screens.ToNekoHubScreen;
 import org.cneko.toneko.common.mod.packets.interactives.DismountPassengerPayload;
 import org.cneko.toneko.common.mod.util.EntityUtil;
 
@@ -62,6 +63,12 @@ public class ClientTickEvent {
             if (player != null && !player.getPassengers().isEmpty()) {
                 ClientPlayNetworking.send(new DismountPassengerPayload());
             }
+        }
+        while (ToNekoKeyBindings.TONEKO_MANAGEMENT_KEY.consumeClick()) {
+            client.player.connection.sendUnsignedCommand("toneko gui");
+        }
+        while (ToNekoKeyBindings.HUB_KEY.consumeClick()) {
+            ToNekoHubScreen.open();
         }
     }
 

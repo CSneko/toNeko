@@ -34,7 +34,15 @@ public class NekoInfoScreen extends Screen {
         this.addRenderableWidget(Button.builder(
                 Component.translatable("gui.back"),
                 button -> this.onClose()
-        ).bounds(cx - 50, this.height - 30, 100, 20).build());
+        ).bounds(cx - 100, this.height - 30, 90, 20).build());
+        this.addRenderableWidget(Button.builder(
+                Component.translatable("screen.toneko.neko_info.management"),
+                button -> {
+                    if (Minecraft.getInstance().player != null) {
+                        Minecraft.getInstance().player.connection.sendUnsignedCommand("toneko gui");
+                    }
+                }
+        ).bounds(cx + 10, this.height - 30, 90, 20).build());
     }
 
     @Override

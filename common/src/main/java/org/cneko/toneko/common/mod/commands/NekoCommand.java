@@ -125,8 +125,12 @@ public class NekoCommand {
     public static int rideCommand(CommandContext<CommandSourceStack> context) {
         Entity entity = context.getSource().getEntity();
         ServerLevel world = (ServerLevel) entity.level();
-        float radius = 3.0f;
-        LivingEntity target = EntityUtil.findNearestEntityInRange(entity, world, radius);
+        // 优先选择玩家视线指向的实体
+        LivingEntity target = EntityUtil.findLookedAtEntity(entity, world, 5.0);
+        // 若未命中，则选择范围内最近的实体
+        if (target == null) {
+            target = EntityUtil.findNearestEntityInRange(entity, world, 3.0f);
+        }
 
         handleRiding(entity, target, false);
         return 1;
@@ -135,8 +139,12 @@ public class NekoCommand {
     private static int rideHeadCommand(CommandContext<CommandSourceStack> context) {
         Entity entity = context.getSource().getEntity();
         ServerLevel world = (ServerLevel) entity.level();
-        float radius = 3.0f;
-        LivingEntity target = EntityUtil.findNearestEntityInRange(entity, world, radius);
+        // 优先选择玩家视线指向的实体
+        LivingEntity target = EntityUtil.findLookedAtEntity(entity, world, 5.0);
+        // 若未命中，则选择范围内最近的实体
+        if (target == null) {
+            target = EntityUtil.findNearestEntityInRange(entity, world, 3.0f);
+        }
 
         handleRiding(entity, target, true);
         return 1;

@@ -3,6 +3,7 @@ package org.cneko.toneko.common.mod.client.events;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -84,6 +85,15 @@ public class ClientNetworkEvents {
 
         ClientPlayNetworking.registerGlobalReceiver(OpenNekoInfoScreenPayload.ID, (payload, context) -> context.client().execute(() -> {
             NekoInfoScreen.open();
+        }));
+
+        ClientPlayNetworking.registerGlobalReceiver(ToNekoManagementDataPayload.ID, (payload, context) -> context.client().execute(() -> {
+            Screen currentScreen = Minecraft.getInstance().screen;
+            if (currentScreen instanceof ToNekoManagementScreen tms) {
+                tms.handleDataUpdate(payload.data());
+            } else {
+                Minecraft.getInstance().setScreen(new ToNekoManagementScreen(payload.data(), currentScreen));
+            }
         }));
 
         ClientPlayNetworking.registerGlobalReceiver(GenomeDataPayload.ID, (payload, context) -> {

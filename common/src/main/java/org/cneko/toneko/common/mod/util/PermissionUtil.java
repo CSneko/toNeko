@@ -44,6 +44,7 @@ public class PermissionUtil {
         register(COMMAND_TONEKO_XP);
         register(COMMAND_TONEKO_REMOVE);
         register(COMMAND_TONEKO_HELP);
+        register(COMMAND_TONEKO_GUI);
         register(COMMAND_NEKO_SPEED);
         register(COMMAND_NEKO_VISION);
         register(COMMAND_NEKO_JUMP);

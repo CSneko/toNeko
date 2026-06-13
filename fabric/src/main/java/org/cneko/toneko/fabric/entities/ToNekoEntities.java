@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.level.biome.Biomes;
 import org.cneko.toneko.common.mod.api.NekoNameRegistry;
 import org.cneko.toneko.common.mod.api.NekoSkinRegistry;
 import org.cneko.toneko.common.mod.entities.*;
@@ -78,21 +79,7 @@ public class ToNekoEntities {
         NekoSkinRegistry.register(FIGHTING_NEKO, FightingNekoEntity.NEKO_SKINS);
         NekoSkinRegistry.register(MOUFLET_NEKO_BOSS, MoufletNekoBoss.NEKO_SKINS);
 
-        /*
-        不知道为什么喵，我测试的时候总是不生成，真的好奇怪的问题
-        后来测试了很多次喵，都没生成
-        这个我也是改来改去的喵，就是很奇怪
-        哪怕我看了其它模组的代码，和我的似乎也差不多，但是我的就是不生成喵
-        太她喵的奇怪了！
-        但是喵...
-        重新创建了个世界，它生成了喵！好逆天的Bug喵！
-         */
-        // 设置生成条件
-        BiomeModifications.addSpawn(BiomeSelectors.tag(BiomeTags.IS_MOUNTAIN).or(BiomeSelectors.tag(BiomeTags.IS_FOREST)), MobCategory.CREATURE, ADVENTURER_NEKO, 5, 1, 1); // 在主世界的高山会生成一只
-        BiomeModifications.addSpawn(BiomeSelectors.tag(BiomeTags.ALLOWS_SURFACE_SLIME_SPAWNS).or(BiomeSelectors.tag(BiomeTags.HAS_JUNGLE_TEMPLE)).or(BiomeSelectors.tag(BiomeTags.HAS_NETHER_FOSSIL)), MobCategory.CREATURE, GHOST_NEKO, 5, 1, 1); // 与史莱姆一起生成
-        if (ConfigUtil.IS_BIRTHDAY){
-            BiomeModifications.addSpawn(BiomeSelectors.all(), MobCategory.CREATURE, CRYSTAL_NEKO, 10, 1, 4); // 在所有世界生成一只
-        }
-        BiomeModifications.addSpawn(BiomeSelectors.tag(BiomeTags.IS_NETHER).or(BiomeSelectors.tag(BiomeTags.HAS_ANCIENT_CITY)), MobCategory.CREATURE, FIGHTING_NEKO, 5, 0, 1);
+        // 注册群系生成（委托 common 方法）
+        registerBiomeSpawns(ADVENTURER_NEKO, GHOST_NEKO, CRYSTAL_NEKO, FIGHTING_NEKO);
     }
 }

@@ -3,6 +3,7 @@ package org.cneko.toneko.neoforge.items;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemNameBlockItem;
@@ -14,6 +15,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import org.cneko.toneko.common.mod.items.*;
 import org.cneko.toneko.common.mod.items.ammo.ExplosiveBombItem;
 import org.cneko.toneko.common.mod.items.ammo.LightningBombItem;
+import org.cneko.toneko.common.mod.items.ammo.NekoEnergyBombItem;
 import org.cneko.toneko.common.mod.misc.ToNekoSongs;
 import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.neoforge.ToNekoNeoForge;
@@ -53,6 +55,23 @@ public class ToNekoItems {
     public static DeferredHolder<Item,Item> CONTRACT_HOLDER;
     public static DeferredHolder<Item,Item> NEKO_AGGREGATOR_ITEM_HOLDER;
     public static DeferredHolder<Item,Item> NEKO_INGOT_HOLDER;
+    public static DeferredHolder<Item,GrowthTreatItem> GROWTH_TREAT_HOLDER;
+    public static DeferredHolder<Item,DeageTreatItem> DEAGE_TREAT_HOLDER;
+    public static DeferredHolder<Item,CatnipItem> INFINITE_CATNIP_HOLDER;
+    public static DeferredHolder<Item,NekoEnergyBombItem> NEKO_ENERGY_BOMB_HOLDER;
+    public static DeferredHolder<Item,BlockItem> NEKO_BLOCK_HOLDER;
+    public static DeferredHolder<Item,Item> NEKO_DIAMOND_HOLDER;
+    public static DeferredHolder<Item,BlockItem> NEKO_DIAMOND_BLOCK_HOLDER;
+    public static DeferredHolder<Item,Item> NEKO_CRYSTAL_HOLDER;
+    public static DeferredHolder<Item,NekoEnergyStorageItem> NEKO_ENERGY_STORAGE_SMALL_HOLDER;
+    public static DeferredHolder<Item,NekoEnergyStorageItem> NEKO_ENERGY_STORAGE_SMALL_CHARGED_HOLDER;
+    public static DeferredHolder<Item,NekoEnergyStorageItem> NEKO_ENERGY_STORAGE_MEDIUM_HOLDER;
+    public static DeferredHolder<Item,NekoEnergyStorageItem> NEKO_ENERGY_STORAGE_MEDIUM_CHARGED_HOLDER;
+    public static DeferredHolder<Item,NekoEnergyStorageItem> NEKO_ENERGY_STORAGE_LARGE_HOLDER;
+    public static DeferredHolder<Item,NekoEnergyStorageItem> NEKO_ENERGY_STORAGE_LARGE_CHARGED_HOLDER;
+    public static DeferredHolder<Item,NekoEnergyBurstItem> NEKO_ENERGY_BURST_HOLDER;
+    public static DeferredHolder<Item,GeneEditorItem> GENE_EDITOR_HOLDER;
+    public static DeferredHolder<Item,NekoArmor.NekoPawsItem> NEKO_PAWS_HOLDER;
 
     public static void init() {
         registerWithOutConfig();
@@ -105,7 +124,45 @@ public class ToNekoItems {
 
         NEKO_INGOT_HOLDER = ITEMS.register("neko_ingot",()->new Item(new Item.Properties()));
 
-        ITEMS.register(NekoArmor.NekoPawsItem.ID, ()->new NekoArmor.NekoPawsItem(ToNekoArmorMaterials.NEKO)); // 此物品暂不添加
+        GROWTH_TREAT_HOLDER = ITEMS.register("growth_treat", ()->new GrowthTreatItem(new Item.Properties().component(DataComponents.FOOD,
+                new FoodProperties(4, 2.0f, false, 1.6f, Optional.empty(),
+                        List.of()
+                )).rarity(Rarity.UNCOMMON)));
+
+        DEAGE_TREAT_HOLDER = ITEMS.register("deage_treat", ()->new DeageTreatItem(new Item.Properties().component(DataComponents.FOOD,
+                new FoodProperties(4, 2.0f, false, 1.6f, Optional.empty(),
+                        List.of()
+                )).rarity(Rarity.UNCOMMON)));
+
+        NEKO_PAWS_HOLDER = ITEMS.register(NekoArmor.NekoPawsItem.ID, ()->new NekoArmor.NekoPawsItem(ToNekoArmorMaterials.NEKO));
+
+        INFINITE_CATNIP_HOLDER = ITEMS.register("infinite_catnip", ()->new CatnipItem.InfiniteCatnipItem(new Item.Properties().component(DataComponents.FOOD,new FoodProperties(2,1.0f,false,1.6f, Optional.empty(),List.of())).rarity(Rarity.UNCOMMON)));
+
+        NEKO_ENERGY_BOMB_HOLDER = ITEMS.register("energy_bomb", NekoEnergyBombItem::new);
+
+        NEKO_BLOCK_HOLDER = ITEMS.register("neko_block", ()->new BlockItem(ToNekoBlocks.NEKO_BLOCK_HOLDER.get(), new Item.Properties()));
+
+        NEKO_DIAMOND_HOLDER = ITEMS.register("neko_diamond", ()->new Item(new Item.Properties()));
+
+        NEKO_DIAMOND_BLOCK_HOLDER = ITEMS.register("neko_diamond_block", ()->new BlockItem(ToNekoBlocks.NEKO_DIAMOND_BLOCK_HOLDER.get(), new Item.Properties()));
+
+        NEKO_CRYSTAL_HOLDER = ITEMS.register("neko_crystal", ()->new Item(new Item.Properties()));
+
+        NEKO_ENERGY_STORAGE_SMALL_HOLDER = ITEMS.register("neko_energy_storage_small", ()->new NekoEnergyStorageItem(150,false));
+
+        NEKO_ENERGY_STORAGE_SMALL_CHARGED_HOLDER = ITEMS.register("neko_energy_storage_small_charged", ()->new NekoEnergyStorageItem(150,true));
+
+        NEKO_ENERGY_STORAGE_MEDIUM_HOLDER = ITEMS.register("neko_energy_storage_medium", ()->new NekoEnergyStorageItem(400,false));
+
+        NEKO_ENERGY_STORAGE_MEDIUM_CHARGED_HOLDER = ITEMS.register("neko_energy_storage_medium_charged", ()->new NekoEnergyStorageItem(400,true));
+
+        NEKO_ENERGY_STORAGE_LARGE_HOLDER = ITEMS.register("neko_energy_storage_large", ()->new NekoEnergyStorageItem(1000,false));
+
+        NEKO_ENERGY_STORAGE_LARGE_CHARGED_HOLDER = ITEMS.register("neko_energy_storage_large_charged", ()->new NekoEnergyStorageItem(1000,true));
+
+        NEKO_ENERGY_BURST_HOLDER = ITEMS.register("neko_energy_burst", ()->new NekoEnergyBurstItem(2f,3f,50f));
+
+        GENE_EDITOR_HOLDER = ITEMS.register("gene_editor", ()->new GeneEditorItem(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)));
 
         // 注册物品组
         TONEKO_ITEM_GROUP_HOLDER = ToNekoNeoForge.CREATIVE_MODE_TABS.register("toneko_group", ()-> CreativeModeTab.builder()
@@ -133,6 +190,23 @@ public class ToNekoItems {
                     // event.accept(PLOT_SCROLL_HOLDER.get());
                     event.accept(CONTRACT_HOLDER.get());
                     event.accept(NEKO_AGGREGATOR_ITEM_HOLDER.get());
+                    event.accept(NEKO_INGOT_HOLDER.get());
+                    event.accept(NEKO_BLOCK_HOLDER.get());
+                    event.accept(NEKO_DIAMOND_HOLDER.get());
+                    event.accept(NEKO_DIAMOND_BLOCK_HOLDER.get());
+                    event.accept(NEKO_CRYSTAL_HOLDER.get());
+                    event.accept(NEKO_ENERGY_STORAGE_SMALL_HOLDER.get());
+                    event.accept(NEKO_ENERGY_STORAGE_SMALL_CHARGED_HOLDER.get());
+                    event.accept(NEKO_ENERGY_STORAGE_MEDIUM_HOLDER.get());
+                    event.accept(NEKO_ENERGY_STORAGE_MEDIUM_CHARGED_HOLDER.get());
+                    event.accept(NEKO_ENERGY_STORAGE_LARGE_HOLDER.get());
+                    event.accept(NEKO_ENERGY_STORAGE_LARGE_CHARGED_HOLDER.get());
+                    event.accept(NEKO_ENERGY_BURST_HOLDER.get());
+                    event.accept(GENE_EDITOR_HOLDER.get());
+                    event.accept(INFINITE_CATNIP_HOLDER.get());
+                    event.accept(NEKO_ENERGY_BOMB_HOLDER.get());
+                    event.accept(GROWTH_TREAT_HOLDER.get());
+                    event.accept(DEAGE_TREAT_HOLDER.get());
                 })
                 .build()
         );
@@ -174,18 +248,36 @@ public class ToNekoItems {
             event.accept(CONTRACT_HOLDER.get());
             event.accept(NEKO_AGGREGATOR_ITEM_HOLDER.get());
             event.accept(NEKO_INGOT_HOLDER.get());
+            event.accept(NEKO_BLOCK_HOLDER.get());
+            event.accept(NEKO_DIAMOND_HOLDER.get());
+            event.accept(NEKO_DIAMOND_BLOCK_HOLDER.get());
+            event.accept(NEKO_CRYSTAL_HOLDER.get());
+            event.accept(NEKO_ENERGY_STORAGE_SMALL_HOLDER.get());
+            event.accept(NEKO_ENERGY_STORAGE_SMALL_CHARGED_HOLDER.get());
+            event.accept(NEKO_ENERGY_STORAGE_MEDIUM_HOLDER.get());
+            event.accept(NEKO_ENERGY_STORAGE_MEDIUM_CHARGED_HOLDER.get());
+            event.accept(NEKO_ENERGY_STORAGE_LARGE_HOLDER.get());
+            event.accept(NEKO_ENERGY_STORAGE_LARGE_CHARGED_HOLDER.get());
+            event.accept(NEKO_ENERGY_BURST_HOLDER.get());
+            event.accept(GENE_EDITOR_HOLDER.get());
+            event.accept(INFINITE_CATNIP_HOLDER.get());
+            event.accept(NEKO_ENERGY_BOMB_HOLDER.get());
+            event.accept(GROWTH_TREAT_HOLDER.get());
+            event.accept(DEAGE_TREAT_HOLDER.get());
         }
         reg();
     }
 
     public static void reg(){
         CATNIP = CATNIP_HOLDER.get();
+        INFINITE_CATNIP = INFINITE_CATNIP_HOLDER.get();
         CATNIP_SANDWICH = CATNIP_SANDWICH_HOLDER.get();
         CATNIP_SEED = CATNIP_SEED_HOLDER.get();
         NEKO_COLLECTOR = NEKO_COLLECTOR_HOLDER.get();
         FURRY_BOHE = FURRY_BOHE_HOLDER.get();
         NEKO_TAIL = NEKO_TAIL_HOLDER.get();
         NEKO_EARS = NEKO_EARS_HOLDER.get();
+        NEKO_PAWS = NEKO_PAWS_HOLDER.get();
         NEKO_POTION = NEKO_POTION_HOLDER.get();
         MUSIC_DISC_KAWAII = MUSIC_DISC_KAWAII_HOLDER.get();
         MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP = MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP_HOLDER.get();
@@ -193,9 +285,24 @@ public class ToNekoItems {
         PLOT_SCROLL = PLOT_SCROLL_HOLDER.get();
         LIGHTNING_BOMB = LIGHTNING_BOMB_HOLDER.get();
         EXPLOSIVE_BOMB = EXPLOSIVE_BOMB_HOLDER.get();
+        ENERGY_BOMB = NEKO_ENERGY_BOMB_HOLDER.get();
         CONTRACT = CONTRACT_HOLDER.get();
         NEKO_AGGREGATOR_ITEM = NEKO_AGGREGATOR_ITEM_HOLDER.get();
         NEKO_INGOT = NEKO_INGOT_HOLDER.get();
+        NEKO_BLOCK = NEKO_BLOCK_HOLDER.get();
+        NEKO_DIAMOND = NEKO_DIAMOND_HOLDER.get();
+        NEKO_DIAMOND_BLOCK = NEKO_DIAMOND_BLOCK_HOLDER.get();
+        NEKO_CRYSTAL = NEKO_CRYSTAL_HOLDER.get();
+        NEKO_ENERGY_STORAGE_SMALL = NEKO_ENERGY_STORAGE_SMALL_HOLDER.get();
+        NEKO_ENERGY_STORAGE_SMALL_CHARGED = NEKO_ENERGY_STORAGE_SMALL_CHARGED_HOLDER.get();
+        NEKO_ENERGY_STORAGE_MEDIUM = NEKO_ENERGY_STORAGE_MEDIUM_HOLDER.get();
+        NEKO_ENERGY_STORAGE_MEDIUM_CHARGED = NEKO_ENERGY_STORAGE_MEDIUM_CHARGED_HOLDER.get();
+        NEKO_ENERGY_STORAGE_LARGE = NEKO_ENERGY_STORAGE_LARGE_HOLDER.get();
+        NEKO_ENERGY_STORAGE_LARGE_CHARGED = NEKO_ENERGY_STORAGE_LARGE_CHARGED_HOLDER.get();
+        NEKO_ENERGY_BURST = NEKO_ENERGY_BURST_HOLDER.get();
+        GENE_EDITOR = GENE_EDITOR_HOLDER.get();
+        GROWTH_TREAT = GROWTH_TREAT_HOLDER.get();
+        DEAGE_TREAT = DEAGE_TREAT_HOLDER.get();
         ToNekoEffectNeoForge.reg();
         ToNekoBlocks.reg();
         ToNekoEntities.reg();

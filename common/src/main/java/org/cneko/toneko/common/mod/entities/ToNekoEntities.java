@@ -6,6 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.level.biome.Biomes;
 import org.cneko.toneko.common.mod.api.NekoNameRegistry;
 import org.cneko.toneko.common.mod.api.NekoSkinRegistry;
 import org.cneko.toneko.common.mod.entities.boss.mouflet.MoufletNekoBoss;
@@ -96,6 +97,83 @@ public class ToNekoEntities {
                 ()-> EntityType.Builder.of(RavennEntity::new,MobCategory.CREATURE)
                         .sized(0.5f,1.7f).clientTrackingRange(8)
                         .build("ravenn");
+    }
+
+    /**
+     * 注册猫娘在各群系的生成规则。由各平台的实体注册完成后调用。
+     * 使用 Fabric API 的 BiomeModifications，在 NeoForge 上通过 FFAPI 桥接。
+     */
+    public static void registerBiomeSpawns(
+            EntityType<AdventurerNeko> adventurer,
+            EntityType<GhostNekoEntity> ghost,
+            EntityType<CrystalNekoEntity> crystal,
+            EntityType<FightingNekoEntity> fighting) {
+
+        // ===== 冒险猫娘：广泛群系 =====
+        BiomeModifications.addSpawn(
+                BiomeSelectors.tag(BiomeTags.IS_MOUNTAIN)
+                        .or(BiomeSelectors.tag(BiomeTags.IS_FOREST))
+                        .or(BiomeSelectors.tag(BiomeTags.IS_TAIGA))
+                        .or(BiomeSelectors.tag(BiomeTags.IS_JUNGLE))
+                        .or(BiomeSelectors.tag(BiomeTags.IS_SAVANNA))
+                        .or(BiomeSelectors.includeByKey(Biomes.PLAINS))
+                        .or(BiomeSelectors.tag(BiomeTags.IS_RIVER))
+                        .or(BiomeSelectors.tag(BiomeTags.IS_BEACH))
+                        .or(BiomeSelectors.tag(BiomeTags.IS_HILL)),
+                MobCategory.CREATURE, adventurer,
+                35, 2, 5
+        );
+        // 冒险猫娘：樱花林等花海超高刷新
+        BiomeModifications.addSpawn(
+                BiomeSelectors.includeByKey(Biomes.CHERRY_GROVE)
+                        .or(BiomeSelectors.includeByKey(Biomes.FLOWER_FOREST))
+                        .or(BiomeSelectors.includeByKey(Biomes.SUNFLOWER_PLAINS))
+                        .or(BiomeSelectors.includeByKey(Biomes.MEADOW)),
+                MobCategory.CREATURE, adventurer,
+                60, 3, 7
+        );
+
+        // ===== 幽灵猫娘 =====
+        BiomeModifications.addSpawn(
+                BiomeSelectors.tag(BiomeTags.ALLOWS_SURFACE_SLIME_SPAWNS)
+                        .or(BiomeSelectors.tag(BiomeTags.IS_FOREST))
+                        .or(BiomeSelectors.tag(BiomeTags.IS_TAIGA)),
+                MobCategory.CREATURE, ghost,
+                25, 1, 3
+        );
+        // 幽灵猫娘：樱花林/黑森林/红树林
+        BiomeModifications.addSpawn(
+                BiomeSelectors.includeByKey(Biomes.CHERRY_GROVE)
+                        .or(BiomeSelectors.includeByKey(Biomes.DARK_FOREST))
+                        .or(BiomeSelectors.includeByKey(Biomes.MANGROVE_SWAMP)),
+                MobCategory.CREATURE, ghost,
+                40, 1, 4
+        );
+
+        // ===== 水晶猫娘（生日限定）=====
+        if (ConfigUtil.IS_BIRTHDAY) {
+            BiomeModifications.addSpawn(
+                    BiomeSelectors.foundInOverworld(),
+                    MobCategory.CREATURE, crystal,
+                    45, 3, 7
+            );
+            BiomeModifications.addSpawn(
+                    BiomeSelectors.includeByKey(Biomes.CHERRY_GROVE)
+                            .or(BiomeSelectors.includeByKey(Biomes.FLOWER_FOREST))
+                            .or(BiomeSelectors.includeByKey(Biomes.MEADOW)),
+                    MobCategory.CREATURE, crystal,
+                    70, 4, 9
+            );
+        }
+
+        // ===== 战斗猫娘：地狱/古城/山地 =====
+        BiomeModifications.addSpawn(
+                BiomeSelectors.tag(BiomeTags.IS_NETHER)
+                        .or(BiomeSelectors.tag(BiomeTags.HAS_ANCIENT_CITY))
+                        .or(BiomeSelectors.tag(BiomeTags.IS_MOUNTAIN)),
+                MobCategory.CREATURE, fighting,
+                25, 1, 4
+        );
     }
 
 }

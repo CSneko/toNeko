@@ -114,6 +114,10 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
                 ServerPlayNetworking.send(sp,new EntityPosePayload(pose,"self",status));
             }
         }
+        // 自然成长：幼年猫娘每秒成长1 tick，约10个游戏日成年
+        if (player instanceof ServerPlayer && this.isNeko() && this.getNekoAge() < 0) {
+            this.setNekoAge(this.getNekoAge() + 1);
+        }
 
     }
 
