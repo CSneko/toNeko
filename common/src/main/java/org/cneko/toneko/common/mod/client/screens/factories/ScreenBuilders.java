@@ -48,6 +48,7 @@ public class ScreenBuilders {
             ;
 
     public static final NekoScreenBuilder NOELLE_INTERACTION_SCREEN = COMMON_START.clone()
+            .addTooltip(TooltipFactories.NOELLE_TRAUMA_TOOLTIP)
             .addButton(ButtonFactories.NOELLE_STAGE_BUTTON)
             .addButton(ButtonFactories.NOELLE_MEMORY_BUTTON)
             .addButton(ButtonFactories.CHAT_BUTTON)

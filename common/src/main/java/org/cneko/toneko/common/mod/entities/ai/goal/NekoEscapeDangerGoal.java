@@ -31,16 +31,19 @@ public class NekoEscapeDangerGoal extends Goal {
         if (neko.getLastDamageSource() != null && neko.getLastDamageSource().getEntity() == null) {
             return true;
         }
-        List<String> tags = neko.getMoeTags();
-        if (tags.contains("yowaki")) {
-            if (neko.getHealth() < neko.getMaxHealth() * 0.5) return true;
-            for (Player p : neko.level().getEntitiesOfClass(Player.class, neko.getBoundingBox().inflate(8))) {
-                if (!neko.hasOwner(p.getUUID())) return true;
+        // yowaki / paranoia 逃离陌生人（可通过 shouldFleeFromStrangers() 禁用）
+        if (neko.shouldFleeFromStrangers()) {
+            List<String> tags = neko.getMoeTags();
+            if (tags.contains("yowaki")) {
+                if (neko.getHealth() < neko.getMaxHealth() * 0.5) return true;
+                for (Player p : neko.level().getEntitiesOfClass(Player.class, neko.getBoundingBox().inflate(8))) {
+                    if (!neko.hasOwner(p.getUUID())) return true;
+                }
             }
-        }
-        if (tags.contains("paranoia")) {
-            for (Player p : neko.level().getEntitiesOfClass(Player.class, neko.getBoundingBox().inflate(10))) {
-                if (!neko.hasOwner(p.getUUID())) return true;
+            if (tags.contains("paranoia")) {
+                for (Player p : neko.level().getEntitiesOfClass(Player.class, neko.getBoundingBox().inflate(10))) {
+                    if (!neko.hasOwner(p.getUUID())) return true;
+                }
             }
         }
         return false;

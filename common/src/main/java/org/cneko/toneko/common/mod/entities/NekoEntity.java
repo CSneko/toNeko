@@ -101,6 +101,10 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     private String lastMoeTagsStringCache = null;
     private List<String> cachedMoeTagsList = null;
 
+    // 被动回血
+    protected static final int PASSIVE_HEAL_INTERVAL = 600; // 30秒回血一次
+    private int passiveHealTimer = 0;
+
     // 受伤求救冷却时间，避免被连击时疯狂扫描附近实体
     private long lastHelpCallTime = 0;
     private long lastLoliAlarmTime = 0;
@@ -694,7 +698,21 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
                     this.spawnAtLocation(dropped.split(1));
                 }
             }
+            // 被动回血：缓慢自然恢复
+            passiveHealTimer++;
+            if (passiveHealTimer >= PASSIVE_HEAL_INTERVAL) {
+                passiveHealTimer = 0;
+                float amount = getPassiveHealAmount();
+                if (amount > 0 && this.getHealth() < this.getMaxHealth()) {
+                    this.heal(amount);
+                }
+            }
         }
+    }
+
+    /** 每次被动回血的量，子类可重写以改变回血速度 */
+    protected float getPassiveHealAmount() {
+        return 1.0f;
     }
 
     private void updateMoeTagAwareGoals() {
@@ -1348,6 +1366,14 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     @Override
     public boolean isNeko() {
         return true;
+    }
+
+    /**
+     * 是否因萌属性（yowaki/paranoia）而逃离陌生人。
+     * 子类可重写以定制行为（如诺艾尔是陪伴型，不应逃离）。
+     */
+    public boolean shouldFleeFromStrangers() {
+        return this.getMoeTags().contains("yowaki") || this.getMoeTags().contains("paranoia");
     }
 
     @Override
