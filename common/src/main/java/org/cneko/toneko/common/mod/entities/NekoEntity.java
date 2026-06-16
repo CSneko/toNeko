@@ -951,6 +951,11 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
             // ====== 通用仇恨系统（子类可重写此方法来自定义攻击行为）=======
             tickHatred();
 
+            // 环境粒子效果（每5秒一次）
+            if (this.tickCount % 100 == 0) {
+                spawnAmbientParticles();
+            }
+
             // 萝莉猫娘防狼：检测玩家侵犯意图（持武器接近）
             if (this.isNekoBaby() && this.tickCount % 40 == 0) {
                 long currentTime = this.level().getGameTime();
@@ -966,6 +971,33 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * 环境粒子效果，每5秒调用一次（仅服务端）。
+     * 子类可重写以实现自定义粒子。
+     * 默认：在主人附近时偶尔冒出爱心，体现猫娘的依恋。
+     */
+    protected void spawnAmbientParticles() {
+        if (!(this.level() instanceof ServerLevel serverLevel)) return;
+
+        // 当前面无主人时跳过
+        boolean hasOwnerNearby = false;
+        for (var entry : this.getOwners().entrySet()) {
+            Player owner = this.level().getPlayerByUUID(entry.getKey());
+            if (owner != null && owner.isAlive() && this.distanceToSqr(owner) < 100.0) { // 10格内
+                hasOwnerNearby = true;
+                break;
+            }
+        }
+        if (!hasOwnerNearby) return;
+
+        // 15% 概率冒出爱心
+        if (this.random.nextFloat() < 0.15f) {
+            serverLevel.sendParticles(ParticleTypes.HEART,
+                    this.getX(), this.getY() + this.getBbHeight(), this.getZ(),
+                    1, 0.3, 0.2, 0.3, 0.02);
         }
     }
 

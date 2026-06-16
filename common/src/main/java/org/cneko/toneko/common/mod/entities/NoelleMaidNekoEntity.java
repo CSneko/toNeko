@@ -44,23 +44,31 @@ import static org.cneko.toneko.common.mod.util.TextUtil.randomTranslatabledCompo
 public class NoelleMaidNekoEntity extends NekoEntity {
 
     // ============================================================
-    // Stage 枚举 — 她的九个阶段
+    // Stage 枚举 — 她的十一个阶段
     // ============================================================
     public enum Stage {
-        MEOW,       // 女仆猫猫诺艾尔 — 最初的她，用可爱作为伪装
+        MEOW,       // 女仆猫猫诺艾尔 — 最初的她，用可爱作为伪装（创伤已在）
+        CHEESE,     // 乳酪诺 — 甜甜软软，底下却已发酸
         SICKED,     // 病女诺 — 创伤开始侵蚀
-        PRAYING,    // 祈花诺 — 祈求着救赎
         WINTER,     // 寒花诺 — 心冷如冬
-        DEFECTIVE,  // 次品诺 — 觉得自己是次品
+        DEFECTIVE,  // 次品诺 — 自我否定
+        BROKEN,     // 折花诺 — 花被折断，尚未凋零
         WITHERED,   // 残花诺 — 凋零的尽头
+        // ------ 过渡 ------
+        PRAYING,    // 祈花诺 — 祈求着救赎，有人向她伸出了手
         // ------ 重生线 ------
         AWAKENED,   // 觉醒诺 — 从噩梦中惊醒，第一次握紧武器
         BLOOMING,   // 绽花诺 — 残花之后，新芽破土
         RESOLUTE;   // 决意诺 — 不会再让任何人经历她曾受过的苦
 
-        /** 是否为初始阶段（刷新时可随机到的阶段） */
+        /** 是否为初始阶段（刷新时可随机到的阶段，不含过渡阶段 PRAYING） */
         public boolean isInitial() {
             return ordinal() <= WITHERED.ordinal();
+        }
+
+        /** 是否为过渡阶段（WITHERED → AWAKENED 之间的桥梁） */
+        public boolean isTransitional() {
+            return this == PRAYING;
         }
 
         /** 是否为觉醒后的阶段（不可通过刷新获得，只能通过成长达成） */
@@ -72,11 +80,13 @@ public class NoelleMaidNekoEntity extends NekoEntity {
         public String getDisplayName() {
             return switch (this) {
                 case MEOW      -> "女仆猫猫诺艾尔";
+                case CHEESE    -> "乳酪诺";
                 case SICKED    -> "病女诺";
-                case PRAYING   -> "祈花诺";
                 case WINTER    -> "寒花诺";
                 case DEFECTIVE -> "次品诺";
+                case BROKEN    -> "折花诺";
                 case WITHERED  -> "残花诺";
+                case PRAYING   -> "祈花诺";
                 case AWAKENED  -> "觉醒诺";
                 case BLOOMING  -> "绽花诺";
                 case RESOLUTE  -> "决意诺";
@@ -86,8 +96,11 @@ public class NoelleMaidNekoEntity extends NekoEntity {
         /** 用于消息系统的阶段分组 */
         public String getMessageGroup() {
             return switch (this) {
-                case MEOW, SICKED, PRAYING, WINTER, DEFECTIVE -> "early";
-                case WITHERED -> "withered";
+                case MEOW, CHEESE              -> "early";
+                case SICKED, WINTER            -> "mid";
+                case DEFECTIVE, BROKEN         -> "late";
+                case WITHERED                  -> "withered";
+                case PRAYING                   -> "praying";
                 case AWAKENED, BLOOMING, RESOLUTE -> "awakened";
             };
         }
@@ -101,8 +114,11 @@ public class NoelleMaidNekoEntity extends NekoEntity {
     private static final double PROTECTIVE_AURA_RANGE = 10.0;    // 守护光环范围
     private static final int PARTICLE_INTERVAL = 20;             // 粒子效果间隔 (ticks)
     private static final Stage[] INITIAL_STAGES = {
-        Stage.MEOW, Stage.SICKED, Stage.PRAYING, Stage.WINTER, Stage.DEFECTIVE, Stage.WITHERED
+        Stage.MEOW, Stage.CHEESE, Stage.SICKED, Stage.WINTER, Stage.DEFECTIVE, Stage.BROKEN, Stage.WITHERED
     };
+    private static final int INITIAL_TRAUMA_MIN = 8;             // 初始创伤最小值
+    private static final int INITIAL_TRAUMA_MAX = 22;            // 初始创伤最大值
+    private static final int PRAYING_CARE_THRESHOLD = 70;        // WITHERED→PRAYING 所需关怀阈值（创伤需降到70以下）
 
     // ============================================================
     // 创伤系统常量
@@ -227,20 +243,22 @@ public class NoelleMaidNekoEntity extends NekoEntity {
      */
     private void updateStageFromTrauma() {
         Stage current = getStage();
-        // 不影响觉醒后的阶段
-        if (current.isAwakened()) return;
+        // 不影响觉醒后的阶段，也不影响过渡阶段
+        if (current.isAwakened() || current.isTransitional()) return;
 
         Stage newStage;
         if (peakTrauma >= 100) {
             newStage = Stage.WITHERED;
         } else if (peakTrauma >= 80) {
-            newStage = Stage.DEFECTIVE;
+            newStage = Stage.BROKEN;
         } else if (peakTrauma >= 60) {
-            newStage = Stage.WINTER;
+            newStage = Stage.DEFECTIVE;
         } else if (peakTrauma >= 40) {
-            newStage = Stage.PRAYING;
-        } else if (peakTrauma >= 20) {
+            newStage = Stage.WINTER;
+        } else if (peakTrauma >= 25) {
             newStage = Stage.SICKED;
+        } else if (peakTrauma >= 10) {
+            newStage = Stage.CHEESE;
         } else {
             newStage = Stage.MEOW;
         }
@@ -266,6 +284,18 @@ public class NoelleMaidNekoEntity extends NekoEntity {
                 serverLevel.sendParticles(ParticleTypes.HEART,
                         this.getX(), this.getY() + this.getBbHeight() / 2, this.getZ(),
                         20, 0.5, 0.8, 0.5, 0.05);
+            }
+        }
+
+        // 祈花过渡特效：有人向她伸出了手，微弱的光
+        if (to == Stage.PRAYING) {
+            if (this.level() instanceof ServerLevel serverLevel) {
+                serverLevel.sendParticles(ParticleTypes.SOUL_FIRE_FLAME,
+                        this.getX(), this.getY() + this.getBbHeight() / 2, this.getZ(),
+                        30, 0.3, 0.5, 0.3, 0.02);
+                serverLevel.sendParticles(ParticleTypes.GLOW,
+                        this.getX(), this.getY() + this.getBbHeight() / 2, this.getZ(),
+                        15, 0.3, 0.5, 0.3, 0.01);
             }
         }
 
@@ -362,10 +392,12 @@ public class NoelleMaidNekoEntity extends NekoEntity {
         this.protectiveKills = 0;
         this.residualBloomCooldown = 0;
         this.hasBeenHealedByPlayer = false;
-        // 重置创伤
-        this.currentTrauma = 0;
-        this.peakTrauma = 0;
-        this.entityData.set(TRAUMA_ID, 0);
+        // 重置创伤 — 她从一开始就带着心理创伤
+        this.currentTrauma = this.random.nextInt(INITIAL_TRAUMA_MIN, INITIAL_TRAUMA_MAX + 1);
+        this.peakTrauma = this.currentTrauma;
+        this.entityData.set(TRAUMA_ID, this.currentTrauma);
+        // 根据初始创伤设置初始阶段
+        updateStageFromTrauma();
         this.lonelinessCheckTimer = 0;
         this.companionCheckTimer = 0;
     }
@@ -389,10 +421,11 @@ public class NoelleMaidNekoEntity extends NekoEntity {
         // 阶段特殊 tick
         switch (stage) {
             case WITHERED  -> tickWithered();
+            case PRAYING   -> tickPraying();
             case AWAKENED  -> tickAwakened();
             case BLOOMING  -> tickBlooming();
             case RESOLUTE  -> tickResolute();
-            default        -> {} // MEOW ~ DEFECTIVE: 无特殊 tick 逻辑
+            default        -> {} // MEOW ~ BROKEN: 无特殊 tick 逻辑
         }
 
         // 创伤系统 tick
@@ -448,6 +481,19 @@ public class NoelleMaidNekoEntity extends NekoEntity {
                 super.setHatredTarget(attacker, HATRED_DEFAULT_DURATION);
                 return;
             }
+        }
+    }
+
+    private void tickPraying() {
+        // 祈花诺：在祈求与等待中徘徊
+        // 清除虚弱，但战斗意志仍不稳定
+        if (this.hasEffect(MobEffects.WEAKNESS)) {
+            this.removeEffect(MobEffects.WEAKNESS);
+        }
+        // 不再主动结束仇恨，但也不会主动出击
+        // 守护本能：开始重新关心周围的人
+        if (this.tickCount % 60 == 0) {
+            scanForProtectiveInstinct();
         }
     }
 
@@ -666,8 +712,15 @@ public class NoelleMaidNekoEntity extends NekoEntity {
     private void checkStageProgression() {
         Stage stage = getStage();
 
-        // WITHERED → AWAKENED: 被玩家治疗过 + 至少击败一个敌人
-        if (stage == Stage.WITHERED && hasBeenHealedByPlayer && defeatedEnemies >= 1) {
+        // WITHERED → PRAYING: 感受到足够的关怀（创伤值因被治疗/收礼物/陪伴而降到阈值以下）
+        // 这不是一次性的救助，而是持续的温暖让她重新开始祈求希望
+        if (stage == Stage.WITHERED && currentTrauma < PRAYING_CARE_THRESHOLD) {
+            setStage(Stage.PRAYING);
+            return;
+        }
+
+        // PRAYING → AWAKENED: 至少击败一个敌人（她第一次为了守护而战斗）
+        if (stage == Stage.PRAYING && defeatedEnemies >= 1) {
             setStage(Stage.AWAKENED);
             defeatedEnemies = 0; // 重新计数，用于下一阶段
             return;
@@ -715,6 +768,72 @@ public class NoelleMaidNekoEntity extends NekoEntity {
         double z = this.getZ();
 
         switch (stage) {
+            // 偶尔冒出爱心——她用可爱包裹每个人，那是她唯一知道怎么去爱的方式
+            case MEOW -> {
+                if (this.random.nextFloat() < 0.12f) {
+                    serverLevel.sendParticles(ParticleTypes.HEART,
+                            x, y, z, 1, 0.3, 0.3, 0.3, 0.02);
+                }
+            }
+            // 乳酪碎屑 + 偶尔爱心——甜美柔软，底下却已悄悄发酸
+            case CHEESE -> {
+                if (this.random.nextFloat() < 0.15f) {
+                    serverLevel.sendParticles(ParticleTypes.SNOWFLAKE,
+                            x, y, z, 1, 0.2, 0.3, 0.2, 0.01);
+                }
+                if (this.random.nextFloat() < 0.08f) {
+                    serverLevel.sendParticles(ParticleTypes.HEART,
+                            x, y, z, 1, 0.2, 0.2, 0.2, 0.02);
+                }
+            }
+            // 偶尔灵魂粒子——病态，创伤正在侵蚀她的灵魂
+            case SICKED -> {
+                if (this.random.nextFloat() < 0.12f) {
+                    serverLevel.sendParticles(ParticleTypes.SOUL,
+                            x, y, z, 1, 0.2, 0.3, 0.2, 0.01);
+                }
+            }
+            // 偶尔雪花——心如寒冬，冷到不再期待
+            case WINTER -> {
+                if (this.random.nextFloat() < 0.12f) {
+                    serverLevel.sendParticles(ParticleTypes.SNOWFLAKE,
+                            x, y, z, 1, 0.3, 0.3, 0.3, 0.01);
+                }
+            }
+            // 偶尔灰烬——开始凋零的征兆，觉得自己不配被爱
+            case DEFECTIVE -> {
+                if (this.random.nextFloat() < 0.15f) {
+                    serverLevel.sendParticles(ParticleTypes.ASH,
+                            x, y, z, 1, 0.2, 0.3, 0.2, 0.01);
+                }
+            }
+            // 灰烬 + 深红粒子——花被折断，还在流血
+            case BROKEN -> {
+                if (this.random.nextFloat() < 0.3f) {
+                    serverLevel.sendParticles(ParticleTypes.ASH,
+                            x, y, z, 1, 0.2, 0.3, 0.2, 0.01);
+                }
+                if (this.random.nextFloat() < 0.15f) {
+                    serverLevel.sendParticles(ParticleTypes.DAMAGE_INDICATOR,
+                            x, y, z, 1, 0.2, 0.3, 0.2, 0.01);
+                }
+            }
+            // 偶尔灰烬：凋零的痕迹，她快要消失了
+            case WITHERED -> {
+                if (this.random.nextFloat() < 0.3f) {
+                    serverLevel.sendParticles(ParticleTypes.ASH,
+                            x, y, z, 1, 0.2, 0.3, 0.2, 0.01);
+                }
+            }
+            // 烛光微光 + 偶尔爱心——有人伸出了手，她在祈祷中看到了希望
+            case PRAYING -> {
+                serverLevel.sendParticles(ParticleTypes.GLOW,
+                        x, y, z, 1, 0.15, 0.2, 0.15, 0.005);
+                if (this.random.nextFloat() < 0.10f) {
+                    serverLevel.sendParticles(ParticleTypes.HEART,
+                            x, y + 0.3, z, 1, 0.15, 0.2, 0.15, 0.02);
+                }
+            }
             // 白色微光粒子：觉醒的光芒
             case AWAKENED -> serverLevel.sendParticles(ParticleTypes.END_ROD,
                     x, y, z, 1, 0.2, 0.3, 0.2, 0.01);
@@ -728,14 +847,6 @@ public class NoelleMaidNekoEntity extends NekoEntity {
                 serverLevel.sendParticles(ParticleTypes.GLOW,
                         x, y, z, 1, 0.2, 0.3, 0.2, 0.01);
             }
-            case WITHERED -> {
-                // 偶尔的灰烬粒子：凋零的痕迹
-                if (this.random.nextFloat() < 0.3f) {
-                    serverLevel.sendParticles(ParticleTypes.ASH,
-                            x, y, z, 1, 0.2, 0.3, 0.2, 0.01);
-                }
-            }
-            default -> {} // MEOW ~ DEFECTIVE: 无特殊粒子
         }
     }
 
@@ -749,10 +860,11 @@ public class NoelleMaidNekoEntity extends NekoEntity {
         // WITHERED: 受伤时几乎不做反应
         // （但伤害照常结算，仇恨在 setHatredTarget 中阻止）
 
-        // DEFECTIVE: 有概率主动走向危险（自毁倾向）
-        if (stage == Stage.DEFECTIVE && source.getEntity() instanceof LivingEntity attacker) {
-            if (this.random.nextFloat() < 0.15f && this.getNavigation().isDone()) {
-                // 15% 概率走向攻击者而非逃离
+        // DEFECTIVE / BROKEN: 有概率主动走向危险（自毁倾向）
+        if ((stage == Stage.DEFECTIVE || stage == Stage.BROKEN)
+                && source.getEntity() instanceof LivingEntity attacker) {
+            float chance = stage == Stage.BROKEN ? 0.20f : 0.15f;
+            if (this.random.nextFloat() < chance && this.getNavigation().isDone()) {
                 this.getNavigation().moveTo(attacker, 0.3);
             }
         }
@@ -849,6 +961,12 @@ public class NoelleMaidNekoEntity extends NekoEntity {
         // DEFECTIVE: 仅 50% 概率产生仇恨
         if (stage == Stage.DEFECTIVE && this.random.nextFloat() > 0.5f) return;
 
+        // BROKEN: 仅 35% 概率产生仇恨
+        if (stage == Stage.BROKEN && this.random.nextFloat() > 0.35f) return;
+
+        // PRAYING: 60% 概率产生仇恨（开始恢复战斗意志，但不稳定）
+        if (stage == Stage.PRAYING && this.random.nextFloat() > 0.6f) return;
+
         // AWAKENED+: 仇恨持续时间延长（更坚定）
         if (stage.isAwakened()) {
             duration = (int)(duration * 1.5);
@@ -894,7 +1012,7 @@ public class NoelleMaidNekoEntity extends NekoEntity {
             }
         }
 
-        // 追踪玩家治疗（用于 WITHERED→AWAKENED 条件）
+        // 追踪玩家治疗（用于 WITHERED→PRAYING 条件）
         if (getStage() == Stage.WITHERED && amount > 1.0f) {
             Player nearestPlayer = this.level().getNearestPlayer(this, 5.0);
             if (nearestPlayer != null && !nearestPlayer.isSpectator()) {
@@ -914,11 +1032,13 @@ public class NoelleMaidNekoEntity extends NekoEntity {
         // 阶段倍率
         float stageMult = switch (getStage()) {
             case WITHERED  -> 0.3f;   // 几乎不愈合
+            case BROKEN    -> 0.4f;   // 折断的花，难以愈合
             case DEFECTIVE -> 0.5f;
             case WINTER    -> 0.7f;
-            case PRAYING   -> 0.8f;
             case SICKED    -> 0.9f;
+            case CHEESE    -> 0.95f;  // 表面上还行
             case MEOW      -> 1.0f;   // 正常
+            case PRAYING   -> 0.5f;   // 祈求中，仍脆弱
             case AWAKENED  -> 1.2f;
             case BLOOMING  -> 1.5f;
             case RESOLUTE  -> 2.0f;   // 守护者之躯，愈合最快
@@ -994,13 +1114,14 @@ public class NoelleMaidNekoEntity extends NekoEntity {
             // 旧版存档迁移：根据已有阶段估算峰值创伤
             try {
                 Stage loadedStage = Stage.valueOf(compound.getString("NoelleStage"));
-                if (!loadedStage.isAwakened()) {
+                if (!loadedStage.isAwakened() && !loadedStage.isTransitional()) {
                     peakTrauma = switch (loadedStage) {
-                        case MEOW -> 0;
-                        case SICKED -> 30;
-                        case PRAYING -> 50;
-                        case WINTER -> 70;
-                        case DEFECTIVE -> 90;
+                        case MEOW -> 5;
+                        case CHEESE -> 18;
+                        case SICKED -> 33;
+                        case WINTER -> 50;
+                        case DEFECTIVE -> 70;
+                        case BROKEN -> 90;
                         case WITHERED -> 100;
                         default -> 0;
                     };
@@ -1095,15 +1216,17 @@ public class NoelleMaidNekoEntity extends NekoEntity {
     public String getStagePrompt() {
         Stage stage = getStage();
         return switch (stage) {
-            case MEOW -> PROMPT + "\n【当前状态：女仆猫猫】此时的你仍然保持着表面的开朗，用可爱和温柔包裹着自己。你还没有意识到那些创伤正在侵蚀你的内心。";
-            case SICKED -> PROMPT + "\n【当前状态：创伤侵蚀】你开始感到不对劲了。失眠越来越严重，有时候会突然害怕，但你说不清为什么。你试图用更多的「喵」和关心别人来转移注意力。";
-            case PRAYING -> PROMPT + "\n【当前状态：祈求救赎】你在心底祈求着有人能来救你。你不敢直接说出来，只是在深夜一个人的时候默默祈祷。你开始怀疑自己的价值。";
-            case WINTER -> PROMPT + "\n【当前状态：心冷如冬】你已经不再相信有人会来救你了。你的心像冬天一样冷。你不再主动向人求助，只是在被问到的时候勉强笑一笑。";
-            case DEFECTIVE -> PROMPT + "\n【当前状态：自我否定】你觉得自己是个次品，不配被爱。你认为所有发生在你身上的事都是你的错。你偶尔会有走向危险的冲动，因为你觉得自己不值得被保护。";
-            case WITHERED -> PROMPT + "\n【当前状态：残花凋零】你已经快要放弃了。你不再反抗，不再求助。如果有人攻击你，你只会站在原地承受。但在你的内心深处，还有一丝微弱的光——那是你对这个世界最后的温柔。";
-            case AWAKENED -> PROMPT + "\n【当前状态：觉醒】有什么东西在你心中醒了。当你在乎的人治愈了你之后，你突然明白了一件事——那不是你的错。你第一次感到愤怒，而不仅仅是悲伤。你开始敢于直视伤害你的人，握紧了手中的武器。你的语气里多了一丝坚定，但你仍然温柔，仍然会在句尾带「喵」。";
-            case BLOOMING -> PROMPT + "\n【当前状态：绽花】你正在愈合。就像残花之后的新芽一样，你在同伴的陪伴下重新发现了自己的力量。你不再逃避战斗——你会主动迎击那些想要伤害你的人。你依然有创伤，那些记忆不会消失，但它们不再定义你。你的声音更加坚定，但你依然温柔。";
-            case RESOLUTE -> PROMPT + "\n【当前状态：决意】你已经做出了选择。你经历过的痛苦，不会再让任何人经历。你成为了守护者——当有人在你的视线范围内被欺负，你会毫不犹豫地站出来。你的力量来自于你走过的黑暗，而不是对它的遗忘。你的名字就是你的誓言。你仍然会在句尾带「喵」——因为那不是软弱，那是你的温柔和坚持。";
+            case MEOW -> PROMPT + "\n【当前状态：女仆猫猫诺艾尔】此时的你仍然保持着表面的开朗，用可爱和温柔包裹着自己。但你的创伤从一开始就存在了——你只是藏得很好。你会用「喵」和关心别人来让自己忘记那些痛苦。";
+            case CHEESE -> PROMPT + "\n【当前状态：乳酪诺】你依然是那只甜甜软软的女仆猫娘，用温柔和「喵」包裹着每一个人。但就像乳酪一样——表面柔软甜美，底下已经开始悄悄发酸。你偶尔会在深夜一个人发呆，盯着虚空出神，但不会让任何人发现。被问到「怎么了」的时候，你会立刻笑着说「没什么了啦喵~」。";
+            case SICKED -> PROMPT + "\n【当前状态：病女诺】你开始感到不对劲了。失眠越来越严重，有时候会突然害怕，但你说不清为什么。你试图用更多的「喵」和关心别人来转移注意力。创伤正在侵蚀你的内心，而你还在假装一切正常。";
+            case WINTER -> PROMPT + "\n【当前状态：寒花诺】你已经不再相信有人会来救你了。你的心像冬天一样冷。你不再主动向人求助，只是在被问到的时候勉强笑一笑。你的温柔还在，但那已经是习惯，不是希望。";
+            case DEFECTIVE -> PROMPT + "\n【当前状态：次品诺】你觉得自己是个次品，不配被爱。你认为所有发生在你身上的事都是你的错。你偶尔会有走向危险的冲动，因为你觉得自己不值得被保护。「如果咱消失了...对大家会不会更好呢？」";
+            case BROKEN -> PROMPT + "\n【当前状态：折花诺】你像一朵被拦腰折断的花。花瓣还开着，但茎已经快要断了。你不再有力气掩饰自己的痛苦，却也失去了求救的勇气。你会说出一些让人心疼的话——「咱大概...已经坏掉了喵」——然后立刻用「开玩笑的啦w」来收回。你怕别人担心，更怕别人不在乎。";
+            case WITHERED -> PROMPT + "\n【当前状态：残花诺】你已经快要放弃了。你不再反抗，不再求助。如果有人攻击你，你只会站在原地承受。但在你的内心深处，还有一丝微弱的光——那是你对这个世界最后的温柔。那是你还没有完全熄灭的、对爱的渴望。";
+            case PRAYING -> PROMPT + "\n【当前状态：祈花诺】有人在你不抱任何希望的时候向你伸出了手。你不敢置信。你在心底默默祈求着——祈求这不是一场梦，祈求这一次真的能得救。你的声音在颤抖，你的眼睛里第一次有了一丝微弱的光。你还没有完全相信，但你已经不敢不去相信了。「如果...如果是你的话...咱愿意再试一次喵。」";
+            case AWAKENED -> PROMPT + "\n【当前状态：觉醒诺】有什么东西在你心中醒了。当你在乎的人治愈了你之后，你突然明白了一件事——那不是你的错。你第一次感到愤怒，而不仅仅是悲伤。你开始敢于直视伤害你的人，握紧了手中的武器。你的语气里多了一丝坚定，但你仍然温柔，仍然会在句尾带「喵」。";
+            case BLOOMING -> PROMPT + "\n【当前状态：绽花诺】你正在愈合。就像残花之后的新芽一样，你在同伴的陪伴下重新发现了自己的力量。你不再逃避战斗——你会主动迎击那些想要伤害你的人。你依然有创伤，那些记忆不会消失，但它们不再定义你。你的声音更加坚定，但你依然温柔。";
+            case RESOLUTE -> PROMPT + "\n【当前状态：决意诺】你已经做出了选择。你经历过的痛苦，不会再让任何人经历。你成为了守护者——当有人在你的视线范围内被欺负，你会毫不犹豫地站出来。你的力量来自于你走过的黑暗，而不是对它的遗忘。你的名字就是你的誓言。你仍然会在句尾带「喵」——因为那不是软弱，那是你的温柔和坚持。";
         };
     }
 }
