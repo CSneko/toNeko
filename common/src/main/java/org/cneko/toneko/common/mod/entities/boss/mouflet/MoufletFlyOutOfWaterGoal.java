@@ -17,7 +17,9 @@ public class MoufletFlyOutOfWaterGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        // 如果能量不足或已离开水中则停止
+        // 战斗中不执行飞出水面的行为，交给 AttackGoal 处理
+        if (neko.isFighting()) return false;
+        // 如果能量不足或不在水中则不启动
         return !(neko.getNekoEnergy() <= 0) && neko.isInWater();
     }
 
@@ -51,9 +53,10 @@ public class MoufletFlyOutOfWaterGoal extends Goal {
             // 判断y轴高度差
             double dy = targetPos.getY() - neko.getY();
             double yMovement = 0;
-            // 如果y轴高度差小于0则上升
-            if (dy < 0) {
-                yMovement = 0.3; // 上升0.3
+            if (dy > 0) {
+                yMovement = 0.3;       // 目标在上方 → 上升
+            } else if (dy < -1.0) {
+                yMovement = -0.3;      // 目标在下方较远 → 下降
             }
             if (distance > 0) {
                 neko.setDeltaMovement(neko.getDeltaMovement().add(dx / distance * 0.4, yMovement, dz / distance * 0.4));
@@ -63,21 +66,20 @@ public class MoufletFlyOutOfWaterGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        // 能量不足或已经到达了目标则停止（x，z相差小于0.5，y在上面）
-        if (neko.getNekoEnergy() <= 0) {
-            return false;
-        }
-        if (neko.isInWater()){
-            return true;
-        }
+        // 战斗中立即停止，让 AttackGoal 接管
+        if (neko.isFighting()) return false;
+        // 能量不足则停止
+        if (neko.getNekoEnergy() <= 0) return false;
+        // 还在水中 → 继续飞行
+        if (neko.isInWater()) return true;
         if (targetPos != null) {
             double dx = targetPos.getX() - neko.getX();
             double dz = targetPos.getZ() - neko.getZ();
             double dy = targetPos.getY() - neko.getY();
-            return !(Math.abs(dx) > 0.5 || Math.abs(dz) > 0.5 || dy < 0);
-        }else {
-            return true; // 如果目标位置无效则继续飞行
+            // 远离目标 或 目标在上方仍需上升 → 继续
+            return Math.abs(dx) > 0.5 || Math.abs(dz) > 0.5 || dy > 0;
         }
+        return false; // 已出水且无目标 → 停止
     }
 
     @Override

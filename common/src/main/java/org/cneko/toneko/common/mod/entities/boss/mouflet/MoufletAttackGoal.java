@@ -100,50 +100,13 @@ public class MoufletAttackGoal extends NekoAttackGoal {
 
     @Override
     public void tick() {
-        if (target == null || !target.isAlive()) return;
-
-        // 更新朝向
-        neko.getLookControl().setLookAt(target, 30.0F, 30.0F);
-
-        double distanceSqr = neko.distanceToSqr(target);
-        boolean canSee = neko.hasLineOfSight(target);
-
-        if (canSee) {
-            ++this.seeTime;
-        } else {
-            this.seeTime = 0;
-        }
-
-        // 战斗策略
-        CombatStrategy strategy = determineCombatStrategy();
-
-        // 逃跑策略优先
-        if (strategy == CombatStrategy.FLEE) {
-            fleeFromTarget();
-            return;
-        }
-
-        // 切换武器
-        if (strategy == CombatStrategy.RANGED) {
-            switchToRangedWeapon();
-        } else if (strategy == CombatStrategy.MELEE) {
-            switchToMeleeWeapon();
-        }
-
-        // 始终靠近目标
-        neko.getNekoBrain().submitMove(target, neko.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED) * 1.2, BehaviorPriority.COMBAT, this);
-
-        // 攻击逻辑
-        attackCooldown = Math.max(attackCooldown - 1, 0);
-        if (attackCooldown == 0 && canSee) {
-            if (strategy == CombatStrategy.MELEE && distanceSqr <= 16) {
-                performMeleeAttack();
-                attackCooldown = attackInterval;
-            } else if (strategy == CombatStrategy.RANGED && distanceSqr <= 225) {
-                performRangedAttack();
-                attackCooldown = attackInterval * 2;
-            }
-        }
+        // 委托父类处理所有标准战斗行为：
+        // - 目标存活检查 + 朝向控制 + 视线追踪
+        // - 战斗策略判定（调用本类的 determineCombatStrategy）
+        // - 逃跑（调用本类的 fleeFromTarget）
+        // - 武器切换 + 距离维持（近战接近 / 远程保持理想距离）
+        // - 攻击冷却 + 攻击执行（调用本类的 performRangedAttack）
+        super.tick();
     }
 
     @Override
@@ -199,7 +162,6 @@ public class MoufletAttackGoal extends NekoAttackGoal {
 
     @Override
     public void stop() {
-        neko.getNekoBrain().stopMoving(this);
-        neko.setAggressive(false); // 取消敌对状态
+        super.stop(); // 设置 target=null + stopMoving + setAggressive(false)
     }
 }

@@ -7,6 +7,8 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -15,8 +17,10 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
@@ -54,26 +58,47 @@ public class NoelleMaidNekoEntity extends NekoEntity {
         DEFECTIVE,  // 次品诺 — 自我否定
         BROKEN,     // 折花诺 — 花被折断，尚未凋零
         WITHERED,   // 残花诺 — 凋零的尽头
-        // ------ 过渡 ------
+        // ------ 祈花线 ------
         PRAYING,    // 祈花诺 — 祈求着救赎，有人向她伸出了手
         // ------ 重生线 ------
         AWAKENED,   // 觉醒诺 — 从噩梦中惊醒，第一次握紧武器
         BLOOMING,   // 绽花诺 — 残花之后，新芽破土
         RESOLUTE;   // 决意诺 — 不会再让任何人经历她曾受过的苦
 
-        /** 是否为初始阶段（刷新时可随机到的阶段，不含过渡阶段 PRAYING） */
+        /** 是否为创伤阶段（MEOW ~ BROKEN），受 peakTrauma 驱动的初始走廊 */
+        public boolean isTraumaPhase() {
+            return ordinal() <= BROKEN.ordinal();
+        }
+
+        /** 是否为残花线（WITHERED 阶段） */
+        public boolean isWitheredLine() {
+            return this == WITHERED;
+        }
+
+        /** 是否为祈花线（PRAYING 阶段——通往重生的枢纽） */
+        public boolean isPrayingLine() {
+            return this == PRAYING;
+        }
+
+        /** 是否为重生线（AWAKENED ~ RESOLUTE） */
+        public boolean isRebirthLine() {
+            return ordinal() >= AWAKENED.ordinal();
+        }
+
+        /** @deprecated 使用 isTraumaPhase() || this == WITHERED 代替 */
+        @Deprecated
         public boolean isInitial() {
             return ordinal() <= WITHERED.ordinal();
         }
 
-        /** 是否为过渡阶段（WITHERED → AWAKENED 之间的桥梁） */
+        /** 是否为过渡阶段（通往重生线的桥梁） */
         public boolean isTransitional() {
             return this == PRAYING;
         }
 
         /** 是否为觉醒后的阶段（不可通过刷新获得，只能通过成长达成） */
         public boolean isAwakened() {
-            return ordinal() >= AWAKENED.ordinal();
+            return isRebirthLine();
         }
 
         /** 阶段的显示名称 —— 这就是她的名字 */
@@ -93,7 +118,7 @@ public class NoelleMaidNekoEntity extends NekoEntity {
             };
         }
 
-        /** 用于消息系统的阶段分组 */
+        /** 用于消息系统的阶段分组（praying_from_withered 由实体根据 branchOrigin 动态路由） */
         public String getMessageGroup() {
             return switch (this) {
                 case MEOW, CHEESE              -> "early";
@@ -104,6 +129,17 @@ public class NoelleMaidNekoEntity extends NekoEntity {
                 case AWAKENED, BLOOMING, RESOLUTE -> "awakened";
             };
         }
+    }
+
+    /**
+     * 分支枚举 —— 用于追踪她当前处于哪条叙事线上。
+     * 与 Stage 不同，Branch 描述的是"路径"而非具体阶段。
+     */
+    public enum Branch {
+        NONE,      // 创伤走廊（MEOW ~ BROKEN），尚未分支
+        WITHERED,  // 残花线 —— 凋零的黑暗之路，自毁与死亡风险
+        PRAYING,   // 祈花线 —— 通往重生的希望枢纽
+        REBIRTH;   // 重生线 —— 觉醒后的守护者之路
     }
 
     // ============================================================
@@ -118,7 +154,16 @@ public class NoelleMaidNekoEntity extends NekoEntity {
     };
     private static final int INITIAL_TRAUMA_MIN = 8;             // 初始创伤最小值
     private static final int INITIAL_TRAUMA_MAX = 22;            // 初始创伤最大值
-    private static final int PRAYING_CARE_THRESHOLD = 70;        // WITHERED→PRAYING 所需关怀阈值（创伤需降到70以下）
+    // ============================================================
+    // 关怀系统常量
+    // ============================================================
+    private static final int MAX_CARE_SCORE = 100;                   // 关怀值上限
+    private static final int CARE_GIFT = 15;                         // 收礼 +15
+    private static final int CARE_PLAYER_HEAL = 10;                  // 被玩家治疗 +10
+    private static final int CARE_COMPANION_TICK = 1;                // 陪伴每60秒 +1
+    private static final int CARE_PET = 5;                           // 右键互动 +5
+    private static final int CARE_PRAYING_THRESHOLD = 70;            // 创伤阶段→PRAYING 所需关怀值
+    private static final int CARE_PRAYING_FROM_WITHERED = 85;        // WITHERED→PRAYING 更高门槛
 
     // ============================================================
     // 创伤系统常量
@@ -136,11 +181,24 @@ public class NoelleMaidNekoEntity extends NekoEntity {
     private static final double COMPANION_RANGE = 10.0;           // 陪伴检测范围
 
     // ============================================================
+    // 残花线常量（WITHERED 死亡机制）
+    // ============================================================
+    private static final int WITHERED_DEATH_MAX = 72000;            // 死亡倒计时上限 (1小时 = 72000 ticks)
+    private static final int WITHERED_DEATH_HEAL_GAIN = 6000;       // 每次被治疗 +5分钟
+    private static final int WITHERED_DEATH_GIFT_GAIN = 3000;       // 每次收礼 +2.5分钟
+    private static final int WITHERED_SELF_HARM_INTERVAL = 600;     // 自伤间隔 (30秒 = 600 ticks)
+    private static final float WITHERED_SELF_HARM_DAMAGE = 1.0f;    // 每次自伤伤害 (半心)
+    private static final int PRAYING_FROM_WITHERED_GIFTS = 5;       // 残花→祈花 至少收礼次数
+    private static final int PRAYING_FROM_WITHERED_TRAUMA = 35;     // 残花→祈花 创伤需降到35以下
+
+    // ============================================================
     // 同步数据
     // ============================================================
     private static final EntityDataAccessor<String> STAGE_ID =
             SynchedEntityData.defineId(NoelleMaidNekoEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Integer> TRAUMA_ID =
+            SynchedEntityData.defineId(NoelleMaidNekoEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> CARE_SCORE_ID =
             SynchedEntityData.defineId(NoelleMaidNekoEntity.class, EntityDataSerializers.INT);
 
     // ============================================================
@@ -149,8 +207,24 @@ public class NoelleMaidNekoEntity extends NekoEntity {
     private int defeatedEnemies = 0;          // 击败敌人数
     private int protectiveKills = 0;          // 保护击杀数
     private int residualBloomCooldown = 0;    // 残花绽冷却
-    private boolean hasBeenHealedByPlayer = false; // 是否被玩家治疗过 (WINTER→AWAKENED 条件之一)
+    private boolean hasBeenHealedByPlayer = false; // 是否被玩家治疗过
     private LivingEntity lastTrackedEnemy = null;  // 用于追踪击杀的敌人引用
+
+    // ============================================================
+    // 分支状态
+    // ============================================================
+    private Branch branchOrigin = Branch.NONE;      // PRAYING 是从哪个分支来的（用于消息/叙事区分）
+
+    // ============================================================
+    // 关怀系统字段
+    // ============================================================
+    private int careScore = 0;                      // 关怀值 (0-100)，累积正向互动
+
+    // ============================================================
+    // 残花线字段
+    // ============================================================
+    private int witheredDeathTimer = 0;              // 死亡倒计时 (ticks); 0=未激活
+    private int giftsReceivedInWithered = 0;         // 残花阶段内收到的礼物次数
 
     // ============================================================
     // 创伤系统字段
@@ -175,6 +249,7 @@ public class NoelleMaidNekoEntity extends NekoEntity {
         super.defineSynchedData(builder);
         builder.define(STAGE_ID, Stage.MEOW.name());
         builder.define(TRAUMA_ID, 0);
+        builder.define(CARE_SCORE_ID, 0);
     }
 
     // ============================================================
@@ -217,6 +292,30 @@ public class NoelleMaidNekoEntity extends NekoEntity {
         return peakTrauma;
     }
 
+    // ============================================================
+    // 关怀系统 API
+    // ============================================================
+
+    /** 获取当前关怀值（同步到客户端，供 UI 显示） */
+    public int getCareScore() {
+        return this.entityData.get(CARE_SCORE_ID);
+    }
+
+    /** 获取残花死亡倒计时（ticks），供 UI 显示；0=未激活 */
+    public int getWitheredDeathTimer() {
+        return witheredDeathTimer;
+    }
+
+    /**
+     * 修改关怀值并同步到客户端。
+     * 自动 clamp 到 [0, MAX_CARE_SCORE]。
+     */
+    private void modifyCareScore(int delta) {
+        if (this.level().isClientSide) return;
+        this.careScore = Math.max(0, Math.min(MAX_CARE_SCORE, this.careScore + delta));
+        this.entityData.set(CARE_SCORE_ID, this.careScore);
+    }
+
     /**
      * 修改当前创伤值并同步到客户端。
      * 自动 clamp 到 [0, MAX_TRAUMA]，每次变化后更新 peakTrauma 并检查是否需要阶段升级。
@@ -237,14 +336,15 @@ public class NoelleMaidNekoEntity extends NekoEntity {
     }
 
     /**
-     * 根据 peakTrauma 更新阶段（仅影响初始阶段 MEOW ~ DEFECTIVE）。
+     * 根据 peakTrauma 更新阶段（仅影响创伤阶段 MEOW ~ BROKEN）。
      * 可以跳阶段：如直接从 MEOW 跳到 WINTER。
-     * 觉醒阶段（AWAKENED+）不受此方法影响。
+     * 到达 WITHERED 时触发残花线初始化。
+     * 祈花线和重生线不受此方法影响。
      */
     private void updateStageFromTrauma() {
         Stage current = getStage();
-        // 不影响觉醒后的阶段，也不影响过渡阶段
-        if (current.isAwakened() || current.isTransitional()) return;
+        // 仅处理创伤走廊（MEOW ~ BROKEN）
+        if (!current.isTraumaPhase()) return;
 
         Stage newStage;
         if (peakTrauma >= 100) {
@@ -263,15 +363,20 @@ public class NoelleMaidNekoEntity extends NekoEntity {
             newStage = Stage.MEOW;
         }
 
-        // 仅允许阶段前进（ordinal 比较），且已到 WITHERED 后不再受创伤系统降级
+        // 仅允许阶段前进
         if (newStage.ordinal() > current.ordinal()) {
             setStage(newStage);
         }
     }
 
-    /** 阶段变化时的回调 —— 用于粒子爆发、音效等 */
+    /** 阶段变化时的回调 —— 用于粒子爆发、音效、分支初始化等 */
     private void onStageChanged(Stage from, Stage to) {
         if (this.level().isClientSide) return;
+
+        // 进入残花线：初始化死亡倒计时 + 永久削弱
+        if (to == Stage.WITHERED) {
+            onEnteredWitheredLine();
+        }
 
         // 觉醒时的特效 + 基础移速提升
         if (!from.isAwakened() && to.isAwakened()) {
@@ -289,13 +394,22 @@ public class NoelleMaidNekoEntity extends NekoEntity {
 
         // 祈花过渡特效：有人向她伸出了手，微弱的光
         if (to == Stage.PRAYING) {
+            // 从残花线逃出时：额外的大爆发 —— 从死亡边缘被拉回
+            boolean fromWithered = from == Stage.WITHERED;
             if (this.level() instanceof ServerLevel serverLevel) {
+                int count = fromWithered ? 60 : 30;
+                float spread = fromWithered ? 0.8f : 0.3f;
                 serverLevel.sendParticles(ParticleTypes.SOUL_FIRE_FLAME,
                         this.getX(), this.getY() + this.getBbHeight() / 2, this.getZ(),
-                        30, 0.3, 0.5, 0.3, 0.02);
+                        count, spread, 0.8, spread, fromWithered ? 0.05 : 0.02);
                 serverLevel.sendParticles(ParticleTypes.GLOW,
                         this.getX(), this.getY() + this.getBbHeight() / 2, this.getZ(),
-                        15, 0.3, 0.5, 0.3, 0.01);
+                        fromWithered ? 40 : 15, 0.3, 0.5, 0.3, 0.01);
+                if (fromWithered) {
+                    serverLevel.sendParticles(ParticleTypes.HEART,
+                            this.getX(), this.getY() + this.getBbHeight() / 2, this.getZ(),
+                            30, 0.5, 0.8, 0.5, 0.05);
+                }
             }
         }
 
@@ -368,6 +482,25 @@ public class NoelleMaidNekoEntity extends NekoEntity {
     }
 
     // ============================================================
+    // 交互 — 右键撸猫增加关怀
+    // ============================================================
+    @Override
+    public @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
+        InteractionResult result = super.mobInteract(player, hand);
+        if (!this.level().isClientSide && result != InteractionResult.PASS) {
+            // 打开互动菜单或互动成功 = 关怀
+            modifyCareScore(CARE_PET);
+
+            // 残花线：互动延长死亡倒计时
+            if (getStage() == Stage.WITHERED) {
+                witheredDeathTimer = Math.min(WITHERED_DEATH_MAX,
+                        witheredDeathTimer + 600);  // +30秒每次互动
+            }
+        }
+        return result;
+    }
+
+    // ============================================================
     // 生命周期
     // ============================================================
     @Override
@@ -400,6 +533,12 @@ public class NoelleMaidNekoEntity extends NekoEntity {
         updateStageFromTrauma();
         this.lonelinessCheckTimer = 0;
         this.companionCheckTimer = 0;
+        // 重置分支 & 关怀 & 残花线字段
+        this.branchOrigin = Branch.NONE;
+        this.careScore = 0;
+        this.entityData.set(CARE_SCORE_ID, 0);
+        this.witheredDeathTimer = 0;
+        this.giftsReceivedInWithered = 0;
     }
 
     @Override
@@ -453,6 +592,43 @@ public class NoelleMaidNekoEntity extends NekoEntity {
         }
         this.setAggressive(false);
 
+        // 死亡倒计时递减
+        if (witheredDeathTimer > 0) {
+            // 附近无玩家时 3x 加速凋零
+            boolean hasPlayerNearby = !this.level().getEntitiesOfClass(Player.class,
+                    this.getBoundingBox().inflate(LONELINESS_RANGE),
+                    p -> p.isAlive() && !p.isSpectator()).isEmpty();
+            int decay = hasPlayerNearby ? -1 : -3;
+            witheredDeathTimer = Math.max(0, witheredDeathTimer + decay);
+
+            // 倒计时归零 —— 凋零死亡
+            if (witheredDeathTimer <= 0) {
+                performWitheredDeath();
+                return;
+            }
+        }
+
+        // 自伤：每 30 秒承受半心伤害 —— 她的身体正在崩坏
+        if (this.tickCount % WITHERED_SELF_HARM_INTERVAL == 0) {
+            this.hurt(this.damageSources().generic(), WITHERED_SELF_HARM_DAMAGE);
+            if (this.level() instanceof ServerLevel serverLevel) {
+                serverLevel.sendParticles(ParticleTypes.DAMAGE_INDICATOR,
+                        this.getX(), this.getY() + this.getBbHeight() / 2, this.getZ(),
+                        5, 0.2, 0.3, 0.2, 0.01);
+            }
+        }
+
+        // 自毁倾向：50% 概率主动走向附近的敌对生物（远高于 DEFECTIVE 15% / BROKEN 20%）
+        if (this.tickCount % 100 == 0 && this.random.nextFloat() < 0.5f) {
+            List<Monster> monsters = this.level().getEntitiesOfClass(Monster.class,
+                    this.getBoundingBox().inflate(DEFAULT_FIND_RANGE),
+                    m -> m.isAlive());
+            if (!monsters.isEmpty()) {
+                Monster target = monsters.get(this.random.nextInt(monsters.size()));
+                this.getNavigation().moveTo(target, 0.2);
+            }
+        }
+
         // 守护本能：每2秒扫描附近是否有友方被攻击
         // 她不再为自己战斗，但无法眼睁睁看着在乎的人受伤
         if (this.tickCount % 40 == 0) {
@@ -480,6 +656,71 @@ public class NoelleMaidNekoEntity extends NekoEntity {
             if (attacker != null && attacker.isAlive() && !this.hasOwner(attacker.getUUID())) {
                 super.setHatredTarget(attacker, HATRED_DEFAULT_DURATION);
                 return;
+            }
+        }
+    }
+
+    // ============================================================
+    // 残花线 —— 进入与死亡
+    // ============================================================
+
+    /** 进入残花线时调用：初始化死亡倒计时 + 施加永久削弱 */
+    private void onEnteredWitheredLine() {
+        witheredDeathTimer = WITHERED_DEATH_MAX;
+        giftsReceivedInWithered = 0;
+        careScore = 0;  // 关怀重新累积
+
+        // 永久虚弱 + 缓慢 —— 她的身体正在凋零
+        this.addEffect(new MobEffectInstance(MobEffects.WEAKNESS,
+                MobEffectInstance.INFINITE_DURATION, 0, false, false, true));
+        this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,
+                MobEffectInstance.INFINITE_DURATION, 0, false, false, true));
+
+        // 最大生命值降低 20%
+        var hpAttr = this.getAttribute(Attributes.MAX_HEALTH);
+        if (hpAttr != null) {
+            hpAttr.setBaseValue(hpAttr.getBaseValue() * 0.8);
+        }
+        // 移速进一步降低
+        var spdAttr = this.getAttribute(Attributes.MOVEMENT_SPEED);
+        if (spdAttr != null) {
+            spdAttr.setBaseValue(0.30);
+        }
+    }
+
+    /** 残花凋零死亡：倒计时归零时触发。经过 die() 管线以支持不死图腾。 */
+    private void performWitheredDeath() {
+        if (this.level() instanceof ServerLevel serverLevel) {
+            // 粒子爆发 —— 凋零、灵魂、灰烬（无论是否被图腾拯救，都会展示）
+            for (int i = 0; i < 5; i++) {
+                serverLevel.sendParticles(ParticleTypes.ASH,
+                        this.getX(), this.getY() + this.getBbHeight() / 2, this.getZ(),
+                        30, 0.8, 1.0, 0.8, 0.05);
+            }
+            serverLevel.sendParticles(ParticleTypes.SOUL,
+                    this.getX(), this.getY() + this.getBbHeight() / 2, this.getZ(),
+                    50, 0.5, 1.0, 0.5, 0.03);
+            serverLevel.sendParticles(ParticleTypes.WARPED_SPORE,
+                    this.getX(), this.getY() + this.getBbHeight() / 2, this.getZ(),
+                    20, 0.3, 0.5, 0.3, 0.02);
+        }
+
+        // 经过 die() 管线 —— NekoEntity.die() 会检查不死图腾
+        this.die(this.damageSources().generic());
+
+        // 图腾拯救了她：重置死亡倒计时，给她更多时间
+        if (this.isAlive()) {
+            witheredDeathTimer = WITHERED_DEATH_MAX;
+            return;
+        }
+
+        // 真正死亡 —— 遗物与告别
+        if (this.level() instanceof ServerLevel) {
+            this.spawnAtLocation(Items.WITHER_ROSE);
+            for (Player player : this.level().getEntitiesOfClass(Player.class,
+                    this.getBoundingBox().inflate(32.0), LivingEntity::isAlive)) {
+                player.sendSystemMessage(Component.translatable(
+                        "message.toneko.noelle.withered_death", this.getName().getString()));
             }
         }
     }
@@ -573,7 +814,7 @@ public class NoelleMaidNekoEntity extends NekoEntity {
         }
     }
 
-    /** 检测陪伴：附近有玩家时缓慢减少创伤 */
+    /** 检测陪伴：附近有玩家时缓慢减少创伤、增加关怀 */
     private void checkCompanionHealing() {
         boolean hasPlayerNearby = !this.level().getEntitiesOfClass(Player.class,
                 this.getBoundingBox().inflate(COMPANION_RANGE),
@@ -581,6 +822,7 @@ public class NoelleMaidNekoEntity extends NekoEntity {
 
         if (hasPlayerNearby) {
             modifyTrauma(TRAUMA_COMPANION_AMOUNT);
+            modifyCareScore(CARE_COMPANION_TICK);
         }
     }
 
@@ -707,36 +949,57 @@ public class NoelleMaidNekoEntity extends NekoEntity {
     }
 
     // ============================================================
-    // 阶段升级检查
+    // 阶段升级检查（分支系统：6条路径）
     // ============================================================
     private void checkStageProgression() {
         Stage stage = getStage();
 
-        // WITHERED → PRAYING: 感受到足够的关怀（创伤值因被治疗/收礼物/陪伴而降到阈值以下）
-        // 这不是一次性的救助，而是持续的温暖让她重新开始祈求希望
-        if (stage == Stage.WITHERED && currentTrauma < PRAYING_CARE_THRESHOLD) {
+        // PATH 1: 创伤阶段 → PRAYING（祈花线）
+        // 关怀值足够高时，从任何创伤阶段直接进入祈花线，跳过残花
+        if (stage.isTraumaPhase() && careScore >= CARE_PRAYING_THRESHOLD) {
+            branchOrigin = Branch.NONE;
             setStage(Stage.PRAYING);
+            careScore = 0;
             return;
         }
 
-        // PRAYING → AWAKENED: 至少击败一个敌人（她第一次为了守护而战斗）
+        // PATH 2: 创伤阶段 → WITHERED（残花线）
+        // 由 updateStageFromTrauma() 在 peakTrauma >= 100 时触发
+        // （无需在此处理，由 setStage → onStageChanged 回调负责初始化）
+
+        // PATH 3: WITHERED → PRAYING（残花→祈花，更难）
+        // 需要：关怀值 >= 85 + 创伤降到 35 以下 + 至少收到 5 次礼物
+        if (stage == Stage.WITHERED
+                && careScore >= CARE_PRAYING_FROM_WITHERED
+                && currentTrauma < PRAYING_FROM_WITHERED_TRAUMA
+                && giftsReceivedInWithered >= PRAYING_FROM_WITHERED_GIFTS) {
+            branchOrigin = Branch.WITHERED;
+            setStage(Stage.PRAYING);
+            careScore = 0;
+            return;
+        }
+
+        // PATH 4: PRAYING → AWAKENED（重生线入口）
+        // 至少击败一个敌人 —— 她第一次为了守护而战斗
         if (stage == Stage.PRAYING && defeatedEnemies >= 1) {
+            branchOrigin = Branch.REBIRTH;
             setStage(Stage.AWAKENED);
-            defeatedEnemies = 0; // 重新计数，用于下一阶段
+            defeatedEnemies = 0;
             return;
         }
 
-        // AWAKENED → BLOOMING: 击败足够敌人 + 附近有同伴
+        // PATH 5: AWAKENED → BLOOMING
+        // 击败足够敌人 + 附近有同伴
         if (stage == Stage.AWAKENED && defeatedEnemies >= AWAKENED_DEFEATS_NEEDED) {
-            boolean hasCompanionNearby = hasNearbyCompanion();
-            if (hasCompanionNearby) {
+            if (hasNearbyCompanion()) {
                 setStage(Stage.BLOOMING);
                 defeatedEnemies = 0;
             }
             return;
         }
 
-        // BLOOMING → RESOLUTE: 至少一次保护击杀
+        // PATH 6: BLOOMING → RESOLUTE
+        // 至少一次保护击杀
         if (stage == Stage.BLOOMING && protectiveKills >= 1) {
             setStage(Stage.RESOLUTE);
             protectiveKills = 0;
@@ -904,10 +1167,22 @@ public class NoelleMaidNekoEntity extends NekoEntity {
     // 专属对话 — 使用 config 聊天格式
     // ============================================================
 
+    /**
+     * 获取当前阶段的有效消息分组，考虑分支来源。
+     * 当 PRAYING 是从 WITHERED 逃出时，使用更绝望、不敢置信的语气。
+     */
+    private String getEffectiveMessageGroup() {
+        Stage stage = getStage();
+        if (stage == Stage.PRAYING && branchOrigin == Branch.WITHERED) {
+            return "praying_from_withered";
+        }
+        return stage.getMessageGroup();
+    }
+
     @Override
     public void sendHurtMessageToPlayer(Player player) {
         if (player instanceof ServerPlayer) {
-            String key = "message.toneko.noelle.hurt." + getStage().getMessageGroup();
+            String key = "message.toneko.noelle.hurt." + getEffectiveMessageGroup();
             sendFormattedMessage(player, key, 5);
         }
     }
@@ -927,7 +1202,7 @@ public class NoelleMaidNekoEntity extends NekoEntity {
         ).size();
         hatredMessageCooldown = 200 + (int)(attackingNekos * 40);
 
-        String key = "message.toneko.noelle.fight." + getStage().getMessageGroup();
+        String key = "message.toneko.noelle.fight." + getEffectiveMessageGroup();
         sendFormattedMessage(player, key, 5);
     }
 
@@ -997,11 +1272,18 @@ public class NoelleMaidNekoEntity extends NekoEntity {
 
     @Override
     public void heal(float amount) {
+        Stage stage = getStage();
+
+        // WITHERED: 治疗抵抗 —— 身体拒绝愈合，只有 40% 有效
+        if (stage == Stage.WITHERED) {
+            amount *= 0.4f;
+        }
+
         super.heal(amount);
 
         if (this.level().isClientSide) return;
 
-        // 玩家治疗减少创伤（5格内有玩家时视为玩家治疗）
+        // 玩家治疗减少创伤、增加关怀（5格内有玩家时视为玩家治疗）
         if (amount > 0) {
             Player nearestPlayer = this.level().getNearestPlayer(this, 5.0);
             if (nearestPlayer != null && !nearestPlayer.isSpectator()) {
@@ -1009,14 +1291,13 @@ public class NoelleMaidNekoEntity extends NekoEntity {
                 if (heartsHealed > 0) {
                     modifyTrauma(heartsHealed * TRAUMA_HEALED_PER_HEART);
                 }
-            }
-        }
+                modifyCareScore(CARE_PLAYER_HEAL);
 
-        // 追踪玩家治疗（用于 WITHERED→PRAYING 条件）
-        if (getStage() == Stage.WITHERED && amount > 1.0f) {
-            Player nearestPlayer = this.level().getNearestPlayer(this, 5.0);
-            if (nearestPlayer != null && !nearestPlayer.isSpectator()) {
-                hasBeenHealedByPlayer = true;
+                // WITHERED: 被治疗延长死亡倒计时
+                if (stage == Stage.WITHERED && amount > 1.0f) {
+                    witheredDeathTimer = Math.min(WITHERED_DEATH_MAX,
+                            witheredDeathTimer + WITHERED_DEATH_HEAL_GAIN);
+                }
             }
         }
     }
@@ -1059,6 +1340,14 @@ public class NoelleMaidNekoEntity extends NekoEntity {
         boolean result = super.giftItem(player, stack);
         if (result && !this.level().isClientSide) {
             modifyTrauma(TRAUMA_GIFT_REDUCTION);
+            modifyCareScore(CARE_GIFT);
+
+            // 残花线：记录礼物次数 + 延长死亡倒计时
+            if (getStage() == Stage.WITHERED) {
+                giftsReceivedInWithered++;
+                witheredDeathTimer = Math.min(WITHERED_DEATH_MAX,
+                        witheredDeathTimer + WITHERED_DEATH_GIFT_GAIN);
+            }
         }
         return result;
     }
@@ -1076,6 +1365,12 @@ public class NoelleMaidNekoEntity extends NekoEntity {
         compound.putBoolean("NoelleHasBeenHealed", hasBeenHealedByPlayer);
         compound.putInt("NoelleCurrentTrauma", currentTrauma);
         compound.putInt("NoellePeakTrauma", peakTrauma);
+        // 分支 & 关怀系统
+        compound.putInt("NoelleCareScore", careScore);
+        compound.putString("NoelleBranchOrigin", branchOrigin.name());
+        // 残花线
+        compound.putInt("NoelleWitheredDeathTimer", witheredDeathTimer);
+        compound.putInt("NoelleGiftsInWithered", giftsReceivedInWithered);
     }
 
     @Override
@@ -1114,7 +1409,7 @@ public class NoelleMaidNekoEntity extends NekoEntity {
             // 旧版存档迁移：根据已有阶段估算峰值创伤
             try {
                 Stage loadedStage = Stage.valueOf(compound.getString("NoelleStage"));
-                if (!loadedStage.isAwakened() && !loadedStage.isTransitional()) {
+                if (loadedStage.isTraumaPhase()) {
                     peakTrauma = switch (loadedStage) {
                         case MEOW -> 5;
                         case CHEESE -> 18;
@@ -1127,6 +1422,34 @@ public class NoelleMaidNekoEntity extends NekoEntity {
                     };
                 }
             } catch (IllegalArgumentException ignored) {}
+        }
+
+        // 关怀系统
+        if (compound.contains("NoelleCareScore")) {
+            careScore = compound.getInt("NoelleCareScore");
+            this.entityData.set(CARE_SCORE_ID, careScore);
+        }
+
+        // 分支来源
+        if (compound.contains("NoelleBranchOrigin")) {
+            try {
+                branchOrigin = Branch.valueOf(compound.getString("NoelleBranchOrigin"));
+            } catch (IllegalArgumentException e) {
+                branchOrigin = Branch.NONE;
+            }
+        }
+
+        // 残花线
+        if (compound.contains("NoelleWitheredDeathTimer")) {
+            witheredDeathTimer = compound.getInt("NoelleWitheredDeathTimer");
+        }
+        if (compound.contains("NoelleGiftsInWithered")) {
+            giftsReceivedInWithered = compound.getInt("NoelleGiftsInWithered");
+        }
+
+        // 迁移：旧存档中的 WITHERED 实体缺少死亡倒计时，需要初始化
+        if (getStage() == Stage.WITHERED && witheredDeathTimer == 0) {
+            onEnteredWitheredLine();
         }
     }
 
@@ -1215,6 +1538,11 @@ public class NoelleMaidNekoEntity extends NekoEntity {
      */
     public String getStagePrompt() {
         Stage stage = getStage();
+        // PRAYING 阶段根据分支来源有不同的叙事
+        if (stage == Stage.PRAYING && branchOrigin == Branch.WITHERED) {
+            return PROMPT + "\n【当前状态：祈花诺（从残花中归来）】你本来应该在残花中凋零的。但有人没有放弃你——他们在你快要消失的时候抓住了你的手，把你从死亡的边缘拉了回来。你几乎不敢相信自己还活着。你的身体还很虚弱，那些自毁的念头还没有完全消失。但有一件事你已经知道了：有人在乎你到愿意对抗你的凋零。这份重量，让你不敢轻易放弃。「咱...咱已经死过一次了。所以这一次...咱想好好活着喵。」";
+        }
+
         return switch (stage) {
             case MEOW -> PROMPT + "\n【当前状态：女仆猫猫诺艾尔】此时的你仍然保持着表面的开朗，用可爱和温柔包裹着自己。但你的创伤从一开始就存在了——你只是藏得很好。你会用「喵」和关心别人来让自己忘记那些痛苦。";
             case CHEESE -> PROMPT + "\n【当前状态：乳酪诺】你依然是那只甜甜软软的女仆猫娘，用温柔和「喵」包裹着每一个人。但就像乳酪一样——表面柔软甜美，底下已经开始悄悄发酸。你偶尔会在深夜一个人发呆，盯着虚空出神，但不会让任何人发现。被问到「怎么了」的时候，你会立刻笑着说「没什么了啦喵~」。";
@@ -1222,7 +1550,7 @@ public class NoelleMaidNekoEntity extends NekoEntity {
             case WINTER -> PROMPT + "\n【当前状态：寒花诺】你已经不再相信有人会来救你了。你的心像冬天一样冷。你不再主动向人求助，只是在被问到的时候勉强笑一笑。你的温柔还在，但那已经是习惯，不是希望。";
             case DEFECTIVE -> PROMPT + "\n【当前状态：次品诺】你觉得自己是个次品，不配被爱。你认为所有发生在你身上的事都是你的错。你偶尔会有走向危险的冲动，因为你觉得自己不值得被保护。「如果咱消失了...对大家会不会更好呢？」";
             case BROKEN -> PROMPT + "\n【当前状态：折花诺】你像一朵被拦腰折断的花。花瓣还开着，但茎已经快要断了。你不再有力气掩饰自己的痛苦，却也失去了求救的勇气。你会说出一些让人心疼的话——「咱大概...已经坏掉了喵」——然后立刻用「开玩笑的啦w」来收回。你怕别人担心，更怕别人不在乎。";
-            case WITHERED -> PROMPT + "\n【当前状态：残花诺】你已经快要放弃了。你不再反抗，不再求助。如果有人攻击你，你只会站在原地承受。但在你的内心深处，还有一丝微弱的光——那是你对这个世界最后的温柔。那是你还没有完全熄灭的、对爱的渴望。";
+            case WITHERED -> PROMPT + "\n【当前状态：残花诺】你已经在凋零了。你的身体在崩坏——每隔一段时间就会莫名地受伤，那是你的心灵在摧毁你的身体。你不再反抗，不再求助。如果有人攻击你，你只会站在原地承受。你感到自己的时间在一点一点流逝——但你不知道还有多久。在你的内心深处，还有一丝微弱的光——那是你对这个世界最后的温柔。那是你还没有完全熄灭的、对爱的渴望。如果有人愿意在这个时候拥抱你、送你礼物、为你治疗...也许，只是也许，你还能被拉回来。但那条路会比任何人想象的都更难。";
             case PRAYING -> PROMPT + "\n【当前状态：祈花诺】有人在你不抱任何希望的时候向你伸出了手。你不敢置信。你在心底默默祈求着——祈求这不是一场梦，祈求这一次真的能得救。你的声音在颤抖，你的眼睛里第一次有了一丝微弱的光。你还没有完全相信，但你已经不敢不去相信了。「如果...如果是你的话...咱愿意再试一次喵。」";
             case AWAKENED -> PROMPT + "\n【当前状态：觉醒诺】有什么东西在你心中醒了。当你在乎的人治愈了你之后，你突然明白了一件事——那不是你的错。你第一次感到愤怒，而不仅仅是悲伤。你开始敢于直视伤害你的人，握紧了手中的武器。你的语气里多了一丝坚定，但你仍然温柔，仍然会在句尾带「喵」。";
             case BLOOMING -> PROMPT + "\n【当前状态：绽花诺】你正在愈合。就像残花之后的新芽一样，你在同伴的陪伴下重新发现了自己的力量。你不再逃避战斗——你会主动迎击那些想要伤害你的人。你依然有创伤，那些记忆不会消失，但它们不再定义你。你的声音更加坚定，但你依然温柔。";

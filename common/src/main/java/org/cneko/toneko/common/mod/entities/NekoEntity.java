@@ -17,6 +17,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
@@ -106,6 +107,10 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     // 被动回血
     protected static final int PASSIVE_HEAL_INTERVAL = 600; // 30秒回血一次
     private int passiveHealTimer = 0;
+
+    // 战斗中自动吃食物回血冷却（防止每次受伤都吃）
+    private int lastFoodHealTick = 0;
+    private static final int FOOD_HEAL_COOLDOWN = 200; // 10秒 = 200 ticks
 
     // 受伤求救冷却时间，避免被连击时疯狂扫描附近实体
     private long lastHelpCallTime = 0;
@@ -230,12 +235,16 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
         this.saveNekoNBTData(compound);
         compound.put("Genome", this.genome.save());
         compound.put("GeneticData", this.geneticData);
+        compound.putInt("LastFoodHealTick", this.lastFoodHealTick);
     }
 
     public void readAdditionalSaveData(@NotNull CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         if (compound.contains("Skin")) {
             this.setSkin(compound.getString("Skin"));
+        }
+        if (compound.contains("LastFoodHealTick")) {
+            this.lastFoodHealTick = compound.getInt("LastFoodHealTick");
         }
         if (compound.contains("Inventory")) {
             ListTag listTag = compound.getList("Inventory", 10);
@@ -403,7 +412,10 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     }
     // 是否喜欢这个物品
     public boolean isLikedItem(ItemStack stack){
-        return isFavoriteItem(stack) || stack.has(DataComponents.FOOD) || stack.is(NEKO_ARMOR);
+        return isFavoriteItem(stack)
+                || stack.has(DataComponents.FOOD)
+                || stack.is(NEKO_ARMOR)
+                || stack.is(Items.TOTEM_OF_UNDYING);
     }
     // 是否需要这个物品
     public boolean isNeededItem(ItemStack stack){
@@ -480,8 +492,9 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     public void setLastHurtByPlayer(@Nullable Player player) {
         if (player == null || !this.hasOwner(player.getUUID())) {
             super.setLastHurtByPlayer(player);
+        } else {
+            super.setLastHurtByPlayer(null);
         }
-        super.setLastHurtByPlayer(null);
     }
 
     public @NotNull ItemStack getItemBySlot(@NotNull EquipmentSlot slot) {
@@ -656,12 +669,70 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
 
     @Override
     public void die(@NotNull DamageSource damageSource) {
+        // 尝试使用不死图腾阻止死亡
+        if (tryUseTotem(damageSource)) {
+            return;
+        }
         super.die(damageSource);
         Level world = this.level();
         if (world instanceof ServerLevel serverLevel) {
             this.dropAllDeathLoot(serverLevel, damageSource);
             this.getInventory().dropAll();
         }
+    }
+
+    /**
+     * 尝试消耗不死图腾来阻止死亡。
+     * 搜索顺序：主手 → 副手 → 背包。
+     * @return true 如果图腾被消耗且死亡被阻止
+     */
+    private boolean tryUseTotem(DamageSource damageSource) {
+        ItemStack totem = null;
+
+        // 1. 检查主手
+        ItemStack mainHand = this.getItemInHand();
+        if (mainHand.is(Items.TOTEM_OF_UNDYING)) {
+            totem = mainHand;
+        }
+        // 2. 检查副手
+        if (totem == null) {
+            ItemStack offhand = this.inventory.offhand.get(0);
+            if (offhand.is(Items.TOTEM_OF_UNDYING)) {
+                totem = offhand;
+            }
+        }
+        // 3. 搜索背包
+        if (totem == null) {
+            for (ItemStack stack : this.inventory.items) {
+                if (stack.is(Items.TOTEM_OF_UNDYING)) {
+                    totem = stack;
+                    break;
+                }
+            }
+        }
+
+        if (totem == null) return false;
+
+        // 消耗图腾
+        totem.shrink(1);
+
+        // 复活效果（参照原版玩家图腾行为）
+        this.setHealth(1.0f);
+        this.removeAllEffects();
+        this.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 900, 1));     // 生命恢复 II, 45秒
+        this.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 100, 3));       // 伤害吸收 IV, 5秒
+        this.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 800, 0));  // 抗火, 40秒
+
+        // 视觉 & 音效
+        if (this.level() instanceof ServerLevel serverLevel) {
+            serverLevel.sendParticles(ParticleTypes.TOTEM_OF_UNDYING,
+                    this.getX(), this.getY() + this.getBbHeight() / 2, this.getZ(),
+                    100, 0.5, 0.8, 0.5, 0.05);
+            serverLevel.playSound(null, this.getX(), this.getY(), this.getZ(),
+                    SoundEvents.TOTEM_USE, this.getSoundSource(), 1.0f, 1.0f);
+        }
+
+        return true;
     }
 
     @Override
@@ -1064,15 +1135,20 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
                 && !this.hasOwner(attacker.getUUID())) {
             this.setHatredTarget(attacker, HATRED_DEFAULT_DURATION);
         }
-        // 寻找回血食物
-        for (ItemStack stack : this.getInventory().items){
-            // 如果是食物，则吃掉回血并获取对应的效果
-            FoodProperties food = stack.getItem().components().get(DataComponents.FOOD);
-            if (food!=null && (this.getHealth() < this.getMaxHealth() || !food.effects().isEmpty())){
-                // 回血
-                this.heal(food.nutrition());
-                this.eat(this.level(), stack);
-                stack.shrink(1);
+        // 寻找回血食物（每 10 秒最多触发一次，防止每次都吃食物回血）
+        int currentTick = (int) this.level().getGameTime();
+        if (currentTick - this.lastFoodHealTick >= FOOD_HEAL_COOLDOWN) {
+            for (ItemStack stack : this.getInventory().items){
+                // 如果是食物，则吃掉回血并获取对应的效果
+                FoodProperties food = stack.getItem().components().get(DataComponents.FOOD);
+                if (food!=null && (this.getHealth() < this.getMaxHealth() || !food.effects().isEmpty())){
+                    // 回血
+                    this.heal(food.nutrition());
+                    this.eat(this.level(), stack);
+                    stack.shrink(1);
+                    this.lastFoodHealTick = currentTick;
+                    break; // 一次只吃一个
+                }
             }
         }
         // 召集附近猫娘共同作战（40tick冷却）

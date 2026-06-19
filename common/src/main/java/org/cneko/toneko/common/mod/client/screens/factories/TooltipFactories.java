@@ -16,9 +16,16 @@ public class TooltipFactories {
     public static TooltipFactory NOELLE_TRAUMA_TOOLTIP = screen -> {
         if (screen.getNeko() instanceof NoelleMaidNekoEntity noelle) {
             int trauma = noelle.getCurrentTrauma();
+            int care = noelle.getCareScore();
             String stageName = noelle.getStage().getDisplayName();
+            // 残花线：显示死亡倒计时
+            if (noelle.getStage() == NoelleMaidNekoEntity.Stage.WITHERED) {
+                int minutesLeft = noelle.getWitheredDeathTimer() / 1200;
+                return Component.translatable("screen.toneko.noelle_interactive.tooltip.trauma_withered",
+                        trauma, 100, care, 100, stageName, minutesLeft);
+            }
             return Component.translatable("screen.toneko.noelle_interactive.tooltip.trauma",
-                    trauma, 100, stageName);
+                    trauma, 100, care, 100, stageName);
         }
         return Component.empty();
     };
