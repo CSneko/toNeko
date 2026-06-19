@@ -39,6 +39,7 @@ public class ToNekoItems {
     public static Item NEKO_ENERGY_STORAGE_LARGE;
     public static Item NEKO_ENERGY_STORAGE_LARGE_CHARGED;
     public static NekoEnergyBurstItem NEKO_ENERGY_BURST;
+    public static NekoEnergyBurstItem EVIL_NEKO_ENERGY_BURST;
     public static Item GENE_EDITOR;
     public static Item GROWTH_TREAT;
     public static Item DEAGE_TREAT;

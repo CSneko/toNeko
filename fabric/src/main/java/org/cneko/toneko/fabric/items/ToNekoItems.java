@@ -74,6 +74,7 @@ public class ToNekoItems {
         NEKO_ENERGY_STORAGE_LARGE = new NekoEnergyStorageItem(1000,false);
         NEKO_ENERGY_STORAGE_LARGE_CHARGED = new NekoEnergyStorageItem(1000,true);
         NEKO_ENERGY_BURST = new NekoEnergyBurstItem(2f,3f,50f);
+        EVIL_NEKO_ENERGY_BURST = new EvilNekoEnergyBurstItem(2f,3f,50f);
         GENE_EDITOR = new GeneEditorItem(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
         GROWTH_TREAT = new GrowthTreatItem(new Item.Properties().component(DataComponents.FOOD,
                 new FoodProperties(4, 2.0f, false, 1.6f, Optional.empty(),
@@ -115,6 +116,7 @@ public class ToNekoItems {
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("neko_energy_storage_large"), NEKO_ENERGY_STORAGE_LARGE);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("neko_energy_storage_large_charged"), NEKO_ENERGY_STORAGE_LARGE_CHARGED);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("neko_energy_burst"), NEKO_ENERGY_BURST);
+        Registry.register(BuiltInRegistries.ITEM, toNekoLoc("evil_neko_energy_burst"), EVIL_NEKO_ENERGY_BURST);
             Registry.register(BuiltInRegistries.ITEM, toNekoLoc("gene_editor"), GENE_EDITOR);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(GrowthTreatItem.ID), GROWTH_TREAT);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(DeageTreatItem.ID), DEAGE_TREAT);
@@ -175,6 +177,7 @@ public class ToNekoItems {
             content.accept(NEKO_ENERGY_STORAGE_LARGE);
             content.accept(NEKO_ENERGY_STORAGE_LARGE_CHARGED);
             content.accept(NEKO_ENERGY_BURST);
+            content.accept(EVIL_NEKO_ENERGY_BURST);
             content.accept(GENE_EDITOR);
             content.accept(GROWTH_TREAT);
             content.accept(DEAGE_TREAT);

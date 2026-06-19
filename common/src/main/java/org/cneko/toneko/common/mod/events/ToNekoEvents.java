@@ -26,6 +26,7 @@ import net.minecraft.world.item.trading.MerchantOffer;
 import org.cneko.toneko.common.mod.api.NekoLevelRegistry;
 import org.cneko.toneko.common.mod.api.events.WorldEvents;
 import org.cneko.toneko.common.mod.entities.INeko;
+import org.cneko.toneko.common.mod.items.NekoEnergyBurstItem;
 import org.cneko.toneko.common.mod.items.ToNekoItems;
 import org.cneko.toneko.common.mod.quirks.ModQuirk;
 import org.cneko.toneko.common.mod.util.TextUtil;
@@ -57,6 +58,7 @@ public class ToNekoEvents {
         });
         AttackEntityCallback.EVENT.register(CommonPlayerInteractionEvent::onAttackEntity);
         ServerTickEvents.START_SERVER_TICK.register(CommonPlayerEvent::startTick);
+        ServerTickEvents.START_SERVER_TICK.register(NekoEnergyBurstItem::tickComboBossBars);
         ServerWorldEvents.UNLOAD.register(CommonWorldEvent::onWorldUnLoad);
         WorldEvents.ON_WEATHER_CHANGE.register(CommonWorldEvent::onWeatherChange);
         EntitySleepEvents.START_SLEEPING.register(CommonPlayerEvent::startSleep);

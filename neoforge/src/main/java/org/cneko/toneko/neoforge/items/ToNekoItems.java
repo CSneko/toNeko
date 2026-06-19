@@ -71,6 +71,7 @@ public class ToNekoItems {
     public static DeferredHolder<Item,NekoEnergyStorageItem> NEKO_ENERGY_STORAGE_LARGE_HOLDER;
     public static DeferredHolder<Item,NekoEnergyStorageItem> NEKO_ENERGY_STORAGE_LARGE_CHARGED_HOLDER;
     public static DeferredHolder<Item,NekoEnergyBurstItem> NEKO_ENERGY_BURST_HOLDER;
+    public static DeferredHolder<Item,EvilNekoEnergyBurstItem> EVIL_NEKO_ENERGY_BURST_HOLDER;
     public static DeferredHolder<Item,GeneEditorItem> GENE_EDITOR_HOLDER;
     public static DeferredHolder<Item,NekoArmor.NekoPawsItem> NEKO_PAWS_HOLDER;
 
@@ -163,6 +164,7 @@ public class ToNekoItems {
         NEKO_ENERGY_STORAGE_LARGE_CHARGED_HOLDER = ITEMS.register("neko_energy_storage_large_charged", ()->new NekoEnergyStorageItem(1000,true));
 
         NEKO_ENERGY_BURST_HOLDER = ITEMS.register("neko_energy_burst", ()->new NekoEnergyBurstItem(2f,3f,50f));
+        EVIL_NEKO_ENERGY_BURST_HOLDER = ITEMS.register("evil_neko_energy_burst", ()->new EvilNekoEnergyBurstItem(2f,3f,50f));
 
         GENE_EDITOR_HOLDER = ITEMS.register("gene_editor", ()->new GeneEditorItem(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)));
 
@@ -205,6 +207,7 @@ public class ToNekoItems {
                     event.accept(NEKO_ENERGY_STORAGE_LARGE_HOLDER.get());
                     event.accept(NEKO_ENERGY_STORAGE_LARGE_CHARGED_HOLDER.get());
                     event.accept(NEKO_ENERGY_BURST_HOLDER.get());
+                    event.accept(EVIL_NEKO_ENERGY_BURST_HOLDER.get());
                     event.accept(GENE_EDITOR_HOLDER.get());
                     event.accept(INFINITE_CATNIP_HOLDER.get());
                     event.accept(NEKO_ENERGY_BOMB_HOLDER.get());
@@ -263,6 +266,7 @@ public class ToNekoItems {
             event.accept(NEKO_ENERGY_STORAGE_LARGE_HOLDER.get());
             event.accept(NEKO_ENERGY_STORAGE_LARGE_CHARGED_HOLDER.get());
             event.accept(NEKO_ENERGY_BURST_HOLDER.get());
+            event.accept(EVIL_NEKO_ENERGY_BURST_HOLDER.get());
             event.accept(GENE_EDITOR_HOLDER.get());
             event.accept(INFINITE_CATNIP_HOLDER.get());
             event.accept(NEKO_ENERGY_BOMB_HOLDER.get());
@@ -304,6 +308,7 @@ public class ToNekoItems {
         NEKO_ENERGY_STORAGE_LARGE = NEKO_ENERGY_STORAGE_LARGE_HOLDER.get();
         NEKO_ENERGY_STORAGE_LARGE_CHARGED = NEKO_ENERGY_STORAGE_LARGE_CHARGED_HOLDER.get();
         NEKO_ENERGY_BURST = NEKO_ENERGY_BURST_HOLDER.get();
+        EVIL_NEKO_ENERGY_BURST = EVIL_NEKO_ENERGY_BURST_HOLDER.get();
         GENE_EDITOR = GENE_EDITOR_HOLDER.get();
         GROWTH_TREAT = GROWTH_TREAT_HOLDER.get();
         DEAGE_TREAT = DEAGE_TREAT_HOLDER.get();

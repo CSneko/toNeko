@@ -23,7 +23,7 @@ public class EnchantmentUtil {
     }
 
     public static int getEnchantmentLevel(ResourceKey<Enchantment> enchantment, ItemStack stack, Level level){
-        var en = level.registryAccess().lookup(Registries.ENCHANTMENT).flatMap(lookup -> lookup.get(Enchantments.LOYALTY)).orElse(null);
+        var en = level.registryAccess().lookup(Registries.ENCHANTMENT).flatMap(lookup -> lookup.get(enchantment)).orElse(null);
         if (en == null) return 0;
         return EnchantmentHelper.getItemEnchantmentLevel(en,stack);
     }

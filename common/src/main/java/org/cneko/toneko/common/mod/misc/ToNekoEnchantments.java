@@ -15,6 +15,19 @@ public class ToNekoEnchantments {
     public static final ResourceKey<Enchantment> REVERSION = of(REVERSION_ID); // 反转
     public static final ResourceLocation ENFORCEMENT_ID = toNekoLoc("enforcement");
     public static final ResourceKey<Enchantment> ENFORCEMENT = of(ENFORCEMENT_ID); // 强制
+    // 猫能爆哈器附魔
+    public static final ResourceLocation HISS_POWER_ID = toNekoLoc("hiss_power");
+    public static final ResourceKey<Enchantment> HISS_POWER = of(HISS_POWER_ID); // 哈气强化
+    public static final ResourceLocation HISS_SPREAD_ID = toNekoLoc("hiss_spread");
+    public static final ResourceKey<Enchantment> HISS_SPREAD = of(HISS_SPREAD_ID); // 哈气扩散
+    public static final ResourceLocation HISS_EFFICIENCY_ID = toNekoLoc("hiss_efficiency");
+    public static final ResourceKey<Enchantment> HISS_EFFICIENCY = of(HISS_EFFICIENCY_ID); // 节能哈气
+    public static final ResourceLocation COMBO_EXTEND_ID = toNekoLoc("combo_extend");
+    public static final ResourceKey<Enchantment> COMBO_EXTEND = of(COMBO_EXTEND_ID); // 连击延续
+    public static final ResourceLocation HISS_ROOT_ID = toNekoLoc("hiss_root");
+    public static final ResourceKey<Enchantment> HISS_ROOT = of(HISS_ROOT_ID); // 定身哈气
+    public static final ResourceLocation HISS_DEMOLISH_ID = toNekoLoc("hiss_demolish");
+    public static final ResourceKey<Enchantment> HISS_DEMOLISH = of(HISS_DEMOLISH_ID); // 破坏哈气
 
     public static void init(){
 
