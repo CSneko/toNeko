@@ -7,6 +7,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
+import org.cneko.toneko.common.mod.entities.ai.BehaviorPriority;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -54,7 +55,7 @@ public class NekoHealGoal extends Goal {
         } else {
             if (--timeToRecalcPath <= 0) {
                 timeToRecalcPath = 10;
-                neko.getNavigation().moveTo(target, neko.getAttributeValue(Attributes.MOVEMENT_SPEED));
+                neko.getNekoBrain().submitMove(target, neko.getAttributeValue(Attributes.MOVEMENT_SPEED), BehaviorPriority.NORMAL, this);
             }
         }
     }
@@ -67,7 +68,7 @@ public class NekoHealGoal extends Goal {
     @Override
     public void stop() {
         target = null;
-        neko.getNavigation().stop();
+        neko.getNekoBrain().stopMoving(this);
     }
 
     private LivingEntity findInjuredEntity() {

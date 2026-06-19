@@ -18,6 +18,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
+import org.cneko.toneko.common.mod.entities.ai.BehaviorPriority;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -112,7 +113,7 @@ public class NekoCropGatheringGoal extends Goal {
                 // 若操作失败，则继续后续流程
             } else {
                 // 目标还未到达，指示猫娘朝目标移动
-                this.neko.getNavigation().moveTo(targetPos.getX() + 0.5, targetPos.getY() + 0.5, targetPos.getZ() + 0.5, neko.getAttributeValue(Attributes.MOVEMENT_SPEED) * 0.5);
+                this.neko.getNekoBrain().submitMove(targetPos.getX() + 0.5, targetPos.getY() + 0.5, targetPos.getZ() + 0.5, neko.getAttributeValue(Attributes.MOVEMENT_SPEED) * 0.5, BehaviorPriority.NORMAL, this);
                 this.cooldownTicks = 10;
                 return;
             }
@@ -172,7 +173,7 @@ public class NekoCropGatheringGoal extends Goal {
                 this.targetPos = foundTarget;
                 this.targetType = foundType;
                 // 同时指示猫娘开始移动
-                this.neko.getNavigation().moveTo(foundTarget.getX() + 0.5, foundTarget.getY() + 0.5, foundTarget.getZ() + 0.5, neko.getAttributeValue(Attributes.MOVEMENT_SPEED) * 0.5);
+                this.neko.getNekoBrain().submitMove(foundTarget.getX() + 0.5, foundTarget.getY() + 0.5, foundTarget.getZ() + 0.5, neko.getAttributeValue(Attributes.MOVEMENT_SPEED) * 0.5, BehaviorPriority.NORMAL, this);
                 this.cooldownTicks = 10;
                 return;
             }

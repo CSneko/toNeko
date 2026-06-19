@@ -9,6 +9,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.item.enchantment.effects.SpawnParticlesEffect;
 import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
+import org.cneko.toneko.common.mod.entities.ai.BehaviorPriority;
 
 import java.util.EnumSet;
 import java.util.Random;
@@ -57,7 +58,7 @@ public class NekoMateGoal extends Goal {
         // 每 10 tick 重新计算一次路径
         if (--this.timeToRecalcPath <= 0) {
             this.timeToRecalcPath = 10;
-            nekoEntity.getNavigation().moveTo(target.getEntity(), followSpeed);
+            nekoEntity.getNekoBrain().submitMove(target.getEntity(), followSpeed, BehaviorPriority.HIGH, this);
         }
         // 当距离小于1时，开始贴贴
         if (nekoEntity.distanceToSqr(target.getEntity()) < 1) {

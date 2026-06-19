@@ -4,6 +4,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.ai.goal.Goal;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
+import org.cneko.toneko.common.mod.entities.ai.BehaviorPriority;
 
 import java.util.EnumSet;
 
@@ -29,7 +30,7 @@ public class NekoChunibyoGoal extends Goal {
     @Override
     public void start() {
         duration = 20 + neko.getRandom().nextInt(20);
-        neko.getNavigation().stop();
+        neko.getNekoBrain().stopMoving(this);
     }
 
     @Override

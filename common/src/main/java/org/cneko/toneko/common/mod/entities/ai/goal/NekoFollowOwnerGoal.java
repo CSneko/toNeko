@@ -4,6 +4,7 @@ import lombok.Setter;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
+import org.cneko.toneko.common.mod.entities.ai.BehaviorPriority;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -62,13 +63,13 @@ public class NekoFollowOwnerGoal extends Goal {
     public void tick() {
         if (owner != null && owner.isAlive() && --this.timeToRecalcPath <= 0) {
             this.timeToRecalcPath = 10;
-            nekoEntity.getNavigation().moveTo(owner, getEffectiveSpeed());
+            nekoEntity.getNekoBrain().submitMove(owner, getEffectiveSpeed(), BehaviorPriority.HIGH, this);
         }
     }
 
     @Override
     public void stop() {
-        nekoEntity.getNavigation().stop();
+        nekoEntity.getNekoBrain().stopMoving(this);
     }
 
     public void setTarget(Player owner) {

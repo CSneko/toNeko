@@ -7,6 +7,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
+import org.cneko.toneko.common.mod.entities.ai.BehaviorPriority;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -69,7 +70,7 @@ public class NekoEscapeDangerGoal extends Goal {
             if (target == null) target = randomFlee();
         }
         if (target != null) {
-            neko.getNavigation().moveTo(target.x, target.y, target.z, speed);
+            neko.getNekoBrain().submitMove(target.x, target.y, target.z, speed, BehaviorPriority.CRITICAL, this);
         }
     }
 
@@ -81,10 +82,10 @@ public class NekoEscapeDangerGoal extends Goal {
                 recalcTimer = 40;
                 Vec3 shore = findShore();
                 if (shore != null) {
-                    neko.getNavigation().moveTo(shore.x, shore.y, shore.z, speed);
+                    neko.getNekoBrain().submitMove(shore.x, shore.y, shore.z, speed, BehaviorPriority.CRITICAL, this);
                 } else {
                     Vec3 flee = randomFlee();
-                    neko.getNavigation().moveTo(flee.x, flee.y, flee.z, speed);
+                    neko.getNekoBrain().submitMove(flee.x, flee.y, flee.z, speed, BehaviorPriority.CRITICAL, this);
                 }
             }
         }
@@ -103,7 +104,7 @@ public class NekoEscapeDangerGoal extends Goal {
 
     @Override
     public void stop() {
-        neko.getNavigation().stop();
+        neko.getNekoBrain().stopMoving(this);
     }
 
     private Vec3 findShore() {

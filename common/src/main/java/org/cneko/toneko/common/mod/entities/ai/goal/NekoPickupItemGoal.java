@@ -5,6 +5,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.item.ItemEntity;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
+import org.cneko.toneko.common.mod.entities.ai.BehaviorPriority;
 import org.cneko.toneko.common.mod.util.EntityUtil;
 
 import java.util.EnumSet;
@@ -65,7 +66,7 @@ public class NekoPickupItemGoal extends Goal {
             }
         } else if (--timeToRecalcPath <= 0) {
             timeToRecalcPath = 10;
-            neko.getNavigation().moveTo(targetItem, neko.getAttributeValue(Attributes.MOVEMENT_SPEED) * 0.6);
+            neko.getNekoBrain().submitMove(targetItem.getX(), targetItem.getY(), targetItem.getZ(), neko.getAttributeValue(Attributes.MOVEMENT_SPEED) * 0.6, BehaviorPriority.NORMAL, this);
         }
     }
 
@@ -73,6 +74,6 @@ public class NekoPickupItemGoal extends Goal {
     public void stop() {
         targetItem = null;
         cooldown = 40;
-        neko.getNavigation().stop();
+        neko.getNekoBrain().stopMoving(this);
     }
 }

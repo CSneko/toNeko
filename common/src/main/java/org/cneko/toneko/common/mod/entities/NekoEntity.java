@@ -50,6 +50,8 @@ import org.cneko.toneko.common.mod.ai.PromptRegistry;
 import org.cneko.toneko.common.mod.api.NekoLevelRegistry;
 import org.cneko.toneko.common.mod.api.NekoNameRegistry;
 import org.cneko.toneko.common.mod.api.NekoSkinRegistry;
+import org.cneko.toneko.common.mod.entities.ai.NekoBrain;
+import org.cneko.toneko.common.mod.entities.ai.NekoLookController;
 import org.cneko.toneko.common.mod.entities.ai.goal.*;
 import org.cneko.toneko.common.mod.genetics.ToNekoLocus;
 import org.cneko.toneko.common.mod.genetics.api.*;
@@ -134,6 +136,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
 
     public NekoFollowOwnerGoal nekoFollowOwnerGoal;
     public NekoMateGoal nekoMateGoal;
+    private final NekoBrain nekoBrain;
     private final AnimatableInstanceCache cache;
     @Getter
     private boolean isSitting = false;
@@ -151,7 +154,14 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
 
     public NekoEntity(EntityType<? extends NekoEntity> entityType, Level level) {
         super(entityType, level);
+        this.nekoBrain = new NekoBrain(this);
+        this.nekoBrain.enableFullArbitration();
+        this.lookControl = new NekoLookController(this);
         this.cache = GeckoLibUtil.createInstanceCache(this);
+    }
+
+    public NekoBrain getNekoBrain() {
+        return nekoBrain;
     }
 
 
@@ -667,13 +677,12 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
         super.baseTick();
         if (!this.level().isClientSide() && this.getMoeTags().contains("baka")
                 && this.random.nextFloat() < 0.002f) {
-            // baka: occasionally get distracted and stop navigating
-            this.getNavigation().stop();
-            this.getLookControl().setLookAt(
-                    this.getX() + this.random.nextGaussian() * 3,
-                    this.getY() + this.random.nextFloat() * 2,
-                    this.getZ() + this.random.nextGaussian() * 3
-            );
+            // baka: occasionally get distracted —— 通过大脑提交干扰意图
+            // 仅在无更高优先级行为时生效
+            double lookX = this.getX() + this.random.nextGaussian() * 3;
+            double lookY = this.getY() + this.random.nextFloat() * 2;
+            double lookZ = this.getZ() + this.random.nextGaussian() * 3;
+            nekoBrain.submitDistraction(20, new net.minecraft.world.phys.Vec3(lookX, lookY, lookZ));
         }
         slowTimer++;
         if (slowTimer >= 20){
@@ -951,6 +960,9 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
             // ====== 通用仇恨系统（子类可重写此方法来自定义攻击行为）=======
             tickHatred();
 
+            // ====== AI 大脑：统一仲裁所有移动意图 ======
+            nekoBrain.tick();
+
             // 环境粒子效果（每5秒一次）
             if (this.tickCount % 100 == 0) {
                 spawnAmbientParticles();
@@ -1003,9 +1015,11 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
 
     @Override
     public void move(@NotNull MoverType type, @NotNull Vec3 pos) {
-        if (this.canMove()) {
-            super.move(type, pos);
+        // 仅阻止 AI 驱动的移动（SELF），不阻止物理推送（PISTON、WATER 等）
+        if (type == MoverType.SELF && !this.canMove()) {
+            return;
         }
+        super.move(type, pos);
     }
 
     @Override
@@ -1152,10 +1166,10 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
             return;
         }
         this.hatredCooldown--;
-        // 仅在当前没有活跃导航路径时设置追击路径，避免每tick覆盖GoalSystem的导航指令
-        if (this.getNavigation().isDone()) {
-            this.getNavigation().moveTo(this.hatredTarget, this.getAttributeValue(Attributes.MOVEMENT_SPEED) * 1.2);
-        }
+        // 通过大脑提交战斗移动意图，由大脑统一仲裁
+        nekoBrain.submitMove(this.hatredTarget,
+                this.getAttributeValue(Attributes.MOVEMENT_SPEED) * 1.2,
+                org.cneko.toneko.common.mod.entities.ai.BehaviorPriority.COMBAT, this);
         tryHatredAttack();
         trySendHatredMessage();
     }

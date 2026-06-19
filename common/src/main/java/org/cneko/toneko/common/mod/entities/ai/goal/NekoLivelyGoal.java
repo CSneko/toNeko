@@ -4,6 +4,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
+import org.cneko.toneko.common.mod.entities.ai.BehaviorPriority;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -48,11 +49,11 @@ public class NekoLivelyGoal extends Goal {
         double dist = neko.distanceToSqr(target);
         if (dist < 4.0) {
             // close enough, stay and look
-            neko.getNavigation().stop();
+            neko.getNekoBrain().stopMoving(this);
             neko.getLookControl().setLookAt(target, 30, 30);
             stayTicks--;
         } else {
-            neko.getNavigation().moveTo(target, neko.getAttributeValue(Attributes.MOVEMENT_SPEED) * 0.7);
+            neko.getNekoBrain().submitMove(target, neko.getAttributeValue(Attributes.MOVEMENT_SPEED) * 0.7, BehaviorPriority.NORMAL, this);
         }
     }
 
@@ -65,6 +66,6 @@ public class NekoLivelyGoal extends Goal {
     public void stop() {
         target = null;
         cooldown = 100;
-        neko.getNavigation().stop();
+        neko.getNekoBrain().stopMoving(this);
     }
 }

@@ -6,6 +6,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.util.DefaultRandomPos;
+import org.cneko.toneko.common.mod.entities.ai.BehaviorPriority;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
@@ -90,12 +91,12 @@ public class MobSunBaskingGoal extends Goal {
         this.isBasking = false;
         this.baskingTicks = 0;
         // 开始向阳光点移动
-        this.mob.getNavigation().moveTo(this.wantedX, this.wantedY, this.wantedZ, mob.getAttributeValue(Attributes.MOVEMENT_SPEED));
+        ((org.cneko.toneko.common.mod.entities.NekoEntity) this.mob).getNekoBrain().submitMove(this.wantedX, this.wantedY, this.wantedZ, mob.getAttributeValue(Attributes.MOVEMENT_SPEED), BehaviorPriority.LOW, this);
     }
 
     @Override
     public void stop() {
-        this.mob.getNavigation().stop();
+        ((org.cneko.toneko.common.mod.entities.NekoEntity) this.mob).getNekoBrain().stopMoving(this);
         this.isBasking = false;
         this.baskingTicks = 0;
         this.searchCooldown = this.mob.getRandom().nextInt(60) + 60;

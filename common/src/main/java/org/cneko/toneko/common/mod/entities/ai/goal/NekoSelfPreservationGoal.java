@@ -6,6 +6,7 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
+import org.cneko.toneko.common.mod.entities.ai.BehaviorPriority;
 
 import java.util.EnumSet;
 
@@ -31,7 +32,7 @@ public class NekoSelfPreservationGoal extends Goal {
         eatTicks = 60;
         // move to a safe spot
         Vec3 target = neko.position().add(neko.getRandom().nextDouble() * 4 - 2, 0, neko.getRandom().nextDouble() * 4 - 2);
-        neko.getNavigation().moveTo(target.x, target.y, target.z, neko.getAttributeValue(Attributes.MOVEMENT_SPEED));
+        neko.getNekoBrain().submitMove(target.x, target.y, target.z, neko.getAttributeValue(Attributes.MOVEMENT_SPEED), BehaviorPriority.NORMAL, this);
     }
 
     @Override
@@ -56,7 +57,7 @@ public class NekoSelfPreservationGoal extends Goal {
     public void stop() {
         cooldown = 100;
         eatTicks = 0;
-        neko.getNavigation().stop();
+        neko.getNekoBrain().stopMoving(this);
     }
 
     private boolean hasFood() {

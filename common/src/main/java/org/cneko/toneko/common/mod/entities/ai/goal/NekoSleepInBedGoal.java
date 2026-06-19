@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.cneko.toneko.common.mod.api.EntityPoseManager;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
+import org.cneko.toneko.common.mod.entities.ai.BehaviorPriority;
 
 import java.util.EnumSet;
 import java.util.Optional;
@@ -55,10 +56,12 @@ public class NekoSleepInBedGoal extends Goal {
     @Override
     public void start() {
         // 移动到床边
-        this.navigation.moveTo(
-                this.navigation.createPath(this.targetBedPos, 1),
-                1.2
-        );
+        neko.getNekoBrain().submitMove(
+                new net.minecraft.world.phys.Vec3(
+                        this.targetBedPos.getX() + 0.5,
+                        this.targetBedPos.getY(),
+                        this.targetBedPos.getZ() + 0.5),
+                1.2, BehaviorPriority.NORMAL, this);
         this.neko.getLookControl().setLookAt(
                 this.targetBedPos.getX(),
                 this.targetBedPos.getY(),
@@ -85,7 +88,7 @@ public class NekoSleepInBedGoal extends Goal {
             stopSleeping();
         }
         this.targetBedPos = null;
-        this.navigation.stop();
+        neko.getNekoBrain().stopMoving(this);
         this.cooldown = 200; // 设置10秒冷却时间（200 ticks）
     }
 
@@ -132,7 +135,7 @@ public class NekoSleepInBedGoal extends Goal {
     private void startSleeping() {
         EntityPoseManager.setPose(this.neko, Pose.SLEEPING);
         this.neko.setSleepingPos(this.targetBedPos);
-        this.neko.getNavigation().stop();
+        this.neko.getNekoBrain().stopMoving(this);
     }
 
     private void stopSleeping() {

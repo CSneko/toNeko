@@ -4,6 +4,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
+import org.cneko.toneko.common.mod.entities.ai.BehaviorPriority;
 
 import java.util.EnumSet;
 
@@ -39,8 +40,8 @@ public class NekoParanoiaGoal extends Goal {
         }
         if (threat != null) {
             Vec3 away = neko.position().subtract(threat.position()).normalize().scale(8);
-            neko.getNavigation().moveTo(
-                    neko.getX() + away.x, neko.getY(), neko.getZ() + away.z, 1.0);
+            neko.getNekoBrain().submitMove(
+                    neko.getX() + away.x, neko.getY(), neko.getZ() + away.z, 1.0, BehaviorPriority.COMBAT, this);
         }
     }
 
@@ -56,6 +57,6 @@ public class NekoParanoiaGoal extends Goal {
 
     @Override
     public void stop() {
-        neko.getNavigation().stop();
+        neko.getNekoBrain().stopMoving(this);
     }
 }

@@ -5,6 +5,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
 import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
+import org.cneko.toneko.common.mod.entities.ai.BehaviorPriority;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -67,14 +68,14 @@ public class NekoStayNearCompanionGoal extends Goal {
         if (companion == null) return;
         if (--this.timeToRecalcPath <= 0) {
             this.timeToRecalcPath = 15;
-            neko.getNavigation().moveTo(companion, MOVE_SPEED);
+            neko.getNekoBrain().submitMove(companion, MOVE_SPEED, BehaviorPriority.NORMAL, this);
         }
     }
 
     @Override
     public void stop() {
         this.companion = null;
-        neko.getNavigation().stop();
+        neko.getNekoBrain().stopMoving(this);
     }
 
     /**

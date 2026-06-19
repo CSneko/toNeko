@@ -6,6 +6,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
 import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
+import org.cneko.toneko.common.mod.entities.ai.BehaviorPriority;
 
 import java.util.EnumSet;
 import java.util.UUID;
@@ -53,7 +54,7 @@ public class NekoYandereDefenseGoal extends Goal {
         } else {
             if (--timeToRecalcPath <= 0) {
                 timeToRecalcPath = 10;
-                neko.getNavigation().moveTo(target, neko.getAttributeValue(Attributes.MOVEMENT_SPEED) * 1.2);
+                neko.getNekoBrain().submitMove(target, neko.getAttributeValue(Attributes.MOVEMENT_SPEED) * 1.2, BehaviorPriority.CRITICAL, this);
             }
         }
     }
@@ -66,6 +67,6 @@ public class NekoYandereDefenseGoal extends Goal {
     @Override
     public void stop() {
         target = null;
-        neko.getNavigation().stop();
+        neko.getNekoBrain().stopMoving(this);
     }
 }

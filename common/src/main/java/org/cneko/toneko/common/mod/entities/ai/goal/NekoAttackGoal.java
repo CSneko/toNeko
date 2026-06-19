@@ -12,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import org.cneko.toneko.common.mod.entities.FightingNekoEntity;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
+import org.cneko.toneko.common.mod.entities.ai.BehaviorPriority;
 import org.cneko.toneko.common.mod.items.BazookaItem;
 
 import java.util.EnumSet;
@@ -98,7 +99,7 @@ public class NekoAttackGoal extends Goal {
 
     @Override
     public void start() {
-        neko.getNavigation().moveTo(target, neko.getAttributeValue(Attributes.MOVEMENT_SPEED)*1.2); // 提高移动速度
+        neko.getNekoBrain().submitMove(target, neko.getAttributeValue(Attributes.MOVEMENT_SPEED)*1.2, BehaviorPriority.COMBAT, this); // 提高移动速度
         attackCooldown = 0;
         seeTime = 0;
         neko.setAggressive(true); // 设置为敌对状态
@@ -107,7 +108,7 @@ public class NekoAttackGoal extends Goal {
     @Override
     public void stop() {
         target = null;
-        neko.getNavigation().stop();
+        neko.getNekoBrain().stopMoving(this);
         neko.setAggressive(false); // 取消敌对状态
     }
 
@@ -149,7 +150,7 @@ public class NekoAttackGoal extends Goal {
                 // 远程策略：仅在距离过近时后退
                 if (distanceSqr > RANGED_ATTACK_RANGE * RANGED_ATTACK_RANGE) {
                     // 距离过远，向目标移动
-                    neko.getNavigation().moveTo(target, neko.getAttributeValue(Attributes.MOVEMENT_SPEED)*1.2);
+                    neko.getNekoBrain().submitMove(target, neko.getAttributeValue(Attributes.MOVEMENT_SPEED)*1.2, BehaviorPriority.COMBAT, this);
                 } else {
                     // 计算当前距离与保持距离的比例
                     double currentDistance = Math.sqrt(distanceSqr);
@@ -158,12 +159,12 @@ public class NekoAttackGoal extends Goal {
                         moveAwayFromTarget(2.0);
                     } else {
                         // 在理想距离内，停止移动
-                        neko.getNavigation().stop();
+                        neko.getNekoBrain().stopMoving(this);
                     }
                 }
             } else { // 近战策略
                 if (distanceSqr > MELEE_ATTACK_RANGE * MELEE_ATTACK_RANGE) {
-                    neko.getNavigation().moveTo(target, neko.getAttributeValue(Attributes.MOVEMENT_SPEED)*1.2);
+                    neko.getNekoBrain().submitMove(target, neko.getAttributeValue(Attributes.MOVEMENT_SPEED)*1.2, BehaviorPriority.COMBAT, this);
                 } else {
                     neko.getNavigation().stop();
                 }
@@ -274,7 +275,7 @@ public class NekoAttackGoal extends Goal {
             double fleeZ = neko.getZ() + dz * fleeDistance;
 
             // 移动到逃跑位置
-            neko.getNavigation().moveTo(fleeX, neko.getY(), fleeZ, neko.getAttributeValue(Attributes.MOVEMENT_SPEED)*1.1);
+            neko.getNekoBrain().submitMove(new net.minecraft.world.phys.Vec3(fleeX, neko.getY(), fleeZ), neko.getAttributeValue(Attributes.MOVEMENT_SPEED)*1.1, BehaviorPriority.COMBAT, this);
         }
     }
 
@@ -303,7 +304,7 @@ public class NekoAttackGoal extends Goal {
             double backX = neko.getX() + dx * distance;
             double backZ = neko.getZ() + dz * distance;
 
-            neko.getNavigation().moveTo(backX, neko.getY(), backZ, neko.getAttributeValue(Attributes.MOVEMENT_SPEED)*1.1);
+            neko.getNekoBrain().submitMove(new net.minecraft.world.phys.Vec3(backX, neko.getY(), backZ), neko.getAttributeValue(Attributes.MOVEMENT_SPEED)*1.1, BehaviorPriority.COMBAT, this);
         }
     }
 

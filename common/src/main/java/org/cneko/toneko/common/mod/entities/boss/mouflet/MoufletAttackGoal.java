@@ -6,6 +6,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.levelgen.Heightmap;
 import org.cneko.toneko.common.mod.entities.AmmunitionEntity;
 import org.cneko.toneko.common.mod.entities.ToNekoEntities;
+import org.cneko.toneko.common.mod.entities.ai.BehaviorPriority;
 import org.cneko.toneko.common.mod.entities.ai.goal.NekoAttackGoal;
 import org.cneko.toneko.common.mod.items.BazookaItem;
 
@@ -130,7 +131,7 @@ public class MoufletAttackGoal extends NekoAttackGoal {
         }
 
         // 始终靠近目标
-        neko.getNavigation().moveTo(target, neko.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED) * 1.2);
+        neko.getNekoBrain().submitMove(target, neko.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED) * 1.2, BehaviorPriority.COMBAT, this);
 
         // 攻击逻辑
         attackCooldown = Math.max(attackCooldown - 1, 0);
@@ -198,7 +199,7 @@ public class MoufletAttackGoal extends NekoAttackGoal {
 
     @Override
     public void stop() {
-        neko.getNavigation().stop();
+        neko.getNekoBrain().stopMoving(this);
         neko.setAggressive(false); // 取消敌对状态
     }
 }
