@@ -2,27 +2,14 @@ package org.cneko.toneko.common.util;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.channel.socket.SocketChannel;
-import org.cneko.ai.NekoLogger;
 import org.cneko.ai.core.AIHistory;
 import org.cneko.ai.core.AIRequest;
 import org.cneko.ai.core.AIResponse;
-import org.cneko.ai.core.NetworkingProxy;
-import org.cneko.ai.providers.AbstractNettyAIService;
-import org.cneko.ai.providers.gemini.GeminiConfig;
-import org.cneko.ai.providers.gemini.GeminiService;
-import org.cneko.ai.providers.openai.OpenAIConfig;
-import org.cneko.ai.providers.openai.OpenAIService;
 import org.cneko.ai.util.FileStorageUtil;
-import io.netty.handler.codec.http.*;
+import org.cneko.toneko.common.mod.ai.AIServiceConfig;
+import org.cneko.toneko.common.mod.ai.provider.AIServiceProvider;
+import org.cneko.toneko.common.mod.ai.provider.AIServiceProviderRegistry;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -47,14 +34,13 @@ public class AIUtil {
                 var response = client.sendGet("http://localhost:4315/v1/health",null, String.class);
                 response.whenComplete((response1, throwable) -> {
                     boolean canUseElefant = throwable == null;
-                    // 如果可以使用elefant的话
                     if (canUseElefant) {
-                        // 设置默认为elefant
-                        ConfigUtil.CONFIG.set("ai.service", "player2");
+                        ConfigUtil.CONFIG.set("ai.service", "custom");
                         ConfigUtil.CONFIG.set("ai.enable", true);
                         ConfigUtil.CONFIG.set("ai.tts.enable", true);
                         ConfigUtil.CONFIG.set("ai.tts.service", "player2");
-                        LOGGER.info("Found Elefant running,set AI to Flefant");
+                        ConfigUtil.CONFIG.save();
+                        LOGGER.info("Found Elefant running, set AI to Custom (localhost:4315)");
                     }
                 });
                 response.join();
@@ -63,141 +49,168 @@ public class AIUtil {
 
     }
 
-    public static void sendMessage(UUID uuid,UUID userUuid, String prompt, String message, MessageCallback callback){
+    /**
+     * Map legacy service names to new provider IDs.
+     */
+    private static String resolveProviderId(String service) {
+        if (service == null || service.isEmpty()) return null;
+
+        // Legacy aliases
+        if (service.equalsIgnoreCase("elefant") || service.equalsIgnoreCase("player2")) {
+            return "custom";
+        }
+        // If it's a URL, use the custom provider
+        if (service.startsWith("http://") || service.startsWith("https://")) {
+            return "custom";
+        }
+        // If the provider is registered directly, use it
+        if (AIServiceProviderRegistry.hasProvider(service)) {
+            return service.toLowerCase();
+        }
+        // Not found
+        return null;
+    }
+
+    /**
+     * Parse a legacy custom URL into host, port, endpoint, and tls components.
+     */
+    private static ParsedUrl parseLegacyUrl(String url) {
+        ParsedUrl result = new ParsedUrl();
+        if (url.startsWith("http://")) {
+            url = url.substring("http://".length());
+            result.tls = false;
+        } else if (url.startsWith("https://")) {
+            url = url.substring("https://".length());
+            result.tls = true;
+        }
+        String[] hostPortAndPath = url.split("/", 2);
+        String hostPortSection = hostPortAndPath[0];
+        result.endpoint = hostPortAndPath.length > 1 ? "/" + hostPortAndPath[1] : "/";
+
+        int colonIndex = hostPortSection.indexOf(':');
+        if (colonIndex != -1) {
+            result.host = hostPortSection.substring(0, colonIndex);
+            try {
+                result.port = Integer.parseInt(hostPortSection.substring(colonIndex + 1));
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Invalid port number in URL: " + url);
+            }
+        } else {
+            result.host = hostPortSection;
+            result.port = result.tls ? 443 : 80;
+        }
+        return result;
+    }
+
+    private static class ParsedUrl {
+        String host;
+        int port;
+        String endpoint;
+        boolean tls;
+    }
+
+    public static void sendMessage(UUID uuid, UUID userUuid, String prompt, String message, MessageCallback callback){
+        final boolean debug = ConfigUtil.isAIDebugEnabled();
+        final long startTime = System.currentTimeMillis();
+        final String msgSnippet = message.length() > 80 ? message.substring(0, 80) + "..." : message;
+
         var future = executor.submit(()->{
             try{
-                // 获取AI模型
-                var s = ConfigUtil.getAIService();
-                var model = ConfigUtil.getAIModel();
-                var key = ConfigUtil.getAIKey();
-                var proxyIp = ConfigUtil.getAIProxyIp();
-                var proxyPort = ConfigUtil.getAIProxyPort();
-                var uuidStr = uuid.toString();
-                var userUuidStr = userUuid.toString();
-                // 判断是否使用代理
-                boolean useProxy = ConfigUtil.isAIProxyEnabled();
-                NetworkingProxy proxy = null;
-                if (proxyPort!=null&&!proxyIp.isEmpty()){
-                    proxy = new NetworkingProxy(proxyIp, Integer.parseInt(proxyPort));
-                }else useProxy =false;
-                AIResponse response = null;
-                if (s.equalsIgnoreCase("neko")){
-                    // CNekoAI的服务
-                    var config = new GeminiConfig(key);
-                    if (useProxy) {
-                        config.setProxy(proxy);
-                    }
-                    config.setModel(model);
-                    config.setHost("chat.ai.cneko.org");
-                    var service = new CNekoAIService(config);
-                    response = service.processRequest(new AIRequest(message,uuidStr,userUuidStr,prompt,FileStorageUtil.readConversation(uuidStr,userUuidStr)));
+                String rawService = ConfigUtil.getAIService();
+                String providerId = resolveProviderId(rawService);
+
+                if (providerId == null) {
+                    LOGGER.warn("Unsupported AI service: {}, please read the docs: https://s.cneko.org/toNekoAI", rawService);
+                    callback.execute(new AIResponse("Unsupported AI service: " + rawService + ", please read the docs: https://s.cneko.org/toNekoAI", 400));
+                    return;
                 }
-                if (s.equalsIgnoreCase("google")){
-                    // Google的服务
-                    var config = new GeminiConfig(key);
-                    if (useProxy) {
-                        config.setProxy(proxy);
-                    }
-                    config.setModel(model);
-                    var service = new GeminiService(config);
-                    response = service.processRequest(new AIRequest(message,uuidStr,userUuidStr,prompt,FileStorageUtil.readConversation(uuidStr,userUuidStr)));
-                } else if (s.equalsIgnoreCase("openai")){
-                    // OpenAI的服务
-                    var config = new OpenAIConfig(key);
-                    if (useProxy) {
-                        config.setProxy(proxy);
-                    }
-                    config.setModel(model);
-                    var service = new OpenAIService(config);
-                    response = service.processRequest(new AIRequest(message,uuidStr,userUuidStr,prompt,FileStorageUtil.readConversation(uuidStr,userUuidStr)));
-                } else if (s.equalsIgnoreCase("groq")) {
-                    // Groq的服务
-                    var config = new OpenAIConfig(key);
-                    if (useProxy) {
-                        config.setProxy(proxy);
-                    }
-                    config.setModel(model);
-                    config.setHost("api.groq.com");
-                    config.setEndpoint("/openai/v1/chat/completions");
-                    var service = new OpenAIService(config);
-                    response = service.processRequest(new AIRequest(message,uuidStr,userUuidStr,prompt,FileStorageUtil.readConversation(uuidStr,userUuidStr)));
-                }else if(s.equalsIgnoreCase("siliconflow")){
-                    // siliconflow的服务
-                    var config = new OpenAIConfig(key);
-                    if (useProxy) {
-                        config.setProxy(proxy);
-                    }
-                    config.setModel(model);
-                    config.setHost("api.siliconflow.cn");
-                    config.setEndpoint("/v1/chat/completions");
-                    var service = new OpenAIService(config);
-                    response = service.processRequest(new AIRequest(message,uuidStr,userUuidStr,prompt,FileStorageUtil.readConversation(uuidStr,userUuidStr)));
-                } else if (s.equalsIgnoreCase("elefant") || s.equalsIgnoreCase("player2")) {
-                    // elefant的服务
-                    var config = new OpenAIConfig("");
-                    config.setHost("127.0.0.1");
-                    config.setPort(4315);
-                    config.setEndpoint("/v1/chat/completions");
-                    config.setTls(false);
-                    var service = new OpenAIService(config);
-                    response = service.processRequest(new AIRequest(message,uuidStr,userUuidStr,prompt,FileStorageUtil.readConversation(uuidStr,userUuidStr)));
-                } else if(!s.isEmpty()){
-                    // OpenAI格式
-                    // 把字符串分解为域名，端口（如果有）和endpoint（如果有）
-                    var config = new OpenAIConfig(key);
-                    // 如果是http开头
-                    if (s.startsWith("http://")){
-                        s = s.substring("http://".length());
-                        config.setTls(false);
-                    }else if (s.startsWith("https://")){
-                        s = s.substring("https://".length());
-                        config.setTls(true);
-                    }
-                    // 分割主机（和端口）部分与路径部分
-                    String[] hostPortAndPath = s.split("/", 2);
-                    String hostPortSection = hostPortAndPath[0];
-                    String endpoint = hostPortAndPath.length > 1 ? "/" + hostPortAndPath[1] : "/";
 
-                    // 处理主机和端口
-                    String host;
-                    Integer port = null;
-                    int colonIndex = hostPortSection.indexOf(':');
-                    if (colonIndex != -1) {
-                        // 分离主机和端口
-                        host = hostPortSection.substring(0, colonIndex);
-                        try {
-                            port = Integer.parseInt(hostPortSection.substring(colonIndex + 1));
-                        } catch (NumberFormatException e) {
-                            throw new IllegalArgumentException("Invalid port number in URL: " + s);
-                        }
-                    } else {
-                        host = hostPortSection;
-                    }
+                AIServiceProvider provider = AIServiceProviderRegistry.get(providerId);
+                if (provider == null) {
+                    LOGGER.warn("AI provider not found: {}", providerId);
+                    callback.execute(new AIResponse("AI provider not found: " + providerId, 400));
+                    return;
+                }
 
-                    // 设置配置
-                    config.setHost(host);
-                    if (port != null) {
-                        config.setPort(port);
-                    }
-                    config.setEndpoint(endpoint);
-                    if (useProxy) {
-                        config.setProxy(proxy);
-                    }
-                    config.setModel(model);
-                    var service = new OpenAIService(config);
-                    response = service.processRequest(new AIRequest(message,uuidStr,userUuidStr,prompt,FileStorageUtil.readConversation(uuidStr,userUuidStr)));
+                // Build config
+                AIServiceConfig serviceConfig;
+                if (rawService.startsWith("http://") || rawService.startsWith("https://")) {
+                    ParsedUrl parsed = parseLegacyUrl(rawService);
+                    serviceConfig = AIServiceConfig.builder("custom")
+                            .apiKey(ConfigUtil.getAIKey())
+                            .model(ConfigUtil.getAIModel())
+                            .host(parsed.host)
+                            .port(parsed.port)
+                            .endpoint(parsed.endpoint)
+                            .tls(parsed.tls)
+                            .prompt(prompt)
+                            .showThink(ConfigUtil.isAIShowThink())
+                            .build();
+                    provider = AIServiceProviderRegistry.get("custom");
                 } else {
-                    LOGGER.warn("Unsupported AI service: {} ,please read the docs: https://s.cneko.org/toNekoAI",s);
-                    callback.execute(new AIResponse("Unsupported AI service: {} ,please read the docs: https://s.cneko.org/toNekoAI",400));
+                    serviceConfig = ConfigUtil.buildAIServiceConfig(providerId);
+                    serviceConfig = AIServiceConfig.builder(providerId)
+                            .apiKey(serviceConfig.getApiKey())
+                            .model(serviceConfig.getModel())
+                            .host(serviceConfig.getHost())
+                            .port(serviceConfig.getPort())
+                            .endpoint(serviceConfig.getEndpoint())
+                            .tls(serviceConfig.isTls())
+                            .proxy(serviceConfig.getProxy())
+                            .prompt(prompt)
+                            .showThink(ConfigUtil.isAIShowThink())
+                            .build();
                 }
+
+                if (debug) {
+                    String keyPreview = serviceConfig.getApiKey().isEmpty() ? "(none)"
+                            : serviceConfig.getApiKey().substring(0, Math.min(8, serviceConfig.getApiKey().length())) + "***";
+                    LOGGER.info("[AI-DEBUG] >>> REQUEST | provider={} model={} host={}:{} endpoint={} tls={} key={} msg({}c)=\"{}\"",
+                            providerId, serviceConfig.getModel(),
+                            serviceConfig.getHost(), serviceConfig.getPort(), serviceConfig.getEndpoint(),
+                            serviceConfig.isTls(), keyPreview, msgSnippet.length(), msgSnippet);
+                }
+
+                String uuidStr = uuid.toString();
+                String userUuidStr = userUuid.toString();
+
+                AIHistory history = FileStorageUtil.readConversation(uuidStr, userUuidStr);
+                AIRequest request = new AIRequest(message, uuidStr, userUuidStr, prompt, history);
+
+                AIResponse response = provider.processRequest(serviceConfig, request);
+
+                long elapsed = System.currentTimeMillis() - startTime;
+
                 if (response != null) {
                     if (!response.isSuccess()){
+                        if (debug) {
+                            LOGGER.warn("[AI-DEBUG] <<< FAILED | provider={} code={} time={}ms response=\"{}\"",
+                                    providerId, response.getCode(), elapsed,
+                                    response.getResponse() != null ? response.getResponse().substring(0, Math.min(200, response.getResponse().length())) : "(null)");
+                        }
                         response.setResponse("服务器繁忙，请稍后再试。");
+                    } else if (debug) {
+                        String respPreview = response.getResponse();
+                        if (respPreview != null && respPreview.length() > 150) {
+                            respPreview = respPreview.substring(0, 150) + "...";
+                        }
+                        LOGGER.info("[AI-DEBUG] <<< SUCCESS | provider={} code={} time={}ms resp({}c)=\"{}\"",
+                                providerId, response.getCode(), elapsed,
+                                response.getResponse() != null ? response.getResponse().length() : 0,
+                                respPreview);
                     }
                     callback.execute(response);
+                } else {
+                    LOGGER.warn("[AI-DEBUG] <<< NULL | provider={} time={}ms - AI provider returned null response", providerId, elapsed);
+                    callback.execute(new AIResponse("AI service returned no response.", 500));
                 }
             }catch (Exception e){
-                LOGGER.warn("Failed to send message to AI service,{}",e.getMessage());
+                long elapsed = System.currentTimeMillis() - startTime;
+                LOGGER.warn("[AI-DEBUG] <<< EXCEPTION | time={}ms error=\"{}\"", elapsed, e.toString());
+                if (debug) {
+                    LOGGER.error("[AI-DEBUG] Exception details:", e);
+                }
+                callback.execute(new AIResponse("AI request failed: " + e.getMessage(), 500));
             }
         });
 
@@ -206,8 +219,8 @@ public class AIUtil {
             try {
                 future.get(REQUEST_TIMEOUT, TimeUnit.SECONDS);
             } catch (TimeoutException e) {
-                future.cancel(true); // 超时后取消任务
-                LOGGER.warn("Message sending task timed out and was cancelled.");
+                future.cancel(true);
+                LOGGER.warn("[AI-DEBUG] <<< TIMEOUT | exceeded {}s for msg=\"{}\"", REQUEST_TIMEOUT, msgSnippet);
             } catch (Exception e) {
                 LOGGER.error("Unexpected error during message sending task.", e);
             }
@@ -220,121 +233,15 @@ public class AIUtil {
         void execute(AIResponse message);
     }
 
-    public static class CNekoAIService extends AbstractNettyAIService<GeminiConfig> {
-        public CNekoAIService(GeminiConfig config) throws Exception {
-            super(config);
-        }
-
-        @Override
-        protected void initChannel(SocketChannel ch, AIRequest request, CompletableFuture<AIResponse> future) {
-            configurePipeline(ch, new CNekoAIService.CnekoHandler(request, future));
-        }
-        @Override
-        protected void sendRequest(Channel channel, AIRequest request) {
-            // 调用公共方法构造历史记录
-            AIHistory history = prepareHistory(request);
-            // Gemini 接口直接使用 AIHistory 的 JSON 表示
-            String jsonBody = history.toJson();
-            byte[] bodyBytes = jsonBody.getBytes(StandardCharsets.UTF_8);
-            ByteBuf buf = Unpooled.wrappedBuffer(bodyBytes);
-
-            // 删除掉url中的&
-            String msg = request.getQuery().replace("&", "");
-            // 构建查询参数
-            String encodedPrompt = URLEncoder.encode(request.getPrompt() != null ? request.getPrompt() : "无提示词", StandardCharsets.UTF_8);
-            String encodedMessage = URLEncoder.encode(msg, StandardCharsets.UTF_8);
-            String encodedKey = URLEncoder.encode(ConfigUtil.getAIKey(), StandardCharsets.UTF_8);
-            String encodeModel = URLEncoder.encode(config.getModel(), StandardCharsets.UTF_8);
-            String query = String.format("p=%s&t=%s&key=%s&model=%s&ver=1", encodedPrompt, encodedMessage, encodedKey, encodeModel);
-
-            // 将 jsonBody 进行 URL 编码并放入请求头
-            String encodedJsonBody = URLEncoder.encode(jsonBody, StandardCharsets.UTF_8);
-
-            FullHttpRequest httpRequest = new DefaultFullHttpRequest(
-                    HttpVersion.HTTP_1_1,
-                    HttpMethod.POST,
-                    "/?"+query,
-                    buf
-            );
-            httpRequest.headers()
-                    .set(HttpHeaderNames.HOST, config.getHost())
-                    .set(HttpHeaderNames.CONTENT_TYPE, HttpHeaderValues.APPLICATION_JSON)
-                    .set(HttpHeaderNames.CONTENT_LENGTH, buf.readableBytes())
-                    .set("msg", jsonBody);
-
-            channel.writeAndFlush(httpRequest);
-        }
-
-
-        private static class CnekoHandler extends SimpleChannelInboundHandler<FullHttpResponse> {
-            private final AIRequest request;
-            private final CompletableFuture<AIResponse> future;
-
-            public CnekoHandler(AIRequest request, CompletableFuture<AIResponse> future) {
-                this.request = request;
-                this.future = future;
-            }
-
-            @Override
-            protected void channelRead0(ChannelHandlerContext ctx, FullHttpResponse response) {
-                String content = response.content().toString(StandardCharsets.UTF_8);
-                int code = response.status().code();
-                if (code != HttpResponseStatus.OK.code()) {
-                    future.complete(new AIResponse("API Error: " + content, code));
-                    return;
-                }
-
-                try {
-                    // 使用 GeminiResponse 类型替代 Map 解析
-                    CnekoHandler.CnekoResponse responseObj = gson.fromJson(content, CnekoHandler.CnekoResponse.class);
-
-                    // 获取文本内容
-                    String responseText = responseObj.response;
-                    // 删除句末的\n
-                    responseText = responseText.replace("\\n", "");
-
-                    // 保存会话记录（原有逻辑保持不变）
-                    try {
-                        FileStorageUtil.saveConversation(
-                                request.getUserId(),
-                                request.getSessionId(),
-                                request.getQuery(),
-                                responseText
-                        );
-                    } catch (Exception e) {
-                        NekoLogger.LOGGER.error("Error saving conversation: {}", e.getMessage());
-                    }
-
-                    future.complete(new AIResponse(responseText.trim(), code));
-                } catch (Exception e) {
-                    future.complete(new AIResponse("Response parsing error: " + e.getMessage(), code));
-                }
-            }
-
-
-            @Override
-            public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-                future.complete(new AIResponse("Network error: " + cause.getMessage(), 400));
-                ctx.close();
-            }
-
-            public static class CnekoResponse {
-                public String response;
-            }
-        }
-    }
-
-    public static void playTTS(String text,String voice) {
-        var future =executor.submit(() -> {
+    public static void playTTS(String text, String voice) {
+        var future = executor.submit(() -> {
             try {
                 // Elefant的tts
-                // 构建请求体
                 var body = new ElefantTTSRequestBody();
                 body.text = text;
                 body.voiceIds.add(voice);
 
                 HttpClient client = new HttpClient();
-                // 发送请求
                 CompletableFuture<String> cf = client.sendPost(
                         "http://127.0.0.1:4315/v1/tts/speak",
                         body,
@@ -343,12 +250,11 @@ public class AIUtil {
 
                 cf.whenComplete((response, ex) -> {
                     if (ex != null) {
-                        LOGGER.error("Request failed: {}" ,ex.getMessage());
+                        LOGGER.error("Request failed: {}", ex.getMessage());
                     }
                     client.close();
                 });
 
-                // 等待异步操作完成
                 cf.join();
             } catch (Exception e) {
                 LOGGER.error("Unexpected error during message sending task.", e);
@@ -360,13 +266,14 @@ public class AIUtil {
             try {
                 future.get(REQUEST_TIMEOUT, TimeUnit.SECONDS);
             } catch (TimeoutException e) {
-                future.cancel(true); // 超时后取消任务
+                future.cancel(true);
                 LOGGER.warn("TTS sending task timed out and was cancelled.");
             } catch (Exception e) {
                 LOGGER.error("Unexpected error during message sending task.", e);
             }
         });
     }
+
     private static class ElefantTTSRequestBody{
         public static final Gson gson = new Gson();
         @SerializedName("play_in_app")

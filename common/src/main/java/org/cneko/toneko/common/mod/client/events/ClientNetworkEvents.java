@@ -16,6 +16,7 @@ import org.cneko.toneko.common.mod.client.api.ClientEntityPoseManager;
 import org.cneko.toneko.common.mod.client.screens.*;
 import org.cneko.toneko.common.mod.client.util.ClientPlayerUtil;
 import org.cneko.toneko.common.mod.packets.*;
+import org.cneko.toneko.common.mod.packets.interactives.ChatHistoryResponsePayload;
 import org.cneko.toneko.common.mod.packets.interactives.NekoEntityInteractivePayload;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
 import org.cneko.toneko.common.util.AIUtil;
@@ -100,6 +101,13 @@ public class ClientNetworkEvents {
             context.client().execute(() -> {
                 // 打开 UI，把数据传进去
                 context.client().setScreen(new GeneticsScreen(payload.entityId(), payload.genomeNbt(), payload.canEdit()));
+            });
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(ChatHistoryResponsePayload.ID, (payload, context) -> {
+            context.client().execute(() -> {
+                ChatWithNekoScreen.receiveHistory(
+                        UUID.fromString(payload.nekoUuid()), payload.messages());
             });
         });
 

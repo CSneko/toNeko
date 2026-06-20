@@ -17,6 +17,9 @@ public class ToNekoPackets {
         PayloadTypeRegistry.playS2C().register(VehicleStopRidePayload.ID, VehicleStopRidePayload.CODEC);
         PayloadTypeRegistry.playC2S().register(NekoMatePayload.ID, NekoMatePayload.CODEC);
         PayloadTypeRegistry.playC2S().register(ChatWithNekoPayload.ID, ChatWithNekoPayload.CODEC);
+        PayloadTypeRegistry.playC2S().register(ChatHistoryRequestPayload.ID, ChatHistoryRequestPayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(ChatHistoryResponsePayload.ID, ChatHistoryResponsePayload.CODEC);
+        PayloadTypeRegistry.playC2S().register(ChatModePayload.ID, ChatModePayload.CODEC);
         PayloadTypeRegistry.playC2S().register(MateWithCrystalNekoPayload.ID, MateWithCrystalNekoPayload.CODEC);
         PayloadTypeRegistry.playC2S().register(CrystalNekoNyaPayload.ID, CrystalNekoNyaPayload.CODEC);
         PayloadTypeRegistry.playC2S().register(DismountPassengerPayload.ID, DismountPassengerPayload.CODEC);

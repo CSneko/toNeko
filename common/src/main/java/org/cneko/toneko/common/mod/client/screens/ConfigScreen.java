@@ -90,6 +90,11 @@ public class ConfigScreen extends Screen {
     }
 
     private void addNodeToUI(ConfigNode node, int indent) {
+        // "ai" children are handled in the dedicated AIConfigScreen
+        if ("ai".equals(node.name)) {
+            configList.addEntry(new GroupHeaderEntry(node, indent, configList.width, this::rebuildList));
+            return; // Don't render AI children in the generic config screen
+        }
         if (node.isGroupHeader()) {
             configList.addEntry(new GroupHeaderEntry(node, indent, configList.width, this::rebuildList));
             if (!node.collapsed) {
@@ -364,6 +369,13 @@ public class ConfigScreen extends Screen {
 
         @Override
         public boolean mouseClicked(double mouseX, double mouseY, int button) {
+            // AI group opens the dedicated AI config screen (children are handled there)
+            if ("ai".equals(node.name)) {
+                Minecraft.getInstance().setScreen(new AIConfigScreen(Minecraft.getInstance().screen));
+                Minecraft.getInstance().getSoundManager().play(net.minecraft.client.resources.sounds.SimpleSoundInstance.forUI(net.minecraft.sounds.SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                return true;
+            }
+            // Lolihead group opens the dedicated LoliHead config screen (if needed in future)
             node.collapsed = !node.collapsed;
             onToggle.run();
             Minecraft.getInstance().getSoundManager().play(net.minecraft.client.resources.sounds.SimpleSoundInstance.forUI(net.minecraft.sounds.SoundEvents.UI_BUTTON_CLICK, 1.0F));

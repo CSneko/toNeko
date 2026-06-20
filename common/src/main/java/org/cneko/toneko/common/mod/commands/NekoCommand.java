@@ -23,12 +23,18 @@ import net.minecraft.world.item.component.ItemLore;
 import org.cneko.toneko.common.api.Permissions;
 import org.cneko.toneko.common.mod.api.EntityPoseManager;
 import org.cneko.toneko.common.mod.entities.INeko;
+import org.cneko.toneko.common.mod.entities.NekoEntity;
+import org.cneko.toneko.common.mod.misc.Messaging;
 import org.cneko.toneko.common.mod.misc.ToNekoAttributes;
 import org.cneko.toneko.common.mod.packets.EntityPosePayload;
 import org.cneko.toneko.common.mod.util.EntityUtil;
 import org.cneko.toneko.common.mod.util.PermissionUtil;
+import org.cneko.toneko.common.util.AIUtil;
+import org.cneko.toneko.common.util.ConfigUtil;
+import org.cneko.toneko.common.util.LanguageUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -96,6 +102,12 @@ public class NekoCommand {
                     .then(literal("gui")
                             .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_NEKO_GUI))
                             .executes(NekoCommand::guiCommand)
+                    )
+                    .then(literal("chat")
+                            .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_NEKO_CHAT))
+                            .then(argument("message", StringArgumentType.greedyString())
+                                    .executes(NekoCommand::chatCommand)
+                            )
                     )
             );
         });
@@ -274,6 +286,33 @@ public class NekoCommand {
         effectLevel = Math.min(effectLevel, 10);
         time = Math.min(time, 20*3600);
         player.addEffect(new MobEffectInstance(effect, time, effectLevel));
+        return 1;
+    }
+
+    public static int chatCommand(CommandContext<CommandSourceStack> context) {
+        ServerPlayer player = context.getSource().getPlayer();
+        if (!ConfigUtil.isAIEnabled()) {
+            player.sendSystemMessage(Component.translatable("messages.toneko.ai.not_enabled"));
+            return 1;
+        }
+        String message = StringArgumentType.getString(context, "message");
+        if (message.isBlank()) {
+            player.sendSystemMessage(Component.translatable("messages.toneko.chat.empty_message"));
+            return 1;
+        }
+
+        // Find the nearest neko entity within range
+        NekoEntity neko = EntityUtil.findNearestNekoEntity(player, player.level(), 16.0f);
+        if (neko == null) {
+            player.sendSystemMessage(Component.translatable("messages.toneko.chat.no_neko_nearby"));
+            return 1;
+        }
+
+        AIUtil.sendMessage(neko.getUUID(), player.getUUID(), neko.generateAIPrompt(player), message, response -> {
+            String r = Messaging.format(response.getResponse(), neko,
+                    Collections.singletonList(LanguageUtil.prefix), ConfigUtil.getChatFormat());
+            player.sendSystemMessage(Component.literal(r));
+        });
         return 1;
     }
 

@@ -19,6 +19,7 @@ public class ToNekoKeyBindings {
     public static KeyMapping DISMOUNT_PASSENGER_KEY;
     public static KeyMapping TONEKO_MANAGEMENT_KEY;
     public static KeyMapping HUB_KEY;
+    public static KeyMapping CHAT_WITH_NEKO_KEY;
 
     public static void init(){
         LIE_KEY = KeyBindingHelper.registerKeyBinding(
@@ -122,6 +123,14 @@ public class ToNekoKeyBindings {
                         "key.toneko.hub",
                         InputConstants.Type.KEYSYM,
                         GLFW.GLFW_KEY_LEFT_BRACKET,
+                        "key.toneko.lie.category"
+                )
+        );
+        CHAT_WITH_NEKO_KEY = KeyBindingHelper.registerKeyBinding(
+                new KeyMapping(
+                        "key.toneko.chat_with_neko",
+                        InputConstants.Type.KEYSYM,
+                        GLFW.GLFW_KEY_UNKNOWN,
                         "key.toneko.lie.category"
                 )
         );

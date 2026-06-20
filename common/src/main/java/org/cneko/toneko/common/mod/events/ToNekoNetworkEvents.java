@@ -13,7 +13,10 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
+import org.cneko.ai.core.AIHistory;
 import org.cneko.ai.core.AIResponse;
+import org.cneko.ai.util.FileStorageUtil;
+import org.cneko.toneko.common.Bootstrap;
 import org.cneko.toneko.common.api.Permissions;
 import org.cneko.toneko.common.api.TickTasks;
 import org.cneko.toneko.common.mod.api.EntityPoseManager;
@@ -46,6 +49,8 @@ public class ToNekoNetworkEvents {
         ServerPlayNetworking.registerGlobalReceiver(NekoPosePayload.ID, ToNekoNetworkEvents::onSetPose);
         ServerPlayNetworking.registerGlobalReceiver(NekoMatePayload.ID, ToNekoNetworkEvents::onBreed);
         ServerPlayNetworking.registerGlobalReceiver(ChatWithNekoPayload.ID, ToNekoNetworkEvents::onChatWithNeko);
+        ServerPlayNetworking.registerGlobalReceiver(ChatHistoryRequestPayload.ID, ToNekoNetworkEvents::onChatHistoryRequest);
+        ServerPlayNetworking.registerGlobalReceiver(ChatModePayload.ID, ToNekoNetworkEvents::onChatMode);
         ServerPlayNetworking.registerGlobalReceiver(MateWithCrystalNekoPayload.ID, ToNekoNetworkEvents::onMateWithCrystalNeko);
         ServerPlayNetworking.registerGlobalReceiver(CrystalNekoNyaPayload.ID, ToNekoNetworkEvents::onCrystalNekoNya);
         ServerPlayNetworking.registerGlobalReceiver(DismountPassengerPayload.ID, ToNekoNetworkEvents::onDismountPassenger);
@@ -116,28 +121,30 @@ public class ToNekoNetworkEvents {
 
     public static void onChatWithNeko(ChatWithNekoPayload payload, ServerPlayNetworking.Context context) {
         processNekoInteractive(context.player(), payload.uuid(), neko -> {
-            // 如果没有开启 AI，则不执行
             if (!ConfigUtil.isAIEnabled()){
                 context.player().sendSystemMessage(Component.translatable("messages.toneko.ai.not_enabled"));
             } else {
                 ServerPlayer player = context.player();
+                String nekoUuid = neko.getUUID().toString();
+                String playerUuid = player.getUUID().toString();
                 AIUtil.sendMessage(neko.getUUID(), player.getUUID(), neko.generateAIPrompt(context.player()), payload.message(), response -> {
+                    Runnable sendHistory = () -> pushChatHistory(player, nekoUuid, playerUuid);
                     if (ConfigUtil.isAIShowThink() && response.hasThink()){
                         ServerLevel world = (ServerLevel) neko.level();
-                        // 使用多行 ArmorStand 显示思考过程，顺序逐行显示
                         int totalDelay = spawnFloatingText(neko, response, world);
-                        // 在所有行动画完成后，再发送最终消息
                         TickTaskQueue task = new TickTaskQueue();
                         task.addTask(totalDelay, () -> {
                             String r = Messaging.format(response.getResponse(), neko,
                                     Collections.singletonList(LanguageUtil.prefix), ConfigUtil.getChatFormat());
                             player.sendSystemMessage(Component.literal(r));
+                            player.getServer().execute(sendHistory);
                         });
                         TickTasks.add(task);
                     } else {
                         String r = Messaging.format(response.getResponse(), neko,
                                 Collections.singletonList(LanguageUtil.prefix), ConfigUtil.getChatFormat());
                         context.player().sendSystemMessage(Component.literal(r));
+                        player.getServer().execute(sendHistory);
                     }
                     // 如果启用了TTS
                     if (ConfigUtil.isAITTSEnabled()){
@@ -520,6 +527,52 @@ public class ToNekoNetworkEvents {
     private static void handleGuiRefresh(ServerPlayer player) {
         CompoundTag data = ToNekoCommand.buildManagementData(player);
         ServerPlayNetworking.send(player, new ToNekoManagementDataPayload(data));
+    }
+
+    // Per-player chat mode: true=area (64-block range + neko AI), false=global (all players, no AI)
+    private static final Map<UUID, Boolean> CHAT_MODES = new java.util.concurrent.ConcurrentHashMap<>();
+
+    public static boolean isPlayerAreaChat(UUID playerUuid) {
+        return CHAT_MODES.getOrDefault(playerUuid, false);
+    }
+
+    public static void onChatMode(ChatModePayload payload, ServerPlayNetworking.Context context) {
+        CHAT_MODES.put(context.player().getUUID(), payload.area());
+    }
+
+    /** Read chat history from disk and push to the client's open ChatWithNekoScreen */
+    private static void pushChatHistory(ServerPlayer player, String nekoUuid, String playerUuid) {
+        List<String> messages = new ArrayList<>();
+        try {
+            AIHistory history = FileStorageUtil.readConversation(nekoUuid, playerUuid);
+            if (history != null && history.getContents() != null) {
+                for (AIHistory.Content content : history.getContents()) {
+                    String role = content.getRole() == AIHistory.Content.Role.USER ? "user" : "assistant";
+                    StringBuilder text = new StringBuilder();
+                    if (content.getParts() != null) {
+                        for (AIHistory.Content.Part part : content.getParts()) {
+                            text.append(part.getText());
+                        }
+                    }
+                    if (!text.isEmpty()) {
+                        messages.add(role + ":" + text.toString());
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Bootstrap.LOGGER.warn("Failed to push chat history: {}", e.getMessage());
+        }
+        ServerPlayNetworking.send(player, new ChatHistoryResponsePayload(nekoUuid, messages));
+    }
+
+    /**
+     * Handle client request for chat history. Reads directly from disk (no entity needed).
+     */
+    public static void onChatHistoryRequest(ChatHistoryRequestPayload payload, ServerPlayNetworking.Context context) {
+        ServerPlayer player = context.player();
+        String nekoUuid = payload.nekoUuid();
+        if (nekoUuid == null || nekoUuid.isEmpty()) return;
+        pushChatHistory(player, nekoUuid, player.getUUID().toString());
     }
 }
 

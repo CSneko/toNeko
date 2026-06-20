@@ -11,6 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.cneko.toneko.common.mod.entities.INeko;
+import org.cneko.toneko.common.mod.entities.NekoEntity;
 
 import net.minecraft.world.phys.Vec3;
 
@@ -122,6 +123,29 @@ public class EntityUtil {
             }
         }
         return nekos;
+    }
+
+    /**
+     * Find the nearest NekoEntity within range.
+     * @param entity the source entity
+     * @param world the world to search in
+     * @param radius the search radius
+     * @return the nearest NekoEntity, or null if none found
+     */
+    public static NekoEntity findNearestNekoEntity(Entity entity, Level world, float radius) {
+        List<INeko> nekos = getNekoInRange(entity, world, radius);
+        NekoEntity nearest = null;
+        double nearestDist = Double.MAX_VALUE;
+        for (INeko neko : nekos) {
+            if (neko instanceof NekoEntity nekoEntity && nekoEntity != entity) {
+                double dist = entity.distanceToSqr(nekoEntity);
+                if (dist < nearestDist) {
+                    nearestDist = dist;
+                    nearest = nekoEntity;
+                }
+            }
+        }
+        return nearest;
     }
 
 

@@ -15,12 +15,16 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import org.cneko.toneko.common.api.Permissions;
+import org.cneko.toneko.common.mod.ai.provider.AIServiceProvider;
+import org.cneko.toneko.common.mod.ai.provider.AIServiceProviderRegistry;
 import org.cneko.toneko.common.mod.entities.INeko;
+import org.cneko.toneko.common.mod.entities.NekoEntity;
 import org.cneko.toneko.common.mod.api.NekoLevelRegistry;
-import org.cneko.toneko.common.util.ConfigBuilder;
-import org.cneko.toneko.common.util.ConfigUtil;
-import org.cneko.toneko.common.util.LanguageUtil;
+import org.cneko.toneko.common.mod.misc.Messaging;
+import org.cneko.toneko.common.util.*;
 import org.cneko.toneko.common.mod.util.PermissionUtil;
+
+import java.util.Collections;
 
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
@@ -115,6 +119,32 @@ public class ToNekoAdminCommand {
                                                             .executes(ToNekoAdminCommand::nekoSetLevelFactor)
                                                     )
                                             )
+                                    )
+                            )
+                    )
+                    // ===== AI 管理命令 =====
+                    .then(literal("ai")
+                            .requires(source -> PermissionUtil.has(source, Permissions.COMMAND_TONEKOADMIN))
+                            .then(literal("list")
+                                    .executes(ToNekoAdminCommand::aiList)
+                            )
+                            .then(literal("switch")
+                                    .then(argument("provider", StringArgumentType.word())
+                                            .executes(ToNekoAdminCommand::aiSwitch)
+                                    )
+                            )
+                            .then(literal("config")
+                                    .then(argument("provider", StringArgumentType.word())
+                                            .then(argument("key", StringArgumentType.word())
+                                                    .then(argument("value", StringArgumentType.greedyString())
+                                                            .executes(ToNekoAdminCommand::aiConfig)
+                                                    )
+                                            )
+                                    )
+                            )
+                            .then(literal("test")
+                                    .then(argument("message", StringArgumentType.greedyString())
+                                            .executes(ToNekoAdminCommand::aiTest)
                                     )
                             )
                     )
@@ -368,6 +398,99 @@ public class ToNekoAdminCommand {
         double value = context.getArgument("value", Double.class);
         neko.setNekoLevelFactorRaw(factorId, value);
         source.sendSystemMessage(translatable("command.tonekoadmin.neko.set_level_factor", neko.getEntity().getName().getString(), factorId, String.format("%.1f", value)));
+        return 1;
+    }
+
+    // ==================== AI management ====================
+
+    private static int aiList(CommandContext<CommandSourceStack> context) {
+        CommandSourceStack source = context.getSource();
+        String activeId = ConfigUtil.getAIService();
+        StringBuilder sb = new StringBuilder();
+        sb.append("§6===== AI Providers =====\n");
+        for (AIServiceProvider provider : AIServiceProviderRegistry.getAll()) {
+            boolean isActive = provider.getProviderId().equalsIgnoreCase(activeId);
+            String marker = isActive ? "§a[ACTIVE] " : "§7";
+            sb.append(marker).append("§e").append(provider.getProviderId())
+                    .append(" §7- ").append(provider.getDisplayName())
+                    .append(" §7(").append(provider.getDefaultModel()).append(")\n");
+        }
+        source.sendSystemMessage(Component.literal(sb.toString().trim()));
+        return 1;
+    }
+
+    private static int aiSwitch(CommandContext<CommandSourceStack> context) {
+        CommandSourceStack source = context.getSource();
+        String providerId = StringArgumentType.getString(context, "provider");
+        AIServiceProvider provider = AIServiceProviderRegistry.get(providerId);
+        if (provider == null) {
+            source.sendSystemMessage(translatable("messages.toneko.ai.provider_not_found", providerId));
+            return 0;
+        }
+        // Save current provider config before switching
+        ConfigUtil.saveProviderConfig(ConfigUtil.getAIService());
+        // Switch to new provider
+        ConfigUtil.CONFIG.set("ai.service", providerId);
+        // Load saved config for new provider into flat keys
+        ConfigUtil.loadProviderConfig(providerId);
+        ConfigUtil.CONFIG.save();
+        source.sendSystemMessage(translatable("command.tonekoadmin.ai.switch", provider.getDisplayName()));
+        return 1;
+    }
+
+    private static int aiConfig(CommandContext<CommandSourceStack> context) {
+        CommandSourceStack source = context.getSource();
+        String providerId = StringArgumentType.getString(context, "provider");
+        String key = StringArgumentType.getString(context, "key");
+        String value = StringArgumentType.getString(context, "value");
+
+        if (AIServiceProviderRegistry.get(providerId) == null) {
+            source.sendSystemMessage(translatable("messages.toneko.ai.provider_not_found", providerId));
+            return 0;
+        }
+
+        // Supported keys: key, model, base_url
+        if (key.equalsIgnoreCase("key") || key.equalsIgnoreCase("model") || key.equalsIgnoreCase("base_url")) {
+            String configKey = "ai.providers." + providerId + "." + key;
+            ConfigUtil.CONFIG.set(configKey, value);
+            // Also update flat key if this is the active provider
+            if (providerId.equalsIgnoreCase(ConfigUtil.getAIService())) {
+                ConfigUtil.CONFIG.set("ai." + key, value);
+            }
+            ConfigUtil.CONFIG.save();
+            source.sendSystemMessage(translatable("command.tonekoadmin.ai.config", providerId, key, value));
+        } else {
+            source.sendSystemMessage(translatable("command.tonekoadmin.ai.config.invalid_key", key));
+        }
+        return 1;
+    }
+
+    private static int aiTest(CommandContext<CommandSourceStack> context) {
+        CommandSourceStack source = context.getSource();
+        String message = StringArgumentType.getString(context, "message");
+
+        if (!ConfigUtil.isAIEnabled()) {
+            source.sendSystemMessage(Component.translatable("messages.toneko.ai.not_enabled"));
+            return 0;
+        }
+
+        String providerId = ConfigUtil.getAIService();
+        AIServiceProvider provider = AIServiceProviderRegistry.get(providerId);
+
+        source.sendSystemMessage(translatable("command.tonekoadmin.ai.test.sending", provider != null ? provider.getDisplayName() : providerId));
+
+        // Use a dummy UUID for test
+        java.util.UUID testUuid = java.util.UUID.randomUUID();
+        try {
+            ServerPlayer player = source.getPlayerOrException();
+            AIUtil.sendMessage(testUuid, player.getUUID(),
+                    ConfigUtil.getAIPrompt(), message, response -> {
+                        source.sendSystemMessage(Component.literal("§b[AI Test] §f" + response.getResponse()));
+                    });
+        } catch (CommandSyntaxException e) {
+            source.sendSystemMessage(translatable("command.tonekoadmin.neko.not_neko"));
+            return 0;
+        }
         return 1;
     }
 }

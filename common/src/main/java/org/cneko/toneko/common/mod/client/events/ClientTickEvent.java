@@ -4,15 +4,19 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import org.cneko.toneko.common.api.TickTasks;
 import org.cneko.toneko.common.mod.client.ToNekoKeyBindings;
 import org.cneko.toneko.common.mod.client.api.ClientEntityPoseManager;
+import org.cneko.toneko.common.mod.client.screens.ChatWithNekoScreen;
 import org.cneko.toneko.common.mod.client.screens.NekoInfoScreen;
 import org.cneko.toneko.common.mod.client.screens.RouletteScreen;
 import org.cneko.toneko.common.mod.client.screens.ToNekoHubScreen;
+import org.cneko.toneko.common.mod.entities.NekoEntity;
 import org.cneko.toneko.common.mod.packets.interactives.DismountPassengerPayload;
 import org.cneko.toneko.common.mod.util.EntityUtil;
 
@@ -69,6 +73,31 @@ public class ClientTickEvent {
         }
         while (ToNekoKeyBindings.HUB_KEY.consumeClick()) {
             ToNekoHubScreen.open();
+        }
+        while (ToNekoKeyBindings.CHAT_WITH_NEKO_KEY.consumeClick()) {
+            openChatWithNearestNeko(client);
+        }
+    }
+
+    private static void openChatWithNearestNeko(Minecraft client) {
+        if (client.player == null || client.level == null) return;
+
+        // Try to find a neko the player is looking at
+        LivingEntity lookedAt = EntityUtil.findLookedAtEntity(client.player, client.level, 16.0);
+        if (lookedAt instanceof NekoEntity neko) {
+            client.setScreen(new ChatWithNekoScreen(neko));
+            return;
+        }
+
+        // Fallback: find the nearest neko in range
+        NekoEntity nearest = EntityUtil.findNearestNekoEntity(client.player, client.level, 12.0f);
+        if (nearest != null) {
+            client.setScreen(new ChatWithNekoScreen(nearest));
+        } else {
+            if (client.player != null) {
+                client.player.displayClientMessage(
+                        Component.translatable("messages.toneko.chat.no_neko_nearby"), true);
+            }
         }
     }
 
