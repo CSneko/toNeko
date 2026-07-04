@@ -296,7 +296,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
         this.goalSelector.addGoal(4, new org.cneko.toneko.common.mod.entities.ai.goal.NekoHealGoal(this));
         nekoMateGoal = new NekoMateGoal(this, null, 30, this.followLeashSpeed() / 2);
         this.goalSelector.addGoal(3, nekoMateGoal);
-        this.goalSelector.addGoal(2, new NekoSleepInBedGoal(this));
+        //this.goalSelector.addGoal(2, new NekoSleepInBedGoal(this));
         this.goalSelector.addGoal(2, new org.cneko.toneko.common.mod.entities.ai.goal.NekoParanoiaGoal(this));
         this.goalSelector.addGoal(1, new NekoEscapeDangerGoal(this));
         this.goalSelector.addGoal(1, new org.cneko.toneko.common.mod.entities.ai.goal.NekoYandereDefenseGoal(this));
