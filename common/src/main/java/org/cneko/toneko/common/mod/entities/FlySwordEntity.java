@@ -17,14 +17,18 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.vehicle.AbstractMinecart;
+import net.minecraft.world.item.MinecartItem;
 import net.minecraft.world.level.block.TntBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.cneko.toneko.common.util.ConfigUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Map;
 
 public class FlySwordEntity extends Entity {
     private static final EntityDataAccessor<String> BLOCK_ID =
@@ -39,6 +43,27 @@ public class FlySwordEntity extends Entity {
             SynchedEntityData.defineId(FlySwordEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> MAX_SPEED =
             SynchedEntityData.defineId(FlySwordEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Boolean> IS_MINECART =
+            SynchedEntityData.defineId(FlySwordEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<String> MINECART_TYPE =
+            SynchedEntityData.defineId(FlySwordEntity.class, EntityDataSerializers.STRING);
+
+    // Minecart item-to-entity type mapping
+    private static final Map<Item, EntityType<? extends AbstractMinecart>> MINECART_ITEM_TO_ENTITY = Map.of(
+            Items.MINECART,         EntityType.MINECART,
+            Items.CHEST_MINECART,   EntityType.CHEST_MINECART,
+            Items.FURNACE_MINECART, EntityType.FURNACE_MINECART,
+            Items.HOPPER_MINECART,  EntityType.HOPPER_MINECART,
+            Items.TNT_MINECART,     EntityType.TNT_MINECART
+    );
+
+    private static final Map<String, EntityType<? extends AbstractMinecart>> TYPE_NAME_TO_ENTITY = Map.of(
+            "rideable", EntityType.MINECART,
+            "chest",    EntityType.CHEST_MINECART,
+            "furnace",  EntityType.FURNACE_MINECART,
+            "hopper",   EntityType.HOPPER_MINECART,
+            "tnt",      EntityType.TNT_MINECART
+    );
 
     private float targetPitch, targetRoll;
     private float prevPitch, prevRoll, prevYawOffset;
@@ -95,13 +120,23 @@ public class FlySwordEntity extends Entity {
         builder.define(ROLL, 0f);
         builder.define(YAW_OFFSET, 0f);
         builder.define(MAX_SPEED, 1.5f);
+        builder.define(IS_MINECART, false);
+        builder.define(MINECART_TYPE, "");
     }
 
     // === Mass ===
     public float getMass() {
         float base = 10.0f;
-        // Block-based mass: heavier blocks = more mass
-        if (swordStack.getItem() instanceof BlockItem bi) {
+        // Minecart: heavy vehicle mass (like a "大运" truck)
+        if (isMinecartMode()) {
+            base += 250.0f;
+            // TNT minecart slightly lighter, chest/furnace heavier
+            if (swordStack.is(Items.TNT_MINECART)) {
+                base += 50.0f;
+            } else if (swordStack.is(Items.CHEST_MINECART) || swordStack.is(Items.FURNACE_MINECART)) {
+                base += 100.0f;
+            }
+        } else if (swordStack.getItem() instanceof BlockItem bi) {
             BlockState bs = bi.getBlock().defaultBlockState();
             // Approximate mass from hardness
             base += bs.getDestroySpeed(level(), BlockPos.ZERO) * 3.0f;
@@ -123,6 +158,41 @@ public class FlySwordEntity extends Entity {
     public float getFuelPower() { return fuelPower; }
     public double getClientSpeed() { return clientSpeed; }
     public float getSyncedMaxSpeed() { return entityData.get(MAX_SPEED); }
+
+    // === Minecart mode ===
+    public boolean isMinecartMode() {
+        return !swordStack.isEmpty() && swordStack.getItem() instanceof MinecartItem;
+    }
+    public boolean isSyncedMinecartMode() {
+        return entityData.get(IS_MINECART);
+    }
+    public EntityType<? extends AbstractMinecart> getMinecartEntityType() {
+        return MINECART_ITEM_TO_ENTITY.getOrDefault(swordStack.getItem(), EntityType.MINECART);
+    }
+    public EntityType<? extends AbstractMinecart> getMinecartEntityTypeClient() {
+        return TYPE_NAME_TO_ENTITY.getOrDefault(entityData.get(MINECART_TYPE), EntityType.MINECART);
+    }
+
+    // Client-side cached minecart entity for rendering
+    @Nullable
+    private transient AbstractMinecart cachedRenderMinecart;
+    private transient String cachedRenderMinecartType;
+
+    @Nullable
+    public AbstractMinecart getOrCreateRenderMinecart() {
+        if (!level().isClientSide) return null;
+
+        String currentType = entityData.get(MINECART_TYPE);
+        if (cachedRenderMinecart == null || !currentType.equals(cachedRenderMinecartType)) {
+            EntityType<? extends AbstractMinecart> entityType = getMinecartEntityTypeClient();
+            if (entityType != null) {
+                cachedRenderMinecart = (AbstractMinecart) entityType.create(level());
+                cachedRenderMinecartType = currentType;
+            }
+        }
+        return cachedRenderMinecart;
+    }
+
     public void setIronLevel(int v) { this.ironLevel = v; }
     public void setDiamondLevel(int v) { this.diamondLevel = v; }
     public void setNetheriteLevel(int v) { this.netheriteLevel = v; }
@@ -156,15 +226,37 @@ public class FlySwordEntity extends Entity {
         if (swordStack.isEmpty()) {
             entityData.set(DISPLAY_ITEM, "");
             entityData.set(BLOCK_ID, "minecraft:diamond_block");
+            entityData.set(IS_MINECART, false);
+            entityData.set(MINECART_TYPE, "");
             return;
         }
         if (swordStack.getItem() instanceof BlockItem bi) {
             entityData.set(BLOCK_ID, BuiltInRegistries.BLOCK.getKey(bi.getBlock()).toString());
             entityData.set(DISPLAY_ITEM, "");
+            entityData.set(IS_MINECART, false);
+            entityData.set(MINECART_TYPE, "");
+        } else if (swordStack.getItem() instanceof MinecartItem) {
+            // Minecart items: still set DISPLAY_ITEM for backward compat, flag minecart mode
+            ResourceLocation rl = BuiltInRegistries.ITEM.getKey(swordStack.getItem());
+            entityData.set(DISPLAY_ITEM, rl != null ? rl.toString() : "");
+            entityData.set(BLOCK_ID, "");
+            entityData.set(IS_MINECART, true);
+            entityData.set(MINECART_TYPE, getMinecartTypeString(swordStack.getItem()));
+            refreshDimensions();
         } else {
             ResourceLocation rl = BuiltInRegistries.ITEM.getKey(swordStack.getItem());
             entityData.set(DISPLAY_ITEM, rl != null ? rl.toString() : "");
+            entityData.set(IS_MINECART, false);
+            entityData.set(MINECART_TYPE, "");
         }
+    }
+
+    private static String getMinecartTypeString(Item item) {
+        if (item == Items.CHEST_MINECART)   return "chest";
+        if (item == Items.FURNACE_MINECART) return "furnace";
+        if (item == Items.HOPPER_MINECART)  return "hopper";
+        if (item == Items.TNT_MINECART)     return "tnt";
+        return "rideable";
     }
 
     public BlockState getBlockState() {
@@ -210,7 +302,9 @@ public class FlySwordEntity extends Entity {
             Entity p = getFirstPassenger();
             if (p instanceof Player player) pilotTick(player);
         } else if (!isNoGravity()) {
-            setDeltaMovement(getDeltaMovement().add(0, -0.04, 0));
+            // Gravity scales with mass: heavier objects fall faster
+            float gravityScale = Math.min(1.0f + getMass() / 100.0f, 5.0f);
+            setDeltaMovement(getDeltaMovement().add(0, -0.04 * gravityScale, 0));
         }
 
         if (!level().isClientSide) {
@@ -251,25 +345,57 @@ public class FlySwordEntity extends Entity {
 
             // Rebound
             if (!bs.isAir() && bs.getDestroySpeed(level(), bp) >= 0) {
-                boolean isSlimeSword = swordStack.getItem() instanceof BlockItem cbi
-                        && cbi.getBlock() instanceof net.minecraft.world.level.block.SlimeBlock;
-                double bounce = isSlimeSword ? 1.0
-                        : bs.getDestroySpeed(level(), bp) > 5 ? 0.5 : 0.3;
-                // Reflect velocity components that hit
-                Vec3 newVel = postMoveVel;
-                if (hitX) newVel = new Vec3(-preMoveVel.x * bounce, newVel.y, newVel.z);
-                if (hitY) newVel = new Vec3(newVel.x, -preMoveVel.y * bounce, newVel.z);
-                if (hitZ) newVel = new Vec3(newVel.x, newVel.y, -preMoveVel.z * bounce);
-                setDeltaMovement(newVel);
-                level().playSound(null, getX(), getY(), getZ(),
-                        SoundEvents.ANVIL_LAND, SoundSource.BLOCKS, 0.3f, 2.0f);
+                if (isSyncedMinecartMode()) {
+                    // Minecart: ram through very weak blocks, moderate slowdown on soft blocks
+                    float hardness = bs.getDestroySpeed(level(), bp);
+                    if (hardness <= 0.5f && hardness >= 0) {
+                        // Destroy only very weak blocks (crops, torches, flowers, etc.)
+                        level().destroyBlock(bp, true);
+                        setDeltaMovement(preMoveVel.scale(0.85));
+                    } else if (hardness <= 2.0f) {
+                        // Soft blocks: moderate slowdown, no destruction
+                        double bounce = 0.08;
+                        Vec3 newVel = postMoveVel;
+                        if (hitX) newVel = new Vec3(-preMoveVel.x * bounce, newVel.y, newVel.z);
+                        if (hitY) newVel = new Vec3(newVel.x, -preMoveVel.y * bounce, newVel.z);
+                        if (hitZ) newVel = new Vec3(newVel.x, newVel.y, -preMoveVel.z * bounce);
+                        setDeltaMovement(newVel);
+                    } else {
+                        // Hard blocks: tiny bounce, keep momentum
+                        double bounce = 0.05;
+                        Vec3 newVel = postMoveVel;
+                        if (hitX) newVel = new Vec3(-preMoveVel.x * bounce, newVel.y, newVel.z);
+                        if (hitY) newVel = new Vec3(newVel.x, -preMoveVel.y * bounce, newVel.z);
+                        if (hitZ) newVel = new Vec3(newVel.x, newVel.y, -preMoveVel.z * bounce);
+                        setDeltaMovement(newVel);
+                    }
+                    level().playSound(null, getX(), getY(), getZ(),
+                            SoundEvents.ANVIL_LAND, SoundSource.BLOCKS, 0.5f, 1.2f);
+                } else {
+                    boolean isSlimeSword = swordStack.getItem() instanceof BlockItem cbi
+                            && cbi.getBlock() instanceof net.minecraft.world.level.block.SlimeBlock;
+                    double bounce = isSlimeSword ? 1.0
+                            : bs.getDestroySpeed(level(), bp) > 5 ? 0.5 : 0.3;
+                    // Reflect velocity components that hit
+                    Vec3 newVel = postMoveVel;
+                    if (hitX) newVel = new Vec3(-preMoveVel.x * bounce, newVel.y, newVel.z);
+                    if (hitY) newVel = new Vec3(newVel.x, -preMoveVel.y * bounce, newVel.z);
+                    if (hitZ) newVel = new Vec3(newVel.x, newVel.y, -preMoveVel.z * bounce);
+                    setDeltaMovement(newVel);
+                    level().playSound(null, getX(), getY(), getZ(),
+                            SoundEvents.ANVIL_LAND, SoundSource.BLOCKS, 0.3f, 2.0f);
+                }
             }
         }
 
-        // Inertia: heavier = slower deceleration
-        float mass = getMass();
-        float drag = 1.0f / (1.0f + mass * 0.02f);
-        setDeltaMovement(getDeltaMovement().scale(0.95f + drag * 0.05f - 0.05f));
+        // Inertia: heavier = slower deceleration (minecart plows through)
+        if (isSyncedMinecartMode()) {
+            // Minecart: near-zero drag — rams through everything
+            setDeltaMovement(getDeltaMovement().scale(0.998));
+        } else {
+            float drag = 1.0f / (1.0f + getMass() * 0.02f);
+            setDeltaMovement(getDeltaMovement().scale(0.95f + drag * 0.05f - 0.05f));
+        }
         if (Math.abs(getDeltaMovement().x) < 0.001) setDeltaMovement(new Vec3(0, getDeltaMovement().y, getDeltaMovement().z));
         if (Math.abs(getDeltaMovement().z) < 0.001) setDeltaMovement(new Vec3(getDeltaMovement().x, getDeltaMovement().y, 0));
 
@@ -286,7 +412,9 @@ public class FlySwordEntity extends Entity {
         double speed = myVel.length();
         if (speed < 0.3) return;
 
-        AABB box = getBoundingBox().inflate(0.5);
+        // Minecart: much larger hit detection area (like a truck)
+        double inflateAmount = isSyncedMinecartMode() ? 2.5 : 0.5;
+        AABB box = getBoundingBox().inflate(inflateAmount);
         List<LivingEntity> targets = level().getEntitiesOfClass(LivingEntity.class, box,
                 e -> e != rider && e.isAlive());
 
@@ -356,20 +484,28 @@ public class FlySwordEntity extends Entity {
         // Without fuel, speed is 1/10. Fuel multiplier configurable.
         float flyMultiplier = ConfigUtil.getFlySwordFuelMultiplier();
         float boost = fuelTicks > 0 ? fuelPower * flyMultiplier : 0.1f;
-        if (fuelTicks > 0) fuelTicks--;
+        if (fuelTicks > 0) {
+            fuelTicks--;
+            // Minecart: double fuel consumption for extra power
+            if (isSyncedMinecartMode()) fuelTicks--;
+        }
 
         float forward = player.zza;
         float strafe = player.xxa;
         float speed = player.isSprinting() ? 1.5f : 0.8f;
 
+        // Minecart: modest speed boost for truck-like feel
+        boolean minecart = isSyncedMinecartMode();
+        float minecartSpeedMult = minecart ? 1.5f : 1.0f;
+        float minecartAccelMult = minecart ? 1.5f : 1.0f;
+
         // Netherite increases max speed, config multiplier applied
         float speedMult = ConfigUtil.getFlySwordSpeedMultiplier();
         float netheriteBonus = dim(netheriteLevel, NETHERITE_SPEED_PER_LEVEL);
-        float maxSpeed = (1.5f + netheriteBonus) * speedMult;
+        float maxSpeed = (1.5f + netheriteBonus) * speedMult * minecartSpeedMult;
         float netheriteAccel = (1.0f + (float)Math.sqrt(netheriteLevel) * 0.3f) * speedMult;
 
-        float mass = getMass();
-        float accel = speed * netheriteAccel * boost / (1.0f + mass * 0.04f);
+        float accel = speed * netheriteAccel * boost * minecartAccelMult / (1.0f + getMass() * 0.02f);
 
         float yaw = player.getYRot() + entityData.get(YAW_OFFSET);
         double rad = Math.toRadians(yaw);
@@ -505,6 +641,16 @@ public class FlySwordEntity extends Entity {
 
     @Override public boolean isPickable() { return true; }
 
+    private static final EntityDimensions MINECART_DIMENSIONS = EntityDimensions.scalable(2.5f, 1.5f);
+
+    @Override
+    public @NotNull EntityDimensions getDimensions(@NotNull Pose pose) {
+        if (isSyncedMinecartMode()) {
+            return MINECART_DIMENSIONS;
+        }
+        return super.getDimensions(pose);
+    }
+
     @Override
     protected boolean canAddPassenger(@NotNull Entity p) { return getPassengers().isEmpty(); }
 
@@ -519,6 +665,9 @@ public class FlySwordEntity extends Entity {
 
     @Override
     protected @NotNull Vec3 getPassengerAttachmentPoint(@NotNull Entity e, @NotNull EntityDimensions d, float pt) {
+        if (isSyncedMinecartMode()) {
+            return new Vec3(0, 1.2, 0);
+        }
         return new Vec3(0, 1.0, 0);
     }
 
@@ -539,6 +688,11 @@ public class FlySwordEntity extends Entity {
         entityData.set(PITCH, tag.getFloat("Pitch"));
         entityData.set(ROLL, tag.getFloat("Roll"));
         entityData.set(YAW_OFFSET, tag.getFloat("YawOffset"));
+        // Sync appearance (minecart mode, etc.) from loaded swordStack
+        updateAppearanceFromStack();
+        if (isSyncedMinecartMode()) {
+            refreshDimensions();
+        }
     }
 
     @Override
