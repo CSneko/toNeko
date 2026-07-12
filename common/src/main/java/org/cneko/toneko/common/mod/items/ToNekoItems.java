@@ -22,6 +22,7 @@ public class ToNekoItems {
     public static Item MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP;
     public static Item BAZOOKA;
     public static Item PLOT_SCROLL;
+    public static Item FLY_SWORD;
     public static Item LIGHTNING_BOMB;
     public static Item EXPLOSIVE_BOMB;
     public static Item ENERGY_BOMB;

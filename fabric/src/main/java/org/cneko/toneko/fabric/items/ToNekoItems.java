@@ -57,6 +57,7 @@ public class ToNekoItems {
         MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP = new Item(new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ToNekoSongs.NEVER_GONNA_GIVE_YOU_UP));
         BAZOOKA = new BazookaItem(new Item.Properties());
         PLOT_SCROLL = new PlotScrollItem(new Item.Properties());
+        FLY_SWORD = new FlySwordItem(new Item.Properties().stacksTo(1));
         LIGHTNING_BOMB = new LightningBombItem(new Item.Properties());
         EXPLOSIVE_BOMB  = new ExplosiveBombItem(new Item.Properties());
         ENERGY_BOMB = new NekoEnergyBombItem();
@@ -99,6 +100,7 @@ public class ToNekoItems {
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("music_disc_never_gonna_give_you_up"), MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(BazookaItem.ID), BAZOOKA);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("plot_scroll"), PLOT_SCROLL);
+        Registry.register(BuiltInRegistries.ITEM, toNekoLoc("fly_sword"), FLY_SWORD);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("lightning_bomb"), LIGHTNING_BOMB);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("explosive_bomb"), EXPLOSIVE_BOMB);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("energy_bomb"), ENERGY_BOMB);

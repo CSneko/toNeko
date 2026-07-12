@@ -18,7 +18,7 @@ import java.util.List;
 
 /**
  * Scrollable AI configuration screen covering ALL ai.* config keys.
- * Replaces the generic tree section from ConfigScreen.
+ * 其余配置内容在ConfigScreen
  */
 public class AIConfigScreen extends Screen {
     private final Screen lastScreen;
@@ -129,6 +129,7 @@ public class AIConfigScreen extends Screen {
                 Component.translatable("screen.toneko.config.key.ai.proxy.ip"), ConfigUtil.getAIProxyIp(), 64));
         list.addEntry(new StringEntry(leftX, rowW, "ai.proxy.port",
                 Component.translatable("screen.toneko.config.key.ai.proxy.port"), ConfigUtil.getAIProxyPort(), 8));
+
     }
 
     private void switchProvider() {

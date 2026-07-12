@@ -10,6 +10,7 @@ import org.cneko.toneko.common.mod.blocks.ToNekoBlocks;
 import org.cneko.toneko.common.mod.client.ToNekoKeyBindings;
 import org.cneko.toneko.common.mod.client.events.HudRenderEvent;
 import org.cneko.toneko.common.mod.client.renderers.AmmunitionRenderer;
+import org.cneko.toneko.common.mod.client.renderers.FlySwordRenderer;
 import org.cneko.toneko.common.mod.client.renderers.GhostNekoRenderer;
 import org.cneko.toneko.common.mod.client.renderers.NekoBossRenderer;
 import org.cneko.toneko.common.mod.client.renderers.NekoRenderer;
@@ -41,6 +42,7 @@ public class ToNekoClient implements ClientModInitializer {
         EntityRendererRegistry.register(ToNekoEntities.MOUFLET_NEKO_BOSS, (EntityRendererProvider<? super MoufletNekoBoss>) NekoBossRenderer::new);
         EntityRendererRegistry.register(ToNekoEntities.RAVENN_ENTITY, (EntityRendererProvider<? super RavennEntity>) NekoRenderer::new);
         EntityRendererRegistry.register(ToNekoEntities.NOELLE_MAID_NEKO, (EntityRendererProvider<? super NoelleMaidNekoEntity>) NekoRenderer::new);
+        EntityRendererRegistry.register(ToNekoEntities.FLY_SWORD_ENTITY, FlySwordRenderer::new);
 
         BlockRenderLayerMap.INSTANCE.putBlock(ToNekoBlocks.CATNIP, RenderType.cutout());
 

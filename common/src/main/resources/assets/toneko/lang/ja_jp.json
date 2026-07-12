@@ -1186,9 +1186,22 @@
   "screen.toneko.ai_config.section.common": "一般設定",
   "screen.toneko.ai_config.section.tts": "TTS 設定",
   "screen.toneko.ai_config.section.proxy": "プロキシ設定",
+  "screen.toneko.ai_config.section.fly_sword": "飛剣",
+  "screen.toneko.config.key.ai.fly_sword.fuel_multiplier": "燃料倍率:",
+  "screen.toneko.config.key.ai.fly_sword.mass_multiplier": "質量倍率:",
+  "screen.toneko.config.key.ai.fly_sword.speed_multiplier": "速度倍率:",
+  "screen.toneko.config.key.ai.fly_sword.damage_multiplier": "ダメージ倍率:",
   "screen.toneko.ai_config.api_key": "APIキー:",
   "screen.toneko.ai_config.api_key.show": "表示",
   "screen.toneko.ai_config.api_key.hide": "非表示",
   "screen.toneko.ai_config.model": "モデル:",
-  "screen.toneko.ai_config.base_url": "ベースURL:"
+  "screen.toneko.ai_config.base_url": "ベースURL:",
+  "item.toneko.fly_sword": "飛剣",
+  "item.toneko.fly_sword.tooltip.0": "§7ブロックを右クリックで召喚",
+  "item.toneko.fly_sword.tooltip.1": "§7アイテムで右クリックして強化:",
+  "item.toneko.fly_sword.tooltip.2": "§8  鉄 §7= 重量  |  §bダイヤ §7= ダメージ",
+  "item.toneko.fly_sword.tooltip.3": "§e  金 §7= +1上限  |  §4ネザライト §7= 速度",
+  "item.toneko.fly_sword.tooltip.4": "§8  石炭 §7= 燃料(騎乗時に持つ)",
+  "item.toneko.fly_sword.tooltip.5": "§7左クリックで回収",
+  "entity.toneko.fly_sword": "飛剣"
 }

@@ -1308,9 +1308,22 @@
   "screen.toneko.ai_config.section.common": "通用設定",
   "screen.toneko.ai_config.section.tts": "TTS 設定",
   "screen.toneko.ai_config.section.proxy": "代理設定",
+  "screen.toneko.ai_config.section.fly_sword": "御劍飛行",
+  "screen.toneko.config.key.ai.fly_sword.fuel_multiplier": "燃料倍率:",
+  "screen.toneko.config.key.ai.fly_sword.mass_multiplier": "質量倍率:",
+  "screen.toneko.config.key.ai.fly_sword.speed_multiplier": "速度倍率:",
+  "screen.toneko.config.key.ai.fly_sword.damage_multiplier": "傷害倍率:",
   "screen.toneko.ai_config.api_key": "API 金鑰:",
   "screen.toneko.ai_config.api_key.show": "顯示",
   "screen.toneko.ai_config.api_key.hide": "隱藏",
   "screen.toneko.ai_config.model": "模型:",
-  "screen.toneko.ai_config.base_url": "自定義地址:"
+  "screen.toneko.ai_config.base_url": "自定義地址:",
+  "item.toneko.fly_sword": "御劍",
+  "item.toneko.fly_sword.tooltip.0": "§7右鍵方塊召喚",
+  "item.toneko.fly_sword.tooltip.1": "§7右鍵用物品升級:",
+  "item.toneko.fly_sword.tooltip.2": "§8  鐵 §7= 重量  |  §b鑽石 §7= 傷害",
+  "item.toneko.fly_sword.tooltip.3": "§e  金 §7= +1上限  |  §4獄髓 §7= 速度",
+  "item.toneko.fly_sword.tooltip.4": "§8  煤炭 §7= 燃料(騎乘時手持)",
+  "item.toneko.fly_sword.tooltip.5": "§7左鍵回收",
+  "entity.toneko.fly_sword": "御劍"
 }

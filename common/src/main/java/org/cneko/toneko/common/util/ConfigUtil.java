@@ -72,6 +72,23 @@ public class ConfigUtil {
                     "代理端口",
                     "Proxy port")
             // Stats
+            // ===== Fly Sword 配置 =====
+            .addBoolean("fly_sword.enable", true, null,
+                    "启用御剑飞行",
+                    "Enable fly sword")
+            .addFloat("fly_sword.fuel_multiplier", 1.0f, null,
+                    "燃料动力倍率",
+                    "Fuel power multiplier")
+            .addFloat("fly_sword.mass_multiplier", 1.0f, null,
+                    "质量倍率（影响惯性和碰撞）",
+                    "Mass multiplier (affects inertia and collision)")
+            .addFloat("fly_sword.speed_multiplier", 1.0f, null,
+                    "速度倍率",
+                    "Speed multiplier")
+            .addFloat("fly_sword.damage_multiplier", 1.0f, null,
+                    "伤害倍率",
+                    "Damage multiplier")
+            // Stats
             .addBoolean("stats", true, "https://s.cneko.org/toNekoOnlineAPI",
                     "启用统计功能，统计数据将发送到 toneko API，如何使用api请查看 https://s.cneko.org/toNekoOnlineAPI",
                     "Enable statistics, statistics data will be sent to the toneko API, how to use the api please see https://s.cneko.org/toNekoOnlineAPI")
@@ -216,6 +233,13 @@ public class ConfigUtil {
     public static boolean isAIDebugEnabled() {
         return CONFIG.getBoolean("ai.debug");
     }
+
+    public static float getFlySwordFuelMultiplier()  { return clampConfig(CONFIG.getFloat("fly_sword.fuel_multiplier"), 1.0f); }
+    public static float getFlySwordMassMultiplier()  { return clampConfig(CONFIG.getFloat("fly_sword.mass_multiplier"), 1.0f); }
+    public static float getFlySwordSpeedMultiplier() { return clampConfig(CONFIG.getFloat("fly_sword.speed_multiplier"), 1.0f); }
+    public static float getFlySwordDamageMultiplier(){ return clampConfig(CONFIG.getFloat("fly_sword.damage_multiplier"), 1.0f); }
+    public static boolean isFlySwordEnabled()         { return CONFIG.getBoolean("fly_sword.enable"); }
+    private static float clampConfig(float v, float def) { return v > 0 ? v : def; }
 
     /**
      * Save the current flat AI config to per-provider storage for the given provider ID.

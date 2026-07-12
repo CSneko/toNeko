@@ -16,6 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import org.cneko.toneko.common.mod.client.ToNekoKeyBindings;
+import org.cneko.toneko.common.mod.entities.FlySwordEntity;
 import org.cneko.toneko.common.mod.effects.ToNekoEffects;
 import org.joml.Matrix4f;
 
@@ -39,6 +40,9 @@ public class HudRenderEvent {
             // 玩家被骑乘时显示提示
             if (!player.getPassengers().isEmpty()) {
                 renderDismountHint(guiGraphics);
+            }
+            if (player.getVehicle() instanceof FlySwordEntity flySword) {
+                renderFlySwordHUD(guiGraphics, flySword);
             }
         });
     }
@@ -201,5 +205,37 @@ public class HudRenderEvent {
                 0, 0,
                 iconSize, iconSize,
                 iconSize, iconSize);
+    }
+
+    private static void renderFlySwordHUD(GuiGraphics g, FlySwordEntity entity) {
+        Minecraft client = Minecraft.getInstance();
+        if (client.options.hideGui) return;
+
+        int barW = 100, barH = 6, x = g.guiWidth() / 2 - barW / 2;
+
+        // Fuel gauge — percentage of max fuel
+        int fuelY = g.guiHeight() - 62;
+        int maxFuel = Math.max(entity.getMaxFuelTicks(), 1);
+        float fp = entity.getFuelTicks() > 0 ? Math.clamp((float) entity.getFuelTicks() / maxFuel, 0, 1) : 0;
+        g.fill(x, fuelY, x + barW, fuelY + barH, 0x80000000);
+        if (fp > 0) g.fill(x, fuelY, x + (int)(barW * fp), fuelY + barH, 0xFFFF8800);
+        String ft = entity.getFuelTicks() > 0
+                ? String.format("§6Fuel: %d%%", (int)(fp * 100))
+                : "§7Fuel: --";
+        g.drawCenteredString(client.font, ft, g.guiWidth() / 2, fuelY - 10, 0xFFFFFF);
+
+        // Speed bar — % of current max speed (synced from server)
+        int spdY = g.guiHeight() - 46;
+        double speed = entity.getClientSpeed();
+        double speedMax = Math.max(entity.getSyncedMaxSpeed(), 0.1);
+        float spd = Math.clamp((float) (speed / speedMax), 0, 1);
+
+        g.fill(x, spdY, x + barW, spdY + barH, 0x80000000);
+        if (spd > 0) {
+            int c = spd > 0.8f ? 0xFF55FF55 : spd > 0.4f ? 0xFFFFFF55 : 0xFFFF5555;
+            g.fill(x, spdY, x + (int)(barW * spd), spdY + barH, c);
+        }
+        g.drawCenteredString(client.font, String.format("§f%.1f m/s", speed),
+                g.guiWidth() / 2, spdY + barH + 2, 0xFFFFFF);
     }
 }

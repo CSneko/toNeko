@@ -51,6 +51,7 @@ public class ToNekoItems {
     public static DeferredHolder<Item,Item> MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP_HOLDER;
     public static DeferredHolder<Item,Item> BAZOOKA_HOLDER;
     public static DeferredHolder<Item,Item> PLOT_SCROLL_HOLDER;
+    public static DeferredHolder<Item,Item> FLY_SWORD_HOLDER;
     public static DeferredHolder<Item,Item> LIGHTNING_BOMB_HOLDER;
     public static DeferredHolder<Item,Item> EXPLOSIVE_BOMB_HOLDER;
     public static DeferredHolder<Item,Item> CONTRACT_HOLDER;
@@ -116,6 +117,7 @@ public class ToNekoItems {
         BAZOOKA_HOLDER = ITEMS.register("bazooka",()->new BazookaItem(new Item.Properties().stacksTo(1).rarity(Rarity.RARE)));
 
         PLOT_SCROLL_HOLDER = ITEMS.register("plot_scroll",()->new PlotScrollItem(new Item.Properties()));
+        FLY_SWORD_HOLDER = ITEMS.register("fly_sword",()->new FlySwordItem(new Item.Properties().stacksTo(1)));
 
         LIGHTNING_BOMB_HOLDER = ITEMS.register("lightning_bomb",()->new LightningBombItem(new Item.Properties()));
 
@@ -291,6 +293,7 @@ public class ToNekoItems {
         MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP = MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP_HOLDER.get();
         BAZOOKA = BAZOOKA_HOLDER.get();
         PLOT_SCROLL = PLOT_SCROLL_HOLDER.get();
+        FLY_SWORD = FLY_SWORD_HOLDER.get();
         LIGHTNING_BOMB = LIGHTNING_BOMB_HOLDER.get();
         EXPLOSIVE_BOMB = EXPLOSIVE_BOMB_HOLDER.get();
         ENERGY_BOMB = NEKO_ENERGY_BOMB_HOLDER.get();

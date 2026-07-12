@@ -18,6 +18,7 @@ import org.cneko.toneko.common.mod.client.events.ClientPlayerJoinEvent;
 import org.cneko.toneko.common.mod.client.events.ClientTickEvent;
 import org.cneko.toneko.common.mod.client.events.HudRenderEvent;
 import org.cneko.toneko.common.mod.client.renderers.AmmunitionRenderer;
+import org.cneko.toneko.common.mod.client.renderers.FlySwordRenderer;
 import org.cneko.toneko.common.mod.client.renderers.GhostNekoRenderer;
 import org.cneko.toneko.common.mod.client.renderers.NekoBossRenderer;
 import org.cneko.toneko.common.mod.client.renderers.NekoRenderer;
@@ -78,6 +79,10 @@ public class ToNekoNeoForgeClient {
         event.registerEntityRenderer(
                 ToNekoEntities.NOELLE_MAID_NEKO_HOLDER.get(),
                 NekoRenderer::new
+        );
+        event.registerEntityRenderer(
+                ToNekoEntities.FLY_SWORD_HOLDER.get(),
+                FlySwordRenderer::new
         );
     }
 

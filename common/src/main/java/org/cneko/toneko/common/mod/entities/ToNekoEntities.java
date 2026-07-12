@@ -35,6 +35,8 @@ public class ToNekoEntities {
     public static EntityType<NoelleMaidNekoEntity> NOELLE_MAID_NEKO;
     public static EntityType<AmmunitionEntity> AMMUNITION_ENTITY;
     public static ResourceLocation AMMUNITION_ENTITY_ID = toNekoLoc("ammunition_entity");
+    public static EntityType<FlySwordEntity> FLY_SWORD_ENTITY;
+    public static ResourceLocation FLY_SWORD_ENTITY_ID = toNekoLoc("fly_sword");
     public static void init() {
         // 注册名字
         Set<String> names = Set.of(
@@ -49,6 +51,12 @@ public class ToNekoEntities {
         NekoNameRegistry.register(names);
 
 
+    }
+
+    @ApiStatus.Internal
+    public static Supplier<EntityType<FlySwordEntity>> getFlySwordEntity(){
+        return () -> EntityType.Builder.of(FlySwordEntity::new, MobCategory.MISC)
+                .sized(0.6f, 0.6f).clientTrackingRange(10).build("fly_sword");
     }
 
     @ApiStatus.Internal

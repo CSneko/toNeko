@@ -1406,6 +1406,12 @@
   "screen.toneko.ai_config.section.common": "Common Settings",
   "screen.toneko.ai_config.section.tts": "TTS Settings",
   "screen.toneko.ai_config.section.proxy": "Proxy Settings",
+  "screen.toneko.config.group.fly_sword": "Fly Sword",
+  "screen.toneko.config.key.fly_sword.enable": "Enable Fly Sword",
+  "screen.toneko.config.key.fly_sword.fuel_multiplier": "Fuel Power",
+  "screen.toneko.config.key.fly_sword.mass_multiplier": "Mass",
+  "screen.toneko.config.key.fly_sword.speed_multiplier": "Speed",
+  "screen.toneko.config.key.fly_sword.damage_multiplier": "Damage",
   "screen.toneko.ai_config.api_key": "API Key:",
   "screen.toneko.ai_config.api_key.show": "Show",
   "screen.toneko.ai_config.api_key.hide": "Hide",
@@ -1414,5 +1420,13 @@
   "key.toneko.chat_mode": "Toggle Chat Mode (Area/Global)",
   "messages.toneko.chat.mode.area": "§aArea",
   "messages.toneko.chat.mode.global": "§7Global",
-  "messages.toneko.chat.mode.switched": "Chat mode: %s"
+  "messages.toneko.chat.mode.switched": "Chat mode: %s",
+  "item.toneko.fly_sword": "Fly Sword",
+  "item.toneko.fly_sword.tooltip.0": "§7Right-click on a block to summon",
+  "item.toneko.fly_sword.tooltip.1": "§7Right-click with items to upgrade:",
+  "item.toneko.fly_sword.tooltip.2": "§8  Iron §7= mass  |  §bDiamond §7= damage",
+  "item.toneko.fly_sword.tooltip.3": "§e  Gold §7= +1 limit  |  §4Netherite §7= speed",
+  "item.toneko.fly_sword.tooltip.4": "§8  Coal §7= fuel (hold while riding)",
+  "item.toneko.fly_sword.tooltip.5": "§7Left-click to retrieve",
+  "entity.toneko.fly_sword": "Fly Sword"
 }

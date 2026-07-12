@@ -1400,6 +1400,12 @@
   "screen.toneko.ai_config.section.common": "通用设置",
   "screen.toneko.ai_config.section.tts": "TTS 设置",
   "screen.toneko.ai_config.section.proxy": "代理设置",
+  "screen.toneko.config.group.fly_sword": "御剑飞行",
+  "screen.toneko.config.key.fly_sword.enable": "启用御剑飞行",
+  "screen.toneko.config.key.fly_sword.fuel_multiplier": "燃料功率",
+  "screen.toneko.config.key.fly_sword.mass_multiplier": "质量倍率",
+  "screen.toneko.config.key.fly_sword.speed_multiplier": "速度倍率",
+  "screen.toneko.config.key.fly_sword.damage_multiplier": "伤害倍率",
   "screen.toneko.ai_config.api_key": "API 密钥:",
   "screen.toneko.ai_config.api_key.show": "显示",
   "screen.toneko.ai_config.api_key.hide": "隐藏",
@@ -1408,5 +1414,13 @@
   "key.toneko.chat_mode": "切换聊天模式 (区域/全服)",
   "messages.toneko.chat.mode.area": "§a区域",
   "messages.toneko.chat.mode.global": "§7全服",
-  "messages.toneko.chat.mode.switched": "聊天模式: %s"
+  "messages.toneko.chat.mode.switched": "聊天模式: %s",
+  "item.toneko.fly_sword": "御剑",
+  "item.toneko.fly_sword.tooltip.0": "§7右键方块召唤",
+  "item.toneko.fly_sword.tooltip.1": "§7右键用物品升级:",
+  "item.toneko.fly_sword.tooltip.2": "§8  铁 §7= 重量  |  §b钻石 §7= 伤害",
+  "item.toneko.fly_sword.tooltip.3": "§e  金 §7= +1上限  |  §4下界合金 §7= 速度",
+  "item.toneko.fly_sword.tooltip.4": "§8  煤炭 §7= 燃料(骑行时手持)",
+  "item.toneko.fly_sword.tooltip.5": "§7左键回收",
+  "entity.toneko.fly_sword": "御剑"
 }

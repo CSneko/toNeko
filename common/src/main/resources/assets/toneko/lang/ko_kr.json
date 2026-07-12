@@ -148,9 +148,22 @@
   "screen.toneko.ai_config.section.common": "일반 설정",
   "screen.toneko.ai_config.section.tts": "TTS 설정",
   "screen.toneko.ai_config.section.proxy": "프록시 설정",
+  "screen.toneko.ai_config.section.fly_sword": "비검",
+  "screen.toneko.config.key.ai.fly_sword.fuel_multiplier": "연료 배율:",
+  "screen.toneko.config.key.ai.fly_sword.mass_multiplier": "질량 배율:",
+  "screen.toneko.config.key.ai.fly_sword.speed_multiplier": "속도 배율:",
+  "screen.toneko.config.key.ai.fly_sword.damage_multiplier": "데미지 배율:",
   "screen.toneko.ai_config.api_key": "API 키:",
   "screen.toneko.ai_config.api_key.show": "표시",
   "screen.toneko.ai_config.api_key.hide": "숨기기",
   "screen.toneko.ai_config.model": "모델:",
-  "screen.toneko.ai_config.base_url": "기본 URL:"
+  "screen.toneko.ai_config.base_url": "기본 URL:",
+  "item.toneko.fly_sword": "비검",
+  "item.toneko.fly_sword.tooltip.0": "§7블록을 우클릭하여 소환",
+  "item.toneko.fly_sword.tooltip.1": "§7아이템으로 우클릭하여 강화:",
+  "item.toneko.fly_sword.tooltip.2": "§8  철 §7= 무게  |  §b다이아 §7= 데미지",
+  "item.toneko.fly_sword.tooltip.3": "§e  금 §7= +1한도  |  §4네더라이트 §7= 속도",
+  "item.toneko.fly_sword.tooltip.4": "§8  석탄 §7= 연료(탑승 중 들기)",
+  "item.toneko.fly_sword.tooltip.5": "§7좌클릭으로 회수",
+  "entity.toneko.fly_sword": "비검"
 }
