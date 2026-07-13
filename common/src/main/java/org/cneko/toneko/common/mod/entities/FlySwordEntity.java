@@ -43,6 +43,10 @@ public class FlySwordEntity extends Entity {
             SynchedEntityData.defineId(FlySwordEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> MAX_SPEED =
             SynchedEntityData.defineId(FlySwordEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Integer> SYNC_FUEL =
+            SynchedEntityData.defineId(FlySwordEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> SYNC_MAX_FUEL =
+            SynchedEntityData.defineId(FlySwordEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> IS_MINECART =
             SynchedEntityData.defineId(FlySwordEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<String> MINECART_TYPE =
@@ -72,6 +76,7 @@ public class FlySwordEntity extends Entity {
     private int hitCooldown = 0;
 
     // Upgrade levels
+    private boolean netherStarUpgrade = false; // explosion-proof
     private int ironLevel = 0;     // increases mass
     private int diamondLevel = 0;  // increases damage
     private int netheriteLevel = 0; // increases max speed & acceleration
@@ -87,6 +92,7 @@ public class FlySwordEntity extends Entity {
     private int fuelTicks = 0;
     private int maxFuelTicks = 100;
     private float fuelPower = 1.0f;
+    private boolean tntFuel = false;
     // Client-side smoothed speed
     private double clientSpeed = 0;
     private double[] speedSamples = new double[10];
@@ -103,6 +109,7 @@ public class FlySwordEntity extends Entity {
         FUEL_TABLE.put(Items.LAVA_BUCKET,  new FuelData(1000, 1.8f));
         FUEL_TABLE.put(Items.FIRE_CHARGE,  new FuelData(200, 4.0f));
         FUEL_TABLE.put(Items.DRIED_KELP_BLOCK, new FuelData(400, 2.0f));
+        FUEL_TABLE.put(Items.TNT,            new FuelData(72, 6.0f));   // nether star required, 130BPM 4/4 rhythm
     }
 
     private record FuelData(int ticks, float power) {}
@@ -120,6 +127,8 @@ public class FlySwordEntity extends Entity {
         builder.define(ROLL, 0f);
         builder.define(YAW_OFFSET, 0f);
         builder.define(MAX_SPEED, 1.5f);
+        builder.define(SYNC_FUEL, 0);
+        builder.define(SYNC_MAX_FUEL, 100);
         builder.define(IS_MINECART, false);
         builder.define(MINECART_TYPE, "");
     }
@@ -153,8 +162,8 @@ public class FlySwordEntity extends Entity {
     public int getDiamondLevel() { return diamondLevel; }
     public int getNetheriteLevel() { return netheriteLevel; }
     public int getMaxUpgradeLimit() { return maxUpgradeLimit; }
-    public int getFuelTicks() { return fuelTicks; }
-    public int getMaxFuelTicks() { return maxFuelTicks; }
+    public int getFuelTicks() { return entityData.get(SYNC_FUEL); }
+    public int getMaxFuelTicks() { return entityData.get(SYNC_MAX_FUEL); }
     public float getFuelPower() { return fuelPower; }
     public double getClientSpeed() { return clientSpeed; }
     public float getSyncedMaxSpeed() { return entityData.get(MAX_SPEED); }
@@ -326,7 +335,12 @@ public class FlySwordEntity extends Entity {
         boolean hitZ = spdBefore > 0.1 && Math.abs(preMoveVel.z) > 0.01 && Math.abs(postMoveVel.z) < 0.001;
         boolean blockHit = !level().isClientSide && (hitX || hitY || hitZ);
 
-        if (blockHit) {
+        // TNT fly sword: explode on hard landing and clear block (if enabled)
+        boolean tntEnabled = ConfigUtil.isFlySwordTntEnabled();
+        boolean isTntSword = tntEnabled && swordStack.getItem() instanceof BlockItem tbi
+                && tbi.getBlock() instanceof TntBlock;
+
+        if (blockHit || (isTntSword && spdBefore > 1.0 && spdAfter < spdBefore * 0.3)) {
             // Find collision point
             Vec3 dir = preMoveVel.normalize();
             BlockPos bp = BlockPos.containing(
@@ -335,11 +349,16 @@ public class FlySwordEntity extends Entity {
                     getZ() + (hitZ ? Math.signum(preMoveVel.z) * 0.7 : 0));
             BlockState bs = level().getBlockState(bp);
 
-            // TNT detonation
-            if (bs.getBlock() instanceof TntBlock && (spdBefore * getMass()) > 5.0) {
+            // TNT detonation (hit block is TNT, or our own stored block is TNT, if enabled)
+            if (tntEnabled && (bs.getBlock() instanceof TntBlock || isTntSword) && (spdBefore * getMass()) > 5.0) {
                 level().removeBlock(bp, false);
                 level().explode(this, getX(), getY(), getZ(), 2.0f, Level.ExplosionInteraction.BLOCK);
                 setDeltaMovement(dir.scale(-spdBefore * 1.5));
+                // Clear our own TNT block if we had one stored
+                if (isTntSword) {
+                    swordStack = ItemStack.EMPTY;
+                    updateAppearanceFromStack();
+                }
                 return; // skip drag this tick
             }
 
@@ -475,19 +494,44 @@ public class FlySwordEntity extends Entity {
         // Fuel: hold fuel items for thrust boost (different fuels = different power)
         ItemStack held = player.getMainHandItem();
         FuelData fuel = FUEL_TABLE.get(held.getItem());
+        boolean isHoldingTnt = held.is(Items.TNT);
         if (fuel != null && fuelTicks <= 0) {
-            if (!level().isClientSide) held.shrink(1);
-            fuelTicks = fuel.ticks;
-            maxFuelTicks = fuel.ticks;
-            fuelPower = fuel.power;
+            // TNT requires nether star upgrade
+            if (isHoldingTnt && !netherStarUpgrade) {
+                fuel = null;
+            }
+            if (fuel != null && !level().isClientSide) {
+                held.shrink(1);
+                fuelTicks = fuel.ticks;
+                maxFuelTicks = Math.max(fuel.ticks, 1);
+                fuelPower = fuel.power;
+                tntFuel = isHoldingTnt;
+                entityData.set(SYNC_FUEL, fuelTicks);
+                entityData.set(SYNC_MAX_FUEL, maxFuelTicks);
+            }
         }
         // Without fuel, speed is 1/10. Fuel multiplier configurable.
         float flyMultiplier = ConfigUtil.getFlySwordFuelMultiplier();
         float boost = fuelTicks > 0 ? fuelPower * flyMultiplier : 0.1f;
+        // TNT fuel: explosion on every beat before decrement
+        if (tntFuel && fuelTicks > 0 && fuelTicks % 9 == 0 && !level().isClientSide) {
+            float pow = netherStarUpgrade ? 0 : 1.0f;
+            level().explode(this, getX(), getY() - 1, getZ(), pow, Level.ExplosionInteraction.NONE);
+        }
         if (fuelTicks > 0) {
             fuelTicks--;
-            // Minecart: double fuel consumption for extra power
             if (isSyncedMinecartMode()) fuelTicks--;
+            if (!level().isClientSide) entityData.set(SYNC_FUEL, fuelTicks);
+            if (tntFuel && fuelTicks <= 0) {
+                tntFuel = false;
+            }
+        }
+
+        // Auto-refill: if nether star + no stored block + offhand has TNT → auto-load
+        if (netherStarUpgrade && swordStack.isEmpty() && player.getOffhandItem().is(Items.TNT)) {
+            swordStack = new ItemStack(Items.TNT);
+            player.getOffhandItem().shrink(1);
+            updateAppearanceFromStack();
         }
 
         float forward = player.zza;
@@ -548,6 +592,8 @@ public class FlySwordEntity extends Entity {
     @Override
     public boolean hurt(@NotNull DamageSource source, float amount) {
         if (level().isClientSide) return false;
+        // Nether star upgrade: immune to explosion damage
+        if (netherStarUpgrade && source.is(net.minecraft.tags.DamageTypeTags.IS_EXPLOSION)) return false;
         // Drop stored weapon if present
         if (!swordStack.isEmpty()) {
             level().addFreshEntity(new net.minecraft.world.entity.item.ItemEntity(
@@ -601,6 +647,17 @@ public class FlySwordEntity extends Entity {
             return InteractionResult.sidedSuccess(level().isClientSide);
         }
 
+        // Nether Star (explosion-proof)
+        if (held.is(Items.NETHER_STAR) && !netherStarUpgrade) {
+            if (!level().isClientSide) {
+                netherStarUpgrade = true;
+                held.shrink(1);
+                level().playSound(null, getX(), getY(), getZ(),
+                        SoundEvents.WITHER_BREAK_BLOCK, SoundSource.PLAYERS, 0.5f, 2.0f);
+            }
+            return InteractionResult.sidedSuccess(level().isClientSide);
+        }
+
         // Gold ingot (increases max upgrade limit, up to 100)
         if (held.is(Items.GOLD_INGOT) && maxUpgradeLimit < 100) {
             if (!level().isClientSide) {
@@ -623,8 +680,8 @@ public class FlySwordEntity extends Entity {
                 if (!swordStack.isEmpty()) {
                     player.getInventory().add(swordStack.copy());
                 }
-                swordStack = held.copy();
-                player.setItemInHand(hand, ItemStack.EMPTY);
+                swordStack = held.copyWithCount(1);
+                held.shrink(1);
                 updateAppearanceFromStack();
                 level().playSound(null, getX(), getY(), getZ(),
                         SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.PLAYERS, 0.5f, 2.0f);
@@ -681,10 +738,14 @@ public class FlySwordEntity extends Entity {
         ironLevel = tag.getInt("IronLevel");
         diamondLevel = tag.getInt("DiamondLevel");
         netheriteLevel = tag.getInt("NetheriteLevel");
+        netherStarUpgrade = tag.getBoolean("NetherStar");
         maxUpgradeLimit = tag.contains("MaxUpLimit") ? tag.getInt("MaxUpLimit") : 10;
         fuelTicks = tag.getInt("FuelTicks");
         maxFuelTicks = tag.getInt("MaxFuelTicks");
+        tntFuel = tag.getBoolean("TntFuel");
         fuelPower = tag.getFloat("FuelPower");
+        entityData.set(SYNC_FUEL, fuelTicks);
+        entityData.set(SYNC_MAX_FUEL, maxFuelTicks);
         entityData.set(PITCH, tag.getFloat("Pitch"));
         entityData.set(ROLL, tag.getFloat("Roll"));
         entityData.set(YAW_OFFSET, tag.getFloat("YawOffset"));
@@ -704,9 +765,11 @@ public class FlySwordEntity extends Entity {
         tag.putInt("IronLevel", ironLevel);
         tag.putInt("DiamondLevel", diamondLevel);
         tag.putInt("NetheriteLevel", netheriteLevel);
+        tag.putBoolean("NetherStar", netherStarUpgrade);
         tag.putInt("MaxUpLimit", maxUpgradeLimit);
         tag.putInt("FuelTicks", fuelTicks);
         tag.putInt("MaxFuelTicks", maxFuelTicks);
+        tag.putBoolean("TntFuel", tntFuel);
         tag.putFloat("FuelPower", fuelPower);
         tag.putFloat("Pitch", entityData.get(PITCH));
         tag.putFloat("Roll", entityData.get(ROLL));

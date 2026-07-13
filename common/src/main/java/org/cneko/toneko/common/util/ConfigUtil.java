@@ -88,6 +88,9 @@ public class ConfigUtil {
             .addFloat("fly_sword.damage_multiplier", 1.0f, null,
                     "伤害倍率",
                     "Damage multiplier")
+            .addBoolean("fly_sword.tnt_enable", true, null,
+                    "允许TNT御剑（撞击时产生爆炸）",
+                    "Enable TNT fly sword (explodes on impact)")
             // Stats
             .addBoolean("stats", true, "https://s.cneko.org/toNekoOnlineAPI",
                     "启用统计功能，统计数据将发送到 toneko API，如何使用api请查看 https://s.cneko.org/toNekoOnlineAPI",
@@ -239,6 +242,7 @@ public class ConfigUtil {
     public static float getFlySwordSpeedMultiplier() { return clampConfig(CONFIG.getFloat("fly_sword.speed_multiplier"), 1.0f); }
     public static float getFlySwordDamageMultiplier(){ return clampConfig(CONFIG.getFloat("fly_sword.damage_multiplier"), 1.0f); }
     public static boolean isFlySwordEnabled()         { return CONFIG.getBoolean("fly_sword.enable"); }
+    public static boolean isFlySwordTntEnabled()      { return CONFIG.getBoolean("fly_sword.tnt_enable"); }
     private static float clampConfig(float v, float def) { return v > 0 ? v : def; }
 
     /**

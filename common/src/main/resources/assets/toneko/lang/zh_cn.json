@@ -1406,6 +1406,8 @@
   "screen.toneko.config.key.fly_sword.mass_multiplier": "质量倍率",
   "screen.toneko.config.key.fly_sword.speed_multiplier": "速度倍率",
   "screen.toneko.config.key.fly_sword.damage_multiplier": "伤害倍率",
+  "screen.toneko.config.key.fly_sword.tnt_enable": "TNT御剑",
+  "screen.toneko.config.key.fly_sword.tnt_enable.des": "允许TNT作为御剑方块（撞击时产生爆炸）",
   "screen.toneko.ai_config.api_key": "API 密钥:",
   "screen.toneko.ai_config.api_key.show": "显示",
   "screen.toneko.ai_config.api_key.hide": "隐藏",

@@ -1412,6 +1412,8 @@
   "screen.toneko.config.key.fly_sword.mass_multiplier": "Mass",
   "screen.toneko.config.key.fly_sword.speed_multiplier": "Speed",
   "screen.toneko.config.key.fly_sword.damage_multiplier": "Damage",
+  "screen.toneko.config.key.fly_sword.tnt_enable": "TNT Fly Sword",
+  "screen.toneko.config.key.fly_sword.tnt_enable.des": "Allow TNT to be used as fly sword block (explodes on impact)",
   "screen.toneko.ai_config.api_key": "API Key:",
   "screen.toneko.ai_config.api_key.show": "Show",
   "screen.toneko.ai_config.api_key.hide": "Hide",
