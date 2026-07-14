@@ -14,13 +14,18 @@ allprojects {
 }
 
 subprojects {
-    apply plugin: 'dev.architectury.loom'
-    apply plugin: 'architectury-plugin'
+    // Bukkit doesn't use Architectury Loom
+    boolean isLoom = project.name != 'bukkit'
+    if (isLoom) {
+        apply plugin: 'dev.architectury.loom'
+        apply plugin: 'architectury-plugin'
+    }
     apply plugin: 'maven-publish'
 
-    base {
-        // Set up a suffixed format for the mod jar names, e.g. `example-fabric`.
-        archivesName = "$rootProject.archives_name-$project.name"
+    if (isLoom) {
+        base {
+            archivesName = "$rootProject.archives_name-$project.name"
+        }
     }
 
     repositories {
@@ -60,58 +65,56 @@ subprojects {
         }
     }
 
-    loom {
-        silentMojangMappingsLicense()
-    }
-
-    dependencies {
-        minecraft "net.minecraft:minecraft:$rootProject.minecraft_version"
-        mappings loom.layered() {
-            officialMojangMappings()
-            // parchment("org.parchmentmc.data:parchment-1.21.1:2024.11.17@zip") // ParchmentMC版本，目前最新2024.11.17
+    if (isLoom) {
+        loom {
+            silentMojangMappingsLicense()
         }
 
-        modCompileOnly "me.lucko:fabric-permissions-api:0.3.1"
-        modImplementation "net.fabricmc.fabric-api:fabric-api:$rootProject.fabric_api_version"
+        dependencies {
+            minecraft "net.minecraft:minecraft:$rootProject.minecraft_version"
+            mappings loom.layered() {
+                officialMojangMappings()
+            }
 
-        implementation "com.github.CSneko:NekoAI:$rootProject.nekoai_version"
+            modCompileOnly "me.lucko:fabric-permissions-api:0.3.1"
+            modImplementation "net.fabricmc.fabric-api:fabric-api:$rootProject.fabric_api_version"
 
-        implementation 'io.netty:netty-codec-http:4.1.117.Final'
-
-        implementation 'io.netty:netty-handler-proxy:4.1.117.Final'
-
-        implementation 'com.github.umjammer:jlayer:1.0.3'
-
-        compileOnly("org.projectlombok:lombok:1.18.38")
-        annotationProcessor("org.projectlombok:lombok:1.18.38")
-
-        implementation 'dev.architectury:architectury-transformer:5.2.88'
-
-        modCompileOnly "dev.emi:emi-xplat-intermediary:${emi_version}:api"
+            implementation "com.github.CSneko:NekoAI:$rootProject.nekoai_version"
+            implementation 'io.netty:netty-codec-http:4.1.117.Final'
+            implementation 'io.netty:netty-handler-proxy:4.1.117.Final'
+            implementation 'com.github.umjammer:jlayer:1.0.3'
+            implementation 'dev.architectury:architectury-transformer:5.2.88'
+            modCompileOnly "dev.emi:emi-xplat-intermediary:${emi_version}:api"
+        }
     }
 
-    java {
-        // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-        // if it is present.
-        // If you remove this line, sources will not be generated.
-        withSourcesJar()
-
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
+    if (isLoom) {
+        dependencies {
+            compileOnly("org.projectlombok:lombok:1.18.38")
+            annotationProcessor("org.projectlombok:lombok:1.18.38")
+        }
     }
 
-    tasks.withType(JavaCompile).configureEach {
-        it.options.release = 21
+    if (isLoom) {
+        java {
+            withSourcesJar()
+            sourceCompatibility = JavaVersion.VERSION_21
+            targetCompatibility = JavaVersion.VERSION_21
+        }
+        tasks.withType(JavaCompile).configureEach {
+            it.options.release = 21
+        }
     }
 
     // Configure Maven publishing.
-    publishing {
-        publications {
-            mavenJava(MavenPublication) {
-                artifactId = base.archivesName.get()
-                from components.java
+    if (isLoom) {
+        publishing {
+            publications {
+                mavenJava(MavenPublication) {
+                    artifactId = base.archivesName.get()
+                    from components.java
+                }
             }
-        }
 
         // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
         repositories {
@@ -120,5 +123,6 @@ subprojects {
             // The repositories here will be used for publishing your artifact, not for
             // retrieving dependencies.
         }
+    }
     }
 }

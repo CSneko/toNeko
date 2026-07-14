@@ -1,5 +1,5 @@
 architectury {
-    common rootProject.enabled_platforms.split(',')
+    common rootProject.enabled_platforms.split(',').findAll { it != 'bukkit' }
 }
 
 repositories {
