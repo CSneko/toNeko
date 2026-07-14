@@ -206,6 +206,8 @@ public class FlySwordEntity extends Entity {
     public void setDiamondLevel(int v) { this.diamondLevel = v; }
     public void setNetheriteLevel(int v) { this.netheriteLevel = v; }
     public void setMaxUpgradeLimit(int v) { this.maxUpgradeLimit = Math.min(v, 100); }
+    public void setNetherStarUpgrade(boolean v) { this.netherStarUpgrade = v; }
+    public boolean hasNetherStarUpgrade() { return netherStarUpgrade; }
 
     // === Stored ItemStack ===
     public ItemStack getSwordStack() { return swordStack; }
@@ -226,6 +228,7 @@ public class FlySwordEntity extends Entity {
         data.putInt("diamond", diamondLevel);
         data.putInt("netherite", netheriteLevel);
         data.putInt("maxLimit", maxUpgradeLimit);
+        data.putBoolean("netherStar", netherStarUpgrade);
         result.set(net.minecraft.core.component.DataComponents.CUSTOM_DATA,
                 net.minecraft.world.item.component.CustomData.of(data));
         return result;

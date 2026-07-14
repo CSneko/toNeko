@@ -60,6 +60,7 @@ public class FlySwordItem extends Item {
         if (custom != null) {
             CompoundTag tag = custom.copyTag();
             if (tag.contains("maxLimit")) sword.setMaxUpgradeLimit(tag.getInt("maxLimit"));
+            sword.setNetherStarUpgrade(tag.getBoolean("netherStar"));
             sword.setIronLevel(tag.getInt("iron"));
             sword.setDiamondLevel(tag.getInt("diamond"));
             sword.setNetheriteLevel(tag.getInt("netherite"));
