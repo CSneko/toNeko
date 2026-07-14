@@ -1,23 +1,23 @@
 name: toNeko
-version: '1.5.0'
+version: '1.9.2'
 main: org.cneko.toneko.bukkit.ToNeko
-description: Turn Players to Neko in Minecraft
+description: Turn players into nekos with AI chat, energy system, area/global chat, and more!
 api-version: '1.21'
 folia-supported: true
 authors:
   - CrystalNeko
 website: https://github.com/CSNeko/toNeko
 dependencies:
-  bootstrap:
-    ctLib:
-      load: BEFORE
-      required: true
-      join-classpath: false
   server:
-    ctLib:
-      load: BEFORE
-      required: true
-      join-classpath: true
     PlaceholderAPI:
       load: BEFORE
       required: false
+permissions:
+  command.tonekoadmin:
+    default: op
+  command.toneko:
+    default: true
+  command.neko:
+    default: true
+  command.quirk:
+    default: true

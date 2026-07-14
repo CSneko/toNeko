@@ -2,12 +2,11 @@ package org.cneko.toneko.common.api;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import org.cneko.toneko.common.Bootstrap;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -30,8 +29,8 @@ public class NekoQuery {
 
     // === Static accessors ===
 
-    public static @Nullable Neko getNeko(UUID uuid) {
-        return NEKOS.get(uuid);
+    public static @NotNull Neko getNeko(UUID uuid) {
+        return NEKOS.computeIfAbsent(uuid, Neko::new);
     }
 
     public static boolean isNeko(UUID uuid) {
@@ -57,6 +56,9 @@ public class NekoQuery {
         private boolean isNeko;
         private String nickName = "";
         private double level;
+        private float energy;
+        private float maxEnergy = 1000f;
+        private int age = 0; // 0=adult, negative=baby (matches INeko.getMaxAge=24000)
         private final Map<UUID, Double> xpMap = new LinkedHashMap<>();
         private final Set<UUID> owners = new LinkedHashSet<>();
         private final Map<UUID, List<String>> aliases = new LinkedHashMap<>();
@@ -73,6 +75,21 @@ public class NekoQuery {
         public double getLevel() { return level; }
         public void addLevel(double v) { level += v; }
         public void setLevel(double v) { level = v; }
+        public float getNekoEnergy() { return energy; }
+        public void setNekoEnergy(float v) { energy = v < 0 ? 0 : Math.min(v, maxEnergy); }
+        public float getMaxNekoEnergy() { return maxEnergy; }
+        public void setMaxNekoEnergy(float v) { maxEnergy = v < 100 ? 100 : v; }
+        public int getNekoAge() { return age; }
+        public void setNekoAge(int v) { age = v; }
+        public boolean isNekoBaby() { return age < 0; }
+        public void setNekoBaby(boolean baby) {
+            if (baby) age = -24000; else if (age < 0) age = 0;
+        }
+        public int getMaxAge() { return 24000; }
+        /** Advance age by 1 tick. Called every 20 ticks by EnergyManager. Returns true while growing up. */
+        public void tickAge() {
+            if (age < 0) age = Math.min(age + 20, 0); // advance 1 second worth
+        }
 
         public double getXp(UUID owner) { return xpMap.getOrDefault(owner, 0.0); }
         public void setXp(UUID owner, double xp) { xpMap.put(owner, xp); }

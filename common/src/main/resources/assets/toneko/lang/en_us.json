@@ -1430,5 +1430,15 @@
   "item.toneko.fly_sword.tooltip.3": "§e  Gold §7= +1 limit  |  §4Netherite §7= speed",
   "item.toneko.fly_sword.tooltip.4": "§8  Coal §7= fuel (hold while riding)",
   "item.toneko.fly_sword.tooltip.5": "§7Left-click to retrieve",
-  "entity.toneko.fly_sword": "Fly Sword"
+  "entity.toneko.fly_sword": "Fly Sword",
+  "command.quirk.not_found": "§cQuirk not found: %s",
+  "command.toneko.accept.neko": "§a%s accepted your owner request!",
+  "messages.toneko.no_request": "§cNo pending request from %s",
+  "messages.toneko.mod_required": "§cThis feature requires the toNeko mod installed on your client",
+  "command.tonekoadmin.neko.info": "§6===== Neko Info: %s =====",
+  "command.tonekoadmin.neko.set_age": "§aAge set to %s",
+  "command.tonekoadmin.neko.set_nickname": "§aNickname set to %s",
+  "command.tonekoadmin.neko.set_energy": "§aEnergy set to %s",
+  "command.tonekoadmin.neko.set_baby.true": "§aYou are now a baby neko!",
+  "command.tonekoadmin.neko.set_baby.false": "§aYou are now an adult neko!"
 }

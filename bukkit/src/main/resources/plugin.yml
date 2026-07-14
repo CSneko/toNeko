@@ -1,64 +1,65 @@
 name: toNeko
-version: '1.5.0'
+version: '${mod_version}'
 main: org.cneko.toneko.bukkit.ToNeko
 api-version: '1.21'
 author: CrystalNeko
-depends: [ctLib]
 folia-supported: true
+description: Turn players into nekos with AI chat, energy system, and more!
 commands:
   toneko:
     usage: /toneko help
-    description: toneko命令
+    description: toNeko player commands
   tonekoadmin:
     usage: /tonekoadmin help
-    description: toNeko管理员命令
+    description: toNeko admin commands
   neko:
     usage: /neko help
-    description: 猫猫命令
+    description: Neko ability commands
+  quirk:
+    usage: /quirk help
+    description: Quirk management commands
 permissions:
-#  command.toneko.help:
-#    default: true
-#  command.toneko.player:
-#    default: true
-#  command.toneko.remove:
-#    default: true
-#  command.neko.help:
-#    default: true
-#  command.neko.ride:
-#    default: true
   command.tonekoadmin:
     default: op
     children:
       command.tonekoadmin.help: true
       command.tonekoadmin.set: true
       command.tonekoadmin.reload: true
+      command.tonekoadmin.config: true
+      command.tonekoadmin.data: true
+      command.tonekoadmin.neko: true
   command.toneko:
     default: true
     children:
       command.toneko.help: true
       command.toneko.player: true
+      command.toneko.accept: true
+      command.toneko.deny: true
       command.toneko.remove: true
       command.toneko.alias: true
       command.toneko.block: true
       command.toneko.xp: true
+      command.toneko.gui: true
   command.neko:
     default: true
     children:
       command.neko.help: true
+      command.neko.chat: true
       command.neko.ride: true
-      command.neko.get_down: true
+      command.neko.ride_head: true
+      command.neko.jump: true
+      command.neko.speed: true
+      command.neko.vision: true
       command.neko.lie: true
+      command.neko.get_down: true
       command.neko.nickname: true
       command.neko.level: true
       command.neko.lore: true
-      command.neko.vision: true
-      command.neko.jump: true
-      command.neko.speed: true
+      command.neko.gui: true
   command.quirk:
     default: true
     children:
       command.quirk.help: true
-      command.quirk.gui: true
-      command.quirk.add: true
-      command.quirk.remove: true
       command.quirk.list: true
+  command.genetics:
+    default: op

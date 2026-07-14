@@ -1424,5 +1424,15 @@
   "item.toneko.fly_sword.tooltip.3": "§e  金 §7= +1上限  |  §4下界合金 §7= 速度",
   "item.toneko.fly_sword.tooltip.4": "§8  煤炭 §7= 燃料(骑行时手持)",
   "item.toneko.fly_sword.tooltip.5": "§7左键回收",
-  "entity.toneko.fly_sword": "御剑"
+  "entity.toneko.fly_sword": "御剑",
+  "command.quirk.not_found": "§c未找到该Quirk: %s",
+  "command.toneko.accept.neko": "§a%s 接受了你的主人请求！",
+  "messages.toneko.no_request": "§c没有来自 %s 的待处理请求",
+  "messages.toneko.mod_required": "§c此功能需要安装toNeko模组",
+  "command.tonekoadmin.neko.info": "§6===== 猫娘信息: %s =====",
+  "command.tonekoadmin.neko.set_age": "§a年龄已设置为 %s",
+  "command.tonekoadmin.neko.set_nickname": "§a昵称已设置为 %s",
+  "command.tonekoadmin.neko.set_energy": "§a能量已设置为 %s",
+  "command.tonekoadmin.neko.set_baby.true": "§a你已成为幼年猫娘！",
+  "command.tonekoadmin.neko.set_baby.false": "§a你已长大成年！"
 }
