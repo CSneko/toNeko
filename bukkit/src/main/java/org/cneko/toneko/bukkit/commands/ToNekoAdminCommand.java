@@ -15,6 +15,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.cneko.toneko.bukkit.api.NekoStatus;
+import org.cneko.toneko.bukkit.items.NekoItems;
 import org.cneko.toneko.common.api.NekoQuery;
 import org.cneko.toneko.common.api.Permissions;
 import org.cneko.toneko.common.mod.ai.provider.AIServiceProvider;
@@ -82,6 +83,29 @@ public class ToNekoAdminCommand {
                                     )
                                     .then(Commands.literal("allCount")
                                             .executes(ToNekoAdminCommand::dataAllCount)
+                                    )
+                            )
+                            .then(Commands.literal("give")
+                                    .requires(s -> check(s, Permissions.COMMAND_TONEKOADMIN))
+                                    .then(Commands.literal("collector")
+                                            .then(Commands.argument("player", ArgumentTypes.player())
+                                                    .executes(ToNekoAdminCommand::giveCollector)
+                                            )
+                                    )
+                                    .then(Commands.literal("potion")
+                                            .then(Commands.argument("player", ArgumentTypes.player())
+                                                    .executes(ToNekoAdminCommand::givePotion)
+                                            )
+                                    )
+                                    .then(Commands.literal("catnip")
+                                            .then(Commands.argument("player", ArgumentTypes.player())
+                                                    .executes(ToNekoAdminCommand::giveCatnip)
+                                            )
+                                    )
+                                    .then(Commands.literal("catnip_seed")
+                                            .then(Commands.argument("player", ArgumentTypes.player())
+                                                    .executes(ToNekoAdminCommand::giveCatnipSeed)
+                                            )
                                     )
                             )
                             .then(Commands.literal("neko")
@@ -267,6 +291,34 @@ public class ToNekoAdminCommand {
         String val = context.getArgument("value", String.class);
         NekoQuery.getNeko(p.getUniqueId()).setNickName(val);
         sendTransTo(p, "command.tonekoadmin.neko.set_nickname", val);
+        return 1;
+    }
+
+    private static void giveToPlayer(CommandContext<CommandSourceStack> context, java.util.function.Consumer<Player> giver) {
+        Player p;
+        try {
+            p = context.getArgument("player", PlayerSelectorArgumentResolver.class).resolve(context.getSource()).getFirst();
+        } catch (CommandSyntaxException e) { return; }
+        giver.accept(p);
+    }
+
+    private static int giveCollector(CommandContext<CommandSourceStack> context) {
+        giveToPlayer(context, NekoItems::giveCollector);
+        return 1;
+    }
+
+    private static int givePotion(CommandContext<CommandSourceStack> context) {
+        giveToPlayer(context, NekoItems::givePotion);
+        return 1;
+    }
+
+    private static int giveCatnip(CommandContext<CommandSourceStack> context) {
+        giveToPlayer(context, NekoItems::giveCatnip);
+        return 1;
+    }
+
+    private static int giveCatnipSeed(CommandContext<CommandSourceStack> context) {
+        giveToPlayer(context, NekoItems::giveCatnipSeed);
         return 1;
     }
 

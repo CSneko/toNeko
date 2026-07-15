@@ -1,0 +1,7 @@
+material: ender_eye
+display:
+  name: "<#FF69B4>猫猫收集器 <gray>(Neko Collector)"
+  lore:
+    - "<green>收集进度: <white>%progress% / 5000"
+    - "<gray>放在背包中，靠近猫娘自动充能"
+    - "<gray>充满后自动产出猫娘药水"

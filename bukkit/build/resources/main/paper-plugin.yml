@@ -9,6 +9,9 @@ authors:
 website: https://github.com/CSNeko/toNeko
 dependencies:
   server:
+    CraftEngine:
+      load: BEFORE
+      required: true
     PlaceholderAPI:
       load: BEFORE
       required: false

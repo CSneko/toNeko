@@ -9,6 +9,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.cneko.toneko.bukkit.ToNeko;
 import org.cneko.toneko.common.api.NekoQuery;
+import org.cneko.toneko.common.util.ConfigUtil;
 
 public class PlayerConnectionEvents implements Listener {
     public static void init(){
@@ -21,8 +22,11 @@ public class PlayerConnectionEvents implements Listener {
         NekoQuery.Neko neko = NekoQuery.getNeko(player.getUniqueId());
         if(neko.isNeko()){
             neko.fixQuirks();
-            String nick = neko.getNickName().isEmpty() ? player.getName() : neko.getNickName();
-            Bukkit.broadcast(Component.text("§d" + nick + " §ejoined the server §d❤"));
+            if (ConfigUtil.isWelcomeMessageEnabled()) {
+                String nick = neko.getNickName().isEmpty() ? player.getName() : neko.getNickName();
+                String msg = ConfigUtil.getWelcomeMessage().replace("%s", nick);
+                Bukkit.broadcast(Component.text(msg));
+            }
         }
     }
 

@@ -1,5 +1,5 @@
 plugins {
-    id 'dev.architectury.loom' version '1.7-SNAPSHOT' apply false
+    id 'dev.architectury.loom' version '1.9-SNAPSHOT' apply false
     id 'architectury-plugin' version '3.4-SNAPSHOT'
     id 'com.github.johnrengelman.shadow' version '8.1.1' apply false
 }
@@ -84,7 +84,6 @@ subprojects {
             implementation 'io.netty:netty-handler-proxy:4.1.117.Final'
             implementation 'com.github.umjammer:jlayer:1.0.3'
             implementation 'dev.architectury:architectury-transformer:5.2.88'
-            modCompileOnly "dev.emi:emi-xplat-intermediary:${emi_version}:api"
         }
     }
 

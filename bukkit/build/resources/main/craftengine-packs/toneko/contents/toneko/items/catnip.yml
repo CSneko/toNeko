@@ -1,0 +1,6 @@
+material: green_dye
+display:
+  name: "<green>猫薄荷 <gray>(Catnip)"
+  lore:
+    - "<gray>右键食用"
+    - "<gray>猫娘恢复 30 能量"

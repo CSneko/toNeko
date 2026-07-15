@@ -1,0 +1,14 @@
+{
+  "type": "neoforge:add_spawns",
+  "biomes": [
+    "minecraft:cherry_grove",
+    "minecraft:dark_forest",
+    "minecraft:mangrove_swamp"
+  ],
+  "spawners": {
+    "type": "toneko:ghost_neko",
+    "weight": 40,
+    "minCount": 1,
+    "maxCount": 4
+  }
+}

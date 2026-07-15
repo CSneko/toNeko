@@ -1,0 +1,7 @@
+material: potion
+display:
+  name: "<#AA44FF>猫娘药水 <gray>(Neko Potion)"
+  lore:
+    - "<gray>右键饮用"
+    - "<gray>不是猫娘：变成猫娘"
+    - "<gray>已是猫娘：恢复 100 能量"

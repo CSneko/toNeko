@@ -1434,5 +1434,10 @@
   "command.tonekoadmin.neko.set_nickname": "§a昵称已设置为 %s",
   "command.tonekoadmin.neko.set_energy": "§a能量已设置为 %s",
   "command.tonekoadmin.neko.set_baby.true": "§a你已成为幼年猫娘！",
-  "command.tonekoadmin.neko.set_baby.false": "§a你已长大成年！"
+  "command.tonekoadmin.neko.set_baby.false": "§a你已长大成年！",
+  "item.toneko.collector.captured": "§d已捕获 %s！",
+  "item.toneko.collector.released": "§a已释放捕获的猫娘",
+  "item.toneko.collector.already_captured": "§c已捕获过 %s",
+  "item.toneko.potion.become": "§d你已变成猫娘！",
+  "item.toneko.potion.restore": "§a能量已完全恢复！"
 }

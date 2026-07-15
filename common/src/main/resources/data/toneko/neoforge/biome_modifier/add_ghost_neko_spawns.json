@@ -1,0 +1,21 @@
+{
+  "type": "neoforge:add_spawns",
+  "biomes": [
+    "#minecraft:allows_surface_slime_spawns",
+    "#minecraft:has_structure/jungle_temple",
+    "#minecraft:has_structure/nether_fossil",
+    "#minecraft:has_structure/swamp_hut",
+    "#minecraft:has_structure/ancient_city",
+    "#minecraft:is_forest",
+    "#minecraft:is_taiga",
+    "minecraft:cherry_grove",
+    "minecraft:dark_forest",
+    "minecraft:mangrove_swamp"
+  ],
+  "spawners": {
+    "type": "toneko:ghost_neko",
+    "weight": 25,
+    "minCount": 1,
+    "maxCount": 3
+  }
+}

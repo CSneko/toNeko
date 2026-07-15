@@ -12,6 +12,7 @@ import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
@@ -88,6 +89,12 @@ public class ToNekoEvents {
                 if (quirk instanceof ModQuirk mq){
                     mq.onJoin(player);
                 }
+            }
+            // Welcome broadcast
+            if (ConfigUtil.isWelcomeMessageEnabled()) {
+                String nick = player.getNickName().isEmpty() ? name : player.getNickName();
+                String msg = ConfigUtil.getWelcomeMessage().replace("%s", nick);
+                server.getPlayerList().broadcastSystemMessage(Component.literal(msg), false);
             }
         }
     }

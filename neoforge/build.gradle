@@ -32,6 +32,7 @@ repositories {
     maven {
         url "https://maven.su5ed.dev/releases"
     }
+    maven { url = uri("https://api.modrinth.com/maven") }
 }
 
 dependencies {
@@ -47,6 +48,7 @@ dependencies {
 
     implementation "org.sinytra.forgified-fabric-api:forgified-fabric-api:${forgified_fabric_api_version}"
     modImplementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
+    modCompileOnly "maven.modrinth:emi:1.1.24+1.21.1+neoforge"
 
 }
 

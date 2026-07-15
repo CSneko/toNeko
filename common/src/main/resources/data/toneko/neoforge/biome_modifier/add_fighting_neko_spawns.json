@@ -1,0 +1,14 @@
+{
+  "type": "neoforge:add_spawns",
+  "biomes": [
+    "#minecraft:is_nether",
+    "#minecraft:has_structure/ancient_city",
+    "#minecraft:is_mountain"
+  ],
+  "spawners": {
+    "type": "toneko:fighting_neko",
+    "weight": 25,
+    "minCount": 1,
+    "maxCount": 4
+  }
+}

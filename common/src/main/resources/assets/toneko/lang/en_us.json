@@ -1440,5 +1440,10 @@
   "command.tonekoadmin.neko.set_nickname": "§aNickname set to %s",
   "command.tonekoadmin.neko.set_energy": "§aEnergy set to %s",
   "command.tonekoadmin.neko.set_baby.true": "§aYou are now a baby neko!",
-  "command.tonekoadmin.neko.set_baby.false": "§aYou are now an adult neko!"
+  "command.tonekoadmin.neko.set_baby.false": "§aYou are now an adult neko!",
+  "item.toneko.collector.captured": "§dCaptured %s!",
+  "item.toneko.collector.released": "§aReleased captured neko",
+  "item.toneko.collector.already_captured": "§cAlready captured %s",
+  "item.toneko.potion.become": "§dYou have become a neko!",
+  "item.toneko.potion.restore": "§aEnergy fully restored!"
 }

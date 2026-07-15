@@ -1,0 +1,24 @@
+{
+  "type": "neoforge:add_spawns",
+  "biomes": [
+    "#minecraft:is_mountain",
+    "#minecraft:is_forest",
+    "#minecraft:is_taiga",
+    "#minecraft:is_jungle",
+    "#minecraft:is_savanna",
+    "#minecraft:is_river",
+    "#minecraft:is_beach",
+    "#minecraft:is_hill",
+    "minecraft:plains",
+    "minecraft:sunflower_plains",
+    "minecraft:cherry_grove",
+    "minecraft:flower_forest",
+    "minecraft:meadow"
+  ],
+  "spawners": {
+    "type": "toneko:adventurer_neko",
+    "weight": 35,
+    "minCount": 2,
+    "maxCount": 5
+  }
+}

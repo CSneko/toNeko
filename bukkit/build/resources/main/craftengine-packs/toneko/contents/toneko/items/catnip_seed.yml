@@ -1,0 +1,6 @@
+material: wheat_seeds
+display:
+  name: "<green>猫薄荷种子 <gray>(Catnip Seed)"
+  lore:
+    - "<gray>种在耕地上"
+    - "<gray>成熟后收获猫薄荷"

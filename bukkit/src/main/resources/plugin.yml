@@ -4,6 +4,7 @@ main: org.cneko.toneko.bukkit.ToNeko
 api-version: '1.21'
 author: CrystalNeko
 folia-supported: true
+depend: [CraftEngine]
 description: Turn players into nekos with AI chat, energy system, and more!
 commands:
   toneko:

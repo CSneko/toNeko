@@ -23,6 +23,12 @@ public class ConfigUtil {
             .addString("chat.format","%prefix%§e%name% §d>> §f%msg%",null,
                     "聊天格式，占位符 %name% = 玩家名称, %msg% = 玩家消息, %prefix% = 前缀",
                     "Chat format, placeholder %name% = player name, %msg% = player message, %prefix% = prefix")
+            .addBoolean("chat.welcome.enable",true,null,
+                    "猫娘加入服务器时广播欢迎消息",
+                    "Broadcast welcome message when neko joins server")
+            .addString("chat.welcome.message","§d%s §e加入了服务器 §d❤",null,
+                    "猫娘加入欢迎消息，%s=玩家名",
+                    "Neko join welcome message, %s=player name")
             // ===== AI 配置 =====
             .addBoolean("ai.enable",false,AI_URL,
                     "是否启用AI",
@@ -148,6 +154,8 @@ public class ConfigUtil {
     public static boolean isChatEnable() {
         return CONFIG.getBoolean("chat.enable");
     }
+    public static boolean isWelcomeMessageEnabled() { return CONFIG.getBoolean("chat.welcome.enable"); }
+    public static String getWelcomeMessage() { return CONFIG.getString("chat.welcome.message"); }
     public static String getChatFormat() {
         return CONFIG.getString("chat.format");
     }
