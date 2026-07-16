@@ -103,6 +103,16 @@ public class ClientTickEvent {
 
 
     private static int tick = 0;
+
+    // Tracks how many consecutive ticks the local player has been crouching
+    private static int crouchTicks = 0;
+    // Cooldown after auto-cancel to prevent immediate re-trigger
+    private static int crouchCooldown = 0;
+    // Threshold: 3 seconds at 20 ticks/s
+    private static final int CROUCH_THRESHOLD = 60;
+    // Cooldown duration after cancelling pose via crouch-release
+    private static final int CROUCH_COOLDOWN_TICKS = 40;
+
     public static void onTick(Minecraft client) {
         TickTasks.executeDefaultClient();
         // 寻找16格内的生物
@@ -117,6 +127,34 @@ public class ClientTickEvent {
                     Entity entity = entry.getKey();
                     return entity == null || entity.distanceTo(p) > 16;
                 });
+            }
+
+            // Auto-trigger getDown pose after crouching for 3 seconds (issue #125)
+            if (p instanceof org.cneko.toneko.common.mod.entities.INeko neko && neko.isNeko()) {
+                if (crouchCooldown > 0) {
+                    crouchCooldown--;
+                }
+
+                if (p.isCrouching()) {
+                    crouchTicks++;
+                    if (crouchTicks == CROUCH_THRESHOLD) {
+                        // Trigger getDown pose
+                        p.connection.sendUnsignedCommand("neko getDown");
+                        crouchTicks = 0;
+                    }
+                } else {
+                    crouchTicks = 0;
+                    // If player released crouch while getDown is active, cancel the pose
+                    if (crouchCooldown == 0 && ClientEntityPoseManager.contains(p) &&
+                            ClientEntityPoseManager.getPose(p) == Pose.SWIMMING) {
+                        p.connection.sendUnsignedCommand("neko getDown");
+                        crouchCooldown = CROUCH_COOLDOWN_TICKS;
+                    }
+                }
+            } else {
+                // Not a neko: reset counters
+                crouchTicks = 0;
+                crouchCooldown = 0;
             }
         }
     }
