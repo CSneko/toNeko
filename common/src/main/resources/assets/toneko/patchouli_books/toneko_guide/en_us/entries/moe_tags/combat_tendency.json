@@ -1,0 +1,37 @@
+{
+  "name": "Combat & Defense Tendencies",
+  "category": "toneko:moe_tags",
+  "icon": "toneko:bazooka",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The 5 tags introduced in this section mainly affect a neko's $(#FF69B4)combat style$() and $(#FF69B4)safe distance$(). If you're looking for a bodyguard or a cautious companion, pay attention to these tags~"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "tsundere · Tsundere",
+      "text": "$(#FF69B4)\"I-It's not like I'm following you because I want to!\"$()$(br2)Tsundere nekos act reluctant on the surface, but deep down it's a different story. However, she does have a $(#FF69B4)8% chance$() of refusing your follow command — she'll say \"no\" at first, but quietly follow along moments later.$(br2)This love-hate cuteness is the very charm of tsundere!"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "yandere · Yandere",
+      "text": "$(#FF69B4)\"Anyone who hurts my owner... must die.\"$()$(br2)Yandere nekos have an extreme protective instinct toward their owners. If $(#FF69B4)anyone attacks the owner$(), she will retaliate within a 12-block range.$(br2)Her follow range is the longest of all — $(#FF69B4)40 blocks$(). No matter how far her owner goes, she'll keep a close watch.$(br2)With her around, you'll feel incredibly safe... though sometimes a little chilled down the spine too."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "yowaki · Timid",
+      "text": "$(#FF69B4)\"Uu... don't come closer...\"$()$(br2)Timid nekos are very shy and will actively $(#FF69B4)flee from strangers$(). Her follow range is also shorter — $(#FF69B4)15 blocks$() — she gets anxious if separated by too much distance.$(br2)She needs more patience and care from her owner, but once trust is built, she becomes one of the clingiest nekos around."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "paranoia · Paranoid",
+      "text": "$(#FF69B4)\"Someone's watching...\"$()$(br2)Paranoid nekos stay vigilant at all times. She $(#FF69B4)scans every 2 seconds$() for unknown players within an 8-block radius, and flees immediately upon detection.$(br2)In crowded areas, she can barely settle down. If you have a paranoid neko, it's best to take her somewhere quiet to live."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "shoakuma · Little Devil",
+      "text": "$(#FF69B4)\"Ehehe~ this belongs to me now~\"$()$(br2)Little Devil nekos love mischief. Her $(#FF69B4)item pickup range is larger than normal$() (5 blocks vs the default 3) — anything dropped nearby gets secretly snatched up by her.$(br2)While not directly combat-related, this tag means she'll always end up with more loot during chaotic moments — maybe even that thing you just dropped?"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "type": "toneko:neko_aggregator",
+  "key": {
+    "P": { "item": "minecraft:diamond_pickaxe" },
+    "S": { "item": "minecraft:diamond_shovel" },
+    "W": { "item": "minecraft:diamond_sword" },
+    "A": { "item": "minecraft:diamond_axe" },
+    "I": { "item": "toneko:neko_ingot" },
+    "C": { "item": "toneko:neko_crystal" },
+    "R": { "item": "toneko:neko_energy_storage_large_charged" }
+  },
+  "pattern": [
+    "PCS",
+    "IAI",
+    "WRW"
+  ],
+  "energy": 1000.0,
+  "result": {
+    "id": "toneko:neko_multi_tool",
+    "count": 1
+  }
+}

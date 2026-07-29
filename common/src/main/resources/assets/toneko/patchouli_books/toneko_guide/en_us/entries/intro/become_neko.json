@@ -1,0 +1,28 @@
+{
+  "name": "Becoming a Neko",
+  "category": "toneko:intro",
+  "icon": "toneko:neko_potion",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "toneko:neko_potion",
+      "text": "The $(item)Neko Potion$() is the key item that transforms you into a neko.$(br2)The moment you drink it, your body glows with a pink light — and then, $(#FF69B4)welcome to the world of nekos$()!"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "What Changes",
+      "text": "After becoming a neko, your character will experience these changes:$(br2)$(li)Gain a $(thing)Neko Energy bar$() displayed at the top of the screen$(li)Gain the $(thing)neko.degree$() attribute, representing your \"neko-ness\"$(li)Unlock the $(k:toneko.roulette) neko skill wheel$(li)Unlock $(thing)/neko$() commands for various neko-exclusive actions$(br2)Your appearance may also change depending on the neko armor you equip~"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Drinking Again",
+      "text": "If you're $(#FF69B4)already a neko$(), drinking another $(item)Neko Potion$() won't make you \"a neko twice\" — instead, it will restore $(#FF69B4)100 points$() of neko energy.$(br2)This is super handy when you're low on energy but need to use the aggregator urgently, meow!"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Getting Energy",
+      "text": "When you first become a neko, your energy bar will be empty. Here's how to fill it up:$(br2)$(li)Eat $(item)Catnip$(), restores $(#FF69B4)30 points$() of energy$(li)$(#FF69B4)Cuddle$() with neko NPCs — both of you gain energy$(li)Natural regeneration — the more nekos nearby, the faster it recovers$(br2)$(#FFB6C1)Keep some catnip on you, just in case~$()"
+    }
+  ]
+}

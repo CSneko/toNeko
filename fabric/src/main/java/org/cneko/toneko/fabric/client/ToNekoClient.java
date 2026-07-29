@@ -45,6 +45,7 @@ public class ToNekoClient implements ClientModInitializer {
         EntityRendererRegistry.register(ToNekoEntities.FLY_SWORD_ENTITY, FlySwordRenderer::new);
 
         BlockRenderLayerMap.INSTANCE.putBlock(ToNekoBlocks.CATNIP, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(ToNekoBlocks.WILD_CATNIP, RenderType.cutout());
 
         org.cneko.toneko.common.mod.client.ToNekoClient.init();
     }

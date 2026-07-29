@@ -15,6 +15,7 @@ public record NekoInfoSyncPayload(
         double interactionRaw,
         double combatRaw,
         double baseRaw,
+        double explorationRaw,
         boolean isNeko,
         int age
 ) implements CustomPacketPayload {
@@ -26,12 +27,14 @@ public record NekoInfoSyncPayload(
                 ByteBufCodecs.DOUBLE.encode(buf, payload.interactionRaw());
                 ByteBufCodecs.DOUBLE.encode(buf, payload.combatRaw());
                 ByteBufCodecs.DOUBLE.encode(buf, payload.baseRaw());
+                ByteBufCodecs.DOUBLE.encode(buf, payload.explorationRaw());
                 ByteBufCodecs.BOOL.encode(buf, payload.isNeko());
                 ByteBufCodecs.INT.encode(buf, payload.age());
             },
             buf -> new NekoInfoSyncPayload(
                     ByteBufCodecs.FLOAT.decode(buf),
                     ByteBufCodecs.FLOAT.decode(buf),
+                    ByteBufCodecs.DOUBLE.decode(buf),
                     ByteBufCodecs.DOUBLE.decode(buf),
                     ByteBufCodecs.DOUBLE.decode(buf),
                     ByteBufCodecs.DOUBLE.decode(buf),

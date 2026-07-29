@@ -1,0 +1,27 @@
+{
+  "name": "General Neko Knowledge",
+  "category": "toneko:neko_types",
+  "icon": "toneko:neko_potion",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The nekos roaming the world come in various types, but they share many $(#FF69B4)common traits$(). Understanding these basics will help you get along with them better~"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Common Traits",
+      "text": "$(li)Every neko has a $(thing)Neko Energy bar$(), the source of her power$(li)Each neko has 1~3 $(thing)Moe Tags$() that determine her personality and behavior$(li)Nekos can be $(#FF69B4)tamed$() using a $(item)Contract$(), making her your companion$(li)Two nekos can $(#FF69B4)breed$(), producing a baby with mixed genes$(br2)Check later chapters for more details!"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Daily Behaviors",
+      "text": "Nekos display all kinds of adorable behaviors in daily life:$(br2)$(li)They $(#FF69B4)pick up items$() from the ground, especially things they like$(li)They $(#FF69B4)follow their owners$() and accompany them on adventures$(li)When injured, they $(#FF69B4)eat food to heal$() — very self-sufficient$(li)They $(#FF69B4)auto-equip$() armor and weapons they receive$(li)At night they look for nearby beds and sleep peacefully$(br2)With a neko companion, you'll never adventure alone!"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Natural Spawning",
+      "text": "Nekos naturally spawn in specific $(thing)biomes$(). Different types prefer different environments:$(br2)$(li)Adventurer Neko — mountains, forests, plains and other common terrain$(li)Fighting Neko — the Nether, ancient cities, mountains$(li)Ghost Neko — swamps, forests, cherry groves and other quiet places$(br2)Also, on a certain $(#FF69B4)special day$() each year, rumor has it that a mysterious neko named $(#FF69B4)Crystal_Neko$() will quietly appear somewhere in the world..."
+    }
+  ]
+}

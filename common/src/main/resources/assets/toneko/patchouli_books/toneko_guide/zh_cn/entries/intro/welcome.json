@@ -1,0 +1,17 @@
+{
+  "name": "欢迎来到 toNeko",
+  "category": "toneko:intro",
+  "icon": "toneko:neko_tail",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "$(thing)toNeko$() 是一个以 $(#FF69B4)猫娘$() 为主题的 Minecraft 模组。$(br2)在这里，你可以：$(li)喝下猫娘药水，$(#FF69B4)变身可爱猫娘$()$(li)与世界上各种猫娘 NPC $(#FF69B4)互动交友$()$(li)收集猫娘能量，合成$(#FF69B4)专属装备$()$(li)繁育猫娘宝宝，探索$(#FF69B4)基因遗传$()$(li)挑战强大的 $(#FF69B4)猫娘 Boss$()$(br2)$(#FFB6C1)准备好了吗？可爱即是正义！$()"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "toneko:toneko_guide",
+      "text": "这本手册的合成配方很简单：$(item)书$() + $(item)猫薄荷$() 就能做出来啦~$(br2)如果弄丢了也没关系，随时可以重新合成一本喵！"
+    }
+  ]
+}

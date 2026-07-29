@@ -1,0 +1,32 @@
+{
+  "name": "Custom Enchantments",
+  "category": "toneko:advanced",
+  "icon": "minecraft:enchanted_book",
+  "sortnum": 3,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "toNeko provides $(#FF69B4)8 exclusive enchantments$() across different equipment. These cannot be obtained from a regular enchanting table — they must be acquired through the aggregator or other special means."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "General Enchantments",
+      "text": "$(li)$(thing)Enforcement$() (Level 1) — for $(item)Contract$(): essential for taming bratty nekos. Can also be put on armor to prevent hatred buildup when hitting nekos.$(li)$(thing)Reversion$() (Level 1) — for $(item)Neko Armor$() (ears/tail), creates a curious reversal effect with the armor itself.$(br2)These two aren't weighted highly for acquisition, but their unique effects make them worth collecting."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Hiss Series · Part 1",
+      "text": "The following 5 enchantments are exclusive to the $(item)Neko Energy Burst$():$(br2)$(li)$(thing)Hiss Power$() (Lv.3 / Weight 10) — increases energy burst damage$(li)$(thing)Hiss Spread$() (Lv.3 / Weight 8) — expands energy burst radius$(li)$(thing)Hiss Efficiency$() (Lv.3 / Weight 8) — reduces energy consumption$(br2)The Hiss series is the core enhancement for the Neko Energy Burst — a good combination will take your AoE output to the next level!"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Hiss Series · Part 2",
+      "text": "$(li)$(thing)Hiss Root$() (Lv.2 / Weight 6) — chance to briefly root enemies on hit$(li)$(thing)Hiss Demolish$() (Lv.3 / Weight 6) — adds explosive effect and area destruction$(br2)The Root + Demolish combo is devastating against mob groups — root them first, then blow them all up together!"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Combo Extend",
+      "text": "$(thing)Combo Extend$() (Lv.2 / Weight 4) — for $(item)Neko Energy Burst$().$(br2)Effect: $(#FF69B4)extends the combo time window$(), making it easier to maintain high combos.$(br2)For players who love pushing their combo counts to the limit, this is a must-have enchantment — after all, the higher the combo, the flashier the energy burst becomes!"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "name": "Admin Commands & Permissions",
+  "category": "toneko:advanced",
+  "icon": "minecraft:command_block",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "toNeko provides a complete admin command system with $(#FF69B4)permission nodes$(), allowing server admins to finely control each player's feature access.$(br2)The permission system integrates seamlessly with $(thing)LuckPerms$() and similar permission plugins."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Admin Commands",
+      "text": "$(thing)/tonekoadmin$() is designed for administrators:$(br2)$(li)$(#FF69B4)/tonekoadmin set$() — set a player as a neko (or remove)$(li)$(#FF69B4)/tonekoadmin setLevel$() — set a neko's level$(li)$(#FF69B4)/tonekoadmin reload$() — reload configuration files$(li)$(#FF69B4)/tonekoadmin data$() — manage neko data$(li)$(#FF69B4)/tonekoadmin config$() — manage AI and mod configuration$(li)$(#FF69B4)/tonekoadmin neko$() — manage neko NPCs$(br2)Requires: $(thing)command.tonekoadmin$()"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Permission Nodes Overview",
+      "text": "toNeko's permissions are structured in tiers:$(br2)$(li)$(thing)command.toneko.player$() — basic player commands (accept/deny/alias/block/xp/remove/help/gui)$(li)$(thing)command.neko$() — neko action commands (jump/vision/speed/lie/ride/chat etc.)$(li)$(thing)command.quirk$() — quirk management (add/remove/list/gui)$(li)$(thing)command.genetics$() — gene viewing command$(li)$(thing)command.tonekoadmin$() — full admin permissions"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Using with LuckPerms",
+      "text": "If you use LuckPerms, you can assign permissions like this:$(br2)$(li)Normal neko players: $(thing)command.toneko.player$() + $(thing)command.neko$()$(li)Active nekos: additionally grant $(thing)command.quirk$()$(li)Admins: $(thing)command.tonekoadmin$()$(li)Gene viewing granted separately: $(thing)command.genetics$()$(br2)This way each player only has access to their appropriate tier of features, keeping the server orderly and balanced~"
+    }
+  ]
+}

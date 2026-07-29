@@ -1,0 +1,6 @@
+{
+  "parent": "patchouli:item/book",
+  "textures": {
+    "book": "patchouli:textures/gui/book_purple"
+  }
+}

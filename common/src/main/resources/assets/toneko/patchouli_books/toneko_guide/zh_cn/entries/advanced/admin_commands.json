@@ -1,0 +1,27 @@
+{
+  "name": "管理指令与权限",
+  "category": "toneko:advanced",
+  "icon": "minecraft:command_block",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "toNeko 提供了完整的管理指令系统和 $(#FF69B4)权限节点$()，方便服务器管理员精细控制每位玩家的功能使用。$(br2)权限系统可以与 $(thing)LuckPerms$() 等常见权限插件无缝配合。"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "管理员指令",
+      "text": "$(thing)/tonekoadmin$() 专为管理员设计：$(br2)$(li)$(#FF69B4)/tonekoadmin set$() —— 设置一个玩家为猫娘（或取消）$(li)$(#FF69B4)/tonekoadmin setLevel$() —— 设置猫娘等级$(li)$(#FF69B4)/tonekoadmin reload$() —— 重载配置文件$(li)$(#FF69B4)/tonekoadmin data$() —— 管理猫娘数据$(li)$(#FF69B4)/tonekoadmin config$() —— 管理 AI 和模组配置$(li)$(#FF69B4)/tonekoadmin neko$() —— 管理猫娘 NPC$(br2)需要权限：$(thing)command.tonekoadmin$()"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "权限节点一览",
+      "text": "toNeko 的权限分为几个层级：$(br2)$(li)$(thing)command.toneko.player$() —— 基础玩家指令（accept/deny/alias/block/xp/remove/help/gui）$(li)$(thing)command.neko$() —— 猫娘动作指令（jump/vision/speed/lie/ride/chat 等）$(li)$(thing)command.quirk$() —— 性癖管理指令（add/remove/list/gui）$(li)$(thing)command.genetics$() —— 基因查看指令$(li)$(thing)command.tonekoadmin$() —— 管理员全部权限"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "配合 LuckPerms",
+      "text": "如果你使用 LuckPerms，可以这样做精细化权限分配：$(br2)$(li)给普通猫娘玩家 $(thing)command.toneko.player$() + $(thing)command.neko$()$(li)给活跃猫娘额外加 $(thing)command.quirk$()$(li)给管理员 $(thing)command.tonekoadmin$()$(li)基因查看单独赋予 $(thing)command.genetics$()$(br2)这样每个玩家只能使用对应等级的功能，保持服务器的秩序和平衡~"
+    }
+  ]
+}

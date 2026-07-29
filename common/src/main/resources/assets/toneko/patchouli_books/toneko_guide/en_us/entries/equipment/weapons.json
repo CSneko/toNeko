@@ -1,0 +1,27 @@
+{
+  "name": "Weapons",
+  "category": "toneko:equipment",
+  "icon": "toneko:bazooka",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Nekos have their own exclusive weapons! From a fierce bazooka to a flashy AoE energy weapon, to a stylish flying mount — this section introduces three $(#FF69B4)neko-exclusive weapons$()."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "toneko:bazooka",
+      "text": "The $(item)Bazooka$() is a neko's heavy ranged weapon.$(br2)Hold $(#FF69B4)Shift + Right-click$() to cycle ammo types (explosive/lightning/energy bombs), regular right-click to fire.$(br2)Supports $(thing)Power$() and $(thing)Loyalty$() enchantments — make your shots hit harder and even return to you!"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "toneko:neko_energy_burst",
+      "text": "The $(item)Neko Energy Burst$() is an AoE energy weapon.$(br2)When used, it $(#FF69B4)damages surrounding enemies$() while $(#FF69B4)healing nearby nekos$().$(br2)Features a $(thing)combo system$(): consecutive hits trigger increasingly powerful combo moves, displayed via a Boss-bar-style combo HUD.$(br2)There's also an $(item)Evil version$() — it damages both enemies AND yourself, with chuunibyo-style combo names!"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "toneko:fly_sword",
+      "text": "The $(item)Fly Sword$() is a $(#FF69B4)flying mount$() you can ride on.$(br2)Right-click to place it and stand on it — soar through the skies just like a cultivation novel!$(br2)Can be upgraded step by step: $(item)Iron Ingot$() → $(item)Diamond$() → $(item)Netherite Ingot$() — higher levels bring better performance.$(br2)Fly through the skies in style~"
+    }
+  ]
+}

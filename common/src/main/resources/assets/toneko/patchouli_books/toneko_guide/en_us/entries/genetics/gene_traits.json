@@ -1,0 +1,37 @@
+{
+  "name": "Gene Traits",
+  "category": "toneko:genetics",
+  "icon": "minecraft:enchanted_book",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Here are all inheritable $(#FF69B4)gene traits$() in toNeko. Each trait has a corresponding allele — dominance and dominant/recessive status shown in parentheses.$(br2)With smart pairing, you can breed your ideal neko!"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Speed & Attack",
+      "text": "$(li)$(#FF69B4)super_speed$() (Dominant 20): movement speed +0.03$(li)$(#FF69B4)slow_speed$() (Dominant 20): movement speed -0.03$(li)$(#FF69B4)strong_attack$() (Dominant 20): attack damage +3$(li)$(#FF69B4)fast_attack$() (Dominant 20): attack speed +3$(br2)Speed and attack genes are on different loci — an elite fighting neko can have both super speed and strong attack!"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Body Size & Health",
+      "text": "$(li)$(#FF69B4)small_body$() (Dominant 20): scale -0.3, petite and cute$(li)$(#FF69B4)large_body$() (Recessive 5): scale +0.3, rare — needs two recessive genes to match$(li)$(#FF69B4)healthy$() (Dominant 20): max health +5$(li)$(#FF69B4)weak$() (Dominant 20): max health -5$(br2)Large body is a rare recessive trait — if you want to breed a \"big cat,\" carefully select parents carrying the recessive gene~"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Resistances & Weakness",
+      "text": "$(li)$(#FF69B4)fall_resistance$() (Recessive 5): fall damage -50%, rare$(li)$(#FF69B4)fire_resistance$() (Recessive 5): burn duration -50%, rare$(li)$(#FF69B4)gravity_sensitive$() (Dominant 15): gravity +20%, a negative trait$(br2)Both resistances are rare recessives — you need a pair of recessive genes for them to work. Gravity sensitivity is dominant, so once inherited it will always express — avoid it when breeding."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Appearance & Behavior",
+      "text": "$(li)$(#FF69B4)flat_chest$() (Dominant 15) / $(#FF69B4)large_chest$() (Recessive 5)$(li)$(#FF69B4)tall_legs$() (Dominant 20): step height +0.5, easier to climb steps$(li)$(#FF69B4)lucky$() (Recessive 5): luck +1, rare$(li)$(#FF69B4)night_active$() (Neutral 10): more active at night$(li)$(#FF69B4)sun_basking$() (Neutral 10): seeks sunlight on clear days to heal (+0.5 HP every 2 sec)$(br2)Sun basking is great during peacetime — let your neko leisurely heal under the sun~"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Moe Tag Genes",
+      "text": "Each of the 15 moe tags has a corresponding $(#FF69B4)allele$(), all with dominance 20.$(br2)This means moe tags can be $(#FF69B4)inherited by offspring$() — for example, two nekos carrying the yandere gene are more likely to have yandere babies.$(br2)Of course, baby nekos still randomly generate 1~3 moe tags based on their parents' combined genes, not a direct copy — this also follows the independent assortment principle of Mendel's laws~"
+    }
+  ]
+}

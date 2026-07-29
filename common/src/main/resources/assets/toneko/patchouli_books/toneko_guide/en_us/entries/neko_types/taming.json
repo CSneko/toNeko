@@ -1,0 +1,28 @@
+{
+  "name": "How to Tame a Neko",
+  "category": "toneko:neko_types",
+  "icon": "toneko:contract",
+  "sortnum": 4,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "toneko:contract",
+      "text": "The $(item)Contract$() is the key item for taming nekos.$(br2)Once you sign a contract with a neko, you become her $(#FF69B4)owner$(), and she will be willing to follow you, protect you, and adventure with you."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "toneko:contract",
+      "text": "The contract is crafted from $(item)Catnip$() and $(item)Paper$().$(br2)A 3×3 of catnip surrounding a piece of paper — that's the ritual of the neko contract, meow~"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Signing the Contract",
+      "text": "Using it is simple: $(#FF69B4)right-click a neko while holding the contract$().$(br2)Signing the contract consumes $(#FF69B4)30 XP levels$() — showing that you're willing to pay a price for this bond.$(br2)Once signed, the neko will acknowledge you as her owner. You can give her a $(thing)nickname$(), check her $(thing)info panel$(), and command her to $(thing)follow or stay$()."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Important Notes",
+      "text": "$(li)A neko can have $(#FF69B4)multiple owners$(), each tracked independently with their own affection (XP) progress.$(li)Nekos with the $(#FF69B4)mesugaki$() (bratty) moe tag are naturally rebellious — a normal contract won't work on them. You'll need to enchant the contract with $(thing)Enforcement$() to tame them.$(br2)$(#FFB6C1)Taming is just the beginning — true bonds are built through daily companionship~$()"
+    }
+  ]
+}

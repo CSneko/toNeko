@@ -19,12 +19,14 @@ import org.cneko.ai.util.FileStorageUtil;
 import org.cneko.toneko.common.Bootstrap;
 import org.cneko.toneko.common.api.Permissions;
 import org.cneko.toneko.common.api.TickTasks;
+import org.cneko.toneko.common.mod.abilities.ClimbWallHandler;
 import org.cneko.toneko.common.mod.api.EntityPoseManager;
 import org.cneko.toneko.common.mod.entities.CrystalNekoEntity;
 import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.genetics.api.IGeneticEntity;
 import org.cneko.toneko.common.mod.commands.ToNekoCommand;
 import org.cneko.toneko.common.mod.items.GeneEditorItem;
+import org.cneko.toneko.common.mod.items.NekoMultiToolItem;
 import org.cneko.toneko.common.mod.misc.Messaging;
 import org.cneko.toneko.common.mod.packets.*;
 import org.cneko.toneko.common.mod.packets.interactives.*;
@@ -57,6 +59,7 @@ public class ToNekoNetworkEvents {
         ServerPlayNetworking.registerGlobalReceiver(PlayerLeadByPlayerPayload.ID,ToNekoNetworkEvents::onPlayerLeadByPlayer);
         ServerPlayNetworking.registerGlobalReceiver(PluginDetectPayload.ID,(a,b)->{});// 什么也不干
         ServerPlayNetworking.registerGlobalReceiver(ToNekoActionPayload.ID, ToNekoNetworkEvents::onToNekoAction);
+        ServerPlayNetworking.registerGlobalReceiver(NekoMultiToolModePayload.ID, ToNekoNetworkEvents::onMultiToolMode);
         ServerPlayNetworking.registerGlobalReceiver(GenomeDataPayload.ID, (payload, context) -> {
             ServerPlayer player = context.player();
 
@@ -82,6 +85,40 @@ public class ToNekoNetworkEvents {
                 }
             });
         });
+        // 猫娘潜行切换
+        ServerPlayNetworking.registerGlobalReceiver(NekoStealthPayload.ID, (payload, context) -> {
+            ServerPlayer player = context.player();
+            if (!player.isNeko()) return;
+            player.setStealthActive(payload.active());
+        });
+        // 猫爪爬墙
+        ServerPlayNetworking.registerGlobalReceiver(ClimbWallPayload.ID, (payload, context) -> {
+            ServerPlayer player = context.player();
+            if (!player.isNeko()) return;
+            if (payload.active()) {
+                if (ClimbWallHandler.isClimbing(player)) {
+                    // 已在爬墙，只更新方向
+                    ClimbWallHandler.updateVerticalInput(player, payload.verticalInput());
+                } else {
+                    ClimbWallHandler.startClimbing(player, payload.verticalInput());
+                }
+            } else {
+                ClimbWallHandler.stopClimbing(player);
+            }
+        });
+    }
+
+    public static void onMultiToolMode(NekoMultiToolModePayload payload, ServerPlayNetworking.Context context) {
+        ServerPlayer player = context.player();
+        var stack = player.getMainHandItem();
+        if (!(stack.getItem() instanceof NekoMultiToolItem)) return;
+
+        if (payload.action() == 0) {
+            NekoMultiToolItem.cycleRangeMode(stack, player);
+            int range = NekoMultiToolItem.getRangeMode(stack);
+            player.displayClientMessage(
+                    Component.translatable("item.toneko.neko_multi_tool.mode.range." + range), true);
+        }
     }
 
     public static void onPlayerLeadByPlayer(PlayerLeadByPlayerPayload payload, ServerPlayNetworking.Context context) {

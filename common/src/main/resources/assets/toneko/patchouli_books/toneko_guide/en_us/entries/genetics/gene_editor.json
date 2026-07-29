@@ -1,0 +1,23 @@
+{
+  "name": "Gene Editor",
+  "category": "toneko:genetics",
+  "icon": "toneko:gene_editor",
+  "sortnum": 3,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "toneko:gene_editor",
+      "text": "The $(item)Gene Editor$() is a $(#FF69B4)Creative Mode item$() — it cannot be crafted in survival.$(br2)It lets you directly view and modify a neko's genes — great for debugging, experimenting, or quickly creating your \"perfect neko.\""
+    },
+    {
+      "type": "patchouli:text",
+      "title": "How to Use",
+      "text": "$(li)Hold the Gene Editor and $(#FF69B4)right-click on a neko$()$(li)Opens the gene editing GUI, displaying all $(#FF69B4)9 chromosome pairs$() and the alleles at each locus$(li)Click on a locus — choose a $(#FF69B4)replacement allele$() from the recommended or full list$(li)Click $(#FF69B4)Save$() — the neko's genes update instantly and traits take effect immediately$(br2)Intuitive and visual — what you see is what you get~"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Read-Only View",
+      "text": "If you don't have a Gene Editor but want to check a neko's genes, use the command:$(br2)$(#FF69B4)/genetics <neko name>$()$(br2)This opens the gene interface in $(#FF69B4)read-only mode$() — view only, no editing.$(br2)Using this command requires the $(thing)command.genetics$() permission, suitable for server admins to inspect neko genetic information."
+    }
+  ]
+}

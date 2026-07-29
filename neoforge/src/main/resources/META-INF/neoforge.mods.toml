@@ -45,6 +45,13 @@ side = "BOTH"
 # side = "BOTH"
 
 [[dependencies.toneko]]
+modId = "patchouli"
+type = "optional"
+versionRange = "*"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.toneko]]
 modId = "geckolib"
 type = "required"
 versionRange = "*"

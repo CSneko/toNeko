@@ -1,0 +1,37 @@
+{
+  "name": "Daily Behavior Tendencies",
+  "category": "toneko:moe_tags",
+  "icon": "toneko:catnip",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The 5 tags introduced in this section mainly affect a neko's $(#FF69B4)daily habits$(). From efficiency to accidents, each one has its own little quirks~"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "baka · Airhead",
+      "text": "$(#FF69B4)\"Huh? Look, a butterfly!\"$()$(br2)Airhead nekos have... well, simple minds. She gets easily $(#FF69B4)distracted by various things around her$(), occasionally forgetting what she was doing and staring off into space.$(br2)A bit ditzy, but that's exactly what makes her cute! Just be a little more patient with her~"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "dojikko · Clumsy",
+      "text": "$(#FF69B4)\"Ah! I dropped it again...\"$()$(br2)Clumsy nekos are a bit accident-prone with their hands. When picking up items, there's a $(#FF69B4)25% chance$() she'll drop something else from her inventory instead.$(br2)She might not be the most reliable for organizing items, but watching her fumble around is its own kind of entertainment, isn't it?"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "chunibyo · Chuunibyo",
+      "text": "$(#FF69B4)\"The dark power sealed within my right eye... is awakening!\"$()$(br2)Chuunibyo nekos have a $(#FF69B4)1% chance$() of suddenly bursting into dramatic poses, surrounded by $(thing)End Rod particles$() and $(thing)Enchantment particles$() for 1~2 seconds.$(br2)It doesn't actually do anything, but the theatrical performance is absolutely top-tier. When she's having an episode, please play along silently, meow~"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "shizukana · Quiet",
+      "text": "$(#FF69B4)\"…………\"$()$(br2)Quiet nekos don't talk much, and they don't rush either. When following her owner, her speed is $(#FF69B4)30% slower$() — not because she doesn't want to follow, she just prefers a leisurely pace.$(br2)In this fast-paced world, quiet nekos remind you: sometimes slowing down to enjoy the scenery is nice too."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "tennen_boke · Airy",
+      "text": "$(#FF69B4)\"Hmm? Did something just happen?\"$()$(br2)Airy nekos always react to things a beat late. She has a $(#FF69B4)natural slowness$() and innocence — sometimes danger is right in front of her and she still hasn't noticed.$(br2)But her pure innocence can heal your heart — like a blank canvas, making you want to protect her no matter what."
+    }
+  ]
+}

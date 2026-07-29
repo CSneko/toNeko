@@ -1,0 +1,32 @@
+{
+  "name": "Neko Armor",
+  "category": "toneko:equipment",
+  "icon": "toneko:neko_ears",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "If you want to look more like a real catgirl, you definitely need $(#FF69B4)Neko Armor$()!$(br2)toNeko provides two unique armor pieces: $(item)Neko Ears$() and $(item)Neko Tail$(). They change your appearance when worn — the tail and ears will sway naturally, instantly maxing out your cuteness~"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "toneko:neko_ears",
+      "text": "$(item)Neko Ears$() are equipped in the $(#FF69B4)helmet slot$().$(br2)Once worn, a pair of fluffy cat ears will appear on your head — they twitch and sway with your movements, just like real cat ears!$(br2)The crafting recipe is simple: just $(item)Wool$() will do~"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "toneko:neko_tail",
+      "text": "$(item)Neko Tail$() is equipped in the $(#FF69B4)chestplate slot$().$(br2)A slender cat tail will sway behind you, swinging side to side as you walk.$(br2)$(#FF69B4)Note:$() when first equipping the tail, you'll feel a sharp sting — you'll lose $(#FF69B4)0.5 hearts$() of health. Growing a tail comes at a small price, meow~"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "toneko:neko_tail",
+      "text": "Crafting the tail requires $(item)Iron Nuggets$() and $(item)Wool$()."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Trinkets Support",
+      "text": "If you have the $(thing)Trinkets$() mod installed, neko armor can be equipped in $(#FF69B4)trinket slots$() without occupying regular armor slots:$(br2)$(li)Neko Ears → Head trinket slot$(li)Neko Tail → Back trinket slot$(br2)This lets you wear full diamond armor AND neko armor at the same time — powerful AND cute!"
+    }
+  ]
+}

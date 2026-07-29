@@ -1,0 +1,32 @@
+{
+  "name": "自定义附魔",
+  "category": "toneko:advanced",
+  "icon": "minecraft:enchanted_book",
+  "sortnum": 3,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "toNeko 提供了 $(#FF69B4)8 种专属附魔$()，分布在不同的装备上。这些附魔无法在普通附魔台中获得——需要通过聚合器或其他特殊方式获取。"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "通用附魔",
+      "text": "$(li)$(thing)Enforcement$()（强制 / 1 级）—— 适用于 $(item)契约书$()：驯服雌小鬼猫娘的必备附魔。也能附在护甲上，打猫娘时不会增加仇恨值。$(li)$(thing)Reversion$()（反转 / 1 级）—— 适用于 $(item)猫娘护甲$()（猫耳/猫尾），效果与护甲本身产生奇妙的反转。$(br2)这两个附魔的获取权重不高，但效果独特，值得收集。"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Hiss 系列 · 上",
+      "text": "以下 5 种附魔专用于 $(item)猫能爆哈器$()：$(br2)$(li)$(thing)Hiss Power$()（威力 / 3 级 / 权重 10）—— 提升能量爆发的伤害$(li)$(thing)Hiss Spread$()（扩散 / 3 级 / 权重 8）—— 扩大能量爆发的范围$(li)$(thing)Hiss Efficiency$()（效率 / 3 级 / 权重 8）—— 降低能量消耗$(br2)Hiss 系列是猫能爆哈器的核心增强，合理搭配能让你的范围输出提升一个档次！"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Hiss 系列 · 下",
+      "text": "$(li)$(thing)Hiss Root$()（定身 / 2 级 / 权重 6）—— 命中后概率让敌人短暂定身$(li)$(thing)Hiss Demolish$()（爆破 / 3 级 / 权重 6）—— 增加爆炸效果和范围破坏力$(br2)定身+爆破的组合在面对群怪时效果拔群——先定住再一起炸！"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Combo Extend",
+      "text": "$(thing)Combo Extend$()（连击延长 / 2 级 / 权重 4）—— 适用于 $(item)猫能爆哈器$()。$(br2)效果：$(#FF69B4)延长连击的时间窗口$()，让你更容易打出高连击。$(br2)对于喜欢挑战极限连击数的玩家来说，这是必备附魔——毕竟连击越高，猫能爆哈器的效果越华丽！"
+    }
+  ]
+}

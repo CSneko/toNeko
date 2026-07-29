@@ -1,0 +1,14 @@
+{
+  "type": "neoforge:add_table",
+  "conditions": [
+    {
+      "condition": "minecraft:any_of",
+      "terms": [
+        { "condition": "neoforge:loot_table_id", "loot_table_id": "minecraft:chests/simple_dungeon" },
+        { "condition": "neoforge:loot_table_id", "loot_table_id": "minecraft:chests/abandoned_mineshaft" },
+        { "condition": "neoforge:loot_table_id", "loot_table_id": "minecraft:chests/shipwreck_supply" }
+      ]
+    }
+  ],
+  "table": "toneko:chests/neko_dungeon_loot"
+}

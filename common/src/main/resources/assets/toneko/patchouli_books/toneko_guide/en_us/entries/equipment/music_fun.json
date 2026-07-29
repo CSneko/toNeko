@@ -1,0 +1,22 @@
+{
+  "name": "Music & Easter Eggs",
+  "category": "toneko:equipment",
+  "icon": "toneko:music_disc_kawaii",
+  "sortnum": 4,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The neko world isn't just about combat and adventure — there's wonderful music and fun easter eggs waiting for you to discover~"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "toneko:music_disc_kawaii",
+      "text": "The $(item)Kawaii Music Disc$() is a cute-style track created by homewool, lasting $(#FF69B4)121 seconds$().$(br2)This disc $(#FF69B4)cannot be crafted directly$() — you need to give gifts to neko NPCs for a chance to receive it as a return gift.$(br2)Pop it into a jukebox and fill the neko world with adorable melodies~"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "toneko:furry_bohe",
+      "text": "$(item)Furry Bohe$() is an $(#FF69B4)easter egg item$().$(br2)When harvesting mature $(item)Catnip$() crops, there's a very small chance (about 5%) of it dropping as a bonus.$(br2)The item's tooltip reads \"Also try Furry Bohe\" — as for what it actually does... perhaps it's an inside joke for a certain mysterious community?$(br2)$(#FFB6C1)Mysterious things always make you curious, don't they~$()"
+    }
+  ]
+}

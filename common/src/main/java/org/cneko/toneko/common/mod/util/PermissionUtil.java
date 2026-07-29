@@ -77,9 +77,9 @@ public class PermissionUtil {
         if( perm.startsWith("command.tonekoadmin")){
             return 4;
         }else if (perm.startsWith("command.neko") || perm.startsWith("command.quirk") || perm.startsWith("command.toneko")){
-            return 1;
+            return 0;
         }
-        return 1;
+        return 0;
     }
 
 

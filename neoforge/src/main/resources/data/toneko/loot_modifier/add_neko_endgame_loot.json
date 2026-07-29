@@ -1,0 +1,18 @@
+{
+  "type": "neoforge:add_table",
+  "conditions": [
+    {
+      "condition": "minecraft:any_of",
+      "terms": [
+        { "condition": "neoforge:loot_table_id", "loot_table_id": "minecraft:chests/ancient_city" },
+        { "condition": "neoforge:loot_table_id", "loot_table_id": "minecraft:chests/ancient_city_ice_box" },
+        { "condition": "neoforge:loot_table_id", "loot_table_id": "minecraft:chests/end_city_treasure" },
+        { "condition": "neoforge:loot_table_id", "loot_table_id": "minecraft:chests/bastion_treasure" },
+        { "condition": "neoforge:loot_table_id", "loot_table_id": "minecraft:chests/bastion_other" },
+        { "condition": "neoforge:loot_table_id", "loot_table_id": "minecraft:chests/bastion_bridge" },
+        { "condition": "neoforge:loot_table_id", "loot_table_id": "minecraft:chests/bastion_hoglin_stable" }
+      ]
+    }
+  ],
+  "table": "toneko:chests/neko_endgame_loot"
+}

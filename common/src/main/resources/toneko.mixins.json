@@ -10,6 +10,7 @@
   ],
   "mixins": [
     "CatEntityMixin",
+    "CreeperMixin",
     "EntityMixin",
     "PlayerEntityMixin",
     "ServerLevelMixin",

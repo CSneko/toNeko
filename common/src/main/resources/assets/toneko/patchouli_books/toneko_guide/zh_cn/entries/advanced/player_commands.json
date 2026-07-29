@@ -1,0 +1,27 @@
+{
+  "name": "玩家指令",
+  "category": "toneko:advanced",
+  "icon": "minecraft:paper",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "成为猫娘后，你可以使用 $(thing)/neko$() 系列指令来做各种猫娘专属动作。$(br2)这些指令不同于普通玩家的操作——它们是 $(#FF69B4)猫娘独有的能力$()，体现了猫娘身体的特殊性。"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "动作指令",
+      "text": "$(li)$(#FF69B4)/neko jump$() —— 让猫娘高高跃起，跳跃高度远超普通玩家$(li)$(#FF69B4)/neko vision$() —— 切换猫娘视野模式，夜视能力让你在黑暗中看清一切$(li)$(#FF69B4)/neko speed$() —— 猫娘的奔跑速度比普通人更快$(li)$(#FF69B4)/neko lie$() —— 躺下休息，慵懒的猫娘姿态$(li)$(#FF69B4)/neko get_down$() —— 从骑乘状态下来"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "交互指令",
+      "text": "$(li)$(#FF69B4)/neko ride$() —— 骑到另一个生物（或玩家）身上$(li)$(#FF69B4)/neko ride_head$() —— 骑在头上，猫娘专属的小恶作剧$(li)$(#FF69B4)/neko chat$() —— 打开聊天模式，与附近的猫娘交流$(li)$(#FF69B4)/neko gui$() —— 打开猫娘互动 GUI，等同于 Shift+右键猫娘$(br2)按 $(#FF69B4)$(k:toneko.roulette)$() 可以打开技能轮盘，快捷使用这些指令！"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "信息指令",
+      "text": "$(li)$(#FF69B4)/neko nickname <昵称>$() —— 给自己设置一个猫娘昵称$(li)$(#FF69B4)/neko level$() —— 查看自己的猫娘等级$(li)$(#FF69B4)/neko lore$() —— 查看猫娘的详细信息面板$(br2)这些指令需要 $(thing)command.neko$() 权限，通常玩家猫娘默认拥有。"
+    }
+  ]
+}

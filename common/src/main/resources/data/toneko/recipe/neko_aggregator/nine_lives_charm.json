@@ -1,0 +1,27 @@
+{
+  "type": "toneko:neko_aggregator",
+  "key": {
+    "I": {
+      "item": "toneko:neko_ingot"
+    },
+    "D": {
+      "item": "toneko:neko_diamond"
+    },
+    "T": {
+      "item": "minecraft:totem_of_undying"
+    },
+    "C": {
+      "item": "toneko:neko_energy_storage_large_charged"
+    }
+  },
+  "pattern": [
+    "IDI",
+    "TTT",
+    "ICI"
+  ],
+  "energy": 500.0,
+  "result": {
+    "id": "toneko:nine_lives_charm",
+    "count": 1
+  }
+}

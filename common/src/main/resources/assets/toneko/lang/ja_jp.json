@@ -1203,5 +1203,8 @@
   "item.toneko.fly_sword.tooltip.3": "§e  金 §7= +1上限  |  §4ネザライト §7= 速度",
   "item.toneko.fly_sword.tooltip.4": "§8  石炭 §7= 燃料(騎乗時に持つ)",
   "item.toneko.fly_sword.tooltip.5": "§7左クリックで回収",
-  "entity.toneko.fly_sword": "飛剣"
+  "entity.toneko.fly_sword": "飛剣",
+  "key.toneko.climb": "壁登り",
+  "messages.toneko.climb.no_energy": "§c猫娘エネルギーが不足しています！",
+  "messages.toneko.climb.no_wall": "近くに登れる壁がありません"
 }

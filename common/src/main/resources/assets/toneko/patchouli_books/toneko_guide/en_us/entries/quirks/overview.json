@@ -1,0 +1,22 @@
+{
+  "name": "Quirks Overview",
+  "category": "toneko:quirks",
+  "icon": "minecraft:book",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "$(thing)Quirks$() are a personality expression system $(#FF69B4)exclusive to player nekos$().$(br2)Unlike NPC moe tags, quirks are your chosen \"personality signature\" — they don't change your stats, but they make your neko life much more colorful."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "How Quirks Express",
+      "text": "Quirks trigger unique effects during these $(#FF69B4)life events$():$(br2)$(li)$(#FF69B4)Taking damage$(): sends different messages based on damage severity$(li)$(#FF69B4)Attacking$(): sends different messages based on target's remaining HP$(li)$(#FF69B4)Weather changes$(): reactions to rain, clear skies, and thunder$(li)$(#FF69B4)Sleeping/waking$(): special dialogue for bedtime and morning$(li)$(#FF69B4)Joining world$(): announces your arrival to the server$(br2)Every quirk responds to these events differently~"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Quirk Commands",
+      "text": "Use $(thing)/quirk$() commands to manage your quirks:$(br2)$(li)$(#FF69B4)/quirk add <name>$() — add a quirk$(li)$(#FF69B4)/quirk remove <name>$() — remove a quirk$(li)$(#FF69B4)/quirk list$() — view your current quirks$(li)$(#FF69B4)/quirk gui$() — open the quirk GUI (if available)$(br2)You can have multiple quirks at once — mix and match as you please~"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "type": "toneko:neko_aggregator",
+  "key": {
+    "I": { "item": "toneko:neko_ingot" },
+    "G": { "item": "minecraft:gold_ingot" },
+    "N": { "item": "minecraft:note_block" }
+  },
+  "pattern": [
+    "IGI",
+    "GNG",
+    "IGI"
+  ],
+  "energy": 300.0,
+  "result": {
+    "id": "toneko:neko_bell",
+    "count": 1
+  }
+}

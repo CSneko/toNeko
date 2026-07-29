@@ -1,0 +1,27 @@
+{
+  "name": "Defense & Despair",
+  "category": "toneko:boss",
+  "icon": "minecraft:totem_of_undying",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Beyond her active skills, Mouflet has passive defense mechanics — and a terrifying $(#FF69B4)near-death self-destruct$(). Don't think you've won just because her HP hits zero... the fight might just be beginning."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Defense Stance",
+      "text": "When Mouflet takes $(#FF69B4)more than 5 damage in a single hit$(), she automatically triggers Defense Stance:$(br2)$(li)Gains $(#FF69B4)Resistance IV$() for 15 seconds — your attacks will barely scratch her$(li)$(#FF69B4)80% Thorns reflection$() — you hit her, you hurt yourself too!$(br2)Strategy: stop attacking for 15 seconds after triggering the stance, or use low-damage rapid attacks to avoid crossing the 5-damage threshold."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Despair State",
+      "text": "When Mouflet's HP reaches 0, she $(#FF69B4)does not simply die$()...$(br2)She enters a terrifying self-destruct sequence:$(li)Heals to $(#FF69B4)50 HP$()$(li)Attack power $(#FF69B4)+20$() — she becomes a super-damage-dealer$(li)Armor $(#FF69B4)-10$() — but you'll be dead soon anyway$(li)$(#FF69B4)3.75× TNT explosion$(), draining player saturation$(li)Continuously $(#FF69B4)clears her own debuffs$() — all CC rendered useless$(li)$(#FF69B4)After 20 seconds — 9× TNT ultimate self-destruct$()"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Surviving Despair",
+      "text": "Your options when facing a desperate Mouflet:$(br2)$(li)$(#FF69B4)Run$() — get out of the blast radius within 20 seconds; if she doesn't chase, you live$(li)$(#FF69B4)Hide$() — find cover, dig a hole, use a shield — 9× TNT is no joke$(li)$(#FF69B4)Fight$() — if you have absolute confidence in your gear and dodging skills... but honestly, not recommended$(br2)$(#FFB6C1)Remember: a spoiled cat's tantrum is scarier than any monster!$()"
+    }
+  ]
+}

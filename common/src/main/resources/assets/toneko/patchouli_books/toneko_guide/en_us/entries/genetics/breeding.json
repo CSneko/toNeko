@@ -1,0 +1,22 @@
+{
+  "name": "Breeding Basics",
+  "category": "toneko:genetics",
+  "icon": "toneko:growth_treat",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Want two nekos to have an adorable baby? toNeko provides a full $(#FF69B4)breeding system$() — and it's about more than just making babies.$(br2)Offspring $(#FF69B4)inherit genes from both parents$(), meaning you can carefully pair nekos to breed one with your ideal traits.$(br2)Let's start with the basics~"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "How to Trigger Breeding",
+      "text": "The breeding process:$(br2)$(li)$(#FF69B4)Shift + Right-click$() on a neko to open the interaction GUI$(li)Click the $(#FF69B4)Breed button$() in the interface$(li)Choose a mate from available candidates within 16 blocks$(li)The two nekos will approach each other, cuddle for about $(#FF69B4)1.5 seconds$() — then a baby is born!$(br2)Note: nekos can also breed with vanilla cats~"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Requirements & Cooldown",
+      "text": "You can't breed anytime — these conditions must be met:$(br2)$(li)Both must be $(#FF69B4)adult nekos$() — babies cannot breed$(li)Neither must have the $(#FF69B4)Weakness effect$() — weakness is the post-breeding cooldown marker, lasting $(#FF69B4)150 seconds$()$(br2)If a neko has the $(#FF69B4)mesugaki$() (bratty) moe tag, you also need to be $(#FF69B4)holding catnip$() to open the breed interface — otherwise the button will jump around and reject you!$(br2)After breeding, the baby is in infant form and takes about $(#FF69B4)1 in-game day$() to grow into an adult."
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "name": "Ammo & Consumables",
+  "category": "toneko:equipment",
+  "icon": "toneko:catnip",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Beyond weapons and armor, the neko world has various ammo and consumables. This section introduces them one by one~"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Bazooka Ammo",
+      "text": "The following three ammo types are crafted in the $(item)Neko Aggregator$():$(br2)$(li)$(item)Explosive Bomb$() — creates an area explosion on impact, simple and brutal$(li)$(item)Lightning Bomb$() — summons a lightning bolt on impact, great for crowd control$(li)$(item)Energy Bomb$() — heals nekos, damages monsters, and converts nearby crops into catnip$(br2)Catnip itself can also be used as bazooka ammo, meow~"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "toneko:catnip",
+      "text": "$(item)Catnip$() is the most important basic consumable in the neko world.$(br2)$(li)Restores $(#FF69B4)30 points$() of neko energy when eaten$(li)Grants the $(thing)Exciting$() effect: boosts speed, attack speed, jump, and damage$(li)Can be used as bazooka ammo$(li)Used as material for crafting contracts, neko potions, and more$(br2)Can be mass-produced by planting $(item)Catnip Seeds$()."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "More Catnip Products",
+      "text": "$(li)$(item)Catnip Sandwich$() — bread with catnip inside, stronger food effect$(li)$(item)Catnip Seeds$() — plant in soil, grows into catnip crops (8 growth stages)$(li)$(item)Infinite Catnip$() — an $(#FF69B4)advanced aggregator product$(), never depletes, 5-second cooldown for players$(br2)Plant a catnip field and never worry about running out of energy!"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Growth & De-age Treats",
+      "text": "$(li)$(item)Growth Treat$() — feed to a baby neko, accelerates growth by about $(#FF69B4)2.5 in-game days$(). Want her to grow up faster? Here's a treat!$(li)$(item)De-age Treat$() — feed to an adult neko, reverts her to baby form by about $(#FF69B4)2.5 in-game days$(). Want to revisit loli neko days? Have one!$(br2)Both treats must be crafted in the Neko Aggregator."
+    }
+  ]
+}

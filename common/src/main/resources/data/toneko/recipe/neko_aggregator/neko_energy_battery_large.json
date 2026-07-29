@@ -1,0 +1,18 @@
+{
+  "type": "toneko:neko_aggregator",
+  "key": {
+    "B": { "item": "minecraft:redstone_block" },
+    "C": { "item": "toneko:neko_crystal" },
+    "S": { "item": "toneko:neko_energy_storage_large_charged" }
+  },
+  "pattern": [
+    "BCB",
+    "CSC",
+    "BCB"
+  ],
+  "energy": 1200.0,
+  "result": {
+    "id": "toneko:neko_energy_battery_large",
+    "count": 1
+  }
+}

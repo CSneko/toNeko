@@ -3,6 +3,7 @@ package org.cneko.toneko.common.mod.items;
 import net.fabricmc.fabric.api.item.v1.EnchantingContext;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -16,6 +17,7 @@ import org.cneko.toneko.common.mod.entities.boss.NekoBoss;
 import org.cneko.toneko.common.mod.misc.ToNekoEnchantments;
 import org.cneko.toneko.common.mod.util.EnchantmentUtil;
 import org.cneko.toneko.common.mod.util.RandomUtil;
+import org.cneko.toneko.common.mod.advencements.ToNekoCriteria;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -65,6 +67,10 @@ public class ContractItem extends Item {
                         org.cneko.toneko.common.mod.api.NekoLevelRegistry.interaction().addRaw(player, 10.0);
                     }
                     player.sendSystemMessage(Component.translatable("item.toneko.contract.success",neko.getEntity().getName()));
+                    // 触发成就：契约成立
+                    if (player instanceof ServerPlayer sp) {
+                        ToNekoCriteria.TAME_NEKO.trigger(sp);
+                    }
                     // 删除物品
                     if (!player.isCreative()) {
                         stack.shrink(1);

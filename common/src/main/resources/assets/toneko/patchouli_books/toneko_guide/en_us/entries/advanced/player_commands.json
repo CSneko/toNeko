@@ -1,0 +1,27 @@
+{
+  "name": "Player Commands",
+  "category": "toneko:advanced",
+  "icon": "minecraft:paper",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Once you become a neko, you can use the $(thing)/neko$() command series for various neko-exclusive actions.$(br2)These are unlike ordinary player actions — they're $(#FF69B4)abilities unique to nekos$(), reflecting the special nature of a neko's body."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Action Commands",
+      "text": "$(li)$(#FF69B4)/neko jump$() — leap high into the air, far beyond a normal player's jump$(li)$(#FF69B4)/neko vision$() — toggle neko vision mode, granting night vision in darkness$(li)$(#FF69B4)/neko speed$() — nekos can run faster than ordinary players$(li)$(#FF69B4)/neko lie$() — lie down and rest in a lazy neko pose$(li)$(#FF69B4)/neko get_down$() — dismount from riding"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Interaction Commands",
+      "text": "$(li)$(#FF69B4)/neko ride$() — ride on another creature (or player)$(li)$(#FF69B4)/neko ride_head$() — ride on someone's head, a classic neko prank$(li)$(#FF69B4)/neko chat$() — enter chat mode to talk with nearby nekos$(li)$(#FF69B4)/neko gui$() — open the neko interaction GUI, equivalent to Shift+Right-clicking a neko$(br2)Press $(#FF69B4)$(k:toneko.roulette)$() to open the skill wheel for quick access!"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Info Commands",
+      "text": "$(li)$(#FF69B4)/neko nickname <nickname>$() — set a neko nickname for yourself$(li)$(#FF69B4)/neko level$() — check your neko level$(li)$(#FF69B4)/neko lore$() — view detailed neko info panel$(br2)These commands require the $(thing)command.neko$() permission, which player nekos usually have by default."
+    }
+  ]
+}

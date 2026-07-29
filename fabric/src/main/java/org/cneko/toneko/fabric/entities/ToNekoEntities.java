@@ -94,6 +94,6 @@ public class ToNekoEntities {
         NekoSkinRegistry.register(NOELLE_MAID_NEKO, FightingNekoEntity.NEKO_SKINS);
 
         // 注册群系生成（委托 common 方法）
-        registerBiomeSpawns(ADVENTURER_NEKO, GHOST_NEKO, CRYSTAL_NEKO, FIGHTING_NEKO, NOELLE_MAID_NEKO);
+        registerBiomeSpawns(ADVENTURER_NEKO, GHOST_NEKO, CRYSTAL_NEKO, FIGHTING_NEKO);
     }
 }

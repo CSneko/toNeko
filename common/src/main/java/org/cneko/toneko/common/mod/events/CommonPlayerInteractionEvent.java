@@ -149,6 +149,11 @@ public class CommonPlayerInteractionEvent {
             return InteractionResult.PASS;
         }
 
+        // 猫娘潜行：攻击后暂时解除潜行
+        if (sp.isNeko()) {
+            sp.breakStealth();
+        }
+
         for (Quirk q : sp.getQuirks()) {
             if (q != null) {
                 InteractionResult result = q.onNekoAttack(sp, level, hand, le, hitResult);

@@ -1,0 +1,48 @@
+{
+  "name": "速查手册",
+  "category": "toneko:summary",
+  "icon": "minecraft:writable_book",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "title": "快速入门",
+      "text": "$(#FF69B4)猫娘之路三步走：$()$(br2)$(li)合成 $(thing)猫猫收集器$()（木棍+玻璃）$(li)拿着收集器靠近猫娘/猫，攒满 5000 能量 → 获得 $(thing)猫娘药水$()$(li)喝下药水——$(#FF69B4)你变成猫娘啦！$()$(br2)$(li)想吃猫薄荷回能量（+30）$(li)想要更多药水？继续用收集器吸能量$(li)想做高级道具？造一台 $(thing)Neko 聚合器$()，消耗自身猫娘能量来合成$(br2)手册丢了？$(item)书$() + $(item)猫薄荷$() 重新合成。"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "猫娘 NPC 速览",
+      "text": "$(li)$(#FF69B4)冒险家猫娘$()：自动收菜种菜+存箱子，会自己合成武器。常见于山地/森林/平原。$(li)$(#FF69B4)战斗猫娘$()：近战/远程切换+火箭筒，小萝莉会放闪电。下界/古城/山地。$(li)$(#FF69B4)幽灵猫娘$()：飞行+穿墙，只吃魔法伤害和/kill。沼泽/森林/樱花林。$(br2)$(li)驯服：$(item)契约书$() 右键，消耗 30 级经验$(li)雌小鬼猫娘需要 $(thing)Enforcement$() 附魔的契约书$(li)据说 $(#FF69B4)特殊日子$() 里，水晶猫娘会在世界某处出现……"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "核心物品速览",
+      "text": "$(#FF69B4)装备：$()$(li)猫耳（头盔） / 猫尾（胸甲）——会摆动，支持 Trinkets$(br2)$(#FF69B4)武器：$()$(li)火箭筒——Shift+右键切弹药$(li)猫能爆哈器——范围伤害+治疗猫娘+连击系统$(li)御剑——飞行坐骑，可升级铁→钻→下界合金$(br2)$(#FF69B4)消耗品：$()$(li)猫薄荷——回 30 能量+兴奋效果$(li)无限猫薄荷——聚合器高级制品，永不消耗$(li)成长/幼化零食——调整猫娘年龄"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "资源与能量速览",
+      "text": "$(#FF69B4)基础资源（聚合器合成）：$()$(li)猫猫锭（铁锭→）、猫猫钻石（钻石→）、猫猫水晶（紫水晶→）$(li)9 个锭/钻石可合成对应方块$(br2)$(#FF69B4)能量存储装置：$()$(li)小型 → 中型 → 大型，逐级升级$(li)有未充能/已充能两种状态$(li)相当于 $(#FF69B4)便携能量包$()——聚合器充能/取能$(br2)$(#FF69B4)彩蛋：$()$(li)Kawaii 唱片——给猫娘送礼有几率获得$(li)兽薄荷（Furry Bohe）——收猫薄荷时 5% 掉落"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "萌属性速览",
+      "text": "15 种萌属性，每只 NPC 猫娘随机 1~3 种。玩家猫娘 $(#FF69B4)没有$() 萌属性——用 $(thing)性癖$()（见下页）代替。$(br2)$(#FF69B4)战斗中注意：$()$(li)yandere——护主狂魔，跟 40 格$(li)yowaki——胆小，跟 15 格$(li)paranoia——每 2 秒扫描陌生人$(br2)$(#FF69B4)日常中注意：$()$(li)baka——走神 / dojikko——掉东西$(li)chunibyo——中二姿势+粒子特效$(br2)$(#FF69B4)社交中注意：$()$(li)mesugaki——需要 Enforcement 契约书$(li)gentleness——主动治疗受伤生物$(li)yuri——主人是猫娘贴更近"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "性癖与繁殖",
+      "text": "$(#FF69B4)玩家性癖（/quirk 指令管理）：$()$(li)Caress——空手右键猫娘出爱心+加好感$(li)Crystal Neko——水晶猫娘风格对话$(li)Zako——杂鱼风格对话$(br2)$(#FF69B4)繁殖速查：$()$(li)Shift+右键 → 点交配按钮 → 选配偶$(li)条件：双方成年、无虚弱效果（虚弱=繁殖冷却 150 秒）$(li)雌小鬼需要手持猫薄荷才能触发$(li)遵循孟德尔遗传：每对染色体随机选一条$(li)9 对染色体，大量可遗传性状$(li)$(thing)基因编辑器$() 是创造物品，/genetics 只读查看"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Boss 与指令",
+      "text": "$(#FF69B4)Mouflet Boss（开发中，需指令召唤）：$()$(li)100 HP / 10 护甲 / 2 倍体型$(li)三大技能(40s CD)：Spoil 减伤 / Charm 魅惑 / Grab-Fly 抓飞$(li)防御：>5 伤害触发抗性 IV + 80% 荆棘$(li)绝望：空血后自毁——20 秒后 9×TNT$(li)驯服：HP<40 + 背包 5 个猫薄荷$(li)宠物模式可骑乘飞行 + 亲密度互动$(br2)$(#FF69B4)常用指令：$()$(li)/neko jump/vision/speed/lie/ride/chat/gui$(li)/quirk add/remove/list$(li)/genetics <名称>（只读）$(li)/tonekoadmin set/reload/data/config（管理员）"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "附魔速查",
+      "text": "$(#FF69B4)8 种专属附魔：$()$(br2)$(thing)契约书附魔：$()$(li)Enforcement（强制 Lv.1）——驯服雌小鬼 / 打猫娘不涨仇恨$(br2)$(thing)猫娘护甲附魔：$()$(li)Reversion（反转 Lv.1）——猫耳/猫尾$(br2)$(thing)猫能爆哈器附魔：$()$(li)Hiss Power（Lv.3）/ Spread（Lv.3）/ Efficiency（Lv.3）$(li)Hiss Root（Lv.2）——定身 / Demolish（Lv.3）——爆破$(li)Combo Extend（Lv.2）——延长连击窗口$(br2)$(#FFB6C1)至此，toNeko 的全部内容你都已经了解啦~喵~$()"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "name": "Quick Reference",
+  "category": "toneko:summary",
+  "icon": "minecraft:writable_book",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "title": "Quick Start",
+      "text": "$(#FF69B4)Three steps to becoming a neko:$()$(br2)$(li)Craft a $(thing)Neko Collector$() (sticks + glass)$(li)Hold it near nekos/cats — gather 5000 energy → get a $(thing)Neko Potion$()$(li)Drink it — $(#FF69B4)you're a neko now!$()$(br2)$(li)Eat catnip to restore energy (+30)$(li)Want more potions? Keep using the collector$(li)Want advanced items? Build a $(thing)Neko Aggregator$() — consumes your own neko energy to craft$(br2)Lost this guide? $(item)Book$() + $(item)Catnip$() to craft a new one."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Neko NPCs at a Glance",
+      "text": "$(li)$(#FF69B4)Adventurer Neko$(): auto-harvest/replant crops + store in chests, auto-crafts weapons. Common in mountains/forests/plains.$(li)$(#FF69B4)Fighting Neko$(): melee/ranged switch + bazooka, loli form summons lightning. Nether/ancient cities/mountains.$(li)$(#FF69B4)Ghost Neko$(): flying + phasing through blocks, immune except magic damage and /kill. Swamps/forests/cherry groves.$(br2)$(li)Tame: $(item)Contract$() right-click, costs 30 XP levels$(li)Bratty nekos need $(thing)Enforcement$() enchanted contract$(li)Rumor: on a $(#FF69B4)special day$(), Crystal Neko appears somewhere…"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Key Items at a Glance",
+      "text": "$(#FF69B4)Armor:$()$(li)Neko Ears (helmet) / Neko Tail (chestplate) — sways naturally, Trinkets support$(br2)$(#FF69B4)Weapons:$()$(li)Bazooka — Shift+R-click to cycle ammo$(li)Neko Energy Burst — AoE damage + heals nekos + combo system$(li)Fly Sword — flying mount, upgrade iron→diamond→netherite$(br2)$(#FF69B4)Consumables:$()$(li)Catnip — restores 30 energy + Exciting buff$(li)Infinite Catnip — advanced aggregator product, never depletes$(li)Growth/De-age Treats — adjust neko age"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Resources & Energy",
+      "text": "$(#FF69B4)Basic resources (aggregator crafts):$()$(li)Neko Ingot (iron→), Neko Diamond (diamond→), Neko Crystal (amethyst→)$(li)9 ingots/diamonds → corresponding blocks$(br2)$(#FF69B4)Energy Storage Devices:$()$(li)Small → Medium → Large, tiered upgrades$(li)Uncharged/charged variants$(li)$(#FF69B4)Portable energy packs$() — charge/drain in aggregator$(br2)$(#FF69B4)Easter eggs:$()$(li)Kawaii Music Disc — chance from gifting nekos$(li)Furry Bohe — 5% drop from harvesting catnip"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Moe Tags at a Glance",
+      "text": "15 moe tags, each NPC neko gets 1~3 randomly. Player nekos do $(#FF69B4)NOT$() get moe tags — use $(thing)Quirks$() instead.$(br2)$(#FF69B4)Combat-relevant:$()$(li)yandere — attacks owner's attackers, follows 40 blocks$(li)yowaki — timid, follows 15 blocks$(li)paranoia — scans every 2 sec for strangers$(br2)$(#FF69B4)Daily behavior:$()$(li)baka — distractible / dojikko — drops items$(li)chunibyo — dramatic poses + particles$(br2)$(#FF69B4)Social:$()$(li)mesugaki — needs Enforcement contract$(li)gentleness — heals injured creatures$(li)yuri — closer to neko owners"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Quirks & Breeding",
+      "text": "$(#FF69B4)Player Quirks (manage with /quirk):$()$(li)Caress — right-click neko, hearts + affection$(li)Crystal Neko — Crystal Neko style dialogue$(li)Zako — zako-style dialogue$(br2)$(#FF69B4)Breeding quick ref:$()$(li)Shift+R-click → Breed button → pick mate$(li)Both adult, no Weakness effect (=150s cooldown)$(li)Bratty nekos require holding catnip$(li)Mendelian inheritance: random chromosome per pair$(li)9 chromosome pairs, many heritable traits$(li)$(thing)Gene Editor$() is creative-only, /genetics for read-only"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Boss & Commands",
+      "text": "$(#FF69B4)Mouflet Boss (dev, summon via command):$()$(li)100 HP / 10 armor / 2× size$(li)3 skills(40s CD): Spoil(-dmg) / Charm(bewitch) / Grab-Fly$(li)Defense: >5 dmg triggers Resistance IV + 80% Thorns$(li)Despair: self-destruct at 0 HP — 9×TNT after 20s$(li)Tame: HP<40 + 5 catnip in inventory$(li)Pet mode: flying mount + affection interactions$(br2)$(#FF69B4)Common commands:$()$(li)/neko jump/vision/speed/lie/ride/chat/gui$(li)/quirk add/remove/list$(li)/genetics <name> (read-only)$(li)/tonekoadmin set/reload/data/config (admin)"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Enchantments at a Glance",
+      "text": "$(#FF69B4)8 exclusive enchantments:$()$(br2)$(thing)Contract enchants:$()$(li)Enforcement (Lv.1) — tame bratty nekos / no hatred buildup$(br2)$(thing)Neko armor enchants:$()$(li)Reversion (Lv.1) — ears/tail$(br2)$(thing)Neko Energy Burst enchants:$()$(li)Hiss Power (Lv.3) / Spread (Lv.3) / Efficiency (Lv.3)$(li)Hiss Root (Lv.2) — root enemies / Demolish (Lv.3) — explosion$(li)Combo Extend (Lv.2) — longer combo window$(br2)$(#FFB6C1)And with that — you now know everything about toNeko~ Meow~$()"
+    }
+  ]
+}

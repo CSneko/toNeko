@@ -1,0 +1,27 @@
+{
+  "name": "武器篇",
+  "category": "toneko:equipment",
+  "icon": "toneko:bazooka",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "猫娘也有自己的专属武器！从火力凶猛的火箭筒到华丽的范围能量武器，再到拉风的飞行坐骑——这一节为你介绍三种 $(#FF69B4)猫娘专属武器$()。"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "toneko:bazooka",
+      "text": "$(item)火箭筒$() 是猫娘的远程重火力武器。$(br2)按住 $(#FF69B4)Shift + 右键$() 可以切换弹药类型（爆炸弹/闪电弹/能量弹），普通右键发射。$(br2)支持 $(thing)Power$()（威力）和 $(thing)Loyalty$()（忠诚）附魔，让你的炮弹更猛、甚至能自动回收！"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "toneko:neko_energy_burst",
+      "text": "$(item)猫能爆哈器$() 是一种范围能量武器。$(br2)使用时会 $(#FF69B4)伤害周围敌人$()，同时 $(#FF69B4)治疗附近的猫娘$()。$(br2)拥有 $(thing)连击系统$()：连续命中会触发越来越强的组合技，屏幕上方会出现 Boss 血条风格的连击 HUD。$(br2)还有 $(item)邪恶版本$()——伤害敌人的同时也会伤到自己，连击名都变得中二起来！"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "toneko:fly_sword",
+      "text": "$(item)御剑$() 是一把可以骑上去的 $(#FF69B4)飞行坐骑$()。$(br2)右键放置后就能站上去，像修仙小说里一样御剑飞行！$(br2)可以用 $(item)铁锭$() → $(item)钻石$() → $(item)下界合金锭$() 逐步升级，等级越高性能越强。$(br2)飞天遁地，帅气又实用~"
+    }
+  ]
+}

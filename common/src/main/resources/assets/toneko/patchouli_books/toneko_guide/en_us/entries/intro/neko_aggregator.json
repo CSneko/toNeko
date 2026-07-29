@@ -1,0 +1,27 @@
+{
+  "name": "Neko Aggregator",
+  "category": "toneko:intro",
+  "icon": "toneko:neko_aggregator",
+  "sortnum": 3,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The $(item)Neko Aggregator$() is the $(#FF69B4)technological core$() of the toNeko mod — think of it as an advanced crafting station exclusively for nekos.$(br2)It can transform ordinary materials into powerful neko equipment and items, making it an indispensable facility on your journey.$(br2)But beware — the aggregator $(#FF69B4)consumes your own neko energy$() to operate. Experience points won't work here, meow!"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "toneko:neko_aggregator",
+      "text": "Building the aggregator requires various materials: a $(item)Neko Collector$() as the core, along with $(item)Catnip$(), an $(item)Enchanting Table$(), a $(item)Smithing Table$(), a $(item)Crafting Table$(), and an $(item)Iron Block$().$(br2)It's not cheap, but absolutely worth the investment!"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "How to Use",
+      "text": "Right-click the aggregator to open it — you'll see a 3×3 crafting grid and an output slot.$(br2)Place the correct material combination in the grid, and if you have enough energy, the resulting item will appear. Each recipe consumes a certain amount of $(thing)Neko Energy$() — different recipes cost different amounts.$(br2)$(#FF69B4)Your energy bar IS the aggregator's fuel — without energy, nothing works$()!"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Craftable Items",
+      "text": "The aggregator can produce many important items, including:$(br2)$(li)$(item)Neko Ingots / Diamonds / Crystals$() — basic resource materials$(li)$(item)Energy Storage Devices$() — small/medium/large, store backup energy$(li)$(item)Infinite Catnip$() — catnip that never runs out$(li)$(item)Growth Treat$() / $(item)De-age Treat$() — adjust a neko's age$(li)$(item)Neko Potion$() — extra potions for backup$(li)$(item)Neko Energy Burst$() — a powerful weapon$(br2)Check later chapters for more recipes!"
+    }
+  ]
+}

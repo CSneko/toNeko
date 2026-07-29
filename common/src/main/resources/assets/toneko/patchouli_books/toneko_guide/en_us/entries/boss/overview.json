@@ -1,0 +1,22 @@
+{
+  "name": "Mouflet Overview",
+  "category": "toneko:boss",
+  "icon": "toneko:neko_diamond_block",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "$(#FF69B4)Mouflet$() is the one and only neko boss in the toNeko world. She's $(#FF69B4)twice the size$() of a normal neko, with powerful combat abilities and unique skill mechanics.$(br2)Defeating her — or even better, taming her — is one of the most thrilling challenges in your neko adventure!"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Base Stats",
+      "text": "Mouflet's stat panel:$(br2)$(li)$(#FF69B4)Health$(): 100 HP$(li)$(#FF69B4)Armor$(): 10 points$(li)$(#FF69B4)Attack$(): 10 points$(li)$(#FF69B4)Neko Energy$(): 5000 points$(li)$(#FF69B4)Size$(): twice that of a normal neko$(li)$(#FF69B4)Safe Fall$(): 50 blocks$(br2)She appears with a Boss bar visible to all players within 32 blocks.$(br2)She spawns with full diamond armor + either a diamond sword or bazooka with ammo — far beyond any ordinary neko."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Important Note",
+      "text": "$(#FF69B4)Mouflet Boss is still under development and does not naturally spawn in the world.$()$(br2)If you want to challenge her, you'll need to summon her manually via commands.$(br2)Although still in development, her combat mechanics are already quite complete — from skills and defensive counterattacks, to the desperate self-destruct and post-taming pet mode — every part is worth experiencing.$(br2)$(#FFB6C1)Do your homework now, and you'll be the most knowledgeable player when the boss officially launches!$()"
+    }
+  ]
+}

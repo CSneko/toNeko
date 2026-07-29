@@ -1,0 +1,27 @@
+{
+  "name": "AI 对话系统",
+  "category": "toneko:advanced",
+  "icon": "minecraft:ender_eye",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "toNeko 支持将猫娘接入 $(#FF69B4)大语言模型（LLM）$()，让她们不再只会说固定台词，而是能够与你 $(#FF69B4)真正地聊天$()。$(br2)每只猫娘都会根据自己的萌属性、与主人的关系、当前状态（血量、能量、背包物品等）来生成独一无二的对话——就像在和一只真正的猫娘交谈！"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "支持的 AI 提供商",
+      "text": "toNeko 支持接入多种 AI 服务，你可以选择最适合自己的：$(br2)$(li)$(thing)OpenAI$() —— ChatGPT 系列$(li)$(thing)Anthropic$() —— Claude 系列$(li)$(thing)DeepSeek$() —— 高性价比的选择$(li)$(thing)Gemini$() —— Google 家的模型$(li)$(thing)Ollama$() —— 本地运行，完全免费$(li)$(thing)Groq / Mistral / OpenRouter / SiliconFlow$() —— 更多选择$(br2)还有 $(thing)CNekoAI$() 和 $(thing)LocalCustom$() 等自定义接入方式。"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "配置方法",
+      "text": "AI 对话需要在服务器的 $(#FF69B4)配置文件$() 中设置：$(br2)$(li)选择 AI 提供商$(li)填写 API 地址和密钥$(li)调整模型参数（温度、上下文长度等）$(br2)配置完成后，右键猫娘即可打开聊天界面。输入文字发送——猫娘会根据自己的性格和状态来回复你。$(br2)部分配置还支持 $(thing)TTS$()（文字转语音），让猫娘用声音回应你！"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "上下文感知",
+      "text": "AI 猫娘的对话不是随机的——她的回复基于 $(#FF69B4)丰富的上下文信息$()：$(br2)$(li)名字和昵称$(li)萌属性和性格$(li)与主人的好感度$(li)当前血量、能量、背包物品$(li)天气、时间、地点$(br2)这意味着同一个问题，不同属性、不同状态的猫娘会给出完全不同的回答。这也是 AI 对话最有趣的地方~"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Welcome to toNeko",
+  "category": "toneko:intro",
+  "icon": "toneko:neko_tail",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "$(thing)toNeko$() is a Minecraft mod themed around $(#FF69B4)catgirls$().$(br2)Here, you can:$(li)Drink Neko Potion and $(#FF69B4)become an adorable catgirl$(li)$(#FF69B4)Interact and befriend$() various neko NPCs in the world$(li)Collect neko energy and craft $(#FF69B4)exclusive gear$(li)Breed neko babies and explore $(#FF69B4)genetic inheritance$(li)Challenge powerful $(#FF69B4)neko bosses$(br2)$(#FFB6C1)Ready? Cuteness is justice!$()"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "toneko:toneko_guide",
+      "text": "The recipe for this guide book is simple: $(item)Book$() + $(item)Catnip$() and you're all set~$(br2)If you lose it, don't worry — you can always craft a new one, meow!"
+    }
+  ]
+}

@@ -20,6 +20,7 @@ import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.ItemLore;
 import org.cneko.toneko.common.mod.api.EntityPoseManager;
+import org.cneko.toneko.common.mod.api.ExplorationLevelFactor;
 import org.cneko.toneko.common.mod.api.NekoLevelRegistry;
 import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.misc.mixininterface.SlowTickable;
@@ -64,7 +65,15 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
     String toneko$nickName = "";
     @Unique
     List<Quirk> toneko$quirks = new ArrayList<>();
+    @Unique
+    Set<String> toneko$visitedBiomes = new HashSet<>();
     // ---------------------------
+
+    // 猫娘潜行
+    @Unique
+    boolean toneko$stealthActive = false;
+    @Unique
+    int toneko$stealthCooldown = 0; // 攻击后解除潜行的冷却 tick
 
     @Unique
     short toneko$tick = 20;
@@ -118,6 +127,20 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
         if (player instanceof ServerPlayer && this.isNeko() && this.getNekoAge() < 0) {
             this.setNekoAge(this.getNekoAge() + 1);
         }
+        // 猫娘潜行：能量消耗 + 冷却倒计时
+        if (player instanceof ServerPlayer && toneko$stealthActive && this.isNeko() && player.isCrouching()) {
+            if (toneko$stealthCooldown > 0) {
+                toneko$stealthCooldown--;
+            } else {
+                double cost = player.getDeltaMovement().horizontalDistance() > 0.01 ? 0.8 : 0.2;
+                this.setNekoEnergy((float) Math.max(0, this.getNekoEnergy() - cost));
+                if (this.getNekoEnergy() <= 0) {
+                    toneko$stealthActive = false;
+                }
+            }
+        } else if (toneko$stealthCooldown > 0) {
+            toneko$stealthCooldown--;
+        }
 
     }
 
@@ -127,6 +150,10 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
         if ((Object)this instanceof ServerPlayer sp){
             // 同步信息给玩家
             toneko$syncNekoInfo(sp);
+            // 检查新群系探索
+            if (this.isNeko()) {
+                checkBiomeExploration(sp);
+            }
             this.serverNekoSlowTick();
             this.updateNekoLevelModifiers();
         }
@@ -140,9 +167,23 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
                 this.getNekoLevelFactorRaw("interaction"),
                 this.getNekoLevelFactorRaw("combat"),
                 this.getNekoLevelFactorRaw("base"),
+                this.getNekoLevelFactorRaw("exploration"),
                 this.isNeko(),
                 this.getNekoAge()
         ));
+    }
+
+    @Unique
+    private void checkBiomeExploration(ServerPlayer sp) {
+        sp.serverLevel().getBiome(sp.blockPosition()).unwrapKey().ifPresent(key -> {
+            String biomeId = key.location().toString();
+            if (!toneko$visitedBiomes.contains(biomeId)) {
+                toneko$visitedBiomes.add(biomeId);
+                double xp = ExplorationLevelFactor.getBiomeXp(
+                        sp.serverLevel().getBiome(sp.blockPosition()));
+                NekoLevelRegistry.exploration().addRaw((INeko)(Object)this, xp);
+            }
+        });
     }
 
     @Override
@@ -216,6 +257,18 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
         return toneko$quirks;
     }
     @Override
+    public Set<String> getVisitedBiomes() {
+        return toneko$visitedBiomes;
+    }
+    @Override
+    public void setVisitedBiomes(Set<String> biomes) {
+        toneko$visitedBiomes = new HashSet<>(biomes);
+    }
+    @Override
+    public void addVisitedBiome(String biomeKey) {
+        toneko$visitedBiomes.add(biomeKey);
+    }
+    @Override
     public void setNickName(@NotNull String nickName) {
         toneko$nickName = nickName;
     }
@@ -265,6 +318,33 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
                 cir.setReturnValue(InteractionResult.sidedSuccess(player.level().isClientSide));
                 cir.cancel();
             }
+        }
+    }
+
+    // ---- 猫娘潜行 ----
+
+    @Override
+    public void setStealthActive(boolean active) {
+        toneko$stealthActive = active;
+    }
+    @Override
+    public boolean isStealthActive() {
+        return toneko$stealthActive;
+    }
+    /** 攻击后暂时解除潜行 5 秒 */
+    @Override
+    public void breakStealth() {
+        if (toneko$stealthActive) {
+            toneko$stealthCooldown = 100;
+        }
+    }
+
+    /** 潜行状态下怪物不将猫娘视为敌人。潜行冷却期间恢复可见。 */
+    @Inject(method = "canBeSeenAsEnemy", at = @At("HEAD"), cancellable = true)
+    private void onCanBeSeenAsEnemy(CallbackInfoReturnable<Boolean> cir) {
+        Player self = (Player)(Object)this;
+        if (toneko$stealthActive && toneko$stealthCooldown <= 0 && self.isCrouching() && this.isNeko()) {
+            cir.setReturnValue(false);
         }
     }
 

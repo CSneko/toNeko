@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "W W",
+    "W W"
+  ],
+  "key": {
+    "W": {
+      "tag": "c:wool"
+    }
+  },
+  "result": {
+    "id": "toneko:neko_paws",
+    "count": 1
+  }
+}

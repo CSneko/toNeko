@@ -1,0 +1,27 @@
+{
+  "name": "Resources & Energy Storage",
+  "category": "toneko:equipment",
+  "icon": "toneko:neko_ingot",
+  "sortnum": 3,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The neko world has its own $(#FF69B4)exclusive resource system$(). These materials can only be produced through the Neko Aggregator and serve as the foundation for crafting advanced items."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Basic Resources",
+      "text": "$(li)$(item)Neko Ingot$() — crafted from iron ingots in the aggregator, the basic neko material$(li)$(item)Neko Diamond$() — crafted from diamonds in the aggregator, an advanced neko material$(li)$(item)Neko Crystal$() — crafted from amethyst shards in the aggregator, a special neko material$(br2)9 Neko Ingots can craft a $(item)Neko Block$(), and 9 Neko Diamonds can craft a $(item)Neko Diamond Block$() — both decorative and useful for storage."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Energy Storage Devices",
+      "text": "Energy storage devices act as $(#FF69B4)portable energy packs$() — you can charge or drain neko energy in the aggregator:$(br2)$(li)$(item)Small Energy Storage$() — low crafting cost, smaller capacity$(li)$(item)Medium Energy Storage$() — medium capacity, requires small storage to upgrade$(li)$(item)Large Energy Storage$() — max capacity, requires medium storage + netherite scraps and other rare materials$(br2)Each comes in $(thing)uncharged$() and $(thing)charged$() versions. Charge empty ones or extract energy from charged ones in the aggregator."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Use Cases",
+      "text": "Energy storage devices are especially handy in these scenarios:$(br2)$(li)Running low on energy during adventures? Bring a few charged devices to top up anytime$(li)Want to mass-craft but your energy cap is too low? Pre-charge a bunch of devices$(li)Store excess energy so natural regeneration never goes to waste$(br2)$(#FFB6C1)Better safe than sorry — always carry a few energy packs~$()"
+    }
+  ]
+}

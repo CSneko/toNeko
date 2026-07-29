@@ -1,0 +1,23 @@
+{
+  "name": "基因编辑器",
+  "category": "toneko:genetics",
+  "icon": "toneko:gene_editor",
+  "sortnum": 3,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "toneko:gene_editor",
+      "text": "$(item)基因编辑器$() 是一个 $(#FF69B4)创造模式物品$()，无法在生存模式中合成。$(br2)它能让你直接查看和修改猫娘的基因——适合调试、实验，或者只想快速打造\"完美猫娘\"的玩家。"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "使用方法",
+      "text": "$(li)手持基因编辑器 $(#FF69B4)右键猫娘$()$(li)打开基因编辑 GUI，直观显示所有 $(#FF69B4)9 对染色体$() 及每个基因座上的等位基因$(li)点击某个基因座——可以从推荐列表或完整列表中 $(#FF69B4)选择替换等位基因$()$(li)点击 $(#FF69B4)保存$()，猫娘的基因即刻更新，性状立即生效$(br2)操作直观，所见即所得~"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "只读查看",
+      "text": "如果你没有基因编辑器，但想查看猫娘的基因，可以使用指令：$(br2)$(#FF69B4)/genetics <猫娘名称>$()$(br2)这会以 $(#FF69B4)只读模式$() 打开基因界面——可以看，不能改。$(br2)使用这个指令需要 $(thing)command.genetics$() 权限，适合服务器管理员用来检查猫娘的遗传信息。"
+    }
+  ]
+}

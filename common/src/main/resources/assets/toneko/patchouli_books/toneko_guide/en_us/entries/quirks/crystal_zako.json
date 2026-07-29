@@ -1,0 +1,27 @@
+{
+  "name": "Crystal Neko & Zako",
+  "category": "toneko:quirks",
+  "icon": "toneko:neko_crystal",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "If you feel having a quirk isn't quite enough \"personality,\" these two quirks will help you $(#FF69B4)completely transform your speech style$(). Think of them as swapping a \"dialogue skin\" for your neko life — same scenes, completely different lines!"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Crystal Neko",
+      "text": "With this quirk, your neko will speak in the $(#FF69B4)Crystal Neko style$().$(br2)Trigger events include:$(li)Taking damage — different tsundere lines for light vs heavy hits$(li)Attacking — battle cries shifting with the target's HP$(li)Rain, clear skies, thunder — she has opinions on every weather$(li)Sleeping and waking — bedtime murmurs and energetic good mornings$(li)Joining the world — a unique entrance announcement$(br2)This quirk oozes \"developer\" flavor — a bit tsundere, a bit cute, with a hint of dark history."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Zako",
+      "text": "With this quirk, you become the loudest little $(#FF69B4)zako$() (loser) around.$(br2)Same trigger events as Crystal Neko — but the lines are a completely different flavor.$(br2)Taking damage? Complain loudly. Attacking? Taunt them. Weather? Rant about it. Sleeping and waking? Important announcements incoming...$(br2)$(#FFB6C1)A zako may be a loser, but the fun is doubled!$()"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "How to Choose?",
+      "text": "You can use either quirk alone or stack them together — but when stacked, the messages blend into quite a unique flavor.$(br2)We suggest trying one first to feel the style, then deciding whether to \"mix and match.\"$(br2)$(#FF69B4)Crystal Neko$() suits those wanting a cute tsundere vibe; $(#FF69B4)Zako$() suits those wanting to let loose and be loud.$(br2)Pick either — after all, it's YOUR neko life, you make the call, meow~"
+    }
+  ]
+}

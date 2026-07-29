@@ -31,6 +31,7 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.cneko.toneko.common.mod.advencements.ToNekoCriteria;
 import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.misc.ToNekoDamageTypes;
 import org.cneko.toneko.common.mod.misc.ToNekoEnchantments;
@@ -98,6 +99,11 @@ public class NekoEnergyBurstItem extends Item {
             return InteractionResultHolder.fail(player.getItemInHand(usedHand));
         }
 
+        // 触发成就：哈气初心者
+        if (player instanceof ServerPlayer sp) {
+            ToNekoCriteria.HISS_FIRST_USE.trigger(sp);
+        }
+
         // ---- 读取附魔等级 ----
         ItemStack stack = player.getItemInHand(usedHand);
         int powerLevel = EnchantmentUtil.getEnchantmentLevel(ToNekoEnchantments.HISS_POWER, stack, level);
@@ -159,6 +165,10 @@ public class NekoEnergyBurstItem extends Item {
         spawnLingeringAura((ServerLevel) level, player);       // Layer 3: 威慑气场
         if (isEasterEgg) {
             spawnEasterEggParticles((ServerLevel) level, player); // Layer 5: 彩蛋特效
+            // 触发成就：圆头耄耋降临！
+            if (player instanceof ServerPlayer sp) {
+                ToNekoCriteria.EASTER_EGG.trigger(sp);
+            }
         }
 
         // ---- 统计目标 ----
@@ -304,6 +314,11 @@ public class NekoEnergyBurstItem extends Item {
 
             // 创建/更新 BossBar 连击HUD
             updateComboBossBar((ServerPlayer) player, newCombo, comboMultiplier, extendedWindow, now, isEvil());
+
+            // 触发成就：哈气连击（按连击数）
+            if (player instanceof ServerPlayer sp) {
+                ToNekoCriteria.HISS_COMBO.trigger(sp, newCombo);
+            }
         } else {
             newCombo = 0;
             COMBO_MAP.remove(player.getUUID());

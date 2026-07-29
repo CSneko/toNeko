@@ -124,8 +124,7 @@ public class ToNekoEntities {
             EntityType<AdventurerNeko> adventurer,
             EntityType<GhostNekoEntity> ghost,
             EntityType<CrystalNekoEntity> crystal,
-            EntityType<FightingNekoEntity> fighting,
-            EntityType<NoelleMaidNekoEntity> noelle) {
+            EntityType<FightingNekoEntity> fighting) {
 
         // ===== 冒险猫娘：广泛群系 =====
         BiomeModifications.addSpawn(
@@ -139,16 +138,16 @@ public class ToNekoEntities {
                         .or(BiomeSelectors.tag(BiomeTags.IS_BEACH))
                         .or(BiomeSelectors.tag(BiomeTags.IS_HILL)),
                 MobCategory.CREATURE, adventurer,
-                35, 2, 5
+                35, 1, 3
         );
-        // 冒险猫娘：樱花林等花海超高刷新
+        // 冒险猫娘：樱花林等花海高刷新
         BiomeModifications.addSpawn(
                 BiomeSelectors.includeByKey(Biomes.CHERRY_GROVE)
                         .or(BiomeSelectors.includeByKey(Biomes.FLOWER_FOREST))
                         .or(BiomeSelectors.includeByKey(Biomes.SUNFLOWER_PLAINS))
                         .or(BiomeSelectors.includeByKey(Biomes.MEADOW)),
                 MobCategory.CREATURE, adventurer,
-                60, 3, 7
+                50, 1, 3
         );
 
         // ===== 幽灵猫娘 =====
@@ -173,14 +172,14 @@ public class ToNekoEntities {
             BiomeModifications.addSpawn(
                     BiomeSelectors.foundInOverworld(),
                     MobCategory.CREATURE, crystal,
-                    45, 3, 7
+                    35, 1, 3
             );
             BiomeModifications.addSpawn(
                     BiomeSelectors.includeByKey(Biomes.CHERRY_GROVE)
                             .or(BiomeSelectors.includeByKey(Biomes.FLOWER_FOREST))
                             .or(BiomeSelectors.includeByKey(Biomes.MEADOW)),
                     MobCategory.CREATURE, crystal,
-                    70, 4, 9
+                    50, 1, 3
             );
         }
 
@@ -193,22 +192,6 @@ public class ToNekoEntities {
                 25, 1, 4
         );
 
-        // ===== 诺艾尔女仆猫娘：花海、森林、平原 =====
-        BiomeModifications.addSpawn(
-                BiomeSelectors.includeByKey(Biomes.CHERRY_GROVE)
-                        .or(BiomeSelectors.includeByKey(Biomes.FLOWER_FOREST))
-                        .or(BiomeSelectors.includeByKey(Biomes.MEADOW))
-                        .or(BiomeSelectors.includeByKey(Biomes.SUNFLOWER_PLAINS)),
-                MobCategory.CREATURE, noelle,
-                35, 1, 3
-        );
-        BiomeModifications.addSpawn(
-                BiomeSelectors.tag(BiomeTags.IS_FOREST)
-                        .or(BiomeSelectors.includeByKey(Biomes.PLAINS))
-                        .or(BiomeSelectors.tag(BiomeTags.IS_RIVER)),
-                MobCategory.CREATURE, noelle,
-                15, 1, 2
-        );
     }
 
 }

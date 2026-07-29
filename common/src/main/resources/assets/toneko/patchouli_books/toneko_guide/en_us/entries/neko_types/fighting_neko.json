@@ -1,0 +1,28 @@
+{
+  "name": "Fighting Neko",
+  "category": "toneko:neko_types",
+  "icon": "toneko:fighting_neko_spawn_egg",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "patchouli:entity",
+      "entity": "toneko:fighting_neko",
+      "text": "The Fighting Neko is a born $(#FF69B4)warrior$(). She survives in dangerous environments and possesses outstanding combat skills and weapon proficiency."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Combat Abilities",
+      "text": "The Fighting Neko's greatest strength is her ability to $(#FF69B4)flexibly switch between melee and ranged combat$():$(br2)$(li)She automatically chooses between sword and $(item)Bazooka$() based on the situation$(li)With ammo in her inventory, her ranged firepower is formidable$(li)She has a 40% chance to spawn with a bazooka$(br2)She fears no multiple enemies — a reliable battle companion!"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Special Abilities",
+      "text": "$(#FF69B4)Baby Fighting Nekos$() (loli form) have a terrifying special ability:$(br2)When filled with hatred toward an enemy, they can $(#FF69B4)summon lightning$() to strike the target! Only a 5-second cooldown — upsetting a little loli is never a good idea...$(br2)Additionally, Fighting Nekos $(#FF69B4)auto-regenerate$() after going 64 seconds without taking damage, giving them strong endurance."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Spawning Locations",
+      "text": "Fighting Nekos inhabit dangerous environments:$(br2)$(li)$(#FF69B4)The Nether$() — the hellish environment forged her combat instincts$(li)$(#FF69B4)Ancient Cities$() — she can be found near the Warden's domain$(li)$(#FF69B4)Mountains$() — occasionally spotted among towering peaks$(br2)If you want a battle partner, venture into these dangerous places!"
+    }
+  ]
+}

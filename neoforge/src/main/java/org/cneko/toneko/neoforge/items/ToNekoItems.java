@@ -46,6 +46,7 @@ public class ToNekoItems {
     public static DeferredHolder<Item, CatnipItem> CATNIP_HOLDER;
     public static DeferredHolder<Item, CatnipItem> CATNIP_SANDWICH_HOLDER;
     public static DeferredHolder<Item,Item> CATNIP_SEED_HOLDER;
+    public static DeferredHolder<Item, BlockItem> WILD_CATNIP_HOLDER;
     public static DeferredHolder<CreativeModeTab,CreativeModeTab> TONEKO_ITEM_GROUP_HOLDER;
     public static DeferredHolder<Item,Item> MUSIC_DISC_KAWAII_HOLDER;
     public static DeferredHolder<Item,Item> MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP_HOLDER;
@@ -75,6 +76,11 @@ public class ToNekoItems {
     public static DeferredHolder<Item,EvilNekoEnergyBurstItem> EVIL_NEKO_ENERGY_BURST_HOLDER;
     public static DeferredHolder<Item,GeneEditorItem> GENE_EDITOR_HOLDER;
     public static DeferredHolder<Item,NekoArmor.NekoPawsItem> NEKO_PAWS_HOLDER;
+    public static DeferredHolder<Item,NineLivesCharmItem> NINE_LIVES_CHARM_HOLDER;
+    public static DeferredHolder<Item,NekoMultiToolItem> NEKO_MULTI_TOOL_HOLDER;
+    public static DeferredHolder<Item,NekoBellItem> NEKO_BELL_HOLDER;
+    public static DeferredHolder<Item,NekoEnergyBatteryItem> NEKO_ENERGY_BATTERY_HOLDER;
+    public static DeferredHolder<Item,NekoEnergyBatteryItem> NEKO_ENERGY_BATTERY_LARGE_HOLDER;
 
     public static void init() {
         registerWithOutConfig();
@@ -110,6 +116,8 @@ public class ToNekoItems {
                 ))));
 
         CATNIP_SEED_HOLDER = ITEMS.register("catnip_seed",()->new ItemNameBlockItem(ToNekoBlocks.CATNIP_HOLDER.get(), new Item.Properties()));
+
+        WILD_CATNIP_HOLDER = ITEMS.register("wild_catnip",()->new BlockItem(ToNekoBlocks.WILD_CATNIP_HOLDER.get(), new Item.Properties()));
 
         MUSIC_DISC_KAWAII_HOLDER = ITEMS.register("music_disc_kawaii",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ToNekoSongs.KAWAII)));
         MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP_HOLDER = ITEMS.register("music_disc_never_gonna_give_you_up",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ToNekoSongs.NEVER_GONNA_GIVE_YOU_UP)));
@@ -170,6 +178,17 @@ public class ToNekoItems {
 
         GENE_EDITOR_HOLDER = ITEMS.register("gene_editor", ()->new GeneEditorItem(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)));
 
+        NINE_LIVES_CHARM_HOLDER = ITEMS.register(NineLivesCharmItem.ID, NineLivesCharmItem::new);
+
+        NEKO_MULTI_TOOL_HOLDER = ITEMS.register(NekoMultiToolItem.ID, NekoMultiToolItem::new);
+
+        NEKO_BELL_HOLDER = ITEMS.register(NekoBellItem.ID, NekoBellItem::new);
+
+        NEKO_ENERGY_BATTERY_HOLDER = ITEMS.register(NekoEnergyBatteryItem.ID,
+                () -> new NekoEnergyBatteryItem(2000, 10, 5));
+        NEKO_ENERGY_BATTERY_LARGE_HOLDER = ITEMS.register(NekoEnergyBatteryItem.ID_LARGE,
+                () -> new NekoEnergyBatteryItem(10000, 100, 50));
+
         // 注册物品组
         TONEKO_ITEM_GROUP_HOLDER = ToNekoNeoForge.CREATIVE_MODE_TABS.register("toneko_group", ()-> CreativeModeTab.builder()
                 .icon(()->NEKO_EARS_HOLDER.get().getDefaultInstance())
@@ -187,6 +206,7 @@ public class ToNekoItems {
                     event.accept(CATNIP_HOLDER.get());
                     event.accept(CATNIP_SANDWICH_HOLDER.get());
                     event.accept(CATNIP_SEED_HOLDER.get());
+                    event.accept(WILD_CATNIP_HOLDER.get());
                     event.accept(MUSIC_DISC_KAWAII_HOLDER.get());
                     if (ConfigUtil.IS_FOOL_DAY){
                         event.accept(MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP_HOLDER.get());
@@ -215,6 +235,11 @@ public class ToNekoItems {
                     event.accept(NEKO_ENERGY_BOMB_HOLDER.get());
                     event.accept(GROWTH_TREAT_HOLDER.get());
                     event.accept(DEAGE_TREAT_HOLDER.get());
+                    event.accept(NINE_LIVES_CHARM_HOLDER.get());
+                    event.accept(NEKO_MULTI_TOOL_HOLDER.get());
+                    event.accept(NEKO_BELL_HOLDER.get());
+                    event.accept(NEKO_ENERGY_BATTERY_HOLDER.get());
+                    event.accept(NEKO_ENERGY_BATTERY_LARGE_HOLDER.get());
                 })
                 .build()
         );
@@ -240,11 +265,12 @@ public class ToNekoItems {
             event.accept(ADVENTURER_NEKO_SPAWN_EGG_HOLDER.get());
             event.accept(GHOST_NEKO_SPAWN_EGG_HOLDER.get());
             event.accept(FIGHTING_NEKO_SPAWN_EGG_HOLDER.get());
-            event.accept(NOELLE_MAID_NEKO_SPAWN_EGG_HOLDER.get());
+            // event.accept(NOELLE_MAID_NEKO_SPAWN_EGG_HOLDER.get());
             event.accept(PLOT_SCROLL_HOLDER.get());
             event.accept(CATNIP_HOLDER.get());
             event.accept(CATNIP_SANDWICH_HOLDER.get());
             event.accept(CATNIP_SEED_HOLDER.get());
+            event.accept(WILD_CATNIP_HOLDER.get());
             event.accept(MUSIC_DISC_KAWAII_HOLDER.get());
             event.accept(MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP_HOLDER.get());
             if (ConfigUtil.IS_FOOL_DAY){
@@ -274,6 +300,11 @@ public class ToNekoItems {
             event.accept(NEKO_ENERGY_BOMB_HOLDER.get());
             event.accept(GROWTH_TREAT_HOLDER.get());
             event.accept(DEAGE_TREAT_HOLDER.get());
+            event.accept(NINE_LIVES_CHARM_HOLDER.get());
+            event.accept(NEKO_MULTI_TOOL_HOLDER.get());
+            event.accept(NEKO_BELL_HOLDER.get());
+            event.accept(NEKO_ENERGY_BATTERY_HOLDER.get());
+            event.accept(NEKO_ENERGY_BATTERY_LARGE_HOLDER.get());
         }
         reg();
     }
@@ -281,6 +312,7 @@ public class ToNekoItems {
     public static void reg(){
         CATNIP = CATNIP_HOLDER.get();
         INFINITE_CATNIP = INFINITE_CATNIP_HOLDER.get();
+        WILD_CATNIP = WILD_CATNIP_HOLDER.get();
         CATNIP_SANDWICH = CATNIP_SANDWICH_HOLDER.get();
         CATNIP_SEED = CATNIP_SEED_HOLDER.get();
         NEKO_COLLECTOR = NEKO_COLLECTOR_HOLDER.get();
@@ -315,6 +347,11 @@ public class ToNekoItems {
         GENE_EDITOR = GENE_EDITOR_HOLDER.get();
         GROWTH_TREAT = GROWTH_TREAT_HOLDER.get();
         DEAGE_TREAT = DEAGE_TREAT_HOLDER.get();
+        NINE_LIVES_CHARM = NINE_LIVES_CHARM_HOLDER.get();
+        NEKO_MULTI_TOOL = NEKO_MULTI_TOOL_HOLDER.get();
+        NEKO_BELL = NEKO_BELL_HOLDER.get();
+        NEKO_ENERGY_BATTERY = NEKO_ENERGY_BATTERY_HOLDER.get();
+        NEKO_ENERGY_BATTERY_LARGE = NEKO_ENERGY_BATTERY_LARGE_HOLDER.get();
         ToNekoEffectNeoForge.reg();
         ToNekoBlocks.reg();
         ToNekoEntities.reg();

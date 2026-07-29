@@ -1,5 +1,5 @@
 name: toNeko
-version: '1.9.2'
+version: '1.9.3'
 main: org.cneko.toneko.bukkit.ToNeko
 api-version: '1.21'
 author: CrystalNeko
@@ -20,47 +20,65 @@ commands:
     usage: /quirk help
     description: Quirk management commands
 permissions:
-  command.tonekoadmin:
-    default: op
-    children:
-      command.tonekoadmin.help: true
-      command.tonekoadmin.set: true
-      command.tonekoadmin.reload: true
-      command.tonekoadmin.config: true
-      command.tonekoadmin.data: true
-      command.tonekoadmin.neko: true
   command.toneko:
     default: true
-    children:
-      command.toneko.help: true
-      command.toneko.player: true
-      command.toneko.accept: true
-      command.toneko.deny: true
-      command.toneko.remove: true
-      command.toneko.alias: true
-      command.toneko.block: true
-      command.toneko.xp: true
-      command.toneko.gui: true
+  command.toneko.help:
+    default: true
+  command.toneko.player:
+    default: true
+  command.toneko.accept:
+    default: true
+  command.toneko.deny:
+    default: true
+  command.toneko.remove:
+    default: true
+  command.toneko.alias:
+    default: true
+  command.toneko.block:
+    default: true
+  command.toneko.xp:
+    default: true
+  command.toneko.gui:
+    default: true
   command.neko:
     default: true
-    children:
-      command.neko.help: true
-      command.neko.chat: true
-      command.neko.ride: true
-      command.neko.ride_head: true
-      command.neko.jump: true
-      command.neko.speed: true
-      command.neko.vision: true
-      command.neko.lie: true
-      command.neko.get_down: true
-      command.neko.nickname: true
-      command.neko.level: true
-      command.neko.lore: true
-      command.neko.gui: true
+  command.neko.help:
+    default: true
+  command.neko.chat:
+    default: true
+  command.neko.ride:
+    default: true
+  command.neko.ride_head:
+    default: true
+  command.neko.jump:
+    default: true
+  command.neko.speed:
+    default: true
+  command.neko.vision:
+    default: true
+  command.neko.lie:
+    default: true
+  command.neko.get_down:
+    default: true
+  command.neko.nickname:
+    default: true
+  command.neko.removeNickname:
+    default: true
+  command.neko.level:
+    default: true
+  command.neko.lore:
+    default: true
+  command.neko.gui:
+    default: true
   command.quirk:
     default: true
-    children:
-      command.quirk.help: true
-      command.quirk.list: true
-  command.genetics:
-    default: op
+  command.quirk.help:
+    default: true
+  command.quirk.list:
+    default: true
+  command.quirk.add:
+    default: true
+  command.quirk.remove:
+    default: true
+  command.quirk.gui:
+    default: true

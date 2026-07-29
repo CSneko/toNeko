@@ -47,7 +47,8 @@
   },
   "suggests": {
     "luckperms": "*",
-    "trinkets": "*"
+    "trinkets": "*",
+    "patchouli": "*"
   },
   "breaks": {
     "optifabric": "*",

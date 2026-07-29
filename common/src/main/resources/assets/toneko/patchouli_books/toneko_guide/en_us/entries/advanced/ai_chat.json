@@ -1,0 +1,27 @@
+{
+  "name": "AI Chat System",
+  "category": "toneko:advanced",
+  "icon": "minecraft:ender_eye",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "toNeko supports connecting nekos to $(#FF69B4)Large Language Models (LLMs)$(), letting them go beyond fixed dialogue and $(#FF69B4)truly chat with you$().$(br2)Each neko generates unique responses based on her moe tags, relationship with her owner, current status (health, energy, inventory items, etc.) — just like talking to a real catgirl!"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Supported AI Providers",
+      "text": "toNeko supports connecting to various AI services — pick the one that suits you best:$(br2)$(li)$(thing)OpenAI$() — ChatGPT series$(li)$(thing)Anthropic$() — Claude series$(li)$(thing)DeepSeek$() — cost-effective option$(li)$(thing)Gemini$() — Google's models$(li)$(thing)Ollama$() — run locally, completely free$(li)$(thing)Groq / Mistral / OpenRouter / SiliconFlow$() — even more choices$(br2)Also supports $(thing)CNekoAI$() and $(thing)LocalCustom$() for custom integrations."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Configuration",
+      "text": "AI chat requires setup in the server's $(#FF69B4)config file$():$(br2)$(li)Select an AI provider$(li)Fill in the API endpoint and key$(li)Adjust model parameters (temperature, context length, etc.)$(br2)Once configured, right-click a neko to open the chat interface. Type your message and send — she'll reply based on her personality and current state.$(br2)Some configs also support $(thing)TTS$() (Text-to-Speech), letting the neko respond with her voice!"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Context Awareness",
+      "text": "AI neko replies aren't random — they're based on $(#FF69B4)rich contextual information$():$(br2)$(li)Name and nickname$(li)Moe tags and personality$(li)Affection level with owner$(li)Current HP, energy, inventory items$(li)Weather, time, location$(br2)This means the same question will get completely different answers from nekos with different tags and states — that's what makes AI chat so fascinating~"
+    }
+  ]
+}

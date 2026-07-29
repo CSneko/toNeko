@@ -1,5 +1,5 @@
 name: toNeko
-version: '1.9.2'
+version: '1.9.3'
 main: org.cneko.toneko.bukkit.ToNeko
 description: Turn players into nekos with AI chat, energy system, area/global chat, and more!
 api-version: '1.21'

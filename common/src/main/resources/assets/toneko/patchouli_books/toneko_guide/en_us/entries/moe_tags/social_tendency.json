@@ -1,0 +1,37 @@
+{
+  "name": "Social Interaction Tendencies",
+  "category": "toneko:moe_tags",
+  "icon": "toneko:contract",
+  "sortnum": 3,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The 5 tags introduced in this section mainly affect a neko's $(#FF69B4)social behavior$() — how she treats her owner, strangers, and other nekos. These tags are the easiest to notice in daily interactions~"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "mesugaki · Bratty",
+      "text": "$(#FF69B4)\"Hmph! No way I'm gonna listen to you~ Want to tame me? Show me what you've got!\"$()$(br2)Bratty nekos are naturally rebellious. A normal $(item)Contract$() simply $(#FF69B4)won't work$() on her — you must enchant the contract with $(thing)Enforcement$() to tame her.$(br2)She'll still talk back after being tamed, but that's just her way of expressing herself. The secret to handling a bratty neko? Outplay her at her own game!"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "gentleness · Gentle",
+      "text": "$(#FF69B4)\"You're hurt? Let me help...\"$()$(br2)Gentle nekos are undisputed $(#FF69B4)angels$(). She actively seeks out injured creatures within a 5-block radius and feeds them food from her inventory to heal them.$(br2)If you get injured, she'll be the first to run over and care for you. Having a gentle neko is like carrying a little nurse everywhere~"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "haraguro · Two-faced",
+      "text": "$(#FF69B4)\"Hehe~ I don't mean anything by it~\"$()$(br2)Two-faced nekos appear $(#FF69B4)gentle and harmless$() on the surface, always smiling — but deep down, they have their own schemes.$(br2)It's hard to tell anything unusual from her outward behavior... which is exactly what makes the two-faced nature so terrifying (or charming). Her actions often carry hidden intentions — it never hurts to stay alert..."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "narenareshi · Sociable",
+      "text": "$(#FF69B4)\"Hey! Long time no see!\"$()$(br2)Sociable nekos are extreme extroverts. She will $(#FF69B4)actively approach non-owner players$(), and when she spots a stranger within 8 blocks, she'll run over and hang around them for $(#FF69B4)2~4 seconds$().$(br2)As if saying \"Hi there! Let's be friends!\" — her social skills are maxed out, requiring zero effort from her owner."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "yuri · Yuri",
+      "text": "$(#FF69B4)\"Owner~ come a little closer~\"$()$(br2)Yuri nekos have a special affinity for neko owners. $(#FF69B4)If her owner is also a neko$(), her follow distance will be $(#FF69B4)noticeably shorter$() — not because she's afraid of falling behind, but because she wants to stay as close as possible.$(br2)The bond between two nekos is more intimate than that of an ordinary neko and owner. If you're also a neko, the yuri tag lets you experience double the closeness!"
+    }
+  ]
+}

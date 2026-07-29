@@ -1,0 +1,22 @@
+{
+  "name": "Caress",
+  "category": "toneko:quirks",
+  "icon": "minecraft:heart_of_the_sea",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "$(thing)Caress$() is the simplest and warmest quirk.$(br2)Its core mechanic can be summed up in one word — $(#FF69B4)cuddles$()! If you love intimate interactions with nekos, this quirk is made for you~"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Interaction Effects",
+      "text": "With the Caress quirk, $(#FF69B4)right-clicking another neko with an empty hand$() triggers:$(br2)$(li)$(#FF69B4)Heart particles$() appear around them — sweet and heartwarming$(li)Your $(thing)affection (XP)$() with that neko's owner will increase$(br2)A simple right-click — express your love AND strengthen your bonds at the same time!"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Use Cases",
+      "text": "The Caress quirk is especially great in these situations:$(br2)$(li)Just tamed a new neko and want to quickly build rapport$(li)Strolling through safe areas with your neko companion, cuddling as you go$(li)Multiple nekos gathered together — spread the love, right-click each one$(br2)$(#FFB6C1)Cuddles are great, but don't overdo it — you still have monsters to fight and adventures to go on!$()"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Moe Tags Overview",
+  "category": "toneko:moe_tags",
+  "icon": "minecraft:book",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "$(thing)Moe Tags$() are the $(#FF69B4)core personality system$() in toNeko. Every neko is given 1~3 moe tags at birth, randomly selected from a pool of $(#FF69B4)15 types$(). These tags collectively determine her personality, speech style, and behavior patterns."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "How Tags Affect Nekos",
+      "text": "Moe tags aren't just for show — they tangibly affect every aspect of a neko:$(br2)$(li)$(#FF69B4)Dialogue style$(): what she says when hurt, attacking, or idle$(li)$(#FF69B4)Following behavior$(): distance, speed, and even willingness to follow$(li)$(#FF69B4)Combat strategy$(): fight head-on or flee in panic$(li)$(#FF69B4)Social behavior$(): attitude toward strangers, owners, and other nekos$(br2)Observe a neko's behavior and you can roughly guess her tags~"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "NPC-Only System",
+      "text": "$(#FF69B4)Moe tags are exclusive to neko NPCs$().$(br2)Players do not receive moe tags when becoming a neko — your personality is entirely up to you!$(br2)However, player nekos have their own personality expression system: $(thing)Quirks$(). Quirks affect your dialogue messages and interaction effects — they're your \"personality signature\" in the neko world.$(br2)For details on quirks, check out the \"Quirks System\" chapter in this guide~"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "name": "Skills Analysis",
+  "category": "toneko:boss",
+  "icon": "toneko:bazooka",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Mouflet has three active skills, each with a $(#FF69B4)40-second cooldown$(). Her skill cycle has a clear rhythm — after each skill, she enters a brief vulnerability window, which is your best time to counterattack!"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Spoil",
+      "text": "$(#FF69B4)\"Let big sis spoil you~\"$()$(br2)Mouflet gains $(#FF69B4)60% damage reduction$() + $(#FF69B4)clears all debuffs$() for 10 seconds.$(br2)Fighting her head-on during these 10 seconds is extremely inefficient — she barely takes damage. But once the 10 seconds are up, she enters a $(#FF69B4)vulnerability window$() — that's when you go all out!$(br2)Strategy: keep your distance, replenish your status, and strike back hard once the spoiling ends."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Charm",
+      "text": "$(#FF69B4)\"Look into my eyes...\"$()$(br2)Mouflet unleashes her charm:$(br2)$(li)Boss bar $(#FF69B4)disappears$() — you can't see her remaining HP$(li)Nearby players are $(#FF69B4)charmed$(), gaining the Bewitched debuff: -3% movement, -10% attack speed, -10% jump, -50% attack damage, -1 interaction range, with a 10% chance of heart particles$(br2)After charm ends, there's also a vulnerability window. Don't fight through the bewitchment — endure it first, then retaliate."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Grab-and-Fly",
+      "text": "$(#FF69B4)\"Fly!\"$()$(br2)The most dangerous skill — Mouflet $(#FF69B4)grabs a player and flies into the air$(), releasing them after 5 seconds.$(br2)The fall damage can be fatal, especially since she can fly quite high.$(br2)Survival strategies:$(li)Have $(item)Ender Pearls$() or a $(item)Water Bucket$() ready for landing$(li)Wear boots with Feather Falling enchantment$(li)Or — spend those 5 seconds praying she didn't fly too high"
+    }
+  ]
+}

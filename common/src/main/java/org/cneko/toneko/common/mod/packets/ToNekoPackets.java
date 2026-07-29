@@ -35,5 +35,8 @@ public class ToNekoPackets {
         PayloadTypeRegistry.playC2S().register(GenomeDataPayload.ID, GenomeDataPayload.CODEC);
         PayloadTypeRegistry.playS2C().register(ToNekoManagementDataPayload.ID, ToNekoManagementDataPayload.CODEC);
         PayloadTypeRegistry.playC2S().register(ToNekoActionPayload.ID, ToNekoActionPayload.CODEC);
+        PayloadTypeRegistry.playC2S().register(NekoMultiToolModePayload.ID, NekoMultiToolModePayload.CODEC);
+        PayloadTypeRegistry.playC2S().register(ClimbWallPayload.ID, ClimbWallPayload.CODEC);
+        PayloadTypeRegistry.playC2S().register(NekoStealthPayload.ID, NekoStealthPayload.CODEC);
     }
 }

@@ -1,0 +1,17 @@
+{
+  "type": "neoforge:add_table",
+  "conditions": [
+    {
+      "condition": "minecraft:any_of",
+      "terms": [
+        { "condition": "neoforge:loot_table_id", "loot_table_id": "minecraft:chests/stronghold_corridor" },
+        { "condition": "neoforge:loot_table_id", "loot_table_id": "minecraft:chests/stronghold_crossing" },
+        { "condition": "neoforge:loot_table_id", "loot_table_id": "minecraft:chests/stronghold_library" },
+        { "condition": "neoforge:loot_table_id", "loot_table_id": "minecraft:chests/woodland_mansion" },
+        { "condition": "neoforge:loot_table_id", "loot_table_id": "minecraft:chests/pillager_outpost" },
+        { "condition": "neoforge:loot_table_id", "loot_table_id": "minecraft:chests/nether_bridge" }
+      ]
+    }
+  ],
+  "table": "toneko:chests/neko_rare_loot"
+}

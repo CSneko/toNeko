@@ -1,0 +1,32 @@
+{
+  "name": "猫娘护甲",
+  "category": "toneko:equipment",
+  "icon": "toneko:neko_ears",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "如果你想更像一只真正的猫娘，那你一定需要 $(#FF69B4)猫娘护甲$()！$(br2)toNeko 提供了两件独特的护甲：$(item)猫耳$() 和 $(item)猫尾$()。穿戴后外观会发生变化，尾巴和耳朵会自然地摆动，可爱度瞬间拉满~"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "toneko:neko_ears",
+      "text": "$(item)猫耳$() 装备在 $(#FF69B4)头盔槽$()。$(br2)戴上之后头顶会长出一对毛茸茸的猫耳朵——它们会随着你的动作轻轻抖动，就像真的猫耳一样！$(br2)合成配方很简单，只需要 $(item)羊毛$() 就够了~"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "toneko:neko_tail",
+      "text": "$(item)猫尾$() 装备在 $(#FF69B4)胸甲槽$()。$(br2)一条修长的猫尾巴会在你身后摇摆，走路时还会左右晃动。$(br2)$(#FF69B4)注意：$()首次装备猫尾时，你会感到一阵刺痛——扣除 $(#FF69B4)0.5 颗心$() 的生命值。想长出尾巴，总要付出一点代价嘛~"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "toneko:neko_tail",
+      "text": "猫尾的合成需要 $(item)铁粒$() 和 $(item)羊毛$()。"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Trinkets 支持",
+      "text": "如果你安装了 $(thing)Trinkets$() 模组，猫娘护甲可以装备在 $(#FF69B4)饰品栏$() 中，不占用普通护甲槽：$(br2)$(li)猫耳 → 头部饰品槽$(li)猫尾 → 背部饰品槽$(br2)这样你就能同时穿戴钻石套和猫娘护甲，又强又可爱！"
+    }
+  ]
+}

@@ -10,6 +10,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.network.Filterable;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -41,11 +42,16 @@ import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.WrittenBookContent;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.cneko.toneko.common.mod.advencements.ToNekoCriteria;
 import org.cneko.toneko.common.mod.ai.PromptRegistry;
 import org.cneko.toneko.common.mod.api.NekoLevelRegistry;
@@ -678,7 +684,40 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
         if (world instanceof ServerLevel serverLevel) {
             this.dropAllDeathLoot(serverLevel, damageSource);
             this.getInventory().dropAll();
+
+            // 30% 概率掉落猫娘日记
+            if (random.nextFloat() < 0.30f) {
+                String name = this.getCustomName() != null
+                        ? this.getCustomName().getString()
+                        : this.getName().getString();
+                this.spawnAtLocation(createNekoDiary(name));
+            }
         }
+    }
+
+    /**
+     * 生成一本猫娘日记（底层使用原版成书）。
+     * @param nekoName 猫娘的名字
+     * @return 写好的日记 ItemStack
+     */
+    public static ItemStack createNekoDiary(String nekoName) {
+        ItemStack stack = new ItemStack(Items.WRITTEN_BOOK);
+        stack.set(DataComponents.ITEM_NAME, Component.translatable("item.toneko.neko_diary"));
+        Random random = new Random();
+        int count = 2 + random.nextInt(3);
+        List<Filterable<Component>> pages = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            int idx = random.nextInt(80);
+            pages.add(Filterable.passThrough(
+                    Component.translatable("diary.toneko.entry." + idx, nekoName)));
+        }
+
+        WrittenBookContent content = new WrittenBookContent(
+                Filterable.passThrough(nekoName + "的日记"),
+                nekoName, 0, pages, false
+        );
+        stack.set(DataComponents.WRITTEN_BOOK_CONTENT, content);
+        return stack;
     }
 
     /**
@@ -924,6 +963,14 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
             child.moveTo(this.getX(), this.getY(), this.getZ(), 0.0F, 0.0F);
             this.finalizeSpawnChildFromBreeding(level, mate, child);
             level.addFreshEntityWithPassengers(child);
+
+            // 触发成就：新生命（父母中任意一方是玩家）
+            if (mate.getEntity() instanceof ServerPlayer sp) {
+                ToNekoCriteria.NEKO_BREED.trigger(sp);
+            }
+            if (this.getEntity() instanceof ServerPlayer sp) {
+                ToNekoCriteria.NEKO_BREED.trigger(sp);
+            }
         }
         return child;
     }

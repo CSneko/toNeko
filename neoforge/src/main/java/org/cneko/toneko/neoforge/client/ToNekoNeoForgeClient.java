@@ -90,6 +90,7 @@ public class ToNekoNeoForgeClient {
     public static void registerBlockLayerRenderers(RegisterNamedRenderTypesEvent event){
         // TODO
         event.register(ToNekoBlocks.CATNIP_HOLDER.getId(),RenderType.cutout(), RenderType.entityCutout(ToNekoBlocks.CATNIP_HOLDER.getId()));
+        event.register(ToNekoBlocks.WILD_CATNIP_HOLDER.getId(),RenderType.cutout(), RenderType.entityCutout(ToNekoBlocks.WILD_CATNIP_HOLDER.getId()));
     }
 
 

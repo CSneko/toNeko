@@ -24,10 +24,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.ItemCost;
 import net.minecraft.world.item.trading.MerchantOffer;
+import org.cneko.toneko.common.mod.abilities.ClimbWallHandler;
 import org.cneko.toneko.common.mod.api.NekoLevelRegistry;
 import org.cneko.toneko.common.mod.api.events.WorldEvents;
 import org.cneko.toneko.common.mod.entities.INeko;
+import org.cneko.toneko.common.mod.items.NekoEnergyBatteryItem;
 import org.cneko.toneko.common.mod.items.NekoEnergyBurstItem;
+import org.cneko.toneko.common.mod.items.NineLivesCharmItem;
 import org.cneko.toneko.common.mod.items.ToNekoItems;
 import org.cneko.toneko.common.mod.quirks.ModQuirk;
 import org.cneko.toneko.common.mod.util.TextUtil;
@@ -57,13 +60,22 @@ public class ToNekoEvents {
                 NekoLevelRegistry.combat().addRaw(neko, xp);
             }
         });
+        ServerLivingEntityEvents.ALLOW_DEATH.register((entity, source, amount) -> {
+            if (entity instanceof ServerPlayer player) {
+                return NineLivesCharmItem.tryPreventDeath(player);
+            }
+            return true;
+        });
         AttackEntityCallback.EVENT.register(CommonPlayerInteractionEvent::onAttackEntity);
         ServerTickEvents.START_SERVER_TICK.register(CommonPlayerEvent::startTick);
         ServerTickEvents.START_SERVER_TICK.register(NekoEnergyBurstItem::tickComboBossBars);
+        ServerTickEvents.START_SERVER_TICK.register(NekoEnergyBatteryItem::dischargeAllPlayers);
+        ServerTickEvents.START_SERVER_TICK.register(ClimbWallHandler::onServerTick);
         ServerWorldEvents.UNLOAD.register(CommonWorldEvent::onWorldUnLoad);
         WorldEvents.ON_WEATHER_CHANGE.register(CommonWorldEvent::onWeatherChange);
         EntitySleepEvents.START_SLEEPING.register(CommonPlayerEvent::startSleep);
         EntitySleepEvents.STOP_SLEEPING.register(CommonPlayerEvent::stopSleep);
+        NekoMultiToolEvents.init();
         TradeOfferHelper.registerVillagerOffers(VillagerProfession.FARMER,
                 1,
                 (factories) -> factories.add((trader, random) -> new MerchantOffer(

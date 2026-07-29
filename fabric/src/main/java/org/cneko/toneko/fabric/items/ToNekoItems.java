@@ -53,6 +53,7 @@ public class ToNekoItems {
         INFINITE_CATNIP = new CatnipItem.InfiniteCatnipItem(new Item.Properties().component(DataComponents.FOOD,new FoodProperties(2,1.0f,false,1.6f, Optional.empty(),List.of())).rarity(Rarity.UNCOMMON));
         CATNIP_SANDWICH = new CatnipItem(new Item.Properties().component(DataComponents.FOOD,new FoodProperties(10,12f,false,1.6f, Optional.empty(),List.of())));
         CATNIP_SEED = new ItemNameBlockItem(ToNekoBlocks.CATNIP, new Item.Properties());
+        WILD_CATNIP = new BlockItem(ToNekoBlocks.WILD_CATNIP, new Item.Properties());
         MUSIC_DISC_KAWAII = new Item(new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ToNekoSongs.KAWAII));
         MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP = new Item(new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ToNekoSongs.NEVER_GONNA_GIVE_YOU_UP));
         BAZOOKA = new BazookaItem(new Item.Properties());
@@ -85,6 +86,11 @@ public class ToNekoItems {
                 new FoodProperties(4, 2.0f, false, 1.6f, Optional.empty(),
                         List.of()
                 )).rarity(Rarity.UNCOMMON));
+        NINE_LIVES_CHARM = new NineLivesCharmItem();
+        NEKO_MULTI_TOOL = new NekoMultiToolItem();
+        NEKO_BELL = new NekoBellItem();
+        NEKO_ENERGY_BATTERY = new NekoEnergyBatteryItem(2000, 10, 5);
+        NEKO_ENERGY_BATTERY_LARGE = new NekoEnergyBatteryItem(10000, 100, 50);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NekoPotionItem.ID), NEKO_POTION);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NekoCollectorItem.ID), NEKO_COLLECTOR);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(FurryBoheItem.ID), FURRY_BOHE);
@@ -96,6 +102,7 @@ public class ToNekoItems {
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("infinite_catnip"), INFINITE_CATNIP);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("catnip_sandwich"), CATNIP_SANDWICH);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("catnip_seed"), CATNIP_SEED);
+        Registry.register(BuiltInRegistries.ITEM, toNekoLoc("wild_catnip"), WILD_CATNIP);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("music_disc_kawaii"), MUSIC_DISC_KAWAII);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("music_disc_never_gonna_give_you_up"), MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(BazookaItem.ID), BAZOOKA);
@@ -122,6 +129,11 @@ public class ToNekoItems {
             Registry.register(BuiltInRegistries.ITEM, toNekoLoc("gene_editor"), GENE_EDITOR);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(GrowthTreatItem.ID), GROWTH_TREAT);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(DeageTreatItem.ID), DEAGE_TREAT);
+        Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NineLivesCharmItem.ID), NINE_LIVES_CHARM);
+        Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NekoMultiToolItem.ID), NEKO_MULTI_TOOL);
+        Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NekoBellItem.ID), NEKO_BELL);
+        Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NekoEnergyBatteryItem.ID), NEKO_ENERGY_BATTERY);
+        Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NekoEnergyBatteryItem.ID_LARGE), NEKO_ENERGY_BATTERY_LARGE);
 
         // 如果安装了trinkets，则注册为TrinketItem
         if (isTrinketsInstalled){
@@ -152,10 +164,11 @@ public class ToNekoItems {
             content.accept(INFINITE_CATNIP);
             content.accept(CATNIP_SANDWICH);
             content.accept(CATNIP_SEED);
+            content.accept(WILD_CATNIP);
             content.accept(ADVENTURER_NEKO_SPAWN_EGG);
             content.accept(GHOST_NEKO_SPAWN_EGG);
             content.accept(FIGHTING_NEKO_SPAWN_EGG);
-            content.accept(NOELLE_MAID_NEKO_SPAWN_EGG);
+            //content.accept(NOELLE_MAID_NEKO_SPAWN_EGG);
             content.accept(MUSIC_DISC_KAWAII);
             if (ConfigUtil.IS_FOOL_DAY){
                 content.accept(MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP);
@@ -183,6 +196,11 @@ public class ToNekoItems {
             content.accept(GENE_EDITOR);
             content.accept(GROWTH_TREAT);
             content.accept(DEAGE_TREAT);
+            content.accept(NINE_LIVES_CHARM);
+            content.accept(NEKO_MULTI_TOOL);
+            content.accept(NEKO_BELL);
+            content.accept(NEKO_ENERGY_BATTERY);
+            content.accept(NEKO_ENERGY_BATTERY_LARGE);
         });
     }
 

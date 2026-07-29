@@ -1,0 +1,28 @@
+{
+  "name": "成为猫娘",
+  "category": "toneko:intro",
+  "icon": "toneko:neko_potion",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "toneko:neko_potion",
+      "text": "$(item)猫娘药水$() 是让你变身猫娘的关键道具。$(br2)喝下它的那一刻，你的身体会泛起粉色的光芒——然后，$(#FF69B4)欢迎来到猫娘的世界$()！"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "变身之后的变化",
+      "text": "成为猫娘后，你的角色会发生以下变化：$(br2)$(li)获得 $(thing)猫娘能量条$()，显示在屏幕上方$(li)拥有 $(thing)neko.degree$() 属性，代表你的「猫娘程度」$(li)解锁 $(k:toneko.roulette) 猫娘技能轮盘$(li)解锁 $(thing)/neko$() 系列指令，可以做各种猫娘专属动作$(br2)你的外观也会有所变化，具体取决于你装备的猫娘护甲~"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "重复饮用",
+      "text": "如果你 $(#FF69B4)已经是猫娘$()，再喝一瓶 $(item)猫娘药水$() 不会让你「变成两次猫娘」——它会直接为你恢复 $(#FF69B4)100 点$() 猫娘能量。$(br2)这在能量不足又急需使用聚合器的时候非常有用喵！"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "获取能量",
+      "text": "刚变成猫娘时，你的能量条是空的。获取能量的方式有：$(br2)$(li)吃 $(item)猫薄荷$()，恢复 $(#FF69B4)30 点$() 能量$(li)与猫娘 NPC $(#FF69B4)贴贴互动$()，双方都会获得能量$(li)自然恢复，身边猫娘越多恢复越快$(br2)$(#FFB6C1)记得随身带点猫薄荷，以备不时之需~$()"
+    }
+  ]
+}

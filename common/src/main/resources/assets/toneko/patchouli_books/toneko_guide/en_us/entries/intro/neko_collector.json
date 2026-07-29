@@ -1,0 +1,28 @@
+{
+  "name": "Neko Collector",
+  "category": "toneko:intro",
+  "icon": "toneko:neko_collector",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "toneko:neko_collector",
+      "text": "The $(item)Neko Collector$() is your $(#FF69B4)first essential tool$() on the journey to becoming a neko.$(br2)It absorbs energy from nearby nekos and cats, and once full — it produces a $(thing)Neko Potion$()!"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "toneko:neko_collector",
+      "text": "Crafting the collector requires some basic materials: $(item)Sticks$() and $(item)Glass$().$(br2)Nothing too complicated — go gather the materials and craft one~"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "How to Use",
+      "text": "Using the $(item)Neko Collector$() couldn't be easier — $(#FF69B4)just hold it in your hand$()!$(br2)As long as there are $(thing)nekos$() or $(thing)cats$() nearby, the collector will automatically absorb their energy and the progress bar will slowly fill up. No need to right-click anything — just stand near them, meow~$(br2)The progress bar needs a total of $(#FF69B4)5000 points$() of energy."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Producing Neko Potion",
+      "text": "When the collector's energy bar is full, it will automatically consume the stored energy and produce a $(item)Neko Potion$().$(br2)Once you have the potion, drink it up and you'll officially become a neko!$(br2)The collector is reusable — after each use, the energy bar resets to zero, and you can start absorbing energy again for another potion.$(br2)$(#FFB6C1)Tip: The more nekos around you, the faster it fills up~$()"
+    }
+  ]
+}

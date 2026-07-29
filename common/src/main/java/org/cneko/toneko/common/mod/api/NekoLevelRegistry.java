@@ -28,6 +28,7 @@ public class NekoLevelRegistry {
     public static NekoLevelFactor interaction() { return FACTORS.get("interaction"); }
     public static NekoLevelFactor combat() { return FACTORS.get("combat"); }
     public static NekoLevelFactor base() { return FACTORS.get("base"); }
+    public static NekoLevelFactor exploration() { return FACTORS.get("exploration"); }
 
     public static double computeTotal(INeko neko) {
         double total = 0;

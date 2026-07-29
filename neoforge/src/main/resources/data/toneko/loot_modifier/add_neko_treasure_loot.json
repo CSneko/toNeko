@@ -1,0 +1,16 @@
+{
+  "type": "neoforge:add_table",
+  "conditions": [
+    {
+      "condition": "minecraft:any_of",
+      "terms": [
+        { "condition": "neoforge:loot_table_id", "loot_table_id": "minecraft:chests/desert_pyramid" },
+        { "condition": "neoforge:loot_table_id", "loot_table_id": "minecraft:chests/jungle_temple" },
+        { "condition": "neoforge:loot_table_id", "loot_table_id": "minecraft:chests/shipwreck_treasure" },
+        { "condition": "neoforge:loot_table_id", "loot_table_id": "minecraft:chests/buried_treasure" },
+        { "condition": "neoforge:loot_table_id", "loot_table_id": "minecraft:chests/ruined_portal" }
+      ]
+    }
+  ],
+  "table": "toneko:chests/neko_treasure_loot"
+}

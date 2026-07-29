@@ -1,0 +1,32 @@
+{
+  "name": "Taming & Pet Mode",
+  "category": "toneko:boss",
+  "icon": "toneko:contract",
+  "sortnum": 3,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Defeating Mouflet isn't your only option — you can also $(#FF69B4)tame her$()!$(br2)Imagine this: the boss that once grabbed you and threw you to the ground is now your exclusive mount, pet, and companion. Taming her brings not only powerful support, but a unique sense of achievement~"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Taming Requirements",
+      "text": "To tame Mouflet, you must satisfy both conditions:$(br2)$(li)Her HP must be $(#FF69B4)below 40$() — beat her down but don't kill her$(li)You must have $(#FF69B4)5 or more catnip$() in your inventory$(br2)Once conditions are met, use the catnip to tame her.$(br2)$(#FF69B4)Note:$() taming is not guaranteed — prepare to try multiple times, or bring extra catnip."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Pet Mode Changes",
+      "text": "Once tamed, Mouflet transforms from boss to companion, with stats greatly adjusted:$(br2)$(li)Attack: 10 → $(#FF69B4)3$() — much less violent now$(li)Size: 2.0 → $(#FF69B4)1.5$() — shrunk a bit but still bigger than normal nekos$(li)Speed: $(#FF69B4)0.12$() — leisurely walks alongside you$(br2)She'll also actively $(#FF69B4)pick up dropped items$() for her owner, like a thoughtful little housekeeper~"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Flying Mount",
+      "text": "Tamed Mouflet can serve as a $(#FF69B4)flying mount$()!$(br2)Controls:$(li)WASD — direction$(li)Mouse — camera/look$(li)Height control — ascend and descend$(br2)Riding a neko boss through the sky — just imagining it is beautiful. And with her broad aerial view, exploring the world becomes much easier and more pleasant~"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Affection System",
+      "text": "Mouflet has an $(#FF69B4)affection rating of 0-100$(), divided into 4 levels. Raising affection requires frequent interaction.$(br2)Interactions unlocked at different affection levels:$(li)$(thing)Nuzzle$() — rubbing her cheek against you$(li)$(thing)Hug$() — an intimate embrace$(li)$(thing)Tsun$() — says no but her body says yes$(li)$(thing)Kiss$() — unlocked at maximum affection$(li)$(thing)Little Devil$() — occasional mischief$(br2)$(#FFB6C1)From boss to tsundere catgirl — who can resist this gap moe?!$()"
+    }
+  ]
+}

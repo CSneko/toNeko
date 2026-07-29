@@ -1,0 +1,28 @@
+{
+  "name": "Ghost Neko",
+  "category": "toneko:neko_types",
+  "icon": "toneko:ghost_neko_spawn_egg",
+  "sortnum": 3,
+  "pages": [
+    {
+      "type": "patchouli:entity",
+      "entity": "toneko:ghost_neko",
+      "text": "The Ghost Neko is an ethereal neko, unbound by gravity, floating freely through the air. Mysterious and elegant, she's one of the most unique beings in the neko world."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Flying & Phasing",
+      "text": "The Ghost Neko's most notable feature is that she $(#FF69B4)can fly$().$(br2)She completely ignores gravity and floats freely through the air. Even more amazing, she has $(#FF69B4)no physical collision$(), meaning she can pass through walls and blocks — just like a real ghost!$(br2)Her flight behavior is quite casual, drifting randomly within a 10-block radius — so leisurely~"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Nearly Invincible",
+      "text": "The Ghost Neko is $(#FF69B4)immune$() to most damage.$(br2)Only two things can harm her:$(li)$(#FF69B4)Magic damage$() — like the Warden's sonic boom$(li)$(#FF69B4)Instant kill commands$() — like /kill$(br2)Normal attacks, fall damage, fire, explosions... none of them faze her. This also means once tamed, she's a companion who will never get hurt!"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Spawning Locations",
+      "text": "Ghost Nekos prefer quiet, mysterious places:$(br2)$(li)Slime chunks, swamp huts$(li)Forests, taiga$(li)Jungle temples, nether fossils$(li)Ancient cities$(br2)You'll have a higher chance of encountering her in $(#FF69B4)cherry groves$(), $(#FF69B4)dark forests$(), and $(#FF69B4)mangrove swamps$().$(br2)If you want to find a Ghost Neko, try your luck in these gloomy, secluded places~"
+    }
+  ]
+}

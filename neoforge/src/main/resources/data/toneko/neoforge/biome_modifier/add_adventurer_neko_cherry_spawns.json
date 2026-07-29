@@ -1,0 +1,18 @@
+{
+  "type": "neoforge:add_spawns",
+  "biomes": {
+    "type": "neoforge:or",
+    "values": [
+      "minecraft:cherry_grove",
+      "minecraft:flower_forest",
+      "minecraft:sunflower_plains",
+      "minecraft:meadow"
+    ]
+  },
+  "spawners": {
+    "type": "toneko:adventurer_neko",
+    "weight": 50,
+    "minCount": 1,
+    "maxCount": 3
+  }
+}

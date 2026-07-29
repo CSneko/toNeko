@@ -1,0 +1,28 @@
+{
+  "name": "猫猫收集器",
+  "category": "toneko:intro",
+  "icon": "toneko:neko_collector",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "toneko:neko_collector",
+      "text": "$(item)猫猫收集器$() 是你猫娘之旅的 $(#FF69B4)第一件关键道具$()。$(br2)它能够吸收附近猫娘和猫的能量，并将其储存起来——集满后就能产出一瓶 $(thing)猫娘药水$()！"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "toneko:neko_collector",
+      "text": "收集器的合成需要一些基础材料：$(item)木棍$() 和 $(item)玻璃$()。$(br2)制作并不复杂，快去收集材料吧~"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "如何使用",
+      "text": "$(item)猫猫收集器$() 的使用方式非常简单——$(#FF69B4)只需要拿在手上就行了$()！$(br2)只要你的附近有 $(thing)猫娘$() 或 $(thing)猫$()，收集器就会自动吸收它们的能量，进度条会慢慢上涨。你不需要右键点击任何生物，站在它们身边就够了喵~$(br2)进度条总共需要积攒 $(#FF69B4)5000 点$() 能量。"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "产出猫娘药水",
+      "text": "当收集器的能量条满了之后，它会自动消耗储存的能量，产出一瓶 $(item)猫娘药水$()。$(br2)拿到药水后，喝下它，你就正式成为一名猫娘啦！$(br2)收集器可以反复使用，用完一次后能量条归零，继续吸收能量就能再次产出药水。$(br2)$(#FFB6C1)小提示：多和猫娘们待在一起，收集速度会更快哦~$()"
+    }
+  ]
+}

@@ -165,5 +165,8 @@
   "item.toneko.fly_sword.tooltip.3": "§e  금 §7= +1한도  |  §4네더라이트 §7= 속도",
   "item.toneko.fly_sword.tooltip.4": "§8  석탄 §7= 연료(탑승 중 들기)",
   "item.toneko.fly_sword.tooltip.5": "§7좌클릭으로 회수",
-  "entity.toneko.fly_sword": "비검"
+  "entity.toneko.fly_sword": "비검",
+  "key.toneko.climb": "벽 타기",
+  "messages.toneko.climb.no_energy": "§c네코 에너지가 부족합니다!",
+  "messages.toneko.climb.no_wall": "근처에 오를 수 있는 벽이 없습니다"
 }

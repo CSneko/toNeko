@@ -17,6 +17,11 @@ import org.cneko.toneko.common.mod.client.screens.NekoInfoScreen;
 import org.cneko.toneko.common.mod.client.screens.RouletteScreen;
 import org.cneko.toneko.common.mod.client.screens.ToNekoHubScreen;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
+import org.cneko.toneko.common.mod.items.NekoMultiToolItem;
+import org.cneko.toneko.common.mod.abilities.ClimbWallHandler;
+import org.cneko.toneko.common.mod.packets.NekoMultiToolModePayload;
+import org.cneko.toneko.common.mod.packets.ClimbWallPayload;
+import org.cneko.toneko.common.mod.packets.NekoStealthPayload;
 import org.cneko.toneko.common.mod.packets.interactives.DismountPassengerPayload;
 import org.cneko.toneko.common.mod.util.EntityUtil;
 
@@ -77,9 +82,86 @@ public class ClientTickEvent {
         while (ToNekoKeyBindings.CHAT_WITH_NEKO_KEY.consumeClick()) {
             openChatWithNearestNeko(client);
         }
+        while (ToNekoKeyBindings.MULTI_TOOL_RANGE_KEY.consumeClick()) {
+            if (client.player != null && client.player.getMainHandItem().getItem() instanceof NekoMultiToolItem) {
+                ClientPlayNetworking.send(new NekoMultiToolModePayload(0));
+            }
+        }
+        // 猫爪爬墙：检测 R 键状态变化 + 方向变化
+        boolean isClimbKeyDown = ToNekoKeyBindings.CLIMB_KEY.isDown();
+        boolean canClimb = isClimbKeyDown && client.player != null
+                && ClimbWallHandler.isAgainstWall(client.player);
+        if (canClimb) {
+            // 按住 R 且靠墙：检查方向输入 (W/空格=上, S/Shift=下)
+            float verticalInput = getClimbVerticalInput(client);
+            // R 刚按下 或 方向发生变化时发送更新
+            if (!wasClimbKeyDown || verticalInput != lastSentVerticalInput) {
+                lastSentVerticalInput = verticalInput;
+                ClientPlayNetworking.send(new ClimbWallPayload(true, verticalInput));
+            }
+            // 客户端爬墙位移预测
+            double speed;
+            if (verticalInput > 0.5f) {
+                speed = 0.12;
+            } else if (verticalInput < -0.5f) {
+                speed = -0.08;
+            } else {
+                speed = 0;
+            }
+            client.player.setPos(client.player.getX(), client.player.getY() + speed, client.player.getZ());
+            client.player.fallDistance = 0;
+            client.player.setDeltaMovement(0, 0, 0);
+        } else if (wasClimbKeyDown) {
+            // R 释放 或 离开墙壁：发送停止
+            lastSentVerticalInput = 0;
+            if (client.player != null) {
+                ClientPlayNetworking.send(new ClimbWallPayload(false, 0));
+            }
+        }
+        wasClimbKeyDown = isClimbKeyDown;
+        // 猫娘潜行：切换开关
+        while (ToNekoKeyBindings.STEALTH_KEY.consumeClick()) {
+            wasStealthActive = !wasStealthActive;
+            if (client.player != null) {
+                ClientPlayNetworking.send(new NekoStealthPayload(wasStealthActive));
+                client.player.displayClientMessage(
+                        Component.translatable(wasStealthActive
+                                ? "messages.toneko.stealth.enabled"
+                                : "messages.toneko.stealth.disabled"),
+                        true);
+            }
+        }
     }
 
-    private static void openChatWithNearestNeko(Minecraft client) {
+    public static boolean isStealthActive() {
+        return wasStealthActive;
+    }
+    public static void toggleStealth(boolean active) {
+        wasStealthActive = active;
+        if (Minecraft.getInstance().player != null) {
+            Minecraft.getInstance().player.displayClientMessage(
+                    Component.translatable(active
+                            ? "messages.toneko.stealth.enabled"
+                            : "messages.toneko.stealth.disabled"),
+                    true);
+        }
+    }
+
+    private static boolean wasClimbKeyDown = false;
+    private static float lastSentVerticalInput = 0;
+    private static boolean wasStealthActive = false;
+
+    /** 获取爬墙垂直方向：W 或 空格=向上(1), S 或 Shift=向下(-1), 无=悬挂(0) */
+    private static float getClimbVerticalInput(Minecraft client) {
+        if (client.options == null) return 0;
+        boolean up = client.options.keyUp.isDown() || client.options.keyJump.isDown();
+        boolean down = client.options.keyDown.isDown() || client.options.keyShift.isDown();
+        if (up && !down) return 1.0f;
+        if (down && !up) return -1.0f;
+        return 0;
+    }
+
+    public static void openChatWithNearestNeko(Minecraft client) {
         if (client.player == null || client.level == null) return;
 
         // Try to find a neko the player is looking at

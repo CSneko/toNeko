@@ -1,0 +1,18 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": {
+    "type": "neoforge:or",
+    "values": [
+      "#minecraft:is_forest",
+      "#minecraft:is_taiga",
+      "#minecraft:is_hill",
+      "minecraft:plains",
+      "minecraft:sunflower_plains",
+      "minecraft:cherry_grove",
+      "minecraft:flower_forest",
+      "minecraft:meadow"
+    ]
+  },
+  "features": ["toneko:patch_wild_catnip"],
+  "step": "vegetal_decoration"
+}

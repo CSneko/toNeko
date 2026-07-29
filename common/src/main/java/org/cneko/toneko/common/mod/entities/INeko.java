@@ -12,6 +12,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import org.cneko.toneko.common.mod.api.NekoLevelFactor;
 import org.cneko.toneko.common.mod.api.NekoLevelRegistry;
+import org.cneko.toneko.common.mod.items.NekoEnergyBatteryItem;
 import org.cneko.toneko.common.mod.misc.Messaging;
 import org.cneko.toneko.common.mod.misc.ToNekoAttributes;
 import org.cneko.toneko.common.mod.quirks.Quirk;
@@ -174,6 +175,18 @@ public interface INeko {
         this.getQuirks().removeIf(quirk -> QuirkRegister.hasQuirk(quirk.getId()));
     }
 
+    // ---- 已访问群系 ----
+    default Set<String> getVisitedBiomes() {
+        return Set.of();
+    }
+    default void addVisitedBiome(String biomeKey) {
+        // no-op — PlayerEntityMixin overrides with real storage
+    }
+    default void setVisitedBiomes(Set<String> biomes) {
+        // no-op — PlayerEntityMixin overrides with real storage
+    }
+    // --------------------
+
 
     default void saveNekoNBTData(@NotNull CompoundTag nbt){
         nbt.putBoolean("IsNeko", this.isNeko());
@@ -194,6 +207,12 @@ public interface INeko {
         nbt.putInt("NekoAge", this.getNekoAge());
         nbt.putString("NickName", this.getNickName());
         nbt.put("Owners", owners);
+        // 保存已访问群系
+        ListTag visitedBiomesList = new ListTag();
+        for (String biomeKey : this.getVisitedBiomes()) {
+            visitedBiomesList.add(StringTag.valueOf(biomeKey));
+        }
+        nbt.put("VisitedBiomes", visitedBiomesList);
     }
     default void loadNekoNBTData(@NotNull CompoundTag nbt){
         if(nbt.contains("IsNeko")){
@@ -235,12 +254,22 @@ public interface INeko {
         if (nbt.contains("NickName")){
             this.setNickName(this.getNickName());
         }
+        // 加载已访问群系
+        if (nbt.contains("VisitedBiomes")) {
+            ListTag list = nbt.getList("VisitedBiomes", ListTag.TAG_STRING);
+            Set<String> biomes = new HashSet<>();
+            for (int i = 0; i < list.size(); i++) {
+                biomes.add(list.getString(i));
+            }
+            this.setVisitedBiomes(biomes);
+        }
     }
 
     ResourceLocation ATTACK_MODIFIER_ID = toNekoLoc("neko_level_attack_modifier");
     ResourceLocation MAX_NEKO_ENERGY_MODIFIER_ID = toNekoLoc("neko_level_max_neko_energy_modifier");
     ResourceLocation MAX_HEALTH_MODIFIER_ID = toNekoLoc("neko_level_max_health_modifier");
     ResourceLocation AGE_SCALE_MODIFIER_ID = toNekoLoc("neko_age_scale_modifier");
+    ResourceLocation FALL_DAMAGE_MODIFIER_ID = toNekoLoc("neko_level_fall_damage_modifier");
 
     /**
      * 根据年龄计算缩放因子，从幼年的 0.3 线性过渡到成年的 1.0
@@ -280,6 +309,15 @@ public interface INeko {
                 this.getNekoAgeScale() - 1.0,
                 AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
         );
+
+        // 摔落减伤：每级 0.5%，上限 80%（Lv160 达到上限）
+        double fallReduction = Math.min(nekoLevel * 0.005, 0.8);
+        applyModifier(
+                this.getEntity().getAttribute(Attributes.FALL_DAMAGE_MULTIPLIER),
+                FALL_DAMAGE_MODIFIER_ID,
+                -fallReduction,
+                AttributeModifier.Operation.ADD_MULTIPLIED_BASE
+        );
     }
 
     static void applyModifier(AttributeInstance attr, ResourceLocation id, double bonus) {
@@ -306,13 +344,8 @@ public interface INeko {
     }
 
     default void increaseEnergy(){
-        // 如果满了，则忽略
         float max = this.getMaxNekoEnergy();
         float energy = this.getNekoEnergy();
-        if (energy >= max){
-            this.setNekoEnergy(max);
-            return;
-        }
         // 根据自身猫猫等级来增加
         float increase = (float) (this.getNekoAbility() * 0.1);
         // 根据周围猫猫数量来增加
@@ -322,10 +355,13 @@ public interface INeko {
                 increase += (float) (neko.getNekoAbility() * 0.05);
             }
         }
-        this.setNekoEnergy(energy + increase);
-        if (this.getNekoEnergy() >= max){
-            this.setNekoEnergy(max);
+        float newEnergy = energy + increase;
+        if (newEnergy > max) {
+            float excess = newEnergy - max;
+            NekoEnergyBatteryItem.chargeBatteries(this.getEntity(), excess);
+            newEnergy = max;
         }
+        this.setNekoEnergy(newEnergy);
     }
 
     default void sendMessageToTarget(String message, Entity target){
@@ -334,6 +370,13 @@ public interface INeko {
     default void sendMessageToAll(String message){
         Messaging.modifyAndSendMessageToAll(this, message);
     }
+
+    // ---- 猫娘潜行 ----
+    default boolean isStealthActive() { return false; }
+    default void setStealthActive(boolean active) {}
+    /** 攻击后暂时解除潜行 */
+    default void breakStealth() {}
+    // --------------------
 
     record BlockedWord(String block, String replace, BlockMethod method) {
             @Getter

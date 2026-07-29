@@ -1,0 +1,28 @@
+{
+  "name": "Adventurer Neko",
+  "category": "toneko:neko_types",
+  "icon": "toneko:adventurer_neko_spawn_egg",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:entity",
+      "entity": "toneko:adventurer_neko",
+      "text": "The Adventurer Neko is the most common neko type in the wild. Hardworking and capable, she's a $(#FF69B4)great farming helper$()."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Farming Expert",
+      "text": "The Adventurer Neko has a unique ability: $(#FF69B4)auto-harvesting and replanting crops$().$(br2)She actively seeks out mature crops nearby, harvests them, and takes seeds from her inventory to replant on farmland.$(br2)Harvested crops are also $(#FF69B4)deposited into nearby chests$() — just like a thoughtful little housekeeper!$(br2)This ability consumes her $(thing)Gathering Power$() — which is earned through gifts from players."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Weapon Smith",
+      "text": "The Adventurer Neko is also a weapon smith! She can $(#FF69B4)auto-craft weapons$() from materials in her inventory:$(br2)$(li)First choice: $(item)Diamond Sword$()$(li)No diamonds? $(item)Iron Sword$()$(li)No iron? $(item)Stone Sword$()$(li)At minimum: $(item)Wooden Sword$()$(br2)Let her guard your home — she's absolutely reliable~"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Spawning & Likes",
+      "text": "Adventurer Nekos like to live in: mountains, forests, taiga, jungles, savannas, plains, rivers, and beaches.$(br2)They appear more frequently in $(#FF69B4)cherry groves$(), $(#FF69B4)flower forests$(), $(#FF69B4)sunflower plains$(), and $(#FF69B4)meadows$().$(br2)Her favorite gifts: $(item)Swords$(), all kinds of $(item)Armor$(), and $(item)Catnip$(). Gifting these will greatly boost her affection!"
+    }
+  ]
+}

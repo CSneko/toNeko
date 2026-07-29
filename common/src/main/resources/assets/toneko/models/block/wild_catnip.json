@@ -1,0 +1,6 @@
+{
+  "parent": "block/crop",
+  "textures": {
+    "crop": "toneko:block/catnip/catnip_stage7"
+  }
+}

@@ -16,6 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import org.cneko.toneko.common.mod.client.ToNekoKeyBindings;
+import org.cneko.toneko.common.mod.client.events.ClientTickEvent;
 import org.cneko.toneko.common.mod.entities.FlySwordEntity;
 import org.cneko.toneko.common.mod.effects.ToNekoEffects;
 import org.joml.Matrix4f;
@@ -33,6 +34,10 @@ public class HudRenderEvent {
             Player player = Minecraft.getInstance().player;
             if (player == null) return;
             renderNekoEnergyBar(guiGraphics);
+            // 潜行模式指示器
+            if (ClientTickEvent.isStealthActive()) {
+                renderStealthIndicator(guiGraphics);
+            }
             // 检查玩家是否有魅惑效果
             if (player.hasEffect(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(ToNekoEffects.BEWITCHED_EFFECT))) {
                 renderBewitchedOverlay(guiGraphics,player);
@@ -205,6 +210,28 @@ public class HudRenderEvent {
                 0, 0,
                 iconSize, iconSize,
                 iconSize, iconSize);
+    }
+
+    /** 潜行模式指示器：屏幕右下角能量条上方显示状态文字 */
+    private static void renderStealthIndicator(GuiGraphics context) {
+        Minecraft client = Minecraft.getInstance();
+        if (client.options.hideGui || client.player == null) return;
+
+        int width = context.guiWidth();
+        int height = context.guiHeight();
+        int margin = 10;
+
+        boolean crouching = client.player.isCrouching();
+        String text = crouching
+                ? Component.translatable("hud.toneko.stealth.active").getString()
+                : Component.translatable("hud.toneko.stealth.idle").getString();
+        int color = crouching ? 0xFF55FF55 : 0xFFAAAAAA;
+
+        int textWidth = client.font.width(text);
+        int x = width - margin - textWidth;
+        int y = height - margin - 12; // 能量条上方
+
+        context.drawString(client.font, text, x, y, color);
     }
 
     private static void renderFlySwordHUD(GuiGraphics g, FlySwordEntity entity) {

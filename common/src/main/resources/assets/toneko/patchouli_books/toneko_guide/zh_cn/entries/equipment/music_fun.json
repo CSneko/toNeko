@@ -1,0 +1,22 @@
+{
+  "name": "音乐与彩蛋",
+  "category": "toneko:equipment",
+  "icon": "toneko:music_disc_kawaii",
+  "sortnum": 4,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "猫娘世界不仅有战斗和冒险，还有美妙的音乐和有趣的彩蛋等着你发现~"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "toneko:music_disc_kawaii",
+      "text": "$(item)Kawaii 音乐唱片$() 是一张由 homewool 创作的可爱风格唱片，时长 $(#FF69B4)121 秒$()。$(br2)这张唱片 $(#FF69B4)无法直接合成$()——你需要向猫娘 NPC 送礼，有几率作为回礼获得。$(br2)放进唱片机里，让猫娘世界充满可爱的旋律吧~"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "toneko:furry_bohe",
+      "text": "$(item)兽薄荷$()（Furry Bohe）是一个 $(#FF69B4)彩蛋物品$()。$(br2)在收获成熟的 $(item)猫薄荷$() 作物时，有极小的概率（约 5%）额外掉落。$(br2)物品提示写着\"Also try Furry Bohe\"——至于它到底有什么用途……也许是某个神秘社区的暗号？$(br2)$(#FFB6C1)神秘的东西，总是让人好奇呢~$()"
+    }
+  ]
+}

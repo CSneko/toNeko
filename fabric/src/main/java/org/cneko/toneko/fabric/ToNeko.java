@@ -1,9 +1,17 @@
 package org.cneko.toneko.fabric;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
+import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
+import net.minecraft.tags.BiomeTags;
+import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.world.level.levelgen.GenerationStep;
 import org.cneko.toneko.common.Bootstrap;
 import org.cneko.toneko.common.mod.ModBootstrap;
 import org.cneko.toneko.common.mod.ModMeta;
@@ -19,10 +27,13 @@ import org.cneko.toneko.common.mod.util.PermissionUtil;
 import org.cneko.toneko.common.util.LanguageUtil;
 import org.cneko.toneko.fabric.entities.ToNekoEntities;
 import org.cneko.toneko.common.mod.misc.ToNekoAttributes;
+import org.cneko.toneko.fabric.msic.ChestLootInjection;
 import org.cneko.toneko.fabric.msic.ToNekoCriteriaFabric;
 import org.cneko.toneko.fabric.msic.ToNekoEffectFabric;
 import org.cneko.toneko.fabric.msic.ToNekoMenuTypes;
 import org.cneko.toneko.fabric.msic.ToNekoRecipes;
+
+import static org.cneko.toneko.common.Bootstrap.MODID;
 
 public class ToNeko implements ModInitializer {
     @Override
@@ -44,11 +55,28 @@ public class ToNeko implements ModInitializer {
         // 注册实体
         ToNekoEntities.init();
 
+        // 注册野生猫薄荷的群系生成
+        BiomeModifications.addFeature(
+                BiomeSelectors.tag(BiomeTags.IS_FOREST)
+                        .or(BiomeSelectors.tag(BiomeTags.IS_TAIGA))
+                        .or(BiomeSelectors.tag(BiomeTags.IS_HILL))
+                        .or(BiomeSelectors.includeByKey(Biomes.PLAINS))
+                        .or(BiomeSelectors.includeByKey(Biomes.SUNFLOWER_PLAINS))
+                        .or(BiomeSelectors.includeByKey(Biomes.CHERRY_GROVE))
+                        .or(BiomeSelectors.includeByKey(Biomes.FLOWER_FOREST))
+                        .or(BiomeSelectors.includeByKey(Biomes.MEADOW)),
+                GenerationStep.Decoration.VEGETAL_DECORATION,
+                ResourceKey.create(Registries.PLACED_FEATURE,
+                        ResourceLocation.fromNamespaceAndPath(MODID, "patch_wild_catnip"))
+        );
+
         // 注册装备
         ToNekoArmorMaterials.init();
         // 注册物品
         ToNekoBlocks.init();
         ToNekoItems.init();
+        // 注册箱子战利品注入
+        ChestLootInjection.init();
         // 注册状态
         ToNekoEffectFabric.init();
         // 注册属性

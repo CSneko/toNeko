@@ -30,6 +30,9 @@ public class ServerPlayerEntityMixin {
 
         newNeko.getQuirks().clear();
         newNeko.getQuirks().addAll(oldPlayer.getQuirks());
+
+        newNeko.getVisitedBiomes().clear();
+        newNeko.getVisitedBiomes().addAll(oldPlayer.getVisitedBiomes());
     }
 
     @Inject(method = "stopRiding" , at = @At("HEAD"),cancellable = true)

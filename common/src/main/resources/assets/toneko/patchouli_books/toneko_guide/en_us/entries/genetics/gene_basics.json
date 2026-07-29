@@ -1,0 +1,27 @@
+{
+  "name": "Genetics Primer",
+  "category": "toneko:genetics",
+  "icon": "minecraft:knowledge_book",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "toNeko's genetics system follows $(#FF69B4)Mendelian inheritance$().$(br2)If you remember the pea plant experiments from biology class — yes, that's exactly the principle! Each neko inherits half their genes from each parent, with dominant genes suppressing recessive ones."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Gene Structure Hierarchy",
+      "text": "A neko's genes are organized in these layers:$(br2)$(li)$(#FF69B4)Allele$(): the smallest hereditary unit, determines a specific trait (like \"fast\" or \"slow\")$(li)$(#FF69B4)Locus$(): each locus holds one allele, like a \"slot\"$(li)$(#FF69B4)Chromosome Pair$(): a chromosome contains multiple loci, paired up$(li)$(#FF69B4)Karyotype$(): a neko's complete chromosome map — $(#FF69B4)9 chromosome pairs$() in total"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Dominance & Recessiveness",
+      "text": "Each locus has a pair of alleles (one from each parent), but only the $(#FF69B4)more dominant one$() gets expressed.$(br2)$(li)High-dominance genes (e.g. 20) override low-dominance genes (e.g. 5~10)$(li)$(thing)Wild Type$() has dominance 10 — most nekos carry it by default, producing no effect$(li)Some rare traits (large body, resistances, luck, large chest) have only dominance 5, making them $(#FF69B4)recessive$() — only expressed when two recessive genes meet$(li)When dominance is equal, expression is $(#FF69B4)randomly chosen$()"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Inheritance Process",
+      "text": "Here's how genes are passed down during breeding:$(br2)$(li)Parents each produce a gamete through $(#FF69B4)meiosis$() — one chromosome randomly chosen from each pair$(li)Paternal gamete + maternal gamete $(#FF69B4)combine$(), forming the offspring's chromosome pairs$(li)Offspring genome = half from father + half from mother$(br2)Since each chromosome pair is chosen independently, the offspring's trait combinations can vary wildly — this is the \"independent assortment\" of Mendel's laws in action!"
+    }
+  ]
+}

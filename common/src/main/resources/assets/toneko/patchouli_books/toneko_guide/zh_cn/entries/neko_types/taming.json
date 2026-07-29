@@ -1,0 +1,28 @@
+{
+  "name": "如何驯服猫娘",
+  "category": "toneko:neko_types",
+  "icon": "toneko:contract",
+  "sortnum": 4,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "toneko:contract",
+      "text": "$(item)契约书$() 是驯服猫娘的关键道具。$(br2)与猫娘签订契约后，你就成为她的 $(#FF69B4)主人$()，她将愿意跟随你、保护你、与你一起冒险。"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "toneko:contract",
+      "text": "契约书由 $(item)猫薄荷$() 和 $(item)纸$() 合成。$(br2)3×3 的猫薄荷围绕一张纸——这就是猫娘契约的仪式感喵~"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "签订契约",
+      "text": "使用方法很简单：$(#FF69B4)手持契约书右键猫娘$() 即可。$(br2)签订契约需要消耗你 $(#FF69B4)30 级经验值$()——这代表你愿意为这段羁绊付出代价。$(br2)签订成功后，猫娘就会认可你为主人。你可以为她 $(thing)取别名$()、查看她的 $(thing)信息面板$()、让她 $(thing)跟随或停留$()。"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "注意事项",
+      "text": "$(li)一只猫娘可以有 $(#FF69B4)多位主人$()，每位主人都会留下独立的记录和好感度（XP）追踪。$(li)拥有 $(#FF69B4)雌小鬼$()（mesugaki）萌属性的猫娘天生叛逆，普通契约书对她无效——需要给契约书附上 $(thing)Enforcement$()（强制）附魔才能驯服。$(br2)$(#FFB6C1)驯服只是开始，真正的羁绊需要日积月累的陪伴~$()"
+    }
+  ]
+}

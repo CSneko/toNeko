@@ -14,6 +14,8 @@ public class ToNekoBlocks {
     public static void init(){
         CATNIP = Registry.register(BuiltInRegistries.BLOCK, ResourceLocation.fromNamespaceAndPath(MODID, "catnip"),
                 new CatnipBlock());
+        WILD_CATNIP = Registry.register(BuiltInRegistries.BLOCK, ResourceLocation.fromNamespaceAndPath(MODID, "wild_catnip"),
+                new WildCatnipBlock());
         NEKO_AGGREGATOR = Registry.register(BuiltInRegistries.BLOCK, ResourceLocation.fromNamespaceAndPath(MODID, "neko_aggregator"),
                 new NekoAggregatorBlock(BlockBehaviour.Properties.of().strength(5.0f).requiresCorrectToolForDrops()));
         NEKO_BLOCK = Registry.register(BuiltInRegistries.BLOCK, ResourceLocation.fromNamespaceAndPath(MODID, "neko_block"),
