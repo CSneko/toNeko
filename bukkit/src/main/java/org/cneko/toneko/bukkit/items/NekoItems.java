@@ -47,22 +47,22 @@ public class NekoItems implements Listener {
     // === Item creation ===
 
     public static void giveCollector(Player player) {
-        ItemStack item = CraftEngineIntegration.createItem("neko_collector", createCollector(0), player);
+        ItemStack item = createCollector(0);
         player.getInventory().addItem(item);
     }
 
     public static void giveCatnip(Player player) {
-        ItemStack item = CraftEngineIntegration.createItem("catnip", createCatnipItem(), player);
+        ItemStack item = createCatnipItem();
         player.getInventory().addItem(item);
     }
 
     public static void giveCatnipSeed(Player player) {
-        ItemStack item = CraftEngineIntegration.createItem("catnip_seed", createCatnipSeedItem(), player);
+        ItemStack item = createCatnipSeedItem();
         player.getInventory().addItem(item);
     }
 
     public static void givePotion(Player player) {
-        ItemStack item = CraftEngineIntegration.createItem("neko_potion", createPotionItem(), player);
+        ItemStack item = createPotionItem();
         player.getInventory().addItem(item);
     }
 

@@ -28,8 +28,7 @@ repositories {
 }
 
 dependencies {
-    implementation("maven.modrinth:craftengine:26.7.3")
-    compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
+compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
     implementation(project(":common")) {
         exclude("dev.architectury", "architectury-transformer")
         exclude("software.bernie.geckolib")
@@ -87,8 +86,7 @@ tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
 
     dependencies {
         exclude(dependency(".*:.*"))
-        exclude(dependency("maven.modrinth:craftengine:.*"))
-        exclude("mappings.tiny")
+exclude("mappings.tiny")
         exclude("**/mappings.tiny")
     }
 

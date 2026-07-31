@@ -1,9 +1,9 @@
 {
-  "parent": "minecraft:toneko/neko_lv50",
+  "parent": "minecraft:toneko/neko_lv10",
   "criteria": {
-    "neko_lv100": {
+    "neko_lv50": {
       "conditions": {
-        "level": 100.0
+        "level": 50.0
       },
       "trigger": "minecraft:toneko/neko_lv100"
     }
@@ -11,20 +11,20 @@
   "display": {
     "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
     "description": {
-      "translate": "advancements.toneko.neko_lv100.description"
+      "translate": "advancements.toneko.neko_lv50.description"
     },
-    "frame": "challenge",
+    "frame": "goal",
     "icon": {
       "count": 1,
-      "id": "toneko:neko_tail"
+      "id": "toneko:neko_diamond"
     },
     "title": {
-      "translate": "advancements.toneko.neko_lv100.title"
+      "translate": "advancements.toneko.neko_lv50.title"
     }
   },
   "requirements": [
     [
-      "neko_lv100"
+      "neko_lv50"
     ]
   ],
   "sends_telemetry_event": true

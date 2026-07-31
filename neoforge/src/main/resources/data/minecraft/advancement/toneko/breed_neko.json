@@ -1,0 +1,28 @@
+{
+  "parent": "minecraft:toneko/tame_neko",
+  "criteria": {
+    "breed_neko": {
+      "trigger": "minecraft:toneko/neko_breed"
+    }
+  },
+  "display": {
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "description": {
+      "translate": "advancements.toneko.breed_neko.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "toneko:deage_treat"
+    },
+    "title": {
+      "translate": "advancements.toneko.breed_neko.title"
+    }
+  },
+  "requirements": [
+    [
+      "breed_neko"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

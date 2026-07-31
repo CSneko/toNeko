@@ -10,7 +10,6 @@ import org.cneko.toneko.bukkit.events.NetworkingEvents;
 import org.cneko.toneko.bukkit.events.PlayerConnectionEvents;
 import org.cneko.toneko.bukkit.events.QuirkEventHandler;
 import org.cneko.toneko.bukkit.events.WorldEvents;
-import org.cneko.toneko.bukkit.items.CraftEngineIntegration;
 import org.cneko.toneko.bukkit.items.NekoItems;
 import org.cneko.toneko.bukkit.msic.Metrics;
 import org.cneko.toneko.bukkit.util.BukkitSchedulerPool;
@@ -75,7 +74,6 @@ public class ToNeko extends JavaPlugin {
         WorldEvents.init();
         NetworkingEvents.init();
         QuirkEventHandler.init();
-        CraftEngineIntegration.init();
         NekoItems.init();
         // event end
 

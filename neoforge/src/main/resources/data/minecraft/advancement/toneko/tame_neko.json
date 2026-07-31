@@ -1,0 +1,28 @@
+{
+  "parent": "minecraft:toneko/first_gift",
+  "criteria": {
+    "tame_neko": {
+      "trigger": "minecraft:toneko/tame_neko"
+    }
+  },
+  "display": {
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "description": {
+      "translate": "advancements.toneko.tame_neko.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "toneko:contract"
+    },
+    "title": {
+      "translate": "advancements.toneko.tame_neko.title"
+    }
+  },
+  "requirements": [
+    [
+      "tame_neko"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

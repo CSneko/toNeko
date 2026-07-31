@@ -61,10 +61,12 @@ public class EnergyManager {
             NekoQuery.Neko neko = NekoQuery.getNeko(p.getUniqueId());
             if (neko == null || !neko.isNeko()) continue;
             if (ClientStatus.isInstalled(p)) {
-                // Send full info: energy, level factors (approximated from neko level), isNeko, age
+                // Send full info: energy, 6 level factors (approximated from neko level), isNeko, age
+                // factor order: interaction(C=300), combat(C=60), base(direct), exploration(C=200), fishing(C=100), homestead(C=180)
                 double level = neko.getLevel();
                 PayloadSender.sendNekoInfoSync(p, neko.getNekoEnergy(), neko.getMaxNekoEnergy(),
-                        level * 0.4, level * 0.2, level * 0.4,
+                        level * 0.3, level * 0.1, level * 0.2,
+                        level * 0.15, level * 0.1, level * 0.15,
                         true, neko.getNekoAge());
             }
         }

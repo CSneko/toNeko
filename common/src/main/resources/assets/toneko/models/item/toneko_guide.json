@@ -1,6 +1,6 @@
 {
-  "parent": "patchouli:item/book",
+  "parent": "item/generated",
   "textures": {
-    "book": "patchouli:textures/gui/book_purple"
+    "layer0": "toneko:item/toneko_guide"
   }
 }

@@ -1,0 +1,28 @@
+{
+  "parent": "minecraft:toneko/become_neko",
+  "criteria": {
+    "climb_wall": {
+      "trigger": "minecraft:toneko/neko_climb"
+    }
+  },
+  "display": {
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "description": {
+      "translate": "advancements.toneko.climb_wall.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "toneko:neko_paws"
+    },
+    "title": {
+      "translate": "advancements.toneko.climb_wall.title"
+    }
+  },
+  "requirements": [
+    [
+      "climb_wall"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

@@ -1,0 +1,28 @@
+{
+  "parent": "minecraft:toneko/become_neko",
+  "criteria": {
+    "nine_lives": {
+      "trigger": "minecraft:toneko/nine_lives"
+    }
+  },
+  "display": {
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "description": {
+      "translate": "advancements.toneko.nine_lives.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "toneko:nine_lives_charm"
+    },
+    "title": {
+      "translate": "advancements.toneko.nine_lives.title"
+    }
+  },
+  "requirements": [
+    [
+      "nine_lives"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

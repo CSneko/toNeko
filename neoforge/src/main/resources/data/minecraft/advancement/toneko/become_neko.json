@@ -1,0 +1,28 @@
+{
+  "parent": "minecraft:toneko/got_neko_potion",
+  "criteria": {
+    "become_neko": {
+      "trigger": "minecraft:toneko/neko_become"
+    }
+  },
+  "display": {
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "description": {
+      "translate": "advancements.toneko.become_neko.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "toneko:neko_potion"
+    },
+    "title": {
+      "translate": "advancements.toneko.become_neko.title"
+    }
+  },
+  "requirements": [
+    [
+      "become_neko"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

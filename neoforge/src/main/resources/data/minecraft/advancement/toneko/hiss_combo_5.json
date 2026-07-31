@@ -1,0 +1,31 @@
+{
+  "parent": "minecraft:toneko/hiss_first_use",
+  "criteria": {
+    "hiss_combo_5": {
+      "conditions": {
+        "combo": 5
+      },
+      "trigger": "minecraft:toneko/hiss_combo"
+    }
+  },
+  "display": {
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "description": {
+      "translate": "advancements.toneko.hiss_combo_5.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "toneko:neko_energy_burst"
+    },
+    "title": {
+      "translate": "advancements.toneko.hiss_combo_5.title"
+    }
+  },
+  "requirements": [
+    [
+      "hiss_combo_5"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

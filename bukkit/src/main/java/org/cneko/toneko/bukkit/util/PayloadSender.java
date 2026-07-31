@@ -33,12 +33,14 @@ public class PayloadSender {
 
     public static void sendNekoInfoSync(Player player, float energy, float maxEnergy,
                                          double interactionRaw, double combatRaw, double baseRaw,
+                                         double explorationRaw, double fishingRaw, double homesteadRaw,
                                          boolean isNeko, int age) {
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             DataOutputStream out = new DataOutputStream(bos);
             out.writeFloat(energy); out.writeFloat(maxEnergy);
             out.writeDouble(interactionRaw); out.writeDouble(combatRaw); out.writeDouble(baseRaw);
+            out.writeDouble(explorationRaw); out.writeDouble(fishingRaw); out.writeDouble(homesteadRaw);
             out.writeBoolean(isNeko); out.writeInt(age);
             out.flush();
             send(player, "toneko:neko_info_sync", bos.toByteArray());
@@ -46,7 +48,7 @@ public class PayloadSender {
     }
 
     public static void sendNekoInfoUpdate(Player player, float energy, float maxEnergy, boolean isNeko, int age) {
-        sendNekoInfoSync(player, energy, maxEnergy, 0, 0, 0, isNeko, age);
+        sendNekoInfoSync(player, energy, maxEnergy, 0, 0, 0, 0, 0, 0, isNeko, age);
     }
 
     public static void sendManagementData(Player player, byte[] nbtData) {
