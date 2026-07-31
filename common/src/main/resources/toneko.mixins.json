@@ -9,9 +9,11 @@
     "client.SoundEngineMixin"
   ],
   "mixins": [
+    "BlockPlaceMixin",
     "CatEntityMixin",
     "CreeperMixin",
     "EntityMixin",
+    "FishingHookMixin",
     "PlayerEntityMixin",
     "ServerLevelMixin",
     "ServerPlayerEntityMixin"

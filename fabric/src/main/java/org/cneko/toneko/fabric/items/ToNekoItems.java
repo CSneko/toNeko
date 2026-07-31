@@ -201,6 +201,11 @@ public class ToNekoItems {
             content.accept(NEKO_BELL);
             content.accept(NEKO_ENERGY_BATTERY);
             content.accept(NEKO_ENERGY_BATTERY_LARGE);
+            // 猫猫手册（Patchouli 指南书）
+            ItemStack guideBook = GuideBookItem.createGuideBookStack();
+            if (!guideBook.isEmpty()) {
+                content.accept(guideBook);
+            }
         });
     }
 

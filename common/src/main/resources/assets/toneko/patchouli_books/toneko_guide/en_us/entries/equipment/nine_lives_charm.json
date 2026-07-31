@@ -1,0 +1,33 @@
+{
+  "name": "Nine Lives Charm",
+  "category": "toneko:equipment",
+  "icon": "toneko:nine_lives_charm",
+  "sortnum": 6,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "toneko:nine_lives_charm",
+      "text": "The $(item)Nine Lives Charm$() is a $(#FF69B4)rare talisman$() — cats are said to have nine lives, and now you can too!$(br2)When you take fatal damage, the charm automatically activates to $(#FF69B4)prevent death$() and restore some of your health. Each activation consumes 1 \"life\", with $(#FF69B4)9 lives$() in total.$(br2)The durability bar tracks your remaining lives — once depleted, the charm vanishes meow~"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "For Neko Players",
+      "text": "As a $(#FF69B4)Neko$(), the charm works from $(thing)anywhere in your inventory$()（including offhand）.$(br2)Each activation costs $(thing)Neko Energy$(), scaling with lives used:$(li)1st life: $(#FF69B4)150$() energy$(li)Each subsequent life adds +20$(li)9th life: $(#FF69B4)310$() energy$(br2)If you don't have enough energy, the charm won't trigger even if it still has lives — keep your energy topped up!"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "For Non-Neko Players",
+      "text": "Players who haven't become a neko can still use the Nine Lives Charm, but with stricter conditions:$(br2)$(li)Must be placed in the $(#FF69B4)offhand slot$()$(li)A $(item)Charged Neko Energy Stone$()（any size）must be in your inventory$(li)Triggering $(#FF69B4)consumes 1 Charged Energy Stone$()$(br2)The system prioritizes the smallest-capacity stone first — no wasting big ones~"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Resurrection Effects",
+      "text": "Upon activation（slightly weaker than a vanilla $(item)Totem of Undying$()）：$(br2)$(li)$(#FF69B4)Clears$() all status effects（both good and bad）$(li)Restores $(#FF69B4)30%$() of max health$(li)$(thing)Regeneration II$() — 45s of gradual healing$(li)$(thing)Absorption II$() — 5s of extra golden hearts$(li)$(thing)Fire Resistance I$() — 40s of fire immunity$(li)$(thing)Brief invulnerability$() — 1s damage immunity$(br2)Triggers Totem of Undying particles and sound, with a server-wide broadcast~"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Usage Strategy",
+      "text": "The Nine Lives Charm isn't invincibility — it just gives you a $(#FF69B4)second chance$(). At 30% HP after revival, you could die again quickly if still in danger.$(br2)Recommended combos:$(li)$(item)Neko Energy Battery$() — ensures energy supply$(li)$(item)Catnip$() — quick energy boost$(li)$(item)Golden Apple$() — instant HP recovery after revival$(br2)$(#FFB6C1)Remember: nine lives doesn't mean you can spend them recklessly~$()"
+    }
+  ]
+}

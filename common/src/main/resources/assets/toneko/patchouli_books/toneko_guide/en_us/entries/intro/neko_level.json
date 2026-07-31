@@ -1,0 +1,33 @@
+{
+  "name": "Neko Level System",
+  "category": "toneko:intro",
+  "icon": "minecraft:experience_bottle",
+  "sortnum": 3,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "title": "What Are Neko Levels?",
+      "text": "As you live your neko life, you'll gradually grow stronger. This is reflected through the $(thing)Neko Level System$() — a multi-factor progression mechanic that rewards $(#FF69B4)everything a neko does$().$(br2)Your total level is made up of $(#FF69B4)six factors$(), each earning raw experience independently. The raw XP is then converted to a level for each factor, and all factor levels are summed up to $(thing)your total neko level$()."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Level Factors",
+      "text": "Here are all six level factors and how to gain XP for each:$(br2)$(li)$(thing)Base$() — Set by server admins. Can't be earned through gameplay.$(li)$(thing)Combat$() — Kill monsters! XP = max health ÷ 2 of the slain enemy.$(li)$(thing)Interaction$() — Gift favorite items to neko NPCs (+15 XP per gift, both parties benefit).$(li)$(thing)Exploration$() — Visit $(#FF69B4)new biomes$() you've never been to! Rare biomes give more XP (End=1000, Nether=600, rare=400, uncommon=200, common=100)."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Level Factors (cont.)",
+      "text": "$(li)$(thing)Fishing$() — Reel in your catch! XP based on the vanilla fishing XP rewarded per catch.$(li)$(thing)Homestead$() — Build your cozy home! Place neko-themed blocks (+30 XP), wool/carpets (+2 XP), torches/lanterns (+3 XP), and sleep in a bed (+50 XP).$(br2)Each factor uses a $(#FF69B4)quadratic formula$(): the more raw XP you have, the more is needed for the next level. Check your factor progress anytime with $(thing)/neko info$()!"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Level Benefits",
+      "text": "Your total neko level isn't just for show — it powers up your character in real ways:$(br2)$(li)$(thing)Attack Damage$() — +0.005 per level$(li)$(thing)Max Neko Energy$() — +10 per level$(li)$(thing)Max Health$() — +0.05 per level$(li)$(thing)Fall Damage Reduction$() — up to 80% at Lv160$(br2)Higher levels also boost energy regeneration, skill effects, and ability power. The stronger you grow, the more versatile you become!"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Commands & Info",
+      "text": "To check your current level status:$(br2)$(li)$(thing)/neko level$() — displays your total neko level$(li)$(thing)/neko info$() — opens a detailed GUI showing all six factors, raw XP, energy, and ability score$(br2)$(li)$(thing)Server admins$() can use $(thing)/tonekoadmin setLevel <player> <level>$() to adjust the base factor, or $(thing)setLevelFactor <factor> <value>$() for any specific factor.$(br2)$(#FFB6C1)Keep growing, cutie!~$()"
+    }
+  ]
+}

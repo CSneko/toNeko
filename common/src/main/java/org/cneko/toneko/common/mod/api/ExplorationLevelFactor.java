@@ -14,7 +14,7 @@ public class ExplorationLevelFactor implements NekoLevelFactor {
 
     @Override
     public double getLevel(double rawValue) {
-        double C = 400.0;
+        double C = 200.0;
         return (Math.sqrt(1 + 8 * rawValue / C) - 1) / 2;
     }
 

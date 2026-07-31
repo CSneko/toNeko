@@ -31,7 +31,7 @@ public class NekoInfoScreen extends Screen {
 
     // 面板尺寸 (为了放下左侧所有内容，稍微加高了面板)
     private final int panelWidth = 290;
-    private final int panelHeight = 235;
+    private final int panelHeight = 263;
 
     protected NekoInfoScreen() {
         super(translatable("screen.toneko.neko_info.title"));
@@ -169,6 +169,12 @@ public class NekoInfoScreen extends Screen {
         rightY += lineHeight;
 
         drawFactor(guiGraphics, "exploration", indentX, rightY, player);
+        rightY += lineHeight;
+
+        drawFactor(guiGraphics, "fishing", indentX, rightY, player);
+        rightY += lineHeight;
+
+        drawFactor(guiGraphics, "homestead", indentX, rightY, player);
         rightY += lineHeight + 12;
 
         // 能力
@@ -224,6 +230,8 @@ public class NekoInfoScreen extends Screen {
             case "interaction": level = NekoLevelRegistry.interaction().getLevel(raw); break;
             case "combat": level = NekoLevelRegistry.combat().getLevel(raw); break;
             case "exploration": level = NekoLevelRegistry.exploration().getLevel(raw); break;
+            case "fishing": level = NekoLevelRegistry.fishing().getLevel(raw); break;
+            case "homestead": level = NekoLevelRegistry.homestead().getLevel(raw); break;
         }
 
         Component text = translatable("screen.toneko.neko_info." + type + "_factor",

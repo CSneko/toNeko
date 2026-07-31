@@ -111,7 +111,7 @@ public class NekoBrain {
         // 或者 source 是更高优先级的行为（它要覆盖当前移动）
         if (currentTarget != null) {
             if (currentTarget.source == source
-                    || BehaviorPriority.isHigherThan(currentTarget.priority, BehaviorPriority.CRITICAL) == false) {
+                    || !BehaviorPriority.isHigherThan(currentTarget.priority, BehaviorPriority.CRITICAL)) {
                 // source 匹配，或者 source 的优先级足够覆盖
                 if (fullArbitration) {
                     // 完整仲裁：将 pending 清空（让 tick 时自然停止）
@@ -232,7 +232,7 @@ public class NekoBrain {
             } else if (intent.priority == currentTarget.priority && runTicks >= MIN_RUN_TICKS) {
                 // 同优先级不同 source：需要当前行为已运行足够时间
                 shouldSwitch = true;
-            } else if (intent.priority == currentTarget.priority && intent.source != currentTarget.source) {
+            } else if (intent.priority == currentTarget.priority) {
                 // 同优先级但运行时不足 → 检查 source 是否相同（防抖）
                 // 如果 intent.source 和上一轮的 source 相同 → 可能是被错误打断后重试 → 拒绝
                 if (intent.source == lastSource && cooldownTicks > 0) {

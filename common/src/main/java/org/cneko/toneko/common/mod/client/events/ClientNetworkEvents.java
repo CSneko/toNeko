@@ -77,6 +77,8 @@ public class ClientNetworkEvents {
                 neko.setNekoLevelFactorRaw("combat", payload.combatRaw());
                 neko.setNekoLevelFactorRaw("base", payload.baseRaw());
                 neko.setNekoLevelFactorRaw("exploration", payload.explorationRaw());
+                neko.setNekoLevelFactorRaw("fishing", payload.fishingRaw());
+                neko.setNekoLevelFactorRaw("homestead", payload.homesteadRaw());
                 neko.setNekoAge(payload.age());
             }
         }));

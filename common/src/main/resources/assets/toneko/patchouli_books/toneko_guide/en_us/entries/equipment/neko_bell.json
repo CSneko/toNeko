@@ -1,0 +1,28 @@
+{
+  "name": "Neko Bell",
+  "category": "toneko:equipment",
+  "icon": "toneko:neko_bell",
+  "sortnum": 7,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "toneko:neko_bell",
+      "text": "The $(item)Neko Bell$() is a compact yet practical item — $(#FF69B4)ring it$() and all nearby neko NPCs that belong to you will be recalled to your side!$(br2)Whether they've wandered off, gotten stuck in terrain, or are being chased by monsters — one chime brings them all back.$(br2)$(#FFB6C1)The ultimate summoning tool for every neko caretaker!$()"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Usage & Mechanics",
+      "text": "Right-click to use the bell. It searches within $(#FF69B4)64 blocks$() for all neko NPCs that belong to you, and instantly teleports them to your position.$(br2)Energy cost per neko recalled: $(#FF69B4)10 Neko Energy$().$(br2)After use, the bell enters a $(#FF69B4)30-second cooldown$()（600 ticks）. Cannot be used during cooldown."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Recall Effects",
+      "text": "When the bell rings, each recalled neko gains:$(br2)$(li)$(thing)Combat disengage$() — current attack target is cleared$(li)$(thing)3s Invulnerability$() — brief immunity to prevent immediate damage$(li)$(thing)Note particles$() — cute musical note effects$(li)$(thing)Bell chime$() — clear ringing sound around you$(br2)If no owned nekos are nearby, you'll get a message letting you know~"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Use Cases",
+      "text": "The Neko Bell shines in these situations:$(br2)$(li)Neko $(#FF69B4)stuck in terrain$() — one click to rescue$(li)$(thing)Boss fights$() — emergency recall when nekos are near death$(li)$(#FF69B4)Long-distance travel$() — no need to lead them slowly$(li)$(thing)Building/relocating$() — gather all nekos to the new home$(li)$(thing)Headcount check$() — ring it and see how many show up!$(br2)$(#FFB6C1)Ding-ding~ Time to come home!$()"
+    }
+  ]
+}

@@ -168,6 +168,8 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
                 this.getNekoLevelFactorRaw("combat"),
                 this.getNekoLevelFactorRaw("base"),
                 this.getNekoLevelFactorRaw("exploration"),
+                this.getNekoLevelFactorRaw("fishing"),
+                this.getNekoLevelFactorRaw("homestead"),
                 this.isNeko(),
                 this.getNekoAge()
         ));

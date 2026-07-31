@@ -7,6 +7,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemNameBlockItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
@@ -240,6 +241,11 @@ public class ToNekoItems {
                     event.accept(NEKO_BELL_HOLDER.get());
                     event.accept(NEKO_ENERGY_BATTERY_HOLDER.get());
                     event.accept(NEKO_ENERGY_BATTERY_LARGE_HOLDER.get());
+                    // 猫猫手册（Patchouli 指南书）
+                    ItemStack guideBook = GuideBookItem.createGuideBookStack();
+                    if (!guideBook.isEmpty()) {
+                        event.accept(guideBook);
+                    }
                 })
                 .build()
         );
@@ -305,6 +311,11 @@ public class ToNekoItems {
             event.accept(NEKO_BELL_HOLDER.get());
             event.accept(NEKO_ENERGY_BATTERY_HOLDER.get());
             event.accept(NEKO_ENERGY_BATTERY_LARGE_HOLDER.get());
+            // 猫猫手册（Patchouli 指南书）
+            ItemStack guideBook = GuideBookItem.createGuideBookStack();
+            if (!guideBook.isEmpty()) {
+                event.accept(guideBook);
+            }
         }
         reg();
     }

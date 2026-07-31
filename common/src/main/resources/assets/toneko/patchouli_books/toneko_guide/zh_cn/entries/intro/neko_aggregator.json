@@ -2,7 +2,7 @@
   "name": "Neko 聚合器",
   "category": "toneko:intro",
   "icon": "toneko:neko_aggregator",
-  "sortnum": 3,
+  "sortnum": 4,
   "pages": [
     {
       "type": "patchouli:text",

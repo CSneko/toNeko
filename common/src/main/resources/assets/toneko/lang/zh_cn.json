@@ -1308,6 +1308,8 @@
   "screen.toneko.neko_info.interaction_factor": "互动: %s (原始: %s)",
   "screen.toneko.neko_info.combat_factor": "战斗: %s (原始: %s)",
   "screen.toneko.neko_info.exploration_factor": "探索: %s (原始: %s)",
+  "screen.toneko.neko_info.fishing_factor": "钓鱼: %s (原始: %s)",
+  "screen.toneko.neko_info.homestead_factor": "家园: %s (原始: %s)",
   "screen.toneko.neko_info.energy_section": "=== 能量 ===",
   "screen.toneko.neko_info.energy": "%s / %s",
   "screen.toneko.neko_info.ability_section": "=== 能力 ===",
@@ -1600,5 +1602,6 @@
   "hud.toneko.stealth.active": "§a潜行中",
   "hud.toneko.stealth.idle": "§7潜行待机",
   "messages.toneko.climb.no_energy": "§c猫娘能量不足，无法继续爬墙！",
-  "messages.toneko.climb.no_wall": "附近没有可以攀爬的墙壁"
+  "messages.toneko.climb.no_wall": "附近没有可以攀爬的墙壁",
+  "message.toneko.guide.need_patchouli": "§c需要安装帕秋莉手册（Patchouli）模组才能阅读本指南喵！"
 }

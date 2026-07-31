@@ -1,0 +1,37 @@
+{
+  "name": "Neko Special Abilities",
+  "category": "toneko:intro",
+  "icon": "minecraft:feather",
+  "sortnum": 5,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Becoming a neko grants you not just a cute appearance, but also $(#FF69B4)three special abilities$()：$(thing)Neko Stealth$(), $(thing)Claw Climbing$(), and $(thing)Creeper Affinity$().$(br2)All three consume $(thing)Neko Energy$() to use — managing your energy wisely is a must-learn skill for every neko!$(br2)$(#FFB6C1)Nekos aren't just cute — we're quite capable!$()"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "🐾 Neko Stealth",
+      "text": "Activate via the $(#FF69B4)Skill Roulette$()（Z key）— select the \"Neko Stealth\" option. Once active, $(thing)crouch$()（hold Shift）to enter stealth mode.$(br2)$(li)Moving: $(#FF69B4)0.8 energy/tick$()$(li)Standing still: $(#FF69B4)0.2 energy/tick$()$(br2)$(thing)Attacking$() breaks stealth immediately, triggering a $(#FF69B4)100 tick$()（5s）cooldown. Running out of energy also disables it.$(br2)The HUD shows your current stealth status — green \"Active\" or gray \"Idle\"."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "🧗 Claw Climbing",
+      "text": "Press against a wall and hold $(#FF69B4)R$() to climb like a real cat!$(br2)How to use:$(li)Stand next to any solid block wall$(li)Hold R to start climbing$(li)$(thing)W/S$() keys to move up/down$(li)Release R to stop climbing$(br2)Energy cost:$(li)Climbing up: $(#FF69B4)0.8 energy/tick$()$(li)Moving down: $(#FF69B4)0.3 energy/tick$()$(li)Hanging still: $(#FF69B4)0.1 energy/tick$()"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Climbing Tips",
+      "text": "While climbing, you gain these advantages:$(br2)$(li)$(thing)Ignore gravity$() — you won't fall$(li)$(thing)Zero fall damage$() — even if you run out of energy mid-climb$(li)$(thing)Full stillness$() — release movement keys to rest on the wall$(br2)Great for:$(li)Scaling mountains without building$(li)Exploring ravines by going straight down/up$(li)Fell into a deep pit? Climb out!$(br2)$(#FFB6C1)With cat claws, terrain is no obstacle!$()"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "💥 Creeper Affinity",
+      "text": "This is a $(#FF69B4)passive ability$() — no activation needed, it just works as long as you're a neko.$(br2)When a $(item)Creeper$() has a neko within $(#FF69B4)7 blocks$(), it will $(thing)cancel its explosion$() — the fuse resets to zero.$(br2)Unlike vanilla cats/ocelots: creepers $(#FF69B4)won't run away$(). They'll just stand there dumbly, neither blowing up nor fleeing."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Energy Management Tips",
+      "text": "All three abilities rely on $(thing)Neko Energy$(). Manage it well:$(br2)$(li)Always carry some $(item)Catnip$() — quick 30 energy boost$(li)Keep a $(item)Neko Energy Battery$() in your bag — automatic buffering$(li)Get close with neko NPCs — $(thing)cuddling$() restores energy for both sides$(li)Stealth + climbing in a row is very energy-hungry — pace yourself$(br2)$(#FFB6C1)Energy is a neko's second life — cherish it well, meow~$()"
+    }
+  ]
+}

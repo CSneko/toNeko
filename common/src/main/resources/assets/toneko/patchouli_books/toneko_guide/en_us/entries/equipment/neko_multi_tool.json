@@ -1,0 +1,38 @@
+{
+  "name": "Neko Multi-Tool",
+  "category": "toneko:equipment",
+  "icon": "toneko:neko_multi_tool",
+  "sortnum": 5,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "toneko:neko_multi_tool",
+      "text": "The $(item)Neko Multi-Tool$() is the $(#FF69B4)ultimate all-in-one tool$() of the neko world — pickaxe, axe, shovel, hoe, and sword combined!$(br2)Its mining speed and attack damage scale with your $(thing)Neko Level$() — the higher your level, the stronger the tool. It consumes a small amount of $(thing)Neko Energy$() when used.$(br2)$(#FFB6C1)One tool to rule them all — say goodbye to cluttered inventories!$()"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Dig Mode Switching",
+      "text": "Hold $(#FF69B4)Shift + Right-Click$() to cycle through 6 dig modes:$(br2)$(li)$(thing)Default$() — normal speed, auto-selects best tool type$(li)$(thing)Default Slow$() — speed ×0.4, lower energy cost$(li)$(thing)Auto-Smelting$() — iron ore → ingot, sand → glass, all on the spot!$(li)$(thing)Auto-Smelting Slow$() — smelting + energy-saving slow mode$(li)$(thing)Silk Touch$() — just like the enchantment!$(li)$(thing)Silk Touch Slow$() — silk touch + energy-saving slow mode"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Area Mining & Tilling",
+      "text": "Press $(#FF69B4)V$() to toggle mining range:$(li)$(thing)1×1$() → $(thing)3×3$() → $(thing)5×5$()（requires $(#FF69B4)Lv15$() to unlock）$(br2)Right-click on $(item)Dirt$(), $(item)Grass Block$(), $(item)Dirt Path$(), $(item)Coarse Dirt$(), or $(item)Rooted Dirt$() to till them $(#FF69B4)in a large area$() — range mode applies too!$(br2)Note: $(#FF69B4)Shift+Right-Click$() triggers mode switching instead of tilling~"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Combat Capabilities",
+      "text": "The multi-tool is no slouch in combat either:$(br2)$(li)Attack damage scales with neko level: $(#FF69B4)3.0 + level × 0.05$()（cap at 25）$(li)Non-neko players get a fixed $(#FF69B4)3.0$() damage$(br2)Weapon enchantments supported: $(thing)Sharpness$(), $(thing)Smite$(), $(thing)Bane of Arthropods$(), $(thing)Knockback$(), $(thing)Sweeping Edge$(), $(thing)Looting$().$(br2)Energy cost ~0.5 per block, $(thing)Unbreaking$() enchant reduces it（minimum 0.1/block）!"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Enchantments & Stats",
+      "text": "The multi-tool supports a wide range of enchantments:$(br2)$(li)Tool: $(thing)Efficiency$(), $(thing)Unbreaking$()（reduces energy cost）, $(thing)Fortune$()$(li)Weapon: $(thing)Sharpness$(), $(thing)Smite$(), $(thing)Bane of Arthropods$(), $(thing)Knockback$(), $(thing)Sweeping Edge$(), $(thing)Looting$()$(br2)Mining speed formula: $(#FF69B4)2.0 + level × 0.17$()（cap at 36）$(br)Non-neko fixed speed: $(#FF69B4)4.0$().$(br2)As a neko-exclusive item, it's also $(thing)Fire-Resistant$() — lava-proof!"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "A Tool That Grows With You",
+      "text": "The multi-tool's philosophy is $(#FF69B4)grow stronger together$().$(br2)As your neko level rises, both mining speed and attack damage automatically increase. At $(#FF69B4)Level 15$(), you unlock the $(thing)5×5 area mode$().$(br2)$(#FFB6C1)So don't dismiss it for its humble starting stats~ Keep leveling up, and it'll become your most loyal companion!$()"
+    }
+  ]
+}

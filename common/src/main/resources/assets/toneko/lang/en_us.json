@@ -1314,6 +1314,8 @@
   "screen.toneko.neko_info.interaction_factor": "Interaction: %s (raw: %s)",
   "screen.toneko.neko_info.combat_factor": "Combat: %s (raw: %s)",
   "screen.toneko.neko_info.exploration_factor": "Exploration: %s (raw: %s)",
+  "screen.toneko.neko_info.fishing_factor": "Fishing: %s (raw: %s)",
+  "screen.toneko.neko_info.homestead_factor": "Homestead: %s (raw: %s)",
   "screen.toneko.neko_info.energy_section": "=== Energy ===",
   "screen.toneko.neko_info.energy": "%s / %s",
   "screen.toneko.neko_info.ability_section": "=== Ability ===",
@@ -1606,5 +1608,6 @@
   "hud.toneko.stealth.active": "§aStealth Active",
   "hud.toneko.stealth.idle": "§7Stealth Standby",
   "messages.toneko.climb.no_energy": "§cNot enough neko energy to climb!",
-  "messages.toneko.climb.no_wall": "No wall nearby to climb"
+  "messages.toneko.climb.no_wall": "No wall nearby to climb",
+  "message.toneko.guide.need_patchouli": "§cYou need to install Patchouli to read this guide book!"
 }

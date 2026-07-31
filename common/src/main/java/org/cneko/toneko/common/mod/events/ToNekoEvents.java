@@ -21,6 +21,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.ItemCost;
 import net.minecraft.world.item.trading.MerchantOffer;
@@ -31,6 +32,7 @@ import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.items.NekoEnergyBatteryItem;
 import org.cneko.toneko.common.mod.items.NekoEnergyBurstItem;
 import org.cneko.toneko.common.mod.items.NineLivesCharmItem;
+import org.cneko.toneko.common.mod.items.GuideBookItem;
 import org.cneko.toneko.common.mod.items.ToNekoItems;
 import org.cneko.toneko.common.mod.quirks.ModQuirk;
 import org.cneko.toneko.common.mod.util.TextUtil;
@@ -73,7 +75,12 @@ public class ToNekoEvents {
         ServerTickEvents.START_SERVER_TICK.register(ClimbWallHandler::onServerTick);
         ServerWorldEvents.UNLOAD.register(CommonWorldEvent::onWorldUnLoad);
         WorldEvents.ON_WEATHER_CHANGE.register(CommonWorldEvent::onWeatherChange);
-        EntitySleepEvents.START_SLEEPING.register(CommonPlayerEvent::startSleep);
+        EntitySleepEvents.START_SLEEPING.register((entity, pos) -> {
+            CommonPlayerEvent.startSleep(entity, pos);
+            if (entity instanceof INeko neko && neko.isNeko()) {
+                NekoLevelRegistry.homestead().addRaw(neko, 50.0);
+            }
+        });
         EntitySleepEvents.STOP_SLEEPING.register(CommonPlayerEvent::stopSleep);
         NekoMultiToolEvents.init();
         TradeOfferHelper.registerVillagerOffers(VillagerProfession.FARMER,
@@ -93,6 +100,22 @@ public class ToNekoEvents {
 
     public static void onPlayerJoin(ServerGamePacketListenerImpl serverPlayNetworkHandler, PacketSender sender, MinecraftServer server) {
         ServerPlayer player = serverPlayNetworkHandler.getPlayer();
+
+        // 首次进服或丢失手册：自动给予猫猫手册
+        boolean hasGuideBook = false;
+        for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+            if (GuideBookItem.isOurGuideBook(player.getInventory().getItem(i))) {
+                hasGuideBook = true;
+                break;
+            }
+        }
+        if (!hasGuideBook) {
+            ItemStack guideBook = GuideBookItem.createGuideBookStack();
+            if (!guideBook.isEmpty()) {
+                player.getInventory().add(guideBook);
+            }
+        }
+
         if(player.isNeko()){
             // 修复quirks
             player.fixQuirks();

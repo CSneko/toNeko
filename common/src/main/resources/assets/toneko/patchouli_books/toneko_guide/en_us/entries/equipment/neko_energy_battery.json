@@ -1,0 +1,33 @@
+{
+  "name": "Neko Energy Battery",
+  "category": "toneko:equipment",
+  "icon": "toneko:neko_energy_battery",
+  "sortnum": 8,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "toneko:neko_energy_battery",
+      "text": "The $(item)Neko Energy Battery$() is the $(#FF69B4)portable energy core$() of the neko world. Just keep it in your inventory — it works automatically! When you're low on energy, it $(thing)auto-discharges$() to refill you. When your energy overflows, it $(thing)auto-absorbs$() the excess.$(br2)It's like carrying a power bank and energy recycler in one!$(br2)There's also a $(item)Large Neko Energy Battery$() upgrade version~"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Auto-Discharge",
+      "text": "When your $(thing)Neko Energy$() is below max, the battery automatically transfers stored energy to you every second:$(br2)$(li)Fixed discharge rate per second — won't drain all at once$(li)Multiple batteries $(#FF69B4)discharge in sequence$()$(li)Stops automatically when you're full$(br2)This gives your energy bar a safety net during adventures — it won't hit zero as easily!"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Auto-Charge",
+      "text": "Conversely, when your $(thing)Neko Energy$() is full and would overflow from natural regeneration, the battery automatically absorbs the excess:$(br2)$(li)Overflow energy $(#FF69B4)flows into the battery$() instead of being wasted$(li)Multiple batteries $(#FF69B4)charge in sequence$()$(li)If all batteries are full, excess energy is lost$(br2)Never worry about wasting natural energy regen again!"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Status Display",
+      "text": "Like vanilla tools, the battery has a $(#FF69B4)durability bar$() showing its charge level:$(br2)$(li)$(#55FF55)Green$()（>70% charge）— Full of power!$(li)$(#FFFF55)Yellow$()（30%–70% charge）— Still got some juice$(li)$(#5555FF)Red$()（<30% charge）— Needs charging!$(br2)Hover over it to see the exact stored energy value and charge/discharge rates."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Vs. Energy Storage Devices",
+      "text": "How is this different from $(item)Energy Storage Devices$()?$(br2)$(li)$(thing)Energy Storage Devices$()：Manually charge/discharge in the aggregator — like a rechargeable battery, requires active operation$(li)$(thing)Neko Energy Battery$()：$(#FF69B4)Fully automatic$() charge/discharge — just leave it in your bag, like a power bank$(br2)Recommended to use both: storage devices for bulk capacity, batteries for daily buffering. The perfect energy management system, meow!"
+    }
+  ]
+}
