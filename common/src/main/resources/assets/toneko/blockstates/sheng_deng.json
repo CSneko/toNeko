@@ -1,0 +1,40 @@
+{
+  "variants": {
+    "color=red,stack=0": {
+      "model": "toneko:block/sheng_deng_red_stack0"
+    },
+    "color=red,stack=1": {
+      "model": "toneko:block/sheng_deng_red_stack1"
+    },
+    "color=red,stack=2": {
+      "model": "toneko:block/sheng_deng_red_stack2"
+    },
+    "color=red,stack=3": {
+      "model": "toneko:block/sheng_deng_red_stack3"
+    },
+    "color=red,stack=4": {
+      "model": "toneko:block/sheng_deng_red_stack4"
+    },
+    "color=red,stack=5": {
+      "model": "toneko:block/sheng_deng_red_stack5"
+    },
+    "color=blue,stack=0": {
+      "model": "toneko:block/sheng_deng_blue_stack0"
+    },
+    "color=blue,stack=1": {
+      "model": "toneko:block/sheng_deng_blue_stack1"
+    },
+    "color=blue,stack=2": {
+      "model": "toneko:block/sheng_deng_blue_stack2"
+    },
+    "color=blue,stack=3": {
+      "model": "toneko:block/sheng_deng_blue_stack3"
+    },
+    "color=blue,stack=4": {
+      "model": "toneko:block/sheng_deng_blue_stack4"
+    },
+    "color=blue,stack=5": {
+      "model": "toneko:block/sheng_deng_blue_stack5"
+    }
+  }
+}

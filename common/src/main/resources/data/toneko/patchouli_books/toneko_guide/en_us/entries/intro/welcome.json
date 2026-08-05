@@ -1,0 +1,21 @@
+{
+  "name": "Welcome to toNeko",
+  "category": "toneko:intro",
+  "icon": "toneko:neko_tail",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "$(thing)toNeko$() is a Minecraft mod themed around $(#FF69B4)catgirls$().$(br2)Here, you can:$(li)Become an adorable catgirl$(li)Interact with other catgirls$(li)Explore the world of nekos$(br2)$(#FFB6C1)Cuteness is justice!$()"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "How to Become a Neko?",
+      "text": "First, you'll need a $(item)Neko Potion$().$(br2)Use the $(item)Neko Aggregator$() to craft it, then drink it up — meow! You're now a cute neko!$(br2)As a neko, you can press $(k:toneko.roulette) to open the skill wheel and use various neko abilities."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Neko Energy",
+      "text": "Nekos need $(thing)Neko Energy$() to use their skills.$(br2)You can absorb energy with the $(item)Neko Collector$(), or cuddle with other nekos to gain energy.$(br2)Keep an eye on your energy bar — without energy, you can't even meow~"
+    }
+  ]
+}

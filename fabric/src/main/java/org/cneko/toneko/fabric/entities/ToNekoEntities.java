@@ -83,6 +83,12 @@ public class ToNekoEntities {
                 EntityType.Builder.of(FlySwordEntity::new, MobCategory.MISC)
                         .sized(0.6f, 0.6f).clientTrackingRange(10).build()
         );
+        SEAT_ENTITY = Registry.register(
+                BuiltInRegistries.ENTITY_TYPE,
+                SEAT_ENTITY_ID,
+                EntityType.Builder.of(SeatEntity::new, MobCategory.MISC)
+                        .sized(0.5f, 0.5f).clientTrackingRange(4).updateInterval(20).build()
+        );
 
         org.cneko.toneko.common.mod.entities.ToNekoEntities.init();
 

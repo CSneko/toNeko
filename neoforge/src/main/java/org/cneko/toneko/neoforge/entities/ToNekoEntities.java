@@ -29,6 +29,7 @@ public class ToNekoEntities {
     public static DeferredHolder<EntityType<?>, EntityType<RavennEntity>> RAVENN_HOLDER;
     public static DeferredHolder<EntityType<?>, EntityType<NoelleMaidNekoEntity>> NOELLE_MAID_NEKO_HOLDER;
     public static DeferredHolder<EntityType<?>, EntityType<FlySwordEntity>> FLY_SWORD_HOLDER;
+    public static DeferredHolder<EntityType<?>, EntityType<SeatEntity>> SEAT_ENTITY_HOLDER;
     public static void init(){
         CRYSTAL_NEKO_HOLDER = ToNekoNeoForge.ENTITY_TYPES.register(CRYSTAL_NEKO_ID.getPath(),
                 org.cneko.toneko.common.mod.entities.ToNekoEntities.getCrystalNeko()
@@ -56,6 +57,9 @@ public class ToNekoEntities {
         );
         FLY_SWORD_HOLDER = ToNekoNeoForge.ENTITY_TYPES.register(FLY_SWORD_ENTITY_ID.getPath(),
                 org.cneko.toneko.common.mod.entities.ToNekoEntities.getFlySwordEntity()
+        );
+        SEAT_ENTITY_HOLDER = ToNekoNeoForge.ENTITY_TYPES.register(SEAT_ENTITY_ID.getPath(),
+                org.cneko.toneko.common.mod.entities.ToNekoEntities.getSeatEntity()
         );
 
         org.cneko.toneko.common.mod.entities.ToNekoEntities.init();
@@ -170,5 +174,6 @@ public class ToNekoEntities {
         RAVENN_ENTITY = RAVENN_HOLDER.get();
         NOELLE_MAID_NEKO = NOELLE_MAID_NEKO_HOLDER.get();
         FLY_SWORD_ENTITY = FLY_SWORD_HOLDER.get();
+        SEAT_ENTITY = SEAT_ENTITY_HOLDER.get();
     }
 }

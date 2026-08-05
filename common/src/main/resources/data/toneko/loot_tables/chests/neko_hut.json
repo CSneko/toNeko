@@ -1,0 +1,36 @@
+{
+    "type": "minecraft:chest",
+    "pools": [
+        {
+            "rolls": { "type": "minecraft:uniform", "min": 2, "max": 5 },
+            "entries": [
+                { "type": "minecraft:item", "name": "toneko:neko_ingot", "weight": 10, "functions": [ { "function": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 1, "max": 3 } } ] },
+                { "type": "minecraft:item", "name": "toneko:catnip", "weight": 8, "functions": [ { "function": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 2, "max": 5 } } ] },
+                { "type": "minecraft:item", "name": "toneko:catnip_seed", "weight": 8, "functions": [ { "function": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 1, "max": 4 } } ] },
+                { "type": "minecraft:item", "name": "toneko:neko_diamond", "weight": 4, "functions": [ { "function": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 1, "max": 2 } } ] },
+                { "type": "minecraft:item", "name": "toneko:neko_crystal", "weight": 2 },
+                { "type": "minecraft:item", "name": "toneko:neko_potion", "weight": 3 },
+                { "type": "minecraft:item", "name": "toneko:neko_collector", "weight": 3 },
+                { "type": "minecraft:item", "name": "toneko:neko_energy_storage_small_charged", "weight": 5 },
+                { "type": "minecraft:item", "name": "minecraft:emerald", "weight": 6, "functions": [ { "function": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 1, "max": 3 } } ] },
+                { "type": "minecraft:item", "name": "minecraft:string", "weight": 6, "functions": [ { "function": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 1, "max": 4 } } ] },
+                { "type": "minecraft:item", "name": "minecraft:iron_ingot", "weight": 5, "functions": [ { "function": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 1, "max": 3 } } ] },
+                { "type": "minecraft:item", "name": "minecraft:gold_ingot", "weight": 3, "functions": [ { "function": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 1, "max": 2 } } ] },
+                { "type": "minecraft:item", "name": "minecraft:book", "weight": 4 },
+                { "type": "minecraft:item", "name": "minecraft:experience_bottle", "weight": 3, "functions": [ { "function": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 1, "max": 2 } } ] },
+                { "type": "minecraft:item", "name": "minecraft:bread", "weight": 7, "functions": [ { "function": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 1, "max": 3 } } ] }
+            ]
+        },
+        {
+            "rolls": { "type": "minecraft:uniform", "min": 0, "max": 2 },
+            "entries": [
+                { "type": "minecraft:item", "name": "toneko:neko_energy_battery", "weight": 4 },
+                { "type": "minecraft:item", "name": "toneko:neko_tail", "weight": 3 },
+                { "type": "minecraft:item", "name": "toneko:neko_ears", "weight": 3 },
+                { "type": "minecraft:item", "name": "toneko:contract", "weight": 2 },
+                { "type": "minecraft:item", "name": "toneko:neko_bell", "weight": 1 },
+                { "type": "minecraft:empty", "weight": 10 }
+            ]
+        }
+    ]
+}

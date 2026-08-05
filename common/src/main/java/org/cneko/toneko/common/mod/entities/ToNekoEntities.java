@@ -37,6 +37,8 @@ public class ToNekoEntities {
     public static ResourceLocation AMMUNITION_ENTITY_ID = toNekoLoc("ammunition_entity");
     public static EntityType<FlySwordEntity> FLY_SWORD_ENTITY;
     public static ResourceLocation FLY_SWORD_ENTITY_ID = toNekoLoc("fly_sword");
+    public static EntityType<SeatEntity> SEAT_ENTITY;
+    public static ResourceLocation SEAT_ENTITY_ID = toNekoLoc("seat_entity");
     public static void init() {
         // 注册名字
         Set<String> names = Set.of(
@@ -108,6 +110,13 @@ public class ToNekoEntities {
                         .sized(0.5f,1.7f).clientTrackingRange(8)
                         .build("ravenn");
     }
+    @ApiStatus.Internal
+    public static Supplier<EntityType<SeatEntity>> getSeatEntity(){
+        return () -> EntityType.Builder.of(SeatEntity::new, MobCategory.MISC)
+                .sized(0.5f, 0.5f).clientTrackingRange(4).updateInterval(20)
+                .build("seat_entity");
+    }
+
     @ApiStatus.Internal
     public static Supplier<EntityType<NoelleMaidNekoEntity>> getNoelleMaidNeko(){
         return

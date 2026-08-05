@@ -168,5 +168,9 @@
   "entity.toneko.fly_sword": "비검",
   "key.toneko.climb": "벽 타기",
   "messages.toneko.climb.no_energy": "§c네코 에너지가 부족합니다!",
-  "messages.toneko.climb.no_wall": "근처에 오를 수 있는 벽이 없습니다"
+  "messages.toneko.climb.no_wall": "근처에 오를 수 있는 벽이 없습니다",
+  "block.toneko.sheng_deng": "광둥성 의자",
+  "block.toneko.sheng_deng.tooltip": "§c광둥성 의자 - 만능 해결사",
+  "block.toneko.sheng_deng.tumble": "§4아야! 의자가 넘어져서 떨어졌다!",
+  "hint.toneko.stand_up": "%s 를 눌러 일어나기"
 }

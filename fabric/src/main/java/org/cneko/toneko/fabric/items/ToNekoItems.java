@@ -91,6 +91,7 @@ public class ToNekoItems {
         NEKO_BELL = new NekoBellItem();
         NEKO_ENERGY_BATTERY = new NekoEnergyBatteryItem(2000, 10, 5);
         NEKO_ENERGY_BATTERY_LARGE = new NekoEnergyBatteryItem(10000, 100, 50);
+        SHENG_DENG_ITEM = new ShengDengItem(ToNekoBlocks.SHENG_DENG, new Item.Properties());
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NekoPotionItem.ID), NEKO_POTION);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NekoCollectorItem.ID), NEKO_COLLECTOR);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(FurryBoheItem.ID), FURRY_BOHE);
@@ -134,6 +135,7 @@ public class ToNekoItems {
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NekoBellItem.ID), NEKO_BELL);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NekoEnergyBatteryItem.ID), NEKO_ENERGY_BATTERY);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NekoEnergyBatteryItem.ID_LARGE), NEKO_ENERGY_BATTERY_LARGE);
+        Registry.register(BuiltInRegistries.ITEM, toNekoLoc("sheng_deng"), SHENG_DENG_ITEM);
 
         // 如果安装了trinkets，则注册为TrinketItem
         if (isTrinketsInstalled){
@@ -201,6 +203,7 @@ public class ToNekoItems {
             content.accept(NEKO_BELL);
             content.accept(NEKO_ENERGY_BATTERY);
             content.accept(NEKO_ENERGY_BATTERY_LARGE);
+            content.accept(SHENG_DENG_ITEM);
             // 猫猫手册（Patchouli 指南书）
             ItemStack guideBook = GuideBookItem.createGuideBookStack();
             if (!guideBook.isEmpty()) {

@@ -50,6 +50,7 @@ public class ToNekoItems {
     public static Item NEKO_BELL;
     public static NekoEnergyBatteryItem NEKO_ENERGY_BATTERY;
     public static NekoEnergyBatteryItem NEKO_ENERGY_BATTERY_LARGE;
+    public static Item SHENG_DENG_ITEM;
 
     public static final TagKey<Item> CATNIP_TAG = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c","foods/catnip"));
     public static final TagKey<Item> BAZOOKA_AMMO_TAG = TagKey.create(Registries.ITEM, toNekoLoc("bazooka_ammo"));

@@ -1206,5 +1206,9 @@
   "entity.toneko.fly_sword": "飛剣",
   "key.toneko.climb": "壁登り",
   "messages.toneko.climb.no_energy": "§c猫娘エネルギーが不足しています！",
-  "messages.toneko.climb.no_wall": "近くに登れる壁がありません"
+  "messages.toneko.climb.no_wall": "近くに登れる壁がありません",
+  "block.toneko.sheng_deng": "省凳",
+  "block.toneko.sheng_deng.tooltip": "§c広東省の省凳 —— なんでも省凳で解決",
+  "block.toneko.sheng_deng.tumble": "§4痛っ！凳が倒れて転んじゃった！",
+  "hint.toneko.stand_up": "%s を押して起き上がる"
 }

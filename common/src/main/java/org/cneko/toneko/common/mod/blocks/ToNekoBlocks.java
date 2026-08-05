@@ -8,4 +8,5 @@ public class ToNekoBlocks {
     public static Block NEKO_AGGREGATOR;
     public static Block NEKO_BLOCK;
     public static Block NEKO_DIAMOND_BLOCK;
+    public static Block SHENG_DENG;
 }

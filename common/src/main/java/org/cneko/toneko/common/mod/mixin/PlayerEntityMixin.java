@@ -127,6 +127,18 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
         if (player instanceof ServerPlayer && this.isNeko() && this.getNekoAge() < 0) {
             this.setNekoAge(this.getNekoAge() + 1);
         }
+        // 趴下/躺下时按潜行键起身（摔倒趴下、/neko lie、/neko getDown 共用）
+        if (player instanceof ServerPlayer sp) {
+            Pose lyingPose = EntityPoseManager.getNullablePose(player);
+            if (lyingPose != null && (lyingPose == Pose.SWIMMING || lyingPose == Pose.SLEEPING)) {
+                if (player.isShiftKeyDown()) {
+                    EntityPoseManager.remove(player);
+                    ServerPlayNetworking.send(sp, new EntityPosePayload(lyingPose,
+                            player.getUUID().toString(), false));
+                }
+            }
+        }
+
         // 猫娘潜行：能量消耗 + 冷却倒计时
         if (player instanceof ServerPlayer && toneko$stealthActive && this.isNeko() && player.isCrouching()) {
             if (toneko$stealthCooldown > 0) {

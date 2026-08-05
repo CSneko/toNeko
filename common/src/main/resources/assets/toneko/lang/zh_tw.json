@@ -1360,5 +1360,9 @@
   "key.toneko.climb": "貓爪爬牆",
   "messages.toneko.climb.no_energy": "§c貓娘能量不足，無法繼續爬牆！",
   "messages.toneko.climb.no_wall": "附近沒有可以攀爬的牆壁",
-  "message.toneko.guide.need_patchouli": "§c需要安裝帕秋莉手冊（Patchouli）模組才能閱讀本指南喵！"
+  "message.toneko.guide.need_patchouli": "§c需要安裝帕秋莉手冊（Patchouli）模組才能閱讀本指南喵！",
+  "block.toneko.sheng_deng": "省凳",
+  "block.toneko.sheng_deng.tooltip": "§c廣東省省凳 —— 萬物皆可省凳",
+  "block.toneko.sheng_deng.tumble": "§4哎喲！凳子倒了，你摔了下來！",
+  "hint.toneko.stand_up": "按 %s 起身"
 }

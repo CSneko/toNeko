@@ -14,8 +14,10 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import org.cneko.toneko.common.mod.client.ToNekoKeyBindings;
+import org.cneko.toneko.common.mod.client.api.ClientEntityPoseManager;
 import org.cneko.toneko.common.mod.client.events.ClientTickEvent;
 import org.cneko.toneko.common.mod.entities.FlySwordEntity;
 import org.cneko.toneko.common.mod.effects.ToNekoEffects;
@@ -45,6 +47,11 @@ public class HudRenderEvent {
             // 玩家被骑乘时显示提示
             if (!player.getPassengers().isEmpty()) {
                 renderDismountHint(guiGraphics);
+            }
+            // 趴下/躺下时显示起身提示（摔倒趴下、/neko lie、/neko getDown 共用）
+            Pose lyingPose = ClientEntityPoseManager.getNullablePose(player);
+            if (lyingPose == Pose.SWIMMING || lyingPose == Pose.SLEEPING) {
+                renderStandUpHint(guiGraphics);
             }
             if (player.getVehicle() instanceof FlySwordEntity flySword) {
                 renderFlySwordHUD(guiGraphics, flySword);
@@ -143,6 +150,24 @@ public class HudRenderEvent {
 
         Component hint = Component.translatable("hint.toneko.dismount_passenger",
                 ToNekoKeyBindings.DISMOUNT_PASSENGER_KEY.getTranslatedKeyMessage());
+
+        int textWidth = client.font.width(hint);
+        int x = width - textWidth - 10;
+        int y = height / 2 - 20;
+
+        guiGraphics.drawString(client.font, hint, x, y, 0xAAFFFFFF);
+    }
+
+    /** 趴下/躺下时右侧的起身提示（与下马提示同一位置，互斥不会同时出现） */
+    private static void renderStandUpHint(GuiGraphics guiGraphics) {
+        Minecraft client = Minecraft.getInstance();
+        if (client.options.hideGui) return;
+
+        int width = guiGraphics.guiWidth();
+        int height = guiGraphics.guiHeight();
+
+        Component hint = Component.translatable("hint.toneko.stand_up",
+                client.options.keyShift.getTranslatedKeyMessage());
 
         int textWidth = client.font.width(hint);
         int x = width - textWidth - 10;

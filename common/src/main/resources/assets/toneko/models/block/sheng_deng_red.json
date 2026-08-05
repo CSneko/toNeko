@@ -1,0 +1,74 @@
+{
+  "parent": "block/block",
+  "textures": {
+    "particle": "#stool",
+    "stool": "toneko:block/sheng_deng_red"
+  },
+  "elements": [
+    {
+      "comment": "Seat top panel",
+      "from": [2, 4, 2],
+      "to": [14, 6, 14],
+      "faces": {
+        "up":    {"uv": [2, 2, 14, 14], "texture": "#stool"},
+        "down":  {"uv": [2, 2, 14, 14], "texture": "#stool"},
+        "north": {"uv": [2, 10, 14, 12], "texture": "#stool"},
+        "south": {"uv": [2, 10, 14, 12], "texture": "#stool"},
+        "east":  {"uv": [2, 10, 14, 12], "texture": "#stool"},
+        "west":  {"uv": [2, 10, 14, 12], "texture": "#stool"}
+      }
+    },
+    {
+      "comment": "Front-left leg",
+      "from": [3, 0, 3],
+      "to": [5, 4, 5],
+      "faces": {
+        "up":    {"uv": [3, 0, 5, 2], "texture": "#stool"},
+        "down":  {"uv": [3, 14, 5, 16], "texture": "#stool"},
+        "north": {"uv": [3, 12, 5, 16], "texture": "#stool"},
+        "south": {"uv": [3, 12, 5, 16], "texture": "#stool"},
+        "east":  {"uv": [3, 12, 5, 16], "texture": "#stool"},
+        "west":  {"uv": [3, 12, 5, 16], "texture": "#stool"}
+      }
+    },
+    {
+      "comment": "Front-right leg",
+      "from": [11, 0, 3],
+      "to": [13, 4, 5],
+      "faces": {
+        "up":    {"uv": [11, 0, 13, 2], "texture": "#stool"},
+        "down":  {"uv": [11, 14, 13, 16], "texture": "#stool"},
+        "north": {"uv": [11, 12, 13, 16], "texture": "#stool"},
+        "south": {"uv": [11, 12, 13, 16], "texture": "#stool"},
+        "east":  {"uv": [11, 12, 13, 16], "texture": "#stool"},
+        "west":  {"uv": [11, 12, 13, 16], "texture": "#stool"}
+      }
+    },
+    {
+      "comment": "Back-left leg",
+      "from": [3, 0, 11],
+      "to": [5, 4, 13],
+      "faces": {
+        "up":    {"uv": [3, 0, 5, 2], "texture": "#stool"},
+        "down":  {"uv": [3, 14, 5, 16], "texture": "#stool"},
+        "north": {"uv": [3, 12, 5, 16], "texture": "#stool"},
+        "south": {"uv": [3, 12, 5, 16], "texture": "#stool"},
+        "east":  {"uv": [3, 12, 5, 16], "texture": "#stool"},
+        "west":  {"uv": [3, 12, 5, 16], "texture": "#stool"}
+      }
+    },
+    {
+      "comment": "Back-right leg",
+      "from": [11, 0, 11],
+      "to": [13, 4, 13],
+      "faces": {
+        "up":    {"uv": [11, 0, 13, 2], "texture": "#stool"},
+        "down":  {"uv": [11, 14, 13, 16], "texture": "#stool"},
+        "north": {"uv": [11, 12, 13, 16], "texture": "#stool"},
+        "south": {"uv": [11, 12, 13, 16], "texture": "#stool"},
+        "east":  {"uv": [11, 12, 13, 16], "texture": "#stool"},
+        "west":  {"uv": [11, 12, 13, 16], "texture": "#stool"}
+      }
+    }
+  ]
+}

@@ -2,6 +2,7 @@ package org.cneko.toneko.fabric.client;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
@@ -14,6 +15,8 @@ import org.cneko.toneko.common.mod.client.renderers.FlySwordRenderer;
 import org.cneko.toneko.common.mod.client.renderers.GhostNekoRenderer;
 import org.cneko.toneko.common.mod.client.renderers.NekoBossRenderer;
 import org.cneko.toneko.common.mod.client.renderers.NekoRenderer;
+import org.cneko.toneko.common.mod.client.renderers.SeatRenderer;
+import org.cneko.toneko.common.mod.client.renderers.ShengDengBewlr;
 import org.cneko.toneko.common.mod.client.events.ClientNetworkEvents;
 import org.cneko.toneko.common.mod.client.events.ClientPlayerJoinEvent;
 import org.cneko.toneko.common.mod.client.events.ClientTickEvent;
@@ -43,9 +46,18 @@ public class ToNekoClient implements ClientModInitializer {
         EntityRendererRegistry.register(ToNekoEntities.RAVENN_ENTITY, (EntityRendererProvider<? super RavennEntity>) NekoRenderer::new);
         EntityRendererRegistry.register(ToNekoEntities.NOELLE_MAID_NEKO, (EntityRendererProvider<? super NoelleMaidNekoEntity>) NekoRenderer::new);
         EntityRendererRegistry.register(ToNekoEntities.FLY_SWORD_ENTITY, FlySwordRenderer::new);
+        EntityRendererRegistry.register(ToNekoEntities.SEAT_ENTITY, SeatRenderer::new);
 
         BlockRenderLayerMap.INSTANCE.putBlock(ToNekoBlocks.CATNIP, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(ToNekoBlocks.WILD_CATNIP, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(ToNekoBlocks.SHENG_DENG, RenderType.cutout());
+
+        // 省凳法棍：Fabric 侧注册动态渲染器（NeoForge 侧走 RegisterClientExtensionsEvent）。
+        // 注意必须引用 common 的字段：fabric 的 ToNekoItems 只是静态导入它，
+        // 而带类名前缀的写法不会解析静态导入；该字段在 fabric 平台已由注册流程赋值
+        BuiltinItemRendererRegistry.INSTANCE.register(
+                org.cneko.toneko.common.mod.items.ToNekoItems.SHENG_DENG_ITEM,
+                ShengDengBewlr.INSTANCE::renderByItem);
 
         org.cneko.toneko.common.mod.client.ToNekoClient.init();
     }

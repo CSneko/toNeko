@@ -106,6 +106,9 @@ public final class ToNekoNeoForge {
         ToNekoAdminCommand.init();
         GeneticsCommand.init();
 
+        // 注册箱子战利品注入
+        ChestLootInjection.init();
+
         // 注册权限
         PermissionUtil.init();
 

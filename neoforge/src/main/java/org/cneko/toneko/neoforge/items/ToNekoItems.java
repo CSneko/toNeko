@@ -82,6 +82,7 @@ public class ToNekoItems {
     public static DeferredHolder<Item,NekoBellItem> NEKO_BELL_HOLDER;
     public static DeferredHolder<Item,NekoEnergyBatteryItem> NEKO_ENERGY_BATTERY_HOLDER;
     public static DeferredHolder<Item,NekoEnergyBatteryItem> NEKO_ENERGY_BATTERY_LARGE_HOLDER;
+    public static DeferredHolder<Item,BlockItem> SHENG_DENG_ITEM_HOLDER;
 
     public static void init() {
         registerWithOutConfig();
@@ -190,6 +191,8 @@ public class ToNekoItems {
         NEKO_ENERGY_BATTERY_LARGE_HOLDER = ITEMS.register(NekoEnergyBatteryItem.ID_LARGE,
                 () -> new NekoEnergyBatteryItem(10000, 100, 50));
 
+        SHENG_DENG_ITEM_HOLDER = ITEMS.register(ShengDengItem.ID, () -> new ShengDengItem(ToNekoBlocks.SHENG_DENG_HOLDER.get(), new Item.Properties()));
+
         // 注册物品组
         TONEKO_ITEM_GROUP_HOLDER = ToNekoNeoForge.CREATIVE_MODE_TABS.register("toneko_group", ()-> CreativeModeTab.builder()
                 .icon(()->NEKO_EARS_HOLDER.get().getDefaultInstance())
@@ -241,6 +244,7 @@ public class ToNekoItems {
                     event.accept(NEKO_BELL_HOLDER.get());
                     event.accept(NEKO_ENERGY_BATTERY_HOLDER.get());
                     event.accept(NEKO_ENERGY_BATTERY_LARGE_HOLDER.get());
+                    event.accept(SHENG_DENG_ITEM_HOLDER.get());
                     // 猫猫手册（Patchouli 指南书）
                     ItemStack guideBook = GuideBookItem.createGuideBookStack();
                     if (!guideBook.isEmpty()) {
@@ -311,6 +315,7 @@ public class ToNekoItems {
             event.accept(NEKO_BELL_HOLDER.get());
             event.accept(NEKO_ENERGY_BATTERY_HOLDER.get());
             event.accept(NEKO_ENERGY_BATTERY_LARGE_HOLDER.get());
+            event.accept(SHENG_DENG_ITEM_HOLDER.get());
             // 猫猫手册（Patchouli 指南书）
             ItemStack guideBook = GuideBookItem.createGuideBookStack();
             if (!guideBook.isEmpty()) {
@@ -321,6 +326,7 @@ public class ToNekoItems {
     }
 
     public static void reg(){
+        SHENG_DENG_ITEM = SHENG_DENG_ITEM_HOLDER.get();
         CATNIP = CATNIP_HOLDER.get();
         INFINITE_CATNIP = INFINITE_CATNIP_HOLDER.get();
         WILD_CATNIP = WILD_CATNIP_HOLDER.get();
