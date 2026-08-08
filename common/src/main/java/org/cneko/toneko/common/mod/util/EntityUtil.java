@@ -148,5 +148,16 @@ public class EntityUtil {
         return nearest;
     }
 
+    /**
+     * Find all NekoEntity within range, sorted by distance (nearest first).
+     */
+    public static List<NekoEntity> findNekoEntitiesInRange(Entity entity, Level world, float radius) {
+        return getNekoInRange(entity, world, radius).stream()
+                .filter(n -> n instanceof NekoEntity nekoEntity && nekoEntity != entity)
+                .map(n -> (NekoEntity) n)
+                .sorted(java.util.Comparator.comparingDouble(n -> entity.distanceToSqr(n)))
+                .collect(java.util.stream.Collectors.toList());
+    }
+
 
 }

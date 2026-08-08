@@ -2,12 +2,18 @@ package org.cneko.toneko.common.mod.client.screens;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.*;
+import net.minecraft.client.gui.components.AbstractContainerWidget;
+import net.minecraft.client.gui.components.AbstractSliderButton;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.MultiLineEditBox;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
+import org.cneko.toneko.common.mod.ai.proactive.NekoProactiveManager;
+import org.cneko.toneko.common.mod.ai.proactive.NekoProactiveManager.NekoProactiveTrigger;
 import org.cneko.toneko.common.mod.ai.provider.AIServiceProvider;
 import org.cneko.toneko.common.mod.ai.provider.AIServiceProviderRegistry;
 import org.cneko.toneko.common.util.ConfigUtil;
@@ -97,8 +103,8 @@ public class AIConfigScreen extends Screen {
         list.addEntry(new SectionEntry(leftX, rowW, "screen.toneko.ai_config.section.common"));
 
         // Prompt (multiline)
-        list.addEntry(new StringEntry(leftX, rowW, "ai.prompt",
-                Component.translatable("screen.toneko.config.key.ai.prompt"), ConfigUtil.getAIPrompt(), 2000));
+        list.addEntry(new MultilineEntry(leftX, rowW, "ai.prompt",
+                Component.translatable("screen.toneko.config.key.ai.prompt"), ConfigUtil.getAIPrompt(), 10000, 96));
 
         // Show think
         list.addEntry(new BoolEntry(leftX, rowW, "ai.show_think",
@@ -111,6 +117,52 @@ public class AIConfigScreen extends Screen {
         // Debug logging
         list.addEntry(new BoolEntry(leftX, rowW, "ai.debug",
                 Component.translatable("screen.toneko.config.key.ai.debug")));
+
+        // Max history
+        list.addEntry(new StringEntry(leftX, rowW, "ai.max_history",
+                Component.translatable("screen.toneko.config.key.ai.max_history"),
+                ConfigUtil.CONFIG.getString("ai.max_history"), 8));
+
+        // Cooldown
+        list.addEntry(new StringEntry(leftX, rowW, "ai.cooldown",
+                Component.translatable("screen.toneko.config.key.ai.cooldown"),
+                ConfigUtil.CONFIG.getString("ai.cooldown"), 8));
+
+        // Max concurrent nekos (area chat)
+        list.addEntry(new StringEntry(leftX, rowW, "ai.max_concurrent_neko",
+                Component.translatable("screen.toneko.config.key.ai.max_concurrent_neko"),
+                ConfigUtil.CONFIG.getString("ai.max_concurrent_neko"), 8));
+
+        // --- Section: Summary ---
+        list.addEntry(new SectionEntry(leftX, rowW, "screen.toneko.ai_config.section.summary"));
+        list.addEntry(new BoolEntry(leftX, rowW, "ai.summary.enable",
+                Component.translatable("screen.toneko.config.key.ai.summary.enable")));
+        list.addEntry(new StringEntry(leftX, rowW, "ai.summary.count",
+                Component.translatable("screen.toneko.config.key.ai.summary.count"),
+                ConfigUtil.CONFIG.getString("ai.summary.count"), 8));
+
+        // --- Section: Actions ---
+        list.addEntry(new SectionEntry(leftX, rowW, "screen.toneko.ai_config.section.actions"));
+        list.addEntry(new BoolEntry(leftX, rowW, "ai.actions.enable",
+                Component.translatable("screen.toneko.config.key.ai.actions.enable")));
+        list.addEntry(new BoolEntry(leftX, rowW, "ai.actions.virtual_items",
+                Component.translatable("screen.toneko.config.key.ai.actions.virtual_items")));
+        list.addEntry(new StringEntry(leftX, rowW, "ai.actions.energy_cost",
+                Component.translatable("screen.toneko.config.key.ai.actions.energy_cost"),
+                ConfigUtil.CONFIG.getString("ai.actions.energy_cost"), 8));
+
+        // --- Section: Proactive ---
+        list.addEntry(new SectionEntry(leftX, rowW, "screen.toneko.ai_config.section.proactive"));
+        list.addEntry(new BoolEntry(leftX, rowW, "ai.proactive.enable",
+                Component.translatable("screen.toneko.config.key.ai.proactive.enable")));
+        list.addEntry(new StringEntry(leftX, rowW, "ai.proactive.interval",
+                Component.translatable("screen.toneko.config.key.ai.proactive.interval"),
+                ConfigUtil.CONFIG.getString("ai.proactive.interval"), 8));
+        // 已注册触发器的概率配置（动态生成，滑动条 0~1：0=禁用，1=必定触发）
+        for (NekoProactiveTrigger trigger : NekoProactiveManager.getAll()) {
+            list.addEntry(new SliderEntry(leftX, rowW, NekoProactiveManager.chanceKey(trigger.getId()),
+                    Component.translatable("screen.toneko.config.key.ai.proactive.trigger." + trigger.getId())));
+        }
 
         // --- Section: TTS ---
         list.addEntry(new SectionEntry(leftX, rowW, "screen.toneko.ai_config.section.tts"));
@@ -254,6 +306,10 @@ public class AIConfigScreen extends Screen {
                 if (ch > h) scrollAmount = Mth.clamp(my / h * ch, 0, ch - h);
                 return true;
             }
+            // 转发给聚焦的条目（如滑动条拖动）
+            for (RowEntry e : entries) {
+                if (e.isFocused() && e.mouseDragged(mx, my, btn, dx, dy)) return true;
+            }
             return super.mouseDragged(mx, my, btn, dx, dy);
         }
 
@@ -286,6 +342,7 @@ public class AIConfigScreen extends Screen {
         int getHeight();
         void render(GuiGraphics g, int lx, int ly, int rx, int mx, int my, float pt);
         default void mouseClicked(double mx, double my, int btn) {}
+        default boolean mouseDragged(double mx, double my, int btn, double dx, double dy) { return false; }
         default boolean isFocused() { return false; }
         default void setFocused(boolean f) {}
         default boolean keyPressed(int keyCode, int scanCode, int modifiers) { return false; }
@@ -372,6 +429,105 @@ public class AIConfigScreen extends Screen {
         public boolean keyPressed(int kc, int sc, int md) { return focused && edit.keyPressed(kc, sc, md); }
         @Override
         public boolean charTyped(char cp, int md) { return focused && edit.charTyped(cp, md); }
+    }
+
+    /** 多行文本输入行（用于 prompt 等长文本编辑） */
+    static class MultilineEntry implements RowEntry {
+        private final String configKey;
+        private final Component label;
+        private final MultiLineEditBox edit;
+        private final int lx, rw, height;
+        private boolean focused;
+        MultilineEntry(int lx, int rw, String configKey, Component label, String value, int maxLen, int height) {
+            this.lx = lx; this.rw = rw; this.configKey = configKey; this.label = label;
+            this.height = height;
+            this.edit = new MultiLineEditBox(Minecraft.getInstance().font, 0, 0, rw - 6, height - 18,
+                    Component.empty(), Component.empty());
+            edit.setCharacterLimit(maxLen);
+            edit.setValue(value != null ? value : "");
+            edit.setValueListener(t -> ConfigUtil.CONFIG.set(configKey, t));
+        }
+        @Override public int getHeight() { return height; }
+        @Override public boolean isFocused() { return focused; }
+        @Override public void setFocused(boolean f) { this.focused = f; edit.setFocused(f); }
+        @Override
+        public void render(GuiGraphics g, int lx, int ly, int rx, int mx, int my, float pt) {
+            boolean hover = mx >= lx && mx < rx && my >= ly && my < ly + getHeight();
+            g.fill(lx, ly, rx, ly + getHeight(), hover ? 0x15FFFFFF : 0);
+            g.drawString(Minecraft.getInstance().font, label, lx + 4, ly + 4, COLOR_ACCENT);
+            edit.setX(lx + 4);
+            edit.setY(ly + 16);
+            edit.render(g, mx, my, pt);
+        }
+        @Override
+        public void mouseClicked(double mx, double my, int btn) {
+            boolean hit = mx >= lx + 4 && mx <= lx + 4 + rw - 6
+                    && my >= edit.getY() && my <= edit.getY() + edit.getHeight();
+            focused = hit;
+            edit.setFocused(hit);
+            if (hit) edit.mouseClicked(mx, my, btn);
+        }
+        @Override
+        public boolean keyPressed(int kc, int sc, int md) { return focused && edit.keyPressed(kc, sc, md); }
+        @Override
+        public boolean charTyped(char cp, int md) { return focused && edit.charTyped(cp, md); }
+    }
+
+    /** 0~1 概率滑动条行（触发器概率配置） */
+    static class SliderEntry implements RowEntry {
+        private final String configKey;
+        private final Component label;
+        private final ProbabilitySlider slider;
+        private final int lx, rw;
+        private boolean focused;
+        SliderEntry(int lx, int rw, String configKey, Component label) {
+            this.lx = lx; this.rw = rw; this.configKey = configKey; this.label = label;
+            float value = ConfigUtil.CONFIG.getFloat(configKey);
+            this.slider = new ProbabilitySlider(configKey, 0, 0, rw - 6, 16, value);
+        }
+        @Override public int getHeight() { return 30; }
+        @Override public boolean isFocused() { return focused; }
+        @Override public void setFocused(boolean f) { this.focused = f; }
+        @Override
+        public void render(GuiGraphics g, int lx, int ly, int rx, int mx, int my, float pt) {
+            boolean hover = mx >= lx && mx < rx && my >= ly && my < ly + getHeight();
+            g.fill(lx, ly, rx, ly + getHeight(), hover ? 0x15FFFFFF : 0);
+            g.drawString(Minecraft.getInstance().font, label, lx + 4, ly + 3, COLOR_ACCENT);
+            slider.setX(lx + 4);
+            slider.setY(ly + 14);
+            slider.render(g, mx, my, pt);
+        }
+        @Override
+        public void mouseClicked(double mx, double my, int btn) {
+            focused = true;
+            slider.mouseClicked(mx, my, btn);
+        }
+        @Override
+        public boolean mouseDragged(double mx, double my, int btn, double dx, double dy) {
+            return focused && slider.mouseDragged(mx, my, btn, dx, dy);
+        }
+    }
+
+    /** 概率滑动条：0~1，实时写入配置，显示百分比 */
+    static class ProbabilitySlider extends AbstractSliderButton {
+        private final String configKey;
+        ProbabilitySlider(String configKey, int x, int y, int width, int height, float value) {
+            super(x, y, width, height, Component.empty(), Math.max(0.0, Math.min(1.0, value)));
+            this.configKey = configKey;
+            updateMessage();
+        }
+        @Override
+        protected void updateMessage() {
+            float v = (float) this.value;
+            String text = v <= 0.005f
+                    ? "0% " + net.minecraft.client.resources.language.I18n.get("screen.toneko.ai_config.slider.disabled")
+                    : String.format("%.0f%%", v * 100);
+            setMessage(Component.literal(text));
+        }
+        @Override
+        protected void applyValue() {
+            ConfigUtil.CONFIG.set(configKey, (float) this.value);
+        }
     }
 
     /** Provider switcher row */

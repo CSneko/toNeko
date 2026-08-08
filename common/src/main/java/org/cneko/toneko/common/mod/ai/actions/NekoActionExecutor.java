@@ -1,0 +1,348 @@
+package org.cneko.toneko.common.mod.ai.actions;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.AABB;
+import org.cneko.toneko.common.mod.api.EntityPoseManager;
+import org.cneko.toneko.common.mod.entities.INeko;
+import org.cneko.toneko.common.mod.entities.NekoEntity;
+import org.cneko.toneko.common.mod.entities.ai.BehaviorPriority;
+import org.cneko.toneko.common.mod.entities.ai.NekoBrain;
+import org.cneko.toneko.common.util.ConfigUtil;
+import org.cneko.toneko.common.util.LanguageUtil;
+
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.cneko.toneko.common.Bootstrap.LOGGER;
+
+/**
+ * AI 动作注册表与执行器。
+ * 动作按 type 注册处理器（对齐 PromptRegistry 的模式），
+ * 新动作只需 {@link #register(String, NekoActionHandler)} 即可接入，
+ * 其 guide 说明也会自动出现在注入 prompt 的动作说明中。
+ * 内置动作由 {@link #registerDefaults()} 在 ModBootstrap 注册。
+ * 必须在服务器主线程调用 execute（调用方的 AI 回调已切主线程）。
+ */
+public class NekoActionExecutor {
+    private static final Map<String, NekoActionHandler> HANDLERS = new LinkedHashMap<>();
+    /** 动作来源标记：与其它行为（仇恨、跟随等）区分，防止误停 */
+    private static final Object ACTION_SOURCE = new Object();
+    /** 按名字查找目标实体时的搜索范围 */
+    private static final double TARGET_SEARCH_RANGE = 64.0;
+
+    private NekoActionExecutor() {}
+
+    /** 注册动作处理器；type 已存在时覆盖 */
+    public static void register(String type, NekoActionHandler handler) {
+        HANDLERS.put(type, handler);
+    }
+
+    public static boolean hasAction(String type) {
+        return HANDLERS.containsKey(type);
+    }
+
+    public static Collection<NekoActionHandler> getAll() {
+        return HANDLERS.values();
+    }
+
+    public static java.util.Set<String> getIds() {
+        return HANDLERS.keySet();
+    }
+
+    /** 注册内置动作（ModBootstrap 初始化时调用） */
+    public static void registerDefaults() {
+        register("move_to_player", new NekoActionHandler() {
+            @Override
+            public boolean handle(NekoEntity neko, ServerPlayer speaker, LivingEntity target, NekoAction action) {
+                NekoBrain brain = neko.getNekoBrain();
+                if (brain == null) return false;
+                brain.submitMove(target, 1.0, BehaviorPriority.HIGH, ACTION_SOURCE);
+                return true;
+            }
+            @Override
+            public String getGuideLine() {
+                return "{\"action\": \"move_to_player\", \"target\": \"Steve\"} - "
+                        + LanguageUtil.translatable("misc.toneko.ai.actions.guide.move_to_player");
+            }
+        });
+        register("give_item", new NekoActionHandler() {
+            @Override
+            public boolean handle(NekoEntity neko, ServerPlayer speaker, LivingEntity target, NekoAction action) {
+                giveItem(neko, target, action.item(), action.count());
+                return true;
+            }
+            @Override
+            public String getGuideLine() {
+                return "{\"action\": \"give_item\", \"item\": \"minecraft:apple\", \"count\": 1, \"target\": \"Steve\"} - "
+                        + LanguageUtil.translatable("misc.toneko.ai.actions.guide.give_item");
+            }
+        });
+        register("follow", new NekoActionHandler() {
+            @Override
+            public boolean handle(NekoEntity neko, ServerPlayer speaker, LivingEntity target, NekoAction action) {
+                if (target instanceof net.minecraft.world.entity.player.Player followTarget) {
+                    neko.followOwner(followTarget);
+                    return true;
+                }
+                return false;
+            }
+            @Override
+            public String getGuideLine() {
+                return "{\"action\": \"follow\", \"target\": \"Steve\"} - "
+                        + LanguageUtil.translatable("misc.toneko.ai.actions.guide.follow");
+            }
+        });
+        register("stop_follow", new NekoActionHandler() {
+            @Override
+            public boolean handle(NekoEntity neko, ServerPlayer speaker, LivingEntity target, NekoAction action) {
+                var goal = neko.getFollowingOwner();
+                if (goal != null) {
+                    goal.stop();
+                    return true;
+                }
+                return false;
+            }
+            @Override
+            public String getGuideLine() {
+                return "{\"action\": \"stop_follow\"} - "
+                        + LanguageUtil.translatable("misc.toneko.ai.actions.guide.stop_follow");
+            }
+        });
+        register("lie", new NekoActionHandler() {
+            @Override
+            public boolean handle(NekoEntity neko, ServerPlayer speaker, LivingEntity target, NekoAction action) {
+                // 躺下/恢复站立（toggle）
+                if (EntityPoseManager.contains(neko)) {
+                    EntityPoseManager.remove(neko);
+                } else {
+                    EntityPoseManager.setPose(neko, Pose.SLEEPING);
+                }
+                return true;
+            }
+            @Override
+            public String getGuideLine() {
+                return "{\"action\": \"lie\"} - "
+                        + LanguageUtil.translatable("misc.toneko.ai.actions.guide.lie");
+            }
+        });
+        register("stand", new NekoActionHandler() {
+            @Override
+            public boolean handle(NekoEntity neko, ServerPlayer speaker, LivingEntity target, NekoAction action) {
+                EntityPoseManager.remove(neko);
+                return true;
+            }
+            @Override
+            public String getGuideLine() {
+                return "{\"action\": \"stand\"} - "
+                        + LanguageUtil.translatable("misc.toneko.ai.actions.guide.stand");
+            }
+        });
+        register("jump", new NekoActionHandler() {
+            @Override
+            public boolean handle(NekoEntity neko, ServerPlayer speaker, LivingEntity target, NekoAction action) {
+                neko.jumpFromGround();
+                return true;
+            }
+            @Override
+            public String getGuideLine() {
+                return "{\"action\": \"jump\"} - "
+                        + LanguageUtil.translatable("misc.toneko.ai.actions.guide.jump");
+            }
+        });
+        register("eat", new NekoActionHandler() {
+            @Override
+            public boolean handle(NekoEntity neko, ServerPlayer speaker, LivingEntity target, NekoAction action) {
+                // 从背包找食物吃掉回血（eatOrStoreFood：血满且无效果时自动存回）
+                for (int i = 0; i < neko.getInventory().getContainerSize(); i++) {
+                    ItemStack stack = neko.getInventory().getItem(i);
+                    if (stack.isEmpty() || !stack.has(net.minecraft.core.component.DataComponents.FOOD)) continue;
+                    neko.getInventory().removeItem(i, 1);
+                    neko.eatOrStoreFood(stack.copy());
+                    return true;
+                }
+                return false;
+            }
+            @Override
+            public String getGuideLine() {
+                return "{\"action\": \"eat\"} - "
+                        + LanguageUtil.translatable("misc.toneko.ai.actions.guide.eat");
+            }
+        });
+        register("mate", new NekoActionHandler() {
+            @Override
+            public boolean handle(NekoEntity neko, ServerPlayer speaker, LivingEntity target, NekoAction action) {
+                // 猫娘主动发起交配（目标可为玩家或其他猫娘，canMate 会校验双方条件）
+                if (target instanceof INeko mateTarget) {
+                    neko.tryMating((ServerLevel) neko.level(), mateTarget);
+                    return true;
+                }
+                return false;
+            }
+            @Override
+            public String getGuideLine() {
+                return "{\"action\": \"mate\", \"target\": \"Steve\"} - "
+                        + LanguageUtil.translatable("misc.toneko.ai.actions.guide.mate");
+            }
+        });
+    }
+
+    /**
+     * 便捷入口：解析 AI 回复中的动作并执行，返回清理掉 JSON 代码块后的显示文本。
+     * 未启用 AI 动作时原样返回文本。必须在服务器主线程调用。
+     */
+    public static String process(NekoEntity neko, ServerPlayer player, String responseText) {
+        if (!ConfigUtil.isAIActionsEnabled()) return responseText;
+        NekoActionParser.ParseResult result = NekoActionParser.parse(responseText);
+        execute(neko, player, result.actions());
+        return result.cleanedText();
+    }
+
+    /** 执行动作列表：按 type 分发到注册的处理器，单个动作失败不影响其它 */
+    public static void execute(NekoEntity neko, ServerPlayer player, List<NekoAction> actions) {
+        if (actions == null || actions.isEmpty()) return;
+        for (NekoAction action : actions) {
+            NekoActionHandler handler = HANDLERS.get(action.type());
+            if (handler == null) {
+                LOGGER.warn("[AI-ACTION] unknown action type: {}", action.type());
+                continue;
+            }
+            try {
+                // 解析目标：缺省为说话者，指定名字时查找玩家或范围内实体
+                LivingEntity target = resolveTarget(neko, player, action);
+                if (target == null) {
+                    LOGGER.warn("[AI-ACTION] target not found for {}: {}", action.type(), action.target());
+                    continue;
+                }
+                handler.handle(neko, player, target, action);
+            } catch (Exception e) {
+                LOGGER.warn("[AI-ACTION] failed to execute {}: {}", action.type(), e.toString());
+            }
+        }
+    }
+
+    /**
+     * 解析动作目标：target 为空或缺省 → 说话者；
+     * 指定名字 → 在线玩家（忽略大小写）→ 同维度 64 格内显示名匹配的实体；
+     * 找不到返回 null（动作跳过，不误执行）。
+     */
+    private static LivingEntity resolveTarget(NekoEntity neko, ServerPlayer speaker, NekoAction action) {
+        String targetName = action.target();
+        if (targetName == null || targetName.isBlank()) return speaker;
+
+        // 1. 在线玩家按名字（忽略大小写）
+        for (ServerPlayer p : neko.level().getServer().getPlayerList().getPlayers()) {
+            if (p.getName().getString().equalsIgnoreCase(targetName)) return p;
+        }
+        // 2. 同维度 64 格内实体按显示名（支持指向其他猫娘）
+        AABB box = neko.getBoundingBox().inflate(TARGET_SEARCH_RANGE);
+        for (Entity entity : neko.level().getEntities(neko, box)) {
+            if (entity == neko) continue;
+            String displayName = entity.getDisplayName().getString();
+            if (displayName.equalsIgnoreCase(targetName)) return entity instanceof LivingEntity living ? living : null;
+        }
+        return null;
+    }
+
+    /**
+     * 生成注入 prompt 的动作说明文本（由所有已注册动作的 guide 行组成）。
+     */
+    public static String actionGuide() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n").append(LanguageUtil.translatable("misc.toneko.ai.actions.guide.header"));
+        for (NekoActionHandler handler : HANDLERS.values()) {
+            String line = handler.getGuideLine();
+            if (line != null && !line.isEmpty()) {
+                sb.append("\n").append(line);
+            }
+        }
+        String footer = LanguageUtil.translatable("misc.toneko.ai.actions.guide.footer");
+        if (!footer.isEmpty() && !footer.equals("misc.toneko.ai.actions.guide.footer")) {
+            sb.append("\n").append(footer);
+        }
+        return sb.toString();
+    }
+
+    /** 给予物品：背包优先，背包没有且配置允许时虚拟生成（消耗猫娘能量） */
+    private static void giveItem(NekoEntity neko, LivingEntity target, String itemId, int count) {
+        if (itemId == null || itemId.isEmpty()) return;
+        Item item = parseItem(itemId);
+        if (item == null) {
+            LOGGER.warn("[AI-ACTION] unknown item id: {}", itemId);
+            return;
+        }
+
+        // 1. 背包优先
+        int slot = neko.getInventory().findSlotMatchingItem(new ItemStack(item));
+        if (slot >= 0) {
+            ItemStack stack = neko.getInventory().removeItem(slot, count);
+            if (!stack.isEmpty()) {
+                giveToPlayer(target, stack);
+                return;
+            }
+        }
+
+        // 2. 虚拟生成（配置开启且能量足够）
+        if (ConfigUtil.isAIActionsVirtualItems()) {
+            int cost = Math.max(1, ConfigUtil.getAIActionsEnergyCost());
+            if (neko.getNekoEnergy() >= cost) {
+                neko.setNekoEnergy(neko.getNekoEnergy() - cost);
+                giveToPlayer(target, new ItemStack(item, count));
+                return;
+            }
+        }
+        LOGGER.info("[AI-ACTION] neko has no {} in inventory and cannot generate (virtual={} energy={})",
+                itemId, ConfigUtil.isAIActionsVirtualItems(), neko.getNekoEnergy());
+    }
+
+    /** 给目标物品：玩家背包放不下时掉落到目标位置 */
+    private static void giveToPlayer(LivingEntity target, ItemStack stack) {
+        if (target instanceof ServerPlayer player) {
+            if (!player.addItem(stack)) {
+                player.drop(stack, false);
+            }
+        } else {
+            // 非玩家实体：掉落到其位置
+            target.spawnAtLocation(stack);
+        }
+    }
+
+    private static Item parseItem(String itemId) {
+        ResourceLocation id = ResourceLocation.tryParse(itemId);
+        if (id == null) return null;
+        Item item = BuiltInRegistries.ITEM.get(id);
+        return item == null || item == net.minecraft.world.item.Items.AIR ? null : item;
+    }
+
+    /**
+     * 动作处理器：处理指定类型的动作，并贡献 prompt 中的动作说明行。
+     */
+    public interface NekoActionHandler {
+        /**
+         * 执行动作。
+         * @param neko   执行动作的猫娘
+         * @param speaker 正在与猫娘对话的玩家
+         * @param target 动作目标（action.target 解析结果，缺省为 speaker；找不到时不会调用）
+         * @return 是否成功执行（用于日志/调试）
+         */
+        boolean handle(NekoEntity neko, ServerPlayer speaker, LivingEntity target, NekoAction action);
+
+        /**
+         * 该动作的 guide 行（JSON 示例 + 说明，注入 prompt 用）。
+         * 说明文本建议使用 {@link LanguageUtil#translatable(String)} 支持多语言。
+         * 返回空字符串表示不显示在 guide 中。
+         */
+        default String getGuideLine() {
+            return "";
+        }
+    }
+}

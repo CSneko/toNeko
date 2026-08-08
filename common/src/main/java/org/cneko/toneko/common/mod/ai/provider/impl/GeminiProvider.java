@@ -44,15 +44,15 @@ public class GeminiProvider implements AIServiceProvider {
 
     @Override
     public AIResponse processRequest(AIServiceConfig config, AIRequest request) throws Exception {
-        GeminiConfig geminiConfig = new GeminiConfig(config.getApiKey());
-        geminiConfig.setModel(config.getModel());
-        if (config.getProxy() != null) geminiConfig.setProxy(config.getProxy());
+        GeminiConfig geminiConfig = new GeminiConfig(config.getApiKey())
+                .withModel(config.getModel());
+        if (config.getProxy() != null) geminiConfig = geminiConfig.withProxy(config.getProxy());
 
         // Only override host if user explicitly set a custom base_url (different from default)
         String customHost = config.getHost();
         if (customHost != null && !customHost.isEmpty()
                 && !customHost.equals(getDefaultHost())) {
-            geminiConfig.setHost(customHost);
+            geminiConfig = geminiConfig.withHost(customHost);
         }
 
         GeminiService service = new GeminiService(geminiConfig);

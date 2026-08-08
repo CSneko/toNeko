@@ -1,53 +1,38 @@
 package org.cneko.toneko.common.mod.ai.provider.impl;
 
 import com.google.gson.Gson;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.handler.codec.http.*;
-import org.cneko.ai.NekoLogger;
+import org.cneko.ai.core.AIException;
 import org.cneko.ai.core.AIHistory;
 import org.cneko.ai.core.AIRequest;
 import org.cneko.ai.core.AIResponse;
-import org.cneko.ai.providers.AbstractNettyAIService;
+import org.cneko.ai.providers.AbstractAIService;
 import org.cneko.ai.providers.gemini.GeminiConfig;
-import org.cneko.ai.util.FileStorageUtil;
 import org.cneko.toneko.common.mod.ai.AIServiceConfig;
 
 import java.net.URLEncoder;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
-import java.util.concurrent.CompletableFuture;
-
-import static org.cneko.toneko.common.Bootstrap.LOGGER;
 
 /**
  * Custom CNeko AI service that communicates with chat.ai.cneko.org.
- * Extracted from AIUtil to standalone file.
+ * 基于 JDK HttpClient（NekoAI v0.2.0），协议与旧版一致：
+ * POST /?p=prompt&t=message&key=key&model=model&ver=1，body 与 msg 头携带历史 JSON。
  */
-public class CNekoAIService extends AbstractNettyAIService<GeminiConfig> {
+public class CNekoAIService extends AbstractAIService<GeminiConfig> {
 
     private static final Gson gson = new Gson();
     private final AIServiceConfig serviceConfig;
 
-    public CNekoAIService(GeminiConfig config, AIServiceConfig serviceConfig) throws Exception {
+    public CNekoAIService(GeminiConfig config, AIServiceConfig serviceConfig) {
         super(config);
         this.serviceConfig = serviceConfig;
     }
 
     @Override
-    protected void initChannel(SocketChannel ch, AIRequest request, CompletableFuture<AIResponse> future) {
-        configurePipeline(ch, new CnekoHandler(request, future));
-    }
-
-    @Override
-    protected void sendRequest(Channel channel, AIRequest request) {
-        AIHistory history = prepareHistory(request);
+    protected HttpRequest buildRequest(AIRequest request) {
+        AIHistory history = buildHistory(request);
         String jsonBody = history.toJson();
-        byte[] bodyBytes = jsonBody.getBytes(StandardCharsets.UTF_8);
-        ByteBuf buf = Unpooled.wrappedBuffer(bodyBytes);
 
         String msg = request.getQuery().replace("&", "");
         String encodedPrompt = URLEncoder.encode(request.getPrompt() != null ? request.getPrompt() : "无提示词", StandardCharsets.UTF_8);
@@ -56,71 +41,28 @@ public class CNekoAIService extends AbstractNettyAIService<GeminiConfig> {
         String encodeModel = URLEncoder.encode(config.getModel(), StandardCharsets.UTF_8);
         String query = String.format("p=%s&t=%s&key=%s&model=%s&ver=1", encodedPrompt, encodedMessage, encodedKey, encodeModel);
 
-        String encodedJsonBody = URLEncoder.encode(jsonBody, StandardCharsets.UTF_8);
-
-        FullHttpRequest httpRequest = new DefaultFullHttpRequest(
-                HttpVersion.HTTP_1_1,
-                HttpMethod.POST,
-                "/?" + query,
-                buf
-        );
-        httpRequest.headers()
-                .set(HttpHeaderNames.HOST, config.getHost())
-                .set(HttpHeaderNames.CONTENT_TYPE, HttpHeaderValues.APPLICATION_JSON)
-                .set(HttpHeaderNames.CONTENT_LENGTH, buf.readableBytes())
-                .set("msg", jsonBody);
-
-        channel.writeAndFlush(httpRequest);
+        return HttpRequest.newBuilder(buildUri("/?" + query))
+                .header("Content-Type", "application/json")
+                .header("msg", jsonBody)
+                .POST(HttpRequest.BodyPublishers.ofString(jsonBody, StandardCharsets.UTF_8))
+                .build();
     }
 
-    private static class CnekoHandler extends SimpleChannelInboundHandler<FullHttpResponse> {
-        private final AIRequest request;
-        private final CompletableFuture<AIResponse> future;
-
-        public CnekoHandler(AIRequest request, CompletableFuture<AIResponse> future) {
-            this.request = request;
-            this.future = future;
-        }
-
-        @Override
-        protected void channelRead0(ChannelHandlerContext ctx, FullHttpResponse response) {
-            String content = response.content().toString(StandardCharsets.UTF_8);
-            int code = response.status().code();
-            if (code != HttpResponseStatus.OK.code()) {
-                future.complete(new AIResponse("API Error: " + content, code));
-                return;
+    @Override
+    protected AIResponse parseResponse(AIRequest request, HttpResponse<String> response) throws AIException {
+        try {
+            CnekoResponse responseObj = gson.fromJson(response.body(), CnekoResponse.class);
+            if (responseObj == null || responseObj.response == null) {
+                throw new AIException(AIException.ErrorType.PARSE, "No response field in CNeko response", 200);
             }
-
-            try {
-                CnekoResponse responseObj = gson.fromJson(content, CnekoResponse.class);
-                String responseText = responseObj.response;
-                responseText = responseText.replace("\\n", "");
-
-                try {
-                    FileStorageUtil.saveConversation(
-                            request.getSessionId(),
-                            request.getUserId(),
-                            request.getQuery(),
-                            responseText
-                    );
-                } catch (Exception e) {
-                    NekoLogger.LOGGER.error("Error saving conversation: {}", e.getMessage());
-                }
-
-                future.complete(new AIResponse(responseText.trim(), code));
-            } catch (Exception e) {
-                future.complete(new AIResponse("Response parsing error: " + e.getMessage(), code));
-            }
+            String responseText = responseObj.response.replace("\\n", "");
+            return new AIResponse(responseText.trim(), 200);
+        } catch (RuntimeException e) {
+            throw new AIException(AIException.ErrorType.PARSE, "Response parsing error: " + e.getMessage(), 200, e);
         }
+    }
 
-        @Override
-        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-            future.complete(new AIResponse("Network error: " + cause.getMessage(), 400));
-            ctx.close();
-        }
-
-        public static class CnekoResponse {
-            public String response;
-        }
+    public static class CnekoResponse {
+        public String response;
     }
 }

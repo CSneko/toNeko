@@ -406,7 +406,7 @@ public class ToNekoAdminCommand {
         sendTransTo(player, "command.tonekoadmin.ai.test.sending",
                 provider != null ? provider.getDisplayName() : providerId);
         UUID testUuid = UUID.randomUUID();
-        AIUtil.sendMessage(testUuid, player.getUniqueId(), ConfigUtil.getAIPrompt(), message, response -> {
+        AIUtil.sendMessage(testUuid.toString(), player.getUniqueId(), ConfigUtil.getAIPrompt(), message, response -> {
             Bukkit.getScheduler().runTask(INSTANCE, () -> {
                 player.sendMessage(Component.text("§b[AI Test] §f" + response.getResponse()));
             });

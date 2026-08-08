@@ -1,28 +1,21 @@
 package org.cneko.toneko.common.mod.ai.provider.impl;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.handler.codec.http.*;
-import org.cneko.ai.NekoLogger;
+import org.cneko.ai.core.AIException;
 import org.cneko.ai.core.AIHistory;
 import org.cneko.ai.core.AIRequest;
 import org.cneko.ai.core.AIResponse;
-import org.cneko.ai.providers.AbstractNettyAIService;
+import org.cneko.ai.providers.AbstractAIService;
 import org.cneko.ai.providers.openai.OpenAIConfig;
-import org.cneko.ai.util.FileStorageUtil;
 import org.cneko.toneko.common.mod.ai.AIServiceConfig;
 import org.cneko.toneko.common.mod.ai.provider.AIServiceProvider;
 
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * Anthropic Claude provider.
@@ -60,47 +53,55 @@ public class AnthropicProvider implements AIServiceProvider {
 
     @Override
     public AIResponse processRequest(AIServiceConfig config, AIRequest request) throws Exception {
-        OpenAIConfig openAIConfig = new OpenAIConfig(config.getApiKey());
-        openAIConfig.setModel(config.getModel());
-        OpenAIProvider.applyCommon(openAIConfig, config, getDefaultHost());
-        AnthropicService service = new AnthropicService(openAIConfig, config);
+        OpenAIConfig openAIConfig = OpenAIProvider.applyCommon(
+                new OpenAIConfig(config.getApiKey()).withModel(config.getModel()), config, getDefaultHost());
+        AnthropicService service = new AnthropicService(openAIConfig);
         return service.processRequest(request);
     }
 
     /**
-     * Custom service for Anthropic Messages API.
+     * Custom service for Anthropic Messages API, based on JDK HttpClient (NekoAI v0.2.0).
      */
-    static class AnthropicService extends AbstractNettyAIService<OpenAIConfig> {
+    static class AnthropicService extends AbstractAIService<OpenAIConfig> {
         private static final Gson gson = new Gson();
         private static final String ANTHROPIC_VERSION = "2023-06-01";
-        private final AIServiceConfig serviceConfig;
 
-        public AnthropicService(OpenAIConfig config, AIServiceConfig serviceConfig) throws Exception {
+        public AnthropicService(OpenAIConfig config) {
             super(config);
-            this.serviceConfig = serviceConfig;
         }
 
         @Override
-        protected void initChannel(SocketChannel ch, AIRequest request, CompletableFuture<AIResponse> future) {
-            configurePipeline(ch, new AnthropicHandler(request, future, serviceConfig));
-        }
-
-        @Override
-        protected void sendRequest(Channel channel, AIRequest request) {
-            AIHistory history = prepareHistory(request);
-
-            // Build Anthropic-format messages from conversation history JSON
+        protected HttpRequest buildRequest(AIRequest request) {
+            // 从 AIHistory 提取消息（强类型遍历，无需 JSON 解析）
             List<AnthropicMessage> messages = new ArrayList<>();
-            if (history != null) {
-                // Parse AIHistory JSON to extract messages (Gemini or OpenAI format)
-                messages.addAll(parseHistory(history.toJson()));
+            AIHistory history = request.getHistory();
+            if (history != null && history.getContents() != null) {
+                for (AIHistory.Content content : history.getContents()) {
+                    String role;
+                    switch (content.getRole()) {
+                        case USER: role = "user"; break;
+                        case MODEL: role = "assistant"; break;
+                        default: continue; // SYSTEM 角色通过顶层 system 字段传递
+                    }
+                    String text = content.getParts() != null
+                            ? content.getParts().stream()
+                                    .map(AIHistory.Content.Part::getText)
+                                    .reduce("", String::concat)
+                            : "";
+                    if (text.isEmpty()) continue;
+                    // Anthropic 要求 user/assistant 角色交替，合并连续相同角色的消息
+                    if (!messages.isEmpty() && messages.get(messages.size() - 1).role.equals(role)) {
+                        messages.get(messages.size() - 1).content += "\n" + text;
+                    } else {
+                        messages.add(new AnthropicMessage(role, text));
+                    }
+                }
             }
-            // Add the current user query
+            // 添加当前用户 query（若历史最后一条是 user 也会被合并）
             messages.add(new AnthropicMessage("user", request.getQuery()));
 
-            // Build request body
             AnthropicRequestBody body = new AnthropicRequestBody();
-            body.model = config.getModel();
+            body.model = resolveModel(request);
             body.maxTokens = 1024;
             body.messages = messages;
             if (request.getPrompt() != null && !request.getPrompt().isEmpty()) {
@@ -108,137 +109,34 @@ public class AnthropicProvider implements AIServiceProvider {
             }
 
             String jsonBody = gson.toJson(body);
-            byte[] bodyBytes = jsonBody.getBytes(StandardCharsets.UTF_8);
-            ByteBuf buf = Unpooled.wrappedBuffer(bodyBytes);
-
-            FullHttpRequest httpRequest = new DefaultFullHttpRequest(
-                    HttpVersion.HTTP_1_1,
-                    HttpMethod.POST,
-                    config.getEndpoint(),
-                    buf
-            );
-            httpRequest.headers()
-                    .set(HttpHeaderNames.HOST, config.getHost())
-                    .set(HttpHeaderNames.CONTENT_TYPE, HttpHeaderValues.APPLICATION_JSON)
-                    .set(HttpHeaderNames.CONTENT_LENGTH, bodyBytes.length)
-                    .set("x-api-key", serviceConfig.getApiKey())
-                    .set("anthropic-version", ANTHROPIC_VERSION);
-
-            channel.writeAndFlush(httpRequest);
+            return HttpRequest.newBuilder(buildUri(config.getEndpoint()))
+                    .header("Content-Type", "application/json")
+                    .header("x-api-key", config.getApiKey())
+                    .header("anthropic-version", ANTHROPIC_VERSION)
+                    .POST(HttpRequest.BodyPublishers.ofString(jsonBody, StandardCharsets.UTF_8))
+                    .build();
         }
 
-        /**
-         * Parse AIHistory JSON (Gemini format: {"contents": [...]} or OpenAI format: {"messages": [...]})
-         * and extract role/content pairs as AnthropicMessage list.
-         */
-        private static List<AnthropicMessage> parseHistory(String json) {
-            List<AnthropicMessage> result = new ArrayList<>();
+        @Override
+        protected AIResponse parseResponse(AIRequest request, HttpResponse<String> response) throws AIException {
             try {
-                JsonObject root = JsonParser.parseString(json).getAsJsonObject();
-                // Try Gemini format: contents[]
-                if (root.has("contents")) {
-                    JsonArray contents = root.getAsJsonArray("contents");
-                    for (JsonElement e : contents) {
-                        JsonObject entry = e.getAsJsonObject();
-                        String role = entry.has("role") ? entry.get("role").getAsString() : "user";
-                        if ("model".equals(role)) role = "assistant";
-                        String text = "";
-                        if (entry.has("parts")) {
-                            JsonArray parts = entry.getAsJsonArray("parts");
-                            if (!parts.isEmpty()) {
-                                text = parts.get(0).getAsJsonObject().get("text").getAsString();
-                            }
-                        }
-                        if (!text.isEmpty()) {
-                            result.add(new AnthropicMessage(role, text));
+                AnthropicResponseBody responseObj = gson.fromJson(response.body(), AnthropicResponseBody.class);
+                StringBuilder responseText = new StringBuilder();
+                if (responseObj != null && responseObj.content != null) {
+                    for (AnthropicContentBlock block : responseObj.content) {
+                        if ("text".equals(block.type) && block.text != null) {
+                            responseText.append(block.text);
                         }
                     }
                 }
-                // Try OpenAI format: messages[]
-                else if (root.has("messages")) {
-                    JsonArray msgs = root.getAsJsonArray("messages");
-                    for (JsonElement e : msgs) {
-                        JsonObject entry = e.getAsJsonObject();
-                        String role = entry.get("role").getAsString();
-                        String content = entry.get("content").getAsString();
-                        result.add(new AnthropicMessage(role, content));
-                    }
+
+                String finalText = responseText.toString().trim();
+                if (finalText.isEmpty()) {
+                    throw new AIException(AIException.ErrorType.PARSE, "Claude returned empty response", 200);
                 }
-            } catch (Exception ignored) {
-                // If parsing fails, just use the current query without history
-            }
-            return result;
-        }
-
-        private static class AnthropicHandler extends SimpleChannelInboundHandler<FullHttpResponse> {
-            private final AIRequest request;
-            private final CompletableFuture<AIResponse> future;
-            private final AIServiceConfig serviceConfig;
-
-            public AnthropicHandler(AIRequest request, CompletableFuture<AIResponse> future, AIServiceConfig serviceConfig) {
-                this.request = request;
-                this.future = future;
-                this.serviceConfig = serviceConfig;
-            }
-
-            @Override
-            protected void channelRead0(ChannelHandlerContext ctx, FullHttpResponse response) {
-                String content = response.content().toString(StandardCharsets.UTF_8);
-                int code = response.status().code();
-                if (code != HttpResponseStatus.OK.code()) {
-                    // Try to extract error message from Anthropic error response
-                    try {
-                        JsonObject errorObj = JsonParser.parseString(content).getAsJsonObject();
-                        if (errorObj.has("error")) {
-                            JsonObject err = errorObj.getAsJsonObject("error");
-                            String errMsg = err.has("message") ? err.get("message").getAsString() : content;
-                            future.complete(new AIResponse("Anthropic Error: " + errMsg, code));
-                            return;
-                        }
-                    } catch (Exception ignored) {}
-                    future.complete(new AIResponse("API Error: " + content, code));
-                    return;
-                }
-
-                try {
-                    AnthropicResponseBody responseObj = gson.fromJson(content, AnthropicResponseBody.class);
-                    StringBuilder responseText = new StringBuilder();
-                    if (responseObj.content != null) {
-                        for (AnthropicContentBlock block : responseObj.content) {
-                            if ("text".equals(block.type) && block.text != null) {
-                                responseText.append(block.text);
-                            }
-                        }
-                    }
-
-                    String finalText = responseText.toString().trim();
-                    if (finalText.isEmpty()) {
-                        future.complete(new AIResponse("[Claude returned empty response]", code));
-                        return;
-                    }
-
-                    // Save conversation
-                    try {
-                        FileStorageUtil.saveConversation(
-                                request.getSessionId(),
-                                request.getUserId(),
-                                request.getQuery(),
-                                finalText
-                        );
-                    } catch (Exception e) {
-                        NekoLogger.LOGGER.error("Error saving conversation: {}", e.getMessage());
-                    }
-
-                    future.complete(new AIResponse(finalText, code));
-                } catch (Exception e) {
-                    future.complete(new AIResponse("Response parsing error: " + e.getMessage(), code));
-                }
-            }
-
-            @Override
-            public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-                future.complete(new AIResponse("Network error: " + cause.getMessage(), 400));
-                ctx.close();
+                return new AIResponse(finalText, 200);
+            } catch (RuntimeException e) {
+                throw new AIException(AIException.ErrorType.PARSE, "Response parsing error: " + e.getMessage(), 200, e);
             }
         }
 

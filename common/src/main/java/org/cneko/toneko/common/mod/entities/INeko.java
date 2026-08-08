@@ -43,6 +43,15 @@ public interface INeko {
     default void setNeko(boolean isNeko){
     }
 
+    /**
+     * 稳定的 AI 聊天存储标识。
+     * NekoEntity 使用持久化在 NBT 中的 AI ID（实体 UUID 变化时聊天记录仍能对应），
+     * 其他实现默认回退到实体当前 UUID。
+     */
+    default String getAIStorageId(){
+        return this.getEntity().getUUID().toString();
+    }
+
     default int getNekoAge() {
         return 0;
     }

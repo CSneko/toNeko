@@ -5,6 +5,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.PlayerChatMessage;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import org.cneko.toneko.common.mod.ai.actions.NekoActionExecutor;
 import org.cneko.toneko.common.Stats;
 import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
@@ -16,7 +17,9 @@ import org.cneko.toneko.common.util.AIUtil;
 import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.common.util.LanguageUtil;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import static org.cneko.toneko.common.Bootstrap.LOGGER;
 
@@ -78,14 +81,30 @@ public class CommonChatEvent {
         if (!ConfigUtil.isAIEnabled()) return;
         if (message.isEmpty()) return;
 
-        NekoEntity neko = EntityUtil.findNearestNekoEntity(sender, sender.level(), (float) NEKO_AI_RANGE);
-        if (neko == null) return;
+        // 范围内所有猫娘按距离近到远排序，按配置限制同时触发的数量
+        List<NekoEntity> nekos = EntityUtil.findNekoEntitiesInRange(sender, sender.level(), (float) NEKO_AI_RANGE);
+        int max = ConfigUtil.getAIMaxConcurrentNeko();
+        if (max > 0 && nekos.size() > max) {
+            nekos = new ArrayList<>(nekos.subList(0, max));
+        }
+        if (nekos.isEmpty()) return;
 
-        AIUtil.sendMessage(neko.getUUID(), sender.getUUID(), neko.generateAIPrompt(sender), message, response -> {
-            String r = Messaging.format(response.getResponse(), neko,
-                    Collections.singletonList(LanguageUtil.prefix), ConfigUtil.getChatFormat());
-            sender.sendSystemMessage(Component.literal(r));
-        });
+        boolean first = true;
+        for (NekoEntity neko : nekos) {
+            // 同一条玩家消息的批次：第一只正常检查冷却并计时，其余跳过冷却（ignoreCooldown）
+            AIUtil.sendMessage(neko.getAIStorageId(), sender.getUUID(), neko.generateAIPrompt(sender), message, response -> {
+                // AI回调在后台线程执行，切回服务器主线程再发消息
+                sender.getServer().execute(() -> {
+                    // 解析并执行 AI 动作（移动/给予物品），聊天窗口显示清理后的文本
+                    String displayText = NekoActionExecutor.process(neko, sender, response.getResponse());
+                    // 聊天格式中的 %name% 会显示猫娘名字，前缀保持统一的「猫娘」
+                    String r = Messaging.format(displayText, neko,
+                            Collections.singletonList(LanguageUtil.prefix), ConfigUtil.getChatFormat());
+                    sender.sendSystemMessage(Component.literal(r));
+                });
+            }, !first);
+            first = false;
+        }
     }
 
     /** Proximity chat: trigger neko AI only when message starts with configured prefix */
@@ -102,10 +121,15 @@ public class CommonChatEvent {
         NekoEntity neko = EntityUtil.findNearestNekoEntity(sender, sender.level(), (float) NEKO_AI_RANGE);
         if (neko == null) return;
 
-        AIUtil.sendMessage(neko.getUUID(), sender.getUUID(), neko.generateAIPrompt(sender), aiMessage, response -> {
-            String r = Messaging.format(response.getResponse(), neko,
-                    Collections.singletonList(LanguageUtil.prefix), ConfigUtil.getChatFormat());
-            sender.sendSystemMessage(Component.literal(r));
+        AIUtil.sendMessage(neko.getAIStorageId(), sender.getUUID(), neko.generateAIPrompt(sender), aiMessage, response -> {
+            // AI回调在后台线程执行，切回服务器主线程再发消息
+            sender.getServer().execute(() -> {
+                // 解析并执行 AI 动作（移动/给予物品），聊天窗口显示清理后的文本
+                String displayText = NekoActionExecutor.process(neko, sender, response.getResponse());
+                String r = Messaging.format(displayText, neko,
+                        Collections.singletonList(LanguageUtil.prefix), ConfigUtil.getChatFormat());
+                sender.sendSystemMessage(Component.literal(r));
+            });
         });
     }
 

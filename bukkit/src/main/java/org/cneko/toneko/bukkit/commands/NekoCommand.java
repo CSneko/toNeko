@@ -227,7 +227,7 @@ public class NekoCommand {
         String prompt = ConfigUtil.getAIPrompt()
                 .replace("%neko_name%", nekoPlayer != null ? nekoPlayer.getName() : "???")
                 .replace("%player_name%", player.getName());
-        AIUtil.sendMessage(finalNeko, player.getUniqueId(), prompt, message, response -> {
+        AIUtil.sendMessage(finalNeko.toString(), player.getUniqueId(), prompt, message, response -> {
             Bukkit.getScheduler().runTask(INSTANCE, () -> {
                 String reply = response.getResponse();
                 if (reply != null && !reply.isEmpty()) {

@@ -52,6 +52,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.cneko.toneko.common.mod.ai.proactive.NekoProactiveManager;
 import org.cneko.toneko.common.mod.advencements.ToNekoCriteria;
 import org.cneko.toneko.common.mod.ai.PromptRegistry;
 import org.cneko.toneko.common.mod.api.NekoLevelRegistry;
@@ -68,6 +69,7 @@ import org.cneko.toneko.common.mod.misc.ToNekoSoundEvents;
 import org.cneko.toneko.common.mod.packets.interactives.NekoEntityInteractivePayload;
 import org.cneko.toneko.common.mod.quirks.Quirk;
 import org.cneko.toneko.common.mod.util.EntityUtil;
+import org.cneko.toneko.common.util.AIUtil;
 import org.cneko.toneko.common.util.ConfigUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -189,30 +191,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
         if (this.getSkin().equals(this.getDefaultSkin())) {
             this.setSkin(NekoSkinRegistry.getRandomSkin(getType()));
         }
-
-        if (!this.hasAnyMoeTags()) {
-            this.generateRandomMoeTags();
-        }
-    }
-
-    /**
-     * 辅助方法：随机生成 2~3 个不重复的萌属性
-     */
-    public void generateRandomMoeTags() {
-        // 1. 创建标签列表的副本（因为我们要打乱它，不能直接改静态的常量列表）
-        List<String> availableTags = new ArrayList<>(MOE_TAGS);
-
-        // 2. 打乱列表顺序 (使用实体的随机种子)
-        Collections.shuffle(availableTags, new java.util.Random(this.random.nextLong()));
-
-        // 3. 随机决定数量：1~3
-        int count = Mth.nextInt(this.random, 1, 3);
-
-        // 4. 截取前 count 个元素作为结果
-        List<String> selectedTags = availableTags.subList(0, count);
-
-        // 5. 设置属性
-        this.setMoeTags(selectedTags);
+        // 萌属性不再随机生成：完全由基因表达决定（见 expressTraits）
     }
 
 
@@ -239,6 +218,10 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
         compound.putInt("GatheringPower", this.getGatheringPower());
         compound.putString("MoeTags", String.join(":", this.getMoeTags()));
         this.saveNekoNBTData(compound);
+        // 持久化 AI 存储 ID：实体 UUID 变化时聊天记录仍能对应
+        if (aiStorageId != null) {
+            compound.putString(AI_STORAGE_ID_TAG, aiStorageId);
+        }
         compound.put("Genome", this.genome.save());
         compound.put("GeneticData", this.geneticData);
         compound.putInt("LastFoodHealTick", this.lastFoodHealTick);
@@ -264,16 +247,13 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
         }
         if (compound.contains("MoeTags")) {
             this.entityData.set(MOE_TAGS_ID, compound.getString("MoeTags"));
-        }else {
-            // 随机设置2~3个萌属性喵
-            List<String> tags = new ArrayList<>();
-            for (int i = 0; i < Mth.nextInt(this.random, 2, 3); i++) {
-                tags.add(MOE_TAGS.get(Mth.nextInt(this.random, 0, MOE_TAGS.size() - 1)));
-            }
-            this.setMoeTags(tags);
-
         }
+        // 无 MoeTags 时不再随机生成：萌属性完全由基因表达决定（见 expressTraits）
         this.loadNekoNBTData(compound);
+        // 读取持久化的 AI 存储 ID
+        if (compound.contains(AI_STORAGE_ID_TAG)) {
+            this.aiStorageId = compound.getString(AI_STORAGE_ID_TAG);
+        }
         if (compound.contains("Genome")) {
             this.genome.load(compound.getCompound("Genome"));
         }
@@ -802,6 +782,8 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     }
     public void slowTick(){
         if (!this.level().isClientSide()){
+            // 猫娘主动发言调度（每秒检查一次，由注册的触发器按概率触发）
+            NekoProactiveManager.tick(this);
             this.setMoeTags(this.getMoeTags());
             this.setSkin(this.getSkin());
             this.serverNekoSlowTick();
@@ -995,10 +977,9 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
                 Gamete gamete2 = Genome.generateFallbackGamete(child.random, ToNekoLocus.NEKO_KARYOTYPE);
                 child.setGenome(Genome.combine(gamete1, gamete2, ToNekoLocus.NEKO_KARYOTYPE));
                 child.expressTraits();
-                // 强制随机化名字、皮肤、萌属性
+                // 强制随机化名字、皮肤（萌属性由基因表达决定，不在此随机）
                 child.setCustomName(Component.literal(NekoNameRegistry.getRandomName()));
                 child.setSkin(NekoSkinRegistry.getRandomSkin(child.getType()));
-                child.generateRandomMoeTags();
                 EntityUtil.randomizeAttributeValue(child, Attributes.SCALE,1,0.65,1.05);
                 EntityUtil.randomizeAttributeValue(child, Attributes.MOVEMENT_SPEED,0.7,0.5,0.6);
             }
@@ -1586,6 +1567,19 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
         return owners;
     }
 
+    /** 持久化的 AI 聊天存储 ID（实体 UUID 变化时保持不变，NBT 持久化） */
+    private String aiStorageId;
+    private static final String AI_STORAGE_ID_TAG = "AIStorageId";
+    @Override
+    public String getAIStorageId() {
+        if (aiStorageId == null) {
+            aiStorageId = UUID.randomUUID().toString();
+            // 首次生成时把旧路径（当前 UUID）下的聊天记录迁移到新路径，避免历史丢失
+            AIUtil.migrateNekoStorage(this.getUUID().toString(), aiStorageId);
+        }
+        return aiStorageId;
+    }
+
     private List<BlockedWord> blockedWords = new ArrayList<>();
     @Override
     public List<BlockedWord> getBlockedWords() {
@@ -1639,6 +1633,8 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     @Override
     public void expressTraits() {
         if (!this.level().isClientSide) {
+            // 萌属性完全由基因决定：先清空旧值（包括历史上随机生成的残留），再按基因表达
+            this.setMoeTags(List.of());
             this.genome.express(this);
 
             // 同步胸部大小缩放值到客户端

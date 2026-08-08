@@ -40,10 +40,15 @@ public class CNekoAIProvider implements AIServiceProvider {
 
     @Override
     public AIResponse processRequest(AIServiceConfig config, AIRequest request) throws Exception {
-        GeminiConfig geminiConfig = new GeminiConfig(config.getApiKey());
-        geminiConfig.setModel(config.getModel());
-        if (config.getProxy() != null) geminiConfig.setProxy(config.getProxy());
-        if (config.getHost() != null && !config.getHost().isEmpty()) geminiConfig.setHost(config.getHost());
+        GeminiConfig geminiConfig = new GeminiConfig(config.getApiKey())
+                .withModel(config.getModel());
+        if (config.getProxy() != null) geminiConfig = geminiConfig.withProxy(config.getProxy());
+        // 用户配置了 base_url 时，连同端口和 TLS 一起覆盖（自定义连接参数完全生效）
+        if (config.getHost() != null && !config.getHost().isEmpty()) {
+            geminiConfig = geminiConfig.withHost(config.getHost())
+                    .withPort(config.getPort())
+                    .withTls(config.isTls());
+        }
         CNekoAIService service = new CNekoAIService(geminiConfig, config);
         return service.processRequest(request);
     }

@@ -41,9 +41,8 @@ public class DeepSeekProvider implements AIServiceProvider {
 
     @Override
     public AIResponse processRequest(AIServiceConfig config, AIRequest request) throws Exception {
-        OpenAIConfig openAIConfig = new OpenAIConfig(config.getApiKey());
-        openAIConfig.setModel(config.getModel());
-        OpenAIProvider.applyCommon(openAIConfig, config, getDefaultHost());
+        OpenAIConfig openAIConfig = OpenAIProvider.applyCommon(
+                new OpenAIConfig(config.getApiKey()).withModel(config.getModel()), config, getDefaultHost());
         OpenAIService service = new OpenAIService(openAIConfig);
         return service.processRequest(request);
     }

@@ -2,6 +2,8 @@ package org.cneko.toneko.common.mod;
 
 import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
+import org.cneko.toneko.common.mod.ai.proactive.NekoProactiveTriggers;
+import org.cneko.toneko.common.mod.ai.actions.NekoActionExecutor;
 import org.cneko.toneko.common.mod.ai.Prompts;
 import org.cneko.toneko.common.mod.ai.provider.AIServiceProviderRegistry;
 import org.cneko.toneko.common.mod.commands.arguments.CustomStringArgument;
@@ -32,6 +34,8 @@ public class ModBootstrap {
                 CustomStringArgument.class,SingletonArgumentInfo.contextFree(CustomStringArgument::replaceWord)
         );
         Prompts.init();
+        NekoActionExecutor.registerDefaults();
+        NekoProactiveTriggers.init();
         AIServiceProviderRegistry.init();
         ToNekoQuirks.init();
         ToNekoLocus.init();

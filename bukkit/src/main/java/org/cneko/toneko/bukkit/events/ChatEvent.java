@@ -142,7 +142,7 @@ public class ChatEvent implements Listener {
         String formattedPrompt = prompt
                 .replace("%neko_name%", nekoName)
                 .replace("%player_name%", sender.getName());
-        AIUtil.sendMessage(nekoPlayerUuid, sender.getUniqueId(), formattedPrompt, message, response -> {
+        AIUtil.sendMessage(nekoPlayerUuid.toString(), sender.getUniqueId(), formattedPrompt, message, response -> {
             Bukkit.getScheduler().runTask(INSTANCE, () -> {
                 String reply = response.getResponse();
                 if (reply == null || reply.isEmpty()) return;

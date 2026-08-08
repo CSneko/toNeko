@@ -16,6 +16,9 @@ import net.minecraft.world.entity.player.Player;
 import org.cneko.ai.core.AIHistory;
 import org.cneko.ai.core.AIResponse;
 import org.cneko.ai.util.FileStorageUtil;
+import org.cneko.toneko.common.mod.ai.actions.NekoActionExecutor;
+import org.cneko.toneko.common.mod.ai.actions.NekoActionParser;
+import org.cneko.toneko.common.mod.ai.proactive.NekoProactiveManager;
 import org.cneko.toneko.common.Bootstrap;
 import org.cneko.toneko.common.api.Permissions;
 import org.cneko.toneko.common.api.TickTasks;
@@ -163,30 +166,35 @@ public class ToNekoNetworkEvents {
             } else {
                 ServerPlayer player = context.player();
                 String nekoUuid = neko.getUUID().toString();
-                String playerUuid = player.getUUID().toString();
-                AIUtil.sendMessage(neko.getUUID(), player.getUUID(), neko.generateAIPrompt(context.player()), payload.message(), response -> {
-                    Runnable sendHistory = () -> pushChatHistory(player, nekoUuid, playerUuid);
-                    if (ConfigUtil.isAIShowThink() && response.hasThink()){
-                        ServerLevel world = (ServerLevel) neko.level();
-                        int totalDelay = spawnFloatingText(neko, response, world);
-                        TickTaskQueue task = new TickTaskQueue();
-                        task.addTask(totalDelay, () -> {
-                            String r = Messaging.format(response.getResponse(), neko,
+                AIUtil.sendMessage(neko.getAIStorageId(), player.getUUID(), neko.generateAIPrompt(context.player()), payload.message(), response -> {
+                    // AI回调在后台线程执行，所有Minecraft世界/实体操作必须切回服务器主线程
+                    player.getServer().execute(() -> {
+                        // 解析并执行 AI 动作（移动/给予物品），聊天窗口显示清理掉 JSON 代码块后的文本
+                        String displayText = NekoActionExecutor.process(neko, player, response.getResponse());
+                        // 历史存储以猫娘的持久 AI 存储 ID 为 key（实体 UUID 会变化），payload 仍用实体 UUID 供客户端匹配
+                        Runnable sendHistory = () -> pushChatHistory(player, neko.getAIStorageId(), nekoUuid);
+                        if (ConfigUtil.isAIShowThink() && response.hasThink()){
+                            ServerLevel world = (ServerLevel) neko.level();
+                            int totalDelay = spawnFloatingText(neko, response, world);
+                            TickTaskQueue task = new TickTaskQueue();
+                            task.addTask(totalDelay, () -> {
+                                String r = Messaging.format(displayText, neko,
+                                        Collections.singletonList(LanguageUtil.prefix), ConfigUtil.getChatFormat());
+                                player.sendSystemMessage(Component.literal(r));
+                                sendHistory.run();
+                            });
+                            TickTasks.add(task);
+                        } else {
+                            String r = Messaging.format(displayText, neko,
                                     Collections.singletonList(LanguageUtil.prefix), ConfigUtil.getChatFormat());
                             player.sendSystemMessage(Component.literal(r));
-                            player.getServer().execute(sendHistory);
-                        });
-                        TickTasks.add(task);
-                    } else {
-                        String r = Messaging.format(response.getResponse(), neko,
-                                Collections.singletonList(LanguageUtil.prefix), ConfigUtil.getChatFormat());
-                        context.player().sendSystemMessage(Component.literal(r));
-                        player.getServer().execute(sendHistory);
-                    }
-                    // 如果启用了TTS
-                    if (ConfigUtil.isAITTSEnabled()){
-                        ServerPlayNetworking.send(player, new TTSSendPayload(response.getResponse()));
-                    }
+                            sendHistory.run();
+                        }
+                        // 如果启用了TTS
+                        if (ConfigUtil.isAITTSEnabled()){
+                            ServerPlayNetworking.send(player, new TTSSendPayload(displayText));
+                        }
+                    });
                 });
             }
         });
@@ -350,11 +358,51 @@ public class ToNekoNetworkEvents {
                         int i = new java.util.Random().nextInt(25);
                         context.player().sendSystemMessage(Component.translatable("message.toneko.neko.breed_fail_baby." + i));
                     } else {
-                        neko.tryMating((ServerLevel) context.player().level(), m);
+                        // 交配请求触发器（mate_request）：概率 > 0 时先由 AI 猫娘决定是否同意，
+                        // 同意（输出 allow_mate 动作）才执行原交配流程；概率 = 0 时走原流程
+                        float mateChance = NekoProactiveManager.getChance("mate_request");
+                        if (mateChance > 0 && neko.getRandom().nextFloat() < mateChance) {
+                            requestMateApproval(neko, m, context.player());
+                        } else {
+                            neko.tryMating((ServerLevel) context.player().level(), m);
+                        }
                     }
                 }
             }
         });
+    }
+
+    /**
+     * 交配请求需猫娘同意：触发 AI 对话让猫娘决定，回复中输出 allow_mate 动作视为同意，
+     * 同意后执行原交配流程（tryMating）。
+     */
+    private static void requestMateApproval(NekoEntity neko, INeko mate, ServerPlayer requester) {
+        // 历史保存用 [提示] 前缀（内部触发的交配请求，不是玩家发言）
+        String hintPrefix = LanguageUtil.translatable("misc.toneko.ai.history.hint",
+                new Object[]{requester.getName().getString()});
+        // 交配请求走正常冷却，历史用 [提示] 前缀
+        AIUtil.sendMessage(neko.getAIStorageId(), requester.getUUID(),
+                neko.generateAIPrompt(requester),
+                LanguageUtil.translatable("misc.toneko.ai.mate.request"),
+                response -> {
+                    requester.getServer().execute(() -> {
+                        // 解析动作：allow_mate = 同意交配
+                        NekoActionParser.ParseResult result = NekoActionParser.parse(response.getResponse());
+                        boolean approved = result.actions().stream()
+                                .anyMatch(a -> "allow_mate".equals(a.type()));
+                        // 发送猫娘回复（动作代码块不显示）
+                        String displayText = result.cleanedText();
+                        if (!displayText.isEmpty()) {
+                            String r = Messaging.format(displayText, neko,
+                                    Collections.singletonList(LanguageUtil.prefix), ConfigUtil.getChatFormat());
+                            requester.sendSystemMessage(Component.literal(r));
+                        }
+                        // 同意才执行交配
+                        if (approved) {
+                            neko.tryMating((ServerLevel) requester.level(), mate);
+                        }
+                    });
+                }, false, hintPrefix);
     }
 
     public static void onSetPose(NekoPosePayload payload, ServerPlayNetworking.Context context) {
@@ -577,11 +625,19 @@ public class ToNekoNetworkEvents {
         CHAT_MODES.put(context.player().getUUID(), payload.area());
     }
 
-    /** Read chat history from disk and push to the client's open ChatWithNekoScreen */
-    private static void pushChatHistory(ServerPlayer player, String nekoUuid, String playerUuid) {
+    /**
+     * Read chat history from disk and push to the client's open ChatWithNekoScreen.
+     * @param storageId 猫娘的持久 AI 存储 ID（读取历史用）
+     * @param entityUuid 猫娘的实体 UUID（发给客户端做屏幕匹配用）
+     */
+    private static void pushChatHistory(ServerPlayer player, String storageId, String entityUuid) {
         List<String> messages = new ArrayList<>();
         try {
-            AIHistory history = FileStorageUtil.readConversation(nekoUuid, playerUuid);
+            AIHistory history = FileStorageUtil.readConversation(storageId, AIUtil.SESSION_ID);
+            // 兼容旧数据：持久 ID 下没有时回退实体 UUID 路径
+            if (history == null && !storageId.equals(entityUuid)) {
+                history = FileStorageUtil.readConversation(entityUuid, AIUtil.SESSION_ID);
+            }
             if (history != null && history.getContents() != null) {
                 for (AIHistory.Content content : history.getContents()) {
                     String role = content.getRole() == AIHistory.Content.Role.USER ? "user" : "assistant";
@@ -599,7 +655,24 @@ public class ToNekoNetworkEvents {
         } catch (Exception e) {
             Bootstrap.LOGGER.warn("Failed to push chat history: {}", e.getMessage());
         }
-        ServerPlayNetworking.send(player, new ChatHistoryResponsePayload(nekoUuid, messages));
+        ServerPlayNetworking.send(player, new ChatHistoryResponsePayload(entityUuid, messages));
+    }
+
+    /**
+     * 把实体 UUID 解析为持久 AI 存储 ID（遍历所有维度查找实体）。
+     * 实体不在世界内时回退实体 UUID（兼容旧存储路径）。
+     */
+    private static String resolveStorageId(ServerPlayer player, String entityUuid) {
+        try {
+            UUID uuid = UUID.fromString(entityUuid);
+            for (ServerLevel level : player.getServer().getAllLevels()) {
+                Entity entity = level.getEntity(uuid);
+                if (entity instanceof NekoEntity neko) {
+                    return neko.getAIStorageId();
+                }
+            }
+        } catch (Exception ignored) {}
+        return entityUuid;
     }
 
     /**
@@ -609,7 +682,9 @@ public class ToNekoNetworkEvents {
         ServerPlayer player = context.player();
         String nekoUuid = payload.nekoUuid();
         if (nekoUuid == null || nekoUuid.isEmpty()) return;
-        pushChatHistory(player, nekoUuid, player.getUUID().toString());
+        // 历史以猫娘的持久 AI 存储 ID 为 key，先把实体 UUID 解析成存储 ID
+        String storageId = resolveStorageId(player, nekoUuid);
+        pushChatHistory(player, storageId, nekoUuid);
     }
 }
 

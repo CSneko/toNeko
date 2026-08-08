@@ -1,5 +1,6 @@
 package org.cneko.toneko.common.mod.entities.ai.goal;
 
+import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
@@ -11,6 +12,7 @@ import java.util.List;
 
 public class NekoFollowOwnerGoal extends Goal {
     private final NekoEntity nekoEntity;
+    @Getter
     private Player owner;
     @Setter
     private double followSpeed;

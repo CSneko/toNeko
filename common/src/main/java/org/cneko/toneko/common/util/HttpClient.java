@@ -1,121 +1,56 @@
 package org.cneko.toneko.common.util;
 
 import com.google.gson.Gson;
-import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import io.netty.channel.*;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.http.*;
-import io.netty.handler.ssl.SslContext;
-import io.netty.handler.ssl.SslContextBuilder;
-import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
-import io.netty.util.CharsetUtil;
 
-import javax.net.ssl.SSLException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * 基于 JDK HttpClient 的轻量 HTTP 客户端（NekoAI v0.2.0 起不再依赖 netty）。
+ * 对外 API 与旧版兼容：sendGet / sendPost 返回 CompletableFuture，非 200 时抛 HttpException。
+ */
 public class HttpClient {
     private final Gson gson;
-    private final EventLoopGroup group;
-    private final boolean autoClose;
+    private final java.net.http.HttpClient client;
 
     public HttpClient() {
         this(new Gson());
     }
 
     public HttpClient(Gson gson) {
-        this(gson, new NioEventLoopGroup(), true);
-    }
-
-    public HttpClient(Gson gson, EventLoopGroup group, boolean autoClose) {
         this.gson = gson;
-        this.group = group;
-        this.autoClose = autoClose;
+        this.client = java.net.http.HttpClient.newBuilder()
+                .connectTimeout(Duration.ofSeconds(10))
+                .build();
     }
 
+    /** JDK HttpClient 无显式关闭，保留方法以兼容旧调用方 */
     public void close() {
-        if (autoClose) {
-            group.shutdownGracefully();
-        }
     }
 
     public <T> CompletableFuture<T> sendPost(String url, Object body, Class<T> responseType) {
-        CompletableFuture<T> future = new CompletableFuture<>();
-
         try {
-            URI uri = new URI(url);
-            String scheme = uri.getScheme() == null ? "http" : uri.getScheme();
-            String host = uri.getHost();
-            int port = uri.getPort() == -1 ? (scheme.equals("https") ? 443 : 80) : uri.getPort();
-
-            // 配置SSL
-            boolean ssl = "https".equalsIgnoreCase(scheme);
-            SslContext sslContext = null;
-            if (ssl) {
-                sslContext = SslContextBuilder.forClient()
-                        .trustManager(InsecureTrustManagerFactory.INSTANCE)
-                        .build();
-            }
-
-            // 创建Bootstrap
-            Bootstrap bootstrap = new Bootstrap();
-            SslContext finalSslContext = sslContext;
-            bootstrap.group(group)
-                    .channel(NioSocketChannel.class)
-                    .handler(new ChannelInitializer<SocketChannel>() {
-                        @Override
-                        protected void initChannel(SocketChannel ch) {
-                            ChannelPipeline p = ch.pipeline();
-                            if (finalSslContext != null) {
-                                p.addLast(finalSslContext.newHandler(ch.alloc(), host, port));
-                            }
-                            p.addLast(new HttpClientCodec());
-                            p.addLast(new HttpObjectAggregator(1048576));
-                            p.addLast(new HttpClientHandler((CompletableFuture<Object>) future, gson, responseType));
-                        }
-                    });
-
-            // 构建请求
             String json = gson.toJson(body);
-            ByteBuf content = Unpooled.copiedBuffer(json, CharsetUtil.UTF_8);
-            FullHttpRequest request = new DefaultFullHttpRequest(
-                    HttpVersion.HTTP_1_1, HttpMethod.POST, uri.getRawPath(), content);
-            request.headers()
-                    .set(HttpHeaderNames.HOST, host)
-                    .set(HttpHeaderNames.CONNECTION, HttpHeaderValues.CLOSE)
-                    .set(HttpHeaderNames.CONTENT_TYPE, HttpHeaderValues.APPLICATION_JSON)
-                    .set(HttpHeaderNames.CONTENT_LENGTH, content.readableBytes());
-
-            // 连接并发送请求
-            ChannelFuture connectFuture = bootstrap.connect(host, port);
-            connectFuture.addListener((ChannelFutureListener) f -> {
-                if (f.isSuccess()) {
-                    f.channel().writeAndFlush(request);
-                } else {
-                    future.completeExceptionally(f.cause());
-                }
-            });
-
-        } catch (URISyntaxException | SSLException e) {
-            future.completeExceptionally(e);
+            HttpRequest request = HttpRequest.newBuilder(URI.create(url))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(json, StandardCharsets.UTF_8))
+                    .build();
+            return client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                    .thenApply(response -> parseResponse(response, responseType));
+        } catch (IllegalArgumentException e) {
+            return failedFuture(e);
         }
-
-        return future;
     }
 
     public <T> CompletableFuture<T> sendGet(String url, Map<String, String> queryParams, Class<T> responseType) {
-        CompletableFuture<T> future = new CompletableFuture<>();
-
         try {
-            // 构建完整的URL（包含查询参数）
+            // 拼接查询参数
             String fullUrl = url;
             if (queryParams != null && !queryParams.isEmpty()) {
                 StringBuilder queryBuilder = new StringBuilder();
@@ -127,140 +62,58 @@ public class HttpClient {
                     String encodedValue = URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8);
                     queryBuilder.append(encodedKey).append('=').append(encodedValue);
                 }
-                if (fullUrl.contains("?")) {
-                    fullUrl += "&" + queryBuilder;
-                } else {
-                    fullUrl += "?" + queryBuilder;
-                }
-            }
-            URI uri = new URI(fullUrl);
-
-            // 解析URI参数
-            String scheme = uri.getScheme() == null ? "http" : uri.getScheme();
-            String host = uri.getHost();
-            int port = uri.getPort() == -1 ? (scheme.equals("https") ? 443 : 80) : uri.getPort();
-
-            // 配置SSL
-            boolean ssl = "https".equalsIgnoreCase(scheme);
-            SslContext sslContext = null;
-            if (ssl) {
-                sslContext = SslContextBuilder.forClient()
-                        .trustManager(InsecureTrustManagerFactory.INSTANCE)
-                        .build();
+                fullUrl += (fullUrl.contains("?") ? "&" : "?") + queryBuilder;
             }
 
-            // 创建Bootstrap
-            Bootstrap bootstrap = new Bootstrap();
-            SslContext finalSslContext = sslContext;
-            bootstrap.group(group)
-                    .channel(NioSocketChannel.class)
-                    .handler(new ChannelInitializer<SocketChannel>() {
-                        @Override
-                        protected void initChannel(SocketChannel ch) {
-                            ChannelPipeline p = ch.pipeline();
-                            if (finalSslContext != null) {
-                                p.addLast(finalSslContext.newHandler(ch.alloc(), host, port));
-                            }
-                            p.addLast(new HttpClientCodec());
-                            p.addLast(new HttpObjectAggregator(1048576));
-                            p.addLast(new HttpClientHandler((CompletableFuture<Object>) future, gson, responseType));
-                        }
-                    });
+            HttpRequest request = HttpRequest.newBuilder(URI.create(fullUrl))
+                    .GET()
+                    .build();
+            return client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                    .thenApply(response -> parseResponse(response, responseType));
+        } catch (IllegalArgumentException e) {
+            return failedFuture(e);
+        }
+    }
 
-            // 构建GET请求
-            String requestUri = uri.getRawPath();
-            String rawQuery = uri.getRawQuery();
-            if (rawQuery != null && !rawQuery.isEmpty()) {
-                requestUri += "?" + rawQuery;
-            }
-            FullHttpRequest request = new DefaultFullHttpRequest(
-                    HttpVersion.HTTP_1_1, HttpMethod.GET, requestUri, Unpooled.EMPTY_BUFFER);
-            request.headers()
-                    .set(HttpHeaderNames.HOST, host)
-                    .set(HttpHeaderNames.CONNECTION, HttpHeaderValues.CLOSE);
+    private <T> T parseResponse(HttpResponse<String> response, Class<T> responseType) {
+        String content = response.body();
 
-            // 连接并发送请求
-            ChannelFuture connectFuture = bootstrap.connect(host, port);
-            connectFuture.addListener((ChannelFutureListener) f -> {
-                if (f.isSuccess()) {
-                    f.channel().writeAndFlush(request);
-                } else {
-                    future.completeExceptionally(f.cause());
-                }
-            });
-
-        } catch (URISyntaxException | SSLException e) {
-            future.completeExceptionally(e);
+        // 处理非200状态码
+        if (response.statusCode() != 200) {
+            throw new HttpException(response.statusCode(), content);
         }
 
+        // 直接返回字符串内容
+        if (responseType == String.class) {
+            return (T) content;
+        }
+        // 处理原始字节数组
+        if (responseType == byte[].class) {
+            return (T) content.getBytes(StandardCharsets.UTF_8);
+        }
+        // 其他类型使用Gson转换
+        return gson.fromJson(content, responseType);
+    }
+
+    private <T> CompletableFuture<T> failedFuture(Throwable cause) {
+        CompletableFuture<T> future = new CompletableFuture<>();
+        future.completeExceptionally(cause);
         return future;
     }
 
-
-    private static class HttpClientHandler extends SimpleChannelInboundHandler<FullHttpResponse> {
-        private final CompletableFuture<Object> future;
-        private final Gson gson;
-        private final Class<?> responseType;
-
-        public HttpClientHandler(CompletableFuture<Object> future, Gson gson, Class<?> responseType) {
-            this.future = future;
-            this.gson = gson;
-            this.responseType = responseType;
-        }
-
-        @Override
-        protected void channelRead0(ChannelHandlerContext ctx, FullHttpResponse msg) {
-            try {
-                String content = msg.content().toString(CharsetUtil.UTF_8);
-
-                // 处理非200状态码
-                if (msg.status().code() != HttpResponseStatus.OK.code()) {
-                    future.completeExceptionally(new HttpException(msg.status(), content));
-                    return;
-                }
-
-                // 直接返回字符串内容
-                if (responseType == String.class) {
-                    future.complete(content);
-                }
-                // 处理原始字节数组
-                else if (responseType == byte[].class) {
-                    byte[] bytes = new byte[msg.content().readableBytes()];
-                    msg.content().readBytes(bytes);
-                    future.complete(bytes);
-                }
-                // 其他类型使用Gson转换
-                else {
-                    Object result = gson.fromJson(content, responseType);
-                    future.complete(result);
-                }
-            } catch (Exception e) {
-                future.completeExceptionally(e);
-            } finally {
-                ctx.close();
-            }
-        }
-
-        @Override
-        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-            future.completeExceptionally(cause);
-            ctx.close();
-        }
-    }
-
     public static class HttpException extends RuntimeException {
-        private final HttpResponseStatus status;
+        private final int status;
         private final String responseBody;
 
-        public HttpException(HttpResponseStatus status, String responseBody) {
-            super("HTTP Error " + status.code() + ": " + status.reasonPhrase());
+        public HttpException(int status, String responseBody) {
+            super("HTTP Error " + status);
             this.status = status;
             this.responseBody = responseBody;
         }
 
         // 获取状态码
         public int getStatusCode() {
-            return status.code();
+            return status;
         }
 
         // 获取响应内容

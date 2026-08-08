@@ -42,10 +42,9 @@ public class LocalCustomProvider implements AIServiceProvider {
 
     @Override
     public AIResponse processRequest(AIServiceConfig config, AIRequest request) throws Exception {
-        OpenAIConfig openAIConfig = new OpenAIConfig(config.getApiKey());
-        openAIConfig.setModel(config.getModel());
         // custom provider: always apply connection params (user-specified host)
-        OpenAIProvider.applyCommon(openAIConfig, config, "");
+        OpenAIConfig openAIConfig = OpenAIProvider.applyCommon(
+                new OpenAIConfig(config.getApiKey()).withModel(config.getModel()), config, "");
         OpenAIService service = new OpenAIService(openAIConfig);
         return service.processRequest(request);
     }

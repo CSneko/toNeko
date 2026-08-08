@@ -483,7 +483,7 @@ public class ToNekoAdminCommand {
         java.util.UUID testUuid = java.util.UUID.randomUUID();
         try {
             ServerPlayer player = source.getPlayerOrException();
-            AIUtil.sendMessage(testUuid, player.getUUID(),
+            AIUtil.sendMessage(testUuid.toString(), player.getUUID(),
                     ConfigUtil.getAIPrompt(), message, response -> {
                         source.sendSystemMessage(Component.literal("§b[AI Test] §f" + response.getResponse()));
                     });

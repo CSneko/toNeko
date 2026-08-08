@@ -44,26 +44,26 @@ public class OpenAIProvider implements AIServiceProvider {
     @Override
     public AIResponse processRequest(AIServiceConfig config, AIRequest request) throws Exception {
         OpenAIConfig openAIConfig = new OpenAIConfig(config.getApiKey());
-        openAIConfig.setModel(config.getModel());
-        applyCommon(openAIConfig, config, getDefaultHost());
+        openAIConfig = applyCommon(openAIConfig.withModel(config.getModel()), config, getDefaultHost());
         OpenAIService service = new OpenAIService(openAIConfig);
         return service.processRequest(request);
     }
 
     /**
-     * Apply connection settings to OpenAIConfig.
+     * Apply connection settings to OpenAIConfig (immutable, with* chain).
      * Always sets host/endpoint/port/tls — these are needed for non-OpenAI providers
      * (OpenAIConfig defaults to api.openai.com:443 with TLS).
      */
-    static void applyCommon(OpenAIConfig c, AIServiceConfig config, String defaultHost) {
-        if (config.getProxy() != null) c.setProxy(config.getProxy());
+    static OpenAIConfig applyCommon(OpenAIConfig c, AIServiceConfig config, String defaultHost) {
+        OpenAIConfig result = c;
+        if (config.getProxy() != null) result = result.withProxy(config.getProxy());
 
         String configHost = config.getHost();
-        if (configHost == null || configHost.isEmpty()) return;
+        if (configHost == null || configHost.isEmpty()) return result;
 
-        c.setHost(configHost);
-        c.setPort(config.getPort());
-        c.setEndpoint(config.getEndpoint());
-        c.setTls(config.isTls());
+        return result.withHost(configHost)
+                .withPort(config.getPort())
+                .withEndpoint(config.getEndpoint())
+                .withTls(config.isTls());
     }
 }
