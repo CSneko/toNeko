@@ -58,6 +58,12 @@ public class ConfigScreen extends Screen {
 
         rebuildList();
 
+        // 列表上方的"客户端配置"入口（客户端本地配置：AI 回复显示方式等）
+        addRenderableWidget(Button.builder(Component.translatable("screen.toneko.client_config.open"), btn ->
+                        Minecraft.getInstance().setScreen(new ClientConfigScreen(this)))
+                .bounds(this.width / 2 - 100, listY - 30, 200, 20)
+                .build());
+
         // 2. 底部按钮
         int btnWidth = 100;
         int btnHeight = 20;

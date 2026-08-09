@@ -5,6 +5,7 @@
   "minVersion": "0.8",
   "client": [
     "client.ChatScreenMixin",
+    "client.ClientLevelAccessor",
     "client.PlayerRendererMixin",
     "client.SoundEngineMixin"
   ],

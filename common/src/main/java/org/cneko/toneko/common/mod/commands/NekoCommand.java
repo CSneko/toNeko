@@ -312,11 +312,9 @@ public class NekoCommand {
         AIUtil.sendMessage(neko.getAIStorageId(), player.getUUID(), neko.generateAIPrompt(player), message, response -> {
             // AI回调在后台线程执行，切回服务器主线程再发消息
             player.getServer().execute(() -> {
-                // 解析并执行 AI 动作（移动/给予物品），聊天窗口显示清理后的文本
+                // 解析并执行 AI 动作（移动/给予物品），回复走统一显示包（客户端按配置显示）
                 String displayText = NekoActionExecutor.process(neko, player, response.getResponse());
-                String r = Messaging.format(displayText, neko,
-                        Collections.singletonList(LanguageUtil.prefix), ConfigUtil.getChatFormat());
-                player.sendSystemMessage(Component.literal(r));
+                Messaging.sendNekoChat(player, neko, displayText);
             });
         });
         return 1;

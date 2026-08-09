@@ -141,7 +141,9 @@ public class ChatEvent implements Listener {
         String nekoName = nekoPlayer != null ? nekoPlayer.getName() : "???";
         String formattedPrompt = prompt
                 .replace("%neko_name%", nekoName)
-                .replace("%player_name%", sender.getName());
+                .replace("%player_name%", sender.getName())
+                // bukkit 侧无 NekoEntity 实体上下文，环境感知占位符留空，避免裸占位符进模型
+                .replace("%neko_surroundings%", "");
         AIUtil.sendMessage(nekoPlayerUuid.toString(), sender.getUniqueId(), formattedPrompt, message, response -> {
             Bukkit.getScheduler().runTask(INSTANCE, () -> {
                 String reply = response.getResponse();

@@ -16,7 +16,7 @@ public class Prompts {
      * 未命中时返回可读化的 key（去命名空间/前缀、下划线转空格），
      * 保证模型看到的永远是文本而不是原始 id（如 minecraft:forest / quirk 键）。
      */
-    private static String translateOrReadable(String key, Object... args) {
+    static String translateOrReadable(String key, Object... args) {
         String text;
         if (LanguageUtil.LANG != null && LanguageUtil.LANG.contains(key)) {
             text = LanguageUtil.LANG.getString(key);
@@ -174,6 +174,15 @@ public class Prompts {
                 .orElse("unknown");
         return translateOrReadable("biome.toneko." + biome);
     };
+
+    // ===== 环境感知 =====
+    /** 周围环境感知：附近实体（玩家/猫娘/怪物/动物）+ 环境特征，由 {@link SurroundingsScanner} 扫描生成 */
+    public static final PromptFactory NEKO_SURROUNDINGS = (neko, other) -> SurroundingsScanner.describe(neko, other);
+
+    // ===== 日记 =====
+    /** 猫娘日记上下文（最近几篇，token 受控）：让 AI 写新日记时参考已有内容保持风格 */
+    public static final PromptFactory NEKO_DIARY = (neko, other) ->
+            NekoDiary.buildContext(neko.getDiaryEntries(), 2, 100);
     /** 月相：0=满月，4=新月 */
     public static final PromptFactory WORLD_PHASE = (neko,other)-> {
         int phase = neko.level().getMoonPhase();
@@ -209,5 +218,9 @@ public class Prompts {
         register("world_dimension",WORLD_DIMENSION);
         register("world_biome",WORLD_BIOME);
         register("world_phase",WORLD_PHASE);
+        // 环境感知
+        register("neko_surroundings",NEKO_SURROUNDINGS);
+        // 日记
+        register("neko_diary",NEKO_DIARY);
     }
 }

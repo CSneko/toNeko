@@ -7,6 +7,8 @@ import org.cneko.ai.providers.gemini.GeminiService;
 import org.cneko.toneko.common.mod.ai.AIServiceConfig;
 import org.cneko.toneko.common.mod.ai.provider.AIServiceProvider;
 
+import java.util.stream.Stream;
+
 /**
  * Google Gemini provider.
  * IMPORTANT: Do NOT override host/endpoint on GeminiConfig unless the user has
@@ -57,5 +59,25 @@ public class GeminiProvider implements AIServiceProvider {
 
         GeminiService service = new GeminiService(geminiConfig);
         return service.processRequest(request);
+    }
+
+    @Override
+    public boolean supportsStream() { return true; }
+
+    @Override
+    public Stream<AIResponse> processStream(AIServiceConfig config, AIRequest request) throws Exception {
+        GeminiConfig geminiConfig = new GeminiConfig(config.getApiKey())
+                .withModel(config.getModel());
+        if (config.getProxy() != null) geminiConfig = geminiConfig.withProxy(config.getProxy());
+
+        // Only override host if user explicitly set a custom base_url (different from default)
+        String customHost = config.getHost();
+        if (customHost != null && !customHost.isEmpty()
+                && !customHost.equals(getDefaultHost())) {
+            geminiConfig = geminiConfig.withHost(customHost);
+        }
+
+        GeminiService service = new GeminiService(geminiConfig);
+        return service.processStream(request);
     }
 }

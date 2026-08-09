@@ -10,6 +10,8 @@ import net.minecraft.world.entity.Pose;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
+import org.cneko.toneko.common.mod.ai.NekoDiary;
+import org.cneko.toneko.common.mod.ai.Prompts;
 import org.cneko.toneko.common.mod.api.EntityPoseManager;
 import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
@@ -192,6 +194,66 @@ public class NekoActionExecutor {
             public String getGuideLine() {
                 return "{\"action\": \"mate\", \"target\": \"Steve\"} - "
                         + LanguageUtil.translatable("misc.toneko.ai.actions.guide.mate");
+            }
+        });
+        register("give_diary", new NekoActionHandler() {
+            @Override
+            public boolean handle(NekoEntity neko, ServerPlayer speaker, LivingEntity target, NekoAction action) {
+                // 给目标一本猫娘日记成书（有 AI 写的日记数据时用数据，无数据回退随机）
+                giveToPlayer(target, neko.createNekoDiary());
+                return true;
+            }
+            @Override
+            public String getGuideLine() {
+                return "{\"action\": \"give_diary\"} - "
+                        + LanguageUtil.translatable("misc.toneko.ai.actions.guide.give_diary");
+            }
+        });
+        register("write_diary", new NekoActionHandler() {
+            @Override
+            public boolean handle(NekoEntity neko, ServerPlayer speaker, LivingEntity target, NekoAction action) {
+                // 写日记冷却（游戏 tick，配置秒数×20；last<=0 表示从未写过，放行；
+                // 同一次回复连发多个 write_diary 会自然被冷却拦截）
+                int cooldownSec = ConfigUtil.getAIActionsDiaryCooldown();
+                long now = neko.level().getGameTime();
+                long last = neko.getLastDiaryWriteTime();
+                if (cooldownSec > 0 && last > 0 && now - last < cooldownSec * 20L) {
+                    LOGGER.info("[AI-ACTION] write_diary skipped (cooldown) for {}", neko.getName().getString());
+                    return false;
+                }
+                // 正文清洗：去 § 格式码、trim、限长（保留换行）；空正文拒绝
+                String text = action.text();
+                if (text == null || text.isBlank()) return false;
+                text = text.replaceAll("§[0-9a-fk-orK-OR]", "").trim();
+                if (text.length() > NekoDiary.MAX_BODY_LENGTH) {
+                    text = text.substring(0, NekoDiary.MAX_BODY_LENGTH);
+                }
+
+                // 环境元数据：复用 Prompts 的翻译工厂（other 传 null 安全）
+                String weather = Prompts.WORLD_WEATHER.getPrompt(neko, null);
+                String mood = Prompts.NEKO_MOOD.getPrompt(neko, null);
+                String biome = Prompts.WORLD_BIOME.getPrompt(neko, null);
+                String dimension = Prompts.WORLD_DIMENSION.getPrompt(neko, null);
+
+                // 无日记：先用随机条目 + 当前真实环境初始化（用户要求：没有日记就随机）
+                if (neko.getDiaryEntries().isEmpty()) {
+                    String nekoName = neko.getCustomName() != null
+                            ? neko.getCustomName().getString()
+                            : neko.getName().getString();
+                    for (String seed : NekoDiary.seedEntries(neko.getRandom(), nekoName,
+                            weather, mood, biome, dimension)) {
+                        neko.appendDiaryEntry(seed);
+                    }
+                }
+                neko.appendDiaryEntry(NekoDiary.composeEntry(weather, mood, biome, dimension, text));
+                neko.setLastDiaryWriteTime(now);
+                LOGGER.info("[AI-ACTION] {} wrote a diary entry", neko.getName().getString());
+                return true;
+            }
+            @Override
+            public String getGuideLine() {
+                return "{\"action\": \"write_diary\", \"text\": \"今天...\"} - "
+                        + LanguageUtil.translatable("misc.toneko.ai.actions.guide.write_diary");
             }
         });
     }

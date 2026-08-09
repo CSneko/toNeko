@@ -77,7 +77,9 @@ public class NekoActionParser {
                 ? Math.max(1, obj.get("count").getAsInt()) : 1;
         String target = obj.has("target") && obj.get("target").isJsonPrimitive()
                 ? obj.get("target").getAsString().trim() : "";
-        return new NekoAction(type, item, count, target);
+        String text = obj.has("text") && obj.get("text").isJsonPrimitive()
+                ? obj.get("text").getAsString().trim() : "";
+        return new NekoAction(type, item, count, target, text);
     }
 
     /** 解析结果：动作列表 + 去掉代码块后的显示文本 */

@@ -4,17 +4,19 @@ package org.cneko.toneko.common.mod.client.events;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
 import org.cneko.toneko.common.mod.api.EntityPoseManager;
+import org.cneko.toneko.common.mod.mixin.client.ClientLevelAccessor;
 import org.cneko.toneko.common.mod.client.api.ClientEntityPoseManager;
 import org.cneko.toneko.common.mod.client.screens.*;
+import org.cneko.toneko.common.mod.client.util.ClientConfig;
 import org.cneko.toneko.common.mod.client.util.ClientPlayerUtil;
+import org.cneko.toneko.common.mod.client.util.ClientTextUtil;
 import org.cneko.toneko.common.mod.packets.*;
 import org.cneko.toneko.common.mod.packets.interactives.ChatHistoryResponsePayload;
 import org.cneko.toneko.common.mod.packets.interactives.NekoEntityInteractivePayload;
@@ -114,6 +116,26 @@ public class ClientNetworkEvents {
             });
         });
 
+        ClientPlayNetworking.registerGlobalReceiver(ChatStreamPayload.ID, (payload, context) -> {
+            context.client().execute(() -> {
+                ChatWithNekoScreen.receiveStreamChunk(
+                        UUID.fromString(payload.nekoUuid()), payload.chunk(), payload.finished(), payload.error());
+            });
+        });
+
+        // AI 回复显示消息：客户端按配置选择聊天栏显示或猫娘头顶气泡
+        ClientPlayNetworking.registerGlobalReceiver(NekoChatDisplayPayload.ID, (payload, context) -> {
+            context.client().execute(() -> {
+                Minecraft mc = context.client();
+                if (mc.level == null || mc.player == null) return; // 断线竞态防护
+                if (ClientConfig.isBubbleMode()) {
+                    NekoBubbleRenderer.show(payload.nekoUuid(), payload.text());
+                } else {
+                    mc.gui.getChat().addMessage(ClientTextUtil.parseLegacyFormatting(payload.text()));
+                }
+            });
+        });
+
     }
     public static void setPose(EntityPosePayload payload, ClientPlayNetworking.Context context) {
         String uuid = payload.uuid();
@@ -149,21 +171,12 @@ public class ClientNetworkEvents {
     }
 
     public static @Nullable LivingEntity findNearbyEntityByUuid(UUID targetUuid,double range) {
-        // 确定搜索范围，这里以玩家为中心，半径为64个方块
-        Player player = Minecraft.getInstance().player;
-        AABB box = new AABB(player.getX() - range, player.getY() - range, player.getZ() - range,
-                player.getX() + range, player.getY() + range, player.getZ() + range);
-
-        Level world = player.level();
-        // 遍历指定范围内的所有实体
-        for (Entity entity : world.getEntities(player, box)) {
-            if (entity.getUUID().equals(targetUuid)) {
-                if (entity instanceof LivingEntity le) {
-                    return le; // 找到了目标实体
-                }else return null;
-            }
+        // 直接按 UUID 从客户端实体表中哈希查找，无需范围扫描（range 参数仅作兼容保留）
+        Level world = Minecraft.getInstance().player.level();
+        if (world instanceof ClientLevel clientLevel
+                && ((ClientLevelAccessor) clientLevel).invokeGetEntities().get(targetUuid) instanceof LivingEntity le) {
+            return le; // 找到了目标实体
         }
-
         return null; // 没有找到目标实体
     }
 

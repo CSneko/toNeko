@@ -113,10 +113,9 @@ public class NekoProactiveManager {
                 neko.generateAIPrompt(player), trigger.getMessage(neko, player), response -> {
             player.getServer().execute(() -> {
                 if (!player.isAlive() || player.isRemoved()) return;
+                // 主动发言回复走统一显示包（客户端按配置显示）
                 String displayText = NekoActionExecutor.process(neko, player, response.getResponse());
-                String r = Messaging.format(displayText, neko,
-                        Collections.singletonList(LanguageUtil.prefix), ConfigUtil.getChatFormat());
-                player.sendSystemMessage(Component.literal(r));
+                Messaging.sendNekoChat(player, neko, displayText);
             });
         }, true, hintPrefix);
     }

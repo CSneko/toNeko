@@ -26,6 +26,8 @@ public class NekoAttackGoal extends Goal {
     private static final double RANGED_ATTACK_RANGE = 15.0; // 远程武器使用距离
     private static final double MELEE_ATTACK_RANGE = 2.0;   // 近战武器使用距离
     private static final double TARGETING_RANGE = 100.0;
+    /** 自主狩猎扫描节流：100 格范围扫描较贵，每 TARGET_SCAN_INTERVAL tick 才做一次 */
+    private static final int TARGET_SCAN_INTERVAL = 10;
     private static final double RANGED_MAINTAIN_DISTANCE = 10.0; // 远程战斗理想距离
     protected int attackCooldown;
     protected int seeTime; // 记录看到目标的时间
@@ -53,6 +55,12 @@ public class NekoAttackGoal extends Goal {
         if (brainTarget != null && brainTarget.isAlive() && !brainTarget.isAlliedTo(neko)) {
             this.target = brainTarget;
             return true;
+        }
+
+        // 自主狩猎扫描节流：仇恨目标分支在上方已即时处理，这里只节流昂贵的 100 格范围扫描
+        if (neko.tickCount % TARGET_SCAN_INTERVAL != 0) {
+            this.target = null;
+            return false;
         }
 
         // 判断是否有武器

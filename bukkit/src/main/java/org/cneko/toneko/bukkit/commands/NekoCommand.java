@@ -226,7 +226,9 @@ public class NekoCommand {
         Player nekoPlayer = Bukkit.getPlayer(finalNeko);
         String prompt = ConfigUtil.getAIPrompt()
                 .replace("%neko_name%", nekoPlayer != null ? nekoPlayer.getName() : "???")
-                .replace("%player_name%", player.getName());
+                .replace("%player_name%", player.getName())
+                // bukkit 侧无 NekoEntity 实体上下文，环境感知占位符留空，避免裸占位符进模型
+                .replace("%neko_surroundings%", "");
         AIUtil.sendMessage(finalNeko.toString(), player.getUniqueId(), prompt, message, response -> {
             Bukkit.getScheduler().runTask(INSTANCE, () -> {
                 String reply = response.getResponse();

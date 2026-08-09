@@ -35,13 +35,19 @@ public class HttpClient {
     }
 
     public <T> CompletableFuture<T> sendPost(String url, Object body, Class<T> responseType) {
+        return sendPost(url, body, null, responseType);
+    }
+
+    public <T> CompletableFuture<T> sendPost(String url, Object body, Map<String, String> headers, Class<T> responseType) {
         try {
             String json = gson.toJson(body);
-            HttpRequest request = HttpRequest.newBuilder(URI.create(url))
+            HttpRequest.Builder builder = HttpRequest.newBuilder(URI.create(url))
                     .header("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(json, StandardCharsets.UTF_8))
-                    .build();
-            return client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                    .POST(HttpRequest.BodyPublishers.ofString(json, StandardCharsets.UTF_8));
+            if (headers != null) {
+                headers.forEach(builder::header);
+            }
+            return client.sendAsync(builder.build(), HttpResponse.BodyHandlers.ofString())
                     .thenApply(response -> parseResponse(response, responseType));
         } catch (IllegalArgumentException e) {
             return failedFuture(e);
@@ -49,6 +55,10 @@ public class HttpClient {
     }
 
     public <T> CompletableFuture<T> sendGet(String url, Map<String, String> queryParams, Class<T> responseType) {
+        return sendGet(url, queryParams, null, responseType);
+    }
+
+    public <T> CompletableFuture<T> sendGet(String url, Map<String, String> queryParams, Map<String, String> headers, Class<T> responseType) {
         try {
             // 拼接查询参数
             String fullUrl = url;
@@ -65,10 +75,12 @@ public class HttpClient {
                 fullUrl += (fullUrl.contains("?") ? "&" : "?") + queryBuilder;
             }
 
-            HttpRequest request = HttpRequest.newBuilder(URI.create(fullUrl))
-                    .GET()
-                    .build();
-            return client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+            HttpRequest.Builder builder = HttpRequest.newBuilder(URI.create(fullUrl))
+                    .GET();
+            if (headers != null) {
+                headers.forEach(builder::header);
+            }
+            return client.sendAsync(builder.build(), HttpResponse.BodyHandlers.ofString())
                     .thenApply(response -> parseResponse(response, responseType));
         } catch (IllegalArgumentException e) {
             return failedFuture(e);

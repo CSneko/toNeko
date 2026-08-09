@@ -7,6 +7,8 @@ import org.cneko.ai.providers.openai.OpenAIService;
 import org.cneko.toneko.common.mod.ai.AIServiceConfig;
 import org.cneko.toneko.common.mod.ai.provider.AIServiceProvider;
 
+import java.util.stream.Stream;
+
 /**
  * OpenAI chat completions provider.
  * Only overrides host/endpoint/tls if the user has explicitly set a custom base_url.
@@ -47,6 +49,17 @@ public class OpenAIProvider implements AIServiceProvider {
         openAIConfig = applyCommon(openAIConfig.withModel(config.getModel()), config, getDefaultHost());
         OpenAIService service = new OpenAIService(openAIConfig);
         return service.processRequest(request);
+    }
+
+    @Override
+    public boolean supportsStream() { return true; }
+
+    @Override
+    public Stream<AIResponse> processStream(AIServiceConfig config, AIRequest request) throws Exception {
+        OpenAIConfig openAIConfig = new OpenAIConfig(config.getApiKey());
+        openAIConfig = applyCommon(openAIConfig.withModel(config.getModel()), config, getDefaultHost());
+        OpenAIService service = new OpenAIService(openAIConfig);
+        return service.processStream(request);
     }
 
     /**

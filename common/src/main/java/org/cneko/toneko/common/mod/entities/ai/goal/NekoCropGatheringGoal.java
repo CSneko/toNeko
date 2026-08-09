@@ -110,7 +110,9 @@ public class NekoCropGatheringGoal extends Goal {
                     this.cooldownTicks = 20;
                     return;
                 }
-                // 若操作失败，则继续后续流程
+                // 若操作失败，短暂冷却后重新扫描，避免每 tick 全量方块扫描
+                this.cooldownTicks = 10;
+                return;
             } else {
                 // 目标还未到达，指示猫娘朝目标移动
                 this.neko.getNekoBrain().submitMove(targetPos.getX() + 0.5, targetPos.getY() + 0.5, targetPos.getZ() + 0.5, neko.getAttributeValue(Attributes.MOVEMENT_SPEED) * 0.5, BehaviorPriority.NORMAL, this);
@@ -123,9 +125,12 @@ public class NekoCropGatheringGoal extends Goal {
         BlockPos foundTarget = null;
         TargetType foundType = null;
         // 定义扫描范围（以实体为中心的包围盒）
+        // Y 方向只需覆盖地表附近 ±3 格（耕地层与作物层），全高度扫描会白白多查 2/3 的方块
+        BlockPos origin = this.neko.blockPosition();
+        int yBase = origin.getY();
         AABB scanBox = new AABB(
-                this.neko.getX() - SCAN_RADIUS, this.neko.getY() - SCAN_RADIUS, this.neko.getZ() - SCAN_RADIUS,
-                this.neko.getX() + SCAN_RADIUS, this.neko.getY() + SCAN_RADIUS, this.neko.getZ() + SCAN_RADIUS
+                origin.getX() - SCAN_RADIUS, yBase - 3.0, origin.getZ() - SCAN_RADIUS,
+                origin.getX() + SCAN_RADIUS, yBase + 3.0, origin.getZ() + SCAN_RADIUS
         );
         // 遍历扫描范围内所有位置
         for (BlockPos pos : BlockPos.betweenClosed(

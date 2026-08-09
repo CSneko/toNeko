@@ -28,6 +28,8 @@ public class ToNekoPackets {
         PayloadTypeRegistry.playS2C().register(PluginDetectPayload.ID, PluginDetectPayload.CODEC);
         PayloadTypeRegistry.playC2S().register(PluginDetectPayload.ID, PluginDetectPayload.CODEC);
         PayloadTypeRegistry.playS2C().register(TTSSendPayload.ID, TTSSendPayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(ChatStreamPayload.ID, ChatStreamPayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(NekoChatDisplayPayload.ID, NekoChatDisplayPayload.CODEC);
         PayloadTypeRegistry.playS2C().register(NekoInfoSyncPayload.ID, NekoInfoSyncPayload.CODEC);
         PayloadTypeRegistry.playS2C().register(OpenPlotScreenPayload.ID, OpenPlotScreenPayload.CODEC);
         PayloadTypeRegistry.playS2C().register(OpenNekoInfoScreenPayload.ID, OpenNekoInfoScreenPayload.CODEC);

@@ -1,11 +1,14 @@
 package org.cneko.toneko.common.mod.misc;
 
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import org.cneko.toneko.common.mod.api.events.ChatEvents;
 import org.cneko.toneko.common.mod.entities.INeko;
+import org.cneko.toneko.common.mod.packets.NekoChatDisplayPayload;
 import org.cneko.toneko.common.mod.util.PlayerUtil;
 import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.common.util.LanguageUtil;
@@ -102,6 +105,27 @@ public class Messaging {
                 .replace("%msg%", message)
                 .replace("%name%", nickname)
                 .replace("%c%", "§");
+    }
+
+    /**
+     * 把 AI 回复显示消息发送给玩家客户端（替代 sendSystemMessage 聊天栏直显）。
+     * 客户端按自己的配置选择显示方式（聊天栏 / 猫娘头顶气泡），
+     * 服务端只负责格式化并统一发包。
+     *
+     * @param player 接收消息的玩家
+     * @param neko   说话的猫娘（用于格式化昵称/前缀）
+     * @param displayText 清理掉动作 JSON 后的回复文本（可为空，空则不发）
+     */
+    public static void sendNekoChat(ServerPlayer player, INeko neko, String displayText) {
+        if (displayText == null || displayText.isEmpty()) return;
+        String r = format(displayText, neko,
+                Collections.singletonList(LanguageUtil.prefix), ConfigUtil.getChatFormat());
+        try {
+            ServerPlayNetworking.send(player,
+                    new NekoChatDisplayPayload(neko.getEntity().getUUID().toString(), r));
+        } catch (Exception ignored) {
+            // 玩家断线等，忽略
+        }
     }
 
     private static String processBlockedWords(String message, INeko neko) {

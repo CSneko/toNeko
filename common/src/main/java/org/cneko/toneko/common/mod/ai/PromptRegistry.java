@@ -2,6 +2,7 @@ package org.cneko.toneko.common.mod.ai;
 
 import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
+import org.cneko.toneko.common.util.ConfigUtil;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -20,6 +21,10 @@ public class PromptRegistry {
     private static final int MAX_INSERT_LENGTH = 64;
     /** 背包内容占位符允许更长（物品列表通常超过 64 字符） */
     private static final int MAX_INVENTORY_LENGTH = 600;
+    /** 环境感知占位符允许更长（含 intro/事实/instruction 三段，事实部分自身已裁剪到 ~200） */
+    private static final int MAX_SURROUNDINGS_LENGTH = 256;
+    /** 日记上下文占位符允许更长（最近 2 篇 + 引导语，buildContext 已按篇截断） */
+    private static final int MAX_DIARY_LENGTH = 300;
 
 
     public static PromptFactory register(String key, PromptFactory promptFactory) {
@@ -47,12 +52,36 @@ public class PromptRegistry {
                 matcher.appendReplacement(sb, Matcher.quoteReplacement(matcher.group()));
                 continue;
             }
-            int maxLen = "neko_inventory".equals(key) ? MAX_INVENTORY_LENGTH : MAX_INSERT_LENGTH;
+            int maxLen = switch (key) {
+                case "neko_inventory" -> MAX_INVENTORY_LENGTH;
+                case "neko_surroundings" -> MAX_SURROUNDINGS_LENGTH;
+                case "neko_diary" -> MAX_DIARY_LENGTH;
+                default -> MAX_INSERT_LENGTH;
+            };
             String replacement = sanitize(factory.getPrompt(neko, other), maxLen);
             matcher.appendReplacement(sb, Matcher.quoteReplacement(replacement));
         }
         matcher.appendTail(sb);
-        return sb.toString();
+        String result = sb.toString();
+        // 环境感知：prompt 显式含 %neko_surroundings% 时已在占位符处替换（用户掌控位置）；
+        // 否则配置开启时自动追加到末尾（覆盖默认 prompt 与 CrystalNeko 硬编码 prompt——
+        // 后者不含任何占位符，注册层追加是唯一注入途径）。追加发生在占位符扫描之后，
+        // 无二次替换/嵌套注入风险。追加文本必须显式净化（昵称等是玩家可控文本）。
+        if (ConfigUtil.isAISurroundingsEnabled() && !prompt.contains("%neko_surroundings%")) {
+            String surroundings = SurroundingsScanner.describe(neko, other);
+            if (!surroundings.isEmpty()) {
+                result += "\n" + sanitize(surroundings, MAX_SURROUNDINGS_LENGTH);
+            }
+        }
+        // 日记上下文：启用 AI 动作时自动注入最近几篇日记（供 write_diary 参考保持风格）；
+        // prompt 显式含 %neko_diary% 时走占位符路径。追加发生在占位符扫描之后，无二次替换风险。
+        if (ConfigUtil.isAIActionsEnabled() && !prompt.contains("%neko_diary%")) {
+            String diary = NekoDiary.buildContext(neko.getDiaryEntries(), 2, 100);
+            if (!diary.isEmpty()) {
+                result += "\n" + sanitize(diary, MAX_DIARY_LENGTH);
+            }
+        }
+        return result;
     }
 
     /**
@@ -60,7 +89,7 @@ public class PromptRegistry {
      * 去除 Minecraft 格式化代码、压缩换行与连续空白、截断超长文本，
      * 避免污染 system prompt 的结构与语义。
      */
-    private static String sanitize(String text, int maxLen) {
+    static String sanitize(String text, int maxLen) {
         if (text == null) {
             return "";
         }

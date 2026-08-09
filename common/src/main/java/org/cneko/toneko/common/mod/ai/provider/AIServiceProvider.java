@@ -4,6 +4,8 @@ import org.cneko.ai.core.AIRequest;
 import org.cneko.ai.core.AIResponse;
 import org.cneko.toneko.common.mod.ai.AIServiceConfig;
 
+import java.util.stream.Stream;
+
 /**
  * Abstraction for an AI service provider (OpenAI, Gemini, DeepSeek, Claude, Ollama, etc.).
  * Each provider knows its default connection details and how to construct the appropriate
@@ -46,4 +48,23 @@ public interface AIServiceProvider {
      * @throws Exception if the request fails
      */
     AIResponse processRequest(AIServiceConfig config, AIRequest request) throws Exception;
+
+    /**
+     * Whether this provider can stream responses (SSE). Providers that cannot stream
+     * fall back to the default single-element stream via {@link #processStream}.
+     */
+    default boolean supportsStream() {
+        return false;
+    }
+
+    /**
+     * Process the AI request and return an incremental stream of response chunks
+     * (each element is a delta of text; the full response is their concatenation).
+     * Connection/status errors are thrown before the stream is returned; mid-stream
+     * errors surface as AIStreamException during iteration. The default implementation
+     * falls back to a single-element stream of the complete response.
+     */
+    default Stream<AIResponse> processStream(AIServiceConfig config, AIRequest request) throws Exception {
+        return Stream.of(processRequest(config, request));
+    }
 }

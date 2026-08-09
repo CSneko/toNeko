@@ -56,6 +56,8 @@ public class HudRenderEvent {
             if (player.getVehicle() instanceof FlySwordEntity flySword) {
                 renderFlySwordHUD(guiGraphics, flySword);
             }
+            // AI 回复头顶气泡（bubble 模式下由 NekoChatDisplayPayload 触发）
+            NekoBubbleRenderer.render(guiGraphics, deltaTracker);
         });
     }
 

@@ -95,12 +95,9 @@ public class CommonChatEvent {
             AIUtil.sendMessage(neko.getAIStorageId(), sender.getUUID(), neko.generateAIPrompt(sender), message, response -> {
                 // AI回调在后台线程执行，切回服务器主线程再发消息
                 sender.getServer().execute(() -> {
-                    // 解析并执行 AI 动作（移动/给予物品），聊天窗口显示清理后的文本
+                    // 解析并执行 AI 动作（移动/给予物品），回复走统一显示包（客户端按配置显示）
                     String displayText = NekoActionExecutor.process(neko, sender, response.getResponse());
-                    // 聊天格式中的 %name% 会显示猫娘名字，前缀保持统一的「猫娘」
-                    String r = Messaging.format(displayText, neko,
-                            Collections.singletonList(LanguageUtil.prefix), ConfigUtil.getChatFormat());
-                    sender.sendSystemMessage(Component.literal(r));
+                    Messaging.sendNekoChat(sender, neko, displayText);
                 });
             }, !first);
             first = false;
@@ -124,11 +121,9 @@ public class CommonChatEvent {
         AIUtil.sendMessage(neko.getAIStorageId(), sender.getUUID(), neko.generateAIPrompt(sender), aiMessage, response -> {
             // AI回调在后台线程执行，切回服务器主线程再发消息
             sender.getServer().execute(() -> {
-                // 解析并执行 AI 动作（移动/给予物品），聊天窗口显示清理后的文本
+                // 解析并执行 AI 动作（移动/给予物品），回复走统一显示包（客户端按配置显示）
                 String displayText = NekoActionExecutor.process(neko, sender, response.getResponse());
-                String r = Messaging.format(displayText, neko,
-                        Collections.singletonList(LanguageUtil.prefix), ConfigUtil.getChatFormat());
-                sender.sendSystemMessage(Component.literal(r));
+                Messaging.sendNekoChat(sender, neko, displayText);
             });
         });
     }

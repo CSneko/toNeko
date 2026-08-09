@@ -8,6 +8,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.network.Filterable;
@@ -52,6 +53,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.cneko.toneko.common.mod.ai.NekoDiary;
 import org.cneko.toneko.common.mod.ai.proactive.NekoProactiveManager;
 import org.cneko.toneko.common.mod.advencements.ToNekoCriteria;
 import org.cneko.toneko.common.mod.ai.PromptRegistry;
@@ -222,6 +224,15 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
         if (aiStorageId != null) {
             compound.putString(AI_STORAGE_ID_TAG, aiStorageId);
         }
+        // 持久化日记条目与上次写日记时间（游戏 tick）
+        if (!diaryEntries.isEmpty()) {
+            ListTag diaryList = new ListTag();
+            for (String entry : diaryEntries) {
+                diaryList.add(StringTag.valueOf(entry));
+            }
+            compound.put(DIARY_ENTRIES_TAG, diaryList);
+        }
+        compound.putLong(LAST_DIARY_WRITE_TIME_TAG, lastDiaryWriteTime);
         compound.put("Genome", this.genome.save());
         compound.put("GeneticData", this.geneticData);
         compound.putInt("LastFoodHealTick", this.lastFoodHealTick);
@@ -253,6 +264,18 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
         // 读取持久化的 AI 存储 ID
         if (compound.contains(AI_STORAGE_ID_TAG)) {
             this.aiStorageId = compound.getString(AI_STORAGE_ID_TAG);
+        }
+        // 读取日记条目（限配置上限防旧数据超限）与上次写日记时间
+        if (compound.contains(DIARY_ENTRIES_TAG)) {
+            this.diaryEntries.clear();
+            ListTag diaryList = compound.getList(DIARY_ENTRIES_TAG, ListTag.TAG_STRING);
+            int max = NekoDiary.maxDiaryEntries();
+            for (int i = 0; i < diaryList.size() && this.diaryEntries.size() < max; i++) {
+                this.diaryEntries.add(diaryList.getString(i));
+            }
+        }
+        if (compound.contains(LAST_DIARY_WRITE_TIME_TAG)) {
+            this.lastDiaryWriteTime = compound.getLong(LAST_DIARY_WRITE_TIME_TAG);
         }
         if (compound.contains("Genome")) {
             this.genome.load(compound.getCompound("Genome"));
@@ -665,18 +688,15 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
             this.dropAllDeathLoot(serverLevel, damageSource);
             this.getInventory().dropAll();
 
-            // 30% 概率掉落猫娘日记
-            if (random.nextFloat() < 0.30f) {
-                String name = this.getCustomName() != null
-                        ? this.getCustomName().getString()
-                        : this.getName().getString();
-                this.spawnAtLocation(createNekoDiary(name));
+            // 掉落猫娘日记：有 AI 写的日记数据时 100% 掉落（用数据生成），无数据时 30% 概率随机
+            if (!diaryEntries.isEmpty() || random.nextFloat() < 0.30f) {
+                this.spawnAtLocation(createNekoDiary());
             }
         }
     }
 
     /**
-     * 生成一本猫娘日记（底层使用原版成书）。
+     * 生成一本随机猫娘日记（底层使用原版成书），兼容旧调用方。
      * @param nekoName 猫娘的名字
      * @return 写好的日记 ItemStack
      */
@@ -693,7 +713,41 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
         }
 
         WrittenBookContent content = new WrittenBookContent(
-                Filterable.passThrough(nekoName + "的日记"),
+                Filterable.passThrough(Component.translatable("diary.toneko.title", nekoName).getString()),
+                nekoName, 0, pages, false
+        );
+        stack.set(DataComponents.WRITTEN_BOOK_CONTENT, content);
+        return stack;
+    }
+
+    /**
+     * 生成猫娘的日记成书：有 AI 写的日记数据时每篇一页（含天气/心情/位置元数据行），
+     * 无数据时回退随机生成。标题用 {@code diary.toneko.title} 翻译。
+     */
+    public ItemStack createNekoDiary() {
+        String nekoName = this.getCustomName() != null
+                ? this.getCustomName().getString()
+                : this.getName().getString();
+        ItemStack stack = new ItemStack(Items.WRITTEN_BOOK);
+        stack.set(DataComponents.ITEM_NAME, Component.translatable("item.toneko.neko_diary"));
+        List<Filterable<Component>> pages = new ArrayList<>();
+        if (!diaryEntries.isEmpty()) {
+            // AI 写的日记：每篇一页
+            for (String entry : diaryEntries) {
+                pages.add(Filterable.passThrough(Component.literal(entry)));
+            }
+        } else {
+            // 无日记数据：回退随机生成（与静态版一致）
+            Random random = new Random();
+            int count = 2 + random.nextInt(3);
+            for (int i = 0; i < count; i++) {
+                int idx = random.nextInt(80);
+                pages.add(Filterable.passThrough(
+                        Component.translatable("diary.toneko.entry." + idx, nekoName)));
+            }
+        }
+        WrittenBookContent content = new WrittenBookContent(
+                Filterable.passThrough(Component.translatable("diary.toneko.title", nekoName).getString()),
                 nekoName, 0, pages, false
         );
         stack.set(DataComponents.WRITTEN_BOOK_CONTENT, content);
@@ -1570,6 +1624,11 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     /** 持久化的 AI 聊天存储 ID（实体 UUID 变化时保持不变，NBT 持久化） */
     private String aiStorageId;
     private static final String AI_STORAGE_ID_TAG = "AIStorageId";
+    /** AI 写的日记条目（每篇一个完整字符串：元数据行+正文），NBT 持久化，上限 {@link NekoDiary#MAX_DIARY_ENTRIES} 篇删最旧 */
+    private final List<String> diaryEntries = new ArrayList<>();
+    private long lastDiaryWriteTime;
+    private static final String DIARY_ENTRIES_TAG = "DiaryEntries";
+    private static final String LAST_DIARY_WRITE_TIME_TAG = "LastDiaryWriteTime";
     @Override
     public String getAIStorageId() {
         if (aiStorageId == null) {
@@ -1578,6 +1637,29 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
             AIUtil.migrateNekoStorage(this.getUUID().toString(), aiStorageId);
         }
         return aiStorageId;
+    }
+
+    /** 日记条目（不可修改视图；每篇 = 元数据行 + 换行 + 正文） */
+    public List<String> getDiaryEntries() {
+        return Collections.unmodifiableList(diaryEntries);
+    }
+
+    /** 追加一篇日记，超出配置上限删最旧 */
+    public void appendDiaryEntry(String entry) {
+        diaryEntries.add(entry);
+        int max = NekoDiary.maxDiaryEntries();
+        while (diaryEntries.size() > max) {
+            diaryEntries.remove(0);
+        }
+    }
+
+    /** 上次写日记的游戏 tick（0 = 从未写过） */
+    public long getLastDiaryWriteTime() {
+        return lastDiaryWriteTime;
+    }
+
+    public void setLastDiaryWriteTime(long ticks) {
+        this.lastDiaryWriteTime = ticks;
     }
 
     private List<BlockedWord> blockedWords = new ArrayList<>();

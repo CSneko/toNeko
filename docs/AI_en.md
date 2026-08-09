@@ -136,3 +136,4 @@ Customize prompts using placeholders:
 | `%player_is_neko%`  | Is the player a neko?    | `Yes`, `No`           |  
 | `%world_time%`      | In-game time             | `Day`, `Night`        |  
 | `%world_weather%`   | In-game weather          | `Sunny`, `Rainy`      |  
+| `%neko_surroundings%` | Surroundings (nearby entities/environment; if absent and `ai.surroundings.enable` is on, appended to prompt automatically) | `[Surroundings] players: Steve; 3 Zombie; environment: water` |  

@@ -31,6 +31,7 @@ public class AIServiceProviderRegistry {
         register(new MistralProvider());
         register(new AnthropicProvider());
         register(new LocalCustomProvider());
+        register(new Player2Provider());
         register(new CNekoAIProvider());
     }
 

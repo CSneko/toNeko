@@ -2,7 +2,7 @@
 [简体中文](https://github.com/CSneko/toNeko/blob/main/docs/AI.md) | [English](https://github.com/CSneko/toNeko/blob/main/docs/AI_en.md)
 ## 服务设置
 当前一共支持以下服务
-- elefant （最简单，新手推荐）
+- player2 （最简单，新手推荐）
 - neko（内置代理google）
 - google（可免费使用）
 - openai
@@ -10,23 +10,23 @@
 - groq（可免费使用）
 - 其它服务
 
-如果你是中国大陆用户并且不会代理，那么你可以使用elefant,neko或siliconflow哦
+如果你是中国大陆用户并且不会代理，那么你可以使用player2,neko或siliconflow哦
 
 ### 其它服务
 如果服务使用OpenAI格式返回（通常情况下链接会像`https://api.xxx.com/v1/chat/completions `），那么填入链接即可
 
 --- 
-## elefant（player2）使用方法
-相比于其它服务，elefant较为简单，推荐新手使用
+## player2 使用方法
+相比于其它服务，player2较为简单，推荐新手使用
 
 首先，打开[player2官网](https://player2.game/)并下载客户端，然后启动客户端
 
-接下来，在游戏内的toNeko配置页面将AI启用后并将服务设置为`elefant`即可直接使用啦。（也可以执行以下两个命令）
+接下来，在游戏内的toNeko配置页面将AI启用后并将服务设置为`player2`即可直接使用啦。（也可以执行以下两个命令）
 ```
 /tonekoadmin config set ai.enable true
-/tonekoadmin config set ai.service elefant
+/tonekoadmin config set ai.service player2
 ```
-*如果没有生效，可以尝试输入`/tonekoadmin config set ai.service "http://localhost:4315/v1/chat/completions" `或者使用 `/tonekoadmin config reload` 重载配置文件*
+*如果没有生效，可以使用 `/tonekoadmin config reload` 重载配置文件*
 
 ---
 ## 获取Key
@@ -49,7 +49,7 @@
 ---
 ## 模型设置
 不同服务支持的模型有所不同，你可以在以下页面查看所有支持的模型
-- elefant请留空
+- player2请留空
 - [google和neko](https://ai.google.dev/gemini-api/docs/models/gemini?hl=zh-cn)
 - [openai](https://platform.openai.com/docs/models)
 - [siliconflow](https://cloud.siliconflow.cn/models)
@@ -57,8 +57,8 @@
 
 ### 推荐模型
 这里给大家推荐以下几个模型
-#### elefant
-请留空
+#### player2
+请留空（使用 Player2 App 内选择的模型）
 #### neko或google
 - gemini-3.0-flash
 - gemini-3.1-pro
@@ -83,9 +83,10 @@
 /tonekoadmin config set ai.tts.enable true
 ```
 ### 如何使用
-目前只支持elefant，因此在打开elefant客户端后就可以直接使用。
+目前只支持player2，因此在打开Player2客户端后就可以直接使用。
 ### 修改语音
-你可以使用浏览器打开`http://127.0.0.1:4315/v1/tts/voices `，然后选择一个你喜欢的并复制id，在游戏内修改语音即可。
+在游戏内toNeko的AI配置页面（TTS 设置 → 声音）点"刷新"即可从列表选择音色；
+也可以使用浏览器打开`http://127.0.0.1:4315/v1/tts/voices `，然后选择一个你喜欢的并复制id，在配置中直接粘贴。
 ### 注意事项
 如果你使用多人游戏时，请在客户端也要设tts
 
@@ -99,7 +100,7 @@
 ## 代理
 这个功能是可选的，如果你无法访问外网，你可能需要用到。
 
-如果你使用elefant，neko或siliconflow，那么在游戏内是不需要代理的。
+如果你使用player2，neko或siliconflow，那么在游戏内是不需要代理的。
 
 而中国大陆环境无法使用其它模型，这时候你可能需要设置代理。
 
@@ -128,3 +129,4 @@
 | %player_is_neko%  | 玩家是否为猫娘 | `是`,`不是`           |
 | %world_time%      | 世界时间    | `白天`,`夜晚`          |
 | %world_weather%   | 世界天气    | `晴天`,`雨天`          |
+| %neko_surroundings% | 周围环境感知（附近实体/环境特征，未使用该占位符且启用 ai.surroundings.enable 时自动附加到提示词末尾） | `【环境感知】玩家：Steve；3 只 僵尸；环境：水` |

@@ -166,35 +166,73 @@ public class ToNekoNetworkEvents {
             } else {
                 ServerPlayer player = context.player();
                 String nekoUuid = neko.getUUID().toString();
-                AIUtil.sendMessage(neko.getAIStorageId(), player.getUUID(), neko.generateAIPrompt(context.player()), payload.message(), response -> {
-                    // AI回调在后台线程执行，所有Minecraft世界/实体操作必须切回服务器主线程
-                    player.getServer().execute(() -> {
-                        // 解析并执行 AI 动作（移动/给予物品），聊天窗口显示清理掉 JSON 代码块后的文本
-                        String displayText = NekoActionExecutor.process(neko, player, response.getResponse());
-                        // 历史存储以猫娘的持久 AI 存储 ID 为 key（实体 UUID 会变化），payload 仍用实体 UUID 供客户端匹配
-                        Runnable sendHistory = () -> pushChatHistory(player, neko.getAIStorageId(), nekoUuid);
-                        if (ConfigUtil.isAIShowThink() && response.hasThink()){
-                            ServerLevel world = (ServerLevel) neko.level();
-                            int totalDelay = spawnFloatingText(neko, response, world);
-                            TickTaskQueue task = new TickTaskQueue();
-                            task.addTask(totalDelay, () -> {
-                                String r = Messaging.format(displayText, neko,
-                                        Collections.singletonList(LanguageUtil.prefix), ConfigUtil.getChatFormat());
-                                player.sendSystemMessage(Component.literal(r));
+                AIUtil.sendMessageStream(neko.getAIStorageId(), player.getUUID(), neko.generateAIPrompt(context.player()), payload.message(), new AIUtil.StreamCallback() {
+                    @Override
+                    public void onChunk(String chunk) {
+                        // AI回调在后台线程执行，网络发送必须切回服务器主线程；玩家可能已断线
+                        player.getServer().execute(() -> {
+                            if (player.connection == null) return;
+                            try {
+                                ServerPlayNetworking.send(player, new ChatStreamPayload(nekoUuid, chunk, false, null));
+                            } catch (Exception ignored) {
+                                // 玩家断线等，忽略
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onFinished(AIResponse response) {
+                        // AI回调在后台线程执行，所有Minecraft世界/实体操作必须切回服务器主线程
+                        player.getServer().execute(() -> {
+                            // 先发收尾包让客户端打字机落定（不等思考动画）
+                            if (player.connection != null) {
+                                try {
+                                    ServerPlayNetworking.send(player, new ChatStreamPayload(nekoUuid, "", true, null));
+                                } catch (Exception ignored) {
+                                    // 玩家断线等，忽略
+                                }
+                            }
+                            // 解析并执行 AI 动作（移动/给予物品），聊天窗口显示清理掉 JSON 代码块后的文本
+                            String displayText = NekoActionExecutor.process(neko, player, response.getResponse());
+                            // 历史存储以猫娘的持久 AI 存储 ID 为 key（实体 UUID 会变化），payload 仍用实体 UUID 供客户端匹配
+                            Runnable sendHistory = () -> pushChatHistory(player, neko.getAIStorageId(), nekoUuid);
+                            if (ConfigUtil.isAIShowThink() && response.hasThink()){
+                                ServerLevel world = (ServerLevel) neko.level();
+                                int totalDelay = spawnFloatingText(neko, response, world);
+                                TickTaskQueue task = new TickTaskQueue();
+                                task.addTask(totalDelay, () -> {
+                                    // AI 回复显示统一发包，客户端按配置选择聊天栏/气泡
+                                    Messaging.sendNekoChat(player, neko, displayText);
+                                    sendHistory.run();
+                                });
+                                TickTasks.add(task);
+                            } else {
+                                Messaging.sendNekoChat(player, neko, displayText);
                                 sendHistory.run();
-                            });
-                            TickTasks.add(task);
-                        } else {
-                            String r = Messaging.format(displayText, neko,
-                                    Collections.singletonList(LanguageUtil.prefix), ConfigUtil.getChatFormat());
-                            player.sendSystemMessage(Component.literal(r));
-                            sendHistory.run();
-                        }
-                        // 如果启用了TTS
-                        if (ConfigUtil.isAITTSEnabled()){
-                            ServerPlayNetworking.send(player, new TTSSendPayload(displayText));
-                        }
-                    });
+                            }
+                            // 如果启用了TTS
+                            if (ConfigUtil.isAITTSEnabled()){
+                                ServerPlayNetworking.send(player, new TTSSendPayload(displayText));
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onError(AIResponse error) {
+                        player.getServer().execute(() -> {
+                            // 屏幕显示错误行（若打开着对应聊天屏）
+                            if (player.connection != null) {
+                                try {
+                                    ServerPlayNetworking.send(player, new ChatStreamPayload(nekoUuid, "", true, error.getResponse()));
+                                } catch (Exception ignored) {
+                                    // 玩家断线等，忽略
+                                }
+                            }
+                            // AI 错误提示走统一显示包（客户端按配置选择聊天栏/气泡）
+                            String displayText = NekoActionExecutor.process(neko, player, error.getResponse());
+                            Messaging.sendNekoChat(player, neko, displayText);
+                        });
+                    }
                 });
             }
         });
@@ -390,12 +428,10 @@ public class ToNekoNetworkEvents {
                         NekoActionParser.ParseResult result = NekoActionParser.parse(response.getResponse());
                         boolean approved = result.actions().stream()
                                 .anyMatch(a -> "allow_mate".equals(a.type()));
-                        // 发送猫娘回复（动作代码块不显示）
+                        // 发送猫娘回复（动作代码块不显示），走统一显示包
                         String displayText = result.cleanedText();
                         if (!displayText.isEmpty()) {
-                            String r = Messaging.format(displayText, neko,
-                                    Collections.singletonList(LanguageUtil.prefix), ConfigUtil.getChatFormat());
-                            requester.sendSystemMessage(Component.literal(r));
+                            Messaging.sendNekoChat(requester, neko, displayText);
                         }
                         // 同意才执行交配
                         if (approved) {
@@ -438,6 +474,7 @@ public class ToNekoNetworkEvents {
     public static void onGiftItem(GiftItemPayload payload, ServerPlayNetworking.Context context) {
         processNekoInteractive(context.player(), payload.uuid(), neko -> neko.giftItem(context.player(), payload.slot()));
     }
+
 
     private static void processNekoInteractive(ServerPlayer player, String uuid, EntityFinder finder) {
         // 检查uuid是否合法
@@ -648,7 +685,34 @@ public class ToNekoNetworkEvents {
                         }
                     }
                     if (!text.isEmpty()) {
-                        messages.add(role + ":" + text.toString());
+                        String displayText = text.toString();
+                        // 剥离猫娘回复中的动作 JSON 代码块（新历史已存清理后文本，
+                        // 这里兜底兼容旧历史文件里存的原始全文），与流式显示语义一致
+                        if (role.equals("assistant")) {
+                            displayText = NekoActionParser.parse(displayText).cleanedText();
+                        }
+                        // 聊天屏幕只显示当前玩家与猫娘的对话：
+                        // - user 行反过滤：只有 "[当前玩家名] " 开头的真实发言才显示（去掉前缀），
+                        //   总结条目（无前缀）、[提示] 内部触发消息（"[提示]对X："）、
+                        //   其他玩家的消息（"[其他名字] "）全部过滤
+                        // - assistant 行：带 [对X] 标记（新历史）时只显示对当前玩家的回复；
+                        //   无标记的旧历史原样显示（兼容旧数据，无法区分对话对象）
+                        String speakerName = player.getName().getString();
+                        if (role.equals("user")) {
+                            String namePrefix = "[" + speakerName + "] ";
+                            if (displayText.startsWith(namePrefix)) {
+                                displayText = displayText.substring(namePrefix.length());
+                            } else {
+                                continue;
+                            }
+                        } else if (displayText.startsWith("[对")) {
+                            int idx = displayText.indexOf("] ");
+                            if (idx > 2) {
+                                if (!displayText.substring(2, idx).equals(speakerName)) continue; // 对其他玩家的回复
+                                displayText = displayText.substring(idx + 2);
+                            }
+                        }
+                        messages.add(role + ":" + displayText);
                     }
                 }
             }

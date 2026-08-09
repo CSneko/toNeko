@@ -7,6 +7,8 @@ import org.cneko.ai.providers.openai.OpenAIService;
 import org.cneko.toneko.common.mod.ai.AIServiceConfig;
 import org.cneko.toneko.common.mod.ai.provider.AIServiceProvider;
 
+import java.util.stream.Stream;
+
 /**
  * Local / custom URL provider — any OpenAI-compatible endpoint.
  * Always applies the user-specified host/port/endpoint since there are no fixed defaults.
@@ -47,5 +49,16 @@ public class LocalCustomProvider implements AIServiceProvider {
                 new OpenAIConfig(config.getApiKey()).withModel(config.getModel()), config, "");
         OpenAIService service = new OpenAIService(openAIConfig);
         return service.processRequest(request);
+    }
+
+    @Override
+    public boolean supportsStream() { return true; }
+
+    @Override
+    public Stream<AIResponse> processStream(AIServiceConfig config, AIRequest request) throws Exception {
+        OpenAIConfig openAIConfig = OpenAIProvider.applyCommon(
+                new OpenAIConfig(config.getApiKey()).withModel(config.getModel()), config, "");
+        OpenAIService service = new OpenAIService(openAIConfig);
+        return service.processStream(request);
     }
 }

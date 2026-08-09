@@ -7,6 +7,8 @@ import org.cneko.ai.providers.openai.OpenAIService;
 import org.cneko.toneko.common.mod.ai.AIServiceConfig;
 import org.cneko.toneko.common.mod.ai.provider.AIServiceProvider;
 
+import java.util.stream.Stream;
+
 /**
  * DeepSeek provider — OpenAI-compatible Chinese AI lab.
  */
@@ -45,5 +47,16 @@ public class DeepSeekProvider implements AIServiceProvider {
                 new OpenAIConfig(config.getApiKey()).withModel(config.getModel()), config, getDefaultHost());
         OpenAIService service = new OpenAIService(openAIConfig);
         return service.processRequest(request);
+    }
+
+    @Override
+    public boolean supportsStream() { return true; }
+
+    @Override
+    public Stream<AIResponse> processStream(AIServiceConfig config, AIRequest request) throws Exception {
+        OpenAIConfig openAIConfig = OpenAIProvider.applyCommon(
+                new OpenAIConfig(config.getApiKey()).withModel(config.getModel()), config, getDefaultHost());
+        OpenAIService service = new OpenAIService(openAIConfig);
+        return service.processStream(request);
     }
 }

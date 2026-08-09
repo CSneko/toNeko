@@ -17,10 +17,12 @@ import org.cneko.toneko.common.mod.ai.proactive.NekoProactiveManager.NekoProacti
 import org.cneko.toneko.common.mod.ai.provider.AIServiceProvider;
 import org.cneko.toneko.common.mod.ai.provider.AIServiceProviderRegistry;
 import org.cneko.toneko.common.util.ConfigUtil;
+import org.cneko.toneko.common.util.TTSUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Scrollable AI configuration screen covering ALL ai.* config keys.
@@ -87,6 +89,9 @@ public class AIConfigScreen extends Screen {
             list.addEntry(new ProviderEntry(leftX, rowW, this));
         }
 
+        // One-click switch to Player2 (auto-enables AI + TTS)
+        list.addEntry(new Player2QuickEntry(leftX, rowW, this));
+
         // API Key
         list.addEntry(new StringEntry(leftX, rowW, "ai.key",
                 Component.translatable("screen.toneko.ai_config.api_key"), ConfigUtil.getAIKey(), 256));
@@ -150,6 +155,12 @@ public class AIConfigScreen extends Screen {
         list.addEntry(new StringEntry(leftX, rowW, "ai.actions.energy_cost",
                 Component.translatable("screen.toneko.config.key.ai.actions.energy_cost"),
                 ConfigUtil.CONFIG.getString("ai.actions.energy_cost"), 8));
+        list.addEntry(new StringEntry(leftX, rowW, "ai.actions.diary.cooldown",
+                Component.translatable("screen.toneko.config.key.ai.actions.diary.cooldown"),
+                ConfigUtil.CONFIG.getString("ai.actions.diary.cooldown"), 8));
+        list.addEntry(new StringEntry(leftX, rowW, "ai.actions.diary.max_entries",
+                Component.translatable("screen.toneko.config.key.ai.actions.diary.max_entries"),
+                ConfigUtil.CONFIG.getString("ai.actions.diary.max_entries"), 8));
 
         // --- Section: Proactive ---
         list.addEntry(new SectionEntry(leftX, rowW, "screen.toneko.ai_config.section.proactive"));
@@ -170,8 +181,9 @@ public class AIConfigScreen extends Screen {
                 Component.translatable("screen.toneko.config.key.ai.tts.enable")));
         list.addEntry(new StringEntry(leftX, rowW, "ai.tts.service",
                 Component.translatable("screen.toneko.config.key.ai.tts.service"), ConfigUtil.CONFIG.getString("ai.tts.service"), 64));
-        list.addEntry(new StringEntry(leftX, rowW, "ai.tts.voice",
-                Component.translatable("screen.toneko.config.key.ai.tts.voice"), ConfigUtil.getAITTSVoice(), 64));
+        list.addEntry(new StringEntry(leftX, rowW, "ai.tts.port",
+                Component.translatable("screen.toneko.config.key.ai.tts.port"), ConfigUtil.getAITTSPort(), 8));
+        list.addEntry(new VoiceEntry(leftX, rowW));
 
         // --- Section: Proxy ---
         list.addEntry(new SectionEntry(leftX, rowW, "screen.toneko.ai_config.section.proxy"));
@@ -190,6 +202,33 @@ public class AIConfigScreen extends Screen {
         currentProviderId = providers.get(providerIndex).getProviderId();
         ConfigUtil.CONFIG.set("ai.service", currentProviderId);
         ConfigUtil.loadProviderConfig(currentProviderId);
+        rebuildWidgets();
+    }
+
+    /**
+     * 一键切换到 Player2：启用 AI + 切换服务商 + 启用 TTS + 模型留空（Player2 App 内自选），
+     * 立即保存生效（模仿 apply()，但不关闭屏幕）。
+     */
+    private void switchToPlayer2() {
+        // 保存当前 provider 的配置
+        ConfigUtil.saveProviderConfig(currentProviderId);
+        // 定位 Player2 在服务商列表中的位置（界面状态同步）
+        for (int i = 0; i < providers.size(); i++) {
+            if (providers.get(i).getProviderId().equalsIgnoreCase("player2")) {
+                providerIndex = i;
+                break;
+            }
+        }
+        currentProviderId = "player2";
+        ConfigUtil.CONFIG.set("ai.service", "player2");
+        ConfigUtil.CONFIG.set("ai.enable", true);
+        ConfigUtil.CONFIG.set("ai.tts.enable", true);
+        ConfigUtil.CONFIG.set("ai.tts.service", "player2");
+        // Player2 使用用户自选的默认模型，模型留空
+        ConfigUtil.CONFIG.set("ai.model", "");
+        ConfigUtil.loadProviderConfig("player2");
+        ConfigUtil.CONFIG.save();
+        ConfigUtil.load();
         rebuildWidgets();
     }
 
@@ -213,7 +252,11 @@ public class AIConfigScreen extends Screen {
         // Provider indicator
         if (!providers.isEmpty()) {
             AIServiceProvider p = providers.get(providerIndex);
-            g.drawCenteredString(font, Component.literal(p.getDisplayName() + " (" + p.getDefaultModel() + ")"),
+            String model = p.getDefaultModel();
+            String label = model == null || model.isEmpty()
+                    ? p.getDisplayName()
+                    : p.getDisplayName() + " (" + model + ")";
+            g.drawCenteredString(font, Component.literal(label),
                     width / 2, 24, 0xFFC0C0C0);
         }
         // Scroll hint
@@ -547,6 +590,148 @@ public class AIConfigScreen extends Screen {
         @Override
         public void mouseClicked(double mx, double my, int btn) {
             switchProvider();
+        }
+    }
+
+    /**
+     * 一键切换到 Player2 的快捷按钮行（启用 AI + 切服务商 + 启用 TTS）。
+     */
+    static class Player2QuickEntry implements RowEntry {
+        private final int lx, rw;
+        private final AIConfigScreen screen;
+        Player2QuickEntry(int lx, int rw, AIConfigScreen screen) { this.lx = lx; this.rw = rw; this.screen = screen; }
+        @Override public int getHeight() { return 28; }
+        @Override
+        public void render(GuiGraphics g, int lx, int ly, int rx, int mx, int my, float pt) {
+            boolean hover = mx >= lx && mx < rx && my >= ly && my < ly + getHeight();
+            g.fill(lx, ly, rx, ly + getHeight(), hover ? 0x25FF69B4 : 0x10FFFFFF);
+            String txt = "▶  " + net.minecraft.client.resources.language.I18n.get("screen.toneko.ai_config.use_player2") + "  ◀";
+            g.drawCenteredString(Minecraft.getInstance().font, Component.literal(txt),
+                    (lx + rx) / 2, ly + 8, 0xFF69B4);
+        }
+        @Override
+        public void mouseClicked(double mx, double my, int btn) {
+            screen.switchToPlayer2();
+        }
+    }
+
+    /**
+     * Player2 声音选择行：◀ 声音: <名> ▶ [刷新]。
+     * 声音列表异步从 /v1/tts/voices 加载（构造时自动加载，render 线程轮询 future.isDone 避免竞态）；
+     * 整行可切换：左 ◀ 上一个、中间/右 ▶ 下一个，切换后立即写入并保存 ai.tts.voice。
+     * 渲染与点击统一使用构造的 this.lx/this.rw（内容区），与列表边界的 8px 内边距无关。
+     */
+    static class VoiceEntry implements RowEntry {
+        private final int lx, rw;
+        private final List<TTSUtil.VoiceInfo> voices = new ArrayList<>();
+        private int index = -1;
+        private CompletableFuture<List<TTSUtil.VoiceInfo>> pending;
+        private boolean failed;
+
+        private static final int REFRESH_W = 40;
+        private static final int NAV_W = 20;
+
+        VoiceEntry(int lx, int rw) {
+            this.lx = lx;
+            this.rw = rw;
+            // 打开配置屏即自动加载声音列表
+            refresh();
+        }
+
+        @Override public int getHeight() { return 28; }
+
+        private int right() { return lx + rw; }
+
+        @Override
+        public void render(GuiGraphics g, int lx, int ly, int rx, int mx, int my, float pt) {
+            // 异步加载完成检查（仅 render 线程修改 voices / index，避免竞态）
+            if (pending != null && pending.isDone()) {
+                try {
+                    List<TTSUtil.VoiceInfo> loaded = pending.get();
+                    voices.clear();
+                    voices.addAll(loaded);
+                    index = -1;
+                    String current = ConfigUtil.getAITTSVoice();
+                    for (int i = 0; i < voices.size(); i++) {
+                        if (voices.get(i).id().equals(current)) { index = i; break; }
+                    }
+                    if (index < 0 && !voices.isEmpty()) index = 0;
+                    failed = false;
+                } catch (Exception e) {
+                    failed = true;
+                    voices.clear();
+                    index = -1;
+                }
+                pending = null;
+            }
+
+            int R = right();
+            boolean hover = mx >= this.lx && mx < R && my >= ly && my < ly + getHeight();
+            g.fill(this.lx, ly, R, ly + getHeight(), hover ? 0x15FFFFFF : 0);
+            g.drawString(Minecraft.getInstance().font, Component.literal(
+                    net.minecraft.client.resources.language.I18n.get("screen.toneko.ai_config.tts.voice") + ": "),
+                    this.lx + 4, ly + 8, COLOR_ACCENT);
+
+            // 中间显示区（◀ 名字 ▶，或加载/失败/空状态）
+            String display;
+            if (failed) {
+                display = "§c" + net.minecraft.client.resources.language.I18n.get("screen.toneko.ai_config.tts.voice.failed");
+            } else if (pending != null) {
+                display = net.minecraft.client.resources.language.I18n.get("screen.toneko.ai_config.tts.voice.loading");
+            } else if (voices.isEmpty() && index < 0) {
+                String configured = ConfigUtil.getAITTSVoice();
+                display = configured.isEmpty()
+                        ? "§7" + net.minecraft.client.resources.language.I18n.get("screen.toneko.ai_config.tts.voice.empty")
+                        : "◀  " + configured + "  ▶";
+            } else if (index >= 0 && !voices.isEmpty()) {
+                TTSUtil.VoiceInfo v = voices.get(index);
+                String name = v.name() != null && !v.name().isEmpty() ? v.name() : v.id();
+                display = "◀  §f" + name + "§f  ▶";
+            } else {
+                display = "§7" + net.minecraft.client.resources.language.I18n.get("screen.toneko.ai_config.tts.voice.empty");
+            }
+            int midX = this.lx + 4 + Minecraft.getInstance().font.width(
+                    net.minecraft.client.resources.language.I18n.get("screen.toneko.ai_config.tts.voice") + ": ");
+            g.drawString(Minecraft.getInstance().font, Component.literal(display), midX, ly + 8, 0xFFFFFF);
+
+            // 刷新按钮
+            int bx = R - REFRESH_W - 2;
+            boolean btnHover = mx >= bx && mx <= R - 2 && my >= ly + 5 && my <= ly + getHeight() - 5;
+            g.fill(bx, ly + 5, R - 2, ly + getHeight() - 5, btnHover ? 0x55FFFFFF : 0x33FFFFFF);
+            g.drawCenteredString(Minecraft.getInstance().font,
+                    Component.literal(net.minecraft.client.resources.language.I18n.get("screen.toneko.ai_config.tts.voice.refresh")),
+                    (bx + R - 2) / 2, ly + 9, 0xFFFFFF);
+        }
+
+        @Override
+        public void mouseClicked(double mx, double my, int btn) {
+            int R = right();
+            // 刷新按钮
+            if (mx >= R - REFRESH_W - 2 && mx <= R - 2) {
+                refresh();
+                return;
+            }
+            // 列表未加载/为空时不切换（但点刷新可以重新加载）
+            if (voices.isEmpty() || index < 0) return;
+            // 整行可切换：左 ◀ 上一个，中间及右侧（含 ▶）下一个
+            if (mx >= lx + 4 && mx < lx + 4 + NAV_W) {
+                index = (index - 1 + voices.size()) % voices.size();
+            } else {
+                index = (index + 1) % voices.size();
+            }
+            writeConfig();
+        }
+
+        /** 触发异步加载（Player2 未运行时不阻塞 UI，失败显示重试提示） */
+        private void refresh() {
+            if (pending != null) return;
+            pending = TTSUtil.fetchVoices();
+        }
+
+        /** 写入并立即保存音色配置（不依赖"应用"按钮，切换即时生效且重启不丢失） */
+        private void writeConfig() {
+            ConfigUtil.CONFIG.set("ai.tts.voice", voices.get(index).id());
+            ConfigUtil.CONFIG.save();
         }
     }
 }
