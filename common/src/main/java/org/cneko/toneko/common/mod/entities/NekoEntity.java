@@ -54,6 +54,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.cneko.toneko.common.mod.ai.NekoDiary;
+import org.cneko.toneko.common.mod.ai.NekoTriggerManager;
 import org.cneko.toneko.common.mod.ai.proactive.NekoProactiveManager;
 import org.cneko.toneko.common.mod.advencements.ToNekoCriteria;
 import org.cneko.toneko.common.mod.ai.PromptRegistry;
@@ -124,7 +125,6 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
 
     // 受伤求救冷却时间，避免被连击时疯狂扫描附近实体
     private long lastHelpCallTime = 0;
-    private long lastLoliAlarmTime = 0;
     // ====== 通用仇恨系统（绕过GoalSystem，直接在tick中处理）=======
     protected static final ResourceLocation HATRED_ATTACK_BOOST_ID = toNekoLoc("hatred_attack_boost");
     protected static final double HATRED_ATTACK_BOOST = 0.2; // 攻击力倍率（×1.2）
@@ -1045,12 +1045,41 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     // 当玩家右键
     @Override
     public @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
-        // shift+右键打开互动菜单
+        // shift+右键：贴脸（≤3 格）时是拥抱（hug 交互），否则打开互动菜单（按距离分流，互不冲突）
         if (hand.equals(InteractionHand.MAIN_HAND) && player.isShiftKeyDown() && player instanceof ServerPlayer sp){
+            if (player.distanceToSqr(this) <= HUG_RANGE_SQ) {
+                playHugEffect();
+                return InteractionResult.SUCCESS;
+            }
             openInteractiveMenu(sp);
             return InteractionResult.SUCCESS;
         }
         return super.mobInteract(player, hand);
+    }
+
+    /** 拥抱表现的贴脸判定距离（≤1 格，与动作系统的"走到贴脸"一致） */
+    public static final double HUG_RANGE_SQ = 1.0 * 1.0;
+
+    /**
+     * 动画速度随心情变化（客户端每 tick 由 GeckoLib 调用）：
+     * 心情 = (精力比例 + 健康比例) / 2，越好越快——尾巴摇得更欢、动作更活泼（0.6 ~ 1.8）。
+     */
+    public double tailSpeedByMood() {
+        float energyRatio = this.getMaxNekoEnergy() > 0 ? this.getNekoEnergy() / this.getMaxNekoEnergy() : 1.0f;
+        float healthRatio = this.getMaxHealth() > 0 ? this.getHealth() / this.getMaxHealth() : 1.0f;
+        float mood = (energyRatio + healthRatio) / 2;
+        return 0.6 + mood * 1.2;
+    }
+
+    /** 拥抱表现：拥抱动画 + 爱心粒子 + 呼噜音效（服务端调用，动画经发包同步客户端） */
+    public void playHugEffect() {
+        this.playExpressAnim("hug");
+        if (this.level() instanceof ServerLevel level) {
+            level.sendParticles(ParticleTypes.HEART,
+                    this.getX(), this.getY() + 1.0, this.getZ(), 8, 0.5, 0.5, 0.5, 0.1);
+            level.playSound(null, this.getX(), this.getY(), this.getZ(),
+                    SoundEvents.CAT_PURR, this.getSoundSource(), 1.0f, 1.0f);
+        }
     }
 
     public void openInteractiveMenu(ServerPlayer player) {
@@ -1071,7 +1100,8 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, 20, state -> {
+        // 动画速度随心情（精力+健康）动态变化：心情越好尾巴摇得越快、动作越活泼
+        AnimationController<NekoEntity> main = new AnimationController<>(this, 20, state -> {
             // 地上趴着
             if (this.getPose() == Pose.SWIMMING && !this.clientIsInLiquid){
                 return state.setAndContinue(DefaultAnimations.CRAWL);
@@ -1097,7 +1127,42 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
                 return state.setAndContinue(DefaultAnimations.WALK);
             }
 
-        }));
+        }).setAnimationSpeedHandler(neko -> neko.tailSpeedByMood());
+        controllers.add(main);
+        // 表现动画控制器：一次性/循环表情动画，由动作系统与触发反应通过
+        // NekoExpressAnimPayload 触发（服务端 playExpressAnim），播放完回落到 idle
+        controllers.add(new AnimationController<>(this, "express", 5, state ->
+                state.setAndContinue(DefaultAnimations.IDLE))
+                .triggerableAnim("wave", RawAnimation.begin().thenPlay("express.wave"))
+                .triggerableAnim("hug", RawAnimation.begin().thenPlay("express.hug"))
+                .triggerableAnim("pet_request", RawAnimation.begin().thenPlay("express.pet_request"))
+                .triggerableAnim("happy_jump", RawAnimation.begin().thenPlay("express.happy_jump"))
+                .triggerableAnim("purr", RawAnimation.begin().thenPlay("express.purr"))
+                .triggerableAnim("nuzzle", RawAnimation.begin().thenPlay("express.nuzzle"))
+                .triggerableAnim("bow", RawAnimation.begin().thenPlay("express.bow"))
+                .triggerableAnim("dance", RawAnimation.begin().thenPlay("express.dance"))
+                .triggerableAnim("yawn", RawAnimation.begin().thenPlay("express.yawn"))
+                .triggerableAnim("shy", RawAnimation.begin().thenPlay("express.shy"))
+                .triggerableAnim("trip", RawAnimation.begin().thenPlay("express.trip"))
+                .triggerableAnim("think", RawAnimation.begin().thenPlay("express.think"))
+                .triggerableAnim("angry", RawAnimation.begin().thenPlay("express.angry")));
+    }
+
+    /**
+     * 播放一次性表现动画（服务端入口）：发 NekoExpressAnimPayload 给 64 格内玩家客户端，
+     * 客户端 GeckoLib triggerAnim("express", name) 实际播放。动画名必须是
+     * registerControllers 中 triggerableAnim 注册过的键。
+     */
+    public void playExpressAnim(String animName) {
+        if (this.level() == null || this.level().isClientSide()) return;
+        org.cneko.toneko.common.mod.packets.NekoExpressAnimPayload payload =
+                new org.cneko.toneko.common.mod.packets.NekoExpressAnimPayload(this.getId(), animName);
+        for (net.minecraft.server.level.ServerPlayer player :
+                this.level().getServer().getPlayerList().getPlayers()) {
+            if (player.distanceToSqr(this) <= 4096) { // 64 格内可见
+                ServerPlayNetworking.send(player, payload);
+            }
+        }
     }
 
     @Override
@@ -1120,22 +1185,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
             if (this.tickCount % 100 == 0) {
                 spawnAmbientParticles();
             }
-
-            // 萝莉猫娘防狼：检测玩家侵犯意图（持武器接近）
-            if (this.isNekoBaby() && this.tickCount % 40 == 0) {
-                long currentTime = this.level().getGameTime();
-                if (currentTime - this.lastLoliAlarmTime > 1200) { // 60秒冷却，防止误触
-                    for (Player player : this.level().getEntitiesOfClass(Player.class,
-                            this.getBoundingBox().inflate(5),
-                            p -> p.isAlive() && !p.isCreative() && !p.isSpectator())) {
-                        if (this.hasLineOfSight(player) && isWeapon(player.getMainHandItem())) {
-                            this.lastLoliAlarmTime = currentTime;
-                            triggerLoliAlarm(player);
-                            break;
-                        }
-                    }
-                }
-            }
+            // 萝莉防狼警报仅在主动被攻击时触发（见 hurt），接近/旁观不再警报
         }
     }
 
@@ -1201,14 +1251,17 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
             }
         }
 
-        // 萝莉猫娘防狼警报：如果被玩家攻击且是幼体（萝莉）
-        if (source.getEntity() instanceof Player player && this.isNekoBaby()) {
+        // 萝莉猫娘防狼警报：被玩家空手攻击才警报（持武器攻击是正常战斗，不再构成威胁）
+        if (source.getEntity() instanceof Player player && this.isNekoBaby()
+                && player.getMainHandItem().isEmpty()) {
             triggerLoliAlarm(player);
         }
 
         boolean result = super.hurt(source, amount);
 
         if (!result) return false;
+        // 触发型行为反应（害怕逃跑/装死等，本地行为不烧 token；消息已由 on_hurt 按萌属性发送）
+        NekoTriggerManager.onNekoHurt(this, source, amount);
         if (source.getEntity() instanceof Player player){
             hurtByPlayer(player);
         }

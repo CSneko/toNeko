@@ -123,6 +123,18 @@ public class ClientNetworkEvents {
             });
         });
 
+        // 表现动画触发：服务端动作/触发反应播放一次性动画时触发 GeckoLib triggerAnim
+        ClientPlayNetworking.registerGlobalReceiver(NekoExpressAnimPayload.ID, (payload, context) -> {
+            context.client().execute(() -> {
+                net.minecraft.client.Minecraft mc = context.client();
+                if (mc.level == null || mc.player == null) return; // 断线竞态防护
+                net.minecraft.world.entity.Entity entity = mc.level.getEntity(payload.entityId());
+                if (entity instanceof NekoEntity neko) {
+                    neko.triggerAnim("express", payload.animName());
+                }
+            });
+        });
+
         // AI 回复显示消息：客户端按配置选择聊天栏显示或猫娘头顶气泡
         ClientPlayNetworking.registerGlobalReceiver(NekoChatDisplayPayload.ID, (payload, context) -> {
             context.client().execute(() -> {

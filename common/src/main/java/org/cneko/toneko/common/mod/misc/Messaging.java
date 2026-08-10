@@ -6,10 +6,13 @@ import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import org.cneko.toneko.common.mod.ai.NekoTalkManager;
 import org.cneko.toneko.common.mod.api.events.ChatEvents;
 import org.cneko.toneko.common.mod.entities.INeko;
+import org.cneko.toneko.common.mod.entities.NekoEntity;
 import org.cneko.toneko.common.mod.packets.NekoChatDisplayPayload;
 import org.cneko.toneko.common.mod.util.PlayerUtil;
+import org.cneko.toneko.common.util.AIUtil;
 import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.common.util.LanguageUtil;
 
@@ -118,13 +121,34 @@ public class Messaging {
      */
     public static void sendNekoChat(ServerPlayer player, INeko neko, String displayText) {
         if (displayText == null || displayText.isEmpty()) return;
-        String r = format(displayText, neko,
+        // 显示给玩家的文本不含 [对X] 内部格式标记（模型可能误输出）
+        String r = format(AIUtil.removeReplyPrefixes(displayText), neko,
                 Collections.singletonList(LanguageUtil.prefix), ConfigUtil.getChatFormat());
         try {
             ServerPlayNetworking.send(player,
                     new NekoChatDisplayPayload(neko.getEntity().getUUID().toString(), r));
         } catch (Exception ignored) {
             // 玩家断线等，忽略
+        }
+    }
+
+    /**
+     * 把 AI 回复广播给以 center 为中心 range 格内的所有玩家（含 center 自己）。
+     * 区域聊天下猫娘回复跟随玩家消息的广播范围，区域内玩家都能看到；
+     * 聊天页面（ChatWithNekoScreen）私聊仍走 {@link #sendNekoChat} 单发，不广播。
+     * center 可为猫娘（猫娘间对话以说话猫娘为中心广播）。
+     */
+    public static void sendNekoChatInRange(Entity center, INeko neko, String displayText, double range) {
+        if (displayText == null || displayText.isEmpty()) return;
+        double rangeSq = range * range;
+        for (ServerPlayer player : PlayerUtil.getPlayerList()) {
+            if (player == center || center.distanceToSqr(player) <= rangeSq) {
+                sendNekoChat(player, neko, displayText);
+            }
+        }
+        // 猫娘间聊天挂钩：说话的是实体猫娘时，检查是否点到其他猫娘的名字并启动对话链
+        if (neko instanceof NekoEntity nekoEntity) {
+            NekoTalkManager.onNekoSpeaks(nekoEntity, displayText);
         }
     }
 

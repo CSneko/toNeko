@@ -593,6 +593,7 @@
   "misc.toneko.surroundings.intro": "【周囲の知覚】",
   "misc.toneko.surroundings.players": "プレイヤー：%s",
   "misc.toneko.surroundings.nekos": "猫娘：%s",
+  "misc.toneko.surroundings.neko_with_mood": "%s（%s）",
   "misc.toneko.surroundings.monsters": "%2$s %1$d体",
   "misc.toneko.surroundings.animals": "%2$s %1$d匹",
   "misc.toneko.surroundings.others": "その他の生物：%s",

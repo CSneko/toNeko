@@ -95,9 +95,9 @@ public class CommonChatEvent {
             AIUtil.sendMessage(neko.getAIStorageId(), sender.getUUID(), neko.generateAIPrompt(sender), message, response -> {
                 // AI回调在后台线程执行，切回服务器主线程再发消息
                 sender.getServer().execute(() -> {
-                    // 解析并执行 AI 动作（移动/给予物品），回复走统一显示包（客户端按配置显示）
+                    // 解析并执行 AI 动作（移动/给予物品），回复广播给区域内玩家（与玩家消息范围一致）
                     String displayText = NekoActionExecutor.process(neko, sender, response.getResponse());
-                    Messaging.sendNekoChat(sender, neko, displayText);
+                    Messaging.sendNekoChatInRange(sender, neko, displayText, AREA_RANGE);
                 });
             }, !first);
             first = false;

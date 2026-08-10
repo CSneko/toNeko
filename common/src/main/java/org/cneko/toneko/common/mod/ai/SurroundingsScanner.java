@@ -147,7 +147,10 @@ public final class SurroundingsScanner {
                 if (nekos.size() < MAX_NEKOS) {
                     String nick = n.getNickName();
                     String name = (nick != null && !nick.isEmpty()) ? nick : n.getName().getString();
-                    nekos.add(sanitize(name, MAX_NAME_LENGTH));
+                    // 附加表现状态（综合心情：精力+健康加权），让 AI 感知到附近猫娘的心情
+                    String mood = Prompts.NEKO_MOOD.getPrompt(n, null);
+                    nekos.add(translateOrReadable("misc.toneko.surroundings.neko_with_mood",
+                            sanitize(name, MAX_NAME_LENGTH), mood));
                 }
             } else if (e instanceof Monster m) {
                 monsters.merge(m.getType().getDescriptionId(), 1, Integer::sum);

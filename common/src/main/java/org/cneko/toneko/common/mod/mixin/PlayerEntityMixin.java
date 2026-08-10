@@ -5,6 +5,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
@@ -19,10 +20,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.ItemLore;
+import org.cneko.toneko.common.mod.ai.NekoTriggerManager;
 import org.cneko.toneko.common.mod.api.EntityPoseManager;
 import org.cneko.toneko.common.mod.api.ExplorationLevelFactor;
 import org.cneko.toneko.common.mod.api.NekoLevelRegistry;
 import org.cneko.toneko.common.mod.entities.INeko;
+import org.cneko.toneko.common.mod.entities.NekoEntity;
 import org.cneko.toneko.common.mod.misc.mixininterface.SlowTickable;
 import org.cneko.toneko.common.mod.packets.EntityPosePayload;
 import org.cneko.toneko.common.mod.packets.NekoInfoSyncPayload;
@@ -331,6 +334,12 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
                 player.setItemInHand(hand, itemStack2);
                 cir.setReturnValue(InteractionResult.sidedSuccess(player.level().isClientSide));
                 cir.cancel();
+            }
+            // 空手摸头：仅服务端触发型反应（客户端 player 恒为 LocalPlayer，instanceof ServerPlayer 必为 false，
+            // 严格排除客户端预测路径，避免同一右键在双端各触发一次）
+            if (itemStack.isEmpty() && player instanceof ServerPlayer sp
+                    && entityToInteractOn instanceof NekoEntity nekoEntity) {
+                NekoTriggerManager.onPlayerPet((ServerLevel) sp.level(), nekoEntity, sp);
             }
         }
     }

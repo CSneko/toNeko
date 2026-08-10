@@ -30,6 +30,8 @@ public class NekoProactiveManager {
     private static final Map<UUID, Long> lastProactiveTime = new ConcurrentHashMap<>();
     /** 主动消息查找玩家的半径 */
     private static final double PLAYER_RANGE_SQ = 16.0 * 16.0;
+    /** 广播型主动发言的范围（与区域聊天 AREA_RANGE 一致） */
+    private static final double BROADCAST_RANGE = 64.0;
 
     private NekoProactiveManager() {}
 
@@ -115,7 +117,12 @@ public class NekoProactiveManager {
                 if (!player.isAlive() || player.isRemoved()) return;
                 // 主动发言回复走统一显示包（客户端按配置显示）
                 String displayText = NekoActionExecutor.process(neko, player, response.getResponse());
-                Messaging.sendNekoChat(player, neko, displayText);
+                if (trigger.broadcast()) {
+                    // 广播型（如猫娘间聊天闲聊）：以猫娘为中心广播给区域内玩家，并可进入对话链
+                    Messaging.sendNekoChatInRange(neko, neko, displayText, BROADCAST_RANGE);
+                } else {
+                    Messaging.sendNekoChat(player, neko, displayText);
+                }
             });
         }, true, hintPrefix);
     }
@@ -132,5 +139,11 @@ public class NekoProactiveManager {
 
         /** 触发时发送给 AI 的消息内容（AI 会基于此生成猫娘说的话） */
         String getMessage(NekoEntity neko, ServerPlayer player);
+
+        /**
+         * 是否为广播型发言（默认 false = 只发给触发玩家）。
+         * 广播型以猫娘为中心发给区域内玩家，并进入猫娘间聊天对话链（点名接话）。
+         */
+        default boolean broadcast() { return false; }
     }
 }

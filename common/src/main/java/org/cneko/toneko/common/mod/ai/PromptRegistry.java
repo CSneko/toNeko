@@ -4,8 +4,10 @@ import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
 import org.cneko.toneko.common.util.ConfigUtil;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -81,7 +83,28 @@ public class PromptRegistry {
                 result += "\n" + sanitize(diary, MAX_DIARY_LENGTH);
             }
         }
+        // 附加人设（萝莉/萌属性性格强化）：追加在环境感知之前，保证模型优先注意到
+        String persona = buildPersonaExtra(neko);
+        if (!persona.isEmpty()) {
+            result += "\n" + persona;
+        }
         return result;
+    }
+
+    /**
+     * 按实体状态/萌属性附加人设描述（本地化文案，不烧 token）：
+     * - 萝莉（isNekoBaby）：娇小可爱的萝莉猫娘形象
+     * - 雌小鬼（mesugaki，含组合）：喜欢叫别人"杂鱼"
+     */
+    private static String buildPersonaExtra(NekoEntity neko) {
+        List<String> parts = new ArrayList<>();
+        if (neko.isNekoBaby()) {
+            parts.add(Prompts.translateOrReadable("misc.toneko.ai.persona.loli"));
+        }
+        if (neko.getMoeTags().contains("mesugaki")) {
+            parts.add(Prompts.translateOrReadable("misc.toneko.ai.persona.mesugaki"));
+        }
+        return String.join("\n", parts);
     }
 
     /**

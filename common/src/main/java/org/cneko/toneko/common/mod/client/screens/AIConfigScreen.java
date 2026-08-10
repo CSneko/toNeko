@@ -175,6 +175,26 @@ public class AIConfigScreen extends Screen {
                     Component.translatable("screen.toneko.config.key.ai.proactive.trigger." + trigger.getId())));
         }
 
+        // --- Section: Neko Talk ---
+        list.addEntry(new SectionEntry(leftX, rowW, "screen.toneko.ai_config.section.nekotalk"));
+        list.addEntry(new BoolEntry(leftX, rowW, "ai.nekotalk.enable",
+                Component.translatable("screen.toneko.config.key.ai.nekotalk.enable")));
+        list.addEntry(new StringEntry(leftX, rowW, "ai.nekotalk.rounds",
+                Component.translatable("screen.toneko.config.key.ai.nekotalk.rounds"),
+                ConfigUtil.CONFIG.getString("ai.nekotalk.rounds"), 8));
+        list.addEntry(new StringEntry(leftX, rowW, "ai.nekotalk.interval",
+                Component.translatable("screen.toneko.config.key.ai.nekotalk.interval"),
+                ConfigUtil.CONFIG.getString("ai.nekotalk.interval"), 8));
+
+        // --- Section: Trigger Reactions ---
+        list.addEntry(new SectionEntry(leftX, rowW, "screen.toneko.ai_config.section.trigger"));
+        list.addEntry(new BoolEntry(leftX, rowW, "ai.trigger.enable",
+                Component.translatable("screen.toneko.config.key.ai.trigger.enable")));
+        list.addEntry(new SliderEntry(leftX, rowW, "ai.trigger.pet.chance",
+                Component.translatable("screen.toneko.config.key.ai.trigger.pet.chance")));
+        list.addEntry(new SliderEntry(leftX, rowW, "ai.trigger.hurt.chance",
+                Component.translatable("screen.toneko.config.key.ai.trigger.hurt.chance")));
+
         // --- Section: TTS ---
         list.addEntry(new SectionEntry(leftX, rowW, "screen.toneko.ai_config.section.tts"));
         list.addEntry(new BoolEntry(leftX, rowW, "ai.tts.enable",

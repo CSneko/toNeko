@@ -3,6 +3,7 @@ package org.cneko.toneko.common.mod.ai.proactive;
 import net.minecraft.server.level.ServerPlayer;
 import org.cneko.toneko.common.mod.ai.proactive.NekoProactiveManager.NekoProactiveTrigger;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
+import org.cneko.toneko.common.mod.util.EntityUtil;
 
 /**
  * 内置主动发言触发器（ModBootstrap 初始化时注册）。
@@ -58,6 +59,27 @@ public class NekoProactiveTriggers {
             public String getMessage(NekoEntity neko, ServerPlayer player) {
                 return "有点无聊，主动找身边的人聊聊天";
             }
+        });
+
+        // 猫娘间闲聊：附近还有其他猫娘且玩家在围观时，主动开口和她们聊天。
+        // 广播型发言：以猫娘为中心广播给区域内玩家，并进入对话链（被点名的猫娘 3 秒后接话）。
+        NekoProactiveManager.register(new NekoProactiveTrigger() {
+            @Override
+            public String getId() { return "nekotalk"; }
+
+            @Override
+            public boolean canTrigger(NekoEntity neko, ServerPlayer player) {
+                // 16 格内还需有另一只猫娘（点名接话的前提）
+                return !EntityUtil.findNekoEntitiesInRange(neko, neko.level(), 16f).isEmpty();
+            }
+
+            @Override
+            public String getMessage(NekoEntity neko, ServerPlayer player) {
+                return "看到身边有其他猫娘，主动开口和她们聊聊天，可以叫其中一只的名字";
+            }
+
+            @Override
+            public boolean broadcast() { return true; }
         });
 
         // 交配请求：事件型触发器（不参与 tick 调度，canTrigger 恒 false）。

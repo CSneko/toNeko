@@ -363,8 +363,12 @@ public class AIUtil {
                 String historyMsg = historyPrefix != null
                         ? historyPrefix + message
                         : "[" + speakerName + "] " + message;
-                FileStorageUtil.saveConversation(uuidStr, userUuidStr, historyMsg,
-                        "[对" + speakerName + "] " + stripActions(response.getResponse()));
+                // 回复里模型自带的 [对X] 多个合并为一个；已以 [对X] 开头时不重复加系统前缀
+                String replyText = cleanReplyPrefixes(stripActions(response.getResponse()));
+                if (!replyText.startsWith("[对")) {
+                    replyText = "[对" + speakerName + "] " + replyText;
+                }
+                FileStorageUtil.saveConversation(uuidStr, userUuidStr, historyMsg, replyText);
 
                 if (debug) {
                     String respPreview = response.getResponse();
@@ -521,6 +525,37 @@ public class AIUtil {
         return NekoActionParser.parse(text).cleanedText();
     }
 
+    /** 模型误输出的 [对X] 标记（历史格式被模型模仿）；名字最长 16 字符、不含换行 */
+    private static final java.util.regex.Pattern REPLY_PREFIX =
+            java.util.regex.Pattern.compile("\\[对[^\\]\\n]{1,16}\\]\\s*");
+
+    /**
+     * 清理回复中模型自己输出的 [对X] 标记：多个合并为一个（保留第一个）。
+     * 保存历史前调用——系统前缀之外，模型自带的 [对X] 至多保留一个，避免重复前缀。
+     */
+    public static String cleanReplyPrefixes(String text) {
+        if (text == null || text.isEmpty()) return text;
+        java.util.regex.Matcher m = REPLY_PREFIX.matcher(text);
+        boolean first = true;
+        StringBuffer sb = new StringBuffer();
+        while (m.find()) {
+            if (first) {
+                m.appendReplacement(sb, java.util.regex.Matcher.quoteReplacement(m.group()));
+                first = false;
+            } else {
+                m.appendReplacement(sb, "");
+            }
+        }
+        m.appendTail(sb);
+        return sb.toString();
+    }
+
+    /** 移除回复中所有 [对X] 标记（显示给玩家的文本不含内部格式标记） */
+    public static String removeReplyPrefixes(String text) {
+        if (text == null || text.isEmpty()) return text;
+        return REPLY_PREFIX.matcher(text).replaceAll("");
+    }
+
     @FunctionalInterface
     public interface MessageCallback {
         void execute(AIResponse message);
@@ -672,7 +707,7 @@ public class AIUtil {
                         String text = chunk.getResponse();
                         if (text != null && !text.isEmpty()) {
                             rawFull.append(text);
-                            String clean = cleaner.feed(text);
+                            String clean = removeReplyPrefixes(cleaner.feed(text));
                             if (!clean.isEmpty()) callback.onChunk(clean);
                         }
                         String think = chunk.getThink();
@@ -708,8 +743,12 @@ public class AIUtil {
                 String historyMsg = historyPrefix != null
                         ? historyPrefix + message
                         : "[" + speakerName + "] " + message;
-                FileStorageUtil.saveConversation(uuidStr, userUuidStr, historyMsg,
-                        "[对" + speakerName + "] " + stripActions(rawFull.toString()));
+                // 回复里模型自带的 [对X] 多个合并为一个；已以 [对X] 开头时不重复加系统前缀
+                String replyText = cleanReplyPrefixes(stripActions(rawFull.toString()));
+                if (!replyText.startsWith("[对")) {
+                    replyText = "[对" + speakerName + "] " + replyText;
+                }
+                FileStorageUtil.saveConversation(uuidStr, userUuidStr, historyMsg, replyText);
 
                 String think = thinkFull.length() > 0 ? thinkFull.toString() : null;
                 callback.onFinished(new AIResponse(rawFull.toString(), think, 200));

@@ -50,6 +50,7 @@
   "misc.toneko.surroundings.intro": "【주변 감지】",
   "misc.toneko.surroundings.players": "플레이어: %s",
   "misc.toneko.surroundings.nekos": "네코: %s",
+  "misc.toneko.surroundings.neko_with_mood": "%s (%s)",
   "misc.toneko.surroundings.monsters": "%2$s %1$d마리",
   "misc.toneko.surroundings.animals": "%2$s %1$d마리",
   "misc.toneko.surroundings.others": "기타 생물: %s",

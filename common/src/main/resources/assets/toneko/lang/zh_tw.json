@@ -722,6 +722,7 @@
   "misc.toneko.surroundings.intro": "【環境感知】",
   "misc.toneko.surroundings.players": "玩家：%s",
   "misc.toneko.surroundings.nekos": "貓娘：%s",
+  "misc.toneko.surroundings.neko_with_mood": "%s（%s）",
   "misc.toneko.surroundings.monsters": "%1$d 隻 %2$s",
   "misc.toneko.surroundings.animals": "%1$d 隻 %2$s",
   "misc.toneko.surroundings.others": "其他生物：%s",
