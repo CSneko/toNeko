@@ -2,6 +2,7 @@ package org.cneko.toneko.common.mod.ai.actions;
 
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -35,6 +36,7 @@ import org.cneko.toneko.common.mod.entities.ai.NekoBrain;
 import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.common.util.LanguageUtil;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -648,6 +650,93 @@ public class NekoActionExecutor {
             public String getGuideLine() {
                 return "{\"action\": \"write_diary\", \"text\": \"今天...\"} - "
                         + LanguageUtil.translatable("misc.toneko.ai.actions.guide.write_diary");
+            }
+        });
+        // 认主：主动认 target 玩家为主人（同一玩家不能重复认；初始好感 0，与 /toneko 认主一致）
+        register("accept_owner", new NekoActionHandler() {
+            @Override
+            public boolean handle(NekoEntity neko, ServerPlayer speaker, LivingEntity target, NekoAction action) {
+                if (!(target instanceof ServerPlayer player)) return false;
+                if (neko.hasOwner(player.getUUID())) {
+                    LOGGER.info("[AI-ACTION] accept_owner skipped (already owner) for {}", player.getName().getString());
+                    return false;
+                }
+                neko.addOwner(player.getUUID(), new INeko.Owner(new ArrayList<>(), 0));
+                Messaging.sendNekoChat(speaker, neko,
+                        LanguageUtil.translatable("misc.toneko.ai.actions.accept_owner.message"));
+                // 新主人是"别的玩家"（target != speaker）时才补系统通知；
+                // speaker 即新主人时，AI 的回复正文 + 上一条消息已足够，避免重复
+                if (player != speaker) {
+                    player.sendSystemMessage(Component.translatable(
+                            "misc.toneko.ai.actions.accept_owner.notify", neko.getName()));
+                }
+                LOGGER.info("[AI-ACTION] {} accepted {} as owner", neko.getName().getString(), player.getName().getString());
+                return true;
+            }
+            @Override
+            public String getGuideLine() {
+                return "{\"action\": \"accept_owner\", \"target\": \"Steve\"} - "
+                        + LanguageUtil.translatable("misc.toneko.ai.actions.guide.accept_owner");
+            }
+        });
+        // 解除认主：与 target 玩家解除主从关系（只有对方是主人时有效）
+        register("remove_owner", new NekoActionHandler() {
+            @Override
+            public boolean handle(NekoEntity neko, ServerPlayer speaker, LivingEntity target, NekoAction action) {
+                if (!(target instanceof ServerPlayer player)) return false;
+                if (!neko.hasOwner(player.getUUID())) {
+                    LOGGER.info("[AI-ACTION] remove_owner skipped (not owner) for {}", player.getName().getString());
+                    return false;
+                }
+                neko.removeOwner(player.getUUID());
+                Messaging.sendNekoChat(speaker, neko,
+                        LanguageUtil.translatable("misc.toneko.ai.actions.remove_owner.message"));
+                LOGGER.info("[AI-ACTION] {} removed {} as owner", neko.getName().getString(), player.getName().getString());
+                return true;
+            }
+            @Override
+            public String getGuideLine() {
+                return "{\"action\": \"remove_owner\", \"target\": \"Steve\"} - "
+                        + LanguageUtil.translatable("misc.toneko.ai.actions.guide.remove_owner");
+            }
+        });
+        // 好感度变化：增减 target 玩家的好感度（count 正=增加，负=减少）；
+        // 防刷：单次幅度上限（超限截断）+ 冷却（与 write_diary 同模式）；只对主人生效
+        register("change_affection", new NekoActionHandler() {
+            @Override
+            public boolean handle(NekoEntity neko, ServerPlayer speaker, LivingEntity target, NekoAction action) {
+                if (!(target instanceof ServerPlayer player)) return false;
+                // 1. 冷却（游戏 tick；last<=0 表示从未变过，放行）
+                int cooldownSec = ConfigUtil.getAIActionsAffectionCooldown();
+                long now = neko.level().getGameTime();
+                long last = neko.getLastAffectionChangeTime();
+                if (cooldownSec > 0 && last > 0 && now - last < cooldownSec * 20L) {
+                    LOGGER.info("[AI-ACTION] change_affection skipped (cooldown) for {} -> {}",
+                            neko.getName().getString(), player.getName().getString());
+                    return false;
+                }
+                // 2. 目标必须是主人（setXpWithOwner 对非主人是静默 no-op，必须前置判断）
+                if (!neko.hasOwner(player.getUUID())) {
+                    LOGGER.info("[AI-ACTION] change_affection skipped (not owner) for {} -> {}",
+                            neko.getName().getString(), player.getName().getString());
+                    return false;
+                }
+                // 3. 单次幅度上限：clamp 到 [-max, +max]（配置 <=0 视为不限制；超限截断而非拒绝，避免动作整体失败）
+                int max = ConfigUtil.getAIActionsAffectionMaxChange();
+                int change = max > 0 ? Math.max(-max, Math.min(max, action.count())) : action.count();
+                if (change == 0) return false; // AI 传 0：无意义，跳过
+                // 4. 应用并保证好感度下限 0；无论正负都计入冷却
+                int xp = neko.getXpWithOwner(player.getUUID());
+                neko.setXpWithOwner(player.getUUID(), Math.max(0, xp + change));
+                neko.setLastAffectionChangeTime(now);
+                LOGGER.info("[AI-ACTION] {} affection {} by {} -> {}", neko.getName().getString(),
+                        player.getName().getString(), change, Math.max(0, xp + change));
+                return true;
+            }
+            @Override
+            public String getGuideLine() {
+                return "{\"action\": \"change_affection\", \"target\": \"Steve\", \"count\": 5} - "
+                        + LanguageUtil.translatable("misc.toneko.ai.actions.guide.change_affection");
             }
         });
     }

@@ -147,10 +147,12 @@ public final class SurroundingsScanner {
                 if (nekos.size() < MAX_NEKOS) {
                     String nick = n.getNickName();
                     String name = (nick != null && !nick.isEmpty()) ? nick : n.getName().getString();
-                    // 附加表现状态（综合心情：精力+健康加权），让 AI 感知到附近猫娘的心情
+                    // 附加类型（如"冒险家猫娘"）与表现状态（综合心情），
+                    // 让 AI 感知到附近猫娘的身份与心情
+                    String type = translateOrReadable(n.getType().getDescriptionId());
                     String mood = Prompts.NEKO_MOOD.getPrompt(n, null);
                     nekos.add(translateOrReadable("misc.toneko.surroundings.neko_with_mood",
-                            sanitize(name, MAX_NAME_LENGTH), mood));
+                            sanitize(name, MAX_NAME_LENGTH), type, mood));
                 }
             } else if (e instanceof Monster m) {
                 monsters.merge(m.getType().getDescriptionId(), 1, Integer::sum);

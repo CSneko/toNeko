@@ -1,5 +1,6 @@
 package org.cneko.toneko.common.mod.ai;
 
+import org.cneko.toneko.common.mod.entities.GhostNekoEntity;
 import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
 import org.cneko.toneko.common.util.ConfigUtil;
@@ -27,6 +28,8 @@ public class PromptRegistry {
     private static final int MAX_SURROUNDINGS_LENGTH = 256;
     /** 日记上下文占位符允许更长（最近 2 篇 + 引导语，buildContext 已按篇截断） */
     private static final int MAX_DIARY_LENGTH = 300;
+    /** 幽灵生前记忆描述允许更长（名字/萌属性/主人等玩家可控文本需净化） */
+    private static final int MAX_GHOST_PAST_LENGTH = 200;
 
 
     public static PromptFactory register(String key, PromptFactory promptFactory) {
@@ -93,11 +96,17 @@ public class PromptRegistry {
 
     /**
      * 按实体状态/萌属性附加人设描述（本地化文案，不烧 token）：
+     * - 幽灵猫娘：生前类型 + 保留的性格（名字/主人等仍保留着的信息不写"生前"）在前 + 幽灵身份在后
      * - 萝莉（isNekoBaby）：娇小可爱的萝莉猫娘形象
      * - 雌小鬼（mesugaki，含组合）：喜欢叫别人"杂鱼"
      */
     private static String buildPersonaExtra(NekoEntity neko) {
         List<String> parts = new ArrayList<>();
+        if (neko instanceof GhostNekoEntity ghost) {
+            // 生前身份在前：幽灵记得自己生前的模样
+            buildGhostPastLife(parts, ghost);
+            parts.add(Prompts.translateOrReadable("misc.toneko.ai.persona.ghost"));
+        }
         if (neko.isNekoBaby()) {
             parts.add(Prompts.translateOrReadable("misc.toneko.ai.persona.loli"));
         }
@@ -105,6 +114,25 @@ public class PromptRegistry {
             parts.add(Prompts.translateOrReadable("misc.toneko.ai.persona.mesugaki"));
         }
         return String.join("\n", parts);
+    }
+
+    /**
+     * 幽灵的生前后记忆：生前类型（转化时记录在 NBT，幽灵 type 只会读出"幽灵猫娘"）
+     * + 保留的性格（萌属性）。名字/主人/好感度等数据幽灵仍然保留着，
+     * 无需"生前"限定，且名字已由 %neko_name% 占位符注入。全部过净化。
+     */
+    private static void buildGhostPastLife(List<String> parts, GhostNekoEntity ghost) {
+        String pastTypeKey = ghost.getPastTypeName();
+        if (pastTypeKey != null && !pastTypeKey.isEmpty()) {
+            String pastType = Prompts.translateOrReadable(pastTypeKey);
+            parts.add(sanitize(Prompts.translateOrReadable("misc.toneko.ai.persona.ghost_past_type", pastType),
+                    MAX_GHOST_PAST_LENGTH));
+        }
+        String moe = Prompts.NEKO_MOE_TAGS.getPrompt(ghost, null);
+        if (!moe.isEmpty()) {
+            parts.add(sanitize(Prompts.translateOrReadable("misc.toneko.ai.persona.ghost_moe", moe),
+                    MAX_GHOST_PAST_LENGTH));
+        }
     }
 
     /**

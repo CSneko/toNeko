@@ -28,6 +28,7 @@ import org.cneko.toneko.common.mod.packets.interactives.CrystalNekoNyaPayload;
 import org.cneko.toneko.common.mod.util.EntityUtil;
 import org.cneko.toneko.common.mod.util.TextUtil;
 import org.cneko.toneko.common.mod.util.TickTaskQueue;
+import org.cneko.toneko.common.util.ConfigUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,15 @@ import java.util.Random;
 public class ButtonFactories {
     private static final boolean ACTION_BAR = false;
     public static ButtonFactory BACK_BUTTON = screen -> Button.builder(Component.translatable("gui.back"), button -> Minecraft.getInstance().setScreen(screen.lastScreen));
-    public static ButtonFactory CHAT_BUTTON = screen -> Button.builder(Component.translatable("screen.toneko.neko_entity_interactive.button.chat"),(btn)-> Minecraft.getInstance().setScreen(new ChatWithNekoScreen(screen.getNeko())));
+    public static ButtonFactory CHAT_BUTTON = screen -> Button.builder(Component.translatable("screen.toneko.neko_entity_interactive.button.chat"),(btn)-> {
+        Minecraft mc = Minecraft.getInstance();
+        // 单机/局域网主机且 AI 未启用：打开提示屏（可一键跳转 AI 设置）
+        if (!ConfigUtil.isAIEnabled() && mc.hasSingleplayerServer()) {
+            mc.setScreen(new AiDisabledScreen(mc.screen));
+        } else {
+            mc.setScreen(new ChatWithNekoScreen(screen.getNeko()));
+        }
+    });
     public static ButtonFactory GIFT_BUTTON = screen -> Button.builder(Component.translatable("screen.toneko.neko_entity_interactive.button.gift"),(btn)->{
         ItemStack stack = Minecraft.getInstance().player.getMainHandItem();
         int slot = Minecraft.getInstance().player.getInventory().findSlotMatchingItem(stack);

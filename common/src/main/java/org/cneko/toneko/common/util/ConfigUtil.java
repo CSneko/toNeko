@@ -60,6 +60,7 @@ public class ConfigUtil {
                     6. 不同玩家的消息会用[玩家名]前缀。
                     7. 如果输出动作JSON代码块，必须放在回复的最末尾单独成行；不要在正文中间夹带JSON。
                     8. 不要在回复中输出[对xxx]这样的前缀标记，直接对对方说话。
+                    9. 遇到很有意思的事情可以写日记，但是不要太频繁。
                     """,AI_URL,
                     "AI提示词（支持占位符：%neko_name%/%neko_type%/%neko_des%/%neko_height%/%neko_moe_tags%/%neko_level%/%neko_is_baby%/%neko_energy_state%/%neko_health_state%/%neko_mood%/%neko_following%/%neko_inventory%/%player_name%/%player_is_owner%/%player_is_neko%/%player_health_state%/%world_time%/%world_weather%/%world_dimension%/%world_biome%/%world_phase%/%neko_surroundings%），参阅 https://s.cneko.org/toNekoAI",
                     "AI prompt (supports placeholders: %neko_name%/%neko_type%/%neko_des%/%neko_height%/%neko_moe_tags%/%neko_level%/%neko_is_baby%/%neko_energy_state%/%neko_health_state%/%neko_mood%/%neko_following%/%neko_inventory%/%player_name%/%player_is_owner%/%player_is_neko%/%player_health_state%/%world_time%/%world_weather%/%world_dimension%/%world_biome%/%world_phase%/%neko_surroundings%), see https://s.cneko.org/toNekoAI")
@@ -105,6 +106,12 @@ public class ConfigUtil {
             .addString("ai.actions.diary.max_entries","50",AI_URL,
                     "猫娘日记最大保留篇数，超出删最旧",
                     "Max diary entries kept per neko, oldest dropped when exceeded")
+            .addString("ai.actions.affection.cooldown","600",AI_URL,
+                    "猫娘改变玩家好感度的最小间隔（秒），防止AI频繁增减好感度；0=不限制",
+                    "Min interval between affection changes (seconds), prevents AI spamming affection; 0 = unlimited")
+            .addString("ai.actions.affection.max_change","20",AI_URL,
+                    "猫娘单次好感度变化的幅度上限（绝对值，超出被截断）；0=不限制",
+                    "Max absolute affection change per action (clamped); 0 = unlimited")
             .addBoolean("ai.proactive.enable",false,AI_URL,
                     "猫娘主动发言：允许猫娘在空闲时主动找玩家说话（消耗额外token）",
                     "Neko proactive messages: let nekos proactively talk to players (costs extra tokens)")
@@ -360,6 +367,16 @@ public class ConfigUtil {
     /** 猫娘日记最大保留篇数，超出删最旧；配置非法或过小时回退默认值 */
     public static int getAIActionsDiaryMaxEntries() {
         return Math.max(1, CONFIG.getInt("ai.actions.diary.max_entries"));
+    }
+
+    /** 改变好感度的最小间隔（秒），0 或负数表示不限制 */
+    public static int getAIActionsAffectionCooldown() {
+        return CONFIG.getInt("ai.actions.affection.cooldown");
+    }
+
+    /** 单次好感度变化的幅度上限（绝对值），0 或负数表示不限制 */
+    public static int getAIActionsAffectionMaxChange() {
+        return CONFIG.getInt("ai.actions.affection.max_change");
     }
 
     /** 是否启用 AI 环境感知（附近实体/环境特征注入 prompt） */

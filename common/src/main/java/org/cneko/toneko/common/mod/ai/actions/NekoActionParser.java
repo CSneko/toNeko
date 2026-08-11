@@ -160,8 +160,11 @@ public class NekoActionParser {
         String type = typeEl.getAsString().trim();
         String item = obj.has("item") && obj.get("item").isJsonPrimitive()
                 ? obj.get("item").getAsString().trim() : "";
-        int count = obj.has("count") && obj.get("count").isJsonPrimitive()
-                ? Math.max(1, obj.get("count").getAsInt()) : 1;
+        // change_affection 的 count 可正可负（正=增好感，负=减好感），取原始值；
+        // 其余动作保持 ≥1 钳制，防止 count=0/负数破坏 give_item 等逻辑
+        int rawCount = obj.has("count") && obj.get("count").isJsonPrimitive()
+                ? obj.get("count").getAsInt() : 1;
+        int count = "change_affection".equals(type) ? rawCount : Math.max(1, rawCount);
         String target = obj.has("target") && obj.get("target").isJsonPrimitive()
                 ? obj.get("target").getAsString().trim() : "";
         String text = obj.has("text") && obj.get("text").isJsonPrimitive()

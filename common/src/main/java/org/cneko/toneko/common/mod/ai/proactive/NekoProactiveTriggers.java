@@ -4,6 +4,7 @@ import net.minecraft.server.level.ServerPlayer;
 import org.cneko.toneko.common.mod.ai.proactive.NekoProactiveManager.NekoProactiveTrigger;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
 import org.cneko.toneko.common.mod.util.EntityUtil;
+import org.cneko.toneko.common.util.ConfigUtil;
 
 /**
  * 内置主动发言触发器（ModBootstrap 初始化时注册）。
@@ -92,6 +93,49 @@ public class NekoProactiveTriggers {
             @Override
             public boolean canTrigger(NekoEntity neko, ServerPlayer player) {
                 return false; // 不参与主动发言调度，仅作为交配请求的概率开关
+            }
+
+            @Override
+            public String getMessage(NekoEntity neko, ServerPlayer player) {
+                return "";
+            }
+        });
+
+        // 死亡变幽灵发言：事件型触发器（不参与 tick 调度，canTrigger 恒 false）。
+        // 猫娘死亡化作幽灵时触发一次 AI 发言（含死因）；概率 0 = 关闭
+        // 先设默认概率再注册：register 对未配置的键默认写 0，这里保证默认开启（1.0）
+        String deathChanceKey = NekoProactiveManager.chanceKey("death");
+        if (!ConfigUtil.CONFIG.contains(deathChanceKey)) {
+            ConfigUtil.CONFIG.set(deathChanceKey, 1.0f);
+        }
+        NekoProactiveManager.register(new NekoProactiveTrigger() {
+            @Override
+            public String getId() { return "death"; }
+
+            @Override
+            public boolean canTrigger(NekoEntity neko, ServerPlayer player) {
+                return false; // 仅作为死亡发言的概率开关
+            }
+
+            @Override
+            public String getMessage(NekoEntity neko, ServerPlayer player) {
+                return "";
+            }
+        });
+
+        // 玩家死亡发言：事件型触发器（不参与 tick 调度，canTrigger 恒 false）。
+        // 玩家死亡时附近猫娘（主人优先）触发一次 AI 发言；概率 0 = 关闭
+        String playerDeathKey = NekoProactiveManager.chanceKey("player_death");
+        if (!ConfigUtil.CONFIG.contains(playerDeathKey)) {
+            ConfigUtil.CONFIG.set(playerDeathKey, 1.0f); // 未配置过 → 默认 1.0
+        }
+        NekoProactiveManager.register(new NekoProactiveTrigger() {
+            @Override
+            public String getId() { return "player_death"; }
+
+            @Override
+            public boolean canTrigger(NekoEntity neko, ServerPlayer player) {
+                return false; // 仅作为玩家死亡发言的概率开关
             }
 
             @Override

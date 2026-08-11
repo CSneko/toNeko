@@ -36,6 +36,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
@@ -55,6 +56,7 @@ import java.util.List;
 
 import org.cneko.toneko.common.mod.ai.NekoDiary;
 import org.cneko.toneko.common.mod.ai.NekoTriggerManager;
+import org.cneko.toneko.common.mod.ai.actions.NekoActionExecutor;
 import org.cneko.toneko.common.mod.ai.proactive.NekoProactiveManager;
 import org.cneko.toneko.common.mod.advencements.ToNekoCriteria;
 import org.cneko.toneko.common.mod.ai.PromptRegistry;
@@ -71,9 +73,11 @@ import org.cneko.toneko.common.mod.misc.ToNekoAttributes;
 import org.cneko.toneko.common.mod.misc.ToNekoSoundEvents;
 import org.cneko.toneko.common.mod.packets.interactives.NekoEntityInteractivePayload;
 import org.cneko.toneko.common.mod.quirks.Quirk;
+import org.cneko.toneko.common.mod.misc.Messaging;
 import org.cneko.toneko.common.mod.util.EntityUtil;
 import org.cneko.toneko.common.util.AIUtil;
 import org.cneko.toneko.common.util.ConfigUtil;
+import org.cneko.toneko.common.util.LanguageUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -194,6 +198,9 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
             this.setSkin(NekoSkinRegistry.getRandomSkin(getType()));
         }
         // 萌属性不再随机生成：完全由基因表达决定（见 expressTraits）
+
+        // 随机初始能量：上限的 40%~100%，避免新猫娘默认空能量显得疲惫（恢复机制很慢）
+        this.setNekoEnergy(this.getMaxNekoEnergy() * (0.4f + this.random.nextFloat() * 0.6f));
     }
 
 
@@ -233,6 +240,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
             compound.put(DIARY_ENTRIES_TAG, diaryList);
         }
         compound.putLong(LAST_DIARY_WRITE_TIME_TAG, lastDiaryWriteTime);
+        compound.putLong(LAST_AFFECTION_CHANGE_TIME_TAG, lastAffectionChangeTime);
         compound.put("Genome", this.genome.save());
         compound.put("GeneticData", this.geneticData);
         compound.putInt("LastFoodHealTick", this.lastFoodHealTick);
@@ -276,6 +284,9 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
         }
         if (compound.contains(LAST_DIARY_WRITE_TIME_TAG)) {
             this.lastDiaryWriteTime = compound.getLong(LAST_DIARY_WRITE_TIME_TAG);
+        }
+        if (compound.contains(LAST_AFFECTION_CHANGE_TIME_TAG)) {
+            this.lastAffectionChangeTime = compound.getLong(LAST_AFFECTION_CHANGE_TIME_TAG);
         }
         if (compound.contains("Genome")) {
             this.genome.load(compound.getCompound("Genome"));
@@ -676,6 +687,20 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
         return false;
     }
 
+    /**
+     * 聊过 AI 的猫娘不会被自然刷掉（远离玩家/长时间无动作的 checkDespawn）：
+     * 拥有持久 AI 存储 ID（{@link #getAIStorageId()} 首次被 AI 调用时生成，NBT 持久化）
+     * 即代表与玩家有过 AI 互动，保持在场以免聊天记忆丢失。
+     * 未聊过 AI 的野生猫娘保持原版行为。
+     */
+    @Override
+    public void checkDespawn() {
+        if (this.aiStorageId != null) {
+            return;
+        }
+        super.checkDespawn();
+    }
+
     @Override
     public void die(@NotNull DamageSource damageSource) {
         // 尝试使用不死图腾阻止死亡
@@ -691,6 +716,75 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
             // 掉落猫娘日记：有 AI 写的日记数据时 100% 掉落（用数据生成），无数据时 30% 概率随机
             if (!diaryEntries.isEmpty() || random.nextFloat() < 0.30f) {
                 this.spawnAtLocation(createNekoDiary());
+            }
+
+            // 聊过 AI 或有主人的猫娘，死后化作幽灵保留记忆（幽灵不再变幽灵）。
+            // 转化放在掉落之后：背包/装备已清空，幽灵天然不带物品副本
+            if (!(this instanceof GhostNekoEntity)
+                    && (this.aiStorageId != null || !this.getOwners().isEmpty())) {
+                GhostNekoEntity ghost = GhostNekoEntity.createGhostFrom(this);
+                if (ghost != null) {
+                    serverLevel.addFreshEntity(ghost);
+                    this.notifyOwnersBecameGhost(serverLevel);
+                    // 触发一次幽灵的 AI 主动发言（含死因）
+                    this.triggerGhostDeathSpeak(ghost, damageSource, serverLevel);
+                }
+            }
+        }
+    }
+
+    /** 猫娘化作幽灵后触发一次 AI 主动发言（含死因）；概率开关 ai.proactive.trigger.death.chance */
+    private void triggerGhostDeathSpeak(GhostNekoEntity ghost, DamageSource damageSource, ServerLevel level) {
+        float chance = NekoProactiveManager.getChance("death");
+        if (chance <= 0 || ghost.getRandom().nextFloat() >= chance) return;
+        // 发言目标：攻击者玩家 → 在线主人 → 16 格内最近玩家
+        ServerPlayer target = null;
+        if (damageSource.getEntity() instanceof ServerPlayer killer) target = killer;
+        if (target == null) {
+            for (UUID uuid : ghost.getOwners().keySet()) {
+                ServerPlayer p = level.getServer().getPlayerList().getPlayer(uuid);
+                if (p != null && p.isAlive()) { target = p; break; }
+            }
+        }
+        if (target == null) target = (ServerPlayer) level.getNearestPlayer(ghost, 64.0);
+        if (target == null) return;
+
+        // 死因文本（本地化）：有攻击者用模板拼攻击者名，环境伤害回退到服务端死因文本
+        String deathCause;
+        Entity attacker = damageSource.getEntity();
+        if (attacker != null) {
+            deathCause = LanguageUtil.translatable("misc.toneko.ai.ghost.death.attacker",
+                    new Object[]{attacker.getName().getString()});
+        } else {
+            deathCause = LanguageUtil.translatable("misc.toneko.ai.ghost.death.cause",
+                    new Object[]{damageSource.getLocalizedDeathMessage(this).getString()});
+        }
+        // 只陈述事实：说什么由 AI 根据自身人设自由决定；发言广播到 64 格内
+        String message = LanguageUtil.translatable("misc.toneko.ai.ghost.death_message",
+                new Object[]{deathCause});
+        String hintPrefix = LanguageUtil.translatable("misc.toneko.ai.history.hint",
+                new Object[]{target.getName().getString()});
+        final ServerPlayer speakTarget = target;
+
+        AIUtil.sendMessage(ghost.getAIStorageId(), speakTarget.getUUID(),
+                ghost.generateAIPrompt(speakTarget), message, response -> {
+            speakTarget.getServer().execute(() -> {
+                if (ghost.isRemoved()) return;
+                String displayText = NekoActionExecutor.process(ghost, speakTarget, response.getResponse());
+                Messaging.sendNekoChatInRange(ghost, ghost, displayText, 64.0);
+            });
+        }, true, hintPrefix);
+    }
+
+    /** 猫娘化作幽灵后，给所有在线主人发通知 */
+    private void notifyOwnersBecameGhost(ServerLevel serverLevel) {
+        String name = this.getCustomName() != null
+                ? this.getCustomName().getString() : this.getName().getString();
+        Component msg = Component.translatable("message.toneko.neko.become_ghost", name);
+        for (UUID uuid : this.getOwners().keySet()) {
+            ServerPlayer player = serverLevel.getServer().getPlayerList().getPlayer(uuid);
+            if (player != null) {
+                player.sendSystemMessage(msg);
             }
         }
     }
@@ -1680,8 +1774,11 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     /** AI 写的日记条目（每篇一个完整字符串：元数据行+正文），NBT 持久化，上限 {@link NekoDiary#MAX_DIARY_ENTRIES} 篇删最旧 */
     private final List<String> diaryEntries = new ArrayList<>();
     private long lastDiaryWriteTime;
+    /** 上次通过 AI 动作改变好感度的游戏 tick（0 = 从未改变过），用于 change_affection 冷却 */
+    private long lastAffectionChangeTime;
     private static final String DIARY_ENTRIES_TAG = "DiaryEntries";
     private static final String LAST_DIARY_WRITE_TIME_TAG = "LastDiaryWriteTime";
+    private static final String LAST_AFFECTION_CHANGE_TIME_TAG = "LastAffectionChangeTime";
     @Override
     public String getAIStorageId() {
         if (aiStorageId == null) {
@@ -1713,6 +1810,15 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
 
     public void setLastDiaryWriteTime(long ticks) {
         this.lastDiaryWriteTime = ticks;
+    }
+
+    /** 上次通过 AI 动作改变好感度的游戏 tick（0 = 从未改变过） */
+    public long getLastAffectionChangeTime() {
+        return lastAffectionChangeTime;
+    }
+
+    public void setLastAffectionChangeTime(long ticks) {
+        this.lastAffectionChangeTime = ticks;
     }
 
     private List<BlockedWord> blockedWords = new ArrayList<>();
