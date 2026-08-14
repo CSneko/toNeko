@@ -3,6 +3,8 @@ package org.cneko.toneko.common.mod.ai;
 import org.cneko.toneko.common.mod.entities.GhostNekoEntity;
 import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
+import org.cneko.toneko.common.mod.items.LegwearItem;
+import org.cneko.toneko.common.mod.misc.LegwearUtil;
 import org.cneko.toneko.common.util.ConfigUtil;
 
 import java.util.ArrayList;
@@ -84,6 +86,16 @@ public class PromptRegistry {
             String diary = NekoDiary.buildContext(neko.getDiaryEntries(), 2, 100);
             if (!diary.isEmpty()) {
                 result += "\n" + sanitize(diary, MAX_DIARY_LENGTH);
+            }
+        }
+        // 玩家穿搭：prompt 显式含 %player_outfit% 时走占位符路径；
+        // 旧配置（prompt 已固化无此占位符）且玩家确实穿着丝袜时自动追加一句（照 surroundings 模式），
+        // 追加发生在占位符扫描之后，无二次替换风险。
+        if (other != null && !prompt.contains("%player_outfit%")
+                && LegwearItem.isLegwear(LegwearUtil.getWornLegwear(other.getEntity()))) {
+            String outfit = Prompts.PLAYER_OUTFIT.getPrompt(neko, other);
+            if (!outfit.isEmpty()) {
+                result += "\n" + sanitize(outfit, MAX_INSERT_LENGTH);
             }
         }
         // 附加人设（萝莉/萌属性性格强化）：追加在环境感知之前，保证模型优先注意到

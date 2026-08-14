@@ -15,7 +15,9 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.entity.Pose;
+import org.cneko.toneko.common.mod.client.renderers.layers.NekoArmorLayer;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
+import org.cneko.toneko.common.util.ConfigUtil;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
@@ -31,10 +33,17 @@ public class NekoRenderer<T extends NekoEntity> extends GeoEntityRenderer<T> {
 
     public NekoRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new NekoModel<>());
+        this.addRenderLayer(new NekoArmorLayer<>(this));
     }
 
     public NekoRenderer(EntityRendererProvider.Context renderManager, GeoModel<T> model) {
         super(renderManager, model);
+        this.addRenderLayer(new NekoArmorLayer<>(this));
+    }
+
+    /** 是否显示猫娘身上的盔甲（含丝袜）；渲染时实时读配置，避免 ConfigUtil 引用 client 类 */
+    public static boolean isArmorDisplayEnabled() {
+        return ConfigUtil.CONFIG.getBoolean("client.neko_armor.display");
     }
 
     @Override

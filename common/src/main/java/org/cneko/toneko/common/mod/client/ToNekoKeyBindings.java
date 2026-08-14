@@ -23,6 +23,8 @@ public class ToNekoKeyBindings {
     public static KeyMapping MULTI_TOOL_RANGE_KEY;
     public static KeyMapping CLIMB_KEY;
     public static KeyMapping STEALTH_KEY;
+    public static KeyMapping PULL_UP_LEGWEAR_KEY;
+    public static KeyMapping GIFT_CONFIRM_KEY;
 
     public static void init(){
         LIE_KEY = KeyBindingHelper.registerKeyBinding(
@@ -158,6 +160,22 @@ public class ToNekoKeyBindings {
                         "key.toneko.stealth",
                         InputConstants.Type.KEYSYM,
                         GLFW.GLFW_KEY_UNKNOWN,
+                        "key.toneko.lie.category"
+                )
+        );
+        PULL_UP_LEGWEAR_KEY = KeyBindingHelper.registerKeyBinding(
+                new KeyMapping(
+                        "key.toneko.pull_up_legwear",
+                        InputConstants.Type.KEYSYM,
+                        GLFW.GLFW_KEY_UNKNOWN,
+                        "key.toneko.lie.category"
+                )
+        );
+        GIFT_CONFIRM_KEY = KeyBindingHelper.registerKeyBinding(
+                new KeyMapping(
+                        "key.toneko.gift_confirm",
+                        InputConstants.Type.KEYSYM,
+                        GLFW.GLFW_KEY_H,
                         "key.toneko.lie.category"
                 )
         );

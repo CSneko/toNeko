@@ -1,0 +1,28 @@
+{
+  "parent": "minecraft:toneko/legwear_collect",
+  "criteria": {
+    "legwear_first_dye": {
+      "trigger": "minecraft:toneko/legwear_first_dye"
+    }
+  },
+  "display": {
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "description": {
+      "translate": "advancements.toneko.legwear_first_dye.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "toneko:legwear_pantyhose_5d"
+    },
+    "title": {
+      "translate": "advancements.toneko.legwear_first_dye.title"
+    }
+  },
+  "requirements": [
+    [
+      "legwear_first_dye"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

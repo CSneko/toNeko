@@ -4,8 +4,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.entity.EquipmentSlot;
 import org.cneko.toneko.common.mod.items.LegwearItem;
+import org.cneko.toneko.common.mod.misc.LegwearUtil;
 import org.cneko.toneko.common.mod.misc.ToNekoSoundEvents;
 
 /**
@@ -23,8 +23,8 @@ public class LegwearRustleHandler {
     private static void tick(Minecraft client) {
         var player = client.player;
         if (player == null) return;
-        // 腿部穿着丝袜
-        if (!LegwearItem.isLegwear(player.getItemBySlot(EquipmentSlot.LEGS))) return;
+        // 腿部穿着丝袜（Trinkets 饰品槽 / 盔甲槽均识别）
+        if (!LegwearItem.isLegwear(LegwearUtil.getWornLegwear(player))) return;
         // 在地面、非游泳、非滑翔
         if (!player.onGround() || player.isSwimming() || player.isInWater() || player.isFallFlying()) return;
         // 静止不动

@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "#c:armors"
+    "#c:armors",
+    "#toneko:neko_armor"
   ]
 }

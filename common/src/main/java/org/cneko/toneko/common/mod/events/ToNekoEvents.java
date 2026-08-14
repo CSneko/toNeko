@@ -26,7 +26,11 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.ItemCost;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.Level;
+import org.cneko.toneko.common.mod.abilities.CharmAffectionHandler;
+import org.cneko.toneko.common.mod.abilities.CharmBlushHandler;
 import org.cneko.toneko.common.mod.abilities.ClimbWallHandler;
+import org.cneko.toneko.common.mod.abilities.LegwearSagHandler;
+import org.cneko.toneko.common.mod.abilities.ZettaiRyouikiAuraHandler;
 import org.cneko.toneko.common.mod.api.NekoLevelRegistry;
 import org.cneko.toneko.common.mod.api.events.WorldEvents;
 import org.cneko.toneko.common.mod.ai.actions.NekoActionExecutor;
@@ -89,6 +93,10 @@ public class ToNekoEvents {
         ServerTickEvents.START_SERVER_TICK.register(NekoEnergyBurstItem::tickComboBossBars);
         ServerTickEvents.START_SERVER_TICK.register(NekoEnergyBatteryItem::dischargeAllPlayers);
         ServerTickEvents.START_SERVER_TICK.register(ClimbWallHandler::onServerTick);
+        ServerTickEvents.START_SERVER_TICK.register(ZettaiRyouikiAuraHandler::onServerTick);
+        ServerTickEvents.START_SERVER_TICK.register(LegwearSagHandler::onServerTick);
+        ServerTickEvents.START_SERVER_TICK.register(CharmAffectionHandler::onServerTick);
+        ServerTickEvents.START_SERVER_TICK.register(CharmBlushHandler::onServerTick);
         ServerWorldEvents.UNLOAD.register(CommonWorldEvent::onWorldUnLoad);
         WorldEvents.ON_WEATHER_CHANGE.register(CommonWorldEvent::onWeatherChange);
         EntitySleepEvents.START_SLEEPING.register((entity, pos) -> {

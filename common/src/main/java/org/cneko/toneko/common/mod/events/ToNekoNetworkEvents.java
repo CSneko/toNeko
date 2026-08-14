@@ -26,6 +26,7 @@ import org.cneko.toneko.common.mod.ai.proactive.NekoProactiveManager;
 import org.cneko.toneko.common.Bootstrap;
 import org.cneko.toneko.common.api.Permissions;
 import org.cneko.toneko.common.api.TickTasks;
+import org.cneko.toneko.common.mod.advencements.ToNekoCriteria;
 import org.cneko.toneko.common.mod.abilities.ClimbWallHandler;
 import org.cneko.toneko.common.mod.api.EntityPoseManager;
 import org.cneko.toneko.common.mod.entities.CrystalNekoEntity;
@@ -37,13 +38,16 @@ import org.cneko.toneko.common.mod.items.GeneEditorItem;
 import org.cneko.toneko.common.mod.items.LegwearItem;
 import org.cneko.toneko.common.mod.items.NekoMultiToolItem;
 import org.cneko.toneko.common.mod.misc.ToNekoComponents;
+import org.cneko.toneko.common.mod.misc.LegwearUtil;
 import org.cneko.toneko.common.mod.misc.Messaging;
+import org.cneko.toneko.common.mod.misc.ZettaiRyouiki;
 import org.cneko.toneko.common.mod.packets.*;
 import org.cneko.toneko.common.mod.packets.interactives.*;
 import org.cneko.toneko.common.mod.quirks.QuirkRegister;
 import org.cneko.toneko.common.mod.util.PermissionUtil;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
 import org.cneko.toneko.common.mod.util.PlayerUtil;
+import org.cneko.toneko.common.mod.util.TextUtil;
 import org.cneko.toneko.common.mod.util.TickTaskQueue;
 import org.cneko.toneko.common.util.AIUtil;
 import org.cneko.toneko.common.util.ConfigUtil;
@@ -120,6 +124,8 @@ public class ToNekoNetworkEvents {
         ServerPlayNetworking.registerGlobalReceiver(LegwearAdjustPayload.ID, ToNekoNetworkEvents::onLegwearAdjust);
         // 腿部服饰工作台：左右腿染色
         ServerPlayNetworking.registerGlobalReceiver(LegwearDyePayload.ID, ToNekoNetworkEvents::onLegwearDye);
+        // 提袜：过膝袜袜口复位
+        ServerPlayNetworking.registerGlobalReceiver(LegwearPullUpPayload.ID, ToNekoNetworkEvents::onLegwearPullUp);
     }
 
     public static void onLegwearDye(LegwearDyePayload payload, ServerPlayNetworking.Context context) {
@@ -141,6 +147,12 @@ public class ToNekoNetworkEvents {
                 } else {
                     stack.set(ToNekoComponents.LEGWEAR_DYE_RIGHT_COMPONENT, dye);
                 }
+                // 首写即署名：只有未署名的丝袜才打上出品人
+                if (stack.get(ToNekoComponents.LEGWEAR_MAKER_COMPONENT) == null) {
+                    stack.set(ToNekoComponents.LEGWEAR_MAKER_COMPONENT, TextUtil.getPlayerName(player));
+                }
+                // 首次染色成就
+                ToNekoCriteria.LEGWEAR_FIRST_DYE.trigger(player);
             }
             menu.getSlot(0).setChanged();
             player.connection.send(new ClientboundContainerSetSlotPacket(
@@ -170,10 +182,43 @@ public class ToNekoNetworkEvents {
                 changed = true;
             }
             if (!changed) return;
+            // 首写即署名：只有未署名的丝袜才打上出品人
+            if (stack.get(ToNekoComponents.LEGWEAR_MAKER_COMPONENT) == null) {
+                stack.set(ToNekoComponents.LEGWEAR_MAKER_COMPONENT, TextUtil.getPlayerName(player));
+            }
+            // S 级领域成就
+            if ("s".equals(ZettaiRyouiki.compute(stack))) {
+                ToNekoCriteria.LEGWEAR_GRADE_S.trigger(player);
+            }
             menu.getSlot(0).setChanged();
             // 回同步槽位（与 NekoAggregator 同款）
             player.connection.send(new ClientboundContainerSetSlotPacket(
                     menu.containerId, menu.incrementStateId(), 0, stack));
+        });
+    }
+
+    /** 提袜冷却（游戏 tick）：key = 玩家 UUID，防止连点刷屏 */
+    private static final Map<UUID, Long> LAST_LEGWEAR_PULL_UP = new java.util.concurrent.ConcurrentHashMap<>();
+
+    public static void onLegwearPullUp(LegwearPullUpPayload payload, ServerPlayNetworking.Context context) {
+        ServerPlayer player = context.player();
+        context.server().execute(() -> {
+            ItemStack legwear = LegwearUtil.getWornLegwear(player);
+            if (!(legwear.getItem() instanceof LegwearItem.OverKneeSockItem)) return;
+
+            int cooldown = ConfigUtil.getLegwearSagPullupCooldownTicks();
+            long now = player.level().getGameTime();
+            if (cooldown > 0) {
+                Long last = LAST_LEGWEAR_PULL_UP.get(player.getUUID());
+                if (last != null && now - last < cooldown) return;
+            }
+
+            float length = LegwearItem.getStockingTopHeight(legwear);
+            if (length >= LegwearItem.OverKneeSockItem.NATURAL_TOP - 1e-4f) return; // 已在自然高度
+
+            legwear.set(ToNekoComponents.LEGWEAR_LENGTH_COMPONENT, LegwearItem.OverKneeSockItem.NATURAL_TOP);
+            LegwearUtil.markLegwearDirty(player);
+            LAST_LEGWEAR_PULL_UP.put(player.getUUID(), now);
         });
     }
 

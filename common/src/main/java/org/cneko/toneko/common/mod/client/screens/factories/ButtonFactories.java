@@ -8,10 +8,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import org.cneko.toneko.common.api.TickTasks;
 import org.cneko.toneko.common.mod.api.EntityPoseManager;
 import org.cneko.toneko.common.mod.client.api.ClientEntityPoseManager;
+import org.cneko.toneko.common.mod.client.api.GiftSelectionManager;
 import org.cneko.toneko.common.mod.client.screens.*;
 import org.cneko.toneko.common.mod.client.screens.NekoScreenBuilder.ButtonFactory;
 import org.cneko.toneko.common.mod.entities.CrystalNekoEntity;
@@ -21,7 +21,6 @@ import org.cneko.toneko.common.mod.entities.NoelleMaidNekoEntity;
 import org.cneko.toneko.common.mod.items.ToNekoItems;
 import org.cneko.toneko.common.mod.packets.MateWithCrystalNekoPayload;
 import org.cneko.toneko.common.mod.packets.interactives.FollowOwnerPayload;
-import org.cneko.toneko.common.mod.packets.interactives.GiftItemPayload;
 import org.cneko.toneko.common.mod.packets.interactives.NekoPosePayload;
 import org.cneko.toneko.common.mod.packets.interactives.RideEntityPayload;
 import org.cneko.toneko.common.mod.packets.interactives.CrystalNekoNyaPayload;
@@ -47,11 +46,9 @@ public class ButtonFactories {
         }
     });
     public static ButtonFactory GIFT_BUTTON = screen -> Button.builder(Component.translatable("screen.toneko.neko_entity_interactive.button.gift"),(btn)->{
-        ItemStack stack = Minecraft.getInstance().player.getMainHandItem();
-        int slot = Minecraft.getInstance().player.getInventory().findSlotMatchingItem(stack);
-        if(!stack.isEmpty()){
-            ClientPlayNetworking.send(new GiftItemPayload(screen.getNeko().getUUID().toString(), slot));
-        }
+        // 关闭界面进入快捷栏选择模式：滚轮/数字键移动光标，按「送礼确认键」送出（不再固定主手）
+        Minecraft.getInstance().setScreen(null);
+        GiftSelectionManager.activate(screen.getNeko().getUUID().toString());
     });
     public static ButtonFactory ACTION_BUTTON = screen -> Button.builder(Component.translatable("screen.toneko.neko_entity_interactive.button.action"),(btn)->{
         Minecraft.getInstance().setScreen(new InteractionScreen(screen.getTitle(), screen.getNeko(), screen, ScreenBuilders.COMMON_ACTION_SCREEN));

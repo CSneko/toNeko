@@ -2,6 +2,9 @@ package org.cneko.toneko.common.mod.ai;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.ItemStack;
+import org.cneko.toneko.common.mod.items.LegwearItem;
+import org.cneko.toneko.common.mod.misc.LegwearUtil;
+import org.cneko.toneko.common.mod.misc.ZettaiRyouiki;
 import org.cneko.toneko.common.util.LanguageUtil;
 
 import java.text.DecimalFormat;
@@ -158,6 +161,19 @@ public class Prompts {
         if (ratio >= 0.25f) return translateOrReadable("misc.toneko.player_health_state.hurt");
         return translateOrReadable("misc.toneko.player_health_state.severe");
     };
+    /** 玩家腿部穿搭（丝袜款式/D值/袜口高度/绝对领域等级），用于 AI 评论穿搭 */
+    public static final PromptFactory PLAYER_OUTFIT = (neko,other)-> {
+        if (other == null || other.getEntity() == null) return "";
+        ItemStack legs = LegwearUtil.getWornLegwear(other.getEntity());
+        if (!LegwearItem.isLegwear(legs)) return translateOrReadable("misc.toneko.player_outfit.none");
+        String itemName = translateOrReadable(BuiltInRegistries.ITEM.getKey(legs.getItem()).toLanguageKey());
+        String grade = translateOrReadable("item.toneko.legwear.zettai_ryouiki." + ZettaiRyouiki.compute(legs));
+        return translateOrReadable("misc.toneko.player_outfit.desc",
+                itemName,
+                LegwearItem.getDenier(legs),
+                Math.round(LegwearItem.getStockingTopHeight(legs) * 100),
+                grade);
+    };
 
     // ===== 世界 =====
     public static final PromptFactory WORLD_TIME = (neko,other)-> translateOrReadable("misc.toneko.time." + (neko.level().isDay() ? "day" : "night"));
@@ -212,6 +228,7 @@ public class Prompts {
         register("player_is_owner",PLAYER_IS_OWNER);
         register("player_is_neko",PLAYER_IS_NEKO);
         register("player_health_state",PLAYER_HEALTH_STATE);
+        register("player_outfit",PLAYER_OUTFIT);
         // 世界
         register("world_time",WORLD_TIME);
         register("world_weather",WORLD_WEATHER);

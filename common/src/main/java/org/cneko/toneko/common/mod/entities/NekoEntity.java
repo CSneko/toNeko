@@ -68,6 +68,7 @@ import org.cneko.toneko.common.mod.entities.ai.NekoLookController;
 import org.cneko.toneko.common.mod.entities.ai.goal.*;
 import org.cneko.toneko.common.mod.genetics.ToNekoLocus;
 import org.cneko.toneko.common.mod.genetics.api.*;
+import org.cneko.toneko.common.mod.items.LegwearItem;
 import org.cneko.toneko.common.mod.items.ToNekoItems;
 import org.cneko.toneko.common.mod.misc.ToNekoAttributes;
 import org.cneko.toneko.common.mod.misc.ToNekoSoundEvents;
@@ -584,7 +585,8 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
             slot = EquipmentSlot.CHEST;
         } else if (stack.is(Items.LEATHER_LEGGINGS) || stack.is(Items.CHAINMAIL_LEGGINGS) ||
                 stack.is(Items.IRON_LEGGINGS) || stack.is(Items.GOLDEN_LEGGINGS) ||
-                stack.is(Items.DIAMOND_LEGGINGS) || stack.is(Items.NETHERITE_LEGGINGS)) {
+                stack.is(Items.DIAMOND_LEGGINGS) || stack.is(Items.NETHERITE_LEGGINGS) ||
+                stack.getItem() instanceof LegwearItem) {
             slot = EquipmentSlot.LEGS;
         } else if (stack.is(Items.LEATHER_BOOTS) || stack.is(Items.CHAINMAIL_BOOTS) ||
                 stack.is(Items.IRON_BOOTS) || stack.is(Items.GOLDEN_BOOTS) ||
@@ -597,12 +599,15 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
         // 获取当前装备
         ItemStack currentArmor = this.getItemBySlot(slot);
 
+        // 丝袜是观赏性穿搭（防御只有 1），不参与防御比较，直接换穿
+        boolean isLegwear = stack.getItem() instanceof LegwearItem;
+
         // 计算防御值比较
         int newDefense = calculateDefenseValue(stack);
         int currentDefense = calculateDefenseValue(currentArmor);
 
-        // 如果新防具更好则替换
-        if (newDefense > currentDefense) {
+        // 如果新防具更好则替换（丝袜直接换穿）
+        if (isLegwear || newDefense > currentDefense) {
             // 替换装备
             this.setItemSlot(slot, stack.copy().split(1)); // 只装备一个
 

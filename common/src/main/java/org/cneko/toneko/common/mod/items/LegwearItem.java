@@ -94,6 +94,11 @@ public abstract class LegwearItem<N extends Item & GeoItem> extends ArmorItem im
         return DyedItemColor.getOrDefault(stack, 0xFFFFFF);
     }
 
+    /** 出品人（首写即署名；null = 未署名） */
+    public static String getMaker(ItemStack stack) {
+        return stack.get(ToNekoComponents.LEGWEAR_MAKER_COMPONENT);
+    }
+
     // === GeoItem 三件套 ===
 
     @Override
@@ -174,6 +179,10 @@ public abstract class LegwearItem<N extends Item & GeoItem> extends ArmorItem im
                     Math.round(ZettaiRyouiki.computeTerritory(stack) * 100), gradeText));
         }
         tooltip.add(Component.translatable("item.toneko.legwear.tip.dyeable"));
+        String maker = getMaker(stack);
+        if (maker != null) {
+            tooltip.add(Component.translatable("item.toneko.legwear.tip.maker", maker));
+        }
     }
 
     // === 4 款预设 ===
@@ -216,8 +225,10 @@ public abstract class LegwearItem<N extends Item & GeoItem> extends ArmorItem im
 
     public static class OverKneeSockItem extends LegwearItem<OverKneeSockItem> {
         public static final String ID = "legwear_over_knee";
+        /** 过膝袜自然袜口高度（滑落回弹目标 / 提袜复位值） */
+        public static final float NATURAL_TOP = 0.7f;
         public OverKneeSockItem(Holder<ArmorMaterial> material) {
-            super(40, 0.7f, material);
+            super(40, NATURAL_TOP, material);
         }
 
         @Override

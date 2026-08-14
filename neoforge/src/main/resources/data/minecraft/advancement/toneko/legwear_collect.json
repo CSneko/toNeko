@@ -1,0 +1,74 @@
+{
+  "parent": "minecraft:toneko/neko_armor",
+  "criteria": {
+    "over_knee": {
+      "conditions": {
+        "items": [
+          {
+            "items": "toneko:legwear_over_knee"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "pantyhose_20d": {
+      "conditions": {
+        "items": [
+          {
+            "items": "toneko:legwear_pantyhose_20d"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "pantyhose_40d": {
+      "conditions": {
+        "items": [
+          {
+            "items": "toneko:legwear_pantyhose_40d"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "pantyhose_5d": {
+      "conditions": {
+        "items": [
+          {
+            "items": "toneko:legwear_pantyhose_5d"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "description": {
+      "translate": "advancements.toneko.legwear_collect.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "toneko:legwear_pantyhose_40d"
+    },
+    "title": {
+      "translate": "advancements.toneko.legwear_collect.title"
+    }
+  },
+  "requirements": [
+    [
+      "pantyhose_40d"
+    ],
+    [
+      "pantyhose_20d"
+    ],
+    [
+      "pantyhose_5d"
+    ],
+    [
+      "over_knee"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

@@ -12,6 +12,7 @@ import net.minecraft.world.entity.player.Player;
 import org.cneko.toneko.common.api.TickTasks;
 import org.cneko.toneko.common.mod.client.ToNekoKeyBindings;
 import org.cneko.toneko.common.mod.client.api.ClientEntityPoseManager;
+import org.cneko.toneko.common.mod.client.api.GiftSelectionManager;
 import org.cneko.toneko.common.mod.client.screens.ChatWithNekoScreen;
 import org.cneko.toneko.common.mod.client.screens.NekoInfoScreen;
 import org.cneko.toneko.common.mod.client.screens.RouletteScreen;
@@ -20,6 +21,7 @@ import org.cneko.toneko.common.mod.entities.NekoEntity;
 import org.cneko.toneko.common.mod.items.NekoMultiToolItem;
 import org.cneko.toneko.common.mod.abilities.ClimbWallHandler;
 import org.cneko.toneko.common.mod.packets.NekoMultiToolModePayload;
+import org.cneko.toneko.common.mod.packets.LegwearPullUpPayload;
 import org.cneko.toneko.common.mod.packets.ClimbWallPayload;
 import org.cneko.toneko.common.mod.packets.NekoStealthPayload;
 import org.cneko.toneko.common.mod.packets.interactives.DismountPassengerPayload;
@@ -131,6 +133,16 @@ public class ClientTickEvent {
                         true);
             }
         }
+        // 提袜：把过膝袜袜口复位（服务端权威 + 冷却）
+        while (ToNekoKeyBindings.PULL_UP_LEGWEAR_KEY.consumeClick()) {
+            if (client.player != null) {
+                ClientPlayNetworking.send(new LegwearPullUpPayload());
+            }
+        }
+        // 送礼确认：送出当前选中的快捷栏槽位（送礼选择模式内）
+        while (ToNekoKeyBindings.GIFT_CONFIRM_KEY.consumeClick()) {
+            GiftSelectionManager.confirm(client);
+        }
     }
 
     public static boolean isStealthActive() {
@@ -187,6 +199,8 @@ public class ClientTickEvent {
     private static int tick = 0;
     public static void onTick(Minecraft client) {
         TickTasks.executeDefaultClient();
+        // 送礼选择模式：超时/打开界面时取消
+        GiftSelectionManager.tick(client);
         // 寻找16格内的生物
         Player p = Minecraft.getInstance().player;
         if (p != null) {

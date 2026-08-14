@@ -18,6 +18,7 @@ import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import org.cneko.toneko.common.mod.client.ToNekoKeyBindings;
 import org.cneko.toneko.common.mod.client.api.ClientEntityPoseManager;
+import org.cneko.toneko.common.mod.client.api.GiftSelectionManager;
 import org.cneko.toneko.common.mod.client.events.ClientTickEvent;
 import org.cneko.toneko.common.mod.entities.FlySwordEntity;
 import org.cneko.toneko.common.mod.effects.ToNekoEffects;
@@ -55,6 +56,10 @@ public class HudRenderEvent {
             }
             if (player.getVehicle() instanceof FlySwordEntity flySword) {
                 renderFlySwordHUD(guiGraphics, flySword);
+            }
+            // 送礼选择模式：快捷栏高亮 + 提示
+            if (GiftSelectionManager.isActive()) {
+                renderGiftSelection(guiGraphics);
             }
             // AI 回复头顶气泡（bubble 模式下由 NekoChatDisplayPayload 触发）
             NekoBubbleRenderer.render(guiGraphics, deltaTracker);
@@ -176,6 +181,26 @@ public class HudRenderEvent {
         int y = height / 2 - 20;
 
         guiGraphics.drawString(client.font, hint, x, y, 0xAAFFFFFF);
+    }
+
+    /** 送礼选择模式：金色描边高亮当前选中的快捷栏槽 + 快捷栏上方提示 */
+    private static void renderGiftSelection(GuiGraphics guiGraphics) {
+        Minecraft client = Minecraft.getInstance();
+        if (client.options.hideGui || client.player == null) return;
+
+        int width = guiGraphics.guiWidth();
+        int height = guiGraphics.guiHeight();
+        int slot = client.player.getInventory().selected;
+
+        // 原版快捷栏布局：left = width/2 - 91；选中槽高亮 24x23，从 (left-1, height-23) 开始
+        int left = width / 2 - 91;
+        int x = left - 1 + slot * 20;
+        int y = height - 23;
+
+        guiGraphics.renderOutline(x, y, 24, 23, 0xFFFFD700);
+
+        Component hint = GiftSelectionManager.hint();
+        guiGraphics.drawCenteredString(client.font, hint, width / 2, y - 12, 0xFFFFFFFF);
     }
 
     private static final ResourceLocation CATNIP_ICON = ResourceLocation.fromNamespaceAndPath(MODID,"textures/item/catnip.png");

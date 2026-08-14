@@ -26,7 +26,10 @@ import org.cneko.toneko.common.mod.ai.NekoTalkManager;
 import org.cneko.toneko.common.mod.ai.Prompts;
 import org.cneko.toneko.common.mod.api.EntityPoseManager;
 import org.cneko.toneko.common.mod.entities.NekoInventory;
+import org.cneko.toneko.common.mod.items.LegwearItem;
+import org.cneko.toneko.common.mod.items.ToNekoItems;
 import org.cneko.toneko.common.mod.misc.Messaging;
+import org.cneko.toneko.common.mod.misc.ToNekoComponents;
 import org.cneko.toneko.common.mod.util.EntityUtil;
 import org.cneko.toneko.common.mod.util.TickTaskQueue;
 import org.cneko.toneko.common.mod.entities.INeko;
@@ -596,7 +599,7 @@ public class NekoActionExecutor {
             @Override
             public boolean handle(NekoEntity neko, ServerPlayer speaker, LivingEntity target, NekoAction action) {
                 // 给目标一本猫娘日记成书（有 AI 写的日记数据时用数据，无数据回退随机）
-                giveToPlayer(target, neko.createNekoDiary());
+                giveToPlayer(target, neko.createNekoDiary(), null);
                 return true;
             }
             @Override
@@ -739,6 +742,65 @@ public class NekoActionExecutor {
                         + LanguageUtil.translatable("misc.toneko.ai.actions.guide.change_affection");
             }
         });
+        // 送丝袜：背包优先（任意一款丝袜），没有则虚拟生成（随机一款，消耗能量），送出时署名
+        register("give_legwear", new NekoActionHandler() {
+            @Override
+            public boolean handle(NekoEntity neko, ServerPlayer speaker, LivingEntity target, NekoAction action) {
+                // 1. 背包优先：任意一款丝袜
+                for (int i = 0; i < neko.getInventory().getContainerSize(); i++) {
+                    ItemStack stack = neko.getInventory().getItem(i);
+                    if (stack.isEmpty() || !LegwearItem.isLegwear(stack)) continue;
+                    ItemStack give = neko.getInventory().removeItem(i, 1);
+                    giveToPlayer(target, give, nekoName(neko));
+                    return true;
+                }
+                // 2. 虚拟生成（配置开启且能量足够）
+                if (ConfigUtil.isAIActionsVirtualItems()) {
+                    int cost = Math.max(1, ConfigUtil.getAIActionsEnergyCost());
+                    if (neko.getNekoEnergy() >= cost) {
+                        neko.setNekoEnergy(neko.getNekoEnergy() - cost);
+                        Item[] LEGWEARS = {
+                                ToNekoItems.LEGWEAR_PANTYHOSE_40D,
+                                ToNekoItems.LEGWEAR_PANTYHOSE_20D,
+                                ToNekoItems.LEGWEAR_PANTYHOSE_5D,
+                                ToNekoItems.LEGWEAR_OVER_KNEE
+                        };
+                        Item item = LEGWEARS[neko.getRandom().nextInt(LEGWEARS.length)];
+                        giveToPlayer(target, new ItemStack(item), nekoName(neko));
+                        return true;
+                    }
+                }
+                return false;
+            }
+            @Override
+            public String getGuideLine() {
+                return "{\"action\": \"give_legwear\", \"target\": \"Steve\"} - "
+                        + LanguageUtil.translatable("misc.toneko.ai.actions.guide.give_legwear");
+            }
+        });
+        // 穿丝袜：从背包找任意一款丝袜穿到腿部（旧装备收回背包）
+        register("wear_legwear", new NekoActionHandler() {
+            @Override
+            public boolean handle(NekoEntity neko, ServerPlayer speaker, LivingEntity target, NekoAction action) {
+                for (int i = 0; i < neko.getInventory().getContainerSize(); i++) {
+                    ItemStack stack = neko.getInventory().getItem(i);
+                    if (stack.isEmpty() || !LegwearItem.isLegwear(stack)) continue;
+                    ItemStack toWear = neko.getInventory().removeItem(i, 1);
+                    ItemStack old = neko.getItemBySlot(EquipmentSlot.LEGS);
+                    neko.setItemSlot(EquipmentSlot.LEGS, toWear);
+                    if (!old.isEmpty() && !neko.addItem(old)) {
+                        neko.spawnAtLocation(old); // 背包满：旧装备掉落
+                    }
+                    return true;
+                }
+                return false; // 背包里没有丝袜
+            }
+            @Override
+            public String getGuideLine() {
+                return "{\"action\": \"wear_legwear\"} - "
+                        + LanguageUtil.translatable("misc.toneko.ai.actions.guide.wear_legwear");
+            }
+        });
     }
 
     /**
@@ -840,7 +902,7 @@ public class NekoActionExecutor {
         if (slot >= 0) {
             ItemStack stack = neko.getInventory().removeItem(slot, count);
             if (!stack.isEmpty()) {
-                giveToPlayer(target, stack);
+                giveToPlayer(target, stack, nekoName(neko));
                 return;
             }
         }
@@ -850,7 +912,7 @@ public class NekoActionExecutor {
             int cost = Math.max(1, ConfigUtil.getAIActionsEnergyCost());
             if (neko.getNekoEnergy() >= cost) {
                 neko.setNekoEnergy(neko.getNekoEnergy() - cost);
-                giveToPlayer(target, new ItemStack(item, count));
+                giveToPlayer(target, new ItemStack(item, count), nekoName(neko));
                 return;
             }
         }
@@ -858,8 +920,20 @@ public class NekoActionExecutor {
                 itemId, ConfigUtil.isAIActionsVirtualItems(), neko.getNekoEnergy());
     }
 
-    /** 给目标物品：玩家背包放不下时掉落到目标位置 */
-    private static void giveToPlayer(LivingEntity target, ItemStack stack) {
+    /** 猫娘名字（昵称缺失时回退实体名），用于物品署名等 */
+    private static String nekoName(NekoEntity neko) {
+        return neko.getCustomName() != null
+                ? neko.getCustomName().getString()
+                : neko.getName().getString();
+    }
+
+    /** 给目标物品：玩家背包放不下时掉落到目标位置；丝袜未署名时自动打上送出的猫娘名字 */
+    private static void giveToPlayer(LivingEntity target, ItemStack stack, String nekoName) {
+        if (nekoName != null && !nekoName.isEmpty()
+                && LegwearItem.isLegwear(stack)
+                && stack.get(ToNekoComponents.LEGWEAR_MAKER_COMPONENT) == null) {
+            stack.set(ToNekoComponents.LEGWEAR_MAKER_COMPONENT, nekoName);
+        }
         if (target instanceof ServerPlayer player) {
             if (!player.addItem(stack)) {
                 player.drop(stack, false);

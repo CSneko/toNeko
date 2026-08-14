@@ -2,6 +2,7 @@ run/*
 build/*
 /build/
 /.gradle/
+/.gradle-home/
 /common/.gradle/
 /common/build/
 /common/run/

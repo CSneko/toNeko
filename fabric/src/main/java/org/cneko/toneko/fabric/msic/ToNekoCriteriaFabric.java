@@ -19,5 +19,9 @@ public class ToNekoCriteriaFabric {
         NEKO_BREED = CriteriaTriggers.register(MODID+"/neko_breed", new NekoBreedTrigger());
         NINE_LIVES = CriteriaTriggers.register(MODID+"/nine_lives", new NineLivesTrigger());
         EASTER_EGG = CriteriaTriggers.register(MODID+"/easter_egg", new EasterEggTrigger());
+
+        // === 丝袜 ===
+        LEGWEAR_FIRST_DYE = CriteriaTriggers.register(MODID+"/legwear_first_dye", new FirstLegwearDyeTrigger());
+        LEGWEAR_GRADE_S = CriteriaTriggers.register(MODID+"/legwear_grade_s", new LegwearGradeSTrigger());
     }
 }

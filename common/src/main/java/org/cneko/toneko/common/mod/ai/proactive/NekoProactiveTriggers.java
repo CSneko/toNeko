@@ -3,6 +3,9 @@ package org.cneko.toneko.common.mod.ai.proactive;
 import net.minecraft.server.level.ServerPlayer;
 import org.cneko.toneko.common.mod.ai.proactive.NekoProactiveManager.NekoProactiveTrigger;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
+import org.cneko.toneko.common.mod.items.LegwearItem;
+import org.cneko.toneko.common.mod.misc.Charm;
+import org.cneko.toneko.common.mod.misc.LegwearUtil;
 import org.cneko.toneko.common.mod.util.EntityUtil;
 import org.cneko.toneko.common.util.ConfigUtil;
 
@@ -59,6 +62,38 @@ public class NekoProactiveTriggers {
             @Override
             public String getMessage(NekoEntity neko, ServerPlayer player) {
                 return "有点无聊，主动找身边的人聊聊天";
+            }
+        });
+
+        // 丝袜穿搭：附近玩家穿着丝袜时主动夸搭配（概率默认 0，配置开启）
+        NekoProactiveManager.register(new NekoProactiveTrigger() {
+            @Override
+            public String getId() { return "legwear_talk"; }
+
+            @Override
+            public boolean canTrigger(NekoEntity neko, ServerPlayer player) {
+                return LegwearItem.isLegwear(LegwearUtil.getWornLegwear(player));
+            }
+
+            @Override
+            public String getMessage(NekoEntity neko, ServerPlayer player) {
+                return "看到对方穿着丝袜/过膝袜，夸一夸她的搭配，聊聊丝袜的话题";
+            }
+        });
+
+        // 脸红偷看：高魅力玩家附近猫娘害羞脸红、偷偷瞄对方（概率默认 0，配置开启）
+        NekoProactiveManager.register(new NekoProactiveTrigger() {
+            @Override
+            public String getId() { return "legwear_blush"; }
+
+            @Override
+            public boolean canTrigger(NekoEntity neko, ServerPlayer player) {
+                return Charm.isHighCharm(LegwearUtil.getWornLegwear(player));
+            }
+
+            @Override
+            public String getMessage(NekoEntity neko, ServerPlayer player) {
+                return "看到对方穿着很诱人的丝袜，害羞脸红，说话有点结巴，偷偷瞄对方的腿";
             }
         });
 

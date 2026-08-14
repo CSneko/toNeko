@@ -14,4 +14,7 @@ public class ToNekoCriteria {
     public static NekoBreedTrigger NEKO_BREED;
     public static NineLivesTrigger NINE_LIVES;
     public static EasterEggTrigger EASTER_EGG;
+    // === 丝袜 ===
+    public static FirstLegwearDyeTrigger LEGWEAR_FIRST_DYE;
+    public static LegwearGradeSTrigger LEGWEAR_GRADE_S;
 }

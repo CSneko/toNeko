@@ -43,5 +43,6 @@ public class ToNekoPackets {
         PayloadTypeRegistry.playC2S().register(NekoStealthPayload.ID, NekoStealthPayload.CODEC);
         PayloadTypeRegistry.playC2S().register(LegwearAdjustPayload.ID, LegwearAdjustPayload.CODEC);
         PayloadTypeRegistry.playC2S().register(LegwearDyePayload.ID, LegwearDyePayload.CODEC);
+        PayloadTypeRegistry.playC2S().register(LegwearPullUpPayload.ID, LegwearPullUpPayload.CODEC);
     }
 }

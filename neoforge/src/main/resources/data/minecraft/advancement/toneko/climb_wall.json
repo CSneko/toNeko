@@ -13,7 +13,7 @@
     "frame": "goal",
     "icon": {
       "count": 1,
-      "id": "toneko:neko_paws"
+      "id": "toneko:neko_multi_tool"
     },
     "title": {
       "translate": "advancements.toneko.climb_wall.title"

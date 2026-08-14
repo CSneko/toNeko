@@ -75,11 +75,15 @@ public class LegwearRenderer extends GeoArmorRenderer<LegwearItem<?>> {
                 (alpha << 24) | (leftRgb & 0xFFFFFF));
 
         // 第二遍：恢复段显隐后隐藏左腿，只画右腿（右腿色）
+        // isReRender 必须传 true：跳过 handleAnimations。
+        // 否则 AnimationProcessor 第二次 tick 时会把 armorRightLeg 的旋转/位置
+        // 重置回初始快照（GeoArmorRenderer.actuallyRender 每次都会跑 handleAnimations，
+        // 而未被动画触碰的骨骼会被 lerp 回初始值），导致右腿丝袜静止不跟腿。
         applyLengthVisibility(model);
         setSideHidden(model, "L", true);
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource,
                 buffer.setColor((rightRgb >> 16) & 0xFF, (rightRgb >> 8) & 0xFF, rightRgb & 0xFF, alpha),
-                isReRender, partialTick, packedLight, packedOverlay,
+                true, partialTick, packedLight, packedOverlay,
                 (alpha << 24) | (rightRgb & 0xFFFFFF));
 
         // 恢复段显隐（下帧 preRender 也会重设，保持帧末一致）

@@ -22,6 +22,10 @@ public class ToNekoCriteriaNeoForge {
     public static final DeferredHolder<CriterionTrigger<?>,CriterionTrigger<NineLivesTrigger.TriggerInstance>> NINE_LIVES_HOLDER = CRITERION_TRIGGERS.register(MODID+"/nine_lives", NineLivesTrigger::new);
     public static final DeferredHolder<CriterionTrigger<?>,CriterionTrigger<EasterEggTrigger.TriggerInstance>> EASTER_EGG_HOLDER = CRITERION_TRIGGERS.register(MODID+"/easter_egg", EasterEggTrigger::new);
 
+    // === 丝袜 ===
+    public static final DeferredHolder<CriterionTrigger<?>,CriterionTrigger<FirstLegwearDyeTrigger.TriggerInstance>> LEGWEAR_FIRST_DYE_HOLDER = CRITERION_TRIGGERS.register(MODID+"/legwear_first_dye", FirstLegwearDyeTrigger::new);
+    public static final DeferredHolder<CriterionTrigger<?>,CriterionTrigger<LegwearGradeSTrigger.TriggerInstance>> LEGWEAR_GRADE_S_HOLDER = CRITERION_TRIGGERS.register(MODID+"/legwear_grade_s", LegwearGradeSTrigger::new);
+
     public static void init(){
     }
 
@@ -38,5 +42,9 @@ public class ToNekoCriteriaNeoForge {
         NEKO_BREED = (NekoBreedTrigger) NEKO_BREED_HOLDER.get();
         NINE_LIVES = (NineLivesTrigger) NINE_LIVES_HOLDER.get();
         EASTER_EGG = (EasterEggTrigger) EASTER_EGG_HOLDER.get();
+
+        // === 丝袜 ===
+        LEGWEAR_FIRST_DYE = (FirstLegwearDyeTrigger) LEGWEAR_FIRST_DYE_HOLDER.get();
+        LEGWEAR_GRADE_S = (LegwearGradeSTrigger) LEGWEAR_GRADE_S_HOLDER.get();
     }
 }

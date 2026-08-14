@@ -63,4 +63,14 @@ public class ToNekoComponents {
                     .networkSynchronized(DyedItemColor.STREAM_CODEC)
                     .build()
     );
+
+    // 丝袜出品人（首写即署名，只写一次；networkSynchronized 必配，否则回包被静默丢弃）
+    public static final DataComponentType<String> LEGWEAR_MAKER_COMPONENT = Registry.register(
+            BuiltInRegistries.DATA_COMPONENT_TYPE,
+            ResourceLocation.fromNamespaceAndPath(MODID, "legwear_maker"),
+            DataComponentType.<String>builder()
+                    .persistent(Codec.STRING)
+                    .networkSynchronized(ByteBufCodecs.STRING_UTF8)
+                    .build()
+    );
 }

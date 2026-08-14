@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementType;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
@@ -11,6 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.cneko.toneko.common.mod.advencements.*;
 import org.cneko.toneko.common.mod.items.ToNekoItems;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 import static org.cneko.toneko.common.Bootstrap.MODID;
@@ -46,6 +48,11 @@ public class AdvancementsProvider extends FabricAdvancementProvider {
     // 等级里程
     public static AdvancementHolder NEKO_LV10;
     public static AdvancementHolder NEKO_LV50;
+
+    // 丝袜线
+    public static AdvancementHolder LEGWEAR_COLLECT;
+    public static AdvancementHolder LEGWEAR_FIRST_DYE;
+    public static AdvancementHolder LEGWEAR_GRADE_S;
 
     private static final ResourceLocation BG = ResourceLocation.parse("textures/gui/advancements/backgrounds/adventure.png");
 
@@ -133,6 +140,58 @@ public class AdvancementsProvider extends FabricAdvancementProvider {
                 .addCriterion("neko_armor", InventoryChangeTrigger.TriggerInstance.hasItems(ToNekoItems.NEKO_TAIL, ToNekoItems.NEKO_EARS))
                 .parent(NEKO_ATTRACTING)
                 .save(consumer, MODID + "/neko_armor");
+
+        // =========================================================
+        //  🧦 丝袜收藏家 —— [新]（4 款全收集，AND 语义）
+        // =========================================================
+        LEGWEAR_COLLECT = Advancement.Builder.advancement()
+                .display(
+                        ToNekoItems.LEGWEAR_PANTYHOSE_40D,
+                        translatable("advancements.toneko.legwear_collect.title"),
+                        translatable("advancements.toneko.legwear_collect.description"),
+                        BG,
+                        AdvancementType.GOAL,
+                        true, true, false
+                )
+                .addCriterion("pantyhose_40d", InventoryChangeTrigger.TriggerInstance.hasItems(ToNekoItems.LEGWEAR_PANTYHOSE_40D))
+                .addCriterion("pantyhose_20d", InventoryChangeTrigger.TriggerInstance.hasItems(ToNekoItems.LEGWEAR_PANTYHOSE_20D))
+                .addCriterion("pantyhose_5d", InventoryChangeTrigger.TriggerInstance.hasItems(ToNekoItems.LEGWEAR_PANTYHOSE_5D))
+                .addCriterion("over_knee", InventoryChangeTrigger.TriggerInstance.hasItems(ToNekoItems.LEGWEAR_OVER_KNEE))
+                .requirements(AdvancementRequirements.allOf(List.of("pantyhose_40d", "pantyhose_20d", "pantyhose_5d", "over_knee")))
+                .parent(NEKO_ARMOR)
+                .save(consumer, MODID + "/legwear_collect");
+
+        // =========================================================
+        //  🎨 初染 —— [新]
+        // =========================================================
+        LEGWEAR_FIRST_DYE = Advancement.Builder.advancement()
+                .display(
+                        ToNekoItems.LEGWEAR_PANTYHOSE_5D,
+                        translatable("advancements.toneko.legwear_first_dye.title"),
+                        translatable("advancements.toneko.legwear_first_dye.description"),
+                        BG,
+                        AdvancementType.GOAL,
+                        true, true, false
+                )
+                .addCriterion("legwear_first_dye", FirstLegwearDyeTrigger.TriggerInstance.create())
+                .parent(LEGWEAR_COLLECT)
+                .save(consumer, MODID + "/legwear_first_dye");
+
+        // =========================================================
+        //  👑 S 级领域 —— [新] CHALLENGE
+        // =========================================================
+        LEGWEAR_GRADE_S = Advancement.Builder.advancement()
+                .display(
+                        ToNekoItems.LEGWEAR_OVER_KNEE,
+                        translatable("advancements.toneko.legwear_grade_s.title"),
+                        translatable("advancements.toneko.legwear_grade_s.description"),
+                        BG,
+                        AdvancementType.CHALLENGE,
+                        true, true, false
+                )
+                .addCriterion("legwear_grade_s", LegwearGradeSTrigger.TriggerInstance.create())
+                .parent(LEGWEAR_FIRST_DYE)
+                .save(consumer, MODID + "/legwear_grade_s");
 
         // =========================================================
         //  🧗 猫爪攀墙 —— [新]
