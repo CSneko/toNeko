@@ -5,3 +5,4 @@ Our documentation site is not set up yet, so let's use this one first.
 ## Contents
 - [AI Settings](https://github.com/CSneko/toNeko/blob/main/docs/AI_en.md)
 - [Online API](https://github.com/CSneko/toNeko/blob/main/docs/TONEKO_ONLINE_API.md)
+- [Integration API Specification (developers)](https://github.com/CSneko/toNeko/blob/main/docs/API_en.md)

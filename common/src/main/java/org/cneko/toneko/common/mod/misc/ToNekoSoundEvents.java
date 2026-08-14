@@ -10,4 +10,5 @@ public class ToNekoSoundEvents {
     public static final SoundEvent BAZOOKA_BIU = SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(MODID, "item.bazooka.biu"));
     public static final SoundEvent BAZOOKA_MEOW = SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(MODID, "item.bazooka.meow"));
     public static final SoundEvent NEKO_ALARM = SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(MODID, "entity.neko.alarm"));
+    public static final SoundEvent LEGWEAR_RUSTLE = SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(MODID, "item.legwear.rustle"));
 }

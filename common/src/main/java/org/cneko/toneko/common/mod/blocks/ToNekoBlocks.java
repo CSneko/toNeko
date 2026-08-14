@@ -9,4 +9,5 @@ public class ToNekoBlocks {
     public static Block NEKO_BLOCK;
     public static Block NEKO_DIAMOND_BLOCK;
     public static Block SHENG_DENG;
+    public static Block LEGWEAR_WORKBENCH;
 }

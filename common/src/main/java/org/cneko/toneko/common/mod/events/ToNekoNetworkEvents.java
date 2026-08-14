@@ -6,11 +6,15 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Pose;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
 import org.cneko.ai.core.AIHistory;
@@ -28,8 +32,11 @@ import org.cneko.toneko.common.mod.entities.CrystalNekoEntity;
 import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.genetics.api.IGeneticEntity;
 import org.cneko.toneko.common.mod.commands.ToNekoCommand;
+import org.cneko.toneko.common.mod.blocks.LegwearWorkbenchBlock;
 import org.cneko.toneko.common.mod.items.GeneEditorItem;
+import org.cneko.toneko.common.mod.items.LegwearItem;
 import org.cneko.toneko.common.mod.items.NekoMultiToolItem;
+import org.cneko.toneko.common.mod.misc.ToNekoComponents;
 import org.cneko.toneko.common.mod.misc.Messaging;
 import org.cneko.toneko.common.mod.packets.*;
 import org.cneko.toneko.common.mod.packets.interactives.*;
@@ -108,6 +115,65 @@ public class ToNekoNetworkEvents {
             } else {
                 ClimbWallHandler.stopClimbing(player);
             }
+        });
+        // 腿部服饰工作台：滑杆调节
+        ServerPlayNetworking.registerGlobalReceiver(LegwearAdjustPayload.ID, ToNekoNetworkEvents::onLegwearAdjust);
+        // 腿部服饰工作台：左右腿染色
+        ServerPlayNetworking.registerGlobalReceiver(LegwearDyePayload.ID, ToNekoNetworkEvents::onLegwearDye);
+    }
+
+    public static void onLegwearDye(LegwearDyePayload payload, ServerPlayNetworking.Context context) {
+        ServerPlayer player = context.player();
+        context.server().execute(() -> {
+            // 校验：必须正打开着工作台菜单，槽 0 是腿部服饰
+            if (!(player.containerMenu instanceof LegwearWorkbenchBlock.LegwearWorkbenchMenu menu)) return;
+            ItemStack stack = menu.getSlot(0).getItem();
+            if (!LegwearItem.isLegwear(stack)) return;
+            // side 0=左 1=右；rgb -1 移除独立染色
+            if (payload.rgb() < 0) {
+                stack.remove(payload.side() == 0
+                        ? ToNekoComponents.LEGWEAR_DYE_LEFT_COMPONENT
+                        : ToNekoComponents.LEGWEAR_DYE_RIGHT_COMPONENT);
+            } else {
+                DyedItemColor dye = new DyedItemColor(payload.rgb() & 0xFFFFFF, true);
+                if (payload.side() == 0) {
+                    stack.set(ToNekoComponents.LEGWEAR_DYE_LEFT_COMPONENT, dye);
+                } else {
+                    stack.set(ToNekoComponents.LEGWEAR_DYE_RIGHT_COMPONENT, dye);
+                }
+            }
+            menu.getSlot(0).setChanged();
+            player.connection.send(new ClientboundContainerSetSlotPacket(
+                    menu.containerId, menu.incrementStateId(), 0, stack));
+        });
+    }
+
+    public static void onLegwearAdjust(LegwearAdjustPayload payload, ServerPlayNetworking.Context context) {
+        ServerPlayer player = context.player();
+        context.server().execute(() -> {
+            // 校验链 1：必须正打开着工作台菜单
+            if (!(player.containerMenu instanceof LegwearWorkbenchBlock.LegwearWorkbenchMenu menu)) return;
+            // 校验链 2：槽 0 必须真的是腿部服饰（丝袜/未来裙装）
+            ItemStack stack = menu.getSlot(0).getItem();
+            if (!LegwearItem.isLegwear(stack)) return;
+            // 校验链 3：服务端权威 clamp（不可信客户端输入）
+            int denier = Mth.clamp(payload.denier(), 5, 120);
+            float length = Math.round(Mth.clamp(payload.length(), 0f, 1f) * 100f) / 100f;
+            // 值没变则不写（幂等去重）
+            boolean changed = false;
+            if (LegwearItem.getDenier(stack) != denier) {
+                stack.set(ToNekoComponents.LEGWEAR_DENIER_COMPONENT, denier);
+                changed = true;
+            }
+            if (Math.abs(LegwearItem.getStockingTopHeight(stack) - length) > 1e-4f) {
+                stack.set(ToNekoComponents.LEGWEAR_LENGTH_COMPONENT, length);
+                changed = true;
+            }
+            if (!changed) return;
+            menu.getSlot(0).setChanged();
+            // 回同步槽位（与 NekoAggregator 同款）
+            player.connection.send(new ClientboundContainerSetSlotPacket(
+                    menu.containerId, menu.incrementStateId(), 0, stack));
         });
     }
 

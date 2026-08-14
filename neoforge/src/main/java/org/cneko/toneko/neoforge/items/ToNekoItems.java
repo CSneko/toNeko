@@ -44,6 +44,10 @@ public class ToNekoItems {
     public static DeferredHolder<Item,FurryBoheItem> FURRY_BOHE_HOLDER;
     public static DeferredHolder<Item,NekoArmor.NekoEarsItem> NEKO_EARS_HOLDER;
     public static DeferredHolder<Item,NekoArmor.NekoTailItem> NEKO_TAIL_HOLDER;
+    public static DeferredHolder<Item,LegwearItem.Pantyhose40DItem> LEGWEAR_PANTYHOSE_40D_HOLDER;
+    public static DeferredHolder<Item,LegwearItem.Pantyhose20DItem> LEGWEAR_PANTYHOSE_20D_HOLDER;
+    public static DeferredHolder<Item,LegwearItem.Pantyhose5DItem> LEGWEAR_PANTYHOSE_5D_HOLDER;
+    public static DeferredHolder<Item,LegwearItem.OverKneeSockItem> LEGWEAR_OVER_KNEE_HOLDER;
     public static DeferredHolder<Item, CatnipItem> CATNIP_HOLDER;
     public static DeferredHolder<Item, CatnipItem> CATNIP_SANDWICH_HOLDER;
     public static DeferredHolder<Item,Item> CATNIP_SEED_HOLDER;
@@ -83,6 +87,7 @@ public class ToNekoItems {
     public static DeferredHolder<Item,NekoEnergyBatteryItem> NEKO_ENERGY_BATTERY_HOLDER;
     public static DeferredHolder<Item,NekoEnergyBatteryItem> NEKO_ENERGY_BATTERY_LARGE_HOLDER;
     public static DeferredHolder<Item,BlockItem> SHENG_DENG_ITEM_HOLDER;
+    public static DeferredHolder<Item,ItemNameBlockItem> LEGWEAR_WORKBENCH_ITEM_HOLDER;
 
     public static void init() {
         registerWithOutConfig();
@@ -151,6 +156,11 @@ public class ToNekoItems {
 
         NEKO_PAWS_HOLDER = ITEMS.register(NekoArmor.NekoPawsItem.ID, ()->new NekoArmor.NekoPawsItem(ToNekoArmorMaterials.NEKO));
 
+        LEGWEAR_PANTYHOSE_40D_HOLDER = ITEMS.register(LegwearItem.Pantyhose40DItem.ID, ()->new LegwearItem.Pantyhose40DItem(ToNekoArmorMaterials.LEGWEAR));
+        LEGWEAR_PANTYHOSE_20D_HOLDER = ITEMS.register(LegwearItem.Pantyhose20DItem.ID, ()->new LegwearItem.Pantyhose20DItem(ToNekoArmorMaterials.LEGWEAR));
+        LEGWEAR_PANTYHOSE_5D_HOLDER = ITEMS.register(LegwearItem.Pantyhose5DItem.ID, ()->new LegwearItem.Pantyhose5DItem(ToNekoArmorMaterials.LEGWEAR));
+        LEGWEAR_OVER_KNEE_HOLDER = ITEMS.register(LegwearItem.OverKneeSockItem.ID, ()->new LegwearItem.OverKneeSockItem(ToNekoArmorMaterials.LEGWEAR));
+
         INFINITE_CATNIP_HOLDER = ITEMS.register("infinite_catnip", ()->new CatnipItem.InfiniteCatnipItem(new Item.Properties().component(DataComponents.FOOD,new FoodProperties(2,1.0f,false,1.6f, Optional.empty(),List.of())).rarity(Rarity.UNCOMMON)));
 
         NEKO_ENERGY_BOMB_HOLDER = ITEMS.register("energy_bomb", NekoEnergyBombItem::new);
@@ -193,6 +203,8 @@ public class ToNekoItems {
 
         SHENG_DENG_ITEM_HOLDER = ITEMS.register(ShengDengItem.ID, () -> new ShengDengItem(ToNekoBlocks.SHENG_DENG_HOLDER.get(), new Item.Properties()));
 
+        LEGWEAR_WORKBENCH_ITEM_HOLDER = ITEMS.register("legwear_workbench", () -> new ItemNameBlockItem(ToNekoBlocks.LEGWEAR_WORKBENCH_HOLDER.get(), new Item.Properties()));
+
         // 注册物品组
         TONEKO_ITEM_GROUP_HOLDER = ToNekoNeoForge.CREATIVE_MODE_TABS.register("toneko_group", ()-> CreativeModeTab.builder()
                 .icon(()->NEKO_EARS_HOLDER.get().getDefaultInstance())
@@ -203,6 +215,10 @@ public class ToNekoItems {
                     event.accept(FURRY_BOHE_HOLDER.get());
                     event.accept(NEKO_EARS_HOLDER.get());
                     event.accept(NEKO_TAIL_HOLDER.get());
+                    event.accept(LEGWEAR_PANTYHOSE_40D_HOLDER.get());
+                    event.accept(LEGWEAR_PANTYHOSE_20D_HOLDER.get());
+                    event.accept(LEGWEAR_PANTYHOSE_5D_HOLDER.get());
+                    event.accept(LEGWEAR_OVER_KNEE_HOLDER.get());
                     event.accept(ADVENTURER_NEKO_SPAWN_EGG_HOLDER.get());
                     event.accept(GHOST_NEKO_SPAWN_EGG_HOLDER.get());
                     event.accept(FIGHTING_NEKO_SPAWN_EGG_HOLDER.get());
@@ -245,6 +261,7 @@ public class ToNekoItems {
                     event.accept(NEKO_ENERGY_BATTERY_HOLDER.get());
                     event.accept(NEKO_ENERGY_BATTERY_LARGE_HOLDER.get());
                     event.accept(SHENG_DENG_ITEM_HOLDER.get());
+                    event.accept(LEGWEAR_WORKBENCH_ITEM_HOLDER.get());
                     // 猫猫手册（Patchouli 指南书）
                     ItemStack guideBook = GuideBookItem.createGuideBookStack();
                     if (!guideBook.isEmpty()) {
@@ -272,6 +289,10 @@ public class ToNekoItems {
             event.accept(FURRY_BOHE_HOLDER.get());
             event.accept(NEKO_EARS_HOLDER.get());
             event.accept(NEKO_TAIL_HOLDER.get());
+            event.accept(LEGWEAR_PANTYHOSE_40D_HOLDER.get());
+            event.accept(LEGWEAR_PANTYHOSE_20D_HOLDER.get());
+            event.accept(LEGWEAR_PANTYHOSE_5D_HOLDER.get());
+            event.accept(LEGWEAR_OVER_KNEE_HOLDER.get());
             event.accept(ADVENTURER_NEKO_SPAWN_EGG_HOLDER.get());
             event.accept(GHOST_NEKO_SPAWN_EGG_HOLDER.get());
             event.accept(FIGHTING_NEKO_SPAWN_EGG_HOLDER.get());
@@ -316,6 +337,7 @@ public class ToNekoItems {
             event.accept(NEKO_ENERGY_BATTERY_HOLDER.get());
             event.accept(NEKO_ENERGY_BATTERY_LARGE_HOLDER.get());
             event.accept(SHENG_DENG_ITEM_HOLDER.get());
+            event.accept(LEGWEAR_WORKBENCH_ITEM_HOLDER.get());
             // 猫猫手册（Patchouli 指南书）
             ItemStack guideBook = GuideBookItem.createGuideBookStack();
             if (!guideBook.isEmpty()) {
@@ -327,6 +349,7 @@ public class ToNekoItems {
 
     public static void reg(){
         SHENG_DENG_ITEM = SHENG_DENG_ITEM_HOLDER.get();
+        LEGWEAR_WORKBENCH_ITEM = LEGWEAR_WORKBENCH_ITEM_HOLDER.get();
         CATNIP = CATNIP_HOLDER.get();
         INFINITE_CATNIP = INFINITE_CATNIP_HOLDER.get();
         WILD_CATNIP = WILD_CATNIP_HOLDER.get();
@@ -337,6 +360,10 @@ public class ToNekoItems {
         NEKO_TAIL = NEKO_TAIL_HOLDER.get();
         NEKO_EARS = NEKO_EARS_HOLDER.get();
         NEKO_PAWS = NEKO_PAWS_HOLDER.get();
+        LEGWEAR_PANTYHOSE_40D = LEGWEAR_PANTYHOSE_40D_HOLDER.get();
+        LEGWEAR_PANTYHOSE_20D = LEGWEAR_PANTYHOSE_20D_HOLDER.get();
+        LEGWEAR_PANTYHOSE_5D = LEGWEAR_PANTYHOSE_5D_HOLDER.get();
+        LEGWEAR_OVER_KNEE = LEGWEAR_OVER_KNEE_HOLDER.get();
         NEKO_POTION = NEKO_POTION_HOLDER.get();
         MUSIC_DISC_KAWAII = MUSIC_DISC_KAWAII_HOLDER.get();
         MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP = MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP_HOLDER.get();

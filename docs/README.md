@@ -5,3 +5,4 @@
 ## 目录
 - [AI设置](https://github.com/CSneko/toNeko/blob/main/docs/AI.md)
 - [在线API](https://github.com/CSneko/toNeko/blob/main/docs/TONEKO_ONLINE_API.md)
+- [联动API规范（开发者）](https://github.com/CSneko/toNeko/blob/main/docs/API.md)

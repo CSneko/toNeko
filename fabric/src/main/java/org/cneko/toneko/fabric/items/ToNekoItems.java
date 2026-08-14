@@ -92,6 +92,7 @@ public class ToNekoItems {
         NEKO_ENERGY_BATTERY = new NekoEnergyBatteryItem(2000, 10, 5);
         NEKO_ENERGY_BATTERY_LARGE = new NekoEnergyBatteryItem(10000, 100, 50);
         SHENG_DENG_ITEM = new ShengDengItem(ToNekoBlocks.SHENG_DENG, new Item.Properties());
+        LEGWEAR_WORKBENCH_ITEM = new ItemNameBlockItem(ToNekoBlocks.LEGWEAR_WORKBENCH, new Item.Properties());
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NekoPotionItem.ID), NEKO_POTION);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NekoCollectorItem.ID), NEKO_COLLECTOR);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(FurryBoheItem.ID), FURRY_BOHE);
@@ -136,6 +137,7 @@ public class ToNekoItems {
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NekoEnergyBatteryItem.ID), NEKO_ENERGY_BATTERY);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NekoEnergyBatteryItem.ID_LARGE), NEKO_ENERGY_BATTERY_LARGE);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("sheng_deng"), SHENG_DENG_ITEM);
+        Registry.register(BuiltInRegistries.ITEM, toNekoLoc("legwear_workbench"), LEGWEAR_WORKBENCH_ITEM);
 
         // 如果安装了trinkets，则注册为TrinketItem
         if (isTrinketsInstalled){
@@ -145,9 +147,22 @@ public class ToNekoItems {
             NEKO_TAIL = new NekoArmor.NekoTailItem(ToNekoArmorMaterials.NEKO);
             NEKO_PAWS = new NekoArmor.NekoPawsItem(ToNekoArmorMaterials.NEKO);
         }
+        if (isTrinketsInstalled) {
+            // 装了 trinkets：丝袜注册为 Trinket 版（legs/socks 饰品槽，与盔甲裤子共存）
+            LegwearTrinkets.init();
+        } else {
+            LEGWEAR_PANTYHOSE_40D = new LegwearItem.Pantyhose40DItem(ToNekoArmorMaterials.LEGWEAR);
+            LEGWEAR_PANTYHOSE_20D = new LegwearItem.Pantyhose20DItem(ToNekoArmorMaterials.LEGWEAR);
+            LEGWEAR_PANTYHOSE_5D = new LegwearItem.Pantyhose5DItem(ToNekoArmorMaterials.LEGWEAR);
+            LEGWEAR_OVER_KNEE = new LegwearItem.OverKneeSockItem(ToNekoArmorMaterials.LEGWEAR);
+        }
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NekoArmor.NekoEarsItem.ID), NEKO_EARS);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NekoArmor.NekoTailItem.ID), NEKO_TAIL);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NekoArmor.NekoPawsItem.ID), NEKO_PAWS);
+        Registry.register(BuiltInRegistries.ITEM, toNekoLoc(LegwearItem.Pantyhose40DItem.ID), LEGWEAR_PANTYHOSE_40D);
+        Registry.register(BuiltInRegistries.ITEM, toNekoLoc(LegwearItem.Pantyhose20DItem.ID), LEGWEAR_PANTYHOSE_20D);
+        Registry.register(BuiltInRegistries.ITEM, toNekoLoc(LegwearItem.Pantyhose5DItem.ID), LEGWEAR_PANTYHOSE_5D);
+        Registry.register(BuiltInRegistries.ITEM, toNekoLoc(LegwearItem.OverKneeSockItem.ID), LEGWEAR_OVER_KNEE);
         TONEKO_ITEM_GROUP = FabricItemGroup.builder()
                 .icon(() -> new ItemStack(NEKO_EARS))
                 .title(Component.translatable("itemGroup.toneko"))
@@ -161,7 +176,10 @@ public class ToNekoItems {
             content.accept(NEKO_COLLECTOR);
             content.accept(NEKO_EARS);
             content.accept(NEKO_TAIL);
-            content.accept(FURRY_BOHE);
+            content.accept(LEGWEAR_PANTYHOSE_40D);
+            content.accept(LEGWEAR_PANTYHOSE_20D);
+            content.accept(LEGWEAR_PANTYHOSE_5D);
+            content.accept(LEGWEAR_OVER_KNEE);
             content.accept(CATNIP);
             content.accept(INFINITE_CATNIP);
             content.accept(CATNIP_SANDWICH);
@@ -204,6 +222,7 @@ public class ToNekoItems {
             content.accept(NEKO_ENERGY_BATTERY);
             content.accept(NEKO_ENERGY_BATTERY_LARGE);
             content.accept(SHENG_DENG_ITEM);
+            content.accept(LEGWEAR_WORKBENCH_ITEM);
             // 猫猫手册（Patchouli 指南书）
             ItemStack guideBook = GuideBookItem.createGuideBookStack();
             if (!guideBook.isEmpty()) {

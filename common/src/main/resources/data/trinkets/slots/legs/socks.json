@@ -1,0 +1,5 @@
+{
+  "icon": "toneko:gui/slots/socks",
+  "order": -768,
+  "validator_predicates": ["trinkets:tag"]
+}

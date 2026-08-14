@@ -1,0 +1,8 @@
+{
+  "parent": "block/cube_bottom_top",
+  "textures": {
+    "bottom": "toneko:block/legwear_workbench/bottom",
+    "top": "toneko:block/legwear_workbench/top",
+    "side": "toneko:block/legwear_workbench/side"
+  }
+}

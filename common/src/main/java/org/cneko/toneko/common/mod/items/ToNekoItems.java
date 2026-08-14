@@ -13,6 +13,10 @@ public class ToNekoItems {
     public static NekoArmor.NekoTailItem NEKO_TAIL;
     public static NekoArmor.NekoEarsItem NEKO_EARS;
     public static NekoArmor.NekoPawsItem NEKO_PAWS;
+    public static LegwearItem.Pantyhose40DItem LEGWEAR_PANTYHOSE_40D;
+    public static LegwearItem.Pantyhose20DItem LEGWEAR_PANTYHOSE_20D;
+    public static LegwearItem.Pantyhose5DItem LEGWEAR_PANTYHOSE_5D;
+    public static LegwearItem.OverKneeSockItem LEGWEAR_OVER_KNEE;
     public static NekoCollectorItem NEKO_COLLECTOR;
     public static CatnipItem CATNIP;
     public static CatnipItem INFINITE_CATNIP;
@@ -51,6 +55,7 @@ public class ToNekoItems {
     public static NekoEnergyBatteryItem NEKO_ENERGY_BATTERY;
     public static NekoEnergyBatteryItem NEKO_ENERGY_BATTERY_LARGE;
     public static Item SHENG_DENG_ITEM;
+    public static Item LEGWEAR_WORKBENCH_ITEM;
 
     public static final TagKey<Item> CATNIP_TAG = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c","foods/catnip"));
     public static final TagKey<Item> BAZOOKA_AMMO_TAG = TagKey.create(Registries.ITEM, toNekoLoc("bazooka_ammo"));

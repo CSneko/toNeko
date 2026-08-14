@@ -1,0 +1,898 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.legwear",
+				"texture_width": 256,
+				"texture_height": 256
+			},
+			"bones": [
+				{
+					"name": "bipedLeftLeg",
+					"pivot": [
+						2,
+						12,
+						0
+					]
+				},
+				{
+					"name": "armorLeftLeg",
+					"parent": "bipedLeftLeg",
+					"pivot": [
+						2,
+						12,
+						0
+					]
+				},
+				{
+					"name": "legwearFootL",
+					"parent": "armorLeftLeg",
+					"pivot": [
+						2,
+						12,
+						0
+					],
+					"cubes": [
+						{
+							"origin": [
+								-0.2,
+								-0.05,
+								-2.2
+							],
+							"size": [
+								4.4,
+								3.05,
+								4.4
+							],
+							"uv": {
+								"north": {
+									"uv": [
+										0,
+										0
+									],
+									"uv_size": [
+										35,
+										24
+									]
+								},
+								"east": {
+									"uv": [
+										0,
+										24
+									],
+									"uv_size": [
+										35,
+										24
+									]
+								},
+								"south": {
+									"uv": [
+										0,
+										48
+									],
+									"uv_size": [
+										35,
+										24
+									]
+								},
+								"west": {
+									"uv": [
+										0,
+										72
+									],
+									"uv_size": [
+										35,
+										24
+									]
+								},
+								"up": {
+									"uv": [
+										0,
+										96
+									],
+									"uv_size": [
+										8,
+										8
+									]
+								},
+								"down": {
+									"uv": [
+										0,
+										104
+									],
+									"uv_size": [
+										8,
+										8
+									]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "legwearCalfL",
+					"parent": "armorLeftLeg",
+					"pivot": [
+						2,
+						12,
+						0
+					],
+					"cubes": [
+						{
+							"origin": [
+								-0.2,
+								3.0,
+								-2.2
+							],
+							"size": [
+								4.4,
+								3.5,
+								4.4
+							],
+							"uv": {
+								"north": {
+									"uv": [
+										36,
+										0
+									],
+									"uv_size": [
+										35,
+										28
+									]
+								},
+								"east": {
+									"uv": [
+										36,
+										28
+									],
+									"uv_size": [
+										35,
+										28
+									]
+								},
+								"south": {
+									"uv": [
+										36,
+										56
+									],
+									"uv_size": [
+										35,
+										28
+									]
+								},
+								"west": {
+									"uv": [
+										36,
+										84
+									],
+									"uv_size": [
+										35,
+										28
+									]
+								},
+								"up": {
+									"uv": [
+										36,
+										112
+									],
+									"uv_size": [
+										8,
+										8
+									]
+								},
+								"down": {
+									"uv": [
+										36,
+										120
+									],
+									"uv_size": [
+										8,
+										8
+									]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "legwearThighL",
+					"parent": "armorLeftLeg",
+					"pivot": [
+						2,
+						12,
+						0
+					],
+					"cubes": [
+						{
+							"origin": [
+								-0.2,
+								6.5,
+								-2.2
+							],
+							"size": [
+								4.4,
+								5.5,
+								4.4
+							],
+							"uv": {
+								"north": {
+									"uv": [
+										72,
+										0
+									],
+									"uv_size": [
+										35,
+										44
+									]
+								},
+								"east": {
+									"uv": [
+										72,
+										44
+									],
+									"uv_size": [
+										35,
+										44
+									]
+								},
+								"south": {
+									"uv": [
+										72,
+										88
+									],
+									"uv_size": [
+										35,
+										44
+									]
+								},
+								"west": {
+									"uv": [
+										72,
+										132
+									],
+									"uv_size": [
+										35,
+										44
+									]
+								},
+								"up": {
+									"uv": [
+										72,
+										176
+									],
+									"uv_size": [
+										8,
+										8
+									]
+								},
+								"down": {
+									"uv": [
+										72,
+										184
+									],
+									"uv_size": [
+										8,
+										8
+									]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "legwearCuffFootL",
+					"parent": "armorLeftLeg",
+					"pivot": [
+						2,
+						12,
+						0
+					],
+					"cubes": [
+						{
+							"origin": [
+								-0.45,
+								2.35,
+								-2.45
+							],
+							"size": [
+								4.9,
+								0.7,
+								4.9
+							],
+							"uv": {
+								"north": {
+									"uv": [
+										0,
+										112
+									],
+									"uv_size": [
+										39,
+										5
+									]
+								},
+								"east": {
+									"uv": [
+										0,
+										117
+									],
+									"uv_size": [
+										39,
+										5
+									]
+								},
+								"south": {
+									"uv": [
+										0,
+										122
+									],
+									"uv_size": [
+										39,
+										5
+									]
+								},
+								"west": {
+									"uv": [
+										0,
+										127
+									],
+									"uv_size": [
+										39,
+										5
+									]
+								},
+								"up": {
+									"uv": [
+										0,
+										132
+									],
+									"uv_size": [
+										8,
+										8
+									]
+								},
+								"down": {
+									"uv": [
+										0,
+										140
+									],
+									"uv_size": [
+										8,
+										8
+									]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "legwearCuffCalfL",
+					"parent": "armorLeftLeg",
+					"pivot": [
+						2,
+						12,
+						0
+					],
+					"cubes": [
+						{
+							"origin": [
+								-0.45,
+								5.85,
+								-2.45
+							],
+							"size": [
+								4.9,
+								0.7,
+								4.9
+							],
+							"uv": {
+								"north": {
+									"uv": [
+										36,
+										128
+									],
+									"uv_size": [
+										39,
+										5
+									]
+								},
+								"east": {
+									"uv": [
+										36,
+										133
+									],
+									"uv_size": [
+										39,
+										5
+									]
+								},
+								"south": {
+									"uv": [
+										36,
+										138
+									],
+									"uv_size": [
+										39,
+										5
+									]
+								},
+								"west": {
+									"uv": [
+										36,
+										143
+									],
+									"uv_size": [
+										39,
+										5
+									]
+								},
+								"up": {
+									"uv": [
+										36,
+										148
+									],
+									"uv_size": [
+										8,
+										8
+									]
+								},
+								"down": {
+									"uv": [
+										36,
+										156
+									],
+									"uv_size": [
+										8,
+										8
+									]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "bipedRightLeg",
+					"pivot": [
+						-2,
+						12,
+						0
+					]
+				},
+				{
+					"name": "armorRightLeg",
+					"parent": "bipedRightLeg",
+					"pivot": [
+						-2,
+						12,
+						0
+					]
+				},
+				{
+					"name": "legwearFootR",
+					"parent": "armorRightLeg",
+					"pivot": [
+						-2,
+						12,
+						0
+					],
+					"cubes": [
+						{
+							"origin": [
+								-4.2,
+								-0.05,
+								-2.2
+							],
+							"size": [
+								4.4,
+								3.05,
+								4.4
+							],
+							"uv": {
+								"north": {
+									"uv": [
+										0,
+										0
+									],
+									"uv_size": [
+										35,
+										24
+									]
+								},
+								"east": {
+									"uv": [
+										0,
+										24
+									],
+									"uv_size": [
+										35,
+										24
+									]
+								},
+								"south": {
+									"uv": [
+										0,
+										48
+									],
+									"uv_size": [
+										35,
+										24
+									]
+								},
+								"west": {
+									"uv": [
+										0,
+										72
+									],
+									"uv_size": [
+										35,
+										24
+									]
+								},
+								"up": {
+									"uv": [
+										0,
+										96
+									],
+									"uv_size": [
+										8,
+										8
+									]
+								},
+								"down": {
+									"uv": [
+										0,
+										104
+									],
+									"uv_size": [
+										8,
+										8
+									]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "legwearCalfR",
+					"parent": "armorRightLeg",
+					"pivot": [
+						-2,
+						12,
+						0
+					],
+					"cubes": [
+						{
+							"origin": [
+								-4.2,
+								3.0,
+								-2.2
+							],
+							"size": [
+								4.4,
+								3.5,
+								4.4
+							],
+							"uv": {
+								"north": {
+									"uv": [
+										36,
+										0
+									],
+									"uv_size": [
+										35,
+										28
+									]
+								},
+								"east": {
+									"uv": [
+										36,
+										28
+									],
+									"uv_size": [
+										35,
+										28
+									]
+								},
+								"south": {
+									"uv": [
+										36,
+										56
+									],
+									"uv_size": [
+										35,
+										28
+									]
+								},
+								"west": {
+									"uv": [
+										36,
+										84
+									],
+									"uv_size": [
+										35,
+										28
+									]
+								},
+								"up": {
+									"uv": [
+										36,
+										112
+									],
+									"uv_size": [
+										8,
+										8
+									]
+								},
+								"down": {
+									"uv": [
+										36,
+										120
+									],
+									"uv_size": [
+										8,
+										8
+									]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "legwearThighR",
+					"parent": "armorRightLeg",
+					"pivot": [
+						-2,
+						12,
+						0
+					],
+					"cubes": [
+						{
+							"origin": [
+								-4.2,
+								6.5,
+								-2.2
+							],
+							"size": [
+								4.4,
+								5.5,
+								4.4
+							],
+							"uv": {
+								"north": {
+									"uv": [
+										72,
+										0
+									],
+									"uv_size": [
+										35,
+										44
+									]
+								},
+								"east": {
+									"uv": [
+										72,
+										44
+									],
+									"uv_size": [
+										35,
+										44
+									]
+								},
+								"south": {
+									"uv": [
+										72,
+										88
+									],
+									"uv_size": [
+										35,
+										44
+									]
+								},
+								"west": {
+									"uv": [
+										72,
+										132
+									],
+									"uv_size": [
+										35,
+										44
+									]
+								},
+								"up": {
+									"uv": [
+										72,
+										176
+									],
+									"uv_size": [
+										8,
+										8
+									]
+								},
+								"down": {
+									"uv": [
+										72,
+										184
+									],
+									"uv_size": [
+										8,
+										8
+									]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "legwearCuffFootR",
+					"parent": "armorRightLeg",
+					"pivot": [
+						-2,
+						12,
+						0
+					],
+					"cubes": [
+						{
+							"origin": [
+								-4.45,
+								2.35,
+								-2.45
+							],
+							"size": [
+								4.9,
+								0.7,
+								4.9
+							],
+							"uv": {
+								"north": {
+									"uv": [
+										0,
+										112
+									],
+									"uv_size": [
+										39,
+										5
+									]
+								},
+								"east": {
+									"uv": [
+										0,
+										117
+									],
+									"uv_size": [
+										39,
+										5
+									]
+								},
+								"south": {
+									"uv": [
+										0,
+										122
+									],
+									"uv_size": [
+										39,
+										5
+									]
+								},
+								"west": {
+									"uv": [
+										0,
+										127
+									],
+									"uv_size": [
+										39,
+										5
+									]
+								},
+								"up": {
+									"uv": [
+										0,
+										132
+									],
+									"uv_size": [
+										8,
+										8
+									]
+								},
+								"down": {
+									"uv": [
+										0,
+										140
+									],
+									"uv_size": [
+										8,
+										8
+									]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "legwearCuffCalfR",
+					"parent": "armorRightLeg",
+					"pivot": [
+						-2,
+						12,
+						0
+					],
+					"cubes": [
+						{
+							"origin": [
+								-4.45,
+								5.85,
+								-2.45
+							],
+							"size": [
+								4.9,
+								0.7,
+								4.9
+							],
+							"uv": {
+								"north": {
+									"uv": [
+										36,
+										128
+									],
+									"uv_size": [
+										39,
+										5
+									]
+								},
+								"east": {
+									"uv": [
+										36,
+										133
+									],
+									"uv_size": [
+										39,
+										5
+									]
+								},
+								"south": {
+									"uv": [
+										36,
+										138
+									],
+									"uv_size": [
+										39,
+										5
+									]
+								},
+								"west": {
+									"uv": [
+										36,
+										143
+									],
+									"uv_size": [
+										39,
+										5
+									]
+								},
+								"up": {
+									"uv": [
+										36,
+										148
+									],
+									"uv_size": [
+										8,
+										8
+									]
+								},
+								"down": {
+									"uv": [
+										36,
+										156
+									],
+									"uv_size": [
+										8,
+										8
+									]
+								}
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}

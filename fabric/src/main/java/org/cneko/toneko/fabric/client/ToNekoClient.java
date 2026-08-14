@@ -20,8 +20,10 @@ import org.cneko.toneko.common.mod.client.renderers.ShengDengBewlr;
 import org.cneko.toneko.common.mod.client.events.ClientNetworkEvents;
 import org.cneko.toneko.common.mod.client.events.ClientPlayerJoinEvent;
 import org.cneko.toneko.common.mod.client.events.ClientTickEvent;
+import org.cneko.toneko.common.mod.client.events.LegwearRustleHandler;
 import org.cneko.toneko.common.mod.entities.*;
 import org.cneko.toneko.common.mod.entities.boss.mouflet.MoufletNekoBoss;
+import org.cneko.toneko.fabric.client.items.LegwearTrinketsRenderer;
 import org.cneko.toneko.fabric.client.items.NekoArmorTrinketsRenderer;
 import org.cneko.toneko.fabric.items.ToNekoItems;
 
@@ -33,9 +35,11 @@ public class ToNekoClient implements ClientModInitializer {
         ClientTickEvent.init();
         ClientPlayerJoinEvent.init();
         HudRenderEvent.init();
+        LegwearRustleHandler.init();
         // 注册trinkets渲染器
         if (ToNekoItems.isTrinketsInstalled){
             Minecraft.getInstance().execute(NekoArmorTrinketsRenderer::init);
+            Minecraft.getInstance().execute(LegwearTrinketsRenderer::init);
         }
         EntityRendererRegistry.register(ToNekoEntities.ADVENTURER_NEKO, (EntityRendererProvider<? super AdventurerNeko>) NekoRenderer::new);
         EntityRendererRegistry.register(ToNekoEntities.CRYSTAL_NEKO, (EntityRendererProvider<? super CrystalNekoEntity>) NekoRenderer::new);

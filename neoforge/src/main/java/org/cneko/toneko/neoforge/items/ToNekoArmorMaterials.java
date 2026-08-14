@@ -20,6 +20,7 @@ import static org.cneko.toneko.common.Bootstrap.MODID;
 
 public class ToNekoArmorMaterials {
     public static DeferredHolder<ArmorMaterial,ArmorMaterial> NEKO;
+    public static DeferredHolder<ArmorMaterial,ArmorMaterial> LEGWEAR;
     public static void init(){
         // 如果启用了仅服务器端，则不注册物品
         registerWithOutConfig();
@@ -42,6 +43,18 @@ public class ToNekoArmorMaterials {
                 true // 猫尾巴可以染色吗?当然可以啦,但是现在技术还不够呢,求原谅
         );
 
+        LEGWEAR = register(
+                "legwear",
+                Map.of(
+                        ArmorItem.Type.LEGGINGS, 1 // 丝袜：象征性的 1 点防御
+                ),
+                15, // 可以附魔
+                SoundEvents.ARMOR_EQUIP_LEATHER, // 皮革摩擦声比较贴切
+                () -> Ingredient.of(TagKey.create(BuiltInRegistries.ITEM.key(), ResourceLocation.fromNamespaceAndPath("c","wool"))), //wooooooooool
+                0F, // 丝袜当然吸收不了伤害啦
+                0F, // 也抵御不了击退
+                true // 丝袜必须在染色缸里染色！
+        );
 
     }
 

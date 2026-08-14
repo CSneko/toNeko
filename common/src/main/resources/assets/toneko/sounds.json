@@ -20,28 +20,73 @@
   "item.bazooka.biu": {
     "category": "master",
     "sounds": [
-      {"name": "toneko:item/bazooka/biu/biu0"},
-      {"name": "toneko:item/bazooka/biu/biu1"},
-      {"name": "toneko:item/bazooka/biu/biu2"},
-      {"name": "toneko:item/bazooka/biu/biu3"},
-      {"name": "toneko:item/bazooka/biu/biu4"},
-      {"name": "toneko:item/bazooka/biu/biu5"}
+      {
+        "name": "toneko:item/bazooka/biu/biu0"
+      },
+      {
+        "name": "toneko:item/bazooka/biu/biu1"
+      },
+      {
+        "name": "toneko:item/bazooka/biu/biu2"
+      },
+      {
+        "name": "toneko:item/bazooka/biu/biu3"
+      },
+      {
+        "name": "toneko:item/bazooka/biu/biu4"
+      },
+      {
+        "name": "toneko:item/bazooka/biu/biu5"
+      }
     ]
   },
   "item.bazooka.meow": {
     "category": "master",
     "sounds": [
-      {"name": "toneko:item/bazooka/meow/meow0"},
-      {"name": "toneko:item/bazooka/meow/meow1"},
-      {"name": "toneko:item/bazooka/meow/meow2"},
-      {"name": "toneko:item/bazooka/meow/meow3"},
-      {"name": "toneko:item/bazooka/meow/meow4"}
+      {
+        "name": "toneko:item/bazooka/meow/meow0"
+      },
+      {
+        "name": "toneko:item/bazooka/meow/meow1"
+      },
+      {
+        "name": "toneko:item/bazooka/meow/meow2"
+      },
+      {
+        "name": "toneko:item/bazooka/meow/meow3"
+      },
+      {
+        "name": "toneko:item/bazooka/meow/meow4"
+      }
     ]
   },
   "entity.neko.alarm": {
     "category": "hostile",
     "sounds": [
-      {"name": "toneko:entity/neko/alarm0", "volume": 0.8}
+      {
+        "name": "toneko:entity/neko/alarm0",
+        "volume": 0.8
+      }
+    ]
+  },
+  "item.legwear.rustle": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "toneko:item/legwear/rustle/rustle0"
+      },
+      {
+        "name": "toneko:item/legwear/rustle/rustle1"
+      },
+      {
+        "name": "toneko:item/legwear/rustle/rustle2"
+      },
+      {
+        "name": "toneko:item/legwear/rustle/rustle3"
+      },
+      {
+        "name": "toneko:item/legwear/rustle/rustle4"
+      }
     ]
   }
 }

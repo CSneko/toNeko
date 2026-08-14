@@ -19,6 +19,7 @@ import org.cneko.toneko.common.mod.client.ToNekoKeyBindings;
 import org.cneko.toneko.common.mod.client.events.ClientNetworkEvents;
 import org.cneko.toneko.common.mod.client.events.ClientPlayerJoinEvent;
 import org.cneko.toneko.common.mod.client.events.ClientTickEvent;
+import org.cneko.toneko.common.mod.client.events.LegwearRustleHandler;
 import org.cneko.toneko.common.mod.client.events.HudRenderEvent;
 import org.cneko.toneko.common.mod.client.renderers.AmmunitionRenderer;
 import org.cneko.toneko.common.mod.client.renderers.FlySwordRenderer;
@@ -46,6 +47,7 @@ public class ToNekoNeoForgeClient {
         ClientPlayerJoinEvent.init();
         ClientTickEvent.init();
         HudRenderEvent.init();
+        LegwearRustleHandler.init();
         ToNekoKeyBindings.init();
         container.registerExtensionPoint(IConfigScreenFactory.class, (a,b)->new ConfigScreen());
 
