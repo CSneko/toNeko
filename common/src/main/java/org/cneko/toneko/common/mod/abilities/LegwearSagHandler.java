@@ -6,6 +6,7 @@ import net.minecraft.world.item.ItemStack;
 import org.cneko.toneko.common.mod.items.LegwearItem;
 import org.cneko.toneko.common.mod.misc.LegwearUtil;
 import org.cneko.toneko.common.mod.misc.ToNekoComponents;
+import org.cneko.toneko.common.mod.misc.WetnessUtil;
 import org.cneko.toneko.common.util.ConfigUtil;
 
 /**
@@ -33,13 +34,20 @@ public class LegwearSagHandler {
             // 只处理自然高度及以下：玩家用工作台把袜口拉高到接近连裤袜时不再下滑
             if (length > LegwearItem.OverKneeSockItem.NATURAL_TOP) continue;
 
+            // 湿袜贴腿：湿度越高滑落/回弹越慢（湿透时几乎定住）
+            int wetness = WetnessUtil.get(legwear);
+            float wetSlowdown = ConfigUtil.getLegwearSagWetSlowdown();
+            float wetFactor = wetSlowdown > 0 && wetness > 0
+                    ? 1.0f - wetSlowdown * (wetness / (float) WetnessUtil.MAX_WETNESS)
+                    : 1.0f;
+
             boolean moving = player.onGround()
                     && player.getDeltaMovement().horizontalDistanceSqr() > 0.0025
                     && !player.isSwimming() && !player.isFallFlying();
 
             float next = moving
-                    ? Math.max(min, length - decay)
-                    : Math.min(LegwearItem.OverKneeSockItem.NATURAL_TOP, length + recover);
+                    ? Math.max(min, length - decay * wetFactor)
+                    : Math.min(LegwearItem.OverKneeSockItem.NATURAL_TOP, length + recover * wetFactor);
 
             if (Math.abs(next - length) > 1e-4f) {
                 legwear.set(ToNekoComponents.LEGWEAR_LENGTH_COMPONENT, next);

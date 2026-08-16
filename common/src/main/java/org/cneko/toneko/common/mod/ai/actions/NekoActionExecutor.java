@@ -28,6 +28,7 @@ import org.cneko.toneko.common.mod.api.EntityPoseManager;
 import org.cneko.toneko.common.mod.entities.NekoInventory;
 import org.cneko.toneko.common.mod.items.LegwearItem;
 import org.cneko.toneko.common.mod.items.ToNekoItems;
+import org.cneko.toneko.common.mod.misc.LegwearUtil;
 import org.cneko.toneko.common.mod.misc.Messaging;
 import org.cneko.toneko.common.mod.misc.ToNekoComponents;
 import org.cneko.toneko.common.mod.util.EntityUtil;
@@ -799,6 +800,29 @@ public class NekoActionExecutor {
             public String getGuideLine() {
                 return "{\"action\": \"wear_legwear\"} - "
                         + LanguageUtil.translatable("misc.toneko.ai.actions.guide.wear_legwear");
+            }
+        });
+        // 闻丝袜：猫娘走向对方，贴脸后害羞地凑近腿部嗅闻（害羞动画 + 爱心粒子）
+        register("sniff_legwear", new NekoActionHandler() {
+            @Override
+            public boolean handle(NekoEntity neko, ServerPlayer speaker, LivingEntity target, NekoAction action) {
+                ItemStack legwear = LegwearUtil.getWornLegwear(target);
+                if (!LegwearItem.isLegwear(legwear)) return false;
+                scheduleWalkToArrive(neko, target, () -> {
+                    neko.playExpressAnim("shy");
+                    neko.getLookControl().setLookAt(target.getX(), target.getY() + 0.5, target.getZ());
+                    ServerLevel level = (ServerLevel) neko.level();
+                    level.sendParticles(ParticleTypes.HEART,
+                            neko.getX(), neko.getY() + 1.0, neko.getZ(), 6, 0.4, 0.4, 0.4, 0.1);
+                    level.playSound(null, neko.getX(), neko.getY(), neko.getZ(),
+                            SoundEvents.CAT_AMBIENT, neko.getSoundSource(), 1.0f, 1.0f);
+                });
+                return true;
+            }
+            @Override
+            public String getGuideLine() {
+                return "{\"action\": \"sniff_legwear\", \"target\": \"Steve\"} - "
+                        + LanguageUtil.translatable("misc.toneko.ai.actions.guide.sniff_legwear");
             }
         });
     }

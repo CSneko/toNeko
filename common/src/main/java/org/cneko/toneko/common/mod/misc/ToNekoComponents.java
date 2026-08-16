@@ -6,8 +6,10 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.DyedItemColor;
 import org.cneko.toneko.common.mod.codecs.CountCodecs;
+import org.cneko.toneko.common.mod.codecs.Scent;
 
 import static org.cneko.toneko.common.Bootstrap.MODID;
 
@@ -71,6 +73,36 @@ public class ToNekoComponents {
             DataComponentType.<String>builder()
                     .persistent(Codec.STRING)
                     .networkSynchronized(ByteBufCodecs.STRING_UTF8)
+                    .build()
+    );
+
+    // 丝袜气味（intensity 0~100 + wearer 最近穿着者）；networkSynchronized 必配
+    public static final DataComponentType<Scent> LEGWEAR_SCENT_COMPONENT = Registry.register(
+            BuiltInRegistries.DATA_COMPONENT_TYPE,
+            ResourceLocation.fromNamespaceAndPath(MODID, "legwear_scent"),
+            DataComponentType.<Scent>builder()
+                    .persistent(Scent.CODEC)
+                    .networkSynchronized(Scent.STREAM_CODEC)
+                    .build()
+    );
+
+    // 丝袜湿度（0~100，水缸/雨水/游泳沾湿，随时间风干）
+    public static final DataComponentType<Integer> LEGWEAR_WET_COMPONENT = Registry.register(
+            BuiltInRegistries.DATA_COMPONENT_TYPE,
+            ResourceLocation.fromNamespaceAndPath(MODID, "legwear_wet"),
+            DataComponentType.<Integer>builder()
+                    .persistent(Codec.INT)
+                    .networkSynchronized(ByteBufCodecs.VAR_INT)
+                    .build()
+    );
+
+    // 晾衣架内容（挂着的腿部服饰；空栈=未挂）
+    public static final DataComponentType<ItemStack> CLOTHESLINE_CONTENT = Registry.register(
+            BuiltInRegistries.DATA_COMPONENT_TYPE,
+            ResourceLocation.fromNamespaceAndPath(MODID, "clothesline_content"),
+            DataComponentType.<ItemStack>builder()
+                    .persistent(ItemStack.OPTIONAL_CODEC)
+                    .networkSynchronized(ItemStack.OPTIONAL_STREAM_CODEC)
                     .build()
     );
 }

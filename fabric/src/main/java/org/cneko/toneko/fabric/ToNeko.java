@@ -74,6 +74,7 @@ public class ToNeko implements ModInitializer {
         ToNekoArmorMaterials.init();
         // 注册物品
         ToNekoBlocks.init();
+        ToNekoBlockEntities.init();
         ToNekoItems.init();
         // 注册箱子战利品注入
         ChestLootInjection.init();

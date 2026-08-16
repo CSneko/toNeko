@@ -1,6 +1,6 @@
 {
-  "parent": "minecraft:item/generated",
+  "parent": "toneko:item/legwear_3d",
   "textures": {
-    "layer0": "toneko:item/legwear_pantyhose"
+    "particle": "toneko:item/legwear_pantyhose"
   }
 }

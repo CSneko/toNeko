@@ -25,6 +25,7 @@ public class ToNekoKeyBindings {
     public static KeyMapping STEALTH_KEY;
     public static KeyMapping PULL_UP_LEGWEAR_KEY;
     public static KeyMapping GIFT_CONFIRM_KEY;
+    public static KeyMapping STOMP_KEY;
 
     public static void init(){
         LIE_KEY = KeyBindingHelper.registerKeyBinding(
@@ -176,6 +177,14 @@ public class ToNekoKeyBindings {
                         "key.toneko.gift_confirm",
                         InputConstants.Type.KEYSYM,
                         GLFW.GLFW_KEY_H,
+                        "key.toneko.lie.category"
+                )
+        );
+        STOMP_KEY = KeyBindingHelper.registerKeyBinding(
+                new KeyMapping(
+                        "key.toneko.stomp",
+                        InputConstants.Type.KEYSYM,
+                        GLFW.GLFW_KEY_B,
                         "key.toneko.lie.category"
                 )
         );

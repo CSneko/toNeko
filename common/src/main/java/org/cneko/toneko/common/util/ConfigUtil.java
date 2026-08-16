@@ -208,66 +208,70 @@ public class ConfigUtil {
             .addBoolean("client.neko_armor.display", true, null,
                     "显示猫娘身上的盔甲（含丝袜）。猫娘捡起/被赠送/AI 穿上的盔甲会渲染出来",
                     "Display armor (including legwear) worn by nekos. Armor picked up/gifted/AI-worn by nekos will be rendered")
-            // ===== 绝对领域光环 =====
-            .addBoolean("aura.legwear.enable", true, null,
-                    "绝对领域光环：玩家穿着丝袜（领域 B 级及以上）时，周围敌对生物被魅惑减速；纯增益无负面",
-                    "Zettai Ryouiki aura: players wearing legwear (grade B+) charm and slow nearby hostile mobs; pure buff, no downside")
-            .addFloat("aura.legwear.radius", 8.0f, null,
-                    "光环半径（格）",
-                    "Aura radius (blocks)")
-            .addFloat("aura.legwear.interval_seconds", 2.0f, null,
-                    "施加间隔（秒）",
-                    "Effect apply interval (seconds)")
-            .addFloat("aura.legwear.effect_duration_seconds", 5.0f, null,
-                    "魅惑效果持续（秒，需大于施加间隔）",
-                    "Charm effect duration (seconds, must exceed apply interval)")
-            // ===== 魅力值 / 脸红偷看 =====
-            .addBoolean("charm.enable", true, null,
-                    "魅力值系统：穿着丝袜时按领域等级/D值/染色计算魅力，影响猫娘脸红偷看与被动好感",
-                    "Charm system: legwear wearers gain a charm score from zettai ryouiki grade/denier/dye, affecting neko blush & passive affection")
-            .addString("charm.high_threshold", "50", null,
-                    "高魅力门槛（魅力分 ≥ 此值触发脸红偷看/被动好感）",
-                    "High-charm threshold (charm score >= this triggers blush & passive affection)")
-            .addBoolean("charm.affection.enable", false, null,
-                    "被动好感：高魅力玩家附近的其主人猫娘缓慢增长好感（默认关闭防通胀）",
-                    "Passive affection: nekos owned by a high-charm nearby player slowly gain affection (off by default to avoid inflation)")
-            .addFloat("charm.affection.interval_seconds", 300.0f, null,
-                    "被动好感增长间隔（秒）",
-                    "Passive affection interval (seconds)")
-            .addFloat("charm.affection.radius", 16.0f, null,
-                    "被动好感检测半径（格）",
-                    "Passive affection radius (blocks)")
-            .addString("charm.affection.amount", "1", null,
-                    "每次被动好感增量",
-                    "Passive affection amount per interval")
-            .addString("charm.affection.max", "100", null,
-                    "被动好感上限（0=不限制）",
-                    "Passive affection cap (0 = unlimited)")
-            .addBoolean("charm.blush.enable", true, null,
-                    "脸红偷看：高魅力玩家附近猫娘害羞动画+爱心粒子+偷瞄（纯视觉，零token）",
-                    "Blush & peek: nekos near a high-charm player play shy anim + heart particles + glance (visual only, no token cost)")
-            .addFloat("charm.blush.interval_seconds", 20.0f, null,
-                    "每只猫娘脸红的最小间隔（秒）",
-                    "Min interval between each neko's blush (seconds)")
-            .addFloat("charm.blush.radius", 16.0f, null,
-                    "脸红检测半径（格）",
-                    "Blush detection radius (blocks)")
-            // ===== 袜子滑落 =====
+            // ===== 丝袜 / 腿部服饰 =====
+            .addBoolean("legwear.aura.enable", true, null,
+                    "绝对领域光环：穿着丝袜（领域 B 级及以上）时魅惑减速周围敌对生物",
+                    "Zettai Ryouiki aura: legwear wearers (grade B+) charm and slow nearby hostile mobs")
+            .addBoolean("legwear.charm.enable", true, null,
+                    "魅力值系统：按领域等级/D值/染色/湿度计算魅力，影响猫娘脸红偷看与被动好感",
+                    "Charm system: charm score from territory grade/denier/dye/wetness, affecting neko blush & passive affection")
+            .addString("legwear.charm.high_threshold", "50", null,
+                    "高魅力门槛",
+                    "High-charm threshold")
+            .addBoolean("legwear.charm.affection.enable", false, null,
+                    "被动好感：高魅力玩家附近的其主人猫娘缓慢增长好感",
+                    "Passive affection: nekos owned by a high-charm nearby player slowly gain affection")
+            .addBoolean("legwear.charm.blush.enable", true, null,
+                    "脸红偷看：高魅力玩家附近猫娘害羞动画+爱心粒子+偷瞄",
+                    "Blush & peek: nekos near a high-charm player play shy anim + heart particles + glance")
             .addBoolean("legwear.sag.enable", true, null,
                     "过膝袜滑落：移动时袜口下滑、静止回弹，可按键提袜复位",
-                    "Over-knee sagging: sock top slides down while moving, recovers when still, pull-up key to reset")
-            .addFloat("legwear.sag.decay_per_tick", 0.0005f, null,
-                    "移动时每 tick 袜口下滑量（0~1）",
-                    "Sock-top decay per tick while moving (0~1)")
-            .addFloat("legwear.sag.recover_per_tick", 0.001f, null,
-                    "静止时每 tick 袜口回弹量（0~1）",
-                    "Sock-top recovery per tick while still (0~1)")
-            .addFloat("legwear.sag.min_length", 0.4f, null,
-                    "袜口下滑下限（0~1）",
-                    "Sock-top sag minimum (0~1)")
-            .addFloat("legwear.sag.pullup_cooldown_seconds", 2.0f, null,
-                    "提袜冷却（秒）",
-                    "Pull-up cooldown (seconds)")
+                    "Over-knee sagging: sock top slides down while moving, recovers when still")
+            .addFloat("legwear.sag.wet_slowdown", 0.9f, null,
+                    "湿袜贴腿：湿度越高滑落与回弹越慢（0~1）",
+                    "Wet legwear clings: higher wetness slows sagging and recovery (0~1)")
+            .addBoolean("legwear.scent.enable", true, null,
+                    "气味系统：穿着丝袜随时间积累气味，可潜行右键闻，猫娘会嗅闻",
+                    "Scent system: worn legwear accumulates scent over time; sniff with sneak-right-click")
+            .addFloat("legwear.scent.base_rate", 0.003f, null,
+                    "气味积累速率（每tick，步行时）",
+                    "Scent accumulation rate (per tick, while walking)")
+            .addBoolean("legwear.scent.neko_sniff.enable", true, null,
+                    "猫娘嗅闻：高气味玩家附近猫娘害羞动画+爱心粒子+偷瞄",
+                    "Neko sniff: nekos near high-scent players play shy anim + heart particles + glance")
+            .addBoolean("legwear.scent.detect.enable", true, null,
+                    "气味感知：附近有有气味的丝袜时玩家动作栏收到提示",
+                    "Scent detection: players near scented legwear get an action-bar hint")
+            .addBoolean("legwear.scent.wolf_tracking.enable", true, null,
+                    "狼犬追踪：高气味玩家会被附近的野生狼追踪（风险）",
+                    "Wolf tracking: wild wolves track high-scent players (risk)")
+            .addBoolean("legwear.scent.zombie_attract", true, null,
+                    "亡灵被浓郁气味吸引（僵尸/尸壳/溺尸）",
+                    "Undead are drawn to strong scent (zombie/husk/drowned)")
+            .addBoolean("legwear.scent.cat_attract", true, null,
+                    "猫被气味吸引靠近",
+                    "Cats are drawn to the scent")
+            .addBoolean("legwear.scent.animal_repel", true, null,
+                    "家畜被气味驱赶",
+                    "Livestock are repelled by the scent")
+            .addBoolean("legwear.scent.villager_repel", true, null,
+                    "村民被气味驱赶",
+                    "Villagers are repelled by the scent")
+            .addBoolean("legwear.scent.spider_repel", true, null,
+                    "昆虫被气味驱赶（蜘蛛/蠹虫）",
+                    "Arachnids and insects are repelled (spider/silverfish)")
+            .addBoolean("legwear.wetness.enable", true, null,
+                    "湿度系统：雨水/游泳/水缸沾湿丝袜，湿透透肉并影响魅力与气味",
+                    "Wetness system: rain/swimming/cauldron wet the legwear; soaked stockings show skin")
+            .addBoolean("legwear.clothesline.enable", true, null,
+                    "晾衣架：挂 1 件丝袜，自然晾干/火源快干/下雨反湿/干燥散味",
+                    "Clothesline: hang 1 legwear to air-dry; fire dries faster; rain re-wets")
+            .addFloat("legwear.clothesline.dry_per_second", 0.3f, null,
+                    "自然晾干速率（每秒降的湿度）",
+                    "Natural drying rate (wetness per second)")
+            .addFloat("legwear.clothesline.air_scent_decay_per_second", 0.02f, null,
+                    "干燥自然散味速率（每秒降的气味）",
+                    "Natural scent decay rate (scent per second, when dry)")
             .build();
     public static JsonConfiguration CONFIG = CONFIG_BUILDER.createConfig();
 
@@ -505,39 +509,72 @@ public class ConfigUtil {
     private static float clampConfig(float v, float def) { return v > 0 ? v : def; }
 
     // ===== 绝对领域光环 =====
-    public static boolean isZettaiRyouikiAuraEnabled() { return CONFIG.getBoolean("aura.legwear.enable"); }
-    public static float getZettaiRyouikiAuraRadius() { return CONFIG.getFloat("aura.legwear.radius"); }
-    public static int getZettaiRyouikiAuraIntervalTicks() {
-        return Math.max(1, (int) (CONFIG.getFloat("aura.legwear.interval_seconds") * 20));
-    }
-    public static int getZettaiRyouikiAuraDurationTicks() {
-        return Math.max(1, (int) (CONFIG.getFloat("aura.legwear.effect_duration_seconds") * 20));
-    }
+    public static boolean isZettaiRyouikiAuraEnabled() { return CONFIG.getBoolean("legwear.aura.enable"); }
+    public static float getZettaiRyouikiAuraRadius() { return 8.0f; }
+    public static int getZettaiRyouikiAuraIntervalTicks() { return 40; }
+    public static int getZettaiRyouikiAuraDurationTicks() { return 100; }
 
     // ===== 魅力值 / 脸红偷看 =====
-    public static boolean isCharmEnabled() { return CONFIG.getBoolean("charm.enable"); }
-    public static int getCharmHighThreshold() { return CONFIG.getInt("charm.high_threshold"); }
-    public static boolean isCharmAffectionEnabled() { return CONFIG.getBoolean("charm.affection.enable"); }
-    public static int getCharmAffectionIntervalTicks() {
-        return Math.max(1, (int) (CONFIG.getFloat("charm.affection.interval_seconds") * 20));
-    }
-    public static float getCharmAffectionRadius() { return CONFIG.getFloat("charm.affection.radius"); }
-    public static int getCharmAffectionAmount() { return CONFIG.getInt("charm.affection.amount"); }
-    public static int getCharmAffectionMax() { return CONFIG.getInt("charm.affection.max"); }
-    public static boolean isCharmBlushEnabled() { return CONFIG.getBoolean("charm.blush.enable"); }
-    public static int getCharmBlushIntervalTicks() {
-        return Math.max(1, (int) (CONFIG.getFloat("charm.blush.interval_seconds") * 20));
-    }
-    public static float getCharmBlushRadius() { return CONFIG.getFloat("charm.blush.radius"); }
+    public static boolean isCharmEnabled() { return CONFIG.getBoolean("legwear.charm.enable"); }
+    public static int getCharmHighThreshold() { return CONFIG.getInt("legwear.charm.high_threshold"); }
+    public static boolean isCharmAffectionEnabled() { return CONFIG.getBoolean("legwear.charm.affection.enable"); }
+    public static int getCharmAffectionIntervalTicks() { return 6000; }
+    public static float getCharmAffectionRadius() { return 16.0f; }
+    public static int getCharmAffectionAmount() { return 1; }
+    public static int getCharmAffectionMax() { return 100; }
+    public static boolean isCharmBlushEnabled() { return CONFIG.getBoolean("legwear.charm.blush.enable"); }
+    public static int getCharmBlushIntervalTicks() { return 400; }
+    public static float getCharmBlushRadius() { return 16.0f; }
 
     // ===== 袜子滑落 =====
     public static boolean isLegwearSagEnabled() { return CONFIG.getBoolean("legwear.sag.enable"); }
-    public static float getLegwearSagDecayPerTick() { return CONFIG.getFloat("legwear.sag.decay_per_tick"); }
-    public static float getLegwearSagRecoverPerTick() { return CONFIG.getFloat("legwear.sag.recover_per_tick"); }
-    public static float getLegwearSagMinLength() { return CONFIG.getFloat("legwear.sag.min_length"); }
-    public static int getLegwearSagPullupCooldownTicks() {
-        return Math.max(0, (int) (CONFIG.getFloat("legwear.sag.pullup_cooldown_seconds") * 20));
-    }
+    public static float getLegwearSagDecayPerTick() { return 0.0005f; }
+    public static float getLegwearSagRecoverPerTick() { return 0.001f; }
+    public static float getLegwearSagMinLength() { return 0.4f; }
+    public static int getLegwearSagPullupCooldownTicks() { return 40; }
+    public static float getLegwearSagWetSlowdown() { return CONFIG.getFloat("legwear.sag.wet_slowdown"); }
+
+    // ===== 气味 =====
+    public static boolean isScentEnabled() { return CONFIG.getBoolean("legwear.scent.enable"); }
+    public static float getScentBaseRate() { return CONFIG.getFloat("legwear.scent.base_rate"); }
+    public static float getScentIdleFactor() { return 0.4f; }
+    public static float getScentSprintFactor() { return 1.6f; }
+    public static float getScentWetFactor() { return 1.8f; }
+    public static float getScentWashRate() { return 0.004f; }
+    public static float getScentThickFactor() { return 1.5f; }
+    public static float getScentThinFactor() { return 0.7f; }
+    public static boolean isScentTemperatureEffect() { return true; }
+    public static boolean isScentNekoSniffEnabled() { return CONFIG.getBoolean("legwear.scent.neko_sniff.enable"); }
+    public static float getScentNekoSniffRadius() { return 12.0f; }
+    public static int getScentNekoSniffIntervalTicks() { return 600; }
+    public static int getScentNekoSniffThreshold() { return 40; }
+    public static boolean isScentDetectEnabled() { return CONFIG.getBoolean("legwear.scent.detect.enable"); }
+    public static float getScentDetectRadius() { return 6.0f; }
+    public static int getScentDetectThreshold() { return 40; }
+    public static int getScentDetectCooldownTicks() { return 200; }
+    public static boolean isScentWolfTrackingEnabled() { return CONFIG.getBoolean("legwear.scent.wolf_tracking.enable"); }
+    public static float getScentWolfTrackingRadius() { return 24.0f; }
+    public static int getScentWolfTrackingThreshold() { return 60; }
+    public static boolean isScentZombieAttractEnabled() { return CONFIG.getBoolean("legwear.scent.zombie_attract"); }
+    public static boolean isScentCatAttractEnabled() { return CONFIG.getBoolean("legwear.scent.cat_attract"); }
+    public static boolean isScentAnimalRepelEnabled() { return CONFIG.getBoolean("legwear.scent.animal_repel"); }
+    public static boolean isScentVillagerRepelEnabled() { return CONFIG.getBoolean("legwear.scent.villager_repel"); }
+    public static boolean isScentSpiderRepelEnabled() { return CONFIG.getBoolean("legwear.scent.spider_repel"); }
+
+    // ===== 湿度 =====
+    public static boolean isWetnessEnabled() { return CONFIG.getBoolean("legwear.wetness.enable"); }
+    public static float getWetnessRainRate() { return 0.05f; }
+    public static float getWetnessWaterRate() { return 1.0f; }
+    public static float getWetnessDryRate() { return 0.01f; }
+    public static boolean isWetnessTemperatureEffect() { return true; }
+
+    // ===== 晾衣架 =====
+    public static boolean isClotheslineEnabled() { return CONFIG.getBoolean("legwear.clothesline.enable"); }
+    public static int getClotheslineFireRadius() { return 3; }
+    public static float getClotheslineDryPerSecond() { return CONFIG.getFloat("legwear.clothesline.dry_per_second"); }
+    public static float getClotheslineFireDryPerSecond() { return 5.0f; }
+    public static float getClotheslineFireScentPerSecond() { return 2.0f; }
+    public static float getClotheslineAirScentDecayPerSecond() { return CONFIG.getFloat("legwear.clothesline.air_scent_decay_per_second"); }
 
     /**
      * Save the current flat AI config to per-provider storage for the given provider ID.

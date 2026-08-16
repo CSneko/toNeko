@@ -26,6 +26,10 @@ public class ToNekoCriteriaNeoForge {
     public static final DeferredHolder<CriterionTrigger<?>,CriterionTrigger<FirstLegwearDyeTrigger.TriggerInstance>> LEGWEAR_FIRST_DYE_HOLDER = CRITERION_TRIGGERS.register(MODID+"/legwear_first_dye", FirstLegwearDyeTrigger::new);
     public static final DeferredHolder<CriterionTrigger<?>,CriterionTrigger<LegwearGradeSTrigger.TriggerInstance>> LEGWEAR_GRADE_S_HOLDER = CRITERION_TRIGGERS.register(MODID+"/legwear_grade_s", LegwearGradeSTrigger::new);
 
+    // === 气味 ===
+    public static final DeferredHolder<CriterionTrigger<?>,CriterionTrigger<FirstLegwearScentTrigger.TriggerInstance>> LEGWEAR_FIRST_SCENT_HOLDER = CRITERION_TRIGGERS.register(MODID+"/legwear_first_scent", FirstLegwearScentTrigger::new);
+    public static final DeferredHolder<CriterionTrigger<?>,CriterionTrigger<LegwearDriedTrigger.TriggerInstance>> LEGWEAR_DRIED_HOLDER = CRITERION_TRIGGERS.register(MODID+"/legwear_dried", LegwearDriedTrigger::new);
+
     public static void init(){
     }
 
@@ -46,5 +50,9 @@ public class ToNekoCriteriaNeoForge {
         // === 丝袜 ===
         LEGWEAR_FIRST_DYE = (FirstLegwearDyeTrigger) LEGWEAR_FIRST_DYE_HOLDER.get();
         LEGWEAR_GRADE_S = (LegwearGradeSTrigger) LEGWEAR_GRADE_S_HOLDER.get();
+
+        // === 气味 ===
+        LEGWEAR_FIRST_SCENT = (FirstLegwearScentTrigger) LEGWEAR_FIRST_SCENT_HOLDER.get();
+        LEGWEAR_DRIED = (LegwearDriedTrigger) LEGWEAR_DRIED_HOLDER.get();
     }
 }

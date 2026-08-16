@@ -8,8 +8,10 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.DyedItemColor;
 import org.cneko.toneko.common.mod.items.LegwearItem;
+import org.cneko.toneko.common.mod.misc.WetnessUtil;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
@@ -46,7 +48,9 @@ public class LegwearRenderer extends GeoArmorRenderer<LegwearItem<?>> {
     public RenderType getRenderType(LegwearItem<?> animatable, ResourceLocation texture,
                                     @Nullable MultiBufferSource bufferSource, float partialTick) {
         int denier = LegwearItem.getDenier(this.currentStack);
-        if (denier >= 40) return RenderType.entityCutoutNoCull(texture);
+        int wetness = WetnessUtil.get(this.currentStack);
+        // 40D+ 不透明，但湿透（>=50）时贴肉透出肤色，切回半透明管线
+        if (denier >= 40 && wetness < 50) return RenderType.entityCutoutNoCull(texture);
         return RenderType.entityTranslucent(texture);
     }
 
@@ -55,14 +59,14 @@ public class LegwearRenderer extends GeoArmorRenderer<LegwearItem<?>> {
     @Override
     public Color getRenderColor(LegwearItem<?> animatable, float partialTick, int packedLight) {
         // 双 pass 下此值不再用于染色（actuallyRender 自行处理），仅提供默认白色
-        return Color.ofRGBA(255, 255, 255, denierAlpha(LegwearItem.getDenier(this.currentStack)));
+        return Color.ofRGBA(255, 255, 255, renderAlpha(this.currentStack));
     }
 
     @Override
     public void actuallyRender(PoseStack poseStack, LegwearItem<?> animatable, BakedGeoModel model, @Nullable RenderType renderType,
                                MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick,
                                int packedLight, int packedOverlay, int colour) {
-        int alpha = denierAlpha(LegwearItem.getDenier(this.currentStack));
+        int alpha = renderAlpha(this.currentStack);
         int leftRgb = LegwearItem.getLeftRenderColor(this.currentStack);
         int rightRgb = LegwearItem.getRightRenderColor(this.currentStack);
 
@@ -134,6 +138,15 @@ public class LegwearRenderer extends GeoArmorRenderer<LegwearItem<?>> {
         if (denier >= 40) return 255;
         if (denier >= 20) return 160;
         return 70;
+    }
+
+    /** 渲染 alpha：D 值透肉基础上，湿透进一步贴肉透出肤色（alpha 下调 = 更透） */
+    private static int renderAlpha(ItemStack stack) {
+        int alpha = denierAlpha(LegwearItem.getDenier(stack));
+        int wetness = WetnessUtil.get(stack);
+        if (wetness >= 80) alpha = (int) (alpha * 0.6f);
+        else if (wetness >= 50) alpha = (int) (alpha * 0.8f);
+        return Math.max(0, Math.min(255, alpha));
     }
 
     private void applyLengthVisibility(BakedGeoModel model) {

@@ -1,11 +1,13 @@
 package org.cneko.toneko.common.mod.ai.proactive;
 
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 import org.cneko.toneko.common.mod.ai.proactive.NekoProactiveManager.NekoProactiveTrigger;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
 import org.cneko.toneko.common.mod.items.LegwearItem;
 import org.cneko.toneko.common.mod.misc.Charm;
 import org.cneko.toneko.common.mod.misc.LegwearUtil;
+import org.cneko.toneko.common.mod.misc.ScentUtil;
 import org.cneko.toneko.common.mod.util.EntityUtil;
 import org.cneko.toneko.common.util.ConfigUtil;
 
@@ -94,6 +96,39 @@ public class NekoProactiveTriggers {
             @Override
             public String getMessage(NekoEntity neko, ServerPlayer player) {
                 return "看到对方穿着很诱人的丝袜，害羞脸红，说话有点结巴，偷偷瞄对方的腿";
+            }
+        });
+
+        // 气味嗅闻：附近玩家穿着有明显气味的丝袜时，猫娘红着脸偷偷嗅闻（概率默认 0，配置开启）
+        NekoProactiveManager.register(new NekoProactiveTrigger() {
+            @Override
+            public String getId() { return "scent_sniff"; }
+
+            @Override
+            public boolean canTrigger(NekoEntity neko, ServerPlayer player) {
+                return ScentUtil.isScenty(LegwearUtil.getWornLegwear(player));
+            }
+
+            @Override
+            public String getMessage(NekoEntity neko, ServerPlayer player) {
+                return "闻到对方丝袜上飘来的气味，红着脸偷偷嗅了嗅，小声嘟囔几句";
+            }
+        });
+
+        // 气味×魅力复合：高气味且高魅力的玩家附近猫娘深呼吸+重度脸红（概率默认 0，配置开启）
+        NekoProactiveManager.register(new NekoProactiveTrigger() {
+            @Override
+            public String getId() { return "scent_charm"; }
+
+            @Override
+            public boolean canTrigger(NekoEntity neko, ServerPlayer player) {
+                ItemStack legwear = LegwearUtil.getWornLegwear(player);
+                return Charm.isHighCharm(legwear) && ScentUtil.isScenty(legwear);
+            }
+
+            @Override
+            public String getMessage(NekoEntity neko, ServerPlayer player) {
+                return "闻到对方丝袜浓郁的气味，又看到那诱人的绝对领域，忍不住深吸一口气，脸涨得通红，说话结结巴巴";
             }
         });
 

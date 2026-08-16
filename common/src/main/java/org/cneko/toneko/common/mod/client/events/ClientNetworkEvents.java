@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
@@ -13,6 +14,7 @@ import net.minecraft.world.level.Level;
 import org.cneko.toneko.common.mod.api.EntityPoseManager;
 import org.cneko.toneko.common.mod.mixin.client.ClientLevelAccessor;
 import org.cneko.toneko.common.mod.client.api.ClientEntityPoseManager;
+import org.cneko.toneko.common.mod.client.api.StompAnimations;
 import org.cneko.toneko.common.mod.client.screens.*;
 import org.cneko.toneko.common.mod.client.util.ClientConfig;
 import org.cneko.toneko.common.mod.client.util.ClientPlayerUtil;
@@ -131,6 +133,24 @@ public class ClientNetworkEvents {
                 net.minecraft.world.entity.Entity entity = mc.level.getEntity(payload.entityId());
                 if (entity instanceof NekoEntity neko) {
                     neko.triggerAnim("express", payload.animName());
+                }
+            });
+        });
+
+        // 玩味的踩：收到 S2C 后对踩踏者播放 PlayerAnimator 动画
+        ClientPlayNetworking.registerGlobalReceiver(StompAnimPayload.ID, (payload, context) -> {
+            context.client().execute(() -> {
+                Minecraft mc = context.client();
+                if (mc.level == null || mc.player == null) return;
+                if (payload.stomperUuid() == null || payload.stomperUuid().isEmpty()) return;
+                UUID stomperUuid = UUID.fromString(payload.stomperUuid());
+                Player stomper = ClientPlayerUtil.getPlayerByUUID(stomperUuid);
+                if (stomper instanceof AbstractClientPlayer acp) {
+                    if (payload.active()) {
+                        StompAnimations.play(acp);
+                    } else {
+                        StompAnimations.playRelease(acp);
+                    }
                 }
             });
         });

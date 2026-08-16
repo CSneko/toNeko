@@ -44,5 +44,8 @@ public class ToNekoPackets {
         PayloadTypeRegistry.playC2S().register(LegwearAdjustPayload.ID, LegwearAdjustPayload.CODEC);
         PayloadTypeRegistry.playC2S().register(LegwearDyePayload.ID, LegwearDyePayload.CODEC);
         PayloadTypeRegistry.playC2S().register(LegwearPullUpPayload.ID, LegwearPullUpPayload.CODEC);
+        // 玩味的踩
+        PayloadTypeRegistry.playC2S().register(StompActionPayload.ID, StompActionPayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(StompAnimPayload.ID, StompAnimPayload.CODEC);
     }
 }

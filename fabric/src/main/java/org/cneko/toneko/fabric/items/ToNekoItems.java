@@ -93,6 +93,7 @@ public class ToNekoItems {
         NEKO_ENERGY_BATTERY_LARGE = new NekoEnergyBatteryItem(10000, 100, 50);
         SHENG_DENG_ITEM = new ShengDengItem(ToNekoBlocks.SHENG_DENG, new Item.Properties());
         LEGWEAR_WORKBENCH_ITEM = new ItemNameBlockItem(ToNekoBlocks.LEGWEAR_WORKBENCH, new Item.Properties());
+        CLOTHESLINE_ITEM = new ItemNameBlockItem(ToNekoBlocks.CLOTHESLINE, new Item.Properties());
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NekoPotionItem.ID), NEKO_POTION);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NekoCollectorItem.ID), NEKO_COLLECTOR);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(FurryBoheItem.ID), FURRY_BOHE);
@@ -138,6 +139,7 @@ public class ToNekoItems {
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NekoEnergyBatteryItem.ID_LARGE), NEKO_ENERGY_BATTERY_LARGE);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("sheng_deng"), SHENG_DENG_ITEM);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("legwear_workbench"), LEGWEAR_WORKBENCH_ITEM);
+        Registry.register(BuiltInRegistries.ITEM, toNekoLoc("clothesline"), CLOTHESLINE_ITEM);
 
         // 如果安装了trinkets，则注册为TrinketItem
         if (isTrinketsInstalled){
@@ -223,6 +225,7 @@ public class ToNekoItems {
             content.accept(NEKO_ENERGY_BATTERY_LARGE);
             content.accept(SHENG_DENG_ITEM);
             content.accept(LEGWEAR_WORKBENCH_ITEM);
+            content.accept(CLOTHESLINE_ITEM);
             // 猫猫手册（Patchouli 指南书）
             ItemStack guideBook = GuideBookItem.createGuideBookStack();
             if (!guideBook.isEmpty()) {

@@ -43,6 +43,7 @@ dependencies {
     include "com.github.umjammer:jlayer:1.0.3"
     modImplementation "dev.emi:trinkets:${trinkets_version}"
     modImplementation "software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}"
+    modImplementation "dev.kosmx.player-anim:player-animation-lib-fabric:${player_animator_version}"
     modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
     modCompileOnly "maven.modrinth:emi:1.1.22+1.21.1+fabric"
     modCompileOnly "maven.modrinth:patchouli:${patchouli_version}-fabric"

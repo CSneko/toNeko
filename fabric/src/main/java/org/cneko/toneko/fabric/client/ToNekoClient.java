@@ -6,11 +6,14 @@ import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import org.cneko.toneko.common.mod.blocks.ToNekoBlocks;
+import org.cneko.toneko.common.mod.blocks.ToNekoBlockEntities;
 import org.cneko.toneko.common.mod.client.ToNekoKeyBindings;
 import org.cneko.toneko.common.mod.client.events.HudRenderEvent;
 import org.cneko.toneko.common.mod.client.renderers.AmmunitionRenderer;
+import org.cneko.toneko.common.mod.client.renderers.ClotheslineBlockEntityRenderer;
 import org.cneko.toneko.common.mod.client.renderers.FlySwordRenderer;
 import org.cneko.toneko.common.mod.client.renderers.GhostNekoRenderer;
 import org.cneko.toneko.common.mod.client.renderers.NekoBossRenderer;
@@ -21,6 +24,7 @@ import org.cneko.toneko.common.mod.client.events.ClientNetworkEvents;
 import org.cneko.toneko.common.mod.client.events.ClientPlayerJoinEvent;
 import org.cneko.toneko.common.mod.client.events.ClientTickEvent;
 import org.cneko.toneko.common.mod.client.events.LegwearRustleHandler;
+import org.cneko.toneko.common.mod.client.events.LegwearWetDripHandler;
 import org.cneko.toneko.common.mod.entities.*;
 import org.cneko.toneko.common.mod.entities.boss.mouflet.MoufletNekoBoss;
 import org.cneko.toneko.fabric.client.items.LegwearTrinketsRenderer;
@@ -36,6 +40,7 @@ public class ToNekoClient implements ClientModInitializer {
         ClientPlayerJoinEvent.init();
         HudRenderEvent.init();
         LegwearRustleHandler.init();
+        LegwearWetDripHandler.init();
         // 注册trinkets渲染器
         if (ToNekoItems.isTrinketsInstalled){
             Minecraft.getInstance().execute(NekoArmorTrinketsRenderer::init);
@@ -55,6 +60,9 @@ public class ToNekoClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(ToNekoBlocks.CATNIP, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(ToNekoBlocks.WILD_CATNIP, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(ToNekoBlocks.SHENG_DENG, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(ToNekoBlocks.CLOTHESLINE, RenderType.cutout());
+
+        BlockEntityRenderers.register(ToNekoBlockEntities.CLOTHESLINE, ClotheslineBlockEntityRenderer::new);
 
         // 省凳法棍：Fabric 侧注册动态渲染器（NeoForge 侧走 RegisterClientExtensionsEvent）。
         // 注意必须引用 common 的字段：fabric 的 ToNekoItems 只是静态导入它，

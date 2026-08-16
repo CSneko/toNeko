@@ -1,0 +1,42 @@
+{
+  "name": "stomp_release",
+  "version": 3,
+  "author": "toNeko",
+  "description": "Release the stomp: lift the leg back off and return to standing.",
+  "emote": {
+    "isLoop": "false",
+    "returnTick": 0,
+    "beginTick": 0,
+    "endTick": 12,
+    "stopTick": 12,
+    "degrees": true,
+    "moves": [
+      {
+        "tick": 0,
+        "easing": "EASEOUTQUAD",
+        "turn": 0,
+        "torso": { "pitch": -8 },
+        "head": { "pitch": 15 },
+        "rightArm": { "pitch": 20 },
+        "leftArm": { "pitch": 20 },
+        "rightLeg": { "pitch": -30, "yaw": 0 }
+      },
+      {
+        "tick": 8,
+        "easing": "EASEOUTQUAD",
+        "turn": 0,
+        "rightLeg": { "pitch": -10 }
+      },
+      {
+        "tick": 12,
+        "easing": "EASEINOUTQUAD",
+        "turn": 0,
+        "torso": { "pitch": 0 },
+        "head": { "pitch": 0 },
+        "rightArm": { "pitch": 0 },
+        "leftArm": { "pitch": 0 },
+        "rightLeg": { "pitch": 0, "yaw": 0 }
+      }
+    ]
+  }
+}

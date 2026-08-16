@@ -17,4 +17,7 @@ public class ToNekoCriteria {
     // === 丝袜 ===
     public static FirstLegwearDyeTrigger LEGWEAR_FIRST_DYE;
     public static LegwearGradeSTrigger LEGWEAR_GRADE_S;
+    // === 气味 ===
+    public static FirstLegwearScentTrigger LEGWEAR_FIRST_SCENT;
+    public static LegwearDriedTrigger LEGWEAR_DRIED;
 }

@@ -88,6 +88,7 @@ public class ToNekoItems {
     public static DeferredHolder<Item,NekoEnergyBatteryItem> NEKO_ENERGY_BATTERY_LARGE_HOLDER;
     public static DeferredHolder<Item,BlockItem> SHENG_DENG_ITEM_HOLDER;
     public static DeferredHolder<Item,ItemNameBlockItem> LEGWEAR_WORKBENCH_ITEM_HOLDER;
+    public static DeferredHolder<Item,ItemNameBlockItem> CLOTHESLINE_ITEM_HOLDER;
 
     public static void init() {
         registerWithOutConfig();
@@ -205,6 +206,8 @@ public class ToNekoItems {
 
         LEGWEAR_WORKBENCH_ITEM_HOLDER = ITEMS.register("legwear_workbench", () -> new ItemNameBlockItem(ToNekoBlocks.LEGWEAR_WORKBENCH_HOLDER.get(), new Item.Properties()));
 
+        CLOTHESLINE_ITEM_HOLDER = ITEMS.register("clothesline", () -> new ItemNameBlockItem(ToNekoBlocks.CLOTHESLINE_HOLDER.get(), new Item.Properties()));
+
         // 注册物品组
         TONEKO_ITEM_GROUP_HOLDER = ToNekoNeoForge.CREATIVE_MODE_TABS.register("toneko_group", ()-> CreativeModeTab.builder()
                 .icon(()->NEKO_EARS_HOLDER.get().getDefaultInstance())
@@ -262,6 +265,7 @@ public class ToNekoItems {
                     event.accept(NEKO_ENERGY_BATTERY_LARGE_HOLDER.get());
                     event.accept(SHENG_DENG_ITEM_HOLDER.get());
                     event.accept(LEGWEAR_WORKBENCH_ITEM_HOLDER.get());
+                    event.accept(CLOTHESLINE_ITEM_HOLDER.get());
                     // 猫猫手册（Patchouli 指南书）
                     ItemStack guideBook = GuideBookItem.createGuideBookStack();
                     if (!guideBook.isEmpty()) {
@@ -338,6 +342,7 @@ public class ToNekoItems {
             event.accept(NEKO_ENERGY_BATTERY_LARGE_HOLDER.get());
             event.accept(SHENG_DENG_ITEM_HOLDER.get());
             event.accept(LEGWEAR_WORKBENCH_ITEM_HOLDER.get());
+            event.accept(CLOTHESLINE_ITEM_HOLDER.get());
             // 猫猫手册（Patchouli 指南书）
             ItemStack guideBook = GuideBookItem.createGuideBookStack();
             if (!guideBook.isEmpty()) {
@@ -350,6 +355,7 @@ public class ToNekoItems {
     public static void reg(){
         SHENG_DENG_ITEM = SHENG_DENG_ITEM_HOLDER.get();
         LEGWEAR_WORKBENCH_ITEM = LEGWEAR_WORKBENCH_ITEM_HOLDER.get();
+        CLOTHESLINE_ITEM = CLOTHESLINE_ITEM_HOLDER.get();
         CATNIP = CATNIP_HOLDER.get();
         INFINITE_CATNIP = INFINITE_CATNIP_HOLDER.get();
         WILD_CATNIP = WILD_CATNIP_HOLDER.get();

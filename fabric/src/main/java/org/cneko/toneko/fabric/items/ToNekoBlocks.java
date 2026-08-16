@@ -27,5 +27,7 @@ public class ToNekoBlocks {
                 new ShengDengBlock(BlockBehaviour.Properties.of().strength(3.0f).sound(SoundType.BAMBOO_WOOD).noOcclusion()));
         LEGWEAR_WORKBENCH = Registry.register(BuiltInRegistries.BLOCK, ResourceLocation.fromNamespaceAndPath(MODID, "legwear_workbench"),
                 new LegwearWorkbenchBlock(BlockBehaviour.Properties.of().strength(2.5f).sound(SoundType.WOOD)));
+        CLOTHESLINE = Registry.register(BuiltInRegistries.BLOCK, ResourceLocation.fromNamespaceAndPath(MODID, "clothesline"),
+                new ClotheslineBlock(BlockBehaviour.Properties.of().strength(2.0f).sound(SoundType.WOOD).noOcclusion()));
     }
 }

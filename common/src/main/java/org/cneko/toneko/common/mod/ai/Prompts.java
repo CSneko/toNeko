@@ -4,6 +4,8 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.ItemStack;
 import org.cneko.toneko.common.mod.items.LegwearItem;
 import org.cneko.toneko.common.mod.misc.LegwearUtil;
+import org.cneko.toneko.common.mod.misc.ScentUtil;
+import org.cneko.toneko.common.mod.misc.WetnessUtil;
 import org.cneko.toneko.common.mod.misc.ZettaiRyouiki;
 import org.cneko.toneko.common.util.LanguageUtil;
 
@@ -161,18 +163,33 @@ public class Prompts {
         if (ratio >= 0.25f) return translateOrReadable("misc.toneko.player_health_state.hurt");
         return translateOrReadable("misc.toneko.player_health_state.severe");
     };
-    /** 玩家腿部穿搭（丝袜款式/D值/袜口高度/绝对领域等级），用于 AI 评论穿搭 */
+    /** 玩家腿部穿搭（丝袜款式/D值/袜口高度/绝对领域等级 + 气味/湿度），用于 AI 评论穿搭 */
     public static final PromptFactory PLAYER_OUTFIT = (neko,other)-> {
         if (other == null || other.getEntity() == null) return "";
         ItemStack legs = LegwearUtil.getWornLegwear(other.getEntity());
         if (!LegwearItem.isLegwear(legs)) return translateOrReadable("misc.toneko.player_outfit.none");
         String itemName = translateOrReadable(BuiltInRegistries.ITEM.getKey(legs.getItem()).toLanguageKey());
         String grade = translateOrReadable("item.toneko.legwear.zettai_ryouiki." + ZettaiRyouiki.compute(legs));
-        return translateOrReadable("misc.toneko.player_outfit.desc",
+        String desc = translateOrReadable("misc.toneko.player_outfit.desc",
                 itemName,
                 LegwearItem.getDenier(legs),
                 Math.round(LegwearItem.getStockingTopHeight(legs) * 100),
                 grade);
+
+        StringBuilder sb = new StringBuilder(desc);
+        int scent = ScentUtil.getIntensity(legs);
+        if (scent > 0) {
+            String wearer = ScentUtil.getWearer(legs);
+            sb.append(translateOrReadable("misc.toneko.player_outfit.scent",
+                    translateOrReadable("item.toneko.legwear.scent." + ScentUtil.grade(scent)),
+                    wearer == null || wearer.isEmpty() ? "?" : wearer));
+        }
+        int wetness = WetnessUtil.get(legs);
+        if (wetness > 0) {
+            sb.append(translateOrReadable("misc.toneko.player_outfit.wet",
+                    translateOrReadable("item.toneko.legwear.wetness." + WetnessUtil.grade(wetness))));
+        }
+        return sb.toString();
     };
 
     // ===== 世界 =====

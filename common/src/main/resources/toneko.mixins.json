@@ -7,7 +7,9 @@
     "client.ChatScreenMixin",
     "client.ClientLevelAccessor",
     "client.PlayerRendererMixin",
-    "client.SoundEngineMixin"
+    "client.SoundEngineMixin",
+    "client.StompFirstPersonRendererMixin",
+    "client.StompFirstPersonPassMixin"
   ],
   "mixins": [
     "BlockPlaceMixin",

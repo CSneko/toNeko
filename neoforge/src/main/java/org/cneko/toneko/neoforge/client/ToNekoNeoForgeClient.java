@@ -20,8 +20,10 @@ import org.cneko.toneko.common.mod.client.events.ClientNetworkEvents;
 import org.cneko.toneko.common.mod.client.events.ClientPlayerJoinEvent;
 import org.cneko.toneko.common.mod.client.events.ClientTickEvent;
 import org.cneko.toneko.common.mod.client.events.LegwearRustleHandler;
+import org.cneko.toneko.common.mod.client.events.LegwearWetDripHandler;
 import org.cneko.toneko.common.mod.client.events.HudRenderEvent;
 import org.cneko.toneko.common.mod.client.renderers.AmmunitionRenderer;
+import org.cneko.toneko.common.mod.client.renderers.ClotheslineBlockEntityRenderer;
 import org.cneko.toneko.common.mod.client.renderers.FlySwordRenderer;
 import org.cneko.toneko.common.mod.client.renderers.GhostNekoRenderer;
 import org.cneko.toneko.common.mod.client.renderers.NekoBossRenderer;
@@ -48,6 +50,7 @@ public class ToNekoNeoForgeClient {
         ClientTickEvent.init();
         HudRenderEvent.init();
         LegwearRustleHandler.init();
+        LegwearWetDripHandler.init();
         ToNekoKeyBindings.init();
         container.registerExtensionPoint(IConfigScreenFactory.class, (a,b)->new ConfigScreen());
 
@@ -107,6 +110,10 @@ public class ToNekoNeoForgeClient {
                 ToNekoEntities.SEAT_ENTITY_HOLDER.get(),
                 SeatRenderer::new
         );
+        event.registerBlockEntityRenderer(
+                org.cneko.toneko.neoforge.items.ToNekoBlockEntities.CLOTHESLINE_HOLDER.get(),
+                ClotheslineBlockEntityRenderer::new
+        );
     }
 
     @SubscribeEvent
@@ -115,6 +122,7 @@ public class ToNekoNeoForgeClient {
         event.register(ToNekoBlocks.CATNIP_HOLDER.getId(),RenderType.cutout(), RenderType.entityCutout(ToNekoBlocks.CATNIP_HOLDER.getId()));
         event.register(ToNekoBlocks.WILD_CATNIP_HOLDER.getId(),RenderType.cutout(), RenderType.entityCutout(ToNekoBlocks.WILD_CATNIP_HOLDER.getId()));
         event.register(ToNekoBlocks.SHENG_DENG_HOLDER.getId(),RenderType.cutout(), RenderType.entityCutout(ToNekoBlocks.SHENG_DENG_HOLDER.getId()));
+        event.register(ToNekoBlocks.CLOTHESLINE_HOLDER.getId(),RenderType.cutout(), RenderType.entityCutout(ToNekoBlocks.CLOTHESLINE_HOLDER.getId()));
     }
 
 

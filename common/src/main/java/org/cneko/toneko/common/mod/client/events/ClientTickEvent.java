@@ -24,6 +24,7 @@ import org.cneko.toneko.common.mod.packets.NekoMultiToolModePayload;
 import org.cneko.toneko.common.mod.packets.LegwearPullUpPayload;
 import org.cneko.toneko.common.mod.packets.ClimbWallPayload;
 import org.cneko.toneko.common.mod.packets.NekoStealthPayload;
+import org.cneko.toneko.common.mod.packets.StompActionPayload;
 import org.cneko.toneko.common.mod.packets.interactives.DismountPassengerPayload;
 import org.cneko.toneko.common.mod.util.EntityUtil;
 
@@ -143,6 +144,36 @@ public class ClientTickEvent {
         while (ToNekoKeyBindings.GIFT_CONFIRM_KEY.consumeClick()) {
             GiftSelectionManager.confirm(client);
         }
+        // 玩味的踩：按住踩准星指向的生物，松开取消（潜行时踩脸，否则踩身体）
+        {
+            boolean stompDown = ToNekoKeyBindings.STOMP_KEY.isDown();
+            if (stompDown && !wasStompKeyDown) {
+                // 按下瞬间：寻找目标并开始踩
+                wasStompKeyDown = true;
+                if (client.player != null && client.level != null) {
+                    // 与服务端 STOMP_MAX_DISTANCE 保持一致，避免客户端命中却被服务端静默拒绝
+                    LivingEntity target = EntityUtil.findLookedAtEntity(client.player, client.level, 3.0);
+                    if (target != null) {
+                        boolean shift = client.options.keyShift.isDown();
+                        String part = shift ? "face" : "body";
+                        // 躺倒姿态暂定：脸朝上踩 = 仰面，否则趴着（后续可扩展）
+                        String pose = shift ? "back" : "prone";
+                        stompTargetUuid = target.getUUID().toString();
+                        ClientPlayNetworking.send(new StompActionPayload(stompTargetUuid, part, pose, true));
+                    } else {
+                        stompTargetUuid = null;
+                    }
+                }
+            } else if (!stompDown && wasStompKeyDown) {
+                // 松开瞬间：取消踩
+                wasStompKeyDown = false;
+                if (client.player != null) {
+                    String target = stompTargetUuid;
+                    stompTargetUuid = null;
+                    ClientPlayNetworking.send(new StompActionPayload(target == null ? "" : target, "body", "prone", false));
+                }
+            }
+        }
     }
 
     public static boolean isStealthActive() {
@@ -162,6 +193,8 @@ public class ClientTickEvent {
     private static boolean wasClimbKeyDown = false;
     private static float lastSentVerticalInput = 0;
     private static boolean wasStealthActive = false;
+    private static boolean wasStompKeyDown = false;
+    private static String stompTargetUuid = null;
 
     /** 获取爬墙垂直方向：W 或 空格=向上(1), S 或 Shift=向下(-1), 无=悬挂(0) */
     private static float getClimbVerticalInput(Minecraft client) {

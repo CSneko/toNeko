@@ -13,6 +13,7 @@ import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -34,6 +35,7 @@ import org.cneko.toneko.common.mod.util.PermissionUtil;
 import org.cneko.toneko.common.util.LanguageUtil;
 import org.cneko.toneko.neoforge.entities.ToNekoEntities;
 import org.cneko.toneko.neoforge.items.ToNekoArmorMaterials;
+import org.cneko.toneko.neoforge.items.ToNekoBlockEntities;
 import org.cneko.toneko.neoforge.items.ToNekoBlocks;
 import org.cneko.toneko.neoforge.items.ToNekoItems;
 import org.cneko.toneko.neoforge.msic.*;
@@ -55,6 +57,7 @@ public final class ToNekoNeoForge {
     public static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(Registries.MENU, MODID);
     public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(Registries.RECIPE_TYPE, MODID);
     public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(Registries.RECIPE_SERIALIZER, MODID);
+    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, MODID);
     public ToNekoNeoForge(IEventBus bus, ModContainer container) {
         // 初始化语言和配置
         LanguageUtil.INSTANCE = new FabricLanguageImpl();
@@ -74,11 +77,13 @@ public final class ToNekoNeoForge {
         MENU_TYPES.register(bus);
         RECIPE_TYPES.register(bus);
         RECIPE_SERIALIZERS.register(bus);
+        BLOCK_ENTITY_TYPES.register(bus);
         // 注册装备
         ToNekoArmorMaterials.init();
         ToNekoItems.init();
         ToNekoEffectNeoForge.init();
         ToNekoBlocks.init();
+        ToNekoBlockEntities.init();
         ToNekoAttributes.init();
         ToNekoCriteriaNeoForge.init();
         ToNekoRecipesNeo.init(bus);
@@ -115,6 +120,7 @@ public final class ToNekoNeoForge {
         // 在所有注册表完成后：解析 DeferredRegister 值并注册群系生成
         bus.addListener(FMLLoadCompleteEvent.class, event -> {
             ToNekoItems.reg();
+            ToNekoBlockEntities.reg();
             // 调用 common 中的群系生成注册（使用 FFAPI 桥接的 BiomeModifications）
             org.cneko.toneko.common.mod.entities.ToNekoEntities.registerBiomeSpawns(
                     ToNekoEntities.ADVENTURER_NEKO_HOLDER.get(),

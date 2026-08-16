@@ -12,6 +12,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.DyedItemColor;
@@ -29,6 +30,7 @@ import org.cneko.toneko.common.api.TickTasks;
 import org.cneko.toneko.common.mod.advencements.ToNekoCriteria;
 import org.cneko.toneko.common.mod.abilities.ClimbWallHandler;
 import org.cneko.toneko.common.mod.api.EntityPoseManager;
+import org.cneko.toneko.common.mod.api.StompSessionManager;
 import org.cneko.toneko.common.mod.entities.CrystalNekoEntity;
 import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.genetics.api.IGeneticEntity;
@@ -126,6 +128,37 @@ public class ToNekoNetworkEvents {
         ServerPlayNetworking.registerGlobalReceiver(LegwearDyePayload.ID, ToNekoNetworkEvents::onLegwearDye);
         // 提袜：过膝袜袜口复位
         ServerPlayNetworking.registerGlobalReceiver(LegwearPullUpPayload.ID, ToNekoNetworkEvents::onLegwearPullUp);
+        // 玩味的踩
+        ServerPlayNetworking.registerGlobalReceiver(StompActionPayload.ID, ToNekoNetworkEvents::onStomp);
+    }
+
+    /**
+     * 处理「玩味的踩」请求。
+     * <p>
+     * active=true（按下）：校验目标 → 会话开始（目标躺倒 + 广播循环动画）。
+     * active=false（松开）：会话结束（目标起身 + 广播收回动画）。
+     */
+    public static void onStomp(StompActionPayload payload, ServerPlayNetworking.Context context) {
+        ServerPlayer stomper = context.player();
+        context.server().execute(() -> {
+            if (!payload.active()) {
+                StompSessionManager.stop(stomper);
+                return;
+            }
+            try {
+                UUID targetUuid = UUID.fromString(payload.targetUuid());
+                ServerLevel level = (ServerLevel) stomper.level();
+                Entity entity = level.getEntity(targetUuid);
+                if (!(entity instanceof LivingEntity target) || target == stomper) return;
+
+                // 距离校验，防止远程踩踏
+                if (stomper.distanceToSqr(target) > StompSessionManager.MAX_DISTANCE * StompSessionManager.MAX_DISTANCE) return;
+
+                StompSessionManager.start(stomper, target, payload.part(), payload.pose());
+            } catch (IllegalArgumentException ignored) {
+                // 非法 UUID，忽略
+            }
+        });
     }
 
     public static void onLegwearDye(LegwearDyePayload payload, ServerPlayNetworking.Context context) {

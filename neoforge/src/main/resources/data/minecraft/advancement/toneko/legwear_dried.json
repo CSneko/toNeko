@@ -1,0 +1,28 @@
+{
+  "parent": "minecraft:toneko/legwear_first_scent",
+  "criteria": {
+    "dried": {
+      "trigger": "minecraft:toneko/legwear_dried"
+    }
+  },
+  "display": {
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "description": {
+      "translate": "advancements.toneko.legwear_dried.description"
+    },
+    "frame": "task",
+    "icon": {
+      "count": 1,
+      "id": "toneko:clothesline"
+    },
+    "title": {
+      "translate": "advancements.toneko.legwear_dried.title"
+    }
+  },
+  "requirements": [
+    [
+      "dried"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

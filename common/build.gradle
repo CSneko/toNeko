@@ -14,6 +14,8 @@ dependencies {
     //include "maven.modrinth:ctlibmod:0.1.13"
     modImplementation "software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}"
     modCompileOnly "dev.emi:emi-xplat-intermediary:${emi_version}:api"
+    modCompileOnly "dev.kosmx.player-anim:player-animation-lib:${player_animator_version}"
+    modCompileOnly "dev.kosmx.player-anim:anim-core:${player_animator_version}"
 
 }
 

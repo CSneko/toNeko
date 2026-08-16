@@ -59,6 +59,13 @@ ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.toneko]]
+modId = "playeranimator"
+type = "required"
+versionRange = "*"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.toneko]]
 modId = "optifine"
 type = "incompatible"
 versionRange = "*"

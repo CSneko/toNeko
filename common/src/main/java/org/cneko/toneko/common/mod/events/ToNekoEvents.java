@@ -30,8 +30,15 @@ import org.cneko.toneko.common.mod.abilities.CharmAffectionHandler;
 import org.cneko.toneko.common.mod.abilities.CharmBlushHandler;
 import org.cneko.toneko.common.mod.abilities.ClimbWallHandler;
 import org.cneko.toneko.common.mod.abilities.LegwearSagHandler;
+import org.cneko.toneko.common.mod.abilities.ScentAccumulationHandler;
+import org.cneko.toneko.common.mod.abilities.ScentDetectionHandler;
+import org.cneko.toneko.common.mod.abilities.ScentEcologyHandler;
+import org.cneko.toneko.common.mod.abilities.ScentNekoSniffHandler;
+import org.cneko.toneko.common.mod.abilities.ScentWolfTrackingHandler;
+import org.cneko.toneko.common.mod.abilities.WetnessHandler;
 import org.cneko.toneko.common.mod.abilities.ZettaiRyouikiAuraHandler;
 import org.cneko.toneko.common.mod.api.NekoLevelRegistry;
+import org.cneko.toneko.common.mod.api.StompSessionManager;
 import org.cneko.toneko.common.mod.api.events.WorldEvents;
 import org.cneko.toneko.common.mod.ai.actions.NekoActionExecutor;
 import org.cneko.toneko.common.mod.ai.proactive.NekoProactiveManager;
@@ -76,6 +83,8 @@ public class ToNekoEvents {
                 NekoLevelRegistry.combat().addRaw(neko, xp);
             }
         });
+        // 被踩者死亡：清理踩踏会话，避免其姿态被强制保持
+        ServerLivingEntityEvents.AFTER_DEATH.register((entity, source) -> StompSessionManager.onTargetDeath(entity));
         ServerLivingEntityEvents.AFTER_DEATH.register((entity, source) -> {
             // 玩家死亡：附近猫娘（主人优先）触发一次 AI 发言
             if (entity instanceof ServerPlayer player) {
@@ -97,6 +106,12 @@ public class ToNekoEvents {
         ServerTickEvents.START_SERVER_TICK.register(LegwearSagHandler::onServerTick);
         ServerTickEvents.START_SERVER_TICK.register(CharmAffectionHandler::onServerTick);
         ServerTickEvents.START_SERVER_TICK.register(CharmBlushHandler::onServerTick);
+        ServerTickEvents.START_SERVER_TICK.register(WetnessHandler::onServerTick);
+        ServerTickEvents.START_SERVER_TICK.register(ScentAccumulationHandler::onServerTick);
+        ServerTickEvents.START_SERVER_TICK.register(ScentNekoSniffHandler::onServerTick);
+        ServerTickEvents.START_SERVER_TICK.register(ScentDetectionHandler::onServerTick);
+        ServerTickEvents.START_SERVER_TICK.register(ScentWolfTrackingHandler::onServerTick);
+        ServerTickEvents.START_SERVER_TICK.register(ScentEcologyHandler::onServerTick);
         ServerWorldEvents.UNLOAD.register(CommonWorldEvent::onWorldUnLoad);
         WorldEvents.ON_WEATHER_CHANGE.register(CommonWorldEvent::onWeatherChange);
         EntitySleepEvents.START_SLEEPING.register((entity, pos) -> {
@@ -197,6 +212,8 @@ public class ToNekoEvents {
 
     public static void onPlayerQuit(ServerGamePacketListenerImpl serverPlayNetworkHandler, MinecraftServer server) {
         ServerPlayer player = serverPlayNetworkHandler.getPlayer();
+        // 清理踩踏会话：若该玩家正在踩别人，恢复被踩者姿态
+        StompSessionManager.onPlayerQuit(player);
         if(player.isNeko()){
             String name = TextUtil.getPlayerName(player);
         }

@@ -1,0 +1,28 @@
+{
+  "parent": "minecraft:toneko/legwear_first_dye",
+  "criteria": {
+    "first_scent": {
+      "trigger": "minecraft:toneko/legwear_first_scent"
+    }
+  },
+  "display": {
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "description": {
+      "translate": "advancements.toneko.legwear_first_scent.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "toneko:legwear_pantyhose_20d"
+    },
+    "title": {
+      "translate": "advancements.toneko.legwear_first_scent.title"
+    }
+  },
+  "requirements": [
+    [
+      "first_scent"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

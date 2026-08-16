@@ -25,6 +25,9 @@ public class Charm {
     private static final int DENIER_BONUS_THIN = 20;   // ≤20D
     private static final int DENIER_BONUS_MEDIUM = 10; // ≤40D
     private static final int DYE_BONUS_PER_LEG = 5;    // 左右腿独立染色各 +5
+    // === 湿度湿身加成（湿透是另一种顶格撩） ===
+    private static final int WET_BONUS_SOAKED = 15;    // 湿透（>=80）
+    private static final int WET_BONUS_WET = 8;        // 湿（>=50）
 
     /** 单件腿部服饰的魅力分 */
     public static int compute(ItemStack legwear) {
@@ -55,7 +58,16 @@ public class Charm {
         if (LegwearItem.getLeftDye(legwear) >= 0) dyeBonus += DYE_BONUS_PER_LEG;
         if (LegwearItem.getRightDye(legwear) >= 0) dyeBonus += DYE_BONUS_PER_LEG;
 
-        return base + denierBonus + dyeBonus;
+        int wetBonus = wetBonus(WetnessUtil.get(legwear));
+
+        return base + denierBonus + dyeBonus + wetBonus;
+    }
+
+    /** 湿度湿身加成 */
+    private static int wetBonus(int wetness) {
+        if (wetness >= 80) return WET_BONUS_SOAKED;
+        if (wetness >= 50) return WET_BONUS_WET;
+        return 0;
     }
 
     /** 是否达到「高魅力」门槛（供脸红/好感/主动反应判断） */

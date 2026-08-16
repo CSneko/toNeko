@@ -1,0 +1,75 @@
+{
+  "name": "stomp",
+  "version": 3,
+  "author": "toNeko",
+  "description": "Hold-to-stomp: slow lift, teasing hover, press down, then an endless grind while the key is held.",
+  "emote": {
+    "isLoop": "true",
+    "returnTick": 26,
+    "beginTick": 0,
+    "endTick": 40,
+    "stopTick": 40,
+    "degrees": true,
+    "moves": [
+      {
+        "tick": 0,
+        "easing": "EASEINOUTQUAD",
+        "turn": 0,
+        "torso": { "pitch": 0 },
+        "head": { "pitch": 0 },
+        "rightLeg": { "pitch": 0, "yaw": 0 }
+      },
+      {
+        "tick": 5,
+        "easing": "EASEINOUTQUAD",
+        "turn": 0,
+        "torso": { "pitch": -8 },
+        "head": { "pitch": 15 },
+        "rightArm": { "pitch": 20 },
+        "leftArm": { "pitch": 20 }
+      },
+      {
+        "tick": 14,
+        "easing": "EASEINOUTQUAD",
+        "turn": 0,
+        "rightLeg": { "pitch": -75 }
+      },
+      {
+        "tick": 17,
+        "easing": "EASEINOUTSINE",
+        "turn": 0,
+        "rightLeg": { "pitch": -68 }
+      },
+      {
+        "tick": 20,
+        "easing": "EASEINOUTSINE",
+        "turn": 0,
+        "rightLeg": { "pitch": -75, "yaw": 4 }
+      },
+      {
+        "tick": 26,
+        "easing": "EASEINQUAD",
+        "turn": 0,
+        "rightLeg": { "pitch": -30, "yaw": 0 }
+      },
+      {
+        "tick": 31,
+        "easing": "EASEINOUTQUAD",
+        "turn": 0,
+        "rightLeg": { "yaw": 12 }
+      },
+      {
+        "tick": 34,
+        "easing": "EASEINOUTQUAD",
+        "turn": 0,
+        "rightLeg": { "yaw": -12 }
+      },
+      {
+        "tick": 40,
+        "easing": "EASEINOUTQUAD",
+        "turn": 0,
+        "rightLeg": { "yaw": 0 }
+      }
+    ]
+  }
+}

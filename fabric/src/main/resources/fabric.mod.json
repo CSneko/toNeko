@@ -43,7 +43,8 @@
     "fabricloader": "*",
     "fabric": "*",
     "minecraft": "1.21.1",
-    "geckolib": "*"
+    "geckolib": "*",
+    "playeranimator": "*"
   },
   "suggests": {
     "luckperms": "*",

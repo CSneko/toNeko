@@ -23,5 +23,9 @@ public class ToNekoCriteriaFabric {
         // === 丝袜 ===
         LEGWEAR_FIRST_DYE = CriteriaTriggers.register(MODID+"/legwear_first_dye", new FirstLegwearDyeTrigger());
         LEGWEAR_GRADE_S = CriteriaTriggers.register(MODID+"/legwear_grade_s", new LegwearGradeSTrigger());
+
+        // === 气味 ===
+        LEGWEAR_FIRST_SCENT = CriteriaTriggers.register(MODID+"/legwear_first_scent", new FirstLegwearScentTrigger());
+        LEGWEAR_DRIED = CriteriaTriggers.register(MODID+"/legwear_dried", new LegwearDriedTrigger());
     }
 }
