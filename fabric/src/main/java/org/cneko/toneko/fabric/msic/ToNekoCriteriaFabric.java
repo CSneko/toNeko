@@ -27,5 +27,10 @@ public class ToNekoCriteriaFabric {
         // === 气味 ===
         LEGWEAR_FIRST_SCENT = CriteriaTriggers.register(MODID+"/legwear_first_scent", new FirstLegwearScentTrigger());
         LEGWEAR_DRIED = CriteriaTriggers.register(MODID+"/legwear_dried", new LegwearDriedTrigger());
+
+        // === 变质水 ===
+        SPOILED_WATER_FIRST = CriteriaTriggers.register(MODID+"/spoiled_water_first", new SpoiledWaterFirstTrigger());
+        SPOILED_WATER_COLLECTOR = CriteriaTriggers.register(MODID+"/spoiled_water_collector", new SpoiledWaterCollectorTrigger());
+        SPOILED_WATER_DRINK = CriteriaTriggers.register(MODID+"/spoiled_water_drink", new SpoiledWaterDrinkTrigger());
     }
 }

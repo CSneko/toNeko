@@ -94,6 +94,11 @@ public class ToNekoItems {
         SHENG_DENG_ITEM = new ShengDengItem(ToNekoBlocks.SHENG_DENG, new Item.Properties());
         LEGWEAR_WORKBENCH_ITEM = new ItemNameBlockItem(ToNekoBlocks.LEGWEAR_WORKBENCH, new Item.Properties());
         CLOTHESLINE_ITEM = new ItemNameBlockItem(ToNekoBlocks.CLOTHESLINE, new Item.Properties());
+        SPOILED_WATER_BUCKET = new SpoiledWaterBucketItem();
+        SPOILED_WATER_BOTTLE = new SpoiledWaterBottleItem();
+        SPOILED_WATER_SPLASH = new SpoiledWaterThrowableItem(false);
+        SPOILED_WATER_LINGERING = new SpoiledWaterThrowableItem(true);
+        SCENT_PERFUME = new ScentPerfumeItem();
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NekoPotionItem.ID), NEKO_POTION);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NekoCollectorItem.ID), NEKO_COLLECTOR);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(FurryBoheItem.ID), FURRY_BOHE);
@@ -140,6 +145,11 @@ public class ToNekoItems {
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("sheng_deng"), SHENG_DENG_ITEM);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("legwear_workbench"), LEGWEAR_WORKBENCH_ITEM);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("clothesline"), CLOTHESLINE_ITEM);
+        Registry.register(BuiltInRegistries.ITEM, toNekoLoc(SpoiledWaterBucketItem.ID), SPOILED_WATER_BUCKET);
+        Registry.register(BuiltInRegistries.ITEM, toNekoLoc(SpoiledWaterBottleItem.ID), SPOILED_WATER_BOTTLE);
+        Registry.register(BuiltInRegistries.ITEM, toNekoLoc(SpoiledWaterThrowableItem.SPLASH_ID), SPOILED_WATER_SPLASH);
+        Registry.register(BuiltInRegistries.ITEM, toNekoLoc(SpoiledWaterThrowableItem.LINGERING_ID), SPOILED_WATER_LINGERING);
+        Registry.register(BuiltInRegistries.ITEM, toNekoLoc(ScentPerfumeItem.ID), SCENT_PERFUME);
 
         // 如果安装了trinkets，则注册为TrinketItem
         if (isTrinketsInstalled){
@@ -226,6 +236,11 @@ public class ToNekoItems {
             content.accept(SHENG_DENG_ITEM);
             content.accept(LEGWEAR_WORKBENCH_ITEM);
             content.accept(CLOTHESLINE_ITEM);
+            content.accept(SPOILED_WATER_BUCKET);
+            content.accept(SPOILED_WATER_BOTTLE);
+            content.accept(SPOILED_WATER_SPLASH);
+            content.accept(SPOILED_WATER_LINGERING);
+            content.accept(SCENT_PERFUME);
             // 猫猫手册（Patchouli 指南书）
             ItemStack guideBook = GuideBookItem.createGuideBookStack();
             if (!guideBook.isEmpty()) {

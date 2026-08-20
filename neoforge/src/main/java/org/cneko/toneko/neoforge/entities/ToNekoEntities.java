@@ -30,6 +30,7 @@ public class ToNekoEntities {
     public static DeferredHolder<EntityType<?>, EntityType<NoelleMaidNekoEntity>> NOELLE_MAID_NEKO_HOLDER;
     public static DeferredHolder<EntityType<?>, EntityType<FlySwordEntity>> FLY_SWORD_HOLDER;
     public static DeferredHolder<EntityType<?>, EntityType<SeatEntity>> SEAT_ENTITY_HOLDER;
+    public static DeferredHolder<EntityType<?>, EntityType<SpoiledWaterProjectile>> SPOILED_WATER_PROJECTILE_HOLDER;
     public static void init(){
         CRYSTAL_NEKO_HOLDER = ToNekoNeoForge.ENTITY_TYPES.register(CRYSTAL_NEKO_ID.getPath(),
                 org.cneko.toneko.common.mod.entities.ToNekoEntities.getCrystalNeko()
@@ -60,6 +61,9 @@ public class ToNekoEntities {
         );
         SEAT_ENTITY_HOLDER = ToNekoNeoForge.ENTITY_TYPES.register(SEAT_ENTITY_ID.getPath(),
                 org.cneko.toneko.common.mod.entities.ToNekoEntities.getSeatEntity()
+        );
+        SPOILED_WATER_PROJECTILE_HOLDER = ToNekoNeoForge.ENTITY_TYPES.register(SPOILED_WATER_PROJECTILE_ENTITY_ID.getPath(),
+                org.cneko.toneko.common.mod.entities.ToNekoEntities.getSpoiledWaterProjectileEntity()
         );
 
         org.cneko.toneko.common.mod.entities.ToNekoEntities.init();
@@ -175,5 +179,6 @@ public class ToNekoEntities {
         NOELLE_MAID_NEKO = NOELLE_MAID_NEKO_HOLDER.get();
         FLY_SWORD_ENTITY = FLY_SWORD_HOLDER.get();
         SEAT_ENTITY = SEAT_ENTITY_HOLDER.get();
+        SPOILED_WATER_PROJECTILE_ENTITY = SPOILED_WATER_PROJECTILE_HOLDER.get();
     }
 }

@@ -26,7 +26,9 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.ItemCost;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.Level;
+import org.cneko.toneko.common.mod.abilities.CauldronScentHandler;
 import org.cneko.toneko.common.mod.abilities.CharmAffectionHandler;
+import org.cneko.toneko.common.mod.abilities.ScentAreaHandler;
 import org.cneko.toneko.common.mod.abilities.CharmBlushHandler;
 import org.cneko.toneko.common.mod.abilities.ClimbWallHandler;
 import org.cneko.toneko.common.mod.abilities.LegwearSagHandler;
@@ -91,6 +93,7 @@ public class ToNekoEvents {
                 triggerNekoMourn(player);
             }
         });
+        CauldronScentHandler.registerCauldronInteractions();
         ServerLivingEntityEvents.ALLOW_DEATH.register((entity, source, amount) -> {
             if (entity instanceof ServerPlayer player) {
                 return NineLivesCharmItem.tryPreventDeath(player);
@@ -107,6 +110,8 @@ public class ToNekoEvents {
         ServerTickEvents.START_SERVER_TICK.register(CharmAffectionHandler::onServerTick);
         ServerTickEvents.START_SERVER_TICK.register(CharmBlushHandler::onServerTick);
         ServerTickEvents.START_SERVER_TICK.register(WetnessHandler::onServerTick);
+        ServerTickEvents.START_SERVER_TICK.register(CauldronScentHandler::onServerTick);
+        ServerTickEvents.START_SERVER_TICK.register(ScentAreaHandler::onServerTick);
         ServerTickEvents.START_SERVER_TICK.register(ScentAccumulationHandler::onServerTick);
         ServerTickEvents.START_SERVER_TICK.register(ScentNekoSniffHandler::onServerTick);
         ServerTickEvents.START_SERVER_TICK.register(ScentDetectionHandler::onServerTick);

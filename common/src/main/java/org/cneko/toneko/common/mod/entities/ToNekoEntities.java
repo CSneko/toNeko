@@ -39,6 +39,8 @@ public class ToNekoEntities {
     public static ResourceLocation FLY_SWORD_ENTITY_ID = toNekoLoc("fly_sword");
     public static EntityType<SeatEntity> SEAT_ENTITY;
     public static ResourceLocation SEAT_ENTITY_ID = toNekoLoc("seat_entity");
+    public static EntityType<SpoiledWaterProjectile> SPOILED_WATER_PROJECTILE_ENTITY;
+    public static ResourceLocation SPOILED_WATER_PROJECTILE_ENTITY_ID = toNekoLoc("spoiled_water_projectile");
     public static void init() {
         // 注册名字
         Set<String> names = Set.of(
@@ -119,6 +121,13 @@ public class ToNekoEntities {
         return () -> EntityType.Builder.of(SeatEntity::new, MobCategory.MISC)
                 .sized(0.5f, 0.5f).clientTrackingRange(4).updateInterval(20)
                 .build("seat_entity");
+    }
+
+    @ApiStatus.Internal
+    public static Supplier<EntityType<SpoiledWaterProjectile>> getSpoiledWaterProjectileEntity(){
+        return () -> EntityType.Builder.<SpoiledWaterProjectile>of((type, level) -> new SpoiledWaterProjectile(type, level), MobCategory.MISC)
+                .sized(0.25f, 0.25f).clientTrackingRange(4).updateInterval(20)
+                .build("spoiled_water_projectile");
     }
 
     @ApiStatus.Internal

@@ -89,6 +89,11 @@ public class ToNekoItems {
     public static DeferredHolder<Item,BlockItem> SHENG_DENG_ITEM_HOLDER;
     public static DeferredHolder<Item,ItemNameBlockItem> LEGWEAR_WORKBENCH_ITEM_HOLDER;
     public static DeferredHolder<Item,ItemNameBlockItem> CLOTHESLINE_ITEM_HOLDER;
+    public static DeferredHolder<Item,SpoiledWaterBucketItem> SPOILED_WATER_BUCKET_HOLDER;
+    public static DeferredHolder<Item,SpoiledWaterBottleItem> SPOILED_WATER_BOTTLE_HOLDER;
+    public static DeferredHolder<Item,SpoiledWaterThrowableItem> SPOILED_WATER_SPLASH_HOLDER;
+    public static DeferredHolder<Item,SpoiledWaterThrowableItem> SPOILED_WATER_LINGERING_HOLDER;
+    public static DeferredHolder<Item,ScentPerfumeItem> SCENT_PERFUME_HOLDER;
 
     public static void init() {
         registerWithOutConfig();
@@ -208,6 +213,12 @@ public class ToNekoItems {
 
         CLOTHESLINE_ITEM_HOLDER = ITEMS.register("clothesline", () -> new ItemNameBlockItem(ToNekoBlocks.CLOTHESLINE_HOLDER.get(), new Item.Properties()));
 
+        SPOILED_WATER_BUCKET_HOLDER = ITEMS.register(SpoiledWaterBucketItem.ID, SpoiledWaterBucketItem::new);
+        SPOILED_WATER_BOTTLE_HOLDER = ITEMS.register(SpoiledWaterBottleItem.ID, SpoiledWaterBottleItem::new);
+        SPOILED_WATER_SPLASH_HOLDER = ITEMS.register(SpoiledWaterThrowableItem.SPLASH_ID, () -> new SpoiledWaterThrowableItem(false));
+        SPOILED_WATER_LINGERING_HOLDER = ITEMS.register(SpoiledWaterThrowableItem.LINGERING_ID, () -> new SpoiledWaterThrowableItem(true));
+        SCENT_PERFUME_HOLDER = ITEMS.register(ScentPerfumeItem.ID, ScentPerfumeItem::new);
+
         // 注册物品组
         TONEKO_ITEM_GROUP_HOLDER = ToNekoNeoForge.CREATIVE_MODE_TABS.register("toneko_group", ()-> CreativeModeTab.builder()
                 .icon(()->NEKO_EARS_HOLDER.get().getDefaultInstance())
@@ -266,6 +277,11 @@ public class ToNekoItems {
                     event.accept(SHENG_DENG_ITEM_HOLDER.get());
                     event.accept(LEGWEAR_WORKBENCH_ITEM_HOLDER.get());
                     event.accept(CLOTHESLINE_ITEM_HOLDER.get());
+                    event.accept(SPOILED_WATER_BUCKET_HOLDER.get());
+                    event.accept(SPOILED_WATER_BOTTLE_HOLDER.get());
+                    event.accept(SPOILED_WATER_SPLASH_HOLDER.get());
+                    event.accept(SPOILED_WATER_LINGERING_HOLDER.get());
+                    event.accept(SCENT_PERFUME_HOLDER.get());
                     // 猫猫手册（Patchouli 指南书）
                     ItemStack guideBook = GuideBookItem.createGuideBookStack();
                     if (!guideBook.isEmpty()) {
@@ -343,6 +359,11 @@ public class ToNekoItems {
             event.accept(SHENG_DENG_ITEM_HOLDER.get());
             event.accept(LEGWEAR_WORKBENCH_ITEM_HOLDER.get());
             event.accept(CLOTHESLINE_ITEM_HOLDER.get());
+            event.accept(SPOILED_WATER_BUCKET_HOLDER.get());
+            event.accept(SPOILED_WATER_BOTTLE_HOLDER.get());
+            event.accept(SPOILED_WATER_SPLASH_HOLDER.get());
+            event.accept(SPOILED_WATER_LINGERING_HOLDER.get());
+            event.accept(SCENT_PERFUME_HOLDER.get());
             // 猫猫手册（Patchouli 指南书）
             ItemStack guideBook = GuideBookItem.createGuideBookStack();
             if (!guideBook.isEmpty()) {
@@ -356,6 +377,11 @@ public class ToNekoItems {
         SHENG_DENG_ITEM = SHENG_DENG_ITEM_HOLDER.get();
         LEGWEAR_WORKBENCH_ITEM = LEGWEAR_WORKBENCH_ITEM_HOLDER.get();
         CLOTHESLINE_ITEM = CLOTHESLINE_ITEM_HOLDER.get();
+        SPOILED_WATER_BUCKET = SPOILED_WATER_BUCKET_HOLDER.get();
+        SPOILED_WATER_BOTTLE = SPOILED_WATER_BOTTLE_HOLDER.get();
+        SPOILED_WATER_SPLASH = SPOILED_WATER_SPLASH_HOLDER.get();
+        SPOILED_WATER_LINGERING = SPOILED_WATER_LINGERING_HOLDER.get();
+        SCENT_PERFUME = SCENT_PERFUME_HOLDER.get();
         CATNIP = CATNIP_HOLDER.get();
         INFINITE_CATNIP = INFINITE_CATNIP_HOLDER.get();
         WILD_CATNIP = WILD_CATNIP_HOLDER.get();

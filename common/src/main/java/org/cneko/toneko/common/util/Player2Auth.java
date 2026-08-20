@@ -151,7 +151,7 @@ public final class Player2Auth {
                                 .withColor(ChatFormatting.AQUA)
                                 .withUnderlined(true)
                                 .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url))));
-        PlayerUtil.getPlayerList().forEach(player -> player.sendSystemMessage(message));
+        //PlayerUtil.getPlayerList().forEach(player -> player.sendSystemMessage(message));
     }
 
     /** POST /login/device/new 响应（camelCase 与云端一致） */

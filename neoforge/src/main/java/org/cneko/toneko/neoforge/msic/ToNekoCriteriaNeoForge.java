@@ -30,6 +30,11 @@ public class ToNekoCriteriaNeoForge {
     public static final DeferredHolder<CriterionTrigger<?>,CriterionTrigger<FirstLegwearScentTrigger.TriggerInstance>> LEGWEAR_FIRST_SCENT_HOLDER = CRITERION_TRIGGERS.register(MODID+"/legwear_first_scent", FirstLegwearScentTrigger::new);
     public static final DeferredHolder<CriterionTrigger<?>,CriterionTrigger<LegwearDriedTrigger.TriggerInstance>> LEGWEAR_DRIED_HOLDER = CRITERION_TRIGGERS.register(MODID+"/legwear_dried", LegwearDriedTrigger::new);
 
+    // === 变质水 ===
+    public static final DeferredHolder<CriterionTrigger<?>,CriterionTrigger<SpoiledWaterFirstTrigger.TriggerInstance>> SPOILED_WATER_FIRST_HOLDER = CRITERION_TRIGGERS.register(MODID+"/spoiled_water_first", SpoiledWaterFirstTrigger::new);
+    public static final DeferredHolder<CriterionTrigger<?>,CriterionTrigger<SpoiledWaterCollectorTrigger.TriggerInstance>> SPOILED_WATER_COLLECTOR_HOLDER = CRITERION_TRIGGERS.register(MODID+"/spoiled_water_collector", SpoiledWaterCollectorTrigger::new);
+    public static final DeferredHolder<CriterionTrigger<?>,CriterionTrigger<SpoiledWaterDrinkTrigger.TriggerInstance>> SPOILED_WATER_DRINK_HOLDER = CRITERION_TRIGGERS.register(MODID+"/spoiled_water_drink", SpoiledWaterDrinkTrigger::new);
+
     public static void init(){
     }
 
@@ -54,5 +59,10 @@ public class ToNekoCriteriaNeoForge {
         // === 气味 ===
         LEGWEAR_FIRST_SCENT = (FirstLegwearScentTrigger) LEGWEAR_FIRST_SCENT_HOLDER.get();
         LEGWEAR_DRIED = (LegwearDriedTrigger) LEGWEAR_DRIED_HOLDER.get();
+
+        // === 变质水 ===
+        SPOILED_WATER_FIRST = (SpoiledWaterFirstTrigger) SPOILED_WATER_FIRST_HOLDER.get();
+        SPOILED_WATER_COLLECTOR = (SpoiledWaterCollectorTrigger) SPOILED_WATER_COLLECTOR_HOLDER.get();
+        SPOILED_WATER_DRINK = (SpoiledWaterDrinkTrigger) SPOILED_WATER_DRINK_HOLDER.get();
     }
 }

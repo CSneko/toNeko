@@ -30,6 +30,7 @@ import org.cneko.toneko.common.mod.client.renderers.NekoBossRenderer;
 import org.cneko.toneko.common.mod.client.renderers.NekoRenderer;
 import org.cneko.toneko.common.mod.client.renderers.SeatRenderer;
 import org.cneko.toneko.common.mod.client.renderers.ShengDengBewlr;
+import org.cneko.toneko.common.mod.client.renderers.SpoiledWaterProjectileRenderer;
 import org.cneko.toneko.common.mod.client.screens.ConfigScreen;
 import org.cneko.toneko.neoforge.entities.ToNekoEntities;
 import org.cneko.toneko.neoforge.items.ToNekoBlocks;
@@ -109,6 +110,10 @@ public class ToNekoNeoForgeClient {
         event.registerEntityRenderer(
                 ToNekoEntities.SEAT_ENTITY_HOLDER.get(),
                 SeatRenderer::new
+        );
+        event.registerEntityRenderer(
+                ToNekoEntities.SPOILED_WATER_PROJECTILE_HOLDER.get(),
+                SpoiledWaterProjectileRenderer::new
         );
         event.registerBlockEntityRenderer(
                 org.cneko.toneko.neoforge.items.ToNekoBlockEntities.CLOTHESLINE_HOLDER.get(),

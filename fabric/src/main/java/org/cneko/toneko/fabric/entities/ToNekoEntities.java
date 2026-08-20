@@ -89,6 +89,12 @@ public class ToNekoEntities {
                 EntityType.Builder.of(SeatEntity::new, MobCategory.MISC)
                         .sized(0.5f, 0.5f).clientTrackingRange(4).updateInterval(20).build()
         );
+        SPOILED_WATER_PROJECTILE_ENTITY = Registry.register(
+                BuiltInRegistries.ENTITY_TYPE,
+                SPOILED_WATER_PROJECTILE_ENTITY_ID,
+                EntityType.Builder.<SpoiledWaterProjectile>of((type, level) -> new SpoiledWaterProjectile(type, level), MobCategory.MISC)
+                        .sized(0.25f, 0.25f).clientTrackingRange(4).updateInterval(20).build()
+        );
 
         org.cneko.toneko.common.mod.entities.ToNekoEntities.init();
 

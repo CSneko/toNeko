@@ -236,6 +236,12 @@ public class ConfigUtil {
             .addFloat("legwear.scent.base_rate", 0.003f, null,
                     "气味积累速率（每tick，步行时）",
                     "Scent accumulation rate (per tick, while walking)")
+            .addBoolean("legwear.scent.cauldron.enable", true, null,
+                    "丝袜水缸：穿着有气味的丝袜站在装满水的炼药锅里会把水变质，可用桶舀出",
+                    "Cauldron spoil: standing in a full water cauldron with scented legwear spoils the water; scoop it with a bucket")
+            .addFloat("legwear.scent.cauldron.wash_rate", 0.002f, null,
+                    "炼药锅洗涤速率（每tick将当前气味强度的该比例洗入水中，0~1）",
+                    "Cauldron wash rate (fraction of current scent washed into the water per tick, 0~1)")
             .addBoolean("legwear.scent.neko_sniff.enable", true, null,
                     "猫娘嗅闻：高气味玩家附近猫娘害羞动画+爱心粒子+偷瞄",
                     "Neko sniff: nekos near high-scent players play shy anim + heart particles + glance")
@@ -537,6 +543,8 @@ public class ConfigUtil {
     // ===== 气味 =====
     public static boolean isScentEnabled() { return CONFIG.getBoolean("legwear.scent.enable"); }
     public static float getScentBaseRate() { return CONFIG.getFloat("legwear.scent.base_rate"); }
+    public static boolean isScentCauldronEnabled() { return CONFIG.getBoolean("legwear.scent.cauldron.enable"); }
+    public static float getScentCauldronWashRate() { return CONFIG.getFloat("legwear.scent.cauldron.wash_rate"); }
     public static float getScentIdleFactor() { return 0.4f; }
     public static float getScentSprintFactor() { return 1.6f; }
     public static float getScentWetFactor() { return 1.8f; }

@@ -20,4 +20,8 @@ public class ToNekoCriteria {
     // === 气味 ===
     public static FirstLegwearScentTrigger LEGWEAR_FIRST_SCENT;
     public static LegwearDriedTrigger LEGWEAR_DRIED;
+    // === 变质水 ===
+    public static SpoiledWaterFirstTrigger SPOILED_WATER_FIRST;
+    public static SpoiledWaterCollectorTrigger SPOILED_WATER_COLLECTOR;
+    public static SpoiledWaterDrinkTrigger SPOILED_WATER_DRINK;
 }

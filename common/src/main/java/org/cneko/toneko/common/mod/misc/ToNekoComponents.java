@@ -96,6 +96,26 @@ public class ToNekoComponents {
                     .build()
     );
 
+    // 变质水：水的变质程度（0~100，0=干净），由丝袜在炼药锅中洗出的气味形成
+    public static final DataComponentType<Integer> SPOILED_WATER_SPOILAGE_COMPONENT = Registry.register(
+            BuiltInRegistries.DATA_COMPONENT_TYPE,
+            ResourceLocation.fromNamespaceAndPath(MODID, "spoiled_water_spoilage"),
+            DataComponentType.<Integer>builder()
+                    .persistent(Codec.INT)
+                    .networkSynchronized(ByteBufCodecs.VAR_INT)
+                    .build()
+    );
+
+    // 变质水气味来源（最近穿着者显示名，空串=无）；networkSynchronized 必配
+    public static final DataComponentType<String> SPOILED_WATER_WEARER_COMPONENT = Registry.register(
+            BuiltInRegistries.DATA_COMPONENT_TYPE,
+            ResourceLocation.fromNamespaceAndPath(MODID, "spoiled_water_wearer"),
+            DataComponentType.<String>builder()
+                    .persistent(Codec.STRING)
+                    .networkSynchronized(ByteBufCodecs.STRING_UTF8)
+                    .build()
+    );
+
     // 晾衣架内容（挂着的腿部服饰；空栈=未挂）
     public static final DataComponentType<ItemStack> CLOTHESLINE_CONTENT = Registry.register(
             BuiltInRegistries.DATA_COMPONENT_TYPE,

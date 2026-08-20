@@ -11,8 +11,17 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.item.ItemStack;
 import org.cneko.toneko.common.mod.entities.INeko;
+import org.cneko.toneko.common.mod.entities.NekoEntity;
 import org.cneko.toneko.common.mod.entities.boss.mouflet.MoufletNekoBoss;
+import org.cneko.toneko.common.mod.misc.ScentedWaterUtil;
+import org.cneko.toneko.common.mod.misc.ToNekoComponents;
 import org.cneko.toneko.common.mod.quirks.Quirk;
 import org.jetbrains.annotations.Nullable;
 
@@ -103,6 +112,9 @@ public class CommonPlayerInteractionEvent {
             return InteractionResult.PASS;
         }
 
+        InteractionResult waterResult = handleScentedWaterOnNeko(sp, world, hand, targetNeko);
+        if (waterResult.consumesAction()) return waterResult;
+
         InteractionContext context = new InteractionContext(sp, world, hand, targetNeko, hitResult);
 
         // 【修改点】：创建一个统一的 XP 处理器，在这里判断是否有主人
@@ -129,6 +141,51 @@ public class CommonPlayerInteractionEvent {
         if (playerResult.consumesAction()) return playerResult;
 
         return InteractionResult.PASS;
+    }
+
+    /** 把变质水/香水给猫娘闻：主人味加好感，别人味会吃醋；无来源则只是好奇。 */
+    private static InteractionResult handleScentedWaterOnNeko(ServerPlayer player, Level level,
+                                                              InteractionHand hand, INeko targetNeko) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (!stack.has(ToNekoComponents.SPOILED_WATER_SPOILAGE_COMPONENT)
+                || !stack.has(ToNekoComponents.SPOILED_WATER_WEARER_COMPONENT)) {
+            return InteractionResult.PASS;
+        }
+        int spoilage = ScentedWaterUtil.getSpoilage(stack);
+        if (spoilage <= 0) return InteractionResult.PASS;
+        if (level.isClientSide) return InteractionResult.SUCCESS;
+
+        String wearer = ScentedWaterUtil.getWearer(stack);
+        String playerName = player.getName().getString();
+        boolean ownerScent = !wearer.isEmpty() && wearer.equals(playerName);
+
+        if (targetNeko instanceof NekoEntity neko) {
+            boolean owned = neko.hasOwner(player.getUUID());
+            if (owned && ownerScent) {
+                int xp = neko.getXpWithOwner(player.getUUID());
+                neko.setXpWithOwner(player.getUUID(), Math.max(0, xp + 2));
+            }
+        }
+
+        stack.shrink(1);
+        level.playSound(null, player.blockPosition(), SoundEvents.CAT_STRAY_AMBIENT,
+                SoundSource.PLAYERS, 1.0f, 1.2f);
+        if (level instanceof ServerLevel serverLevel) {
+            serverLevel.sendParticles(ParticleTypes.HEART,
+                    targetNeko.getEntity().getX(), targetNeko.getEntity().getY() + 1.2,
+                    targetNeko.getEntity().getZ(), 7, 0.3, 0.2, 0.3, 0.05);
+        }
+
+        Component msg;
+        if (ownerScent) {
+            msg = Component.translatable("item.toneko.spoiled_water.neko.owner_scent", wearer);
+        } else if (!wearer.isEmpty()) {
+            msg = Component.translatable("item.toneko.spoiled_water.neko.other_scent", wearer);
+        } else {
+            msg = Component.translatable("item.toneko.spoiled_water.neko.unknown_scent");
+        }
+        player.displayClientMessage(msg, true);
+        return InteractionResult.SUCCESS;
     }
 
     // 伤害事件由于原版要求返回 boolean，单独处理循环
