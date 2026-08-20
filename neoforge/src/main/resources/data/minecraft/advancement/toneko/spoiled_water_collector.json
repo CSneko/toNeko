@@ -1,0 +1,28 @@
+{
+  "parent": "minecraft:toneko/spoiled_water_first",
+  "criteria": {
+    "spoiled_water_collector": {
+      "trigger": "minecraft:toneko/spoiled_water_collector"
+    }
+  },
+  "display": {
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "description": {
+      "translate": "advancements.toneko.spoiled_water_collector.description"
+    },
+    "frame": "challenge",
+    "icon": {
+      "count": 1,
+      "id": "toneko:spoiled_water_lingering"
+    },
+    "title": {
+      "translate": "advancements.toneko.spoiled_water_collector.title"
+    }
+  },
+  "requirements": [
+    [
+      "spoiled_water_collector"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

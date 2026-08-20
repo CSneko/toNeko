@@ -1,0 +1,28 @@
+{
+  "parent": "minecraft:toneko/root",
+  "criteria": {
+    "spoiled_water_first": {
+      "trigger": "minecraft:toneko/spoiled_water_first"
+    }
+  },
+  "display": {
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "description": {
+      "translate": "advancements.toneko.spoiled_water_first.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "toneko:spoiled_water_bucket"
+    },
+    "title": {
+      "translate": "advancements.toneko.spoiled_water_first.title"
+    }
+  },
+  "requirements": [
+    [
+      "spoiled_water_first"
+    ]
+  ],
+  "sends_telemetry_event": true
+}
