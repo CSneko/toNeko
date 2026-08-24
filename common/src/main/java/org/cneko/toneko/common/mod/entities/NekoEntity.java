@@ -1378,8 +1378,8 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
                 if (food!=null && (this.getHealth() < this.getMaxHealth() || !food.effects().isEmpty())){
                     // 回血
                     this.heal(food.nutrition());
+                    // eat() 内部已消耗 1 个（LivingEntity.eat → ItemStack.consume），无需再 shrink
                     this.eat(this.level(), stack);
-                    stack.shrink(1);
                     this.lastFoodHealTick = currentTick;
                     break; // 一次只吃一个
                 }
@@ -1624,6 +1624,12 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
         return damage[0];
     }
 
+    /**
+     * 吃掉或存起一份食物。
+     * <p>契约：方法成功返回 true 时，传入的 stack 恰好被消耗 1 个——
+     * 饥饿分支由 {@code eat()} 内部消耗；饱腹分支存入背包副本后显式 shrink(1)。
+     * 调用方无需再对同一 stack 执行 shrink/removeItem。</p>
+     */
     public boolean eatOrStoreFood(ItemStack stack){
         if (stack.isEmpty() || !stack.has(DataComponents.FOOD)) {
             // 不处理
@@ -1637,6 +1643,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
             }else {
                 if (this.getInventory().isFull()) return false;
                 this.getInventory().add(stack.copy());
+                stack.shrink(1); // 维持"成功即消耗 1 个"的契约
             }
             return true;
         }

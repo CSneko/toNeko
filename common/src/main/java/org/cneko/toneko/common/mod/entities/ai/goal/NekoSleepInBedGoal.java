@@ -144,6 +144,7 @@ public class NekoSleepInBedGoal extends Goal {
     }
 
     private boolean isSleeping() {
-        return this.neko.getPose() == Pose.SLEEPING;
+        // 直接查询钉定表；不再依赖 getPose（姿势已回归原版语义）
+        return EntityPoseManager.getNullablePose(this.neko) == Pose.SLEEPING;
     }
 }

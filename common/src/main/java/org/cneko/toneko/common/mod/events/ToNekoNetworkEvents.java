@@ -48,7 +48,6 @@ import org.cneko.toneko.common.mod.packets.interactives.*;
 import org.cneko.toneko.common.mod.quirks.QuirkRegister;
 import org.cneko.toneko.common.mod.util.PermissionUtil;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
-import org.cneko.toneko.common.mod.util.PlayerUtil;
 import org.cneko.toneko.common.mod.util.TextUtil;
 import org.cneko.toneko.common.mod.util.TickTaskQueue;
 import org.cneko.toneko.common.util.AIUtil;
@@ -72,7 +71,7 @@ public class ToNekoNetworkEvents {
         ServerPlayNetworking.registerGlobalReceiver(MateWithCrystalNekoPayload.ID, ToNekoNetworkEvents::onMateWithCrystalNeko);
         ServerPlayNetworking.registerGlobalReceiver(CrystalNekoNyaPayload.ID, ToNekoNetworkEvents::onCrystalNekoNya);
         ServerPlayNetworking.registerGlobalReceiver(DismountPassengerPayload.ID, ToNekoNetworkEvents::onDismountPassenger);
-        ServerPlayNetworking.registerGlobalReceiver(PlayerLeadByPlayerPayload.ID,ToNekoNetworkEvents::onPlayerLeadByPlayer);
+        // PlayerLeadByPlayer 的 C2S 接收端已移除（无鉴权伪造面）；S2C 由 PlayerEntityMixin 服务端主动发送
         ServerPlayNetworking.registerGlobalReceiver(PluginDetectPayload.ID,(a,b)->{});// 什么也不干
         ServerPlayNetworking.registerGlobalReceiver(ToNekoActionPayload.ID, ToNekoNetworkEvents::onToNekoAction);
         ServerPlayNetworking.registerGlobalReceiver(NekoMultiToolModePayload.ID, ToNekoNetworkEvents::onMultiToolMode);
@@ -268,17 +267,8 @@ public class ToNekoNetworkEvents {
         }
     }
 
-    public static void onPlayerLeadByPlayer(PlayerLeadByPlayerPayload payload, ServerPlayNetworking.Context context) {
-        try{
-            // 寻找对应玩家（如果有的话）
-            Player holder = PlayerUtil.getPlayerByUUID(UUID.fromString(payload.holder()));
-            Player target = PlayerUtil.getPlayerByUUID(UUID.fromString(payload.target()));
-            // 告诉玩家自己被拴上了
-            ServerPlayNetworking.send((ServerPlayer) holder, new PlayerLeadByPlayerPayload(holder.getUUID().toString(),target.getUUID().toString()));
-            ServerPlayNetworking.send((ServerPlayer) target, new PlayerLeadByPlayerPayload(holder.getUUID().toString(),target.getUUID().toString()));
-        }catch (Exception ignored){
-        }
-    }
+    // C2S 拴绳转发接收端已删除：该处理器无鉴权、无距离校验，任意客户端可伪造任意两名玩家间的拴绳状态；
+    // 合法路径由服务端在 PlayerEntityMixin.hurt 中主动发送 S2C 包，无需客户端上报。
 
     public static void onMateWithCrystalNeko(MateWithCrystalNekoPayload mateWithCrystalNekoPayload, ServerPlayNetworking.Context context) {
         processNekoInteractive(context.player(), mateWithCrystalNekoPayload.uuid(), neko -> {
@@ -646,10 +636,13 @@ public class ToNekoNetworkEvents {
             // 没有权限
             return;
         }
-        // 保存数据
+        // 保存数据（过滤未知 id：getById 对未注册 id 返回 null，注入列表会引发后续 NPE）
         var quirks = player.getQuirks();
         quirks.clear();
-        quirks.addAll(payload.getQuirks().stream().map(QuirkRegister::getById).toList());
+        quirks.addAll(payload.getQuirks().stream()
+                .map(QuirkRegister::getById)
+                .filter(Objects::nonNull)
+                .toList());
     }
 
 
@@ -658,12 +651,17 @@ public class ToNekoNetworkEvents {
      *
      * @param player     查找的玩家。
      * @param targetUuid 目标实体的UUID。
-     * @return 找到的实体，如果没有找到则返回null。
+     * @param range      允许的最大距离（格），超出范围视为不存在。
+     * @return 找到的实体，如果没有找到或距离超限则返回null。
      */
     private static Entity findNearbyEntityByUuid(ServerPlayer player, UUID targetUuid, double range) {
         ServerLevel world = (ServerLevel) player.level();
 
-        return world.getEntity(targetUuid);
+        Entity entity = world.getEntity(targetUuid);
+        if (entity != null && entity.distanceToSqr(player) > range * range) {
+            return null; // 距离超限：骑乘/交配等操作不允许跨远距离执行
+        }
+        return entity;
 
     }
 

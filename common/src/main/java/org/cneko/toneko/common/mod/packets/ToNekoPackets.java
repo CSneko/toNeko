@@ -23,7 +23,7 @@ public class ToNekoPackets {
         PayloadTypeRegistry.playC2S().register(MateWithCrystalNekoPayload.ID, MateWithCrystalNekoPayload.CODEC);
         PayloadTypeRegistry.playC2S().register(CrystalNekoNyaPayload.ID, CrystalNekoNyaPayload.CODEC);
         PayloadTypeRegistry.playC2S().register(DismountPassengerPayload.ID, DismountPassengerPayload.CODEC);
-        PayloadTypeRegistry.playC2S().register(PlayerLeadByPlayerPayload.ID, PlayerLeadByPlayerPayload.CODEC);
+        // PlayerLeadByPlayerPayload 仅保留 S2C 注册：服务端主动推送拴绳状态，不接受客户端上报
         PayloadTypeRegistry.playS2C().register(PlayerLeadByPlayerPayload.ID, PlayerLeadByPlayerPayload.CODEC);
         PayloadTypeRegistry.playS2C().register(PluginDetectPayload.ID, PluginDetectPayload.CODEC);
         PayloadTypeRegistry.playC2S().register(PluginDetectPayload.ID, PluginDetectPayload.CODEC);

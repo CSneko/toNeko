@@ -53,7 +53,12 @@ public class StompSessionManager {
         SESSIONS.put(stomperUuid, session);
 
         // 被踩者躺倒（仰面/趴着，当前统一用游泳躺姿，后续可按 pose 细化）
-        EntityPoseManager.setPose(target, Pose.SWIMMING);
+        if (target instanceof ServerPlayer targetPlayer) {
+            // 玩家目标：走一次性同步助手，通知本人客户端对齐预测
+            PoseStateSync.pin(targetPlayer, Pose.SWIMMING);
+        } else {
+            EntityPoseManager.setPose(target, Pose.SWIMMING);
+        }
 
         broadcast(stomper, session, true);
     }
@@ -86,7 +91,7 @@ public class StompSessionManager {
         // 找到所有以该实体为目标的会话并移除
         SESSIONS.values().removeIf(session -> {
             if (session.targetUuid().equals(deadUuid)) {
-                EntityPoseManager.remove(dead);
+                unpinTarget(dead);
                 return true;
             }
             return false;
@@ -102,12 +107,19 @@ public class StompSessionManager {
     private static void restoreTarget(ServerLevel level, StompSession session) {
         Entity target = level.getEntity(session.targetUuid());
         if (!(target instanceof LivingEntity living) || living.isRemoved()) return;
-        if (EntityPoseManager.contains(living)) {
-            EntityPoseManager.remove(living);
-        }
+        unpinTarget(living);
         // 恢复非玩家 Mob 的 AI
         if (!(living instanceof Player) && living instanceof Mob mob) {
             mob.setNoAi(session.targetWasNoAi());
+        }
+    }
+
+    /** 解除目标姿势钉定：玩家需同步通知本人客户端，其它实体直接移除。 */
+    private static void unpinTarget(LivingEntity target) {
+        if (target instanceof ServerPlayer targetPlayer) {
+            PoseStateSync.unpin(targetPlayer);
+        } else {
+            EntityPoseManager.remove(target);
         }
     }
 

@@ -17,6 +17,7 @@
     "CreeperMixin",
     "EntityMixin",
     "FishingHookMixin",
+    "LivingEntityMixin",
     "PlayerEntityMixin",
     "ServerLevelMixin",
     "ServerPlayerEntityMixin"

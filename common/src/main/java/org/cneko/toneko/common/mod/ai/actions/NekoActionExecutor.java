@@ -921,22 +921,27 @@ public class NekoActionExecutor {
             return;
         }
 
+        // LLM 输出不可信：数量钳制到 [1, 单组上限]，防止话术诱导批量刷物品
+        int maxStack = new ItemStack(item).getMaxStackSize();
+        int safeCount = Math.max(1, Math.min(count, maxStack));
+
         // 1. 背包优先
         int slot = neko.getInventory().findSlotMatchingItem(new ItemStack(item));
         if (slot >= 0) {
-            ItemStack stack = neko.getInventory().removeItem(slot, count);
+            ItemStack stack = neko.getInventory().removeItem(slot, safeCount);
             if (!stack.isEmpty()) {
                 giveToPlayer(target, stack, nekoName(neko));
                 return;
             }
         }
 
-        // 2. 虚拟生成（配置开启且能量足够）
+        // 2. 虚拟生成（配置开启且能量足够；成本随组数缩放，不给"一次动作刷一组"的漏洞）
         if (ConfigUtil.isAIActionsVirtualItems()) {
-            int cost = Math.max(1, ConfigUtil.getAIActionsEnergyCost());
+            int stacks = (int) Math.ceil(safeCount / (double) maxStack);
+            int cost = Math.max(1, ConfigUtil.getAIActionsEnergyCost()) * stacks;
             if (neko.getNekoEnergy() >= cost) {
                 neko.setNekoEnergy(neko.getNekoEnergy() - cost);
-                giveToPlayer(target, new ItemStack(item, count), nekoName(neko));
+                giveToPlayer(target, new ItemStack(item, safeCount), nekoName(neko));
                 return;
             }
         }

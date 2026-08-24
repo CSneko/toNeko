@@ -180,8 +180,8 @@ public interface INeko {
         this.getQuirks().remove(quirk);
     }
     default void fixQuirks(){
-        // 修复quirks
-        this.getQuirks().removeIf(quirk -> QuirkRegister.hasQuirk(quirk.getId()));
+        // 修复quirks：移除未注册（已失效）的quirk，保留有效的
+        this.getQuirks().removeIf(quirk -> !QuirkRegister.hasQuirk(quirk.getId()));
     }
 
     // ---- 已访问群系 ----
@@ -261,7 +261,7 @@ public interface INeko {
             }
         }
         if (nbt.contains("NickName")){
-            this.setNickName(this.getNickName());
+            this.setNickName(nbt.getString("NickName"));
         }
         // 加载已访问群系
         if (nbt.contains("VisitedBiomes")) {

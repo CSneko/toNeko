@@ -200,7 +200,7 @@ public class ToNekoCommand {
                 neko.sendSystemMessage(Component.translatable("command.toneko.accept", owner.getName()).withStyle(ChatFormatting.GREEN));
                 owner.sendSystemMessage(Component.translatable("command.toneko.player.accept", neko.getName()).withStyle(ChatFormatting.GREEN));
             }else {
-                neko.sendSystemMessage(Component.translatable("command.toneko.accept", owner.getName()).withStyle(ChatFormatting.RED));
+                neko.sendSystemMessage(Component.translatable("command.toneko.deny", owner.getName()).withStyle(ChatFormatting.RED));
                 owner.sendSystemMessage(Component.translatable("command.toneko.player.deny", neko.getName()).withStyle(ChatFormatting.RED));
             }
             ownerMap.remove(owner);
@@ -219,7 +219,8 @@ public class ToNekoCommand {
     public static int remove(CommandContext<CommandSourceStack> context) {
         try {
             final Player player = context.getSource().getPlayer();
-            Player neko = context.getArgument("neko", ServerPlayer.class);
+            ServerPlayer neko = NekoArgument.checkOwned(context, "neko"); //属主校验
+            if (neko == null) return 0;
             neko.removeOwner(player.getUUID());
             player.sendSystemMessage(translatable("command.toneko.remove", neko.getName().getString()));
             return 1;
@@ -234,7 +235,8 @@ public class ToNekoCommand {
             final CommandSourceStack source = context.getSource();
             final Player player = source.getPlayer();
             //获取关键信息
-            ServerPlayer neko = context.getArgument("neko", ServerPlayer.class); //猫娘
+            ServerPlayer neko = NekoArgument.checkOwned(context, "neko"); //猫娘（含属主校验）
+            if (neko == null) return 0;
             String block = context.getArgument("block", String.class); //屏蔽词
             String replace = context.getArgument("replace", String.class); //替换词
             String method = context.getArgument("method", String.class); //all or word
@@ -254,7 +256,8 @@ public class ToNekoCommand {
         try {
             final CommandSourceStack source = context.getSource();
             final Player player = source.getPlayer();
-            ServerPlayer neko = context.getArgument("neko", ServerPlayer.class); //猫娘的名称
+            ServerPlayer neko = NekoArgument.checkOwned(context, "neko"); //猫娘的名称（含属主校验）
+            if (neko == null) return 0;
             String block = context.getArgument("block", String.class); //屏蔽词
 
             neko.removeBlockedWord(block);
@@ -269,7 +272,8 @@ public class ToNekoCommand {
     public static int xp(CommandContext<CommandSourceStack> context) {
         try {
             ServerPlayer player = context.getSource().getPlayer();
-            ServerPlayer neko = context.getArgument("neko", ServerPlayer.class);
+            ServerPlayer neko = NekoArgument.checkOwned(context, "neko"); //属主校验
+            if (neko == null) return 0;
             player.sendSystemMessage(translatable("command.toneko.xp", neko.getName().getString(), neko.getXpWithOwner(player.getUUID())));
             return 1;
         }catch (Exception e){
@@ -281,7 +285,8 @@ public class ToNekoCommand {
     public static int AliasesRemove(CommandContext<CommandSourceStack> context) {
         try{
             ServerPlayer player = context.getSource().getPlayer();
-            ServerPlayer neko =context.getArgument("neko", ServerPlayer.class);
+            ServerPlayer neko = NekoArgument.checkOwned(context, "neko"); //属主校验
+            if (neko == null) return 0;
             String aliases = StringArgumentType.getString(context, "aliases");
             neko.getOwner(player.getUUID()).getAliases().remove(aliases);
             player.sendSystemMessage(translatable("command.toneko.aliases.remove", aliases));
@@ -295,7 +300,8 @@ public class ToNekoCommand {
     public static int AliasesAdd(CommandContext<CommandSourceStack> context) {
         try {
             ServerPlayer player = context.getSource().getPlayer();
-            ServerPlayer neko = context.getArgument("neko", ServerPlayer.class);
+            ServerPlayer neko = NekoArgument.checkOwned(context, "neko"); //属主校验
+            if (neko == null) return 0;
             String aliases = StringArgumentType.getString(context, "aliases");
             neko.getOwner(player.getUUID()).getAliases().add(aliases);
             player.sendSystemMessage(translatable("command.toneko.aliases.add", aliases));

@@ -3,8 +3,7 @@ package org.cneko.toneko.common.mod.commands;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.commands.CommandSourceStack;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -23,11 +22,11 @@ import net.minecraft.world.item.component.ItemLore;
 import org.cneko.toneko.common.mod.ai.actions.NekoActionExecutor;
 import org.cneko.toneko.common.api.Permissions;
 import org.cneko.toneko.common.mod.api.EntityPoseManager;
+import org.cneko.toneko.common.mod.api.PoseStateSync;
 import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
 import org.cneko.toneko.common.mod.misc.Messaging;
 import org.cneko.toneko.common.mod.misc.ToNekoAttributes;
-import org.cneko.toneko.common.mod.packets.EntityPosePayload;
 import org.cneko.toneko.common.mod.util.EntityUtil;
 import org.cneko.toneko.common.mod.util.PermissionUtil;
 import org.cneko.toneko.common.util.AIUtil;
@@ -178,21 +177,21 @@ public class NekoCommand {
         return 1;
     }
 
-    // 设置实体的姿态
+    // 设置实体的姿态（切换式：已钉定则解除，否则钉定）
     private static void setEntityPose(Entity entity, Pose pose, CommandSourceStack source) {
+        if (entity instanceof ServerPlayer player) {
+            // 玩家走一次性同步助手：钉定/解除时各发一次本人状态包
+            if (EntityPoseManager.contains(player)) {
+                PoseStateSync.unpin(player);
+            } else {
+                PoseStateSync.pin(player, pose);
+            }
+            return;
+        }
         if (EntityPoseManager.contains(entity)) {
             EntityPoseManager.remove(entity);
-            sendPosePacket(entity, pose, false);
         } else {
             EntityPoseManager.setPose(entity, pose);
-            sendPosePacket(entity, pose, true);
-        }
-    }
-
-    // 发送姿态包
-    private static void sendPosePacket(Entity entity, Pose pose, boolean isSet) {
-        if (entity instanceof ServerPlayer player) {
-            ServerPlayNetworking.send(player, new EntityPosePayload(pose,entity.getUUID().toString(), isSet));
         }
     }
 
@@ -270,6 +269,7 @@ public class NekoCommand {
             return 1;
         }else if (player.getNekoEnergy()<100){
             player.sendSystemMessage(translatable("command.neko.effect.not_enough_energy"));
+            return 1;
         }
         // 消耗能量
         player.setNekoEnergy(player.getNekoEnergy()-100);

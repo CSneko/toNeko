@@ -13,7 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.cneko.toneko.common.mod.api.EntityPoseManager;
 import org.cneko.toneko.common.mod.mixin.client.ClientLevelAccessor;
-import org.cneko.toneko.common.mod.client.api.ClientEntityPoseManager;
+import org.cneko.toneko.common.mod.client.api.ClientPoseState;
 import org.cneko.toneko.common.mod.client.api.StompAnimations;
 import org.cneko.toneko.common.mod.client.screens.*;
 import org.cneko.toneko.common.mod.client.util.ClientConfig;
@@ -170,22 +170,15 @@ public class ClientNetworkEvents {
 
     }
     public static void setPose(EntityPosePayload payload, ClientPlayNetworking.Context context) {
-        String uuid = payload.uuid();
-        if (uuid==null){
+        // 只处理发给本人的状态包（uuid="self"）：用于本地预测与服务端一致。
+        // 其它实体的姿势完全由原版 DATA_POSE 同步，不再做客户端覆盖。
+        if (payload.uuid() == null || !"self".equalsIgnoreCase(payload.uuid())) {
             return;
         }
-        LivingEntity entity;
-        if (uuid.equalsIgnoreCase("self")){
-            entity = context.player();
-        }else {
-            entity = findNearbyEntityByUuid(UUID.fromString(uuid),128);
-        }
-        Pose pose = payload.pose();
-        boolean status = payload.status();
-        if(status) {
-            ClientEntityPoseManager.setPose(entity, pose);
-        }else{
-            ClientEntityPoseManager.remove(entity);
+        if (payload.status()) {
+            ClientPoseState.activate(context.player().getUUID(), payload.pose());
+        } else {
+            ClientPoseState.deactivate();
         }
     }
 

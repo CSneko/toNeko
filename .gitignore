@@ -12,6 +12,10 @@ build/*
 /fabric/.gradle/
 /fabric/build/
 /fabric/run/
+/bukkit/.gradle/
+/bukkit/build/
+/bukkit/run/
+/result/
 /run/
 /common/src/main/java/com/crystalneko/tonekofabric/test/
 /common/src/main/generated/

@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
@@ -78,10 +79,13 @@ public class AIUtil {
      * Player2 心跳：每 60s 一次 GET /v1/health（带 player2-game-key 来源标记 + Bearer p2Key）。
      * 与官方 chatclef 一致——Player2 按心跳累计"AI 使用分钟数"，
      * 只发 chat/completions 而不心跳的话统计不会增长。失败静默（仅 debug）。
+     * <p>
+     * 注意：心跳取 p2Key 必须用安静模式——本地 login 失败（App 未启动/未授权）
+     * 不允许自动发起云端授权流程，否则玩家会被反复弹出验证请求。
      */
     private static void heartbeat() {
         Map<String, String> headers = new HashMap<>(TTSUtil.player2Headers());
-        Player2Auth.getP2Key().ifPresent(key -> headers.put("Authorization", "Bearer " + key));
+        Player2Auth.getP2KeyQuiet().ifPresent(key -> headers.put("Authorization", "Bearer " + key));
         new HttpClient().sendGet(TTSUtil.baseUrl() + "/v1/health", null, headers, String.class)
                 .whenComplete((resp, ex) -> {
                     if (ex != null) {
@@ -95,6 +99,10 @@ public class AIUtil {
      * 注意用 127.0.0.1（文档明确 localhost 有 IPv6 冲突），端口走 TTSUtil 解析
      * （Player2 端口被占用时会自动换端口，写 api.port 文件）。
      * Player2Provider 每次请求动态解析端口，因此无需写死 base_url。
+     * <p>
+     * 只在用户"从未配置过 AI"（enable=false 且 service 还是默认值 neko）时才自动启用，
+     * 避免覆盖用户的显式选择——否则用户手动关掉 AI 或换服务商后，60s 内又会被强制改回 player2。
+     * p2Key 预取同样使用安静模式，探测服务不应触发云端授权弹窗。
      */
     private static void checkElefantOnce() {
         executor.submit(() -> {
@@ -102,7 +110,10 @@ public class AIUtil {
             var response = client.sendGet(TTSUtil.baseUrl() + "/v1/health", null, TTSUtil.player2Headers(), String.class);
             response.whenComplete((response1, throwable) -> {
                 boolean canUseElefant = throwable == null;
-                if (canUseElefant) {
+                // 用户显式配置过 AI（启用过其他服务商、或手动关闭过）就不自动改配置
+                boolean untouchedByUser = !ConfigUtil.isAIEnabled()
+                        && "neko".equalsIgnoreCase(ConfigUtil.getAIService());
+                if (canUseElefant && untouchedByUser) {
                     ConfigUtil.CONFIG.set("ai.service", "player2");
                     ConfigUtil.CONFIG.set("ai.enable", true);
                     ConfigUtil.CONFIG.set("ai.tts.enable", true);
@@ -111,8 +122,9 @@ public class AIUtil {
                     ConfigUtil.CONFIG.set("ai.model", "");
                     ConfigUtil.CONFIG.save();
                     LOGGER.info("Found Player2 running, set AI provider to player2 ({})", TTSUtil.baseUrl());
-                    // 预取 p2Key：已授权则直接可用；未授权则异步发起 device flow（通知玩家点击授权）
-                    Player2Auth.getP2Key();
+                    // 安静预取 p2Key：已授权则直接可用；未授权也不打扰玩家
+                    // （真正发 AI 请求时才会走完整授权流程）
+                    Player2Auth.getP2KeyQuiet();
                 }
             });
             response.join();
@@ -262,6 +274,17 @@ public class AIUtil {
         }
         final String speakerName = resolvedSpeaker;
 
+        // 回调幂等保护：正常完成、失败、超时兜底三者只会触发一次真实回调，
+        // 防止超时兜底响应后，迟到的请求结果再重复回调一次
+        final AtomicBoolean responded = new AtomicBoolean(false);
+        final MessageCallback guardedCallback = new MessageCallback() {
+            @Override
+            public void execute(AIResponse response) {
+                if (responded.compareAndSet(false, true)) {
+                    callback.execute(response);
+                }
+            }
+        };
         var future = executor.submit(()->{
             try{
                 String rawService = ConfigUtil.getAIService();
@@ -269,14 +292,14 @@ public class AIUtil {
 
                 if (providerId == null) {
                     LOGGER.warn("Unsupported AI service: {}, please read the docs: https://s.cneko.org/toNekoAI", rawService);
-                    callback.execute(new AIResponse("Unsupported AI service: " + rawService + ", please read the docs: https://s.cneko.org/toNekoAI", 400));
+                    guardedCallback.execute(new AIResponse("Unsupported AI service: " + rawService + ", please read the docs: https://s.cneko.org/toNekoAI", 400));
                     return;
                 }
 
                 AIServiceProvider provider = AIServiceProviderRegistry.get(providerId);
                 if (provider == null) {
                     LOGGER.warn("AI provider not found: {}", providerId);
-                    callback.execute(new AIResponse("AI provider not found: " + providerId, 400));
+                    guardedCallback.execute(new AIResponse("AI provider not found: " + providerId, 400));
                     return;
                 }
 
@@ -341,7 +364,7 @@ public class AIUtil {
 
                 if (response == null) {
                     LOGGER.warn("[AI-DEBUG] <<< NULL | provider={} time={}ms - AI provider returned null response", providerId, elapsed);
-                    callback.execute(new AIResponse("AI service returned no response.", 500));
+                    guardedCallback.execute(new AIResponse("AI service returned no response.", 500));
                     return;
                 }
 
@@ -351,7 +374,7 @@ public class AIUtil {
                                 providerId, response.getCode(), elapsed,
                                 response.getResponse() != null ? response.getResponse().substring(0, Math.min(200, response.getResponse().length())) : "(null)");
                     }
-                    callback.execute(new AIResponse("服务器繁忙，请稍后再试。", response.getCode()));
+                    guardedCallback.execute(new AIResponse("服务器繁忙，请稍后再试。", response.getCode()));
                     return;
                 }
 
@@ -380,7 +403,7 @@ public class AIUtil {
                             response.getResponse() != null ? response.getResponse().length() : 0,
                             respPreview);
                 }
-                callback.execute(response);
+                guardedCallback.execute(response);
             }catch (AIException e){
                 // 库层统一错误：超时/认证/限流/网络/解析等
                 long elapsed = System.currentTimeMillis() - startTime;
@@ -389,7 +412,7 @@ public class AIUtil {
                 if (debug) {
                     LOGGER.error("[AI-DEBUG] AI exception details:", e);
                 }
-                callback.execute(new AIResponse("服务器繁忙，请稍后再试。",
+                guardedCallback.execute(new AIResponse("服务器繁忙，请稍后再试。",
                         e.getStatusCode() != 0 ? e.getStatusCode() : 500));
             }catch (Exception e){
                 long elapsed = System.currentTimeMillis() - startTime;
@@ -397,7 +420,7 @@ public class AIUtil {
                 if (debug) {
                     LOGGER.error("[AI-DEBUG] Exception details:", e);
                 }
-                callback.execute(new AIResponse("AI request failed: " + e.getMessage(), 500));
+                guardedCallback.execute(new AIResponse("AI request failed: " + e.getMessage(), 500));
             }
         });
 
@@ -408,6 +431,8 @@ public class AIUtil {
             } catch (TimeoutException e) {
                 future.cancel(true);
                 LOGGER.warn("[AI-DEBUG] <<< TIMEOUT | exceeded {}s for msg=\"{}\"", REQUEST_TIMEOUT, msgSnippet);
+                // 超时也必须通知调用方，否则玩家消息石沉大海（幂等保护保证不会与迟到结果重复回调）
+                guardedCallback.execute(new AIResponse("AI request timed out.", 504));
             } catch (Exception e) {
                 LOGGER.error("Unexpected error during message sending task.", e);
             }

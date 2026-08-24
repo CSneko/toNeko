@@ -49,8 +49,8 @@ public class MoufletStealItemGoal extends Goal {
                     ItemStack stack = player.getInventory().getItem(i);
                     if (!stack.isEmpty() && stack.getItem() instanceof CatnipItem) {
                         boss.eatenCatnip++;
+                        // eatOrStoreFood 契约：成功时恰好消耗 1 个，无需再 removeItem
                         boss.eatOrStoreFood(stack);
-                        player.getInventory().removeItem(i, 1);
                         lastStealCatnipTime = boss.level().getGameTime();
                         return; // 猫薄荷独立处理，不阻塞其他偷窃
                     }
@@ -69,8 +69,7 @@ public class MoufletStealItemGoal extends Goal {
                         Tier tier = tiered.getTier();
                         float attackDamage = tier.getAttackDamageBonus() + 1.0F;
                         if (attackDamage > 10.0F) {
-                            boss.eatOrStoreFood(stack);
-                            player.getInventory().removeItem(i, 1);
+                            boss.eatOrStoreFood(stack); // 契约：成功时恰好消耗 1 个
                             lastStealWeaponTime = boss.level().getGameTime();
                             return;
                         }
@@ -87,8 +86,7 @@ public class MoufletStealItemGoal extends Goal {
                 for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
                     ItemStack stack = player.getInventory().getItem(i);
                     if (!stack.isEmpty() && stack.has(DataComponents.FOOD)) {
-                        boss.eatOrStoreFood(stack);
-                        player.getInventory().removeItem(i, 1);
+                        boss.eatOrStoreFood(stack); // 契约：成功时恰好消耗 1 个
                         lastStealFoodTime = boss.level().getGameTime();
                         return;
                     }

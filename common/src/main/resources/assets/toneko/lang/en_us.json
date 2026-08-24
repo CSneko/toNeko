@@ -186,6 +186,7 @@
   "command.toneko.player.alreadyOwner": "§aYou have already been §6%s §a's owner~",
   "command.toneko.player.deny": "§c%s has denied your request, meow",
   "command.toneko.player.notNeko": "§cPlayer %s §cisn't a neko~",
+  "command.toneko.player.notOwner": "§cYou are not the owner of neko %s!",
   "command.toneko.player.request": "%s §6 wants to be your master",
   "command.toneko.player.send_request": "§dA request has been sent to %s, meow",
   "command.toneko.player.success": "§aYou become §6%s §a's owner now-nya",

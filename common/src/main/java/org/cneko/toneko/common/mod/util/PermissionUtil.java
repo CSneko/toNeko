@@ -85,8 +85,10 @@ public class PermissionUtil {
 
     public static boolean has(CommandSourceStack source, String permission){
         try {
-            // 如果是终端执行，则直接返回true
-            if (source.getEntity() == null) {
+            // 无实体来源的区分：控制台的权限等级恒为 4，命令块/函数最高只有 2 级。
+            // 因此仅对 4 级来源（即控制台）直接放行；命令块等落入下方常规检查，
+            // 防止命令块绕过 /tonekoadmin 的管理员权限限制。
+            if (source.getEntity() == null && source.hasPermission(4)) {
                 return true;
             }
             if (installed) {

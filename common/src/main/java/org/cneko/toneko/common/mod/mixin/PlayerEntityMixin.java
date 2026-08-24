@@ -24,10 +24,10 @@ import org.cneko.toneko.common.mod.ai.NekoTriggerManager;
 import org.cneko.toneko.common.mod.api.EntityPoseManager;
 import org.cneko.toneko.common.mod.api.ExplorationLevelFactor;
 import org.cneko.toneko.common.mod.api.NekoLevelRegistry;
+import org.cneko.toneko.common.mod.api.PoseStateSync;
 import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
 import org.cneko.toneko.common.mod.misc.mixininterface.SlowTickable;
-import org.cneko.toneko.common.mod.packets.EntityPosePayload;
 import org.cneko.toneko.common.mod.packets.NekoInfoSyncPayload;
 import org.cneko.toneko.common.mod.packets.PlayerLeadByPlayerPayload;
 import org.cneko.toneko.common.mod.quirks.Quirk;
@@ -112,34 +112,13 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
             toneko$slowTick();
             toneko$tick = 0;
         }
-        if (toneko$tick %2 == 0){
-            if (player instanceof ServerPlayer sp){
-                Pose pose;
-                boolean status;
-                if (!EntityPoseManager.contains(player)){
-                    status = false;
-                    pose = Pose.STANDING;
-                }else {
-                    status = true;
-                    pose = EntityPoseManager.getPose(player);
-                }
-                ServerPlayNetworking.send(sp,new EntityPosePayload(pose,"self",status));
-            }
-        }
+        // 姿势钉定不再轮询发包：服务端写入走原版 DATA_POSE 同步，
+        // 本人客户端的预测对齐只在钉定/解除瞬间发一次包（见 PoseStateSync）；
+        // 趴/躺时按 Shift 起身规则统一移至 LivingEntityMixin 双端处理。
+
         // 自然成长：幼年猫娘每秒成长1 tick，约10个游戏日成年
         if (player instanceof ServerPlayer && this.isNeko() && this.getNekoAge() < 0) {
             this.setNekoAge(this.getNekoAge() + 1);
-        }
-        // 趴下/躺下时按潜行键起身（摔倒趴下、/neko lie、/neko getDown 共用）
-        if (player instanceof ServerPlayer sp) {
-            Pose lyingPose = EntityPoseManager.getNullablePose(player);
-            if (lyingPose != null && (lyingPose == Pose.SWIMMING || lyingPose == Pose.SLEEPING)) {
-                if (player.isShiftKeyDown()) {
-                    EntityPoseManager.remove(player);
-                    ServerPlayNetworking.send(sp, new EntityPosePayload(lyingPose,
-                            player.getUUID().toString(), false));
-                }
-            }
         }
 
         // 猫娘潜行：能量消耗 + 冷却倒计时
@@ -345,6 +324,43 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
     }
 
     // ---- 猫娘潜行 ----
+
+    /**
+     * 玩家姿势钉定重申（双端）。
+     *
+     * Player.tick 在 super.tick() 之后调用 updatePlayerPose() 重算姿势，
+     * 因此必须在它的所有返回点把钉定姿势写回去，保证「钉定」是该 tick
+     * 内最后一次姿势写入 —— DATA_POSE 同步出去的值才是钉定值。
+     * 写入走普通 setPose，不取消/劫持任何原版逻辑，兼容其它动作模组。
+     *
+     * 趴/躺钉定时按 Shift 起身的双端同规则也在此处理：
+     * 客户端本地解除预测钉定、服务端解钉并通知本人客户端，
+     * 两端判定条件一致，起身瞬间不会出现姿势来回闪烁。
+     */
+    @Inject(method = "updatePlayerPose", at = @At("RETURN"))
+    public void toneko$reapplyPinnedPose(CallbackInfo ci) {
+        Player self = (Player)(Object)this;
+        boolean clientSide = self.level().isClientSide;
+
+        Pose pinned = clientSide
+                ? org.cneko.toneko.common.mod.client.api.ClientPoseState.applyTo(self)
+                : EntityPoseManager.getNullablePose(self);
+        if (pinned == null || self.isPassenger()) {
+            return;
+        }
+
+        // 与服务端同规则：趴(SWIMMING)/躺(SLEEPING)时按 Shift 起身
+        if ((pinned == Pose.SWIMMING || pinned == Pose.SLEEPING) && self.isShiftKeyDown()) {
+            if (clientSide) {
+                org.cneko.toneko.common.mod.client.api.ClientPoseState.deactivate();
+            } else {
+                PoseStateSync.unpin((ServerPlayer) self);
+            }
+            return;
+        }
+
+        self.setPose(pinned);
+    }
 
     @Override
     public void setStealthActive(boolean active) {

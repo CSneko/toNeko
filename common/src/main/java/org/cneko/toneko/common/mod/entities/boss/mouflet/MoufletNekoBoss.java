@@ -592,7 +592,8 @@ public class MoufletNekoBoss extends NekoEntity implements NekoBoss, PlayerRidea
         if (!this.level().isClientSide()) {
             unhurtTime++;
             if (unhurtTime > 1280) {
-                // 给予生命回复效果
+                // 脱战 64 秒后回复一次生命；重置计数，避免每 tick 施加瞬间治疗（≈无敌）
+                unhurtTime = 0;
                 this.addEffect(new MobEffectInstance(
                         MobEffects.HEAL,
                         1, // 持续时间为1 tick
@@ -773,8 +774,8 @@ public class MoufletNekoBoss extends NekoEntity implements NekoBoss, PlayerRidea
         for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
             ItemStack stack = player.getInventory().getItem(i);
             if (!stack.isEmpty() && stack.has(DataComponents.FOOD)) {
+                // eatOrStoreFood 契约：成功时恰好消耗 1 个，无需再 removeItem
                 this.eatOrStoreFood(stack);
-                player.getInventory().removeItem(i, 1);
                 break;
             }
         }

@@ -2,7 +2,9 @@ package org.cneko.toneko.common.mod.commands.arguments;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
+import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import org.cneko.toneko.common.mod.util.PlayerUtil;
@@ -52,6 +54,25 @@ public class NekoArgument implements ArgumentType<ServerPlayer> {
 
     private boolean checkNeko(Player player) {
         return player.isNeko();
+    }
+
+    /**
+     * 在 executes 阶段校验 ownedNeko() 声明的属主约束。
+     * Brigadier 的 parse(StringReader) 拿不到命令发送者，因此属主校验统一在执行期调用本方法完成。
+     *
+     * @return 校验通过的目标猫娘；校验失败（发送者不是其主人，或来源不是玩家）时向发送者反馈并返回 null
+     */
+    public static ServerPlayer checkOwned(CommandContext<CommandSourceStack> context, String argName) {
+        ServerPlayer neko = context.getArgument(argName, ServerPlayer.class);
+        ServerPlayer sender = context.getSource().getPlayer();
+        if (sender == null) {
+            return null;
+        }
+        if (!neko.hasOwner(sender.getUUID())) {
+            sender.sendSystemMessage(translatable("command.toneko.player.notOwner", neko.getName().getString()));
+            return null;
+        }
+        return neko;
     }
 
     @Override

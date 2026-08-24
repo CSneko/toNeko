@@ -492,6 +492,10 @@ public class FlySwordEntity extends Entity {
     }
 
     private void pilotTick(Player player) {
+        // 御剑时强制站姿：同时解除姿势钉定，否则会被每 tick 的姿势重申覆盖回去
+        if (player instanceof net.minecraft.server.level.ServerPlayer sp) {
+            org.cneko.toneko.common.mod.api.PoseStateSync.unpin(sp);
+        }
         player.setPose(Pose.STANDING);
 
         // Fuel: hold fuel items for thrust boost (different fuels = different power)
@@ -719,6 +723,10 @@ public class FlySwordEntity extends Entity {
         super.positionRider(p, cb);
         if (p instanceof Player player) {
             player.setYRot(player.getYRot() + entityData.get(YAW_OFFSET));
+            if (!player.level().isClientSide && player instanceof net.minecraft.server.level.ServerPlayer sp) {
+                // 御剑时解除姿势钉定，避免与强制站姿互相打架
+                org.cneko.toneko.common.mod.api.PoseStateSync.unpin(sp);
+            }
             player.setPose(Pose.STANDING);
         }
     }

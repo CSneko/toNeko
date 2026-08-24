@@ -17,7 +17,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import org.cneko.toneko.common.mod.client.ToNekoKeyBindings;
-import org.cneko.toneko.common.mod.client.api.ClientEntityPoseManager;
 import org.cneko.toneko.common.mod.client.api.GiftSelectionManager;
 import org.cneko.toneko.common.mod.client.events.ClientTickEvent;
 import org.cneko.toneko.common.mod.entities.FlySwordEntity;
@@ -50,7 +49,8 @@ public class HudRenderEvent {
                 renderDismountHint(guiGraphics);
             }
             // 趴下/躺下时显示起身提示（摔倒趴下、/neko lie、/neko getDown 共用）
-            Pose lyingPose = ClientEntityPoseManager.getNullablePose(player);
+            // 姿势现在由原版 DATA_POSE 同步 + 客户端预测对齐，直接读真实姿势即可
+            Pose lyingPose = player.getPose();
             if (lyingPose == Pose.SWIMMING || lyingPose == Pose.SLEEPING) {
                 renderStandUpHint(guiGraphics);
             }

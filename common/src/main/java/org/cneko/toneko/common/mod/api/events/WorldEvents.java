@@ -8,7 +8,7 @@ public class WorldEvents {
     public static Event<OnWeatherChange> ON_WEATHER_CHANGE = EventFactory.createArrayBacked(OnWeatherChange.class,
             (listeners) -> (world,clearTime, weatherTime, isRaining, isThundering) -> {
         for (OnWeatherChange listener : listeners) {
-            listener.onWeatherChange(world,clearTime, weatherTime, isRaining, isRaining);
+            listener.onWeatherChange(world,clearTime, weatherTime, isRaining, isThundering);
         }
     });
 

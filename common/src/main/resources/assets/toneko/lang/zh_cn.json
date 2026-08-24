@@ -186,6 +186,7 @@
   "command.toneko.player.alreadyOwner": "§a已经是 §6%s §a的主人了喵~",
   "command.toneko.player.deny": "§c%s拒绝了你的请求了喵",
   "command.toneko.player.notNeko": "§c玩家 %s 不是猫娘喵~",
+  "command.toneko.player.notOwner": "§c你不是猫娘 %s 的主人喵！",
   "command.toneko.player.request": "%s §6想要成为你的主人",
   "command.toneko.player.send_request": "§d已经向%s发出请求了喵",
   "command.toneko.player.success": "§a你现在成为了 §6%s §a的主人喵~",

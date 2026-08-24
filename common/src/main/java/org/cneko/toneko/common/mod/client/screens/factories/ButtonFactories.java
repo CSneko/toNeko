@@ -9,8 +9,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import org.cneko.toneko.common.api.TickTasks;
-import org.cneko.toneko.common.mod.api.EntityPoseManager;
-import org.cneko.toneko.common.mod.client.api.ClientEntityPoseManager;
 import org.cneko.toneko.common.mod.client.api.GiftSelectionManager;
 import org.cneko.toneko.common.mod.client.screens.*;
 import org.cneko.toneko.common.mod.client.screens.NekoScreenBuilder.ButtonFactory;
@@ -118,24 +116,12 @@ public class ButtonFactories {
     });
     public static ButtonFactory ACTION_LIE_BUTTON = screen -> Button.builder(Component.translatable("screen.toneko.neko_entity_interactive.button.lie"),(btn)->{
         NekoEntity neko = screen.getNeko();
-        // 客户端立即更新姿态
-        if (!ClientEntityPoseManager.contains(neko)) {
-            ClientEntityPoseManager.setPose(neko, Pose.SLEEPING);
-        } else {
-            ClientEntityPoseManager.remove(neko);
-        }
-        // 同步到服务端
+        // 姿势由服务端写入并经原版 DATA_POSE 同步，无需客户端预测
         ClientPlayNetworking.send(new NekoPosePayload(Pose.SLEEPING,neko.getUUID().toString()));
     });
     public static ButtonFactory ACTION_GET_DOWN_BUTTON = screen -> Button.builder(Component.translatable("screen.toneko.neko_entity_interactive.button.get_down"),(btn)->{
         NekoEntity neko = screen.getNeko();
-        // 客户端立即更新姿态
-        if (!ClientEntityPoseManager.contains(neko)) {
-            ClientEntityPoseManager.setPose(neko, Pose.SWIMMING);
-        } else {
-            ClientEntityPoseManager.remove(neko);
-        }
-        // 同步到服务端
+        // 姿势由服务端写入并经原版 DATA_POSE 同步，无需客户端预测
         ClientPlayNetworking.send(new NekoPosePayload(Pose.SWIMMING,neko.getUUID().toString()));
     });
 

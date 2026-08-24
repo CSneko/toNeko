@@ -4,78 +4,37 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Pose;
-import net.minecraft.world.entity.player.Player;
 import org.cneko.toneko.common.mod.api.EntityPoseManager;
-import org.cneko.toneko.common.mod.client.api.ClientEntityPoseManager;
 import org.cneko.toneko.common.mod.packets.EntityPosePayload;
-import org.cneko.toneko.common.mod.util.EntityUtil;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import software.bernie.geckolib.animatable.GeoEntity;
 
-@SuppressWarnings("UnreachableCode")
 @Mixin(Entity.class)
-public abstract class EntityMixin{
+public abstract class EntityMixin {
 
-    @Unique
-    public int toneko$slowTick = 0;
-
-    @Inject(at = @At("HEAD"), method = "setPose", cancellable = true)
-    public void setPose(Pose pose, CallbackInfo info){
+    /**
+     * 实体移除（死亡/区块卸载/换维度/重生）时清除姿势钉定：
+     * 防止旧实体实例残留强引用（泄漏）与“幽灵姿势”。
+     * 玩家断线不经过此方法，但 EntityPoseManager 为 WeakHashMap，
+     * 实体失去引用后条目自动消失，双重保险。
+     */
+    @Inject(method = "remove(Lnet/minecraft/world/entity/Entity$RemovalReason;)V", at = @At("TAIL"))
+    public void toneko$onRemove(Entity.RemovalReason reason, CallbackInfo ci) {
         Entity entity = (Entity) (Object) this;
-        // 如果实体存在设置的姿态，则取消设置姿态
-        if (!entity.level().isClientSide) {
-            if (EntityPoseManager.contains(entity)) {
-                var entityPose = EntityPoseManager.getPose(entity);
-                if (entityPose != pose) {
-                    entity.setPose(entityPose);
-                    info.cancel();
-                }
-            }
+        if (entity.level().isClientSide) {
+            return;
         }
-    }
-
-    @Inject(at = @At("HEAD"), method = "getPose", cancellable = true)
-    public void getPose(CallbackInfoReturnable<Pose> cir){
-        Entity entity = (Entity) (Object) this;
-        if (!entity.level().isClientSide) {
-            if (EntityPoseManager.contains(entity)) {
-                cir.setReturnValue(EntityPoseManager.getPose(entity));
+        if (entity instanceof ServerPlayer sp && !sp.hasDisconnected()) {
+            // 连接仍在（死亡/换维度）：通知本人客户端解除本地预测钉定
+            Pose prev = EntityPoseManager.getNullablePose(sp);
+            if (prev != null) {
+                EntityPoseManager.remove(sp);
+                ServerPlayNetworking.send(sp, new EntityPosePayload(prev, "self", false));
             }
-        }else {
-            if (ClientEntityPoseManager.contains(entity)) {
-                cir.setReturnValue(ClientEntityPoseManager.getPose(entity));
-            }
+            return;
         }
-
-    }
-
-    @Inject(at = @At("HEAD"), method = "tick")
-    public void tick(CallbackInfo info){
-        toneko$slowTick++;
-        if (toneko$slowTick >= 2) {
-            toneko$slowTick = 0;
-            var entity = (Entity)(Object)this;
-            if (!entity.level().isClientSide) {
-                // 如果周围有其它玩家，则发送给周围的所有玩家
-                var pose = EntityPoseManager.getPose(entity);
-                boolean status;
-                if (pose == null){
-                    status = false;
-                    pose = Pose.STANDING;
-                }else {
-                    status = true;
-                }
-                var players = EntityUtil.getPlayersInRange(entity, entity.level(), 16);
-                for (Player player : players) {
-                    ServerPlayNetworking.send((ServerPlayer) player, new EntityPosePayload(pose, entity.getUUID().toString(), status));
-                }
-            }
-        }
-
+        EntityPoseManager.remove(entity);
     }
 }

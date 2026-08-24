@@ -209,8 +209,9 @@ public class AmmunitionEntity extends ThrowableProjectile implements GeoEntity {
     @Override
     protected void onHit(@NotNull HitResult hitResult) {
         super.onHit(hitResult);
-        // 处理碰撞逻辑
-        if (!this.level().isClientSide) {
+        // 原版 Projectile.onHit 已按命中类型派发到上方 onHitEntity/onHitBlock（其中会 discard）。
+        // 此段仅为兜底：仅当实体未被移除时才手动派发，避免爆炸/落雷等效果被触发两次
+        if (!this.isRemoved() && !this.level().isClientSide) {
             if (hitResult.getType() == HitResult.Type.ENTITY) {
                 this.onHitEntity((EntityHitResult) hitResult);
             } else if (hitResult.getType() == HitResult.Type.BLOCK) {

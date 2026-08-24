@@ -14,7 +14,7 @@ public class FabricLanguageImpl implements Language{
     @Override
     public void load() {
         try {
-            List<String> languages = List.of("en_us","zh_cn","zh_tw","ko_kr");
+            List<String> languages = List.of("en_us","zh_cn","zh_tw","ko_kr","ja_jp");
             language = CONFIG.getString("language");
             // 创建文件夹如果不存在
             FileUtil.CreatePath(LANG_PATH);

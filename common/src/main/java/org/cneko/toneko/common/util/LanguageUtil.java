@@ -23,7 +23,7 @@ public class LanguageUtil {
     public static String translatable(String key){
         if(LANG.contains(key)){
             return LANG.getString(key);
-        }else if(EN_US_LANG != null && !language.equals("en_us") && LANG.contains(key)){
+        }else if(EN_US_LANG != null && !language.equals("en_us") && EN_US_LANG.contains(key)){
             return EN_US_LANG.getString(key);
         }
         return key;

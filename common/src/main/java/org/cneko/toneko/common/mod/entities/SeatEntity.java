@@ -18,10 +18,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.phys.AABB;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import org.cneko.toneko.common.mod.api.EntityPoseManager;
 import org.cneko.toneko.common.mod.blocks.ShengDengBlock;
-import org.cneko.toneko.common.mod.packets.EntityPosePayload;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -233,9 +230,7 @@ public class SeatEntity extends Entity {
 
         // 摔趴下：参考 NekoCommand 的 getDown（Pose.SWIMMING 爬行姿态）
         if (player instanceof ServerPlayer sp) {
-            EntityPoseManager.setPose(player, Pose.SWIMMING);
-            ServerPlayNetworking.send(sp, new EntityPosePayload(Pose.SWIMMING,
-                    player.getUUID().toString(), true));
+            org.cneko.toneko.common.mod.api.PoseStateSync.pin(sp, Pose.SWIMMING);
         }
 
         // 创造模式：只摔不伤（无伤害、无击退），便于测试/观赏

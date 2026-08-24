@@ -5,13 +5,10 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import org.cneko.toneko.common.api.TickTasks;
 import org.cneko.toneko.common.mod.client.ToNekoKeyBindings;
-import org.cneko.toneko.common.mod.client.api.ClientEntityPoseManager;
 import org.cneko.toneko.common.mod.client.api.GiftSelectionManager;
 import org.cneko.toneko.common.mod.client.screens.ChatWithNekoScreen;
 import org.cneko.toneko.common.mod.client.screens.NekoInfoScreen;
@@ -234,19 +231,6 @@ public class ClientTickEvent {
         TickTasks.executeDefaultClient();
         // 送礼选择模式：超时/打开界面时取消
         GiftSelectionManager.tick(client);
-        // 寻找16格内的生物
-        Player p = Minecraft.getInstance().player;
-        if (p != null) {
-            var entities = EntityUtil.getLivingEntitiesInRange(p,p.level(),16);
-            tick++;
-            if (tick==100){
-                tick = 0;
-                // 删除16格外实体的所有姿势
-                ClientEntityPoseManager.poseMap.entrySet().removeIf(entry -> {
-                    Entity entity = entry.getKey();
-                    return entity == null || entity.distanceTo(p) > 16;
-                });
-            }
-        }
+        // 姿势同步已回归原版 DATA_POSE 链路，客户端不再维护姿势覆盖表
     }
 }
