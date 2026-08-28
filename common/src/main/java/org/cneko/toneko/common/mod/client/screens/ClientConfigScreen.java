@@ -2,7 +2,7 @@ package org.cneko.toneko.common.mod.client.screens;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
@@ -94,38 +94,38 @@ public class ClientConfigScreen extends Screen {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractRenderState(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         // 背景渐变（与 ConfigScreen 一致）
         guiGraphics.fill(0, 0, width, height, COLOR_BG_TOP);
         guiGraphics.fill(0, height / 2, width, height, COLOR_BG_BOTTOM);
 
         Component title = Component.translatable("screen.toneko.client_config.title")
                 .withStyle(ChatFormatting.BOLD, ChatFormatting.LIGHT_PURPLE);
-        guiGraphics.drawCenteredString(this.font, title, this.width / 2, 20, 0xFFFFFF);
+        guiGraphics.centeredText(this.font, title, this.width / 2, 20, 0xFFFFFFFF);
 
         int centerX = width / 2;
         int rowY = (int) (height * 0.26);
 
         // 行 label
-        guiGraphics.drawString(this.font,
+        guiGraphics.text(this.font,
                 Component.translatable("screen.toneko.client_config.chat_display").withStyle(ChatFormatting.GOLD),
                 centerX - 220, rowY + 6, 0xE0E0E0, false);
-        guiGraphics.drawString(this.font,
+        guiGraphics.text(this.font,
                 Component.translatable("screen.toneko.client_config.bubble_duration").withStyle(ChatFormatting.GOLD),
                 centerX - 220, rowY + 42, 0xE0E0E0, false);
-        guiGraphics.drawString(this.font,
+        guiGraphics.text(this.font,
                 Component.translatable("screen.toneko.client_config.bubble_color").withStyle(ChatFormatting.GOLD),
                 centerX - 220, rowY + 78, 0xE0E0E0, false);
 
         // 说明文字
         int descY = rowY + 110;
         for (String line : Component.translatable("screen.toneko.client_config.desc").getString().split("\n")) {
-            guiGraphics.drawCenteredString(this.font, Component.literal(line).withStyle(ChatFormatting.GRAY),
+            guiGraphics.centeredText(this.font, Component.literal(line).withStyle(ChatFormatting.GRAY),
                     this.width / 2, descY, 0xFFFFFF);
             descY += 12;
         }
 
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
+        super.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override
@@ -139,7 +139,7 @@ public class ClientConfigScreen extends Screen {
     }
 
     @Override
-    public void renderBackground(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {}
+    public void extractBackground(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {}
 
     /** 预设颜色色块按钮：点击选中并保存；当前选中色带高亮边框 */
     private static class ColorSwatchButton extends AbstractWidget {
@@ -153,16 +153,16 @@ public class ClientConfigScreen extends Screen {
         }
 
         @Override
-        public void renderWidget(@NotNull GuiGraphics g, int mouseX, int mouseY, float partialTick) {
+        public void extractWidgetRenderState(@NotNull GuiGraphicsExtractor g, int mouseX, int mouseY, float partialTick) {
             int size = 20;
             g.fill(getX(), getY(), getX() + size, getY() + size, 0xFF000000 | color);
             // 选中态：粉框高亮
             if (ClientConfig.getBubbleColor() == color) {
-                g.renderOutline(getX() - 1, getY() - 1, size + 2, size + 2, COLOR_PINK_ACCENT);
+                g.outline(getX() - 1, getY() - 1, size + 2, size + 2, COLOR_PINK_ACCENT);
             }
             // 悬停：亮框
             if (isHovered()) {
-                g.renderOutline(getX() - 1, getY() - 1, size + 2, size + 2, 0xFFFFFFFF);
+                g.outline(getX() - 1, getY() - 1, size + 2, size + 2, 0xFFFFFFFF);
             }
         }
 
@@ -170,7 +170,7 @@ public class ClientConfigScreen extends Screen {
         protected void updateWidgetNarration(@NotNull NarrationElementOutput narrationElementOutput) {}
 
         @Override
-        public void onClick(double mouseX, double mouseY) {
+        public void onClick(net.minecraft.client.input.MouseButtonEvent event, boolean active) {
             onPick.run();
         }
     }

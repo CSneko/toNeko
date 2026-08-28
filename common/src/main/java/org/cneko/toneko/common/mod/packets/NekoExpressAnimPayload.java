@@ -4,7 +4,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import static org.cneko.toneko.common.Bootstrap.MODID;
 
@@ -14,7 +14,7 @@ import static org.cneko.toneko.common.Bootstrap.MODID;
  */
 public record NekoExpressAnimPayload(int entityId, String animName) implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<NekoExpressAnimPayload> ID =
-            new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(MODID, "neko_express_anim"));
+            new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(MODID, "neko_express_anim"));
     public static final StreamCodec<RegistryFriendlyByteBuf, NekoExpressAnimPayload> CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT, NekoExpressAnimPayload::entityId,
             ByteBufCodecs.STRING_UTF8, NekoExpressAnimPayload::animName,

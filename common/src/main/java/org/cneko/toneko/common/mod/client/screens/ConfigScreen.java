@@ -2,7 +2,7 @@ package org.cneko.toneko.common.mod.client.screens;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.*;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -114,22 +114,27 @@ public class ConfigScreen extends Screen {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractRenderState(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
 
         Component title = Component.translatable("screen.toneko.config.title")
                 .withStyle(ChatFormatting.BOLD, ChatFormatting.LIGHT_PURPLE);
-        guiGraphics.drawCenteredString(this.font, title, this.width / 2, 20, 0xFFFFFF);
+        guiGraphics.centeredText(this.font, title, this.width / 2, 20, 0xFFFFFFFF);
 
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
+        super.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     /**
      * 关键修复：Screen 必须显式处理点击并设置焦点
      */
+    private static net.minecraft.client.input.MouseButtonEvent mev(double x, double y, int btn) {
+        return new net.minecraft.client.input.MouseButtonEvent(x, y, new net.minecraft.client.input.MouseButtonInfo(btn, 0));
+    }
+
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent event, boolean active) {
         // 如果点击被子组件（列表）处理了
-        if (super.mouseClicked(mouseX, mouseY, button)) {
+        double mouseX = event.x(), mouseY = event.y();
+        if (super.mouseClicked(event, active)) {
             // 找到那个被点击的组件，并设为 Screen 的焦点
             // 这步至关重要，否则 Screen 不会将键盘事件发给 List
             for (GuiEventListener child : this.children()) {
@@ -147,7 +152,7 @@ public class ConfigScreen extends Screen {
 
     @Override
     public void onClose() {
-        minecraft.setScreen(lastScreen);
+        Minecraft.getInstance().setScreen(lastScreen);
     }
 
     // ================== 数据结构 ==================
@@ -195,7 +200,7 @@ public class ConfigScreen extends Screen {
         private final int width, height;
 
         public ConfigListWidget(int x, int y, int width, int height) {
-            super(x, y, width, height, Component.empty());
+            super(x, y, width, height, Component.empty(), AbstractScrollArea.defaultSettings(9));
             this.width = width;
             this.height = height;
         }
@@ -203,22 +208,23 @@ public class ConfigScreen extends Screen {
         public void addEntry(Entry entry) { entries.add(entry); }
         public void clearEntries() { entries.clear(); }
         private int getContentHeight() { return entries.stream().mapToInt(Entry::getHeight).sum(); }
+        @Override protected int contentHeight() { return getContentHeight(); }
         public double getScrollAmount() { return scrollAmount; }
         public void setScrollAmount(double amount) {
             this.scrollAmount = Mth.clamp(amount, 0, Math.max(0, getContentHeight() - this.height));
         }
 
         @Override
-        public void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
             guiGraphics.fill(getX(), getY(), getX() + width, getY() + height, COLOR_LIST_BG);
-            guiGraphics.renderOutline(getX() - 1, getY() - 1, width + 2, height + 2, COLOR_LIST_BORDER);
+            guiGraphics.outline(getX() - 1, getY() - 1, width + 2, height + 2, COLOR_LIST_BORDER);
 
             guiGraphics.enableScissor(getX() + 1, getY() + 1, getX() + width - 1, getY() + height - 1);
 
             int currentY = getY() - (int) scrollAmount + 4;
             for (Entry entry : entries) {
                 if (currentY + entry.getHeight() > getY() && currentY < getY() + height) {
-                    entry.render(guiGraphics, getX(), currentY, mouseX, mouseY, partialTick);
+                    entry.extractRenderState(guiGraphics, getX(), currentY, mouseX, mouseY, partialTick);
                 }
                 currentY += entry.getHeight();
             }
@@ -238,8 +244,9 @@ public class ConfigScreen extends Screen {
         }
 
         @Override
-        public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent event, boolean active) {
             // 1. 滚动条逻辑
+            double mouseX = event.x(), mouseY = event.y();
             int contentHeight = getContentHeight();
             if (contentHeight > height) {
                 int scrollbarX = getX() + width - 10;
@@ -261,8 +268,8 @@ public class ConfigScreen extends Screen {
 
                 for (Entry entry : entries) {
                     if (localY >= currentY && localY < currentY + entry.getHeight()) {
-                        // 转换坐标并传递点击
-                        if (entry.mouseClicked(mouseX, mouseY, button)) {
+                        // 转换坐标并传递点击（26.x：直接转发事件对象）
+                        if (entry.mouseClicked(event, active)) {
                             // 如果子项处理了点击（例如输入框被点了），将焦点设给它
                             this.setFocused(entry);
                             entry.setFocused(true);
@@ -280,37 +287,37 @@ public class ConfigScreen extends Screen {
 
         // 必须实现：将键盘事件转发给当前 Focused 的 Entry
         @Override
-        public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        public boolean keyPressed(net.minecraft.client.input.KeyEvent ke) {
             GuiEventListener focused = getFocused();
-            if (focused != null && focused.keyPressed(keyCode, scanCode, modifiers)) {
+            if (focused != null && focused.keyPressed(ke)) {
                 return true;
             }
-            return super.keyPressed(keyCode, scanCode, modifiers);
+            return super.keyPressed(ke);
         }
 
         @Override
-        public boolean charTyped(char codePoint, int modifiers) {
+        public boolean charTyped(net.minecraft.client.input.CharacterEvent ce) {
             GuiEventListener focused = getFocused();
-            if (focused != null && focused.charTyped(codePoint, modifiers)) {
+            if (focused != null && focused.charTyped(ce)) {
                 return true;
             }
-            return super.charTyped(codePoint, modifiers);
+            return super.charTyped(ce);
         }
 
         @Override
-        public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        public boolean mouseReleased(net.minecraft.client.input.MouseButtonEvent event) {
             isDraggingScrollbar = false;
-            return super.mouseReleased(mouseX, mouseY, button);
+            return super.mouseReleased(event);
         }
 
         @Override
-        public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        public boolean mouseDragged(net.minecraft.client.input.MouseButtonEvent event, double dragX, double dragY) {
             if (isDraggingScrollbar && getContentHeight() > height) {
                 double ratio = (double) getContentHeight() / height;
                 setScrollAmount(scrollAmount + dragY * ratio);
                 return true;
             }
-            return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+            return super.mouseDragged(event, dragX, dragY);
         }
 
         @Override
@@ -338,7 +345,7 @@ public class ConfigScreen extends Screen {
     // ================== Entry 组件 ==================
 
     private abstract static class Entry implements GuiEventListener {
-        public abstract void render(GuiGraphics guiGraphics, int x, int y, int mouseX, int mouseY, float partialTick);
+        public abstract void extractRenderState(GuiGraphicsExtractor guiGraphics, int x, int y, int mouseX, int mouseY, float partialTick);
         public abstract int getHeight();
         public abstract List<? extends GuiEventListener> children();
 
@@ -360,7 +367,7 @@ public class ConfigScreen extends Screen {
         }
 
         @Override
-        public void render(GuiGraphics guiGraphics, int x, int y, int mouseX, int mouseY, float partialTick) {
+        public void extractRenderState(GuiGraphicsExtractor guiGraphics, int x, int y, int mouseX, int mouseY, float partialTick) {
             String arrow = node.collapsed ? "▶ " : "▼ ";
             MutableComponent text = Component.literal(arrow).withStyle(ChatFormatting.LIGHT_PURPLE)
                     .append(Component.translatable("screen.toneko.config.group." + node.name).withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD));
@@ -369,12 +376,12 @@ public class ConfigScreen extends Screen {
                 guiGraphics.fill(x + 2, y, x + width - 2, y + getHeight(), 0x15FFFFFF);
             }
 
-            guiGraphics.drawString(Minecraft.getInstance().font, text, x + 5 + indent, y + 6, 0xFFFFFF, false);
-            guiGraphics.hLine(x + 10, x + width - 10, y + getHeight() - 1, 0x40FF69B4);
+            guiGraphics.text(Minecraft.getInstance().font, text, x + 5 + indent, y + 6, 0xFFFFFFFF, false);
+            guiGraphics.horizontalLine(x + 10, x + width - 10, y + getHeight() - 1, 0x40FF69B4);
         }
 
         @Override
-        public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent event, boolean active) {
             // AI group opens the dedicated AI config screen (children are handled there)
             if ("ai".equals(node.name)) {
                 Minecraft.getInstance().setScreen(new AIConfigScreen(Minecraft.getInstance().screen));
@@ -437,19 +444,19 @@ public class ConfigScreen extends Screen {
         }
 
         @Override
-        public void render(GuiGraphics guiGraphics, int x, int y, int mouseX, int mouseY, float partialTick) {
+        public void extractRenderState(GuiGraphicsExtractor guiGraphics, int x, int y, int mouseX, int mouseY, float partialTick) {
             this.lastRenderX = x;
             this.lastRenderY = y;
 
             Component label = Component.translatable("screen.toneko.config.key." + node.fullKey);
             int labelColor = (url != null && isMouseOverLabel(mouseX, mouseY)) ? COLOR_PINK_ACCENT : 0xE0E0E0;
 
-            guiGraphics.drawString(Minecraft.getInstance().font, label, x + 10 + indent, y + 6, labelColor, false);
+            guiGraphics.text(Minecraft.getInstance().font, label, x + 10 + indent, y + 6, labelColor, false);
 
             int inputX = x + rowWidth - inputWidget.getWidth() - 10;
             inputWidget.setX(inputX);
             inputWidget.setY(y);
-            inputWidget.render(guiGraphics, mouseX, mouseY, partialTick);
+            inputWidget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         private boolean isMouseOverLabel(double mouseX, double mouseY) {
@@ -461,15 +468,17 @@ public class ConfigScreen extends Screen {
 
         // 核心修复：点击时显式设置输入框焦点
         @Override
-        public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent event, boolean active) {
             // 1. 检查是否点击了链接
+            double mouseX = event.x(), mouseY = event.y();
+            int button = event.button();
             if (url != null && isMouseOverLabel(mouseX, mouseY)) {
                 ConfirmLinkScreen.confirmLinkNow(Minecraft.getInstance().screen, url);
                 return true;
             }
 
             // 2. 转发给输入控件 (EditBox 或 Button)
-            if (inputWidget.mouseClicked(mouseX, mouseY, button)) {
+            if (inputWidget.mouseClicked(mev(mouseX, mouseY, button), true)) {
                 // 如果是输入框，强制设为焦点
                 if (inputWidget instanceof EditBox) {
                     ((EditBox) inputWidget).setFocused(true);
@@ -499,13 +508,13 @@ public class ConfigScreen extends Screen {
 
         // 键盘事件转发
         @Override
-        public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-            return inputWidget.keyPressed(keyCode, scanCode, modifiers);
+        public boolean keyPressed(net.minecraft.client.input.KeyEvent ke) {
+            return inputWidget.keyPressed(ke);
         }
 
         @Override
-        public boolean charTyped(char codePoint, int modifiers) {
-            return inputWidget.charTyped(codePoint, modifiers);
+        public boolean charTyped(net.minecraft.client.input.CharacterEvent ce) {
+            return inputWidget.charTyped(ce);
         }
 
         @Override public int getHeight() { return 26; }
@@ -532,14 +541,14 @@ public class ConfigScreen extends Screen {
         }
 
         @Override
-        public void render(GuiGraphics guiGraphics, int x, int y, int mouseX, int mouseY, float partialTick) {
-            guiGraphics.drawCenteredString(Minecraft.getInstance().font, currentText, x + width / 2, y + 8, 0xFFFFFF);
+        public void extractRenderState(GuiGraphicsExtractor guiGraphics, int x, int y, int mouseX, int mouseY, float partialTick) {
+            guiGraphics.centeredText(Minecraft.getInstance().font, currentText, x + width / 2, y + 8, 0xFFFFFFFF);
             randomBtn.setX(x + (width - randomBtn.getWidth()) / 2);
             randomBtn.setY(y + 25);
-            randomBtn.render(guiGraphics, mouseX, mouseY, partialTick);
+            randomBtn.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
 
-        @Override public boolean mouseClicked(double mouseX, double mouseY, int button) { return randomBtn.mouseClicked(mouseX, mouseY, button); }
+        @Override public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent event, boolean active) { return randomBtn.mouseClicked(event, active); }
         @Override public void setFocused(boolean focused) { randomBtn.setFocused(focused); }
         @Override public boolean isFocused() { return randomBtn.isFocused(); }
         @Override public int getHeight() { return 55; }

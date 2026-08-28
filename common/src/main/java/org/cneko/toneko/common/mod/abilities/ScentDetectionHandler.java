@@ -73,7 +73,7 @@ public class ScentDetectionHandler {
     }
 
     private static void notify(ServerPlayer player, BlockPos source) {
-        player.displayClientMessage(Component.translatable("hint.toneko.scent.detect"), true);
+        player.sendOverlayMessage(Component.translatable("hint.toneko.scent.detect"));
         ServerLevel level = (ServerLevel) player.level();
         level.sendParticles(ParticleTypes.SMOKE,
                 source.getX() + 0.5, source.getY() + 0.8, source.getZ() + 0.5,

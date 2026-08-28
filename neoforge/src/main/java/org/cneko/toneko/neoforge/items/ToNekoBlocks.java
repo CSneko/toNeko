@@ -1,5 +1,6 @@
 package org.cneko.toneko.neoforge.items;
 
+import org.cneko.toneko.common.mod.util.NekoIds;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -25,12 +26,12 @@ public class ToNekoBlocks {
     public static void init(){
         CATNIP_HOLDER = ToNekoNeoForge.BLOCKS.register("catnip", CatnipBlock::new);
         WILD_CATNIP_HOLDER = ToNekoNeoForge.BLOCKS.register("wild_catnip", WildCatnipBlock::new);
-        NEKO_AGGREGATOR_BLOCK_HOLDER = ToNekoNeoForge.BLOCKS.register("neko_aggregator", () -> new NekoAggregatorBlock(Block.Properties.of()));
-        NEKO_BLOCK_HOLDER = ToNekoNeoForge.BLOCKS.register("neko_block", () -> new Block(BlockBehaviour.Properties.of().strength(5.0f).requiresCorrectToolForDrops()));
-        NEKO_DIAMOND_BLOCK_HOLDER = ToNekoNeoForge.BLOCKS.register("neko_diamond_block", () -> new Block(BlockBehaviour.Properties.of().strength(5.0f).requiresCorrectToolForDrops()));
-        SHENG_DENG_HOLDER = ToNekoNeoForge.BLOCKS.register("sheng_deng", () -> new ShengDengBlock(BlockBehaviour.Properties.of().strength(3.0f).sound(net.minecraft.world.level.block.SoundType.BAMBOO_WOOD).noOcclusion()));
-        LEGWEAR_WORKBENCH_HOLDER = ToNekoNeoForge.BLOCKS.register("legwear_workbench", () -> new LegwearWorkbenchBlock(BlockBehaviour.Properties.of().strength(2.5f).sound(net.minecraft.world.level.block.SoundType.WOOD)));
-        CLOTHESLINE_HOLDER = ToNekoNeoForge.BLOCKS.register("clothesline", () -> new ClotheslineBlock(BlockBehaviour.Properties.of().strength(2.0f).sound(net.minecraft.world.level.block.SoundType.WOOD).noOcclusion()));
+        NEKO_AGGREGATOR_BLOCK_HOLDER = ToNekoNeoForge.BLOCKS.register("neko_aggregator", () -> new NekoAggregatorBlock(NekoIds.blockProps("neko_aggregator")));
+        NEKO_BLOCK_HOLDER = ToNekoNeoForge.BLOCKS.register("neko_block", () -> new Block(NekoIds.blockProps("neko_block").strength(5.0f).requiresCorrectToolForDrops()));
+        NEKO_DIAMOND_BLOCK_HOLDER = ToNekoNeoForge.BLOCKS.register("neko_diamond_block", () -> new Block(NekoIds.blockProps("neko_diamond_block").strength(5.0f).requiresCorrectToolForDrops()));
+        SHENG_DENG_HOLDER = ToNekoNeoForge.BLOCKS.register("sheng_deng", () -> new ShengDengBlock(NekoIds.blockProps("sheng_deng").strength(3.0f).sound(net.minecraft.world.level.block.SoundType.BAMBOO_WOOD).noOcclusion()));
+        LEGWEAR_WORKBENCH_HOLDER = ToNekoNeoForge.BLOCKS.register("legwear_workbench", () -> new LegwearWorkbenchBlock(NekoIds.blockProps("legwear_workbench").strength(2.5f).sound(net.minecraft.world.level.block.SoundType.WOOD)));
+        CLOTHESLINE_HOLDER = ToNekoNeoForge.BLOCKS.register("clothesline", () -> new ClotheslineBlock(NekoIds.blockProps("clothesline").strength(2.0f).sound(net.minecraft.world.level.block.SoundType.WOOD).noOcclusion()));
     }
 
     public static void reg(){

@@ -49,7 +49,7 @@ public final class ClientConfig {
 
     /** 当前 AI 回复显示方式（"chat" 或 "bubble"） */
     public static String getChatDisplay() {
-        return get().getString("ai.chatDisplay");
+        return get().getStringOr("ai.chatDisplay", "");
     }
 
     /** 设置 AI 回复显示方式（"chat" 或 "bubble"）并保存 */
@@ -62,7 +62,7 @@ public final class ClientConfig {
     /** 头顶气泡显示时长（毫秒），配置非法或过小时回退默认值 */
     public static int getBubbleDuration() {
         try {
-            return Math.max(1000, Integer.parseInt(get().getString("ai.bubble.duration")));
+            return Math.max(1000, Integer.parseInt(get().getStringOr("ai.bubble.duration", "")));
         } catch (NumberFormatException e) {
             return 6000;
         }
@@ -76,7 +76,7 @@ public final class ClientConfig {
 
     /** 头顶气泡颜色（RGB int），配置非法时回退粉色 */
     public static int getBubbleColor() {
-        String hex = get().getString("ai.bubble.color");
+        String hex = get().getStringOr("ai.bubble.color", "");
         try {
             if (hex.startsWith("#")) hex = hex.substring(1);
             return Integer.parseInt(hex, 16) & 0xFFFFFF;

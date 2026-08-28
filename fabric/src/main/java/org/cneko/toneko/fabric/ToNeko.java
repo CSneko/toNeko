@@ -7,7 +7,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.biome.Biomes;
@@ -67,7 +67,7 @@ public class ToNeko implements ModInitializer {
                         .or(BiomeSelectors.includeByKey(Biomes.MEADOW)),
                 GenerationStep.Decoration.VEGETAL_DECORATION,
                 ResourceKey.create(Registries.PLACED_FEATURE,
-                        ResourceLocation.fromNamespaceAndPath(MODID, "patch_wild_catnip"))
+                        Identifier.fromNamespaceAndPath(MODID, "patch_wild_catnip"))
         );
 
         // 注册装备
@@ -95,9 +95,14 @@ public class ToNeko implements ModInitializer {
         // 注册遗传学数据包加载器（支持 /reload 热重载）
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new GeneticsDataLoader());
 
+        // 26.1.2：主动绑定模组物品的默认组件（配方解析需要，见 ComponentBinding 注释）
+        org.cneko.toneko.common.mod.util.ComponentBinding.bindAll();
+
         // 启动事件
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             ModMeta.INSTANCE.setServer(server);
+            // 26.1.2：组件绑定完成后重载资源，使配方管理器重新解析（首次加载时组件未绑定被拒）
+            org.cneko.toneko.common.mod.util.ComponentBinding.reloadRecipesAfterStart(server);
             // 启动监Event
             ToNekoEvents.init();
             ToNekoNetworkEvents.init();

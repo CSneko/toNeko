@@ -62,7 +62,7 @@ public class NekoPickupItemGoal extends Goal {
             targetItem.remove(Entity.RemovalReason.DISCARDED);
             targetItem = null;
             if (neko.getMoeTags().contains("dojikko") && neko.getRandom().nextFloat() < 0.25f) {
-                neko.spawnAtLocation(neko.getRandomInventoryItem());
+                neko.drop(neko.getRandomInventoryItem(), false, false);
             }
         } else if (--timeToRecalcPath <= 0) {
             timeToRecalcPath = 10;

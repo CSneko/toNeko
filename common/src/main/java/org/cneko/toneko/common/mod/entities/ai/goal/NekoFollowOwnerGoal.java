@@ -1,4 +1,5 @@
 package org.cneko.toneko.common.mod.entities.ai.goal;
+import org.cneko.toneko.common.mod.entities.INeko;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -88,7 +89,7 @@ public class NekoFollowOwnerGoal extends Goal {
         if (tags.contains("yandere")) speed *= 1.5;
         if (tags.contains("yowaki")) speed *= 0.9;
         if (tags.contains("shizukana")) speed *= 0.7;
-        if (tags.contains("yuri") && owner != null && owner.isNeko()) speed *= 1.2;
+        if (tags.contains("yuri") && owner != null && ((INeko) owner).isNeko()) speed *= 1.2;
         return speed;
     }
 
@@ -97,7 +98,7 @@ public class NekoFollowOwnerGoal extends Goal {
         double dist = Math.sqrt(maxDistanceSq);
         if (tags.contains("yandere")) dist = 40;
         else if (tags.contains("yowaki")) dist = 15;
-        if (tags.contains("yuri") && owner != null && owner.isNeko()) dist = Math.min(dist, 20);
+        if (tags.contains("yuri") && owner != null && ((INeko) owner).isNeko()) dist = Math.min(dist, 20);
         return dist * dist;
     }
 }

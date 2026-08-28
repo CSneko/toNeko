@@ -6,15 +6,9 @@
     "PPP"
   ],
   "key": {
-    "S": {
-      "item": "minecraft:string"
-    },
-    "W": {
-      "item": "minecraft:white_wool"
-    },
-    "P": {
-      "item": "minecraft:oak_planks"
-    }
+    "S": "minecraft:string",
+    "W": "minecraft:white_wool",
+    "P": "minecraft:oak_planks"
   },
   "result": {
     "id": "toneko:legwear_workbench",

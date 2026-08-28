@@ -10,6 +10,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.ItemSupplier;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -24,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
  * 变质水投掷物：落地/命中后生成一片气味云（ScentAreaHandler）。
  * 喷溅型持续时间短，滞留型持续时间长。
  */
-public class SpoiledWaterProjectile extends ThrowableProjectile {
+public class SpoiledWaterProjectile extends ThrowableProjectile implements ItemSupplier {
     private static final EntityDataAccessor<ItemStack> ITEM =
             SynchedEntityData.defineId(SpoiledWaterProjectile.class, EntityDataSerializers.ITEM_STACK);
 
@@ -33,7 +34,8 @@ public class SpoiledWaterProjectile extends ThrowableProjectile {
     }
 
     public SpoiledWaterProjectile(Level level, LivingEntity shooter) {
-        super(ToNekoEntities.SPOILED_WATER_PROJECTILE_ENTITY, shooter, level);
+        super(ToNekoEntities.SPOILED_WATER_PROJECTILE_ENTITY, level);
+        this.setOwner(shooter);
     }
 
     public SpoiledWaterProjectile(Level level, double x, double y, double z) {
@@ -56,7 +58,7 @@ public class SpoiledWaterProjectile extends ThrowableProjectile {
     @Override
     public void tick() {
         super.tick();
-        if (this.level().isClientSide) {
+        if (this.level().isClientSide()) {
             this.level().addParticle(ParticleTypes.FALLING_WATER,
                     this.getX(), this.getY(), this.getZ(), 0, 0, 0);
         }
@@ -65,7 +67,7 @@ public class SpoiledWaterProjectile extends ThrowableProjectile {
     @Override
     protected void onHitBlock(@NotNull BlockHitResult result) {
         super.onHitBlock(result);
-        if (!this.level().isClientSide) {
+        if (!this.level().isClientSide()) {
             createScentArea(result.getLocation().x, result.getLocation().y, result.getLocation().z);
         }
     }
@@ -73,7 +75,7 @@ public class SpoiledWaterProjectile extends ThrowableProjectile {
     @Override
     protected void onHitEntity(@NotNull EntityHitResult result) {
         super.onHitEntity(result);
-        if (!this.level().isClientSide) {
+        if (!this.level().isClientSide()) {
             createScentArea(result.getLocation().x, result.getLocation().y, result.getLocation().z);
         }
     }
@@ -90,15 +92,23 @@ public class SpoiledWaterProjectile extends ThrowableProjectile {
         this.discard();
     }
 
-    @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag tag) {
-        super.addAdditionalSaveData(tag);
-        tag.put("Item", getItem().save(this.registryAccess()));
+        @Override
+    protected void addAdditionalSaveData(net.minecraft.world.level.storage.ValueOutput out) {
+        super.addAdditionalSaveData(out);
+        CompoundTag data = new CompoundTag();
+        this.writeExtraData(data);
+        org.cneko.toneko.common.mod.util.NbtBridge.store(data, out);
     }
 
-    @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
-        super.readAdditionalSaveData(tag);
-        setItem(ItemStack.parseOptional(this.registryAccess(), tag.getCompound("Item")));
+    private void writeExtraData(@NotNull CompoundTag compound) {        compound.put("Item", org.cneko.toneko.common.mod.util.NbtBridge.encodeStack(this.registryAccess(), getItem()));
+    }
+
+        @Override
+    protected void readAdditionalSaveData(net.minecraft.world.level.storage.ValueInput in) {
+        super.readAdditionalSaveData(in);
+        this.readExtraData(org.cneko.toneko.common.mod.util.NbtBridge.read(in));
+    }
+
+    private void readExtraData(@NotNull CompoundTag compound) {        setItem(org.cneko.toneko.common.mod.util.NbtBridge.decodeStack(this.registryAccess(), compound.getCompoundOrEmpty("Item")));
     }
 }

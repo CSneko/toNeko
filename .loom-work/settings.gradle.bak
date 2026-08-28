@@ -1,0 +1,16 @@
+pluginManagement {
+    repositories {
+        maven { url "https://maven.fabricmc.net/" }
+        maven { url "https://maven.architectury.dev/" }
+        maven { url "https://files.minecraftforge.net/maven/" }
+        gradlePluginPortal()
+    }
+}
+
+rootProject.name = 'toneko'
+
+include 'common'
+include 'fabric'
+// 26.2 暂无 Forgified Fabric API，NeoForge 侧构建依赖不可用，先在 settings 层禁用
+//include 'neoforge'
+//include 'bukkit'

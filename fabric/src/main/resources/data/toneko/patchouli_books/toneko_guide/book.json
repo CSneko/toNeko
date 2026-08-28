@@ -1,0 +1,10 @@
+{
+  "name": "item.toneko.toneko_guide",
+  "landing_text": "patchouli.toneko.toneko_guide.landing",
+  "version": 1,
+  "model": "toneko:toneko_guide",
+  "use_resource_pack": true,
+  "book_texture": "patchouli:textures/gui/book_purple.png",
+  "show_progress": false,
+  "i18n": true
+}

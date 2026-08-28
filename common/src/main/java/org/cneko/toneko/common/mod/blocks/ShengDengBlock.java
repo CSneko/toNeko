@@ -8,7 +8,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
@@ -145,7 +144,7 @@ public class ShengDengBlock extends Block {
      * @param placeState 任意省凳 BlockState，用于开新格（继承其属性模板）
      */
     public static boolean insertStools(Level level, BlockPos base, int n, DyeColor color, BlockState placeState) {
-        if (level.isClientSide) return false;
+        if (level.isClientSide()) return false;
         if (n <= 0) return false;
 
         // 找柱顶
@@ -356,7 +355,7 @@ public class ShengDengBlock extends Block {
     /** 拔凳期间给玩家减速：被凳子"钉"住的感觉 */
     private static void applyPullSlowdown(Player player) {
         player.addEffect(new net.minecraft.world.effect.MobEffectInstance(
-                net.minecraft.world.effect.MobEffects.MOVEMENT_SLOWDOWN,
+                net.minecraft.world.effect.MobEffects.SLOWNESS,
                 60, 0, false, false, true));
     }
 
@@ -376,15 +375,14 @@ public class ShengDengBlock extends Block {
     // ==================== 拔凳入口 ====================
 
     private void startPull(Level level, BlockPos pos, BlockState state, Player player) {
-        if (level.isClientSide) return;
+        if (level.isClientSide()) return;
 
         int weightAbove = countStoolsAbove(level, pos);
 
         // 最底格（下方没有省凳格）且上方有格子压着 → 不能拔
         boolean bottomCell = !(level.getBlockState(pos.below()).getBlock() instanceof ShengDengBlock);
         if (bottomCell && weightAbove > 0) {
-            player.displayClientMessage(
-                    Component.translatable("block.toneko.sheng_deng.bottom_locked"), true);
+            player.sendOverlayMessage(Component.translatable("block.toneko.sheng_deng.bottom_locked"));
             level.playSound(null, pos, SoundEvents.BAMBOO_WOOD_BREAK,
                     SoundSource.BLOCKS, 0.3f, 0.5f);
             return;
@@ -448,8 +446,7 @@ public class ShengDengBlock extends Block {
         if (state.tension < minTension) {
             level.playSound(null, pos, SoundEvents.BAMBOO_WOOD_BREAK,
                     SoundSource.BLOCKS, 0.3f, 0.5f);
-            player.displayClientMessage(
-                    Component.translatable("block.toneko.sheng_deng.pull_weak"), true);
+            player.sendOverlayMessage(Component.translatable("block.toneko.sheng_deng.pull_weak"));
             return;
         }
 
@@ -463,29 +460,25 @@ public class ShengDengBlock extends Block {
         if (tension < 70f) {
             level.playSound(null, pos, SoundEvents.BAMBOO_WOOD_PLACE,
                     SoundSource.BLOCKS, 0.5f, 1.8f);
-            player.displayClientMessage(
-                    Component.translatable("block.toneko.sheng_deng.pull_gentle"), true);
+            player.sendOverlayMessage(Component.translatable("block.toneko.sheng_deng.pull_gentle"));
         } else if (tension < 80f) {
             knockbackPlayer(player, pos, 0.6);
             level.playSound(null, pos, SoundEvents.BAMBOO_WOOD_BREAK,
                     SoundSource.BLOCKS, 0.7f, 1.5f);
-            player.displayClientMessage(
-                    Component.translatable("block.toneko.sheng_deng.pull_normal"), true);
+            player.sendOverlayMessage(Component.translatable("block.toneko.sheng_deng.pull_normal"));
         } else if (tension < 90f) {
             knockbackPlayer(player, pos, 1.2);
             level.playSound(null, pos, SoundEvents.BAMBOO_WOOD_BREAK,
                     SoundSource.BLOCKS, 1.0f, 1.2f);
             spawnPopParticles(level, pos);
-            player.displayClientMessage(
-                    Component.translatable("block.toneko.sheng_deng.pull_strong"), true);
+            player.sendOverlayMessage(Component.translatable("block.toneko.sheng_deng.pull_strong"));
         } else {
             knockbackPlayer(player, pos, 2.0);
             level.playSound(null, pos, SoundEvents.BAMBOO_WOOD_BREAK,
                     SoundSource.BLOCKS, 1.2f, 0.9f);
             spawnPopParticles(level, pos);
             spawnPopParticles(level, pos);
-            player.displayClientMessage(
-                    Component.translatable("block.toneko.sheng_deng.pull_chaos"), true);
+            player.sendOverlayMessage(Component.translatable("block.toneko.sheng_deng.pull_chaos"));
         }
 
         PULLING_STATES.remove(pos);
@@ -577,7 +570,7 @@ public class ShengDengBlock extends Block {
         } else if (rhythmBonus > 1.2f) {
             bar.append(" §a稳！");
         }
-        player.displayClientMessage(Component.literal(bar.toString()), true);
+        player.sendOverlayMessage(Component.literal(bar.toString()));
     }
 
     // ==================== 交互逻辑 ====================
@@ -586,14 +579,14 @@ public class ShengDengBlock extends Block {
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos,
                                                Player player, BlockHitResult hitResult) {
-        if (level.isClientSide) return InteractionResult.SUCCESS;
+        if (level.isClientSide()) return InteractionResult.SUCCESS;
 
         if (!player.isPassenger()) {
             if (player.isShiftKeyDown()) {
                 startPull(level, pos, state, player);
             } else {
                 SeatEntity.sitOnBlock(level, pos, player);
-                player.displayClientMessage(Component.translatable("block.toneko.sheng_deng.sit"), true);
+                player.sendOverlayMessage(Component.translatable("block.toneko.sheng_deng.sit"));
             }
         }
         return InteractionResult.SUCCESS;
@@ -601,30 +594,34 @@ public class ShengDengBlock extends Block {
 
     // ---- 手持物品右键 ----
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level,
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level,
                                               BlockPos pos, Player player,
                                               net.minecraft.world.InteractionHand hand,
                                               BlockHitResult hitResult) {
-        if (level.isClientSide) return ItemInteractionResult.SUCCESS;
+        if (level.isClientSide()) return InteractionResult.SUCCESS;
 
         Item item = stack.getItem();
 
         // 染料
         if (item instanceof DyeItem dyeItem) {
-            DyeColor dyeColor = dyeItem.getDyeColor();
+            // 26.x：DyeItem 不再携带 DyeColor，按注册名反查枚举
+            net.minecraft.world.item.DyeColor dyeColor = java.util.Arrays.stream(net.minecraft.world.item.DyeColor.values())
+                    .filter(dc -> net.minecraft.resources.Identifier.withDefaultNamespace(dc.getName() + "_dye")
+                            .equals(net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(dyeItem)))
+                    .findFirst().orElse(net.minecraft.world.item.DyeColor.WHITE);
             if ((dyeColor == DyeColor.RED || dyeColor == DyeColor.BLUE)
                     && state.getValue(COLOR) != dyeColor) {
                 level.setBlock(pos, state.setValue(COLOR, dyeColor), Block.UPDATE_ALL);
                 level.playSound(null, pos, SoundEvents.DYE_USE, SoundSource.BLOCKS, 0.5f, 1.0f);
                 if (!player.isCreative()) stack.shrink(1);
-                return ItemInteractionResult.SUCCESS;
+                return InteractionResult.SUCCESS;
             }
         }
 
         // 木棍/竹子 → 打鼓
         if (item == Items.STICK || item == Items.BAMBOO) {
             playDrum(level, pos);
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
 
         // 省凳 → 整叠塞进柱子
@@ -636,11 +633,10 @@ public class ShengDengBlock extends Block {
                 level.playSound(null, pos, SoundEvents.BAMBOO_WOOD_PLACE,
                         SoundSource.BLOCKS, 0.7f, 1.5f);
                 if (!player.isCreative()) stack.shrink(1);
-                return ItemInteractionResult.SUCCESS;
+                return InteractionResult.SUCCESS;
             } else {
-                player.displayClientMessage(
-                        Component.translatable("item.toneko.sheng_deng.no_space"), true);
-                return ItemInteractionResult.FAIL;
+                player.sendOverlayMessage(Component.translatable("item.toneko.sheng_deng.no_space"));
+                return InteractionResult.FAIL;
             }
         }
 
@@ -650,19 +646,19 @@ public class ShengDengBlock extends Block {
                 startPull(level, pos, state, player);
             } else {
                 SeatEntity.sitOnBlock(level, pos, player);
-                player.displayClientMessage(Component.translatable("block.toneko.sheng_deng.sit"), true);
+                player.sendOverlayMessage(Component.translatable("block.toneko.sheng_deng.sit"));
             }
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
 
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
     }
 
     // ---- 破坏：整根柱子掉落为一个整体 ----
     @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos,
-                            BlockState newState, boolean movedByPiston) {
-        if (!level.isClientSide && !movedByPiston && !state.is(newState.getBlock())) {
+    public void affectNeighborsAfterRemoval(BlockState state, net.minecraft.server.level.ServerLevel level,
+                                            BlockPos pos, boolean movedByPiston) {
+        if (!state.is(level.getBlockState(pos).getBlock())) {
             PULLING_STATES.remove(pos);
 
             if (!INTERNAL_REMOVAL.contains(pos)) {
@@ -670,7 +666,7 @@ public class ShengDengBlock extends Block {
                 dropStackedStool(level, pos, total);
             }
         }
-        super.onRemove(state, level, pos, newState, movedByPiston);
+        super.affectNeighborsAfterRemoval(state, level, pos, movedByPiston);
     }
 
     /** @param targetCount 目标格（pos）的张数 —— pos 可能已被替换成空气，需要调用者传入 */
@@ -729,7 +725,7 @@ public class ShengDengBlock extends Block {
     // ---- 打鼓 ----
     private void playDrum(Level level, BlockPos pos) {
         level.playSound(null, pos, SoundEvents.BAMBOO_WOOD_HIT,
-                SoundSource.BLOCKS, 0.8f, 0.8f + level.random.nextFloat() * 0.4f);
+                SoundSource.BLOCKS, 0.8f, 0.8f + level.getRandom().nextFloat() * 0.4f);
         if (level instanceof ServerLevel serverLevel) {
             serverLevel.sendParticles(ParticleTypes.NOTE,
                     pos.getX() + 0.5, pos.getY() + 0.6, pos.getZ() + 0.5,

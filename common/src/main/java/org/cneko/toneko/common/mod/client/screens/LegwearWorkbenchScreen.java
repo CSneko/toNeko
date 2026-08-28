@@ -1,12 +1,12 @@
 package org.cneko.toneko.common.mod.client.screens;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
@@ -25,7 +25,7 @@ import static org.cneko.toneko.common.mod.util.ResourceLocationUtil.toNekoLoc;
  */
 public class LegwearWorkbenchScreen extends AbstractContainerScreen<LegwearWorkbenchBlock.LegwearWorkbenchMenu> {
     // 注意：必须带 .png 后缀（SimpleTexture 不会自动补，原版 GUI 贴图路径惯例均带后缀）
-    private static final ResourceLocation BG = toNekoLoc("textures/gui/legwear_workbench.png");
+    private static final Identifier BG = toNekoLoc("textures/gui/legwear_workbench.png");
     // 贴图 512x512（用户自定义背景），blit 需显式传入纹理尺寸，否则按 256 采样错乱
     private static final int BG_TEXTURE_SIZE = 512;
 
@@ -38,9 +38,7 @@ public class LegwearWorkbenchScreen extends AbstractContainerScreen<LegwearWorkb
     private ItemStack lastSlotStack = ItemStack.EMPTY;
 
     public LegwearWorkbenchScreen(LegwearWorkbenchBlock.LegwearWorkbenchMenu menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title);
-        this.imageWidth = 176;
-        this.imageHeight = 196;
+        super(menu, playerInventory, title, 176, 196); // 26.x：imageWidth/Height 改为 final，经构造器传入
         this.titleLabelX = 8;
         this.titleLabelY = 6;
         this.inventoryLabelY = 108;
@@ -74,14 +72,14 @@ public class LegwearWorkbenchScreen extends AbstractContainerScreen<LegwearWorkb
     }
 
     @Override
-    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
+    public void extractRenderState(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         // 色块按钮悬停提示
         if (this.leftSwatch != null && this.leftSwatch.isHovered()) {
-            guiGraphics.renderTooltip(this.font, Component.translatable("gui.toneko.legwear_workbench.dye_left",
+            guiGraphics.setTooltipForNextFrame(this.font, Component.translatable("gui.toneko.legwear_workbench.dye_left",
                     swatchColorName(this.leftSwatch.rgb)), mouseX, mouseY);
         } else if (this.rightSwatch != null && this.rightSwatch.isHovered()) {
-            guiGraphics.renderTooltip(this.font, Component.translatable("gui.toneko.legwear_workbench.dye_right",
+            guiGraphics.setTooltipForNextFrame(this.font, Component.translatable("gui.toneko.legwear_workbench.dye_right",
                     swatchColorName(this.rightSwatch.rgb)), mouseX, mouseY);
         }
     }
@@ -118,15 +116,16 @@ public class LegwearWorkbenchScreen extends AbstractContainerScreen<LegwearWorkb
     }
 
     @Override
-    protected void renderBg(@NotNull GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
+    public void extractContents(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         // 11 参重载：屏幕 176x196 显示整张 512x512 贴图（用户背景为整幅画布，非左上角分块布局）
-        guiGraphics.blit(BG, this.leftPos, this.topPos, this.imageWidth, this.imageHeight,
-                0f, 0f, BG_TEXTURE_SIZE, BG_TEXTURE_SIZE, BG_TEXTURE_SIZE, BG_TEXTURE_SIZE);
+        guiGraphics.blit(BG, this.leftPos, this.topPos,
+                0, 0, this.imageWidth, this.imageHeight,
+                BG_TEXTURE_SIZE, BG_TEXTURE_SIZE);
 
         // 两个标签
-        guiGraphics.drawString(this.font, Component.translatable("gui.toneko.legwear_workbench.denier"),
+        guiGraphics.text(this.font, Component.translatable("gui.toneko.legwear_workbench.denier"),
                 this.leftPos + 44, this.topPos + 30, 0x404040, false);
-        guiGraphics.drawString(this.font, Component.translatable("gui.toneko.legwear_workbench.length"),
+        guiGraphics.text(this.font, Component.translatable("gui.toneko.legwear_workbench.length"),
                 this.leftPos + 44, this.topPos + 62, 0x404040, false);
 
         ItemStack stack = this.menu.getSlot(0).getItem();
@@ -135,17 +134,17 @@ public class LegwearWorkbenchScreen extends AbstractContainerScreen<LegwearWorkb
             String grade = ZettaiRyouiki.compute(this.previewLength, ZettaiRyouiki.DEFAULT_SKIRT_HEM_HEIGHT);
             Component gradeText = Component.translatable("item.toneko.legwear.zettai_ryouiki." + grade);
             if ("full".equals(grade)) {
-                guiGraphics.drawString(this.font, Component.translatable("gui.toneko.legwear_workbench.zettai_full", gradeText),
+                guiGraphics.text(this.font, Component.translatable("gui.toneko.legwear_workbench.zettai_full", gradeText),
                         this.leftPos + 44, this.topPos + 98, 0x404040, false);
             } else {
-                guiGraphics.drawString(this.font, Component.translatable("gui.toneko.legwear_workbench.zettai",
+                guiGraphics.text(this.font, Component.translatable("gui.toneko.legwear_workbench.zettai",
                         Math.round(ZettaiRyouiki.computeTerritory(this.previewLength, ZettaiRyouiki.DEFAULT_SKIRT_HEM_HEIGHT) * 100),
                         gradeText),
                         this.leftPos + 44, this.topPos + 98, 0x404040, false);
             }
         } else {
             // 空槽：领域显示"无"
-            guiGraphics.drawString(this.font, Component.translatable("gui.toneko.legwear_workbench.zettai_full",
+            guiGraphics.text(this.font, Component.translatable("gui.toneko.legwear_workbench.zettai_full",
                     Component.translatable("item.toneko.legwear.zettai_ryouiki.none")),
                     this.leftPos + 44, this.topPos + 98, 0x808080, false);
         }
@@ -179,8 +178,8 @@ public class LegwearWorkbenchScreen extends AbstractContainerScreen<LegwearWorkb
         }
 
         @Override
-        public void onRelease(double mouseX, double mouseY) {
-            super.onRelease(mouseX, mouseY);
+        public void onRelease(net.minecraft.client.input.MouseButtonEvent event) {
+            super.onRelease(event);
             this.screen.sendAdjust();
         }
     }
@@ -213,8 +212,8 @@ public class LegwearWorkbenchScreen extends AbstractContainerScreen<LegwearWorkb
         }
 
         @Override
-        public void onRelease(double mouseX, double mouseY) {
-            super.onRelease(mouseX, mouseY);
+        public void onRelease(net.minecraft.client.input.MouseButtonEvent event) {
+            super.onRelease(event);
             this.screen.sendAdjust();
         }
     }
@@ -236,13 +235,12 @@ public class LegwearWorkbenchScreen extends AbstractContainerScreen<LegwearWorkb
         }
 
         @Override
-        public void onClick(double mouseX, double mouseY) {
+        public void onClick(net.minecraft.client.input.MouseButtonEvent event, boolean active) {
             // 按钮始终可点：空槽时给出提示而非静默无响应
             ItemStack stack = this.screen.menu.getSlot(0).getItem();
             if (!LegwearItem.isLegwear(stack)) {
                 if (this.screen.minecraft != null && this.screen.minecraft.player != null) {
-                    this.screen.minecraft.player.displayClientMessage(
-                            Component.translatable("gui.toneko.legwear_workbench.no_item"), true);
+                    this.screen.minecraft.player.sendOverlayMessage(Component.translatable("gui.toneko.legwear_workbench.no_item"));
                 }
                 return;
             }
@@ -274,7 +272,7 @@ public class LegwearWorkbenchScreen extends AbstractContainerScreen<LegwearWorkb
         }
 
         @Override
-        protected void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
             int x = this.getX();
             int y = this.getY();
             if (this.rgb < 0) {
@@ -293,7 +291,7 @@ public class LegwearWorkbenchScreen extends AbstractContainerScreen<LegwearWorkb
             // 2px 粗黑边框 + 悬停高亮（醒目，防淹没在花背景里）
             int border = this.isHovered() ? 0xFFFFFF00 : 0xFF000000;
             for (int k = 0; k < 2; k++) {
-                guiGraphics.renderOutline(x - k, y - k, this.width + 2 * k, this.height + 2 * k, border);
+                guiGraphics.outline(x - k, y - k, this.width + 2 * k, this.height + 2 * k, border);
             }
         }
     }

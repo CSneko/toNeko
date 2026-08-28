@@ -193,17 +193,17 @@ public class Prompts {
     };
 
     // ===== 世界 =====
-    public static final PromptFactory WORLD_TIME = (neko,other)-> translateOrReadable("misc.toneko.time." + (neko.level().isDay() ? "day" : "night"));
+    public static final PromptFactory WORLD_TIME = (neko,other)-> translateOrReadable("misc.toneko.time." + (org.cneko.toneko.common.mod.util.NekoLevelUtil.isDay(neko.level()) ? "day" : "night"));
     public static final PromptFactory WORLD_WEATHER = (neko,other)-> translateOrReadable("misc.toneko.weather." + ((neko.level().isRainingAt(neko.blockPosition()) || neko.level().isThundering()) ? "rain" : "sunny"));
     /** 当前维度（翻译为"主世界/下界/末地"等文本） */
     public static final PromptFactory WORLD_DIMENSION = (neko,other)-> {
-        String dimKey = neko.level().dimension().location().getPath();
+        String dimKey = neko.level().dimension().identifier().getPath();
         return translateOrReadable("dimension.toneko." + dimKey);
     };
     /** 当前生物群系（翻译为"森林/沙漠"等文本） */
     public static final PromptFactory WORLD_BIOME = (neko,other)-> {
         String biome = neko.level().getBiome(neko.blockPosition()).unwrapKey()
-                .map(key -> key.location().getPath())
+                .map(key -> key.identifier().getPath())
                 .orElse("unknown");
         return translateOrReadable("biome.toneko." + biome);
     };
@@ -218,7 +218,7 @@ public class Prompts {
             NekoDiary.buildContext(neko.getDiaryEntries(), 2, 100);
     /** 月相：0=满月，4=新月 */
     public static final PromptFactory WORLD_PHASE = (neko,other)-> {
-        int phase = neko.level().getMoonPhase();
+        int phase = (int) (org.cneko.toneko.common.mod.util.NekoLevelUtil.getDayTime(neko.level()) / 3000L); // 26.x：getMoonPhase 移除，按日内时间近似推算（0-8）
         if (phase == 0) return translateOrReadable("misc.toneko.moon_phase.full");
         if (phase == 4) return translateOrReadable("misc.toneko.moon_phase.new");
         if (phase < 4) return translateOrReadable("misc.toneko.moon_phase.waning");

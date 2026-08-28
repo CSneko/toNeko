@@ -1,4 +1,6 @@
 package org.cneko.toneko.common.mod.client.events;
+import org.cneko.toneko.common.mod.entities.INeko;
+import net.minecraft.world.entity.Leashable;
 
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -62,7 +64,7 @@ public class ClientNetworkEvents {
             Player target = ClientPlayerUtil.getPlayerByUUID(UUID.fromString(payload.target()));
             // 拴上玩家
             if (target != null && holder != null) {
-                target.setLeashedTo(holder,false);
+                ((Leashable) target).setLeashedTo(holder,false);
             }
         }));
 
@@ -74,7 +76,7 @@ public class ClientNetworkEvents {
 
         ClientPlayNetworking.registerGlobalReceiver(NekoInfoSyncPayload.ID,(payload,context)-> context.client().execute(()->{
             Player player = context.player();
-            player.setNekoEnergy(payload.energy());
+            ((INeko) player).setNekoEnergy(payload.energy());
             if (player instanceof org.cneko.toneko.common.mod.entities.INeko neko) {
                 neko.setNeko(payload.isNeko());
                 neko.setNekoLevelFactorRaw("interaction", payload.interactionRaw());
@@ -163,7 +165,7 @@ public class ClientNetworkEvents {
                 if (ClientConfig.isBubbleMode()) {
                     NekoBubbleRenderer.show(payload.nekoUuid(), payload.text());
                 } else {
-                    mc.gui.getChat().addMessage(ClientTextUtil.parseLegacyFormatting(payload.text()));
+                    mc.gui.getChat().addClientSystemMessage(ClientTextUtil.parseLegacyFormatting(payload.text()));
                 }
             });
         });

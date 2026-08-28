@@ -1,0 +1,31 @@
+{
+  "parent": "toneko:become_neko",
+  "criteria": {
+    "neko_lv10": {
+      "conditions": {
+        "level": 10.0
+      },
+      "trigger": "toneko:neko_lv100"
+    }
+  },
+  "display": {
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "description": {
+      "translate": "advancements.toneko.neko_lv10.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "toneko:neko_ingot"
+    },
+    "title": {
+      "translate": "advancements.toneko.neko_lv10.title"
+    }
+  },
+  "requirements": [
+    [
+      "neko_lv10"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

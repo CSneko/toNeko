@@ -38,28 +38,28 @@ public class ClientTickEvent {
 
     public static void processKeyInput(Minecraft client) {
         while (ToNekoKeyBindings.LIE_KEY.consumeClick()) {
-            client.player.connection.sendUnsignedCommand("neko lie");
+            client.player.connection.sendCommand("neko lie");
         }
         while (ToNekoKeyBindings.GET_DOWN_KEY.consumeClick()) {
-            client.player.connection.sendUnsignedCommand("neko getDown");
+            client.player.connection.sendCommand("neko getDown");
         }
         while (ToNekoKeyBindings.RIDE_KEY.consumeClick()) {
-            client.player.connection.sendUnsignedCommand("neko ride");
+            client.player.connection.sendCommand("neko ride");
         }
         while (ToNekoKeyBindings.QUIRK_KEY.consumeClick()) {
-            client.player.connection.sendUnsignedCommand("quirk gui");
+            client.player.connection.sendCommand("quirk gui");
         }
         while (ToNekoKeyBindings.SPEED_KEY.consumeClick()) {
-            client.player.connection.sendUnsignedCommand("neko speed");
+            client.player.connection.sendCommand("neko speed");
         }
         while (ToNekoKeyBindings.JUMP_KEY.consumeClick()) {
-            client.player.connection.sendUnsignedCommand("neko jump");
+            client.player.connection.sendCommand("neko jump");
         }
         while (ToNekoKeyBindings.VISION_KEY.consumeClick()) {
-            client.player.connection.sendUnsignedCommand("neko vision");
+            client.player.connection.sendCommand("neko vision");
         }
         while (ToNekoKeyBindings.RIDE_HEAD_KEY.consumeClick()) {
-            client.player.connection.sendUnsignedCommand("neko rideHead");
+            client.player.connection.sendCommand("neko rideHead");
         }
         while (ToNekoKeyBindings.ROULETTE_KEY.consumeClick()) {
             RouletteScreen.open();
@@ -74,7 +74,7 @@ public class ClientTickEvent {
             }
         }
         while (ToNekoKeyBindings.TONEKO_MANAGEMENT_KEY.consumeClick()) {
-            client.player.connection.sendUnsignedCommand("toneko gui");
+            client.player.connection.sendCommand("toneko gui");
         }
         while (ToNekoKeyBindings.HUB_KEY.consumeClick()) {
             ToNekoHubScreen.open();
@@ -124,11 +124,9 @@ public class ClientTickEvent {
             wasStealthActive = !wasStealthActive;
             if (client.player != null) {
                 ClientPlayNetworking.send(new NekoStealthPayload(wasStealthActive));
-                client.player.displayClientMessage(
-                        Component.translatable(wasStealthActive
+                client.player.sendOverlayMessage(Component.translatable(wasStealthActive
                                 ? "messages.toneko.stealth.enabled"
-                                : "messages.toneko.stealth.disabled"),
-                        true);
+                                : "messages.toneko.stealth.disabled"));
             }
         }
         // 提袜：把过膝袜袜口复位（服务端权威 + 冷却）
@@ -179,11 +177,9 @@ public class ClientTickEvent {
     public static void toggleStealth(boolean active) {
         wasStealthActive = active;
         if (Minecraft.getInstance().player != null) {
-            Minecraft.getInstance().player.displayClientMessage(
-                    Component.translatable(active
+            Minecraft.getInstance().player.sendOverlayMessage(Component.translatable(active
                             ? "messages.toneko.stealth.enabled"
-                            : "messages.toneko.stealth.disabled"),
-                    true);
+                            : "messages.toneko.stealth.disabled"));
         }
     }
 
@@ -209,18 +205,17 @@ public class ClientTickEvent {
         // Try to find a neko the player is looking at
         LivingEntity lookedAt = EntityUtil.findLookedAtEntity(client.player, client.level, 16.0);
         if (lookedAt instanceof NekoEntity neko) {
-            client.setScreen(new ChatWithNekoScreen(neko));
+            Minecraft.getInstance().setScreen(new ChatWithNekoScreen(neko));
             return;
         }
 
         // Fallback: find the nearest neko in range
         NekoEntity nearest = EntityUtil.findNearestNekoEntity(client.player, client.level, 12.0f);
         if (nearest != null) {
-            client.setScreen(new ChatWithNekoScreen(nearest));
+            Minecraft.getInstance().setScreen(new ChatWithNekoScreen(nearest));
         } else {
             if (client.player != null) {
-                client.player.displayClientMessage(
-                        Component.translatable("messages.toneko.chat.no_neko_nearby"), true);
+                client.player.sendOverlayMessage(Component.translatable("messages.toneko.chat.no_neko_nearby"));
             }
         }
     }

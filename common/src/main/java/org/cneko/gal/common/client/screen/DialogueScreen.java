@@ -1,10 +1,10 @@
 package org.cneko.gal.common.client.screen;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.cneko.gal.common.Gal;
 import org.cneko.gal.common.client.parser.GalInfo;
 import org.cneko.gal.common.client.parser.GalParser;
@@ -26,7 +26,7 @@ public class DialogueScreen extends Screen {
     private Map<String, PlotParser.DialogueNode> currentPlotNodes; // 这里放着现在这个剧情里所有的小故事点哦~
     private int currentPlotIndex = 0; // 现在演到第几个剧情啦，要记一下下~
 
-    private final Map<String, ResourceLocation> cachedTextures = new HashMap<>();
+    private final Map<String, Identifier> cachedTextures = new HashMap<>();
 
     // 这些东东在换场景的时候也会保留，除非节点明确说要改掉它们
     private String activeStandPicturePath; // 当前活动立绘图片的路径哦
@@ -38,7 +38,7 @@ public class DialogueScreen extends Screen {
 
     // 大图图模式
     private String currentBigPicturePath; // 当前活动大图图的路径哦
-    private ResourceLocation activeBigPictureTexture; // 大图图的纹理~
+    private Identifier activeBigPictureTexture; // 大图图的纹理~
     private boolean showTextWindow; // 在大图图模式下，右键可以切换这个哦
 
     // 文字蹦蹦跳设置
@@ -271,7 +271,7 @@ public class DialogueScreen extends Screen {
             lastValidStandPictureWidth = picture.width();
 
             try (is) { // 用 try-with-resources 来乖乖关掉流哦~
-                ResourceLocation texture = TextureUtil.registerTexture(imagePath, is);
+                Identifier texture = TextureUtil.registerTexture(imagePath, is);
                 cachedTextures.put(imagePath, texture);
                 Gal.LOGGER.debug("立绘: {} 加载成功啦！好耶！", imagePath);
             } catch (IOException e) {
@@ -313,7 +313,7 @@ public class DialogueScreen extends Screen {
             }
 
             try (InputStream is = picture.stream()) {
-                ResourceLocation texture = TextureUtil.registerTexture(imagePath, is);
+                Identifier texture = TextureUtil.registerTexture(imagePath, is);
                 cachedTextures.put(imagePath, texture);
                 this.activeBigPictureTexture = texture;
                 Gal.LOGGER.debug("大图图: {} 加载成功啦！棒棒！", imagePath);
@@ -334,7 +334,7 @@ public class DialogueScreen extends Screen {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractRenderState(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (currentBigPicturePath != null && activeBigPictureTexture != null) {
             renderBigPicture(guiGraphics);
         } else {
@@ -347,13 +347,13 @@ public class DialogueScreen extends Screen {
         // 在左上角显示音乐的名字哦~
         if (activeMusicPath != null && !activeMusicPath.isEmpty()) {
             String musicDisplayName = getMusicDisplayName();
-            guiGraphics.drawString(font, "♪ " + musicDisplayName, 5, 5, 0xFFFFFF); // 白白色的字~
+            guiGraphics.text(font, "♪ " + musicDisplayName, 5, 5, 0xFFFFFFFF); // 白白色的字~
         }
 
-        super.render(guiGraphics, mouseX, mouseY, partialTick); // 按钮和其他小部件也要画一下下~
+        super.extractRenderState(guiGraphics, mouseX, mouseY, partialTick); // 按钮和其他小部件也要画一下下~
     }
 
-    private void renderBigPicture(GuiGraphics guiGraphics) {
+    private void renderBigPicture(GuiGraphicsExtractor guiGraphics) {
         if (activeBigPictureTexture != null) {
             guiGraphics.blit(activeBigPictureTexture, 0, 0, 0, 0, this.width, this.height, this.width, this.height);
         }
@@ -374,10 +374,10 @@ public class DialogueScreen extends Screen {
         return musicDisplayName;
     }
 
-    private void renderPortraits(GuiGraphics guiGraphics) {
+    private void renderPortraits(GuiGraphicsExtractor guiGraphics) {
         // 这个方法呀，只有在不是大图模式的时候才会被叫到哦。
         if (activeStandPicturePath != null && this.lastValidStandPictureInfo != null) {
-            ResourceLocation texture = cachedTextures.get(activeStandPicturePath); // 从缓存里拿出来~
+            Identifier texture = cachedTextures.get(activeStandPicturePath); // 从缓存里拿出来~
             PlotParser.StandPicture standPictureInfo = this.lastValidStandPictureInfo;
 
             if (texture != null && standPictureInfo != null) {
@@ -424,7 +424,7 @@ public class DialogueScreen extends Screen {
     }
 
 
-    private void renderTextWindow(GuiGraphics guiGraphics) {
+    private void renderTextWindow(GuiGraphicsExtractor guiGraphics) {
         // 这个方法现在是看情况叫的，要看是不是大图模式，还有文字框框是不是要显示。
         int topColor = 0xAAFFC0CB; // 淡淡的粉红色，几乎不透明~
         int bottomColor = 0x00FFC0CB; // 淡淡的粉红色，完全透明 (渐变到透明哦~)
@@ -440,15 +440,15 @@ public class DialogueScreen extends Screen {
         float actualNameLineHeight = (activeCharacterName != null && !activeCharacterName.isEmpty()) || (currentNode.getCV() != null && !currentNode.getCV().isEmpty() && !currentNode.getCV().equalsIgnoreCase("none")) ? scaledFontHeight : font.lineHeight;
         int dialogueTextY = nameAndCvLineY + (int)actualNameLineHeight + 5;
 
-        guiGraphics.pose().pushPose();
-        guiGraphics.pose().translate(0, 0, 100);
+        guiGraphics.pose().pushMatrix();
+        guiGraphics.pose().translate(0, 0);
 
         if (activeCharacterName != null && !activeCharacterName.isEmpty()) {
-            guiGraphics.pose().pushPose();
-            guiGraphics.pose().translate(TEXT_AREA_SIDE_MARGIN, nameAndCvLineY, 0);
-            guiGraphics.pose().scale(TEXT_SCALE_FACTOR, TEXT_SCALE_FACTOR, 1.0f);
-            guiGraphics.drawString(font, activeCharacterName, 0, 0, 0xFFFFFF);
-            guiGraphics.pose().popPose();
+            guiGraphics.pose().pushMatrix();
+            guiGraphics.pose().translate(TEXT_AREA_SIDE_MARGIN, nameAndCvLineY);
+            guiGraphics.pose().scale(TEXT_SCALE_FACTOR, TEXT_SCALE_FACTOR);
+            guiGraphics.text(font, activeCharacterName, 0, 0, 0xFFFFFFFF);
+            guiGraphics.pose().popMatrix();
         }
 
         String cvName = currentNode.getCV();
@@ -457,11 +457,11 @@ public class DialogueScreen extends Screen {
             int cvNameWidth = (int)(font.width(cvText) * TEXT_SCALE_FACTOR);
             int cvX = width - TEXT_AREA_SIDE_MARGIN - cvNameWidth;
 
-            guiGraphics.pose().pushPose();
-            guiGraphics.pose().translate(cvX, nameAndCvLineY, 0);
-            guiGraphics.pose().scale(TEXT_SCALE_FACTOR, TEXT_SCALE_FACTOR, 1.0f);
-            guiGraphics.drawString(font, cvText, 0, 0, 0xCCCCCC);
-            guiGraphics.pose().popPose();
+            guiGraphics.pose().pushMatrix();
+            guiGraphics.pose().translate(cvX, nameAndCvLineY);
+            guiGraphics.pose().scale(TEXT_SCALE_FACTOR, TEXT_SCALE_FACTOR);
+            guiGraphics.text(font, cvText, 0, 0, 0xFFCCCCCC);
+            guiGraphics.pose().popMatrix();
         }
 
         String fullText = currentNode.getText();
@@ -469,15 +469,15 @@ public class DialogueScreen extends Screen {
         String displayedText = fullText.substring(0, Math.min(textDisplayProgress, fullText.length()));
 
         if (!displayedText.isEmpty()) {
-            guiGraphics.pose().pushPose();
-            guiGraphics.pose().translate(TEXT_AREA_SIDE_MARGIN, dialogueTextY, 0);
-            guiGraphics.pose().scale(TEXT_SCALE_FACTOR, TEXT_SCALE_FACTOR, 1.0f);
+            guiGraphics.pose().pushMatrix();
+            guiGraphics.pose().translate(TEXT_AREA_SIDE_MARGIN, dialogueTextY);
+            guiGraphics.pose().scale(TEXT_SCALE_FACTOR, TEXT_SCALE_FACTOR);
             int wrapWidth = (int)((width - (2 * TEXT_AREA_SIDE_MARGIN)) / TEXT_SCALE_FACTOR);
-            guiGraphics.drawWordWrap(font, Component.literal(displayedText),
-                    0, 0, wrapWidth, 0xFFFFFF);
-            guiGraphics.pose().popPose();
+            guiGraphics.textWithWordWrap(font, Component.literal(displayedText),
+                    0, 0, wrapWidth, 0);
+            guiGraphics.pose().popMatrix();
         }
-        guiGraphics.pose().popPose();
+        guiGraphics.pose().popMatrix();
     }
 
     private void updateTextProgress() {
@@ -540,8 +540,10 @@ public class DialogueScreen extends Screen {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int buttonType) {
-        if (super.mouseClicked(mouseX, mouseY, buttonType)) {
+    public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent event, boolean active) {
+        double mouseX = event.x(), mouseY = event.y();
+        int buttonType = event.button();
+        if (super.mouseClicked(event, active)) {
             return true;
         }
 
@@ -556,12 +558,13 @@ public class DialogueScreen extends Screen {
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    public boolean keyPressed(net.minecraft.client.input.KeyEvent ke) {
+        int keyCode = ke.key();
         // 空格或者回车键，还有Ctrl键都可以哦~
         if (keyCode == GLFW.GLFW_KEY_SPACE || keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_LEFT_CONTROL || keyCode == GLFW.GLFW_KEY_RIGHT_CONTROL) {
             return quickProcessText();
         }
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(ke);
     }
 
     private boolean quickProcessText(){

@@ -12,8 +12,8 @@ public class LightningBombItem extends AmmoItem.SameEffectItem {
     }
     @Override
     public void applyEffect(LivingEntity shooter, BlockPos pos, ItemStack bazooka, ItemStack ammunition) {
-        if (!shooter.level().isClientSide) {
-            var lightningBolt = new LightningBolt(EntityType.LIGHTNING_BOLT, shooter.level());
+        if (!shooter.level().isClientSide()) {
+            var lightningBolt = new LightningBolt((net.minecraft.world.entity.EntityType<LightningBolt>) net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("lightning_bolt")), shooter.level());
             lightningBolt.setPos(pos.getX(), pos.getY(), pos.getZ());
             shooter.level().addFreshEntity(lightningBolt);
         }

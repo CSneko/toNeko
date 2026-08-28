@@ -1,0 +1,23 @@
+{
+  "anvil_cost": 4,
+  "weight": 4,
+  "description": {
+    "type": "translatable",
+    "translate": "enchantment.toneko.combo_extend"
+  },
+  "supported_items": "toneko:neko_energy_burst",
+  "primary_items": "toneko:neko_energy_burst",
+  "min_cost": {
+    "base": 5,
+    "per_level_above_first": 15
+  },
+  "max_cost": {
+    "base": 25,
+    "per_level_above_first": 15
+  },
+  "max_level": 2,
+  "slots": [
+    "mainhand",
+    "offhand"
+  ]
+}

@@ -29,7 +29,7 @@ public class ContractItem extends Item {
 
     @Override
     public @NotNull InteractionResult interactLivingEntity(@NotNull ItemStack stack, @NotNull Player player, @NotNull LivingEntity interactionTarget, @NotNull InteractionHand usedHand) {
-        if (player.level().isClientSide) return super.interactLivingEntity(stack,player,interactionTarget,usedHand);
+        if (player.level().isClientSide()) return super.interactLivingEntity(stack,player,interactionTarget,usedHand);
         if (interactionTarget instanceof NekoBoss boss) {
             if (boss.canBeTamed(player, stack)) {
                 if (boss.tame(player, stack)) {
@@ -63,8 +63,8 @@ public class ContractItem extends Item {
                 }else {
                     neko.addOwner(player.getUUID(), new INeko.Owner(List.of(),0));
                     player.giveExperienceLevels(-30);
-                    if (player.isNeko()){
-                        org.cneko.toneko.common.mod.api.NekoLevelRegistry.interaction().addRaw(player, 10.0);
+                    if (((INeko) player).isNeko()){
+                        org.cneko.toneko.common.mod.api.NekoLevelRegistry.interaction().addRaw((INeko) player, 10.0);
                     }
                     player.sendSystemMessage(Component.translatable("item.toneko.contract.success",neko.getEntity().getName()));
                     // 触发成就：契约成立
@@ -82,16 +82,6 @@ public class ContractItem extends Item {
         return super.interactLivingEntity(stack, player, interactionTarget, usedHand);
     }
 
-
-    @Override
-    public boolean isEnchantable(@NotNull ItemStack stack) {
-        return true;
-    }
-
-    @Override
-    public int getEnchantmentValue() {
-        return 30;
-    }
 
     @Override
     public boolean canBeEnchantedWith(ItemStack stack, Holder<Enchantment> enchantment, EnchantingContext context) {

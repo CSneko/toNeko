@@ -3,7 +3,7 @@ package org.cneko.toneko.common.mod.entities;
 import lombok.*;
 import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -76,11 +76,11 @@ public interface INeko {
 
     default double getNekoLevelFactorRaw(String factorId) {
         CompoundTag data = this.getNekoLevelFactorData();
-        if (data.contains(factorId, CompoundTag.TAG_DOUBLE)) {
-            return data.getDouble(factorId);
+        if (data.contains(factorId)) {
+            return data.getDoubleOr(factorId, 0d);
         }
         NekoLevelFactor factor = NekoLevelRegistry.getFactor(factorId);
-        return factor != null ? factor.getDefaultRawValue() : 0;
+        return factor != null ? factor.getDefaultRawValue() : 0d;
     }
 
     default void setNekoLevelFactorRaw(String factorId, double value) {
@@ -225,35 +225,38 @@ public interface INeko {
     }
     default void loadNekoNBTData(@NotNull CompoundTag nbt){
         if(nbt.contains("IsNeko")){
-            this.setNeko(nbt.getBoolean("IsNeko"));
+            this.setNeko(nbt.getBooleanOr("IsNeko", false));
         }
         if (nbt.contains("NekoAge")) {
-            this.setNekoAge(nbt.getInt("NekoAge"));
+            this.setNekoAge(nbt.getIntOr("NekoAge", 0));
         }
         if (nbt.contains("NekoEnergy")) {
-            this.setNekoEnergy(nbt.getFloat("NekoEnergy"));
+            this.setNekoEnergy(nbt.getFloatOr("NekoEnergy", 0f));
         }
-        if (nbt.contains("NekoLevelFactors", CompoundTag.TAG_COMPOUND)) {
-            this.setNekoLevelFactorData(nbt.getCompound("NekoLevelFactors"));
+        if (nbt.contains("NekoLevelFactors")) {
+            this.setNekoLevelFactorData(nbt.getCompoundOrEmpty("NekoLevelFactors"));
         } else if (nbt.contains("NekoLevel")) {
             // Legacy migration: wrap old single-value level into the base factor
             CompoundTag migrated = new CompoundTag();
-            migrated.putDouble("base", nbt.getFloat("NekoLevel"));
+            migrated.putDouble("base", nbt.getFloatOr("NekoLevel", 0f));
             this.setNekoLevelFactorData(migrated);
         }
         if (nbt.contains("Owners")){
-            CompoundTag owners = nbt.getCompound("Owners");
-            for (String key : owners.getAllKeys()){
-                CompoundTag ownerInfo = owners.getCompound(key);
+            CompoundTag owners = nbt.getCompoundOrEmpty("Owners");
+            for (String key : owners.keySet()){
+                CompoundTag ownerInfo = owners.getCompoundOrEmpty(key);
                 List<String> aliases;
                 int xp;
                 if (ownerInfo.contains("Aliases")) {
-                    aliases = ownerInfo.getList("Aliases", ListTag.TAG_STRING).stream().map(Tag::toString).toList();
+                    aliases = ownerInfo.getListOrEmpty("Aliases").stream()
+                            .map(tag -> tag.asString().orElse(""))
+                            
+                            .toList();
                 }else {
                     aliases = new ArrayList<>();
                 }
                 if (ownerInfo.contains("Xp")){
-                    xp = ownerInfo.getInt("Xp");
+                    xp = ownerInfo.getIntOr("Xp", 0);
                 }else {
                     xp = 0;
                 }
@@ -261,24 +264,24 @@ public interface INeko {
             }
         }
         if (nbt.contains("NickName")){
-            this.setNickName(nbt.getString("NickName"));
+            this.setNickName(nbt.getStringOr("NickName", ""));
         }
         // 加载已访问群系
         if (nbt.contains("VisitedBiomes")) {
-            ListTag list = nbt.getList("VisitedBiomes", ListTag.TAG_STRING);
+            ListTag list = nbt.getListOrEmpty("VisitedBiomes");
             Set<String> biomes = new HashSet<>();
             for (int i = 0; i < list.size(); i++) {
-                biomes.add(list.getString(i));
+                biomes.add(list.getStringOr(i, ""));
             }
             this.setVisitedBiomes(biomes);
         }
     }
 
-    ResourceLocation ATTACK_MODIFIER_ID = toNekoLoc("neko_level_attack_modifier");
-    ResourceLocation MAX_NEKO_ENERGY_MODIFIER_ID = toNekoLoc("neko_level_max_neko_energy_modifier");
-    ResourceLocation MAX_HEALTH_MODIFIER_ID = toNekoLoc("neko_level_max_health_modifier");
-    ResourceLocation AGE_SCALE_MODIFIER_ID = toNekoLoc("neko_age_scale_modifier");
-    ResourceLocation FALL_DAMAGE_MODIFIER_ID = toNekoLoc("neko_level_fall_damage_modifier");
+    Identifier ATTACK_MODIFIER_ID = toNekoLoc("neko_level_attack_modifier");
+    Identifier MAX_NEKO_ENERGY_MODIFIER_ID = toNekoLoc("neko_level_max_neko_energy_modifier");
+    Identifier MAX_HEALTH_MODIFIER_ID = toNekoLoc("neko_level_max_health_modifier");
+    Identifier AGE_SCALE_MODIFIER_ID = toNekoLoc("neko_age_scale_modifier");
+    Identifier FALL_DAMAGE_MODIFIER_ID = toNekoLoc("neko_level_fall_damage_modifier");
 
     /**
      * 根据年龄计算缩放因子，从幼年的 0.3 线性过渡到成年的 1.0
@@ -329,11 +332,11 @@ public interface INeko {
         );
     }
 
-    static void applyModifier(AttributeInstance attr, ResourceLocation id, double bonus) {
+    static void applyModifier(AttributeInstance attr, Identifier id, double bonus) {
         applyModifier(attr, id, bonus, AttributeModifier.Operation.ADD_VALUE);
     }
 
-    static void applyModifier(AttributeInstance attr, ResourceLocation id, double bonus, AttributeModifier.Operation operation) {
+    static void applyModifier(AttributeInstance attr, Identifier id, double bonus, AttributeModifier.Operation operation) {
         if (attr != null) {
             attr.removeModifier(id);
             AttributeModifier modifier = new AttributeModifier(

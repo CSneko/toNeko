@@ -1,7 +1,7 @@
 package org.cneko.toneko.common.mod.items;
 
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 
@@ -63,6 +63,6 @@ public class ToNekoItems {
     public static Item SPOILED_WATER_LINGERING;
     public static Item SCENT_PERFUME;
 
-    public static final TagKey<Item> CATNIP_TAG = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c","foods/catnip"));
+    public static final TagKey<Item> CATNIP_TAG = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c","foods/catnip"));
     public static final TagKey<Item> BAZOOKA_AMMO_TAG = TagKey.create(Registries.ITEM, toNekoLoc("bazooka_ammo"));
 }

@@ -1,4 +1,5 @@
 package org.cneko.toneko.common.mod.events;
+import org.cneko.toneko.common.mod.entities.INeko;
 
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
@@ -56,7 +57,7 @@ public class NekoMultiToolEvents {
         float finalDamage = Math.max(0, amount - 1.0f + nekoBase);
 
         DAMAGE_GUARD.add(entity);
-        boolean result = entity.hurt(source, finalDamage);
+        boolean result = org.cneko.toneko.common.mod.util.EntityHurtUtil.hurt(entity, source, finalDamage);
         DAMAGE_GUARD.remove(entity);
 
         if (result) {
@@ -65,10 +66,10 @@ public class NekoMultiToolEvents {
                 entity.setRemainingFireTicks(80);
             }
             // 能量消耗
-            if (player.isNeko()) {
+            if (((INeko) player).isNeko()) {
                 float cost = NekoMultiToolItem.getEnergyCostPerBlock(player, stack);
-                if (player.getNekoEnergy() >= cost) {
-                    player.setNekoEnergy(player.getNekoEnergy() - cost);
+                if (((INeko) player).getNekoEnergy() >= cost) {
+                    ((INeko) player).setNekoEnergy(((INeko) player).getNekoEnergy() - cost);
                 }
             }
         }
@@ -117,9 +118,8 @@ public class NekoMultiToolEvents {
         }
 
         // 检查能量
-        if (player.isNeko() && player.getNekoEnergy() < totalEnergy) {
-            player.displayClientMessage(
-                    Component.translatable("item.toneko.neko_multi_tool.no_energy"), true);
+        if (((INeko) player).isNeko() && ((INeko) player).getNekoEnergy() < totalEnergy) {
+            player.sendOverlayMessage(Component.translatable("item.toneko.neko_multi_tool.no_energy"));
             return false; // 取消
         }
 
@@ -147,8 +147,8 @@ public class NekoMultiToolEvents {
         }
 
         // 扣除能量
-        if (player.isNeko() && totalEnergy > 0) {
-            player.setNekoEnergy(player.getNekoEnergy() - totalEnergy);
+        if (((INeko) player).isNeko() && totalEnergy > 0) {
+            ((INeko) player).setNekoEnergy(((INeko) player).getNekoEnergy() - totalEnergy);
         }
 
         // 播放原始方块的破坏效果
@@ -170,7 +170,7 @@ public class NekoMultiToolEvents {
 
         // 实际范围（5×5 需要 Lv15）
         int actualRange = rangeMode;
-        if (rangeMode == 5 && (!player.isNeko() || player.getNekoLevel() < 15)) {
+        if (rangeMode == 5 && (!((INeko) player).isNeko() || ((INeko) player).getNekoLevel() < 15)) {
             actualRange = 3; // 静默降级
         }
         int half = actualRange / 2;
@@ -209,7 +209,7 @@ public class NekoMultiToolEvents {
     private static Direction getPlayerFacing(Player player) {
         // 使用玩家视线方向判断
         Vec3 look = player.getLookAngle();
-        return Direction.getNearest(look.x, look.y, look.z);
+        return Direction.getNearest((int) Math.round(look.x), (int) Math.round(look.y), (int) Math.round(look.z), Direction.UP);
     }
 
     // ========================
@@ -220,12 +220,14 @@ public class NekoMultiToolEvents {
     private static List<ItemStack> getSilkTouchDrops(BlockState state, ServerLevel level, BlockPos pos) {
         List<ItemStack> drops = new ArrayList<>();
         BlockEntity blockEntity = state.hasBlockEntity() ? level.getBlockEntity(pos) : null;
-        ItemStack silkDrop = state.getBlock().getCloneItemStack(level, pos, state);
+        // 26.x：getCloneItemStack 为 protected；用方块的 Item 直接取标准掉落形态
+        ItemStack silkDrop = new ItemStack(state.getBlock().asItem());
         if (!silkDrop.isEmpty()) {
-            // 如果有方块实体，把 NBT 写进去
+            // 如果有方块实体，把 NBT 写进去（26.x：BLOCK_ENTITY_DATA 组件类型是 TypedEntityData）
             if (blockEntity != null) {
-                CompoundTag tag = blockEntity.saveWithFullMetadata(level.registryAccess());
-                silkDrop.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(tag));
+                CompoundTag tag = blockEntity.saveWithoutMetadata(level.registryAccess());
+                silkDrop.set(DataComponents.BLOCK_ENTITY_DATA,
+                        net.minecraft.world.item.component.TypedEntityData.of(blockEntity.getType(), tag));
             }
             drops.add(silkDrop);
         }
@@ -246,7 +248,7 @@ public class NekoMultiToolEvents {
                     .getRecipeFor(RecipeType.SMELTING, recipeInput, level);
 
             if (recipe.isPresent()) {
-                ItemStack smelted = recipe.get().value().assemble(recipeInput, level.registryAccess());
+                ItemStack smelted = recipe.get().value().assemble(recipeInput);
                 smelted.setCount(smelted.getCount() * rawDrop.getCount());
                 drops.add(smelted);
             } else {

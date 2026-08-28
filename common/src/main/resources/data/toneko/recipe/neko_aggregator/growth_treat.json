@@ -1,17 +1,10 @@
 {
   "type": "toneko:neko_aggregator",
   "key": {
-    "I": {
-      "item": "toneko:neko_ingot"
-    },
-    "C": {
-      "item": "toneko:catnip"
-    },
-    "M": {
-      "item": "minecraft:milk_bucket"
-    }
+    "I": "toneko:neko_ingot",
+    "C": "toneko:catnip",
+    "M": "minecraft:milk_bucket"
   },
-
   "pattern": [
     "ICI",
     "CMC",

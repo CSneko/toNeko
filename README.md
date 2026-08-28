@@ -26,7 +26,8 @@ toNeko 是一个将你变成猫娘的 Minecraft 模组喵!除了变成猫娘,还
 - [Forgified Fabric API](https://modrinth.com/mod/forgified-fabric-api)（仅 NeoForge 需要）
 
 可选前置：
-- [trinkets](https://modrinth.com/mod/trinkets)（提供饰品栏位支持）
+- [trinkets](https://modrinth.com/mod/trinkets)（提供饰品栏位支持，仅 Fabric）
+- [curios](https://modrinth.com/mod/curios)（提供饰品栏位支持，仅 NeoForge）
 - [luckperms](https://luckperms.net/)（权限管理）
 - [patchouli](https://modrinth.com/mod/patchouli)（提供游戏内指南书）
 
@@ -91,7 +92,7 @@ toNeko 为了在单人模式下有的玩，所以加了一些猫娘实体喵，�
 除此之外，还有强大的 **Mouflet Boss** 等你来挑战喵！它会偷走你的物品、飞行攻击，还会撒娇、魅惑、抱着你飞上天，可不是那么容易对付的喵！不过如果实力足够，也可以使用契约收服它，然后骑着它飞行喵~
 
 ## 饰品
-toNeko 加了几件饰品（猫耳、猫尾、猫爪等），你可以在创造模式物品栏看到它们，当然啦，这些都是可以合成的喵。饰品都可以直接穿在盔甲栏上喵，如果你加了 [trinkets](https://modrinth.com/mod/trinkets) 的话呢，放在饰品栏也可以喵。
+toNeko 加了几件饰品（猫耳、猫尾、猫爪、丝袜等），你可以在创造模式物品栏看到它们，当然啦，这些都是可以合成的喵。饰品都可以直接穿在盔甲栏上喵，如果你加了 [trinkets](https://modrinth.com/mod/trinkets)（Fabric）或 [curios](https://modrinth.com/mod/curios)（NeoForge）的话呢，放在饰品栏也可以喵（猫耳→头部槽、猫尾→背部槽、猫爪→通用槽、丝袜→袜子槽）。NeoForge 版会为玩家提供头部/背部/通用/袜子共 4 个饰品栏；想要更多栏位可以在 Curios 配置的 `slots` 列表里添加喵。
 
 ## 命令&权限（默认全部拥有）
 ```yaml

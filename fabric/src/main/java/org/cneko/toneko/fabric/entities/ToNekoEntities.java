@@ -2,10 +2,11 @@ package org.cneko.toneko.fabric.entities;
 
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityType;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -22,78 +23,91 @@ import static org.cneko.toneko.common.Bootstrap.MODID;
 import static org.cneko.toneko.common.mod.entities.ToNekoEntities.*;
 
 public class ToNekoEntities {
+    private static ResourceKey<net.minecraft.world.entity.EntityType<?>> key(String path) {
+        return ResourceKey.create(net.minecraft.core.registries.Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(MODID, path));
+    }
+
     public static void init(){
         ADVENTURER_NEKO = Registry.register(
                 BuiltInRegistries.ENTITY_TYPE,
                 ADVENTURER_NEKO_ID,
-                FabricEntityType.Builder.createMob(AdventurerNeko::new, MobCategory.CREATURE, builder -> builder.defaultAttributes(AdventurerNeko::createAdventurerNekoAttributes)
-                        ).
-                        sized(0.5f,1.7f).eyeHeight(1.6f).build()
+                EntityType.Builder.of(AdventurerNeko::new, MobCategory.CREATURE)
+                        .sized(0.5f,1.7f).eyeHeight(1.6f).clientTrackingRange(8)
+                        .build(key("adventurer_neko"))
         );
+        FabricDefaultAttributeRegistry.register(ADVENTURER_NEKO, AdventurerNeko.createAdventurerNekoAttributes());
         CRYSTAL_NEKO = Registry.register(
                 BuiltInRegistries.ENTITY_TYPE,
                 CRYSTAL_NEKO_ID,
-                FabricEntityType.Builder.createMob(CrystalNekoEntity::new, MobCategory.CREATURE, builder -> builder.defaultAttributes(CrystalNekoEntity::createNekoAttributes)
-                        )
-                        .sized(0.5f,1.7f).eyeHeight(1.6f).clientTrackingRange(8).build()
+                EntityType.Builder.of(CrystalNekoEntity::new, MobCategory.CREATURE)
+                        .sized(0.5f,1.7f).eyeHeight(1.6f).clientTrackingRange(8)
+                        .build(key("crystal_neko"))
         );
+        FabricDefaultAttributeRegistry.register(CRYSTAL_NEKO, CrystalNekoEntity.createNekoAttributes());
         GHOST_NEKO = Registry.register(
                 BuiltInRegistries.ENTITY_TYPE,
                 GHOST_NEKO_ID,
-                FabricEntityType.Builder.createMob(GhostNekoEntity::new, MobCategory.CREATURE, builder -> builder.defaultAttributes(GhostNekoEntity::createGhostNekoAttributes)
-                )
-                        .sized(0.4f,1.2f).eyeHeight(1.5f).clientTrackingRange(8).build()
+                EntityType.Builder.of(GhostNekoEntity::new, MobCategory.CREATURE)
+                        .sized(0.4f,1.2f).eyeHeight(1.5f).clientTrackingRange(8)
+                        .build(key("ghost_neko"))
         );
-        FIGHTING_NEKO  = Registry.register(
+        FabricDefaultAttributeRegistry.register(GHOST_NEKO, GhostNekoEntity.createGhostNekoAttributes());
+        FIGHTING_NEKO = Registry.register(
                 BuiltInRegistries.ENTITY_TYPE,
                 FIGHTING_NEKO_ID,
-                FabricEntityType.Builder.createMob(FightingNekoEntity::new, MobCategory.CREATURE, builder -> builder.defaultAttributes(FightingNekoEntity::createFightingNekoAttributes)
-                        )
-                        .sized(0.5f,1.7f).eyeHeight(1.6f).build()
+                EntityType.Builder.of(FightingNekoEntity::new, MobCategory.CREATURE)
+                        .sized(0.5f,1.7f).eyeHeight(1.6f).clientTrackingRange(8)
+                        .build(key("fighting_neko"))
         );
+        FabricDefaultAttributeRegistry.register(FIGHTING_NEKO, FightingNekoEntity.createFightingNekoAttributes());
         MOUFLET_NEKO_BOSS = Registry.register(
                 BuiltInRegistries.ENTITY_TYPE,
                 MOUFLET_NEKO_BOSS_ID,
-                FabricEntityType.Builder.createMob(MoufletNekoBoss::new, MobCategory.MONSTER,builder -> builder.defaultAttributes(MoufletNekoBoss::createMoufletNekoAttributes))
-                        .sized(0.5f,1.7f).clientTrackingRange(8).build()
+                EntityType.Builder.of(MoufletNekoBoss::new, MobCategory.MONSTER)
+                        .sized(0.5f,1.7f).clientTrackingRange(8)
+                        .build(key("mouflet_neko_boss"))
         );
+        FabricDefaultAttributeRegistry.register(MOUFLET_NEKO_BOSS, MoufletNekoBoss.createMoufletNekoAttributes());
         RAVENN_ENTITY = Registry.register(
                 BuiltInRegistries.ENTITY_TYPE,
                 RAVENN_ID,
-                FabricEntityType.Builder.createMob(RavennEntity::new, MobCategory.MONSTER, builder -> builder.defaultAttributes(RavennEntity::createRavennAttributes))
-                        .sized(0.5f,1.7f).clientTrackingRange(8).build()
+                EntityType.Builder.of(RavennEntity::new, MobCategory.MONSTER)
+                        .sized(0.5f,1.7f).clientTrackingRange(8)
+                        .build(key("ravenn"))
         );
+        FabricDefaultAttributeRegistry.register(RAVENN_ENTITY, RavennEntity.createRavennAttributes());
         NOELLE_MAID_NEKO = Registry.register(
                 BuiltInRegistries.ENTITY_TYPE,
                 NOELLE_MAID_NEKO_ID,
-                FabricEntityType.Builder.createMob(NoelleMaidNekoEntity::new, MobCategory.CREATURE, builder -> builder.defaultAttributes(NoelleMaidNekoEntity::createNoelleAttributes)
-                        )
-                        .sized(0.5f,1.7f).eyeHeight(1.6f).build()
+                EntityType.Builder.of(NoelleMaidNekoEntity::new, MobCategory.CREATURE)
+                        .sized(0.5f,1.7f).eyeHeight(1.6f).clientTrackingRange(8)
+                        .build(key("noelle_maid_neko"))
         );
+        FabricDefaultAttributeRegistry.register(NOELLE_MAID_NEKO, NoelleMaidNekoEntity.createNoelleAttributes());
 
         AMMUNITION_ENTITY = Registry.register(
                 BuiltInRegistries.ENTITY_TYPE,
                 AMMUNITION_ENTITY_ID,
                 EntityType.Builder.of(AmmunitionEntity::new, MobCategory.MISC)
-                        .sized(0.25f,0.25f).build()
+                        .sized(0.25f,0.25f).build(key("ammunition_entity"))
         );
         FLY_SWORD_ENTITY = Registry.register(
                 BuiltInRegistries.ENTITY_TYPE,
                 FLY_SWORD_ENTITY_ID,
                 EntityType.Builder.of(FlySwordEntity::new, MobCategory.MISC)
-                        .sized(0.6f, 0.6f).clientTrackingRange(10).build()
+                        .sized(0.6f, 0.6f).clientTrackingRange(10).build(key("fly_sword_entity"))
         );
         SEAT_ENTITY = Registry.register(
                 BuiltInRegistries.ENTITY_TYPE,
                 SEAT_ENTITY_ID,
                 EntityType.Builder.of(SeatEntity::new, MobCategory.MISC)
-                        .sized(0.5f, 0.5f).clientTrackingRange(4).updateInterval(20).build()
+                        .sized(0.5f, 0.5f).clientTrackingRange(4).updateInterval(20).build(key("seat_entity"))
         );
         SPOILED_WATER_PROJECTILE_ENTITY = Registry.register(
                 BuiltInRegistries.ENTITY_TYPE,
                 SPOILED_WATER_PROJECTILE_ENTITY_ID,
                 EntityType.Builder.<SpoiledWaterProjectile>of((type, level) -> new SpoiledWaterProjectile(type, level), MobCategory.MISC)
-                        .sized(0.25f, 0.25f).clientTrackingRange(4).updateInterval(20).build()
+                        .sized(0.25f, 0.25f).clientTrackingRange(4).updateInterval(20).build(key("spoiled_water_projectile_entity"))
         );
 
         org.cneko.toneko.common.mod.entities.ToNekoEntities.init();

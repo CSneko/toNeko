@@ -1,4 +1,7 @@
 package org.cneko.toneko.common.mod.items;
+import org.cneko.toneko.common.mod.util.NekoIds;
+import org.jetbrains.annotations.NotNull;
+import net.minecraft.world.item.Item;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BucketItem;
@@ -19,7 +22,7 @@ public class SpoiledWaterBucketItem extends BucketItem {
     public static final int MAX_SPOILAGE = ScentedWaterUtil.MAX_SPOILAGE;
 
     public SpoiledWaterBucketItem() {
-        super(Fluids.WATER, new Properties()
+        super(Fluids.WATER, NekoIds.itemProps(ID)
                 .stacksTo(1)
                 .component(ToNekoComponents.SPOILED_WATER_SPOILAGE_COMPONENT, 0)
                 .component(ToNekoComponents.SPOILED_WATER_WEARER_COMPONENT, ""));
@@ -44,15 +47,19 @@ public class SpoiledWaterBucketItem extends BucketItem {
         return ScentedWaterUtil.grade(spoilage);
     }
 
-    @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        super.appendHoverText(stack, context, tooltip, flag);
+        @Override
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull net.minecraft.world.item.component.TooltipDisplay display, @NotNull java.util.function.Consumer<Component> adder, @NotNull TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, display, adder, tooltipFlag);
+        // 兼容旧实现：先收集到 List，再逐条发送
+        java.util.List<Component> tooltips = new java.util.ArrayList<>();
         int spoilage = getSpoilage(stack);
-        tooltip.add(Component.translatable("item.toneko.spoiled_water_bucket.tip.spoilage",
+        tooltips.add(Component.translatable("item.toneko.spoiled_water_bucket.tip.spoilage",
                 Component.translatable("item.toneko.spoiled_water_bucket.spoilage." + grade(spoilage))));
         String wearer = getWearer(stack);
         if (!wearer.isEmpty()) {
-            tooltip.add(Component.translatable("item.toneko.spoiled_water.tip.wearer", wearer));
+            tooltips.add(Component.translatable("item.toneko.spoiled_water.tip.wearer", wearer));
         }
+    
+        for (Component t : tooltips) adder.accept(t);
     }
 }

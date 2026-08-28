@@ -1,6 +1,6 @@
 package org.cneko.toneko.neoforge.msic;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.neoforged.neoforge.event.LootTableLoadEvent;
@@ -22,7 +22,7 @@ public class ChestLootInjection {
     }
 
     private static void onLootTableLoad(LootTableLoadEvent event) {
-        ResourceLocation name = event.getName();
+        Identifier name = event.getName();
         LootTable table = event.getTable();
 
         // 使用临时 Builder 构建本模组的战利品池

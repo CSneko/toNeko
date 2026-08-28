@@ -5,7 +5,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -52,7 +51,7 @@ public class ClotheslineBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> type) {
-        if (level.isClientSide) return null;
+        if (level.isClientSide()) return null;
         return (lvl, pos, st, be) -> {
             if (be instanceof ClotheslineBlockEntity clothesline) {
                 ClotheslineBlockEntity.serverTick(lvl, pos, st, clothesline);
@@ -62,7 +61,7 @@ public class ClotheslineBlock extends BaseEntityBlock {
 
     @Override
     protected @NotNull InteractionResult useWithoutItem(@NotNull BlockState state, Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull BlockHitResult hitResult) {
-        if (level.isClientSide) return InteractionResult.SUCCESS;
+        if (level.isClientSide()) return InteractionResult.SUCCESS;
         BlockEntity be = level.getBlockEntity(pos);
         if (be instanceof ClotheslineBlockEntity clothesline && !clothesline.getItem().isEmpty()) {
             ItemStack hanging = clothesline.getItem().copy();
@@ -76,28 +75,29 @@ public class ClotheslineBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected @NotNull ItemInteractionResult useItemOn(@NotNull ItemStack stack, @NotNull BlockState state, Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hitResult) {
-        if (level.isClientSide) return ItemInteractionResult.SUCCESS;
+    protected @NotNull InteractionResult useItemOn(@NotNull ItemStack stack, @NotNull BlockState state, Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hitResult) {
+        if (level.isClientSide()) return InteractionResult.SUCCESS;
         if (LegwearItem.isLegwear(stack)) {
             BlockEntity be = level.getBlockEntity(pos);
             if (be instanceof ClotheslineBlockEntity clothesline && clothesline.getItem().isEmpty()) {
                 clothesline.setItem(stack.split(1));
                 level.sendBlockUpdated(pos, state, state, 3); // 同步 BE 数据给客户端（渲染挂着的丝袜）
                 level.playSound(null, pos, ToNekoSoundEvents.LEGWEAR_RUSTLE, SoundSource.BLOCKS, 0.8f, 1.0f);
-                return ItemInteractionResult.SUCCESS;
+                return InteractionResult.SUCCESS;
             }
         }
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
     }
 
     @Override
-    protected void onRemove(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState newState, boolean moved) {
-        if (!state.is(newState.getBlock())) {
+    public void affectNeighborsAfterRemoval(@NotNull BlockState state, @NotNull net.minecraft.server.level.ServerLevel level,
+                                            @NotNull BlockPos pos, boolean moved) {
+        if (!state.is(level.getBlockState(pos).getBlock())) {
             BlockEntity be = level.getBlockEntity(pos);
             if (be instanceof ClotheslineBlockEntity clothesline && !clothesline.getItem().isEmpty()) {
                 Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), clothesline.getItem());
             }
-            super.onRemove(state, level, pos, newState, moved);
         }
+        super.affectNeighborsAfterRemoval(state, level, pos, moved);
     }
 }

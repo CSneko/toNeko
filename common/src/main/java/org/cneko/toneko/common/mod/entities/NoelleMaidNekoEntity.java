@@ -311,7 +311,7 @@ public class NoelleMaidNekoEntity extends NekoEntity {
      * 自动 clamp 到 [0, MAX_CARE_SCORE]。
      */
     private void modifyCareScore(int delta) {
-        if (this.level().isClientSide) return;
+        if (this.level().isClientSide()) return;
         this.careScore = Math.max(0, Math.min(MAX_CARE_SCORE, this.careScore + delta));
         this.entityData.set(CARE_SCORE_ID, this.careScore);
     }
@@ -321,7 +321,7 @@ public class NoelleMaidNekoEntity extends NekoEntity {
      * 自动 clamp 到 [0, MAX_TRAUMA]，每次变化后更新 peakTrauma 并检查是否需要阶段升级。
      */
     private void modifyTrauma(int delta) {
-        if (this.level().isClientSide) return;
+        if (this.level().isClientSide()) return;
 
         int oldTrauma = this.currentTrauma;
         this.currentTrauma = Math.max(0, Math.min(MAX_TRAUMA, this.currentTrauma + delta));
@@ -371,7 +371,7 @@ public class NoelleMaidNekoEntity extends NekoEntity {
 
     /** 阶段变化时的回调 —— 用于粒子爆发、音效、分支初始化等 */
     private void onStageChanged(Stage from, Stage to) {
-        if (this.level().isClientSide) return;
+        if (this.level().isClientSide()) return;
 
         // 进入残花线：初始化死亡倒计时 + 永久削弱
         if (to == Stage.WITHERED) {
@@ -487,7 +487,7 @@ public class NoelleMaidNekoEntity extends NekoEntity {
     @Override
     public @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         InteractionResult result = super.mobInteract(player, hand);
-        if (!this.level().isClientSide && result != InteractionResult.PASS) {
+        if (!this.level().isClientSide() && result != InteractionResult.PASS) {
             // 打开互动菜单或互动成功 = 关怀
             modifyCareScore(CARE_PET);
 
@@ -545,7 +545,7 @@ public class NoelleMaidNekoEntity extends NekoEntity {
     public void tick() {
         super.tick();
 
-        if (this.level().isClientSide) return;
+        if (this.level().isClientSide()) return;
 
         Stage stage = getStage();
 
@@ -610,7 +610,7 @@ public class NoelleMaidNekoEntity extends NekoEntity {
 
         // 自伤：每 30 秒承受半心伤害 —— 她的身体正在崩坏
         if (this.tickCount % WITHERED_SELF_HARM_INTERVAL == 0) {
-            this.hurt(this.damageSources().generic(), WITHERED_SELF_HARM_DAMAGE);
+            org.cneko.toneko.common.mod.util.EntityHurtUtil.hurt(this, this.damageSources().generic(), WITHERED_SELF_HARM_DAMAGE);
             if (this.level() instanceof ServerLevel serverLevel) {
                 serverLevel.sendParticles(ParticleTypes.DAMAGE_INDICATOR,
                         this.getX(), this.getY() + this.getBbHeight() / 2, this.getZ(),
@@ -673,7 +673,7 @@ public class NoelleMaidNekoEntity extends NekoEntity {
         // 永久虚弱 + 缓慢 —— 她的身体正在凋零
         this.addEffect(new MobEffectInstance(MobEffects.WEAKNESS,
                 MobEffectInstance.INFINITE_DURATION, 0, false, false, true));
-        this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,
+        this.addEffect(new MobEffectInstance(MobEffects.SLOWNESS,
                 MobEffectInstance.INFINITE_DURATION, 0, false, false, true));
 
         // 最大生命值降低 20%
@@ -716,7 +716,7 @@ public class NoelleMaidNekoEntity extends NekoEntity {
 
         // 真正死亡 —— 遗物与告别
         if (this.level() instanceof ServerLevel) {
-            this.spawnAtLocation(Items.WITHER_ROSE);
+            this.drop(new ItemStack(Items.WITHER_ROSE), false, false);
             for (Player player : this.level().getEntitiesOfClass(Player.class,
                     this.getBoundingBox().inflate(32.0), LivingEntity::isAlive)) {
                 player.sendSystemMessage(Component.translatable(
@@ -753,9 +753,9 @@ public class NoelleMaidNekoEntity extends NekoEntity {
     private void tickBlooming() {
         // 绽花诺：战斗能力提升 + 守护本能
         if (this.tickCount % 40 == 0) {
-            this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 60, 0,
+            this.addEffect(new MobEffectInstance(MobEffects.STRENGTH, 60, 0,
                     false, false, true));
-            this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 60, 0,
+            this.addEffect(new MobEffectInstance(MobEffects.SPEED, 60, 0,
                     false, false, true));
             scanForProtectiveInstinct();
         }
@@ -764,11 +764,11 @@ public class NoelleMaidNekoEntity extends NekoEntity {
     private void tickResolute() {
         // 决意诺：持续的战斗增益 + 守护光环
         if (this.tickCount % 40 == 0) {
-            this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 60, 1,
+            this.addEffect(new MobEffectInstance(MobEffects.STRENGTH, 60, 1,
                     false, false, true));
-            this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 60, 1,
+            this.addEffect(new MobEffectInstance(MobEffects.SPEED, 60, 1,
                     false, false, true));
-            this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 60, 0,
+            this.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 60, 0,
                     false, false, true));
             // 守护光环：为附近友方施加抗性
             applyProtectiveAura();
@@ -783,7 +783,7 @@ public class NoelleMaidNekoEntity extends NekoEntity {
 
     /** 创伤系统每 tick 处理：孤独检测 + 陪伴减伤。 */
     private void tickTrauma() {
-        if (this.level().isClientSide) return;
+        if (this.level().isClientSide()) return;
         Stage stage = getStage();
 
         // 孤独检测（仅在非觉醒阶段运行 — 觉醒后创伤不再驱动阶段）
@@ -836,16 +836,16 @@ public class NoelleMaidNekoEntity extends NekoEntity {
         for (Player player : this.level().getEntitiesOfClass(Player.class,
                 this.getBoundingBox().inflate(PROTECTIVE_AURA_RANGE),
                 LivingEntity::isAlive)) {
-            if (!player.hasEffect(MobEffects.DAMAGE_RESISTANCE)) {
-                player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE,
+            if (!player.hasEffect(MobEffects.RESISTANCE)) {
+                player.addEffect(new MobEffectInstance(MobEffects.RESISTANCE,
                         60, 0, false, true, true));
             }
         }
         for (NekoEntity neko : this.level().getEntitiesOfClass(NekoEntity.class,
                 this.getBoundingBox().inflate(PROTECTIVE_AURA_RANGE),
                 e -> e.isAlive() && e != this)) {
-            if (!neko.hasEffect(MobEffects.DAMAGE_RESISTANCE)) {
-                neko.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE,
+            if (!neko.hasEffect(MobEffects.RESISTANCE)) {
+                neko.addEffect(new MobEffectInstance(MobEffects.RESISTANCE,
                         60, 0, false, true, true));
             }
         }
@@ -886,11 +886,11 @@ public class NoelleMaidNekoEntity extends NekoEntity {
         this.heal(this.getMaxHealth() * 0.5f);
 
         // 战斗增益
-        this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 300, 2,
+        this.addEffect(new MobEffectInstance(MobEffects.STRENGTH, 300, 2,
                 false, true, true));       // 力量 III，15秒
-        this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 300, 1,
+        this.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 300, 1,
                 false, true, true));       // 抗性 II，15秒
-        this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 300, 1,
+        this.addEffect(new MobEffectInstance(MobEffects.SPEED, 300, 1,
                 false, true, true));       // 速度 II，15秒
         this.addEffect(new MobEffectInstance(MobEffects.GLOWING, 200, 0,
                 false, false, true));      // 发光，10秒
@@ -1117,7 +1117,7 @@ public class NoelleMaidNekoEntity extends NekoEntity {
     // 伤害与仇恨（阶段相关）
     // ============================================================
     @Override
-    public boolean hurt(@NotNull DamageSource source, float amount) {
+    public boolean hurtServer(net.minecraft.server.level.ServerLevel level, @NotNull DamageSource source, float amount) {
         Stage stage = getStage();
 
         // WITHERED: 受伤时几乎不做反应
@@ -1133,10 +1133,10 @@ public class NoelleMaidNekoEntity extends NekoEntity {
         }
 
         // 调用父类伤害处理
-        boolean result = super.hurt(source, amount);
+        boolean result = super.hurtServer(level, source, amount);
 
         // 创伤增加：基础伤害 + 玩家攻击额外惩罚
-        if (result && !this.level().isClientSide) {
+        if (result && !this.level().isClientSide()) {
             int damageInHearts = Math.round(amount / 2.0f); // 1心 = 2HP
             if (damageInHearts > 0) {
                 modifyTrauma(damageInHearts * TRAUMA_PER_HEART_DAMAGED);
@@ -1149,9 +1149,9 @@ public class NoelleMaidNekoEntity extends NekoEntity {
 
         // BLOOMING: 受伤时概率触发"反击决心"
         if (result && stage == Stage.BLOOMING && this.random.nextFloat() < 0.3f) {
-            this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 100, 0,
+            this.addEffect(new MobEffectInstance(MobEffects.STRENGTH, 100, 0,
                     false, true, true));
-            this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 100, 0,
+            this.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 100, 0,
                     false, true, true));
         }
 
@@ -1189,7 +1189,7 @@ public class NoelleMaidNekoEntity extends NekoEntity {
 
     @Override
     protected void trySendHatredMessage() {
-        if (this.level().isClientSide) return;
+        if (this.level().isClientSide()) return;
         if (!(this.hatredTarget instanceof Player player)) return;
         if (hatredMessageCooldown > 0) {
             hatredMessageCooldown--;
@@ -1250,7 +1250,7 @@ public class NoelleMaidNekoEntity extends NekoEntity {
         super.setHatredTarget(target, duration);
 
         // 移除父类施加的力量效果和攻击加成 —— 诺艾尔不需要这些
-        this.removeEffect(MobEffects.DAMAGE_BOOST);
+        this.removeEffect(MobEffects.STRENGTH);
         var atkAttr = this.getAttribute(Attributes.ATTACK_DAMAGE);
         if (atkAttr != null) {
             atkAttr.removeModifier(HATRED_ATTACK_BOOST_ID);
@@ -1281,7 +1281,7 @@ public class NoelleMaidNekoEntity extends NekoEntity {
 
         super.heal(amount);
 
-        if (this.level().isClientSide) return;
+        if (this.level().isClientSide()) return;
 
         // 玩家治疗减少创伤、增加关怀（5格内有玩家时视为玩家治疗）
         if (amount > 0) {
@@ -1338,7 +1338,7 @@ public class NoelleMaidNekoEntity extends NekoEntity {
     @Override
     public boolean giftItem(Player player, ItemStack stack) {
         boolean result = super.giftItem(player, stack);
-        if (result && !this.level().isClientSide) {
+        if (result && !this.level().isClientSide()) {
             modifyTrauma(TRAUMA_GIFT_REDUCTION);
             modifyCareScore(CARE_GIFT);
 
@@ -1355,10 +1355,15 @@ public class NoelleMaidNekoEntity extends NekoEntity {
     // ============================================================
     // NBT 持久化
     // ============================================================
-    @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-        compound.putString("NoelleStage", getStage().name());
+        @Override
+    protected void addAdditionalSaveData(net.minecraft.world.level.storage.ValueOutput out) {
+        super.addAdditionalSaveData(out);
+        CompoundTag data = new CompoundTag();
+        this.writeExtraData(data);
+        org.cneko.toneko.common.mod.util.NbtBridge.store(data, out);
+    }
+
+    private void writeExtraData(@NotNull CompoundTag compound) {        compound.putString("NoelleStage", getStage().name());
         compound.putInt("NoelleDefeatedEnemies", defeatedEnemies);
         compound.putInt("NoelleProtectiveKills", protectiveKills);
         compound.putInt("NoelleResidualBloomCooldown", residualBloomCooldown);
@@ -1373,12 +1378,15 @@ public class NoelleMaidNekoEntity extends NekoEntity {
         compound.putInt("NoelleGiftsInWithered", giftsReceivedInWithered);
     }
 
-    @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
-        if (compound.contains("NoelleStage")) {
+        @Override
+    protected void readAdditionalSaveData(net.minecraft.world.level.storage.ValueInput in) {
+        super.readAdditionalSaveData(in);
+        this.readExtraData(org.cneko.toneko.common.mod.util.NbtBridge.read(in));
+    }
+
+    private void readExtraData(@NotNull CompoundTag compound) {        if (compound.contains("NoelleStage")) {
             try {
-                Stage savedStage = Stage.valueOf(compound.getString("NoelleStage"));
+                Stage savedStage = Stage.valueOf(compound.getStringOr("NoelleStage", ""));
                 this.entityData.set(STAGE_ID, savedStage.name());
                 updateNameFromStage(savedStage);
             } catch (IllegalArgumentException e) {
@@ -1386,29 +1394,29 @@ public class NoelleMaidNekoEntity extends NekoEntity {
             }
         }
         if (compound.contains("NoelleDefeatedEnemies")) {
-            defeatedEnemies = compound.getInt("NoelleDefeatedEnemies");
+            defeatedEnemies = compound.getIntOr("NoelleDefeatedEnemies", 0);
         }
         if (compound.contains("NoelleProtectiveKills")) {
-            protectiveKills = compound.getInt("NoelleProtectiveKills");
+            protectiveKills = compound.getIntOr("NoelleProtectiveKills", 0);
         }
         if (compound.contains("NoelleResidualBloomCooldown")) {
-            residualBloomCooldown = compound.getInt("NoelleResidualBloomCooldown");
+            residualBloomCooldown = compound.getIntOr("NoelleResidualBloomCooldown", 0);
         }
         if (compound.contains("NoelleHasBeenHealed")) {
-            hasBeenHealedByPlayer = compound.getBoolean("NoelleHasBeenHealed");
+            hasBeenHealedByPlayer = compound.getBooleanOr("NoelleHasBeenHealed", false);
         }
 
         // 创伤系统
         if (compound.contains("NoelleCurrentTrauma")) {
-            currentTrauma = compound.getInt("NoelleCurrentTrauma");
+            currentTrauma = compound.getIntOr("NoelleCurrentTrauma", 0);
             this.entityData.set(TRAUMA_ID, currentTrauma);
         }
         if (compound.contains("NoellePeakTrauma")) {
-            peakTrauma = compound.getInt("NoellePeakTrauma");
+            peakTrauma = compound.getIntOr("NoellePeakTrauma", 0);
         } else if (compound.contains("NoelleStage")) {
             // 旧版存档迁移：根据已有阶段估算峰值创伤
             try {
-                Stage loadedStage = Stage.valueOf(compound.getString("NoelleStage"));
+                Stage loadedStage = Stage.valueOf(compound.getStringOr("NoelleStage", ""));
                 if (loadedStage.isTraumaPhase()) {
                     peakTrauma = switch (loadedStage) {
                         case MEOW -> 5;
@@ -1426,14 +1434,14 @@ public class NoelleMaidNekoEntity extends NekoEntity {
 
         // 关怀系统
         if (compound.contains("NoelleCareScore")) {
-            careScore = compound.getInt("NoelleCareScore");
+            careScore = compound.getIntOr("NoelleCareScore", 0);
             this.entityData.set(CARE_SCORE_ID, careScore);
         }
 
         // 分支来源
         if (compound.contains("NoelleBranchOrigin")) {
             try {
-                branchOrigin = Branch.valueOf(compound.getString("NoelleBranchOrigin"));
+                branchOrigin = Branch.valueOf(compound.getStringOr("NoelleBranchOrigin", ""));
             } catch (IllegalArgumentException e) {
                 branchOrigin = Branch.NONE;
             }
@@ -1441,10 +1449,10 @@ public class NoelleMaidNekoEntity extends NekoEntity {
 
         // 残花线
         if (compound.contains("NoelleWitheredDeathTimer")) {
-            witheredDeathTimer = compound.getInt("NoelleWitheredDeathTimer");
+            witheredDeathTimer = compound.getIntOr("NoelleWitheredDeathTimer", 0);
         }
         if (compound.contains("NoelleGiftsInWithered")) {
-            giftsReceivedInWithered = compound.getInt("NoelleGiftsInWithered");
+            giftsReceivedInWithered = compound.getIntOr("NoelleGiftsInWithered", 0);
         }
 
         // 迁移：旧存档中的 WITHERED 实体缺少死亡倒计时，需要初始化

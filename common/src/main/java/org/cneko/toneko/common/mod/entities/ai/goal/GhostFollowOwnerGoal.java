@@ -54,7 +54,7 @@ public class GhostFollowOwnerGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        if (ghost.level().isClientSide) return false;
+        if (ghost.level().isClientSide()) return false;
         if (ghost.isSitting() || ghost.isVehicle() || ghost.isLeashed()) return false;
         return selectOwner() != null;
     }
@@ -165,7 +165,7 @@ public class GhostFollowOwnerGoal extends Goal {
     private void teleportCrossDimension(Vec3 desired) {
         if (this.owner.level() instanceof ServerLevel target) {
             ghost.teleportTo(target, desired.x, desired.y, desired.z,
-                    Set.of(), ghost.getYRot(), ghost.getXRot());
+                    Set.of(), ghost.getYRot(), ghost.getXRot(), false);
         }
     }
 }

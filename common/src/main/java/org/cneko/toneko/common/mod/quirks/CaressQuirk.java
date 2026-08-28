@@ -41,7 +41,7 @@ public class CaressQuirk extends Quirk {
             nekoPlayer.level().addParticle(ParticleTypes.HEART,nekoPlayer.getX()+1.8, nekoPlayer.getY(), nekoPlayer.getZ(),1,1,1);
             if (owner instanceof ServerPlayer so && nekoPlayer instanceof ServerPlayer snp) {
                 // 发送给客户端
-                ClientboundLevelParticlesPacket packet = new ClientboundLevelParticlesPacket(ParticleTypes.HEART, true, owner.getX() + 1.8, owner.getY(), owner.getZ(), 2, 2, 2, 1, 1);
+                ClientboundLevelParticlesPacket packet = new ClientboundLevelParticlesPacket(ParticleTypes.HEART, true, true, owner.getX() + 1.8, owner.getY(), owner.getZ(), 2f, 2f, 2f, 1f, 1);
                 so.connection.send(packet);
                 snp.connection.send(packet);
             }
@@ -49,8 +49,8 @@ public class CaressQuirk extends Quirk {
             neko.setXpWithOwner(owner.getUUID(), CARESS.getInteractionValue()+ neko.getXpWithOwner(owner.getUUID()));
             // 发送消息文本
             if (neko instanceof Player player) {
-                owner.displayClientMessage(translatable("quirk.toneko.caress.use", TextUtil.getPlayerName(player)), true);
-                player.displayClientMessage(translatable("quirk.toneko.caress.be_used", TextUtil.getPlayerName(owner)), true);
+                owner.sendOverlayMessage(translatable("quirk.toneko.caress.use", TextUtil.getPlayerName(player)));
+                player.sendOverlayMessage(translatable("quirk.toneko.caress.be_used", TextUtil.getPlayerName(owner)));
             }
             return InteractionResult.SUCCESS;
         }

@@ -1,9 +1,11 @@
 package org.cneko.toneko.fabric.items;
 
-import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import org.cneko.toneko.common.mod.util.NekoIds;
+import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
+import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.component.Consumables;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -30,11 +32,11 @@ public class ToNekoItems {
     public static NekoCollectorItem NEKO_COLLECTOR;
     public static ResourceKey<CreativeModeTab> TONEKO_ITEM_GROUP_KEY;
     public static CreativeModeTab TONEKO_ITEM_GROUP;
-    public static final SpawnEggItem ADVENTURER_NEKO_SPAWN_EGG = new SpawnEggItem(ToNekoEntities.ADVENTURER_NEKO, 0x7e7e7e, 0xffffff,new Item.Properties());
-    public static final SpawnEggItem GHOST_NEKO_SPAWN_EGG = new SpawnEggItem(ToNekoEntities.GHOST_NEKO, 0x7e7e7e, 0xffffff,new Item.Properties());
-    public static final SpawnEggItem FIGHTING_NEKO_SPAWN_EGG = new SpawnEggItem(ToNekoEntities.FIGHTING_NEKO, 0x7e7e7e, 0xffffff,new Item.Properties());
-    public static final SpawnEggItem NOELLE_MAID_NEKO_SPAWN_EGG = new SpawnEggItem(ToNekoEntities.NOELLE_MAID_NEKO, 0xffc0cb, 0xffffff,new Item.Properties());
-    public static boolean isTrinketsInstalled = tryClass("dev.emi.trinkets.api.Trinket");
+    public static final SpawnEggItem ADVENTURER_NEKO_SPAWN_EGG = new SpawnEggItem(NekoIds.itemProps("adventurer_neko_spawn_egg").spawnEgg(org.cneko.toneko.common.mod.entities.ToNekoEntities.ADVENTURER_NEKO));
+    public static final SpawnEggItem GHOST_NEKO_SPAWN_EGG = new SpawnEggItem(NekoIds.itemProps("ghost_neko_spawn_egg").spawnEgg(org.cneko.toneko.common.mod.entities.ToNekoEntities.GHOST_NEKO));
+    public static final SpawnEggItem FIGHTING_NEKO_SPAWN_EGG = new SpawnEggItem(NekoIds.itemProps("fighting_neko_spawn_egg").spawnEgg(org.cneko.toneko.common.mod.entities.ToNekoEntities.FIGHTING_NEKO));
+    // 26.x 迁移说明：Trinkets 尚无 26.x（去混淆版本）发布，集成类已暂时移除，恒走原版路径。
+    public static boolean isTrinketsInstalled = false;
     public static void init() {
         registerWithOutConfig();
     }
@@ -46,58 +48,52 @@ public class ToNekoItems {
         NEKO_POTION = new NekoPotionItem();
         NEKO_COLLECTOR = new NekoCollectorItem();
         FURRY_BOHE = new FurryBoheItem();
-        CATNIP = new CatnipItem(new Item.Properties().component(DataComponents.FOOD,
-                new FoodProperties(2,1.0f,true,1.6f, Optional.empty(),
-                        List.of()
-                )));
-        INFINITE_CATNIP = new CatnipItem.InfiniteCatnipItem(new Item.Properties().component(DataComponents.FOOD,new FoodProperties(2,1.0f,false,1.6f, Optional.empty(),List.of())).rarity(Rarity.UNCOMMON));
-        CATNIP_SANDWICH = new CatnipItem(new Item.Properties().component(DataComponents.FOOD,new FoodProperties(10,12f,false,1.6f, Optional.empty(),List.of())));
-        CATNIP_SEED = new ItemNameBlockItem(ToNekoBlocks.CATNIP, new Item.Properties());
-        WILD_CATNIP = new BlockItem(ToNekoBlocks.WILD_CATNIP, new Item.Properties());
-        MUSIC_DISC_KAWAII = new Item(new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ToNekoSongs.KAWAII));
-        MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP = new Item(new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ToNekoSongs.NEVER_GONNA_GIVE_YOU_UP));
-        BAZOOKA = new BazookaItem(new Item.Properties());
-        PLOT_SCROLL = new PlotScrollItem(new Item.Properties());
-        FLY_SWORD = new FlySwordItem(new Item.Properties().stacksTo(1));
-        LIGHTNING_BOMB = new LightningBombItem(new Item.Properties());
-        EXPLOSIVE_BOMB  = new ExplosiveBombItem(new Item.Properties());
-        ENERGY_BOMB = new NekoEnergyBombItem();
-        CONTRACT = new ContractItem(new Item.Properties());
-        NEKO_AGGREGATOR_ITEM = new ItemNameBlockItem(ToNekoBlocks.NEKO_AGGREGATOR, new Item.Properties());
-        NEKO_INGOT = new Item(new Item.Properties());
-        NEKO_BLOCK = new BlockItem(ToNekoBlocks.NEKO_BLOCK, new Item.Properties());
-        NEKO_DIAMOND = new Item(new Item.Properties());
-        NEKO_DIAMOND_BLOCK = new BlockItem(ToNekoBlocks.NEKO_DIAMOND_BLOCK, new Item.Properties());
-        NEKO_CRYSTAL = new Item(new Item.Properties());
-        NEKO_ENERGY_STORAGE_SMALL = new NekoEnergyStorageItem(150,false);
-        NEKO_ENERGY_STORAGE_SMALL_CHARGED = new NekoEnergyStorageItem(150,true);
-        NEKO_ENERGY_STORAGE_MEDIUM = new NekoEnergyStorageItem(400,false);
-        NEKO_ENERGY_STORAGE_MEDIUM_CHARGED = new NekoEnergyStorageItem(400,true);
-        NEKO_ENERGY_STORAGE_LARGE = new NekoEnergyStorageItem(1000,false);
-        NEKO_ENERGY_STORAGE_LARGE_CHARGED = new NekoEnergyStorageItem(1000,true);
-        NEKO_ENERGY_BURST = new NekoEnergyBurstItem(2f,3f,50f);
-        EVIL_NEKO_ENERGY_BURST = new EvilNekoEnergyBurstItem(2f,3f,50f);
-        GENE_EDITOR = new GeneEditorItem(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
-        GROWTH_TREAT = new GrowthTreatItem(new Item.Properties().component(DataComponents.FOOD,
-                new FoodProperties(4, 2.0f, false, 1.6f, Optional.empty(),
-                        List.of()
-                )).rarity(Rarity.UNCOMMON));
-        DEAGE_TREAT = new DeageTreatItem(new Item.Properties().component(DataComponents.FOOD,
-                new FoodProperties(4, 2.0f, false, 1.6f, Optional.empty(),
-                        List.of()
-                )).rarity(Rarity.UNCOMMON));
+        CATNIP = new CatnipItem(NekoIds.itemProps("catnip").component(DataComponents.FOOD,
+                new FoodProperties(2, 1.0f, true)).component(DataComponents.CONSUMABLE, Consumables.DEFAULT_FOOD));
+        INFINITE_CATNIP = new CatnipItem.InfiniteCatnipItem(NekoIds.itemProps("infinite_catnip").component(DataComponents.FOOD,new FoodProperties(2, 1.0f, false)).component(DataComponents.CONSUMABLE, Consumables.DEFAULT_FOOD).rarity(Rarity.UNCOMMON));
+        CATNIP_SANDWICH = new CatnipItem(NekoIds.itemProps("catnip_sandwich").component(DataComponents.FOOD,new FoodProperties(10, 12f, false)).component(DataComponents.CONSUMABLE, Consumables.DEFAULT_FOOD));
+        CATNIP_SEED = new BlockItem(ToNekoBlocks.CATNIP, NekoIds.itemProps("catnip_seed"));
+        WILD_CATNIP = new BlockItem(ToNekoBlocks.WILD_CATNIP, NekoIds.itemProps("wild_catnip"));
+        MUSIC_DISC_KAWAII = new Item(NekoIds.itemProps("music_disc_kawaii").stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ToNekoSongs.KAWAII));
+        MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP = new Item(NekoIds.itemProps("music_disc_never_gonna_give_you_up").stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ToNekoSongs.NEVER_GONNA_GIVE_YOU_UP));
+        BAZOOKA = new BazookaItem(NekoIds.itemProps(BazookaItem.ID));
+        PLOT_SCROLL = new PlotScrollItem(NekoIds.itemProps("plot_scroll"));
+        FLY_SWORD = new FlySwordItem(NekoIds.itemProps("fly_sword").stacksTo(1));
+        LIGHTNING_BOMB = new LightningBombItem(NekoIds.itemProps("lightning_bomb"));
+        EXPLOSIVE_BOMB  = new ExplosiveBombItem(NekoIds.itemProps("explosive_bomb"));
+        ENERGY_BOMB = new NekoEnergyBombItem("energy_bomb");
+        CONTRACT = new ContractItem(NekoIds.itemProps("contract"));
+        NEKO_AGGREGATOR_ITEM = new BlockItem(ToNekoBlocks.NEKO_AGGREGATOR, NekoIds.itemProps("neko_aggregator"));
+        NEKO_INGOT = new Item(NekoIds.itemProps("neko_ingot"));
+        NEKO_BLOCK = new BlockItem(ToNekoBlocks.NEKO_BLOCK, NekoIds.itemProps("neko_block"));
+        NEKO_DIAMOND = new Item(NekoIds.itemProps("neko_diamond"));
+        NEKO_DIAMOND_BLOCK = new BlockItem(ToNekoBlocks.NEKO_DIAMOND_BLOCK, NekoIds.itemProps("neko_diamond_block"));
+        NEKO_CRYSTAL = new Item(NekoIds.itemProps("neko_crystal"));
+        NEKO_ENERGY_STORAGE_SMALL = new NekoEnergyStorageItem("neko_energy_storage_small",150,false);
+        NEKO_ENERGY_STORAGE_SMALL_CHARGED = new NekoEnergyStorageItem("neko_energy_storage_small_charged",150,true);
+        NEKO_ENERGY_STORAGE_MEDIUM = new NekoEnergyStorageItem("neko_energy_storage_medium",400,false);
+        NEKO_ENERGY_STORAGE_MEDIUM_CHARGED = new NekoEnergyStorageItem("neko_energy_storage_medium_charged",400,true);
+        NEKO_ENERGY_STORAGE_LARGE = new NekoEnergyStorageItem("neko_energy_storage_large",1000,false);
+        NEKO_ENERGY_STORAGE_LARGE_CHARGED = new NekoEnergyStorageItem("neko_energy_storage_large_charged",1000,true);
+        NEKO_ENERGY_BURST = new NekoEnergyBurstItem("neko_energy_burst",2f,3f,50f);
+        EVIL_NEKO_ENERGY_BURST = new EvilNekoEnergyBurstItem("evil_neko_energy_burst",2f,3f,50f);
+        GENE_EDITOR = new GeneEditorItem(NekoIds.itemProps("gene_editor").stacksTo(1).rarity(Rarity.EPIC));
+        GROWTH_TREAT = new GrowthTreatItem(NekoIds.itemProps(GrowthTreatItem.ID).component(DataComponents.FOOD,
+                new FoodProperties(4, 2.0f, false)).component(DataComponents.CONSUMABLE, Consumables.DEFAULT_FOOD).rarity(Rarity.UNCOMMON));
+        DEAGE_TREAT = new DeageTreatItem(NekoIds.itemProps(DeageTreatItem.ID).component(DataComponents.FOOD,
+                new FoodProperties(4, 2.0f, false)).component(DataComponents.CONSUMABLE, Consumables.DEFAULT_FOOD).rarity(Rarity.UNCOMMON));
         NINE_LIVES_CHARM = new NineLivesCharmItem();
         NEKO_MULTI_TOOL = new NekoMultiToolItem();
         NEKO_BELL = new NekoBellItem();
-        NEKO_ENERGY_BATTERY = new NekoEnergyBatteryItem(2000, 10, 5);
-        NEKO_ENERGY_BATTERY_LARGE = new NekoEnergyBatteryItem(10000, 100, 50);
-        SHENG_DENG_ITEM = new ShengDengItem(ToNekoBlocks.SHENG_DENG, new Item.Properties());
-        LEGWEAR_WORKBENCH_ITEM = new ItemNameBlockItem(ToNekoBlocks.LEGWEAR_WORKBENCH, new Item.Properties());
-        CLOTHESLINE_ITEM = new ItemNameBlockItem(ToNekoBlocks.CLOTHESLINE, new Item.Properties());
+        NEKO_ENERGY_BATTERY = new NekoEnergyBatteryItem(NekoEnergyBatteryItem.ID, 2000, 10, 5);
+        NEKO_ENERGY_BATTERY_LARGE = new NekoEnergyBatteryItem(NekoEnergyBatteryItem.ID_LARGE, 10000, 100, 50);
+        SHENG_DENG_ITEM = new ShengDengItem(ToNekoBlocks.SHENG_DENG, NekoIds.itemProps(ShengDengItem.ID));
+        LEGWEAR_WORKBENCH_ITEM = new BlockItem(ToNekoBlocks.LEGWEAR_WORKBENCH, NekoIds.itemProps("legwear_workbench"));
+        CLOTHESLINE_ITEM = new BlockItem(ToNekoBlocks.CLOTHESLINE, NekoIds.itemProps("clothesline"));
         SPOILED_WATER_BUCKET = new SpoiledWaterBucketItem();
         SPOILED_WATER_BOTTLE = new SpoiledWaterBottleItem();
-        SPOILED_WATER_SPLASH = new SpoiledWaterThrowableItem(false);
-        SPOILED_WATER_LINGERING = new SpoiledWaterThrowableItem(true);
+        SPOILED_WATER_SPLASH = new SpoiledWaterThrowableItem(SpoiledWaterThrowableItem.SPLASH_ID, false);
+        SPOILED_WATER_LINGERING = new SpoiledWaterThrowableItem(SpoiledWaterThrowableItem.LINGERING_ID, true);
         SCENT_PERFUME = new ScentPerfumeItem();
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NekoPotionItem.ID), NEKO_POTION);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NekoCollectorItem.ID), NEKO_COLLECTOR);
@@ -105,7 +101,6 @@ public class ToNekoItems {
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("adventurer_neko_spawn_egg"), ADVENTURER_NEKO_SPAWN_EGG);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("ghost_neko_spawn_egg"),GHOST_NEKO_SPAWN_EGG);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("fighting_neko_spawn_egg"), FIGHTING_NEKO_SPAWN_EGG);
-        Registry.register(BuiltInRegistries.ITEM, toNekoLoc("noelle_maid_neko_spawn_egg"), NOELLE_MAID_NEKO_SPAWN_EGG);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("catnip"), CATNIP);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("infinite_catnip"), INFINITE_CATNIP);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc("catnip_sandwich"), CATNIP_SANDWICH);
@@ -151,23 +146,14 @@ public class ToNekoItems {
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(SpoiledWaterThrowableItem.LINGERING_ID), SPOILED_WATER_LINGERING);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(ScentPerfumeItem.ID), SCENT_PERFUME);
 
-        // 如果安装了trinkets，则注册为TrinketItem
-        if (isTrinketsInstalled){
-            NekoArmorTrinkets.init();
-        }else {
-            NEKO_EARS = new NekoArmor.NekoEarsItem(ToNekoArmorMaterials.NEKO);
-            NEKO_TAIL = new NekoArmor.NekoTailItem(ToNekoArmorMaterials.NEKO);
-            NEKO_PAWS = new NekoArmor.NekoPawsItem(ToNekoArmorMaterials.NEKO);
-        }
-        if (isTrinketsInstalled) {
-            // 装了 trinkets：丝袜注册为 Trinket 版（legs/socks 饰品槽，与盔甲裤子共存）
-            LegwearTrinkets.init();
-        } else {
-            LEGWEAR_PANTYHOSE_40D = new LegwearItem.Pantyhose40DItem(ToNekoArmorMaterials.LEGWEAR);
-            LEGWEAR_PANTYHOSE_20D = new LegwearItem.Pantyhose20DItem(ToNekoArmorMaterials.LEGWEAR);
-            LEGWEAR_PANTYHOSE_5D = new LegwearItem.Pantyhose5DItem(ToNekoArmorMaterials.LEGWEAR);
-            LEGWEAR_OVER_KNEE = new LegwearItem.OverKneeSockItem(ToNekoArmorMaterials.LEGWEAR);
-        }
+        // 26.x 迁移说明：Trinkets 尚无 26.x 版本，暂直接注册原版盔甲/丝袜物品
+        NEKO_EARS = new NekoArmor.NekoEarsItem(ToNekoArmorMaterials.NEKO);
+        NEKO_TAIL = new NekoArmor.NekoTailItem(ToNekoArmorMaterials.NEKO);
+        NEKO_PAWS = new NekoArmor.NekoPawsItem(ToNekoArmorMaterials.NEKO);
+        LEGWEAR_PANTYHOSE_40D = new LegwearItem.Pantyhose40DItem(ToNekoArmorMaterials.LEGWEAR);
+        LEGWEAR_PANTYHOSE_20D = new LegwearItem.Pantyhose20DItem(ToNekoArmorMaterials.LEGWEAR);
+        LEGWEAR_PANTYHOSE_5D = new LegwearItem.Pantyhose5DItem(ToNekoArmorMaterials.LEGWEAR);
+        LEGWEAR_OVER_KNEE = new LegwearItem.OverKneeSockItem(ToNekoArmorMaterials.LEGWEAR);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NekoArmor.NekoEarsItem.ID), NEKO_EARS);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NekoArmor.NekoTailItem.ID), NEKO_TAIL);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NekoArmor.NekoPawsItem.ID), NEKO_PAWS);
@@ -175,7 +161,8 @@ public class ToNekoItems {
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(LegwearItem.Pantyhose20DItem.ID), LEGWEAR_PANTYHOSE_20D);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(LegwearItem.Pantyhose5DItem.ID), LEGWEAR_PANTYHOSE_5D);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(LegwearItem.OverKneeSockItem.ID), LEGWEAR_OVER_KNEE);
-        TONEKO_ITEM_GROUP = FabricItemGroup.builder()
+        // 26.x：Fabric itemgroup.v1 更名为 creativetab.v1
+        TONEKO_ITEM_GROUP = FabricCreativeModeTab.builder()
                 .icon(() -> new ItemStack(NEKO_EARS))
                 .title(Component.translatable("itemGroup.toneko"))
                 .build();
@@ -183,7 +170,7 @@ public class ToNekoItems {
         TONEKO_ITEM_GROUP_KEY = ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), toNekoLoc("item_group"));
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, TONEKO_ITEM_GROUP_KEY,TONEKO_ITEM_GROUP);
 
-        ItemGroupEvents.modifyEntriesEvent(TONEKO_ITEM_GROUP_KEY).register(content -> {
+        CreativeModeTabEvents.modifyOutputEvent(TONEKO_ITEM_GROUP_KEY).register(content -> {
             content.accept(NEKO_POTION);
             content.accept(NEKO_COLLECTOR);
             content.accept(NEKO_EARS);
@@ -200,7 +187,6 @@ public class ToNekoItems {
             content.accept(ADVENTURER_NEKO_SPAWN_EGG);
             content.accept(GHOST_NEKO_SPAWN_EGG);
             content.accept(FIGHTING_NEKO_SPAWN_EGG);
-            //content.accept(NOELLE_MAID_NEKO_SPAWN_EGG);
             content.accept(MUSIC_DISC_KAWAII);
             if (ConfigUtil.IS_FOOL_DAY){
                 content.accept(MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP);
@@ -248,14 +234,4 @@ public class ToNekoItems {
             }
         });
     }
-
-    public static boolean tryClass(String clazz){
-        try {
-            Class.forName(clazz);
-            return true;
-        } catch (ClassNotFoundException e) {
-            return false;
-        }
-    }
-
 }

@@ -1,9 +1,9 @@
 {
   "type": "toneko:neko_aggregator",
   "key": {
-    "I": { "item": "toneko:neko_ingot" },
-    "G": { "item": "minecraft:gold_ingot" },
-    "N": { "item": "minecraft:note_block" }
+    "I": "toneko:neko_ingot",
+    "G": "minecraft:gold_ingot",
+    "N": "minecraft:note_block"
   },
   "pattern": [
     "IGI",

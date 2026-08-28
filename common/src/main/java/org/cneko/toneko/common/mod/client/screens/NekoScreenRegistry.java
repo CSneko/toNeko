@@ -1,7 +1,7 @@
 package org.cneko.toneko.common.mod.client.screens;
 
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
 import org.cneko.toneko.common.mod.client.screens.factories.ScreenBuilders;
 
@@ -10,12 +10,12 @@ import java.util.*;
 import static org.cneko.toneko.common.mod.entities.ToNekoEntities.*;
 
 public class NekoScreenRegistry {
-    private static Map<ResourceLocation, NekoScreenBuilder> screens = new HashMap<>();
+    private static Map<Identifier, NekoScreenBuilder> screens = new HashMap<>();
 
-    public static void register(ResourceLocation id, NekoScreenBuilder builder){
+    public static void register(Identifier id, NekoScreenBuilder builder){
         screens.put(id, builder);
     }
-    public static NekoScreenBuilder get(ResourceLocation id){
+    public static NekoScreenBuilder get(Identifier id){
         return screens.get(id);
     }
     public static NekoScreenBuilder get(EntityType<?> entityType){

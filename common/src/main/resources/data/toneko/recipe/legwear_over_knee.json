@@ -6,12 +6,8 @@
     " S "
   ],
   "key": {
-    "S": {
-      "item": "minecraft:string"
-    },
-    "W": {
-      "item": "minecraft:white_wool"
-    }
+    "S": "minecraft:string",
+    "W": "minecraft:white_wool"
   },
   "result": {
     "id": "toneko:legwear_over_knee",

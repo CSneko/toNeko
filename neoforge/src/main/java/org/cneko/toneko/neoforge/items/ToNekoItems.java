@@ -1,16 +1,18 @@
 package org.cneko.toneko.neoforge.items;
 
+import org.cneko.toneko.common.mod.util.NekoIds;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.component.Consumables;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemNameBlockItem;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.common.DeferredSpawnEggItem;
+import net.minecraft.world.item.SpawnEggItem;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.cneko.toneko.common.mod.items.*;
@@ -35,10 +37,9 @@ import static org.cneko.toneko.neoforge.ToNekoNeoForge.ITEMS;
 
 public class ToNekoItems {
 
-    public static DeferredHolder<Item,DeferredSpawnEggItem> ADVENTURER_NEKO_SPAWN_EGG_HOLDER;
-    public static DeferredHolder<Item,DeferredSpawnEggItem> GHOST_NEKO_SPAWN_EGG_HOLDER;
-    public static DeferredHolder<Item,DeferredSpawnEggItem> FIGHTING_NEKO_SPAWN_EGG_HOLDER;
-    public static DeferredHolder<Item,DeferredSpawnEggItem> NOELLE_MAID_NEKO_SPAWN_EGG_HOLDER;
+    public static DeferredHolder<Item,SpawnEggItem> ADVENTURER_NEKO_SPAWN_EGG_HOLDER;
+    public static DeferredHolder<Item,SpawnEggItem> GHOST_NEKO_SPAWN_EGG_HOLDER;
+    public static DeferredHolder<Item,SpawnEggItem> FIGHTING_NEKO_SPAWN_EGG_HOLDER;
     public static DeferredHolder<Item,NekoPotionItem> NEKO_POTION_HOLDER;
     public static DeferredHolder<Item,NekoCollectorItem> NEKO_COLLECTOR_HOLDER;
     public static DeferredHolder<Item,FurryBoheItem> FURRY_BOHE_HOLDER;
@@ -87,8 +88,8 @@ public class ToNekoItems {
     public static DeferredHolder<Item,NekoEnergyBatteryItem> NEKO_ENERGY_BATTERY_HOLDER;
     public static DeferredHolder<Item,NekoEnergyBatteryItem> NEKO_ENERGY_BATTERY_LARGE_HOLDER;
     public static DeferredHolder<Item,BlockItem> SHENG_DENG_ITEM_HOLDER;
-    public static DeferredHolder<Item,ItemNameBlockItem> LEGWEAR_WORKBENCH_ITEM_HOLDER;
-    public static DeferredHolder<Item,ItemNameBlockItem> CLOTHESLINE_ITEM_HOLDER;
+    public static DeferredHolder<Item,BlockItem> LEGWEAR_WORKBENCH_ITEM_HOLDER;
+    public static DeferredHolder<Item,BlockItem> CLOTHESLINE_ITEM_HOLDER;
     public static DeferredHolder<Item,SpoiledWaterBucketItem> SPOILED_WATER_BUCKET_HOLDER;
     public static DeferredHolder<Item,SpoiledWaterBottleItem> SPOILED_WATER_BOTTLE_HOLDER;
     public static DeferredHolder<Item,SpoiledWaterThrowableItem> SPOILED_WATER_SPLASH_HOLDER;
@@ -113,52 +114,44 @@ public class ToNekoItems {
 
         NEKO_TAIL_HOLDER = ITEMS.register(NekoArmor.NekoTailItem.ID, ()->new NekoArmor.NekoTailItem(ToNekoArmorMaterials.NEKO));
 
-        ADVENTURER_NEKO_SPAWN_EGG_HOLDER = ITEMS.register("adventurer_neko_spawn_egg",()->new DeferredSpawnEggItem(()->ToNekoEntities.ADVENTURER_NEKO_HOLDER.get(), 0x7e7e7e, 0xffffff,new Item.Properties()));
-        GHOST_NEKO_SPAWN_EGG_HOLDER = ITEMS.register("ghost_neko_spawn_egg",()->new DeferredSpawnEggItem(()->ToNekoEntities.GHOST_NEKO_HOLDER.get(), 0x7e7e7e, 0xffffff,new Item.Properties()));
-        FIGHTING_NEKO_SPAWN_EGG_HOLDER = ITEMS.register("fighting_neko_spawn_egg",()->new DeferredSpawnEggItem(()->ToNekoEntities.FIGHTING_NEKO_HOLDER.get(), 0x7e7e7e, 0xffffff,new Item.Properties()));
-        NOELLE_MAID_NEKO_SPAWN_EGG_HOLDER = ITEMS.register("noelle_maid_neko_spawn_egg",()->new DeferredSpawnEggItem(()->ToNekoEntities.NOELLE_MAID_NEKO_HOLDER.get(), 0xffc0cb, 0xffffff,new Item.Properties()));
+        ADVENTURER_NEKO_SPAWN_EGG_HOLDER = ITEMS.register("adventurer_neko_spawn_egg",()->new SpawnEggItem(NekoIds.itemProps("adventurer_neko_spawn_egg").spawnEgg(org.cneko.toneko.neoforge.entities.ToNekoEntities.ADVENTURER_NEKO_HOLDER.get())));
+        GHOST_NEKO_SPAWN_EGG_HOLDER = ITEMS.register("ghost_neko_spawn_egg",()->new SpawnEggItem(NekoIds.itemProps("ghost_neko_spawn_egg").spawnEgg(org.cneko.toneko.neoforge.entities.ToNekoEntities.GHOST_NEKO_HOLDER.get())));
+        FIGHTING_NEKO_SPAWN_EGG_HOLDER = ITEMS.register("fighting_neko_spawn_egg",()->new SpawnEggItem(NekoIds.itemProps("fighting_neko_spawn_egg").spawnEgg(org.cneko.toneko.neoforge.entities.ToNekoEntities.FIGHTING_NEKO_HOLDER.get())));
+        // 诺艾尔猫娘没有刷怪蛋：只能通过 /summon toneko:noelle_maid_neko 命令召唤
 
-        CATNIP_HOLDER = ITEMS.register("catnip", ()->new CatnipItem(new Item.Properties().component(DataComponents.FOOD,
-                new FoodProperties(2,1.0f,true,1.6f, Optional.empty(),
-                        List.of()
-                ))));
+        CATNIP_HOLDER = ITEMS.register("catnip", ()->new CatnipItem(NekoIds.itemProps("catnip").component(DataComponents.FOOD,
+                new FoodProperties(2, 1.0f, true)).component(DataComponents.CONSUMABLE, Consumables.DEFAULT_FOOD)));
 
-        CATNIP_SANDWICH_HOLDER = ITEMS.register("catnip_sandwich", ()->new CatnipItem(new Item.Properties().component(DataComponents.FOOD,
-                new FoodProperties(6,3.0f,false,1.6f, Optional.empty(),
-                        List.of()
-                ))));
+        CATNIP_SANDWICH_HOLDER = ITEMS.register("catnip_sandwich", ()->new CatnipItem(NekoIds.itemProps("catnip_sandwich").component(DataComponents.FOOD,
+                new FoodProperties(6, 3.0f, false)).component(DataComponents.CONSUMABLE, Consumables.DEFAULT_FOOD)));
 
-        CATNIP_SEED_HOLDER = ITEMS.register("catnip_seed",()->new ItemNameBlockItem(ToNekoBlocks.CATNIP_HOLDER.get(), new Item.Properties()));
+        CATNIP_SEED_HOLDER = ITEMS.register("catnip_seed",()->new BlockItem(ToNekoBlocks.CATNIP_HOLDER.get(), NekoIds.itemProps("catnip_seed")));
 
-        WILD_CATNIP_HOLDER = ITEMS.register("wild_catnip",()->new BlockItem(ToNekoBlocks.WILD_CATNIP_HOLDER.get(), new Item.Properties()));
+        WILD_CATNIP_HOLDER = ITEMS.register("wild_catnip",()->new BlockItem(ToNekoBlocks.WILD_CATNIP_HOLDER.get(), NekoIds.itemProps("wild_catnip")));
 
-        MUSIC_DISC_KAWAII_HOLDER = ITEMS.register("music_disc_kawaii",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ToNekoSongs.KAWAII)));
-        MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP_HOLDER = ITEMS.register("music_disc_never_gonna_give_you_up",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ToNekoSongs.NEVER_GONNA_GIVE_YOU_UP)));
+        MUSIC_DISC_KAWAII_HOLDER = ITEMS.register("music_disc_kawaii",()->new Item(NekoIds.itemProps("music_disc_kawaii").stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ToNekoSongs.KAWAII)));
+        MUSIC_DISC_NEVER_GONNA_GIVE_YOU_UP_HOLDER = ITEMS.register("music_disc_never_gonna_give_you_up",()->new Item(NekoIds.itemProps("music_disc_never_gonna_give_you_up").stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ToNekoSongs.NEVER_GONNA_GIVE_YOU_UP)));
 
-        BAZOOKA_HOLDER = ITEMS.register("bazooka",()->new BazookaItem(new Item.Properties().stacksTo(1).rarity(Rarity.RARE)));
+        BAZOOKA_HOLDER = ITEMS.register("bazooka",()->new BazookaItem(NekoIds.itemProps("bazooka").stacksTo(1).rarity(Rarity.RARE)));
 
-        PLOT_SCROLL_HOLDER = ITEMS.register("plot_scroll",()->new PlotScrollItem(new Item.Properties()));
-        FLY_SWORD_HOLDER = ITEMS.register("fly_sword",()->new FlySwordItem(new Item.Properties().stacksTo(1)));
+        PLOT_SCROLL_HOLDER = ITEMS.register("plot_scroll", ()->new PlotScrollItem(NekoIds.itemProps("plot_scroll")));
+        FLY_SWORD_HOLDER = ITEMS.register("fly_sword",()->new FlySwordItem(NekoIds.itemProps("fly_sword").stacksTo(1)));
 
-        LIGHTNING_BOMB_HOLDER = ITEMS.register("lightning_bomb",()->new LightningBombItem(new Item.Properties()));
+        LIGHTNING_BOMB_HOLDER = ITEMS.register("lightning_bomb", ()->new LightningBombItem(NekoIds.itemProps("lightning_bomb")));
 
-        EXPLOSIVE_BOMB_HOLDER = ITEMS.register("explosive_bomb",()->new ExplosiveBombItem(new Item.Properties()));
+        EXPLOSIVE_BOMB_HOLDER = ITEMS.register("explosive_bomb", ()->new ExplosiveBombItem(NekoIds.itemProps("explosive_bomb")));
 
-        CONTRACT_HOLDER = ITEMS.register("contract",()->new ContractItem(new Item.Properties()));
+        CONTRACT_HOLDER = ITEMS.register("contract", ()->new ContractItem(NekoIds.itemProps("contract")));
 
-        NEKO_AGGREGATOR_ITEM_HOLDER = ITEMS.register("neko_aggregator",()->new ItemNameBlockItem(ToNekoBlocks.NEKO_AGGREGATOR_BLOCK_HOLDER.get(), new Item.Properties()));
+        NEKO_AGGREGATOR_ITEM_HOLDER = ITEMS.register("neko_aggregator",()->new BlockItem(ToNekoBlocks.NEKO_AGGREGATOR_BLOCK_HOLDER.get(), NekoIds.itemProps("neko_aggregator")));
 
-        NEKO_INGOT_HOLDER = ITEMS.register("neko_ingot",()->new Item(new Item.Properties()));
+        NEKO_INGOT_HOLDER = ITEMS.register("neko_ingot", ()->new Item(NekoIds.itemProps("neko_ingot")));
 
-        GROWTH_TREAT_HOLDER = ITEMS.register("growth_treat", ()->new GrowthTreatItem(new Item.Properties().component(DataComponents.FOOD,
-                new FoodProperties(4, 2.0f, false, 1.6f, Optional.empty(),
-                        List.of()
-                )).rarity(Rarity.UNCOMMON)));
+        GROWTH_TREAT_HOLDER = ITEMS.register("growth_treat", ()->new GrowthTreatItem(NekoIds.itemProps("growth_treat").component(DataComponents.FOOD,
+                new FoodProperties(4, 2.0f, false)).component(DataComponents.CONSUMABLE, Consumables.DEFAULT_FOOD).rarity(Rarity.UNCOMMON)));
 
-        DEAGE_TREAT_HOLDER = ITEMS.register("deage_treat", ()->new DeageTreatItem(new Item.Properties().component(DataComponents.FOOD,
-                new FoodProperties(4, 2.0f, false, 1.6f, Optional.empty(),
-                        List.of()
-                )).rarity(Rarity.UNCOMMON)));
+        DEAGE_TREAT_HOLDER = ITEMS.register("deage_treat", ()->new DeageTreatItem(NekoIds.itemProps("deage_treat").component(DataComponents.FOOD,
+                new FoodProperties(4, 2.0f, false)).component(DataComponents.CONSUMABLE, Consumables.DEFAULT_FOOD).rarity(Rarity.UNCOMMON)));
 
         NEKO_PAWS_HOLDER = ITEMS.register(NekoArmor.NekoPawsItem.ID, ()->new NekoArmor.NekoPawsItem(ToNekoArmorMaterials.NEKO));
 
@@ -167,34 +160,34 @@ public class ToNekoItems {
         LEGWEAR_PANTYHOSE_5D_HOLDER = ITEMS.register(LegwearItem.Pantyhose5DItem.ID, ()->new LegwearItem.Pantyhose5DItem(ToNekoArmorMaterials.LEGWEAR));
         LEGWEAR_OVER_KNEE_HOLDER = ITEMS.register(LegwearItem.OverKneeSockItem.ID, ()->new LegwearItem.OverKneeSockItem(ToNekoArmorMaterials.LEGWEAR));
 
-        INFINITE_CATNIP_HOLDER = ITEMS.register("infinite_catnip", ()->new CatnipItem.InfiniteCatnipItem(new Item.Properties().component(DataComponents.FOOD,new FoodProperties(2,1.0f,false,1.6f, Optional.empty(),List.of())).rarity(Rarity.UNCOMMON)));
+        INFINITE_CATNIP_HOLDER = ITEMS.register("infinite_catnip", ()->new CatnipItem.InfiniteCatnipItem(NekoIds.itemProps("infinite_catnip").component(DataComponents.FOOD,new FoodProperties(2, 1.0f, false)).component(DataComponents.CONSUMABLE, Consumables.DEFAULT_FOOD).rarity(Rarity.UNCOMMON)));
 
-        NEKO_ENERGY_BOMB_HOLDER = ITEMS.register("energy_bomb", NekoEnergyBombItem::new);
+        NEKO_ENERGY_BOMB_HOLDER = ITEMS.register("energy_bomb", () -> new NekoEnergyBombItem("energy_bomb"));
 
-        NEKO_BLOCK_HOLDER = ITEMS.register("neko_block", ()->new BlockItem(ToNekoBlocks.NEKO_BLOCK_HOLDER.get(), new Item.Properties()));
+        NEKO_BLOCK_HOLDER = ITEMS.register("neko_block", ()->new BlockItem(ToNekoBlocks.NEKO_BLOCK_HOLDER.get(), NekoIds.itemProps("neko_block")));
 
-        NEKO_DIAMOND_HOLDER = ITEMS.register("neko_diamond", ()->new Item(new Item.Properties()));
+        NEKO_DIAMOND_HOLDER = ITEMS.register("neko_diamond", ()->new Item(NekoIds.itemProps("neko_diamond")));
 
-        NEKO_DIAMOND_BLOCK_HOLDER = ITEMS.register("neko_diamond_block", ()->new BlockItem(ToNekoBlocks.NEKO_DIAMOND_BLOCK_HOLDER.get(), new Item.Properties()));
+        NEKO_DIAMOND_BLOCK_HOLDER = ITEMS.register("neko_diamond_block", ()->new BlockItem(ToNekoBlocks.NEKO_DIAMOND_BLOCK_HOLDER.get(), NekoIds.itemProps("neko_diamond_block")));
 
-        NEKO_CRYSTAL_HOLDER = ITEMS.register("neko_crystal", ()->new Item(new Item.Properties()));
+        NEKO_CRYSTAL_HOLDER = ITEMS.register("neko_crystal", ()->new Item(NekoIds.itemProps("neko_crystal")));
 
-        NEKO_ENERGY_STORAGE_SMALL_HOLDER = ITEMS.register("neko_energy_storage_small", ()->new NekoEnergyStorageItem(150,false));
+        NEKO_ENERGY_STORAGE_SMALL_HOLDER = ITEMS.register("neko_energy_storage_small", ()->new NekoEnergyStorageItem("neko_energy_storage_small",150,false));
 
-        NEKO_ENERGY_STORAGE_SMALL_CHARGED_HOLDER = ITEMS.register("neko_energy_storage_small_charged", ()->new NekoEnergyStorageItem(150,true));
+        NEKO_ENERGY_STORAGE_SMALL_CHARGED_HOLDER = ITEMS.register("neko_energy_storage_small_charged", ()->new NekoEnergyStorageItem("neko_energy_storage_small_charged",150,true));
 
-        NEKO_ENERGY_STORAGE_MEDIUM_HOLDER = ITEMS.register("neko_energy_storage_medium", ()->new NekoEnergyStorageItem(400,false));
+        NEKO_ENERGY_STORAGE_MEDIUM_HOLDER = ITEMS.register("neko_energy_storage_medium", ()->new NekoEnergyStorageItem("neko_energy_storage_medium",400,false));
 
-        NEKO_ENERGY_STORAGE_MEDIUM_CHARGED_HOLDER = ITEMS.register("neko_energy_storage_medium_charged", ()->new NekoEnergyStorageItem(400,true));
+        NEKO_ENERGY_STORAGE_MEDIUM_CHARGED_HOLDER = ITEMS.register("neko_energy_storage_medium_charged", ()->new NekoEnergyStorageItem("neko_energy_storage_medium_charged",400,true));
 
-        NEKO_ENERGY_STORAGE_LARGE_HOLDER = ITEMS.register("neko_energy_storage_large", ()->new NekoEnergyStorageItem(1000,false));
+        NEKO_ENERGY_STORAGE_LARGE_HOLDER = ITEMS.register("neko_energy_storage_large", ()->new NekoEnergyStorageItem("neko_energy_storage_large",1000,false));
 
-        NEKO_ENERGY_STORAGE_LARGE_CHARGED_HOLDER = ITEMS.register("neko_energy_storage_large_charged", ()->new NekoEnergyStorageItem(1000,true));
+        NEKO_ENERGY_STORAGE_LARGE_CHARGED_HOLDER = ITEMS.register("neko_energy_storage_large_charged", ()->new NekoEnergyStorageItem("neko_energy_storage_large_charged",1000,true));
 
-        NEKO_ENERGY_BURST_HOLDER = ITEMS.register("neko_energy_burst", ()->new NekoEnergyBurstItem(2f,3f,50f));
-        EVIL_NEKO_ENERGY_BURST_HOLDER = ITEMS.register("evil_neko_energy_burst", ()->new EvilNekoEnergyBurstItem(2f,3f,50f));
+        NEKO_ENERGY_BURST_HOLDER = ITEMS.register("neko_energy_burst", ()->new NekoEnergyBurstItem("neko_energy_burst",2f,3f,50f));
+        EVIL_NEKO_ENERGY_BURST_HOLDER = ITEMS.register("evil_neko_energy_burst", ()->new EvilNekoEnergyBurstItem("evil_neko_energy_burst",2f,3f,50f));
 
-        GENE_EDITOR_HOLDER = ITEMS.register("gene_editor", ()->new GeneEditorItem(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)));
+        GENE_EDITOR_HOLDER = ITEMS.register("gene_editor", ()->new GeneEditorItem(NekoIds.itemProps("gene_editor").stacksTo(1).rarity(Rarity.EPIC)));
 
         NINE_LIVES_CHARM_HOLDER = ITEMS.register(NineLivesCharmItem.ID, NineLivesCharmItem::new);
 
@@ -203,20 +196,20 @@ public class ToNekoItems {
         NEKO_BELL_HOLDER = ITEMS.register(NekoBellItem.ID, NekoBellItem::new);
 
         NEKO_ENERGY_BATTERY_HOLDER = ITEMS.register(NekoEnergyBatteryItem.ID,
-                () -> new NekoEnergyBatteryItem(2000, 10, 5));
+                () -> new NekoEnergyBatteryItem(NekoEnergyBatteryItem.ID, 2000, 10, 5));
         NEKO_ENERGY_BATTERY_LARGE_HOLDER = ITEMS.register(NekoEnergyBatteryItem.ID_LARGE,
-                () -> new NekoEnergyBatteryItem(10000, 100, 50));
+                () -> new NekoEnergyBatteryItem(NekoEnergyBatteryItem.ID_LARGE, 10000, 100, 50));
 
-        SHENG_DENG_ITEM_HOLDER = ITEMS.register(ShengDengItem.ID, () -> new ShengDengItem(ToNekoBlocks.SHENG_DENG_HOLDER.get(), new Item.Properties()));
+        SHENG_DENG_ITEM_HOLDER = ITEMS.register(ShengDengItem.ID, () -> new ShengDengItem(ToNekoBlocks.SHENG_DENG_HOLDER.get(), NekoIds.itemProps("sheng_deng")));
 
-        LEGWEAR_WORKBENCH_ITEM_HOLDER = ITEMS.register("legwear_workbench", () -> new ItemNameBlockItem(ToNekoBlocks.LEGWEAR_WORKBENCH_HOLDER.get(), new Item.Properties()));
+        LEGWEAR_WORKBENCH_ITEM_HOLDER = ITEMS.register("legwear_workbench", () -> new BlockItem(ToNekoBlocks.LEGWEAR_WORKBENCH_HOLDER.get(), NekoIds.itemProps("legwear_workbench")));
 
-        CLOTHESLINE_ITEM_HOLDER = ITEMS.register("clothesline", () -> new ItemNameBlockItem(ToNekoBlocks.CLOTHESLINE_HOLDER.get(), new Item.Properties()));
+        CLOTHESLINE_ITEM_HOLDER = ITEMS.register("clothesline", () -> new BlockItem(ToNekoBlocks.CLOTHESLINE_HOLDER.get(), NekoIds.itemProps("clothesline")));
 
         SPOILED_WATER_BUCKET_HOLDER = ITEMS.register(SpoiledWaterBucketItem.ID, SpoiledWaterBucketItem::new);
         SPOILED_WATER_BOTTLE_HOLDER = ITEMS.register(SpoiledWaterBottleItem.ID, SpoiledWaterBottleItem::new);
-        SPOILED_WATER_SPLASH_HOLDER = ITEMS.register(SpoiledWaterThrowableItem.SPLASH_ID, () -> new SpoiledWaterThrowableItem(false));
-        SPOILED_WATER_LINGERING_HOLDER = ITEMS.register(SpoiledWaterThrowableItem.LINGERING_ID, () -> new SpoiledWaterThrowableItem(true));
+        SPOILED_WATER_SPLASH_HOLDER = ITEMS.register(SpoiledWaterThrowableItem.SPLASH_ID, () -> new SpoiledWaterThrowableItem(SpoiledWaterThrowableItem.SPLASH_ID, false));
+        SPOILED_WATER_LINGERING_HOLDER = ITEMS.register(SpoiledWaterThrowableItem.LINGERING_ID, () -> new SpoiledWaterThrowableItem(SpoiledWaterThrowableItem.LINGERING_ID, true));
         SCENT_PERFUME_HOLDER = ITEMS.register(ScentPerfumeItem.ID, ScentPerfumeItem::new);
 
         // 注册物品组
@@ -236,7 +229,6 @@ public class ToNekoItems {
                     event.accept(ADVENTURER_NEKO_SPAWN_EGG_HOLDER.get());
                     event.accept(GHOST_NEKO_SPAWN_EGG_HOLDER.get());
                     event.accept(FIGHTING_NEKO_SPAWN_EGG_HOLDER.get());
-                    event.accept(NOELLE_MAID_NEKO_SPAWN_EGG_HOLDER.get());
                     event.accept(CATNIP_HOLDER.get());
                     event.accept(CATNIP_SANDWICH_HOLDER.get());
                     event.accept(CATNIP_SEED_HOLDER.get());
@@ -316,7 +308,7 @@ public class ToNekoItems {
             event.accept(ADVENTURER_NEKO_SPAWN_EGG_HOLDER.get());
             event.accept(GHOST_NEKO_SPAWN_EGG_HOLDER.get());
             event.accept(FIGHTING_NEKO_SPAWN_EGG_HOLDER.get());
-            // event.accept(NOELLE_MAID_NEKO_SPAWN_EGG_HOLDER.get());
+            // 诺艾尔猫娘没有刷怪蛋
             event.accept(PLOT_SCROLL_HOLDER.get());
             event.accept(CATNIP_HOLDER.get());
             event.accept(CATNIP_SANDWICH_HOLDER.get());

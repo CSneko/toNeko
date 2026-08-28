@@ -1,5 +1,6 @@
 package org.cneko.toneko.common.mod.items.ammo;
 
+import org.cneko.toneko.common.mod.util.NekoIds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -13,8 +14,8 @@ import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.items.BazookaItem;
 
 public class NekoEnergyBombItem extends AmmoItem {
-    public NekoEnergyBombItem() {
-        super(new Properties());
+    public NekoEnergyBombItem(String idPath) {
+        super(NekoIds.itemProps(idPath));
     }
 
     @Override
@@ -31,7 +32,7 @@ public class NekoEnergyBombItem extends AmmoItem {
             }
         } else {
             // 造成伤害
-            target.hurt(BazookaItem.getDamageSource(shooter), damage);
+            org.cneko.toneko.common.mod.util.EntityHurtUtil.hurt(target, BazookaItem.getDamageSource(shooter), damage);
         }
     }
 
@@ -39,7 +40,7 @@ public class NekoEnergyBombItem extends AmmoItem {
     public void hitOnBlock(LivingEntity shooter, BlockPos pos, ItemStack bazooka, ItemStack ammunition) {
         Level level = shooter.level();
 
-        if (!level.isClientSide && level instanceof ServerLevel serverLevel) {
+        if (!level.isClientSide() && level instanceof ServerLevel serverLevel) {
             // 定义搜索半径
             int radius = 4;
             // 垂直搜索范围稍微小一点，因为作物通常在同一平面
@@ -88,7 +89,7 @@ public class NekoEnergyBombItem extends AmmoItem {
         Level level = shooter.level();
 
         // 空气中引爆：纯特效展示
-        if (!level.isClientSide && level instanceof ServerLevel serverLevel) {
+        if (!level.isClientSide() && level instanceof ServerLevel serverLevel) {
             // 1. HAPPY_VILLAGER (绿色星星，类似骨粉效果) - 量大，范围广
             serverLevel.sendParticles(ParticleTypes.HAPPY_VILLAGER,
                     pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,

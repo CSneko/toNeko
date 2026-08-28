@@ -23,10 +23,10 @@ import org.cneko.toneko.common.mod.items.BazookaItem;
 import org.cneko.toneko.common.mod.misc.ToNekoSoundEvents;
 import org.cneko.toneko.common.mod.util.EnchantmentUtil;
 import org.jetbrains.annotations.NotNull;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.util.GeckoLibUtil;
+import com.geckolib.animatable.GeoEntity;
+import com.geckolib.animatable.instance.AnimatableInstanceCache;
+import com.geckolib.animatable.manager.AnimatableManager;
+import com.geckolib.util.GeckoLibUtil;
 
 public class AmmunitionEntity extends ThrowableProjectile implements GeoEntity {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -66,32 +66,40 @@ public class AmmunitionEntity extends ThrowableProjectile implements GeoEntity {
         return this.getEntityData().get(AMMUNITION_STACK);
     }
 
-    @Override
-    protected void addAdditionalSaveData(@NotNull CompoundTag tag) {
-        super.addAdditionalSaveData(tag);
-        tag.put("Bazooka", getBazookaStack().save(this.registryAccess()));
-        tag.put("Ammunition", getAmmunitionStack().save(this.registryAccess()));
-        tag.putDouble("InitialX", initialPosition.x);
-        tag.putDouble("InitialY", initialPosition.y);
-        tag.putDouble("InitialZ", initialPosition.z);
+        @Override
+    protected void addAdditionalSaveData(net.minecraft.world.level.storage.ValueOutput out) {
+        super.addAdditionalSaveData(out);
+        CompoundTag data = new CompoundTag();
+        this.writeExtraData(data);
+        org.cneko.toneko.common.mod.util.NbtBridge.store(data, out);
     }
 
-    @Override
-    protected void readAdditionalSaveData(@NotNull CompoundTag tag) {
-        super.readAdditionalSaveData(tag);
-        setBazookaStack(ItemStack.parseOptional(registryAccess(),tag.getCompound("Bazooka")));
-        setAmmunitionStack(ItemStack.parseOptional(registryAccess(),tag.getCompound("Ammunition")));
+    private void writeExtraData(@NotNull CompoundTag compound) {        compound.put("Bazooka", org.cneko.toneko.common.mod.util.NbtBridge.encodeStack(this.registryAccess(), getBazookaStack()));
+        compound.put("Ammunition", org.cneko.toneko.common.mod.util.NbtBridge.encodeStack(this.registryAccess(), getAmmunitionStack()));
+        compound.putDouble("InitialX", initialPosition.x);
+        compound.putDouble("InitialY", initialPosition.y);
+        compound.putDouble("InitialZ", initialPosition.z);
+    }
+
+        @Override
+    protected void readAdditionalSaveData(net.minecraft.world.level.storage.ValueInput in) {
+        super.readAdditionalSaveData(in);
+        this.readExtraData(org.cneko.toneko.common.mod.util.NbtBridge.read(in));
+    }
+
+    private void readExtraData(@NotNull CompoundTag compound) {        setBazookaStack(org.cneko.toneko.common.mod.util.NbtBridge.decodeStack(registryAccess(), compound.getCompoundOrEmpty("Bazooka")));
+        setAmmunitionStack(org.cneko.toneko.common.mod.util.NbtBridge.decodeStack(registryAccess(), compound.getCompoundOrEmpty("Ammunition")));
         this.initialPosition = new Vec3(
-                tag.getDouble("InitialX"),
-                tag.getDouble("InitialY"),
-                tag.getDouble("InitialZ")
+                compound.getDoubleOr("InitialX", 0d),
+                compound.getDoubleOr("InitialY", 0d),
+                compound.getDoubleOr("InitialZ", 0d)
         );
     }
 
     @Override
     public void tick() {
         super.tick();
-        if (!this.level().isClientSide) {
+        if (!this.level().isClientSide()) {
             if (this.initialPosition == null) this.initialPosition = this.position();
 
             ItemStack ammoStack = getAmmunitionStack();
@@ -121,7 +129,7 @@ public class AmmunitionEntity extends ThrowableProjectile implements GeoEntity {
                         Vec3 toShooter = shooter.position().add(0, shooter.getBbHeight() * 0.5, 0).subtract(this.position());
                         Vec3 motion = toShooter.normalize().scale(returnSpeed);
                         this.setDeltaMovement(motion);
-                        this.hasImpulse = true;
+                        this.markHurt();
 
                         // 检查是否击中发射者
                         if (this.getBoundingBox().intersects(shooter.getBoundingBox())) {
@@ -145,7 +153,7 @@ public class AmmunitionEntity extends ThrowableProjectile implements GeoEntity {
                 Vec3 toTarget = homingTarget.position().add(0, homingTarget.getBbHeight() * 0.5, 0).subtract(this.position());
                 Vec3 motion = toTarget.normalize().scale(1.5); // 速度可调整
                 this.setDeltaMovement(motion);
-                this.hasImpulse = true;
+                this.markHurt();
             }
 
         }
@@ -155,7 +163,7 @@ public class AmmunitionEntity extends ThrowableProjectile implements GeoEntity {
     public void remove(@NotNull RemovalReason reason) {
         super.remove(reason);
         if (reason == RemovalReason.DISCARDED){
-            if (!level().isClientSide) {
+            if (!level().isClientSide()) {
                 // 清除时播放喵叫
                 this.level().playSound(
                         this,
@@ -211,7 +219,7 @@ public class AmmunitionEntity extends ThrowableProjectile implements GeoEntity {
         super.onHit(hitResult);
         // 原版 Projectile.onHit 已按命中类型派发到上方 onHitEntity/onHitBlock（其中会 discard）。
         // 此段仅为兜底：仅当实体未被移除时才手动派发，避免爆炸/落雷等效果被触发两次
-        if (!this.isRemoved() && !this.level().isClientSide) {
+        if (!this.isRemoved() && !this.level().isClientSide()) {
             if (hitResult.getType() == HitResult.Type.ENTITY) {
                 this.onHitEntity((EntityHitResult) hitResult);
             } else if (hitResult.getType() == HitResult.Type.BLOCK) {

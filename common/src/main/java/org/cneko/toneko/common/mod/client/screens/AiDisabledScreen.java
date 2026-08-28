@@ -1,7 +1,7 @@
 package org.cneko.toneko.common.mod.client.screens;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -44,14 +44,14 @@ public class AiDisabledScreen extends Screen {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
+    public void extractRenderState(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         // 居中绘制提示文字（支持 \n 换行）
         String message = Component.translatable("screen.toneko.ai_disabled.message").getString();
         int lineY = messageTop;
         for (String line : message.split("\n")) {
             int x = (this.width - this.font.width(line)) / 2;
-            guiGraphics.drawString(this.font, line, x, lineY, 0xFFFFFF);
+            guiGraphics.text(this.font, line, x, lineY, 0xFFFFFFFF);
             lineY += this.font.lineHeight + 4;
         }
     }

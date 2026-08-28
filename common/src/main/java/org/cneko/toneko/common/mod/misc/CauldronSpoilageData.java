@@ -1,15 +1,16 @@
 package org.cneko.toneko.common.mod.misc;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.Mth;
 import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.level.saveddata.SavedDataType;
 import org.cneko.toneko.common.mod.items.SpoiledWaterBucketItem;
+import org.cneko.toneko.common.mod.util.ResourceLocationUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,20 +20,42 @@ import java.util.Map;
  * 以 ServerLevel 的 SavedData 持久化，服务器重启后仍在。
  */
 public class CauldronSpoilageData extends SavedData {
-    private static final String KEY = "toneko_spoiled_cauldrons";
-    private static final SavedData.Factory<CauldronSpoilageData> FACTORY = new SavedData.Factory<>(
+    /** 一锅变质水：等级 + 气味来源（最近穿着者显示名，空串=无） */
+    public record SpoiledWater(int level, String wearer) {
+        public static final Codec<SpoiledWater> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                Codec.INT.fieldOf("spoilage").forGetter(SpoiledWater::level),
+                Codec.STRING.fieldOf("wearer").forGetter(SpoiledWater::wearer)
+        ).apply(instance, SpoiledWater::new));
+    }
+
+    private static final Codec<Map<BlockPos, SpoiledWater>> CAULDRONS_CODEC =
+            ExtraCodecs.strictUnboundedMap(BlockPos.CODEC, SpoiledWater.CODEC);
+
+    private static final Codec<CauldronSpoilageData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            CAULDRONS_CODEC.fieldOf("cauldrons").forGetter(data -> data.spoilage)
+    ).apply(instance, spoilage -> new CauldronSpoilageData(spoilage)));
+
+    // 26.x：SavedData.Factory 改为 SavedDataType（Identifier + 构造器 + Codec）
+    public static final SavedDataType<CauldronSpoilageData> TYPE = new SavedDataType<>(
+            ResourceLocationUtil.toNekoLoc("toneko_spoiled_cauldrons"),
             CauldronSpoilageData::new,
-            CauldronSpoilageData::load,
+            CODEC,
             DataFixTypes.LEVEL
     );
 
-    /** 一锅变质水：等级 + 气味来源（最近穿着者显示名，空串=无） */
-    public record SpoiledWater(int level, String wearer) {}
+    private final Map<BlockPos, SpoiledWater> spoilage;
 
-    private final Map<BlockPos, SpoiledWater> spoilage = new HashMap<>();
+    private CauldronSpoilageData(Map<BlockPos, SpoiledWater> spoilage) {
+        this.spoilage = spoilage;
+    }
+
+    /** SavedDataType 需要的默认构造器 */
+    public CauldronSpoilageData() {
+        this.spoilage = new HashMap<>();
+    }
 
     public static CauldronSpoilageData get(ServerLevel level) {
-        return level.getDataStorage().computeIfAbsent(FACTORY, KEY);
+        return level.getDataStorage().computeIfAbsent(TYPE);
     }
 
     public int getSpoilage(BlockPos pos) {
@@ -74,35 +97,5 @@ public class CauldronSpoilageData extends SavedData {
 
     public Map<BlockPos, SpoiledWater> getSpoilageMap() {
         return spoilage;
-    }
-
-    @Override
-    public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
-        ListTag list = new ListTag();
-        for (Map.Entry<BlockPos, SpoiledWater> entry : spoilage.entrySet()) {
-            CompoundTag entryTag = new CompoundTag();
-            BlockPos pos = entry.getKey();
-            entryTag.putInt("x", pos.getX());
-            entryTag.putInt("y", pos.getY());
-            entryTag.putInt("z", pos.getZ());
-            entryTag.putInt("spoilage", entry.getValue().level());
-            entryTag.putString("wearer", entry.getValue().wearer());
-            list.add(entryTag);
-        }
-        tag.put("cauldrons", list);
-        return tag;
-    }
-
-    public static CauldronSpoilageData load(CompoundTag tag, HolderLookup.Provider registries) {
-        CauldronSpoilageData data = new CauldronSpoilageData();
-        ListTag list = tag.getList("cauldrons", Tag.TAG_COMPOUND);
-        for (int i = 0; i < list.size(); i++) {
-            CompoundTag entryTag = list.getCompound(i);
-            BlockPos pos = new BlockPos(entryTag.getInt("x"), entryTag.getInt("y"), entryTag.getInt("z"));
-            int value = Mth.clamp(entryTag.getInt("spoilage"), 0, SpoiledWaterBucketItem.MAX_SPOILAGE);
-            String wearer = entryTag.getString("wearer");
-            data.spoilage.put(pos, new SpoiledWater(value, wearer));
-        }
-        return data;
     }
 }

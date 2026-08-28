@@ -27,59 +27,65 @@ public class NekoAggregatorRecipe implements Recipe<NekoAggregatorInput> {
     }
 
     @Override
-    public @NotNull ItemStack assemble(@NotNull NekoAggregatorInput input, HolderLookup.@NotNull Provider registries) {
-        return getResultItem(registries);
-    }
-
-    @Override
-    public boolean canCraftInDimensions(int width, int height) {
-        return width >= this.pattern.width() && height >= this.pattern.height();
-    }
-
-    @Override
-    public @NotNull ItemStack getResultItem(HolderLookup.@NotNull Provider registries) {
+    public @NotNull ItemStack assemble(@NotNull NekoAggregatorInput input) {
         return this.result.copy();
     }
 
     @Override
-    public @NotNull RecipeSerializer<?> getSerializer() {
+    public @NotNull RecipeSerializer<NekoAggregatorRecipe> getSerializer() {
         return ToNekoRecipes.NEKO_AGGREGATOR_SERIALIZER;
     }
 
     @Override
-    public @NotNull RecipeType<?> getType() {
+    public @NotNull RecipeType<NekoAggregatorRecipe> getType() {
         return ToNekoRecipes.NEKO_AGGREGATOR;
     }
 
-    public static class Serializer implements RecipeSerializer<NekoAggregatorRecipe> {
-        public static final MapCodec<NekoAggregatorRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-                NekoAggregatorRecipePattern.MAP_CODEC.forGetter(recipe -> recipe.pattern),
-                Codec.DOUBLE.fieldOf("energy").forGetter(recipe -> recipe.energy),
-                ItemStack.STRICT_CODEC.fieldOf("result").forGetter(recipe -> recipe.result)
-        ).apply(instance, NekoAggregatorRecipe::new));
+    @Override
+    public @NotNull net.minecraft.world.item.crafting.PlacementInfo placementInfo() {
+        return PlacementInfo.create(this.pattern.ingredients().stream().flatMap(java.util.Optional::stream).toList());
+    }
 
+    @Override
+    public boolean showNotification() { return true; }
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, NekoAggregatorRecipe> STREAM_CODEC = StreamCodec.of(NekoAggregatorRecipe.Serializer::toNetwork, NekoAggregatorRecipe.Serializer::fromNetwork);
+    @Override
+    public boolean isSpecial() {
+        // 自定义机器配方（非工作台）：跳过原版配方簿 placement 检查，
+        // 消除加载时 "Recipe ... can't be placed due to empty ingredients" 警告
+        return true;
+    }
 
-        public @NotNull MapCodec<NekoAggregatorRecipe> codec() {
-            return CODEC;
-        }
+    @Override
+    public @NotNull String group() { return ""; }
 
-        public @NotNull StreamCodec<RegistryFriendlyByteBuf, NekoAggregatorRecipe> streamCodec() {
-            return STREAM_CODEC;
-        }
+    @Override
+    public @NotNull net.minecraft.world.item.crafting.RecipeBookCategory recipeBookCategory() {
+        return net.minecraft.world.item.crafting.RecipeBookCategories.CRAFTING_MISC;
+    }
 
-        private static NekoAggregatorRecipe fromNetwork(RegistryFriendlyByteBuf buffer) {
-            NekoAggregatorRecipePattern shapedRecipePattern = NekoAggregatorRecipePattern.STREAM_CODEC.decode(buffer);
-            ItemStack itemStack = ItemStack.STREAM_CODEC.decode(buffer);
-            double energy = ByteBufCodecs.DOUBLE.decode(buffer);
-            return new NekoAggregatorRecipe(shapedRecipePattern,energy, itemStack);
-        }
+    private static final MapCodec<NekoAggregatorRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            NekoAggregatorRecipePattern.MAP_CODEC.forGetter(recipe -> recipe.pattern),
+            Codec.DOUBLE.fieldOf("energy").forGetter(recipe -> recipe.energy),
+            ItemStack.MAP_CODEC.fieldOf("result").forGetter(recipe -> recipe.result)
+    ).apply(instance, NekoAggregatorRecipe::new));
 
-        private static void toNetwork(RegistryFriendlyByteBuf buffer, NekoAggregatorRecipe recipe) {
-            NekoAggregatorRecipePattern.STREAM_CODEC.encode(buffer, recipe.pattern);
-            ItemStack.STREAM_CODEC.encode(buffer, recipe.result);
-            buffer.writeDouble(recipe.energy);
-        }
+    private static final StreamCodec<RegistryFriendlyByteBuf, NekoAggregatorRecipe> STREAM_CODEC =
+            StreamCodec.of(NekoAggregatorRecipe::toNetwork, NekoAggregatorRecipe::fromNetwork);
+
+    // 26.x：RecipeSerializer 从接口改为 record，直接用 codec + streamCodec 构造
+    public static final RecipeSerializer<NekoAggregatorRecipe> Serializer = new RecipeSerializer<>(CODEC, STREAM_CODEC);
+
+    private static NekoAggregatorRecipe fromNetwork(RegistryFriendlyByteBuf buffer) {
+        NekoAggregatorRecipePattern shapedRecipePattern = NekoAggregatorRecipePattern.STREAM_CODEC.decode(buffer);
+        ItemStack itemStack = ItemStack.STREAM_CODEC.decode(buffer);
+        double energy = ByteBufCodecs.DOUBLE.decode(buffer);
+        return new NekoAggregatorRecipe(shapedRecipePattern, energy, itemStack);
+    }
+
+    private static void toNetwork(RegistryFriendlyByteBuf buffer, NekoAggregatorRecipe recipe) {
+        NekoAggregatorRecipePattern.STREAM_CODEC.encode(buffer, recipe.pattern);
+        ItemStack.STREAM_CODEC.encode(buffer, recipe.result);
+        buffer.writeDouble(recipe.energy);
     }
 }

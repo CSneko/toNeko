@@ -1,5 +1,6 @@
 package org.cneko.toneko.common.mod.items;
 
+import org.cneko.toneko.common.mod.util.NekoIds;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
 import net.minecraft.network.chat.Component;
@@ -7,7 +8,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.Item;
@@ -30,8 +31,8 @@ public class SpoiledWaterThrowableItem extends Item implements ProjectileItem {
     public static final String LINGERING_ID = "spoiled_water_lingering";
     private final boolean lingering;
 
-    public SpoiledWaterThrowableItem(boolean lingering) {
-        super(new Properties().stacksTo(16)
+    public SpoiledWaterThrowableItem(String idPath, boolean lingering) {
+        super(NekoIds.itemProps(idPath).stacksTo(16)
                 .component(ToNekoComponents.SPOILED_WATER_SPOILAGE_COMPONENT, 0)
                 .component(ToNekoComponents.SPOILED_WATER_WEARER_COMPONENT, ""));
         this.lingering = lingering;
@@ -42,13 +43,13 @@ public class SpoiledWaterThrowableItem extends Item implements ProjectileItem {
     }
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player,
+    public @NotNull InteractionResult use(@NotNull Level level, @NotNull Player player,
                                                            @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         level.playSound(null, player.getX(), player.getY(), player.getZ(),
                 SoundEvents.SPLASH_POTION_THROW, SoundSource.NEUTRAL, 0.5f,
                 0.4f / (level.getRandom().nextFloat() * 0.4f + 0.8f));
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             SpoiledWaterProjectile projectile = new SpoiledWaterProjectile(level, player);
             projectile.setItem(stack.copy());
             projectile.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0f, 1.2f, 1.0f);
@@ -56,7 +57,7 @@ public class SpoiledWaterThrowableItem extends Item implements ProjectileItem {
         }
         player.awardStat(Stats.ITEM_USED.get(this));
         stack.consume(1, player);
-        return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
+        return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER);
     }
 
     @Override
@@ -67,19 +68,22 @@ public class SpoiledWaterThrowableItem extends Item implements ProjectileItem {
         return projectile;
     }
 
-    @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context,
-                                @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
-        super.appendHoverText(stack, context, tooltip, flag);
+        @Override
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull net.minecraft.world.item.component.TooltipDisplay display, @NotNull java.util.function.Consumer<Component> adder, @NotNull TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, display, adder, tooltipFlag);
+        // 兼容旧实现：先收集到 List，再逐条发送
+        java.util.List<Component> tooltips = new java.util.ArrayList<>();
         int spoilage = ScentedWaterUtil.getSpoilage(stack);
-        tooltip.add(Component.translatable("item.toneko.spoiled_water_throwable.tip.spoilage",
+        tooltips.add(Component.translatable("item.toneko.spoiled_water_throwable.tip.spoilage",
                 Component.translatable("item.toneko.spoiled_water_bucket.spoilage." + ScentedWaterUtil.grade(spoilage))));
         String wearer = ScentedWaterUtil.getWearer(stack);
         if (!wearer.isEmpty()) {
-            tooltip.add(Component.translatable("item.toneko.spoiled_water.tip.wearer", wearer));
+            tooltips.add(Component.translatable("item.toneko.spoiled_water.tip.wearer", wearer));
         }
-        tooltip.add(Component.translatable(lingering
+        tooltips.add(Component.translatable(lingering
                 ? "item.toneko.spoiled_water_throwable.tip.lingering"
                 : "item.toneko.spoiled_water_throwable.tip.splash"));
+    
+        for (Component t : tooltips) adder.accept(t);
     }
 }

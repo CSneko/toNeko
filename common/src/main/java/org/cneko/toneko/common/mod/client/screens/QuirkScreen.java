@@ -3,7 +3,7 @@ package org.cneko.toneko.common.mod.client.screens;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
@@ -80,10 +80,10 @@ public class QuirkScreen extends Screen{
     }
 
     @Override
-    public void render(@NotNull GuiGraphics context, int mouseX, int mouseY, float delta) {
-        super.render(context, mouseX, mouseY, delta);
+    public void extractRenderState(@NotNull GuiGraphicsExtractor context, int mouseX, int mouseY, float delta) {
+        super.extractRenderState(context, mouseX, mouseY, delta);
         // 添加标题
-        context.drawString(this.font, translatable("screen.toneko.quirk"), this.width / 2 - this.font.width(translatable("screen.toneko.quirk")) / 2, 20, 0xFFFFFFFF, true);
+        context.text(this.font, translatable("screen.toneko.quirk"), this.width / 2 - this.font.width(translatable("screen.toneko.quirk")) / 2, 20, 0xFFFFFFFF, true);
     }
 
     @Override

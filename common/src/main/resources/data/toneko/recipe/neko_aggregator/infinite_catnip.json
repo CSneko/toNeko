@@ -1,20 +1,11 @@
 {
   "type": "toneko:neko_aggregator",
   "key": {
-    "I": {
-      "item": "toneko:neko_ingot"
-    },
-    "D": {
-      "item": "toneko:neko_diamond"
-    },
-    "L": {
-      "item": "toneko:neko_crystal"
-    },
-    "C": {
-      "item": "toneko:catnip"
-    }
+    "I": "toneko:neko_ingot",
+    "D": "toneko:neko_diamond",
+    "L": "toneko:neko_crystal",
+    "C": "toneko:catnip"
   },
-
   "pattern": [
     "ICI",
     "DCD",

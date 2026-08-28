@@ -1,4 +1,5 @@
 package org.cneko.toneko.common.mod.commands;
+import org.cneko.toneko.common.mod.entities.INeko;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -60,7 +61,7 @@ public class QuirkCommand {
         ServerPlayer player = context.getSource().getPlayer();
         // 打开设置屏幕
         ServerPlayNetworking.send(player, new QuirkQueryPayload(
-                QuirkUtil.quirkToIds(player.getQuirks()),
+                QuirkUtil.quirkToIds(((INeko) player).getQuirks()),
                 QuirkRegister.getQuirkIds().stream().toList(),true)
         );
         return 1;
@@ -68,12 +69,12 @@ public class QuirkCommand {
 
     public static int listQuirks(CommandContext<CommandSourceStack> context) {
        Player player = context.getSource().getPlayer();
-        if(player.getQuirks().isEmpty()){
+        if(((INeko) player).getQuirks().isEmpty()){
             context.getSource().sendSystemMessage(translatable("command.quirk.no_any_quirk"));
             return 1;
         }
         // 列出quirks
-        Collection<Quirk> quirks = player.getQuirks();
+        Collection<Quirk> quirks = ((INeko) player).getQuirks();
         // 转换为id
         List<String> quirkIds = quirks.stream().map(Quirk::getId).toList();
         // 翻译
@@ -95,19 +96,19 @@ public class QuirkCommand {
         }
         // 如果是添加
         context.getNodes().stream().filter(node -> node.getNode().getName().equals("add")).findFirst().ifPresent(node -> {
-            if(neko.hasQuirk(QuirkRegister.getById(quirk))){
+            if(((INeko) neko).hasQuirk(QuirkRegister.getById(quirk))){
                 context.getSource().sendSystemMessage(translatable("command.quirk.already_quirk"));
             }else {
-                neko.addQuirk(QuirkRegister.getById(quirk));
+                ((INeko) neko).addQuirk(QuirkRegister.getById(quirk));
                 context.getSource().sendSystemMessage(translatable("command.quirk.add", quirk));
             }
         });
         // 删除
         context.getNodes().stream().filter(node -> node.getNode().getName().equals("remove")).findFirst().ifPresent(node -> {
-            if(!neko.hasQuirk(QuirkRegister.getById(quirk))){
+            if(!((INeko) neko).hasQuirk(QuirkRegister.getById(quirk))){
                 context.getSource().sendSystemMessage(translatable("command.quirk.not_has_quirk"));
             }else {
-                neko.removeQuirk(QuirkRegister.getById(quirk));
+                ((INeko) neko).removeQuirk(QuirkRegister.getById(quirk));
                 context.getSource().sendSystemMessage(translatable("command.quirk.remove", quirk));
             }
         });

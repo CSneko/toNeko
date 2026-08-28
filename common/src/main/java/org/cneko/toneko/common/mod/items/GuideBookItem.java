@@ -3,9 +3,9 @@ package org.cneko.toneko.common.mod.items;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -14,9 +14,9 @@ import net.minecraft.world.level.Level;
 
 public class GuideBookItem extends Item {
     public static final String ID = "toneko_guide";
-    public static final ResourceLocation BOOK_ID = ResourceLocation.fromNamespaceAndPath("toneko", "toneko_guide");
-    private static final ResourceLocation PATCHOULI_BOOK_ITEM_ID = ResourceLocation.fromNamespaceAndPath("patchouli", "guide_book");
-    private static final ResourceLocation PATCHOULI_BOOK_COMPONENT_ID = ResourceLocation.fromNamespaceAndPath("patchouli", "book");
+    public static final Identifier BOOK_ID = Identifier.fromNamespaceAndPath("toneko", "toneko_guide");
+    private static final Identifier PATCHOULI_BOOK_ITEM_ID = Identifier.fromNamespaceAndPath("patchouli", "guide_book");
+    private static final Identifier PATCHOULI_BOOK_COMPONENT_ID = Identifier.fromNamespaceAndPath("patchouli", "book");
 
     private static final boolean PATCHOULI_LOADED;
 
@@ -43,11 +43,11 @@ public class GuideBookItem extends Item {
     public static ItemStack createGuideBookStack() {
         if (!PATCHOULI_LOADED) return ItemStack.EMPTY;
 
-        Item guideBookItem = BuiltInRegistries.ITEM.get(PATCHOULI_BOOK_ITEM_ID);
+        Item guideBookItem = BuiltInRegistries.ITEM.getValue(PATCHOULI_BOOK_ITEM_ID);
         if (guideBookItem == Items.AIR) return ItemStack.EMPTY;
 
-        DataComponentType<ResourceLocation> bookComponent = (DataComponentType<ResourceLocation>)
-                BuiltInRegistries.DATA_COMPONENT_TYPE.get(PATCHOULI_BOOK_COMPONENT_ID);
+        DataComponentType<Identifier> bookComponent = (DataComponentType<Identifier>)
+                BuiltInRegistries.DATA_COMPONENT_TYPE.getValue(PATCHOULI_BOOK_COMPONENT_ID);
         if (bookComponent == null) return ItemStack.EMPTY;
 
         ItemStack stack = new ItemStack(guideBookItem);
@@ -60,16 +60,16 @@ public class GuideBookItem extends Item {
      */
     @SuppressWarnings("unchecked")
     public static boolean isOurGuideBook(ItemStack stack) {
-        Item guideBookItem = BuiltInRegistries.ITEM.get(PATCHOULI_BOOK_ITEM_ID);
+        Item guideBookItem = BuiltInRegistries.ITEM.getValue(PATCHOULI_BOOK_ITEM_ID);
         if (!stack.is(guideBookItem)) return false;
-        DataComponentType<ResourceLocation> bookComponent = (DataComponentType<ResourceLocation>)
-                BuiltInRegistries.DATA_COMPONENT_TYPE.get(PATCHOULI_BOOK_COMPONENT_ID);
+        DataComponentType<Identifier> bookComponent = (DataComponentType<Identifier>)
+                BuiltInRegistries.DATA_COMPONENT_TYPE.getValue(PATCHOULI_BOOK_COMPONENT_ID);
         if (bookComponent == null) return false;
         return BOOK_ID.equals(stack.get(bookComponent));
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
 
         if (PATCHOULI_LOADED) {
@@ -79,11 +79,8 @@ public class GuideBookItem extends Item {
 
         // 帕秋莉未安装，提示玩家
         if (!level.isClientSide()) {
-            player.displayClientMessage(
-                Component.translatable("message.toneko.guide.need_patchouli"),
-                true
-            );
+            player.sendOverlayMessage(Component.translatable("message.toneko.guide.need_patchouli"));
         }
-        return InteractionResultHolder.success(stack);
+        return InteractionResult.SUCCESS;
     }
 }

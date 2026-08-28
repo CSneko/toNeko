@@ -1,12 +1,13 @@
 package org.cneko.toneko.common.mod.items;
 
+import org.cneko.toneko.common.mod.util.NekoIds;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
@@ -30,14 +31,14 @@ public class NekoBellItem extends Item {
     public static final float ENERGY_PER_NEKO = 10.0f;
 
     public NekoBellItem() {
-        super(new Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
+        super(NekoIds.itemProps(ID).stacksTo(1).rarity(Rarity.UNCOMMON));
     }
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player,
+    public @NotNull InteractionResult use(@NotNull Level level, @NotNull Player player,
                                                             @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (level.isClientSide) return InteractionResultHolder.success(stack);
+        if (level.isClientSide()) return InteractionResult.SUCCESS;
 
         // 获取范围内所有猫娘，筛选属于该玩家的 NekoEntity
         List<INeko> nearby = EntityUtil.getNekoInRange(player, level, RECALL_RANGE);
@@ -49,9 +50,8 @@ public class NekoBellItem extends Item {
         }
 
         if (owned.isEmpty()) {
-            player.displayClientMessage(
-                    Component.translatable("item.toneko.neko_bell.no_nekos"), true);
-            return InteractionResultHolder.fail(stack);
+            player.sendOverlayMessage(Component.translatable("item.toneko.neko_bell.no_nekos"));
+            return InteractionResult.FAIL;
         }
 
         // 召回每只猫娘
@@ -76,25 +76,27 @@ public class NekoBellItem extends Item {
                 SoundEvents.NOTE_BLOCK_BELL.value(), SoundSource.PLAYERS, 0.8F, 1.2F);
 
         // 能量消耗
-        if (player.isNeko()) {
+        if (((INeko) player).isNeko()) {
             float cost = ENERGY_PER_NEKO * count;
-            player.setNekoEnergy(Math.max(0, player.getNekoEnergy() - cost));
+            ((INeko) player).setNekoEnergy(Math.max(0, ((INeko) player).getNekoEnergy() - cost));
         }
 
         // 冷却
-        player.getCooldowns().addCooldown(this, COOLDOWN_TICKS);
+        player.getCooldowns().addCooldown(stack, COOLDOWN_TICKS);
 
         // 反馈
-        player.displayClientMessage(
-                Component.translatable("item.toneko.neko_bell.recall", count), true);
+        player.sendOverlayMessage(Component.translatable("item.toneko.neko_bell.recall", count));
 
-        return InteractionResultHolder.success(stack);
+        return InteractionResult.SUCCESS;
     }
 
-    @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context,
-                                @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
-        super.appendHoverText(stack, context, tooltip, flag);
-        tooltip.add(Component.translatable("item.toneko.neko_bell.tip"));
+        @Override
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull net.minecraft.world.item.component.TooltipDisplay display, @NotNull java.util.function.Consumer<Component> adder, @NotNull TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, display, adder, tooltipFlag);
+        // 兼容旧实现：先收集到 List，再逐条发送
+        java.util.List<Component> tooltips = new java.util.ArrayList<>();
+        tooltips.add(Component.translatable("item.toneko.neko_bell.tip"));
+    
+        for (Component t : tooltips) adder.accept(t);
     }
 }

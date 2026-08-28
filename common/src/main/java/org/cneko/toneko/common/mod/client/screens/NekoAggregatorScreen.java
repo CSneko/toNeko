@@ -1,11 +1,11 @@
 package org.cneko.toneko.common.mod.client.screens;
+import org.cneko.toneko.common.mod.entities.INeko;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class NekoAggregatorScreen extends AbstractContainerScreen<NekoAggregatorBlock.NekoAggregatorMenu> {
-    private static final ResourceLocation CRAFTING_TABLE_LOCATION = ResourceLocation.withDefaultNamespace("textures/gui/container/crafting_table.png");
+    private static final Identifier CRAFTING_TABLE_LOCATION = Identifier.withDefaultNamespace("textures/gui/container/crafting_table.png");
 
     // 颜色定义
     private static final int COST_COLOR_CONSUME = 0xFFFF5555; // 红色 (-消耗)
@@ -29,20 +29,18 @@ public class NekoAggregatorScreen extends AbstractContainerScreen<NekoAggregator
     private static final int WARNING_COLOR = 0xFFFF0000;      // 警告符号颜色
 
     public NekoAggregatorScreen(NekoAggregatorBlock.NekoAggregatorMenu menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title);
-        this.imageWidth = 176;
-        this.imageHeight = 166;
+        super(menu, playerInventory, title, 176, 166); // 26.x：imageWidth/Height 改为 final，经构造器传入
         this.titleLabelX = 20;
         this.inventoryLabelY = this.imageHeight - 94;
     }
 
     @Override
-    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractRenderState(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         // 1. 渲染背景 (包含能量条和文字)
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
+        super.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
         // 2. 渲染物品悬停提示 (原版逻辑)
-        this.renderTooltip(guiGraphics, mouseX, mouseY);
+        this.extractTooltip(guiGraphics, mouseX, mouseY);
 
         // 3. 渲染能量条的悬停提示 (自定义逻辑)
         // 放在这里是为了保证 Tooltip 绘制在所有图层最上方
@@ -57,27 +55,30 @@ public class NekoAggregatorScreen extends AbstractContainerScreen<NekoAggregator
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+    public void extractBackground(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        // 26.1.2：界面贴图应在 extractBackground 中绘制（同原版 CraftingScreen）
+        super.extractBackground(guiGraphics, mouseX, mouseY, partialTick);
+        guiGraphics.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, CRAFTING_TABLE_LOCATION,
+                this.leftPos, this.topPos, 0.0F, 0.0F, this.imageWidth, this.imageHeight, 256, 256);
+    }
 
-        // 1. 渲染工作台纹理
+    @Override
+    public void extractContents(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        // 26.1.2：extractContents 负责标题标签 + 全部槽位物品（含玩家背包），必须先调 super
+        super.extractContents(guiGraphics, mouseX, mouseY, partialTick);
+
+        // 叠加自定义内容：能量条与消耗文本
         int x = this.leftPos;
         int y = this.topPos;
-        guiGraphics.blit(CRAFTING_TABLE_LOCATION, x, y, 0, 0, this.imageWidth, this.imageHeight);
-
-        // 2. 获取数据
-        float currentEnergy = this.menu.player.getNekoEnergy();
-        float maxEnergy = this.menu.player.getMaxNekoEnergy();
+        float currentEnergy = ((INeko) this.menu.player).getNekoEnergy();
+        float maxEnergy = ((INeko) this.menu.player).getMaxNekoEnergy();
         int requiredEnergy = getClientSideRequiredEnergy();
 
-        // 3. 渲染能量条 (渐变)
         renderEnergyBar(guiGraphics, x + 158, y + 17, 8, 54, currentEnergy, maxEnergy);
-
-        // 4. 渲染数值文本 (-Cost 或 +Gain) 和警告
         renderCostText(guiGraphics, x, y, currentEnergy, requiredEnergy);
     }
 
-    private void renderEnergyBar(GuiGraphics guiGraphics, int x, int y, int width, int height, float current, float max) {
+    private void renderEnergyBar(GuiGraphicsExtractor guiGraphics, int x, int y, int width, int height, float current, float max) {
         // 绘制背景 (半透明黑色)
         guiGraphics.fill(x, y, x + width, y + height, 0x80000000);
 
@@ -112,10 +113,10 @@ public class NekoAggregatorScreen extends AbstractContainerScreen<NekoAggregator
         }
 
         // 绘制边框
-        guiGraphics.renderOutline(x - 1, y - 1, width + 2, height + 2, 0xFF000000);
+        guiGraphics.outline(x - 1, y - 1, width + 2, height + 2, 0xFF000000);
     }
 
-    private void renderCostText(GuiGraphics guiGraphics, int x, int y, float currentEnergy, int requiredEnergy) {
+    private void renderCostText(GuiGraphicsExtractor guiGraphics, int x, int y, float currentEnergy, int requiredEnergy) {
         // 只有当配方需要能量(>0) 或者 产生能量(<0) 时才显示
         // 如果是0，通常也可以显示 +0
 
@@ -144,24 +145,25 @@ public class NekoAggregatorScreen extends AbstractContainerScreen<NekoAggregator
         int textX = x + 158 + 10;
         int textY = y + 17;
 
-        PoseStack poseStack = guiGraphics.pose();
-        poseStack.pushPose();
-        poseStack.translate(textX, textY, 200); // z=200 确保在最上层
-        poseStack.scale(0.7f, 0.7f, 1.0f);
-        guiGraphics.drawString(this.font, text, 0, 0, color, true);
-        poseStack.popPose();
+        // 26.x GUI：姿态栈为 Matrix3x2fStack（无 z 轴），缩放 + 平移组合实现同样的缩小文字
+        var pose = guiGraphics.pose();
+        pose.pushMatrix();
+        pose.translate(textX, textY);
+        pose.scale(0.7f, 0.7f);
+        guiGraphics.text(this.font, text, 0, 0, color, true);
+        pose.popMatrix();
 
         // 如果能量不足，在箭头处画一个叹号
         if (isNotEnough) {
             int arrowX = x + 90;
             int arrowY = y + 35;
-            guiGraphics.drawString(this.font, "!", arrowX + 5, arrowY - 5, WARNING_COLOR, false);
+            guiGraphics.text(this.font, "!", arrowX + 5, arrowY - 5, WARNING_COLOR, false);
         }
     }
 
-    private void renderEnergyTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        float current = this.menu.player.getNekoEnergy();
-        float max = this.menu.player.getMaxNekoEnergy();
+    private void renderEnergyTooltip(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
+        float current = ((INeko) this.menu.player).getNekoEnergy();
+        float max = ((INeko) this.menu.player).getMaxNekoEnergy();
         int required = getClientSideRequiredEnergy();
 
         List<Component> tooltip = new ArrayList<>();
@@ -174,23 +176,12 @@ public class NekoAggregatorScreen extends AbstractContainerScreen<NekoAggregator
             tooltip.add(Component.literal("+" + Math.abs(required)).withStyle(s -> s.withColor(0xFF55FF55)));
         }
 
-        guiGraphics.renderComponentTooltip(this.font, tooltip, mouseX, mouseY);
+        guiGraphics.setComponentTooltipForNextFrame(this.font, tooltip, mouseX, mouseY);
     }
 
     private int getClientSideRequiredEnergy() {
-        if (this.minecraft == null || this.minecraft.level == null) return 0;
-
-        List<ItemStack> inputs = new ArrayList<>();
-        for (int i = 0; i < 9; i++) {
-            inputs.add(this.menu.getSlot(i).getItem());
-        }
-
-        NekoAggregatorInput input = NekoAggregatorInput.of(3, 3, inputs, 0);
-
-        Optional<RecipeHolder<NekoAggregatorRecipe>> recipe = this.minecraft.level.getRecipeManager()
-                .getRecipeFor(ToNekoRecipes.NEKO_AGGREGATOR, input, this.minecraft.level);
-
-        // 使用 map 获取值，如果是 null (没配方) 默认为 0
-        return recipe.map(holder -> holder.value().energy).orElse(0d).intValue();
+        // 26.1.2 客户端不再持有完整配方表（level.recipeAccess() 返回 ClientRecipeContainer），
+        // 所需能量由服务端在 updateResult 中写入容器数据槽并自动同步
+        return this.menu.getRequiredEnergy();
     }
 }

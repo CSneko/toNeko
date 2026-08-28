@@ -1,4 +1,5 @@
 package org.cneko.toneko.common.mod.abilities;
+import org.cneko.toneko.common.mod.entities.INeko;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -26,15 +27,13 @@ public class ClimbWallHandler {
     private static final double ENERGY_PER_TICK_CLING = 0.1;
 
     public static void startClimbing(ServerPlayer player, float verticalInput) {
-        if (!player.isNeko()) return;
-        if (player.getNekoEnergy() <= 0) {
-            player.displayClientMessage(
-                    Component.translatable("messages.toneko.climb.no_energy"), true);
+        if (!((INeko) player).isNeko()) return;
+        if (((INeko) player).getNekoEnergy() <= 0) {
+            player.sendOverlayMessage(Component.translatable("messages.toneko.climb.no_energy"));
             return;
         }
         if (!isAgainstWall(player)) {
-            player.displayClientMessage(
-                    Component.translatable("messages.toneko.climb.no_wall"), true);
+            player.sendOverlayMessage(Component.translatable("messages.toneko.climb.no_wall"));
             return;
         }
         UUID uuid = player.getUUID();
@@ -74,14 +73,13 @@ public class ClimbWallHandler {
                 verticalInputs.remove(uuid);
                 continue;
             }
-            if (!player.isNeko()) {
+            if (!((INeko) player).isNeko()) {
                 iter.remove();
                 verticalInputs.remove(uuid);
                 continue;
             }
-            if (player.getNekoEnergy() <= 0) {
-                player.displayClientMessage(
-                        Component.translatable("messages.toneko.climb.no_energy"), true);
+            if (((INeko) player).getNekoEnergy() <= 0) {
+                player.sendOverlayMessage(Component.translatable("messages.toneko.climb.no_energy"));
                 iter.remove();
                 verticalInputs.remove(uuid);
                 continue;
@@ -149,6 +147,6 @@ public class ClimbWallHandler {
         } else {
             energyCost = ENERGY_PER_TICK_CLING;
         }
-        player.setNekoEnergy((float) Math.max(0, player.getNekoEnergy() - energyCost));
+        ((INeko) player).setNekoEnergy((float) Math.max(0, ((INeko) player).getNekoEnergy() - energyCost));
     }
 }

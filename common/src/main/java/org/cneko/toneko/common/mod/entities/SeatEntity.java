@@ -78,7 +78,7 @@ public class SeatEntity extends Entity {
     public void tick() {
         super.tick();
 
-        if (!this.level().isClientSide) {
+        if (!this.level().isClientSide()) {
             if (this.getPassengers().isEmpty()) {
                 this.discard();
                 return;
@@ -135,8 +135,7 @@ public class SeatEntity extends Entity {
                     false, true));
             player.addEffect(new MobEffectInstance(MobEffects.LUCK, 300, 0,
                     false, true));
-            player.displayClientMessage(
-                    Component.translatable("block.toneko.sheng_deng.buff"), true);
+            player.sendOverlayMessage(Component.translatable("block.toneko.sheng_deng.buff"));
         }
     }
 
@@ -158,8 +157,7 @@ public class SeatEntity extends Entity {
                 player.setTicksFrozen(Math.min(player.getTicksFrozen() + 3,
                         player.getTicksRequiredToFreeze() + 20));
                 if (sitTicks % 60 == 0) {
-                    player.displayClientMessage(
-                            Component.translatable("block.toneko.sheng_deng.cold"), true);
+                    player.sendOverlayMessage(Component.translatable("block.toneko.sheng_deng.cold"));
                 }
             }
         }
@@ -167,9 +165,8 @@ public class SeatEntity extends Entity {
         // 🔥 夏天烫手：温度 >= 1.5（沙漠/恶地/下界）
         if (temperature >= 1.5f) {
             if (sitTicks > 60 && sitTicks % 80 == 0) {
-                player.displayClientMessage(
-                        Component.translatable("block.toneko.sheng_deng.hot"), true);
-                player.hurt(player.damageSources().onFire(), 0.5f); // 象征性烫伤
+                player.sendOverlayMessage(Component.translatable("block.toneko.sheng_deng.hot"));
+                org.cneko.toneko.common.mod.util.EntityHurtUtil.hurt(player, player.damageSources().onFire(), 0.5f); // 象征性烫伤
                 level().playSound(null, this.blockPosition(),
                         SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.3f, 2.0f);
             }
@@ -238,7 +235,7 @@ public class SeatEntity extends Entity {
         if (!safe) {
             // 摔伤
             float damage = 0.5f + (float) height * 0.5f;
-            player.hurt(player.damageSources().fall(), damage);
+            org.cneko.toneko.common.mod.util.EntityHurtUtil.hurt(player, player.damageSources().fall(), damage);
 
             // 被凳子掀翻击退，越高飞得越远
             double strength = 0.4 + height * 0.15;
@@ -257,8 +254,7 @@ public class SeatEntity extends Entity {
         }
         this.level().playSound(null, this.blockPosition(), SoundEvents.BAMBOO_WOOD_BREAK,
                 SoundSource.BLOCKS, 1.0f, 0.8f);
-        player.displayClientMessage(
-                Component.translatable("block.toneko.sheng_deng.tumble"), true);
+        player.sendOverlayMessage(Component.translatable("block.toneko.sheng_deng.tumble"));
     }
 
     // ==================== 雨水洗凳粒子 ====================
@@ -277,7 +273,7 @@ public class SeatEntity extends Entity {
     // ==================== 下马处理 ====================
     @Override
     public void remove(@NotNull RemovalReason reason) {
-        if (!this.level().isClientSide) {
+        if (!this.level().isClientSide()) {
             handleDismountEffects();
         }
         super.remove(reason);
@@ -291,16 +287,14 @@ public class SeatEntity extends Entity {
 
         // 🦵 腿麻了：坐 >30 秒站起 → 缓慢 II 3 秒
         if (sitTicks > 600) {
-            player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,
+            player.addEffect(new MobEffectInstance(MobEffects.SLOWNESS,
                     60, 1, false, false, true));
-            player.displayClientMessage(
-                    Component.translatable("block.toneko.sheng_deng.numb"), true);
+            player.sendOverlayMessage(Component.translatable("block.toneko.sheng_deng.numb"));
         }
 
         // 省凳印彩蛋
         if (sitTicks > 600) {
-            player.displayClientMessage(
-                    Component.translatable("block.toneko.sheng_deng.imprint"), false);
+            player.sendSystemMessage(Component.translatable("block.toneko.sheng_deng.imprint"));
         }
 
         // 离开音效
@@ -310,9 +304,16 @@ public class SeatEntity extends Entity {
 
     // ==================== 基础方法 ====================
     @Override
-    protected void readAdditionalSaveData(@NotNull CompoundTag tag) {}
+    public boolean hurtServer(net.minecraft.server.level.ServerLevel level, @NotNull net.minecraft.world.damagesource.DamageSource source, float amount) {
+        // 坐骑实体无生命值，不接收任何伤害
+        return false;
+    }
+
     @Override
-    protected void addAdditionalSaveData(@NotNull CompoundTag tag) {}
+    protected void readAdditionalSaveData(net.minecraft.world.level.storage.ValueInput in) {}
+
+    @Override
+    protected void addAdditionalSaveData(net.minecraft.world.level.storage.ValueOutput out) {}
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {}
     @Override
@@ -333,7 +334,7 @@ public class SeatEntity extends Entity {
 
     /** 在方块上方生成座椅并让玩家坐上去 */
     public static void sitOnBlock(Level level, BlockPos pos, Player player) {
-        if (level.isClientSide) return;
+        if (level.isClientSide()) return;
         EntityType<?> seatType = ToNekoEntities.SEAT_ENTITY;
         if (seatType == null) return;
 
@@ -347,7 +348,7 @@ public class SeatEntity extends Entity {
         seat.setPos(top.getX() + 0.5, topY, top.getZ() + 0.5);
         seat.seatCell = top.immutable();
         level.addFreshEntity(seat);
-        player.startRiding(seat, true);
+        player.startRiding(seat, true, true);
         // 显式设置骑乘位置：1.21.1 的 positionRider 只在 rideTick 里被调用，
         // 而 rideTick 对外部 tick 流程不可靠，不显式 setPos 的话玩家会停在默认高度。
         player.setPos(top.getX() + 0.5, topY + RIDER_OFFSET, top.getZ() + 0.5);

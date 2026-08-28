@@ -115,16 +115,16 @@ public class NekoCommand {
 
     private static int removeNicknameCommand(CommandContext<CommandSourceStack> context) {
         ServerPlayer neko = context.getSource().getPlayer();
-        neko.setNickName("");
+        ((INeko) neko).setNickName("");
         return 1;
     }
 
     private static void handleRiding(Entity entity, LivingEntity target, boolean isRideHead) {
         if (target != null && target != entity) {
             if (isRideHead) {
-                target.startRiding(entity, true);
+                target.startRiding(entity, true, true);
             } else {
-                entity.startRiding(target, true);
+                entity.startRiding(target, true, true);
             }
         }
 
@@ -198,7 +198,7 @@ public class NekoCommand {
 
     public static int loreCommand(CommandContext<CommandSourceStack> context) {
         ServerPlayer player = context.getSource().getPlayer();
-        if (!player.isNeko()){
+        if (!((INeko) player).isNeko()){
             context.getSource().getPlayer().sendSystemMessage(translatable("command.neko.not_neko"));
         }else {
             // 获取玩家手中的物品
@@ -218,7 +218,7 @@ public class NekoCommand {
     }
 
     public static int levelCommand(CommandContext<CommandSourceStack> context) {
-        INeko neko = context.getSource().getPlayer();
+        INeko neko = (INeko) context.getSource().getPlayer();
         if(neko.isNeko()){
             double level = neko.getNekoLevel();
             // 保留小数点后两位
@@ -232,7 +232,7 @@ public class NekoCommand {
 
     public static int guiCommand(CommandContext<CommandSourceStack> context) {
         ServerPlayer player = context.getSource().getPlayer();
-        if (!player.isNeko()) {
+        if (!((INeko) player).isNeko()) {
             player.sendSystemMessage(translatable("command.neko.not_neko"));
             return 1;
         }
@@ -244,14 +244,14 @@ public class NekoCommand {
         ServerPlayer neko = context.getSource().getPlayer();
         String nickname = StringArgumentType.getString(context, "nickname");
         // 设置昵称
-        neko.setNickName(nickname);
+        ((INeko) neko).setNickName(nickname);
         neko.sendSystemMessage(translatable("command.neko.nickname.success", nickname));
         return 1;
     }
 
 
     public static int speedCommand(CommandContext<CommandSourceStack> context) {
-        return giveEffect(context, MobEffects.MOVEMENT_SPEED);
+        return giveEffect(context, MobEffects.SPEED);
     }
 
     public static int visionCommand(CommandContext<CommandSourceStack> context) {
@@ -259,24 +259,24 @@ public class NekoCommand {
     }
 
     public static int jumpCommand(CommandContext<CommandSourceStack> context) {
-        return giveEffect(context, MobEffects.JUMP);
+        return giveEffect(context, MobEffects.JUMP_BOOST);
     }
 
     public static int giveEffect(CommandContext<CommandSourceStack> context, Holder<MobEffect> effect) {
         ServerPlayer player = context.getSource().getPlayer();
-        if(!player.isNeko()){
+        if(!((INeko) player).isNeko()){
             player.sendSystemMessage(translatable("command.neko.not_neko"));
             return 1;
-        }else if (player.getNekoEnergy()<100){
+        }else if (((INeko) player).getNekoEnergy()<100){
             player.sendSystemMessage(translatable("command.neko.effect.not_enough_energy"));
             return 1;
         }
         // 消耗能量
-        player.setNekoEnergy(player.getNekoEnergy()-100);
+        ((INeko) player).setNekoEnergy(((INeko) player).getNekoEnergy()-100);
         // 猫猫等级
         double nekoDegree = player.getAttributeValue(ToNekoAttributes.NEKO_DEGREE);
         // 获取玩家等级来计算效果
-        double level = player.getNekoLevel();
+        double level = ((INeko) player).getNekoLevel();
         // (等级+猫猫等级)开方/2
         int effectLevel = (int) (Math.sqrt(level+nekoDegree)/2.00);
 
@@ -311,7 +311,7 @@ public class NekoCommand {
 
         AIUtil.sendMessage(neko.getAIStorageId(), player.getUUID(), neko.generateAIPrompt(player), message, response -> {
             // AI回调在后台线程执行，切回服务器主线程再发消息
-            player.getServer().execute(() -> {
+            player.level().getServer().execute(() -> {
                 // 解析并执行 AI 动作（移动/给予物品），回复走统一显示包（客户端按配置显示）
                 String displayText = NekoActionExecutor.process(neko, player, response.getResponse());
                 Messaging.sendNekoChat(player, neko, displayText);

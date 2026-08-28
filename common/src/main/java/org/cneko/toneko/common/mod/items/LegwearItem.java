@@ -1,4 +1,6 @@
 package org.cneko.toneko.common.mod.items;
+import org.cneko.toneko.common.mod.util.NekoIds;
+import org.jetbrains.annotations.NotNull;
 
 import net.fabricmc.fabric.api.item.v1.EnchantingContext;
 import net.minecraft.client.model.HumanoidModel;
@@ -10,14 +12,12 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.decoration.ArmorStand;
+
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.equipment.ArmorMaterial;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -27,7 +27,6 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import org.cneko.toneko.common.mod.client.items.LegwearItemRenderer;
 import org.cneko.toneko.common.mod.client.items.LegwearRenderer;
 import org.cneko.toneko.common.mod.codecs.Scent;
@@ -39,17 +38,17 @@ import org.cneko.toneko.common.mod.misc.WetnessUtil;
 import org.cneko.toneko.common.mod.misc.ZettaiRyouiki;
 import org.cneko.toneko.common.util.ConfigUtil;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoItem;
-import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
-import software.bernie.geckolib.animatable.client.GeoRenderProvider;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.PlayState;
-import software.bernie.geckolib.constant.DataTickets;
-import software.bernie.geckolib.constant.DefaultAnimations;
-import software.bernie.geckolib.renderer.GeoArmorRenderer;
-import software.bernie.geckolib.util.GeckoLibUtil;
+import com.geckolib.animatable.GeoItem;
+import com.geckolib.animatable.SingletonGeoAnimatable;
+import com.geckolib.animatable.client.GeoRenderProvider;
+import com.geckolib.animatable.instance.AnimatableInstanceCache;
+import com.geckolib.animatable.manager.AnimatableManager;
+import com.geckolib.animation.AnimationController;
+
+
+import com.geckolib.constant.DefaultAnimations;
+import com.geckolib.renderer.GeoArmorRenderer;
+import com.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -59,11 +58,13 @@ import java.util.function.Consumer;
  * 与 NekoArmor 相互独立：这是独立的类体系，未来裙装将作为
  * 本类的兄弟实现接入，绝对领域等级由 {@link ZettaiRyouiki} 统一计算。
  */
-public abstract class LegwearItem<N extends Item & GeoItem> extends ArmorItem implements GeoItem, Scentable {
+public abstract class LegwearItem<N extends Item & GeoItem> extends Item implements GeoItem, Scentable {
     public final AnimatableInstanceCache cache;
 
-    public LegwearItem(int defaultDenier, float defaultLength, Holder<ArmorMaterial> material) {
-        super(material, Type.LEGGINGS, new Properties().stacksTo(1)
+    public LegwearItem(String idPath, int defaultDenier, float defaultLength, ArmorMaterial material) {
+        super(NekoIds.itemProps(idPath).stacksTo(1)
+                // 26.x：ArmorItem 移除，腿部服饰改用 Properties.humanArmor 装配为护腿
+                .humanoidArmor(material, net.minecraft.world.item.equipment.ArmorType.LEGGINGS)
                 .component(ToNekoComponents.LEGWEAR_DENIER_COMPONENT, defaultDenier)
                 .component(ToNekoComponents.LEGWEAR_LENGTH_COMPONENT, defaultLength)
                 .component(ToNekoComponents.LEGWEAR_SCENT_COMPONENT, Scent.EMPTY)
@@ -143,18 +144,9 @@ public abstract class LegwearItem<N extends Item & GeoItem> extends ArmorItem im
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, 40, state -> {
-            Entity e = state.getData(DataTickets.ENTITY);
-            state.getController().setAnimation(DefaultAnimations.IDLE);
-            if (!(e instanceof LivingEntity entity)) return PlayState.STOP;
-            if (entity instanceof ArmorStand)
-                return PlayState.CONTINUE;
-            for (ItemStack stack : entity.getArmorSlots()) {
-                // 只要有任意一件穿了就播放
-                if (!stack.isEmpty())
-                    return PlayState.CONTINUE;
-            }
-            return PlayState.STOP;
+        controllers.add(new AnimationController<>("legwear_idle", 40, state -> {
+            // 26.x/GeckoLib 5.5：与 NekoArmor 相同理由，恒定 idle；穿戴显隐由渲染层处理
+            return state.setAndContinue(DefaultAnimations.IDLE);
         }));
     }
 
@@ -166,19 +158,19 @@ public abstract class LegwearItem<N extends Item & GeoItem> extends ArmorItem im
     @Override
     public void createGeoRenderer(Consumer<GeoRenderProvider> consumer) {
         consumer.accept(new GeoRenderProvider() {
-            private GeoArmorRenderer<N> renderer;
+            private com.geckolib.renderer.GeoArmorRenderer<?, ?> renderer;
             private LegwearItemRenderer itemRenderer;
 
             @Override
-            public <T extends LivingEntity> HumanoidModel<?> getGeoArmorRenderer(@Nullable T livingEntity, ItemStack itemStack, @Nullable EquipmentSlot equipmentSlot, @Nullable HumanoidModel<T> original) {
+            public com.geckolib.renderer.GeoArmorRenderer<?, ?> getGeoArmorRenderer(ItemStack itemStack, EquipmentSlot equipmentSlot) {
                 if (this.renderer == null) // 懒加载，避免与其他 mod 不兼容
-                    this.renderer = (GeoArmorRenderer<N>) LegwearItem.this.getRenderer();
+                    this.renderer = (com.geckolib.renderer.GeoArmorRenderer<?, ?>) LegwearItem.this.getRenderer();
 
                 return this.renderer;
             }
 
             @Override
-            public BlockEntityWithoutLevelRenderer getGeoItemRenderer() {
+            public LegwearItemRenderer getGeoItemRenderer() {
                 if (this.itemRenderer == null)
                     this.itemRenderer = new LegwearItemRenderer();
 
@@ -188,16 +180,6 @@ public abstract class LegwearItem<N extends Item & GeoItem> extends ArmorItem im
     }
 
     // === 附魔 ===
-
-    @Override
-    public boolean isEnchantable(ItemStack stack) {
-        return true;
-    }
-
-    @Override
-    public int getEnchantmentValue() {
-        return 15;
-    }
 
     @Override
     public boolean canBeEnchantedWith(ItemStack stack, Holder<Enchantment> enchantment, EnchantingContext context) {
@@ -212,53 +194,57 @@ public abstract class LegwearItem<N extends Item & GeoItem> extends ArmorItem im
 
     // === tooltip ===
 
-    @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        super.appendHoverText(stack, context, tooltip, flag);
-        tooltip.add(Component.translatable("item.toneko.legwear.tip.denier", getDenier(stack)));
-        tooltip.add(Component.translatable("item.toneko.legwear.tip.length", Math.round(getStockingTopHeight(stack) * 100)));
+        @Override
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull net.minecraft.world.item.component.TooltipDisplay display, @NotNull java.util.function.Consumer<Component> adder, @NotNull TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, display, adder, tooltipFlag);
+        // 兼容旧实现：先收集到 List，再逐条发送
+        java.util.List<Component> tooltips = new java.util.ArrayList<>();
+        tooltips.add(Component.translatable("item.toneko.legwear.tip.denier", getDenier(stack)));
+        tooltips.add(Component.translatable("item.toneko.legwear.tip.length", Math.round(getStockingTopHeight(stack) * 100)));
         String grade = ZettaiRyouiki.compute(stack);
         Component gradeText = Component.translatable("item.toneko.legwear.zettai_ryouiki." + grade);
         if ("full".equals(grade)) {
             // 全覆盖：不显示百分比
-            tooltip.add(Component.translatable("item.toneko.legwear.tip.zettai_ryouiki_full", gradeText));
+            tooltips.add(Component.translatable("item.toneko.legwear.tip.zettai_ryouiki_full", gradeText));
         } else {
             // 连续百分比 + 等级（百分比随袜口高度无级变化）
-            tooltip.add(Component.translatable("item.toneko.legwear.tip.zettai_ryouiki",
+            tooltips.add(Component.translatable("item.toneko.legwear.tip.zettai_ryouiki",
                     Math.round(ZettaiRyouiki.computeTerritory(stack) * 100), gradeText));
         }
-        tooltip.add(Component.translatable("item.toneko.legwear.tip.dyeable"));
+        tooltips.add(Component.translatable("item.toneko.legwear.tip.dyeable"));
         String maker = getMaker(stack);
         if (maker != null) {
-            tooltip.add(Component.translatable("item.toneko.legwear.tip.maker", maker));
+            tooltips.add(Component.translatable("item.toneko.legwear.tip.maker", maker));
         }
         int scent = ScentUtil.getIntensity(stack);
-        tooltip.add(Component.translatable("item.toneko.legwear.tip.scent",
+        tooltips.add(Component.translatable("item.toneko.legwear.tip.scent",
                 Component.translatable("item.toneko.legwear.scent." + ScentUtil.grade(scent))));
         if (scent > 0) {
             String wearer = ScentUtil.getWearer(stack);
             if (wearer != null && !wearer.isEmpty()) {
-                tooltip.add(Component.translatable("item.toneko.legwear.tip.scent_wearer", wearer));
+                tooltips.add(Component.translatable("item.toneko.legwear.tip.scent_wearer", wearer));
             }
         }
         int wetness = WetnessUtil.get(stack);
         if (wetness > 0) {
-            tooltip.add(Component.translatable("item.toneko.legwear.tip.wetness",
+            tooltips.add(Component.translatable("item.toneko.legwear.tip.wetness",
                     Component.translatable("item.toneko.legwear.wetness." + WetnessUtil.grade(wetness))));
         }
+    
+        for (Component t : tooltips) adder.accept(t);
     }
 
     // === 手持闻 / 水缸洗 ===
 
     /** 潜行 + 右键：凑近闻（纯本地，零 token）；普通右键仍是穿袜子 */
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (isSniffing(player)) {
-            if (level.isClientSide) {
+            if (level.isClientSide()) {
                 doSniff(player, stack);
             }
-            return InteractionResultHolder.consume(stack);
+            return InteractionResult.CONSUME;
         }
         return super.use(level, player, hand);
     }
@@ -270,23 +256,23 @@ public abstract class LegwearItem<N extends Item & GeoItem> extends ArmorItem im
         Player player = context.getPlayer();
         // 潜行 + 右键：闻（无论点空气还是点方块，优先于穿/洗）
         if (player != null && isSniffing(player)) {
-            if (level.isClientSide) {
+            if (level.isClientSide()) {
                 doSniff(player, context.getItemInHand());
             }
-            return InteractionResult.sidedSuccess(level.isClientSide);
+            return level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER;
         }
 
         BlockPos pos = context.getClickedPos();
         BlockState state = level.getBlockState(pos);
         if (state.getBlock() instanceof LayeredCauldronBlock && state.getValue(LayeredCauldronBlock.LEVEL) > 0) {
-            if (!level.isClientSide) {
+            if (!level.isClientSide()) {
                 ItemStack stack = context.getItemInHand();
                 stack.set(ToNekoComponents.LEGWEAR_SCENT_COMPONENT, ScentUtil.wash(stack));
                 stack.set(ToNekoComponents.LEGWEAR_WET_COMPONENT, WetnessUtil.MAX_WETNESS);
                 LayeredCauldronBlock.lowerFillLevel(state, level, pos);
                 level.playSound(null, pos, SoundEvents.GENERIC_SPLASH, SoundSource.BLOCKS, 1.0f, 1.0f);
             }
-            return InteractionResult.sidedSuccess(level.isClientSide);
+            return level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER;
         }
         return super.useOn(context);
     }
@@ -307,7 +293,7 @@ public abstract class LegwearItem<N extends Item & GeoItem> extends ArmorItem im
             msg = Component.translatable("item.toneko.legwear.sniff." + ScentUtil.grade(intensity),
                     wearer == null || wearer.isEmpty() ? "???" : wearer);
         }
-        player.displayClientMessage(msg, true);
+        player.sendOverlayMessage(msg);
         if (intensity >= 60) {
             for (int i = 0; i < 5; i++) {
                 player.level().addParticle(ParticleTypes.HEART,
@@ -323,8 +309,8 @@ public abstract class LegwearItem<N extends Item & GeoItem> extends ArmorItem im
 
     public static class Pantyhose40DItem extends LegwearItem<Pantyhose40DItem> {
         public static final String ID = "legwear_pantyhose_40d";
-        public Pantyhose40DItem(Holder<ArmorMaterial> material) {
-            super(40, 1.0f, material);
+        public Pantyhose40DItem(ArmorMaterial material) {
+            super(ID, 40, 1.0f, material);
         }
 
         @Override
@@ -335,8 +321,8 @@ public abstract class LegwearItem<N extends Item & GeoItem> extends ArmorItem im
 
     public static class Pantyhose20DItem extends LegwearItem<Pantyhose20DItem> {
         public static final String ID = "legwear_pantyhose_20d";
-        public Pantyhose20DItem(Holder<ArmorMaterial> material) {
-            super(20, 1.0f, material);
+        public Pantyhose20DItem(ArmorMaterial material) {
+            super(ID, 20, 1.0f, material);
         }
 
         @Override
@@ -347,8 +333,8 @@ public abstract class LegwearItem<N extends Item & GeoItem> extends ArmorItem im
 
     public static class Pantyhose5DItem extends LegwearItem<Pantyhose5DItem> {
         public static final String ID = "legwear_pantyhose_5d";
-        public Pantyhose5DItem(Holder<ArmorMaterial> material) {
-            super(5, 1.0f, material);
+        public Pantyhose5DItem(ArmorMaterial material) {
+            super(ID, 5, 1.0f, material);
         }
 
         @Override
@@ -361,8 +347,8 @@ public abstract class LegwearItem<N extends Item & GeoItem> extends ArmorItem im
         public static final String ID = "legwear_over_knee";
         /** 过膝袜自然袜口高度（滑落回弹目标 / 提袜复位值） */
         public static final float NATURAL_TOP = 0.7f;
-        public OverKneeSockItem(Holder<ArmorMaterial> material) {
-            super(40, NATURAL_TOP, material);
+        public OverKneeSockItem(ArmorMaterial material) {
+            super(ID, 40, NATURAL_TOP, material);
         }
 
         @Override

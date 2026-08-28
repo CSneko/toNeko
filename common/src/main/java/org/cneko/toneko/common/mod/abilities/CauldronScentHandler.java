@@ -2,12 +2,13 @@ package org.cneko.toneko.common.mod.abilities;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.cauldron.CauldronInteraction;
+import net.minecraft.core.cauldron.CauldronInteractions;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.Items;
@@ -35,6 +36,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * 丝袜水缸：玩家穿着有气味的丝袜站在装满水的炼药锅里时，
  * 气味按当前浓度比例洗入水中（水质变质程度 0~100），同时丝袜气味被洗掉。
  * 用桶/玻璃瓶/火药/龙息/糖 可以分别舀出不同形态的变质水。
+ *
+ * <h2>26.x 迁移说明</h2>
+ * CauldronInteraction 现在挂载在 {@link CauldronInteractions} 的 {@link CauldronInteraction.Dispatcher} 上，
+ * map() 已被移除；{@code Dispatcher.put} 为包私有，已通过 toneko.accesswidener 开放。
  */
 public class CauldronScentHandler {
     private static final Map<UUID, Float> WASH_BUFFER = new ConcurrentHashMap<>();
@@ -98,7 +103,7 @@ public class CauldronScentHandler {
             }
 
             if (washed > 0) {
-                ServerLevel serverLevel = player.serverLevel();
+                ServerLevel serverLevel = ((ServerLevel) player.level());
                 CauldronSpoilageData data = CauldronSpoilageData.get(serverLevel);
                 data.setSpoilage(pos, data.getSpoilage(pos) + washed, player.getName().getString());
             }
@@ -111,10 +116,10 @@ public class CauldronScentHandler {
         cauldronInteractionsRegistered = true;
 
         // 空桶从水缸舀水：有变质记录时给变质水桶，否则走原版
-        CauldronInteraction vanillaScoop = CauldronInteraction.WATER.map().get(Items.BUCKET);
+        CauldronInteraction vanillaScoop = CauldronInteractions.WATER.get(new ItemStack(Items.BUCKET));
         if (vanillaScoop != null) {
-            CauldronInteraction.WATER.map().put(Items.BUCKET, (state, level, pos, player, hand, stack) -> {
-                if (level.isClientSide) {
+            CauldronInteractions.WATER.put(Items.BUCKET, (state, level, pos, player, hand, stack) -> {
+                if (level.isClientSide()) {
                     return vanillaScoop.interact(state, level, pos, player, hand, stack);
                 }
                 if (isFullWaterCauldron(state) && level instanceof ServerLevel serverLevel) {
@@ -125,7 +130,7 @@ public class CauldronScentHandler {
                         data.clearSpoilage(pos);
                         ItemStack filled = SpoiledWaterBucketItem.create(spoilage, wearer);
                         notifyCollected(player);
-                        return CauldronInteraction.fillBucket(state, level, pos, player, hand, stack,
+                        return CauldronInteractions.fillBucket(state, level, pos, player, hand, stack,
                                 filled,
                                 s -> s.getValue(LayeredCauldronBlock.LEVEL) == LayeredCauldronBlock.MAX_FILL_LEVEL,
                                 SoundEvents.BUCKET_FILL);
@@ -136,10 +141,10 @@ public class CauldronScentHandler {
         }
 
         // 玻璃瓶：舀出可饮用的变质水瓶
-        CauldronInteraction vanillaBottle = CauldronInteraction.WATER.map().get(Items.GLASS_BOTTLE);
+        CauldronInteraction vanillaBottle = CauldronInteractions.WATER.get(new ItemStack(Items.GLASS_BOTTLE));
         if (vanillaBottle != null) {
-            CauldronInteraction.WATER.map().put(Items.GLASS_BOTTLE, (state, level, pos, player, hand, stack) -> {
-                if (level.isClientSide) {
+            CauldronInteractions.WATER.put(Items.GLASS_BOTTLE, (state, level, pos, player, hand, stack) -> {
+                if (level.isClientSide()) {
                     return vanillaBottle.interact(state, level, pos, player, hand, stack);
                 }
                 if (isWaterCauldron(state) && level instanceof ServerLevel serverLevel) {
@@ -156,50 +161,18 @@ public class CauldronScentHandler {
         }
 
         // 火药：把变质水调成喷溅型
-        CauldronInteraction vanillaGunpowder = CauldronInteraction.WATER.map().get(Items.GUNPOWDER);
-        if (vanillaGunpowder != null) {
-            CauldronInteraction.WATER.map().put(Items.GUNPOWDER, (state, level, pos, player, hand, stack) -> {
-                if (level.isClientSide) {
-                    return vanillaGunpowder.interact(state, level, pos, player, hand, stack);
-                }
-                return mixCauldronWater(state, level, pos, player, hand, stack,
-                        ToNekoItems.SPOILED_WATER_SPLASH);
-            });
-        }
-
+        registerMix(Items.GUNPOWDER, ToNekoItems.SPOILED_WATER_SPLASH);
         // 龙息：把变质水调成滞留型
-        CauldronInteraction vanillaDragonBreath = CauldronInteraction.WATER.map().get(Items.DRAGON_BREATH);
-        if (vanillaDragonBreath != null) {
-            CauldronInteraction.WATER.map().put(Items.DRAGON_BREATH, (state, level, pos, player, hand, stack) -> {
-                if (level.isClientSide) {
-                    return vanillaDragonBreath.interact(state, level, pos, player, hand, stack);
-                }
-                return mixCauldronWater(state, level, pos, player, hand, stack,
-                        ToNekoItems.SPOILED_WATER_LINGERING);
-            });
-        }
-
+        registerMix(Items.DRAGON_BREATH, ToNekoItems.SPOILED_WATER_LINGERING);
         // 糖：把变质水调成气味香水
-        CauldronInteraction vanillaSugar = CauldronInteraction.WATER.map().get(Items.SUGAR);
-        if (vanillaSugar != null) {
-            CauldronInteraction.WATER.map().put(Items.SUGAR, (state, level, pos, player, hand, stack) -> {
-                if (level.isClientSide) {
-                    return vanillaSugar.interact(state, level, pos, player, hand, stack);
-                }
-                return mixCauldronWater(state, level, pos, player, hand, stack,
-                        ToNekoItems.SCENT_PERFUME);
-            });
-        }
+        registerMix(Items.SUGAR, ToNekoItems.SCENT_PERFUME);
 
         // 普通水桶倒入空缸：清掉残留的旧水质记录
-        CauldronInteraction vanillaFillWater = CauldronInteraction.EMPTY.map().get(Items.WATER_BUCKET);
+        CauldronInteraction vanillaFillWater = CauldronInteractions.EMPTY.get(new ItemStack(Items.WATER_BUCKET));
         if (vanillaFillWater != null) {
-            CauldronInteraction.EMPTY.map().put(Items.WATER_BUCKET, (state, level, pos, player, hand, stack) -> {
-                if (level.isClientSide) {
-                    return vanillaFillWater.interact(state, level, pos, player, hand, stack);
-                }
-                ItemInteractionResult result = vanillaFillWater.interact(state, level, pos, player, hand, stack);
-                if (level instanceof ServerLevel serverLevel) {
+            CauldronInteractions.EMPTY.put(Items.WATER_BUCKET, (state, level, pos, player, hand, stack) -> {
+                InteractionResult result = vanillaFillWater.interact(state, level, pos, player, hand, stack);
+                if (!level.isClientSide() && level instanceof ServerLevel serverLevel) {
                     CauldronSpoilageData.get(serverLevel).clearSpoilage(pos);
                 }
                 return result;
@@ -207,31 +180,31 @@ public class CauldronScentHandler {
         }
     }
 
-    /** 用玻璃瓶舀变质水，降低一格水位并替换手中物品。 */
-    private static ItemInteractionResult fillWithBottle(BlockState state, Level level, BlockPos pos,
-                                                        net.minecraft.world.entity.player.Player player,
-                                                        net.minecraft.world.InteractionHand hand,
-                                                        ItemStack input, ItemStack filled) {
-        if (!level.isClientSide) {
-            LayeredCauldronBlock.lowerFillLevel(state, level, pos);
-            player.setItemInHand(hand, ItemUtils.createFilledResult(input, player, filled));
-            level.playSound(null, pos, SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 1.0f, 1.0f);
-        }
-        return ItemInteractionResult.sidedSuccess(level.isClientSide);
+    /** 消耗品（火药/龙息/糖）→ 对应形态的变质水；无变质水时回退原版行为。 */
+    private static void registerMix(net.minecraft.world.item.Item item, net.minecraft.world.level.ItemLike output) {
+        CauldronInteraction vanilla = CauldronInteractions.WATER.get(new ItemStack(item));
+        if (vanilla == null) return;
+        CauldronInteractions.WATER.put(item, (state, level, pos, player, hand, stack) -> {
+            if (level.isClientSide()) {
+                return vanilla.interact(state, level, pos, player, hand, stack);
+            }
+            return mixCauldronWater(vanilla, state, level, pos, player, hand, stack, output);
+        });
     }
 
     /** 用消耗品（火药/龙息/糖）调制炼药锅里的变质水。 */
-    private static ItemInteractionResult mixCauldronWater(BlockState state, Level level, BlockPos pos,
-                                                          net.minecraft.world.entity.player.Player player,
-                                                          net.minecraft.world.InteractionHand hand,
-                                                          ItemStack input, net.minecraft.world.level.ItemLike output) {
-        if (level.isClientSide) return ItemInteractionResult.sidedSuccess(true);
+    private static InteractionResult mixCauldronWater(CauldronInteraction fallback, BlockState state, Level level, BlockPos pos,
+                                                      net.minecraft.world.entity.player.Player player,
+                                                      net.minecraft.world.InteractionHand hand,
+                                                      ItemStack input, net.minecraft.world.level.ItemLike output) {
         if (!isWaterCauldron(state) || !(level instanceof ServerLevel serverLevel)) {
-            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            return fallback.interact(state, level, pos, player, hand, input);
         }
         CauldronSpoilageData data = CauldronSpoilageData.get(serverLevel);
         int spoilage = data.getSpoilage(pos);
-        if (spoilage <= 0) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        if (spoilage <= 0) {
+            return fallback.interact(state, level, pos, player, hand, input);
+        }
 
         String wearer = data.getWearer(pos);
         ItemStack result = ScentedWaterUtil.create(output, spoilage, wearer);
@@ -247,7 +220,20 @@ public class CauldronScentHandler {
         LayeredCauldronBlock.lowerFillLevel(state, level, pos);
         level.playSound(null, pos, SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1.0f, 1.0f);
         notifyCollected(player);
-        return ItemInteractionResult.sidedSuccess(false);
+        return InteractionResult.SUCCESS_SERVER;
+    }
+
+    /** 用玻璃瓶舀变质水，降低一格水位并替换手中物品。 */
+    private static InteractionResult fillWithBottle(BlockState state, Level level, BlockPos pos,
+                                                    net.minecraft.world.entity.player.Player player,
+                                                    net.minecraft.world.InteractionHand hand,
+                                                    ItemStack input, ItemStack filled) {
+        if (!level.isClientSide()) {
+            LayeredCauldronBlock.lowerFillLevel(state, level, pos);
+            player.setItemInHand(hand, ItemUtils.createFilledResult(input, player, filled));
+            level.playSound(null, pos, SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 1.0f, 1.0f);
+        }
+        return level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER;
     }
 
     private static void notifyCollected(net.minecraft.world.entity.player.Player player) {

@@ -1,11 +1,12 @@
 package org.cneko.toneko.common.mod.advencements;
+import org.cneko.toneko.common.mod.entities.INeko;
 
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
+import net.minecraft.advancements.criterion.ContextAwarePredicate;
+import net.minecraft.advancements.criterion.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,7 +20,7 @@ public class NekoLevelTrigger extends SimpleCriterionTrigger<NekoLevelTrigger.Tr
     }
 
     public void trigger(ServerPlayer player) {
-        trigger(player, triggerInstance -> triggerInstance.matches(player.getNekoLevel()));
+        trigger(player, triggerInstance -> triggerInstance.matches(((INeko) player).getNekoLevel()));
     }
 
     public record TriggerInstance(Optional<ContextAwarePredicate> player, double level) implements SimpleCriterionTrigger.SimpleInstance {

@@ -2,7 +2,7 @@ package org.cneko.toneko.common.mod.client.screens;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
@@ -62,59 +62,59 @@ public class ToNekoManagementScreen extends Screen {
     }
 
     private void parseData(CompoundTag data) {
-        isNeko = data.getBoolean("isNeko");
+        isNeko = data.getBooleanOr("isNeko", false);
 
         pendingRequests.clear();
-        ListTag prList = data.getList("pendingRequests", Tag.TAG_COMPOUND);
+        ListTag prList = data.getListOrEmpty("pendingRequests");
         for (int i = 0; i < prList.size(); i++) {
-            CompoundTag t = prList.getCompound(i);
-            pendingRequests.add(new RequestEntry(t.getUUID("uuid"), t.getString("name")));
+            CompoundTag t = prList.getCompoundOrEmpty(i);
+            pendingRequests.add(new RequestEntry(org.cneko.toneko.common.mod.util.NbtBridge.readUuid(t, "uuid"), t.getStringOr("name", "")));
         }
 
         outgoingRequests.clear();
-        ListTag orList = data.getList("outgoingRequests", Tag.TAG_COMPOUND);
+        ListTag orList = data.getListOrEmpty("outgoingRequests");
         for (int i = 0; i < orList.size(); i++) {
-            CompoundTag t = orList.getCompound(i);
-            outgoingRequests.add(new RequestEntry(t.getUUID("uuid"), t.getString("name")));
+            CompoundTag t = orList.getCompoundOrEmpty(i);
+            outgoingRequests.add(new RequestEntry(org.cneko.toneko.common.mod.util.NbtBridge.readUuid(t, "uuid"), t.getStringOr("name", "")));
         }
 
         ownedNekos.clear();
-        ListTag onList = data.getList("ownedNekos", Tag.TAG_COMPOUND);
+        ListTag onList = data.getListOrEmpty("ownedNekos");
         for (int i = 0; i < onList.size(); i++) {
-            CompoundTag t = onList.getCompound(i);
-            UUID uuid = t.getUUID("uuid");
-            String name = t.getString("name");
-            int xp = t.getInt("xp");
+            CompoundTag t = onList.getCompoundOrEmpty(i);
+            UUID uuid = org.cneko.toneko.common.mod.util.NbtBridge.readUuid(t, "uuid");
+            String name = t.getStringOr("name", "");
+            int xp = t.getIntOr("xp", 0);
             List<String> aliases = new ArrayList<>();
-            ListTag aliasList = t.getList("aliases", Tag.TAG_STRING);
+            ListTag aliasList = t.getListOrEmpty("aliases");
             for (int j = 0; j < aliasList.size(); j++) {
-                aliases.add(aliasList.getString(j));
+                aliases.add(aliasList.getStringOr(j, ""));
             }
             List<BlockedWordEntry> blockedWords = new ArrayList<>();
-            ListTag bwList = t.getList("blockedWords", Tag.TAG_COMPOUND);
+            ListTag bwList = t.getListOrEmpty("blockedWords");
             for (int j = 0; j < bwList.size(); j++) {
-                CompoundTag bwTag = bwList.getCompound(j);
+                CompoundTag bwTag = bwList.getCompoundOrEmpty(j);
                 blockedWords.add(new BlockedWordEntry(
-                        bwTag.getString("block"),
-                        bwTag.getString("replace"),
-                        bwTag.getString("method")
+                        bwTag.getStringOr("block", ""),
+                        bwTag.getStringOr("replace", ""),
+                        bwTag.getStringOr("method", "")
                 ));
             }
             ownedNekos.add(new OwnedNekoEntry(uuid, name, xp, aliases, blockedWords));
         }
 
         onlineNekos.clear();
-        ListTag onlineList = data.getList("onlineNekos", Tag.TAG_COMPOUND);
+        ListTag onlineList = data.getListOrEmpty("onlineNekos");
         for (int i = 0; i < onlineList.size(); i++) {
-            CompoundTag t = onlineList.getCompound(i);
-            onlineNekos.add(new OnlineNekoEntry(t.getUUID("uuid"), t.getString("name")));
+            CompoundTag t = onlineList.getCompoundOrEmpty(i);
+            onlineNekos.add(new OnlineNekoEntry(org.cneko.toneko.common.mod.util.NbtBridge.readUuid(t, "uuid"), t.getStringOr("name", "")));
         }
 
         myOwners.clear();
-        ListTag moList = data.getList("myOwners", Tag.TAG_COMPOUND);
+        ListTag moList = data.getListOrEmpty("myOwners");
         for (int i = 0; i < moList.size(); i++) {
-            CompoundTag t = moList.getCompound(i);
-            myOwners.add(new OwnerEntry(t.getUUID("uuid"), t.getString("name"), t.getInt("xp")));
+            CompoundTag t = moList.getCompoundOrEmpty(i);
+            myOwners.add(new OwnerEntry(org.cneko.toneko.common.mod.util.NbtBridge.readUuid(t, "uuid"), t.getStringOr("name", ""), t.getIntOr("xp", 0)));
         }
     }
 
@@ -439,8 +439,8 @@ public class ToNekoManagementScreen extends Screen {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
-        super.render(guiGraphics, mouseX, mouseY, delta);
+    public void extractRenderState(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float delta) {
+        super.extractRenderState(guiGraphics, mouseX, mouseY, delta);
 
         // Tab indicator highlight
         String[] tabKeys = {
@@ -462,38 +462,38 @@ public class ToNekoManagementScreen extends Screen {
             case TAB_REQUESTS -> {
                 // Render static texts that aren't widgets
                 if (isNeko && pendingRequests.isEmpty()) {
-                    guiGraphics.drawString(this.font, translatable("screen.toneko.management.requests.no_pending"), left + 10, y + 24, 0xAAAAAA, false);
+                    guiGraphics.text(this.font, translatable("screen.toneko.management.requests.no_pending"), left + 10, y + 24, 0xFFAAAAAA, false);
                 }
                 if (onlineNekos.isEmpty()) {
                     int ry = y;
                     if (isNeko) ry += 24 + (pendingRequests.isEmpty() ? 0 : pendingRequests.size() * 24) + 8;
                     if (!outgoingRequests.isEmpty()) ry += 4 + 24 + outgoingRequests.size() * 22 + 8;
                     ry += 4 + 24;
-                    guiGraphics.drawString(this.font, translatable("screen.toneko.management.requests.no_online_nekos"), left + 10, ry, 0xFF5555, false);
+                    guiGraphics.text(this.font, translatable("screen.toneko.management.requests.no_online_nekos"), left + 10, ry, 0xFFFF5555, false);
                 }
             }
             case TAB_OWNED_NEKOS -> {
                 if (ownedNekos.isEmpty()) {
-                    guiGraphics.drawString(this.font, translatable("screen.toneko.management.nekos.no_nekos"), left, y, 0xFF5555, false);
+                    guiGraphics.text(this.font, translatable("screen.toneko.management.nekos.no_nekos"), left, y, 0xFFFF5555, false);
                 }
             }
             case TAB_BLOCKED -> {
                 if (ownedNekos.isEmpty()) {
-                    guiGraphics.drawString(this.font, translatable("screen.toneko.management.blocked.no_nekos"), left, y, 0xFF5555, false);
+                    guiGraphics.text(this.font, translatable("screen.toneko.management.blocked.no_nekos"), left, y, 0xFFFF5555, false);
                 } else if (selectedNekoIndex >= 0 && selectedNekoIndex < ownedNekos.size()) {
                     OwnedNekoEntry neko = ownedNekos.get(selectedNekoIndex);
                     if (neko.blockedWords.isEmpty()) {
                         int by = y + 24 + 24;
-                        guiGraphics.drawString(this.font, translatable("screen.toneko.management.blocked.no_words"), left + 10, by, 0xAAAAAA, false);
+                        guiGraphics.text(this.font, translatable("screen.toneko.management.blocked.no_words"), left + 10, by, 0xFFAAAAAA, false);
                     }
                 }
             }
             case TAB_INFO -> {
-                guiGraphics.drawString(this.font, translatable("screen.toneko.management.info.title"), left, y, 0x55FFFF, false);
+                guiGraphics.text(this.font, translatable("screen.toneko.management.info.title"), left, y, 0xFF55FFFF, false);
                 y += LINE_HEIGHT + 4;
                 String[] infoLines = translatable("command.toneko.help").getString().split("\n");
                 for (String line : infoLines) {
-                    guiGraphics.drawString(this.font, line, left, y, 0xCCCCCC, false);
+                    guiGraphics.text(this.font, line, left, y, 0xFFCCCCCC, false);
                     y += LINE_HEIGHT;
                 }
             }

@@ -1,4 +1,5 @@
 package org.cneko.toneko.common.mod.commands.arguments;
+import org.cneko.toneko.common.mod.entities.INeko;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
@@ -53,7 +54,7 @@ public class NekoArgument implements ArgumentType<ServerPlayer> {
     }
 
     private boolean checkNeko(Player player) {
-        return player.isNeko();
+        return ((INeko) player).isNeko();
     }
 
     /**
@@ -68,7 +69,7 @@ public class NekoArgument implements ArgumentType<ServerPlayer> {
         if (sender == null) {
             return null;
         }
-        if (!neko.hasOwner(sender.getUUID())) {
+        if (!((INeko) neko).hasOwner(sender.getUUID())) {
             sender.sendSystemMessage(translatable("command.toneko.player.notOwner", neko.getName().getString()));
             return null;
         }

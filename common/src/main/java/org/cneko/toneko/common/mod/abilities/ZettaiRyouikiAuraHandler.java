@@ -47,7 +47,7 @@ public class ZettaiRyouikiAuraHandler {
                             duration, amplifier, true, false)));
             // S 级彩蛋：给玩家自身小幅速度加成
             if (amplifier == 2) {
-                player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, duration, 0, true, false));
+                player.addEffect(new MobEffectInstance(MobEffects.SPEED, duration, 0, true, false));
             }
         }
     }

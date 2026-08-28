@@ -85,7 +85,7 @@ public class ConfigBuilder {
                 value = primitive.getAsString();
             }
         }
-        return Entry.of(value, get(key).comment, config.getString("url"));
+        return Entry.of(value, get(key).comment, config.getStringOr("url", ""));
     }
     public String getKey(Entry entry){
         for (String key : defaults.keySet()) {

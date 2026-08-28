@@ -4,12 +4,8 @@
     "GGC"
   ],
   "key": {
-    "G": {
-      "item": "minecraft:gunpowder"
-    },
-    "C": {
-      "item": "toneko:catnip"
-    }
+    "G": "minecraft:gunpowder",
+    "C": "toneko:catnip"
   },
   "result": {
     "id": "toneko:explosive_bomb",

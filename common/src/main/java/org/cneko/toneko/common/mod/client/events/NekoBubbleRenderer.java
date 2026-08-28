@@ -3,7 +3,7 @@ package org.cneko.toneko.common.mod.client.events;
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.ComponentRenderUtils;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.Entity;
@@ -81,7 +81,7 @@ public final class NekoBubbleRenderer {
      * 渲染所有气泡（HudRenderCallback 每帧调用，客户端主线程）。
      * 聊天屏幕打开时不渲染（屏幕内已有打字机 + 历史，避免双重显示）。
      */
-    public static void render(GuiGraphics g, DeltaTracker deltaTracker) {
+    public static void render(GuiGraphicsExtractor g, DeltaTracker deltaTracker) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.options.hideGui) return;
         if (mc.screen instanceof ChatWithNekoScreen) return;
@@ -124,7 +124,7 @@ public final class NekoBubbleRenderer {
             g.fill(x, y, x + b.width() + BUBBLE_PAD * 2, y + b.height() + BUBBLE_PAD * 2, bg);
             int ty = y + BUBBLE_PAD;
             for (FormattedCharSequence line : b.lines()) {
-                g.drawString(mc.font, line, x + BUBBLE_PAD, ty, textColor);
+                g.text(mc.font, line, x + BUBBLE_PAD, ty, textColor);
                 ty += mc.font.lineHeight;
             }
         }
@@ -140,7 +140,7 @@ public final class NekoBubbleRenderer {
         // 头顶上方一点（气泡锚点）
         Vec3 pos = entity.getPosition(partialTick)
                 .add(0, entity.getBbHeight() + 0.55, 0);
-        Vec3 camPos = camera.getPosition();
+        Vec3 camPos = camera.position();
         Vector3f rel = new Vector3f(
                 (float) (pos.x - camPos.x),
                 (float) (pos.y - camPos.y),

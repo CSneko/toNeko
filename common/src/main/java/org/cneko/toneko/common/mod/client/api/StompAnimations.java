@@ -1,17 +1,9 @@
 package org.cneko.toneko.common.mod.client.api;
 
-import dev.kosmx.playerAnim.api.firstPerson.FirstPersonMode;
-import dev.kosmx.playerAnim.api.layered.IActualAnimation;
-import dev.kosmx.playerAnim.api.layered.IAnimation;
-import dev.kosmx.playerAnim.api.layered.ModifierLayer;
-import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationAccess;
-import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationFactory;
-import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.resources.Identifier;
 
 import static org.cneko.toneko.common.mod.util.ResourceLocationUtil.toNekoLoc;
 
@@ -19,31 +11,30 @@ import static org.cneko.toneko.common.mod.util.ResourceLocationUtil.toNekoLoc;
  * 客户端「玩味的踩」动画管理：负责为每个玩家注册动画层，并在收到 S2C 包后播放踩踏动画。
  * <p>
  * 动画数据位于 assets/toneko/player_animations/stomp.animation.json。
+ *
+ * <h2>26.x 迁移说明</h2>
+ * PlayerAnimator（dev.kosmx.player-anim）目前没有 Minecraft 26.x（去混淆版本）的发布，
+ * 因此本类暂时退化为空实现：
+ * <ul>
+ *     <li>不再注册 PlayerAnimationFactory 动画层；</li>
+ *     <li>{@link #play} / {@link #playRelease} 直接返回 false，{@link #isStomping} 恒为 false；</li>
+ *     <li>对应的 {@code StompFirstPersonPassMixin} 已移除，
+ *         {@code StompFirstPersonRendererMixin} 依赖 {@link #isStomping} 判定，会自动跳过。</li>
+ * </ul>
+ * 待上游发布 26.x 版本后，从 git 历史（tag V1.9.6 前后）恢复原实现即可。
  */
 @Environment(EnvType.CLIENT)
 public class StompAnimations {
     /** 动画层在玩家关联数据中的键（不要与其它 mod 冲突）。 */
-    public static final ResourceLocation LAYER_ID = toNekoLoc("stomp_layer");
+    public static final Identifier LAYER_ID = toNekoLoc("stomp_layer");
     /** 踩踏循环动画资源键（namespace + 动画 name 字段）。 */
-    public static final ResourceLocation ANIM_ID = toNekoLoc("stomp");
+    public static final Identifier ANIM_ID = toNekoLoc("stomp");
     /** 踩踏收回动画资源键（松开按键时播放）。 */
-    public static final ResourceLocation RELEASE_ANIM_ID = toNekoLoc("stomp_release");
-
-    private static boolean initialized = false;
+    public static final Identifier RELEASE_ANIM_ID = toNekoLoc("stomp_release");
 
     /** 客户端初始化时调用一次：为所有玩家注册踩踏动画层。 */
     public static void init() {
-        if (initialized) return;
-        initialized = true;
-        PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
-                LAYER_ID,
-                42,
-                StompAnimations::createLayer
-        );
-    }
-
-    private static IAnimation createLayer(AbstractClientPlayer player) {
-        return new ModifierLayer<IAnimation>();
+        // PlayerAnimator 尚无 26.x 版本，暂不注册动画层。
     }
 
     /**
@@ -53,13 +44,7 @@ public class StompAnimations {
      * @return 是否成功开始播放
      */
     public static boolean play(AbstractClientPlayer player) {
-        if (player == null) return false;
-        var layer = getLayer(player);
-        if (layer == null) return false;
-        var anim = PlayerAnimationRegistry.getAnimation(ANIM_ID);
-        if (anim == null) return false;
-        layer.setAnimation(firstPerson(anim.playAnimation()));
-        return true;
+        return false;
     }
 
     /**
@@ -69,29 +54,12 @@ public class StompAnimations {
      * @return 是否成功开始播放
      */
     public static boolean playRelease(AbstractClientPlayer player) {
-        if (player == null) return false;
-        var layer = getLayer(player);
-        if (layer == null) return false;
-        var anim = PlayerAnimationRegistry.getAnimation(RELEASE_ANIM_ID);
-        if (anim == null) return false;
-        layer.setAnimation(firstPerson(anim.playAnimation()));
-        return true;
-    }
-
-    /**
-     * 让动画在第一人称下也可见：用第三人称模型渲染第一人称视角（能看到自己的腿踩下去）。
-     */
-    private static IAnimation firstPerson(IActualAnimation<?> anim) {
-        return anim.setFirstPersonMode(FirstPersonMode.THIRD_PERSON_MODEL);
+        return false;
     }
 
     /** 停止并清除指定玩家当前的踩踏动画。 */
     public static void stop(AbstractClientPlayer player) {
-        if (player == null) return;
-        var layer = getLayer(player);
-        if (layer != null) {
-            layer.setAnimation(null);
-        }
+        // no-op
     }
 
     /**
@@ -99,19 +67,6 @@ public class StompAnimations {
      * 供第一人称渲染 mixin 使用，用于在踩踏期间显示腿与腿部物品。
      */
     public static boolean isStomping(AbstractClientPlayer player) {
-        if (player == null) return false;
-        var layer = getLayer(player);
-        return layer != null && layer.getAnimation() != null && layer.getAnimation().isActive();
-    }
-
-    @Nullable
-    @SuppressWarnings("unchecked")
-    private static ModifierLayer<IAnimation> getLayer(AbstractClientPlayer player) {
-        var data = PlayerAnimationAccess.getPlayerAssociatedData(player);
-        var anim = data.get(LAYER_ID);
-        if (anim instanceof ModifierLayer<?> layer) {
-            return (ModifierLayer<IAnimation>) layer;
-        }
-        return null;
+        return false;
     }
 }

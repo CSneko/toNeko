@@ -1,5 +1,6 @@
 package org.cneko.toneko.common.mod.items;
 
+import org.cneko.toneko.common.mod.util.NekoIds;
 import lombok.Getter;
 import net.fabricmc.fabric.api.item.v1.EnchantingContext;
 import net.minecraft.core.BlockPos;
@@ -16,7 +17,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.BossEvent;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -80,23 +81,23 @@ public class NekoEnergyBurstItem extends Item {
         }
     }
 
-    public NekoEnergyBurstItem(float damage, float radius, float energyCost) {
-        super(new Properties().stacksTo(1).durability(200));
+    public NekoEnergyBurstItem(String idPath, float damage, float radius, float energyCost) {
+        super(NekoIds.itemProps(idPath).stacksTo(1).durability(200));
         this.damage = damage;
         this.radius = radius;
         this.energyCost = energyCost;
     }
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand usedHand) {
-        if (level.isClientSide) return super.use(level, player, usedHand);
-        if (!player.isNeko()){
-            player.displayClientMessage(Component.translatable(getBroadcastKeyPrefix() + ".not_neko"),true);
-            return InteractionResultHolder.fail(player.getItemInHand(usedHand));
+    public @NotNull InteractionResult use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand usedHand) {
+        if (level.isClientSide()) return super.use(level, player, usedHand);
+        if (!((INeko) player).isNeko()){
+            player.sendOverlayMessage(Component.translatable(getBroadcastKeyPrefix() + ".not_neko"));
+            return InteractionResult.FAIL;
         }
-        if (player.getNekoEnergy() < energyCost){
-            player.displayClientMessage(Component.translatable(getBroadcastKeyPrefix() + ".not_enough_energy"),true);
-            return InteractionResultHolder.fail(player.getItemInHand(usedHand));
+        if (((INeko) player).getNekoEnergy() < energyCost){
+            player.sendOverlayMessage(Component.translatable(getBroadcastKeyPrefix() + ".not_enough_energy"));
+            return InteractionResult.FAIL;
         }
 
         // 触发成就：哈气初心者
@@ -148,12 +149,12 @@ public class NekoEnergyBurstItem extends Item {
         }
 
         // ---- 计算最终数值（基础×等级×连击×附魔） ----
-        float finalDamage = (damage + damage * player.getNekoLevel() * 0.02f) * comboMultiplier * enchDamageMult;
-        float finalRadius = (radius + player.getNekoLevel() * 0.02f) * comboMultiplier * enchRadiusMult;
+        float finalDamage = (damage + damage * ((INeko) player).getNekoLevel() * 0.02f) * comboMultiplier * enchDamageMult;
+        float finalRadius = (radius + ((INeko) player).getNekoLevel() * 0.02f) * comboMultiplier * enchRadiusMult;
 
         // 扣除能量（附魔减免后）
         float actualEnergyCost = energyCost * enchEnergyMult;
-        player.setNekoEnergy(player.getNekoEnergy() - actualEnergyCost);
+        ((INeko) player).setNekoEnergy(((INeko) player).getNekoEnergy() - actualEnergyCost);
 
         // ---- 音效 ----
         playHissSound(level, player, effectiveCombo, isEasterEgg);
@@ -200,16 +201,16 @@ public class NekoEnergyBurstItem extends Item {
                     } else {
                         // ---- 原版附魔伤害加成 ----
                         float vanillaBonus = sharpnessBonus;
-                        if (smiteLevel > 0 && livingEntity.getType().is(EntityTypeTags.SENSITIVE_TO_SMITE)) {
+                        if (smiteLevel > 0 && ((net.minecraft.world.entity.EntityType<?>) livingEntity.getType()).builtInRegistryHolder().is(EntityTypeTags.SENSITIVE_TO_SMITE)) {
                             vanillaBonus += 2.5f * smiteLevel;
                         }
-                        if (baneLevel > 0 && livingEntity.getType().is(EntityTypeTags.SENSITIVE_TO_BANE_OF_ARTHROPODS)) {
+                        if (baneLevel > 0 && ((net.minecraft.world.entity.EntityType<?>) livingEntity.getType()).builtInRegistryHolder().is(EntityTypeTags.SENSITIVE_TO_BANE_OF_ARTHROPODS)) {
                             vanillaBonus += 2.5f * baneLevel;
                         }
 
                         // 哈气伤害（基础伤害 + 原版附魔加成）
                         float entityDamage = finalDamage + vanillaBonus;
-                        livingEntity.hurt(ToNekoDamageTypes.hissDamage(player), entityDamage);
+                        org.cneko.toneko.common.mod.util.EntityHurtUtil.hurt(livingEntity, ToNekoDamageTypes.hissDamage(player), entityDamage);
                         levelUp.updateAndGet(v -> v + 0.005f);
                         hitCount.incrementAndGet();
                         if (firstTargetName.get().isEmpty()) {
@@ -232,7 +233,7 @@ public class NekoEnergyBurstItem extends Item {
                                 int slowAmp = 4 + hissRootLevel; // I级=缓慢V(75%), II级=缓慢VI(87%)
                                 int slowDuration = 60 + hissRootLevel * 20; // I级=3秒, II级=4秒
                                 mob.addEffect(new MobEffectInstance(
-                                    MobEffects.MOVEMENT_SLOWDOWN, slowDuration, slowAmp));
+                                    MobEffects.SLOWNESS, slowDuration, slowAmp));
                             } else {
                                 // 正常击退（基础 + combo + 原版击退附魔）
                                 float kbPower = 2.5f + comboBonusLevel * 0.5f + knockbackLevel * 1.5f;
@@ -334,12 +335,12 @@ public class NekoEnergyBurstItem extends Item {
             usedHand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
 
         // ---- 冷却 ----
-        player.getCooldowns().addCooldown(this, 10);
+        player.getCooldowns().addCooldown(stack, 10);
 
         // ---- 升级 ----
-        org.cneko.toneko.common.mod.api.NekoLevelRegistry.combat().addRaw(player, levelUp.get());
+        org.cneko.toneko.common.mod.api.NekoLevelRegistry.combat().addRaw((INeko) player, levelUp.get());
 
-        return InteractionResultHolder.success(player.getItemInHand(usedHand));
+        return InteractionResult.SUCCESS;
     }
 
     // ========================
@@ -351,14 +352,14 @@ public class NekoEnergyBurstItem extends Item {
         if (isEasterEgg || combo >= 7) {
             // 终极哈气：低沉震撼（彩蛋 或 连击7+）
             level.playSound(null, player.blockPosition(),
-                SoundEvents.CAT_HISS,
+                SoundEvents.CAT_HISS_BABY.value(),
                 SoundSource.NEUTRAL, 1.2f, 0.55f);
         } else {
             // 普通/连击哈气：combo越高音调越尖锐刺耳
             float pitch = 1.1f + combo * 0.15f;
             float volume = Math.min(0.7f + combo * 0.05f, 1.1f);
             level.playSound(null, player.blockPosition(),
-                SoundEvents.CAT_HISS,
+                SoundEvents.CAT_HISS_BABY.value(),
                 SoundSource.NEUTRAL, volume, pitch);
         }
     }
@@ -676,7 +677,8 @@ public class NekoEnergyBurstItem extends Item {
 
         // 新建 BossBar
         ServerBossEvent bar = new ServerBossEvent(
-            Component.empty(),
+                player.getUUID(),
+                Component.empty(),
             BossEvent.BossBarColor.BLUE,
             BossEvent.BossBarOverlay.PROGRESS
         );
@@ -791,15 +793,7 @@ public class NekoEnergyBurstItem extends Item {
     // ========================
     //  附魔接口
     // ========================
-    @Override
-    public boolean isEnchantable(@NotNull ItemStack stack) {
-        return true;
-    }
 
-    @Override
-    public int getEnchantmentValue() {
-        return 15; // 中等附魔能力
-    }
 
     @Override
     public boolean canBeEnchantedWith(ItemStack stack, Holder<Enchantment> enchantment, EnchantingContext context) {
@@ -827,15 +821,18 @@ public class NekoEnergyBurstItem extends Item {
     // ========================
     //  Tooltip
     // ========================
-    @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context,
-                                 @NotNull List<Component> tooltipComponents, @NotNull TooltipFlag tooltipFlag) {
-        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
-        tooltipComponents.add(Component.translatable(getBroadcastKeyPrefix() + ".tip.flavor"));
-        tooltipComponents.add(Component.translatable(getBroadcastKeyPrefix() + ".tip"));
-        tooltipComponents.add(Component.translatable(getBroadcastKeyPrefix() + ".tip.damage", damage));
-        tooltipComponents.add(Component.translatable(getBroadcastKeyPrefix() + ".tip.radius", radius));
-        tooltipComponents.add(Component.translatable(getBroadcastKeyPrefix() + ".tip.energy_cost", energyCost));
-        tooltipComponents.add(Component.translatable(getBroadcastKeyPrefix() + ".tip.combo_hint"));
+        @Override
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull net.minecraft.world.item.component.TooltipDisplay display, @NotNull java.util.function.Consumer<Component> adder, @NotNull TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, display, adder, tooltipFlag);
+        // 兼容旧实现：先收集到 List，再逐条发送
+        java.util.List<Component> tooltips = new java.util.ArrayList<>();
+        tooltips.add(Component.translatable(getBroadcastKeyPrefix() + ".tip.flavor"));
+        tooltips.add(Component.translatable(getBroadcastKeyPrefix() + ".tip"));
+        tooltips.add(Component.translatable(getBroadcastKeyPrefix() + ".tip.damage", damage));
+        tooltips.add(Component.translatable(getBroadcastKeyPrefix() + ".tip.radius", radius));
+        tooltips.add(Component.translatable(getBroadcastKeyPrefix() + ".tip.energy_cost", energyCost));
+        tooltips.add(Component.translatable(getBroadcastKeyPrefix() + ".tip.combo_hint"));
+    
+        for (Component t : tooltips) adder.accept(t);
     }
 }

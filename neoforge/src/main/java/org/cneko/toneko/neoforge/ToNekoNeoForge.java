@@ -9,16 +9,17 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.common.NeoForge;
 import org.cneko.toneko.common.Bootstrap;
@@ -34,6 +35,7 @@ import org.cneko.toneko.common.mod.quirks.ToNekoQuirks;
 import org.cneko.toneko.common.mod.util.PermissionUtil;
 import org.cneko.toneko.common.util.LanguageUtil;
 import org.cneko.toneko.neoforge.entities.ToNekoEntities;
+import org.cneko.toneko.neoforge.items.NekoArmorCurios;
 import org.cneko.toneko.neoforge.items.ToNekoArmorMaterials;
 import org.cneko.toneko.neoforge.items.ToNekoBlockEntities;
 import org.cneko.toneko.neoforge.items.ToNekoBlocks;
@@ -49,7 +51,6 @@ public final class ToNekoNeoForge {
     public static final DeferredRegister<MobEffect> MOB_EFFECTS = DeferredRegister.create(Registries.MOB_EFFECT, MODID);
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
     public static final DeferredRegister<DataComponentType<?>> DATA_COMPONENTS = DeferredRegister.create(Registries.DATA_COMPONENT_TYPE,MODID);
-    public static final DeferredRegister<ArmorMaterial> ARMOR_MATERIALS = DeferredRegister.create(Registries.ARMOR_MATERIAL, MODID);
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
     public static final DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(Registries.ATTRIBUTE, MODID);
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(Registries.ENTITY_TYPE, MODID);
@@ -69,7 +70,6 @@ public final class ToNekoNeoForge {
         MOB_EFFECTS.register(bus);
         BLOCKS.register(bus);
         DATA_COMPONENTS.register(bus);
-        ARMOR_MATERIALS.register(bus);
         ATTRIBUTES.register(bus);
         ENTITY_TYPES.register(bus);
         CREATIVE_MODE_TABS.register(bus);
@@ -97,8 +97,9 @@ public final class ToNekoNeoForge {
         ToNekoEntities.init();
 
         // 注册遗传学数据包加载器（支持 /reload 热重载）
-        NeoForge.EVENT_BUS.addListener(AddReloadListenerEvent.class, event -> {
-            event.addListener(new GeneticsDataLoader());
+        // 26.1.2：AddReloadListenerEvent 改名 AddServerReloadListenersEvent，注册需带 id
+        NeoForge.EVENT_BUS.addListener(AddServerReloadListenersEvent.class, event -> {
+            event.addListener(net.minecraft.resources.Identifier.fromNamespaceAndPath(MODID, "genetics"), new GeneticsDataLoader());
         });
 
         // 注册网络数据包
@@ -113,6 +114,21 @@ public final class ToNekoNeoForge {
 
         // 注册箱子战利品注入
         ChestLootInjection.init();
+
+        // Curios 集成（可选依赖）：把猫耳/猫尾/猫爪注册为饰品行为
+        // （属性 +0.05 猫娘度等），客户端渲染在 ToNekoNeoForgeClient 中注册
+        if (ModList.get().isLoaded("curios")) {
+            bus.addListener(FMLCommonSetupEvent.class,
+                    event -> event.enqueueWork(NekoArmorCurios::init));
+        }
+
+        // 26.1.2：主动绑定模组物品的默认组件（配方解析需要，见 ComponentBinding 注释）
+        bus.addListener(FMLCommonSetupEvent.class,
+                event -> event.enqueueWork(org.cneko.toneko.common.mod.util.ComponentBinding::bindAll));
+
+        // 26.1.2：服务器启动完成后重载资源，使配方管理器在组件绑定完成后重新解析
+        bus.addListener(net.neoforged.neoforge.event.server.ServerStartedEvent.class,
+                event -> org.cneko.toneko.common.mod.util.ComponentBinding.reloadRecipesAfterStart(event.getServer()));
 
         // 注册权限
         PermissionUtil.init();

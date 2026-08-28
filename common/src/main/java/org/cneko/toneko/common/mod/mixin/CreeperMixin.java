@@ -19,7 +19,7 @@ public abstract class CreeperMixin {
     @Inject(method = "tick", at = @At("TAIL"))
     private void onTickTail(CallbackInfo ci) {
         Creeper self = (Creeper) (Object) this;
-        if (self.level().isClientSide) return;
+        if (self.level().isClientSide()) return;
         if (self.getSwellDir() <= 0) return;
 
         // 在苦力怕爆炸检测范围内（7格）查找猫娘

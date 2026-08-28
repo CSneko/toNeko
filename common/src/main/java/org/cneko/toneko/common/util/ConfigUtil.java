@@ -293,7 +293,7 @@ public class ConfigUtil {
 
     public static void load(){
         CONFIG = CONFIG_BUILDER.createConfig();
-        lastSavedService = CONFIG.getString("ai.service");
+        lastSavedService = CONFIG.getStringOr("ai.service", "");
         LocalDate today = LocalDate.now();
         int month = today.getMonthValue();
         int day = today.getDayOfMonth();
@@ -310,46 +310,46 @@ public class ConfigUtil {
 
     // ===== General config =====
     public static boolean isChatEnable() {
-        return CONFIG.getBoolean("chat.enable");
+        return CONFIG.getBooleanOr("chat.enable", false);
     }
-    public static boolean isWelcomeMessageEnabled() { return CONFIG.getBoolean("chat.welcome.enable"); }
-    public static String getWelcomeMessage() { return CONFIG.getString("chat.welcome.message"); }
+    public static boolean isWelcomeMessageEnabled() { return CONFIG.getBooleanOr("chat.welcome.enable", false); }
+    public static String getWelcomeMessage() { return CONFIG.getStringOr("chat.welcome.message", ""); }
     public static String getChatFormat() {
-        return CONFIG.getString("chat.format");
+        return CONFIG.getStringOr("chat.format", "");
     }
     public static boolean isStatsEnable() {
-        return CONFIG.getBoolean("stats");
+        return CONFIG.getBooleanOr("stats", false);
     }
 
     // ===== AI Config accessors =====
     public static boolean isAIEnabled() {
-        return CONFIG.getBoolean("ai.enable");
+        return CONFIG.getBooleanOr("ai.enable", false);
     }
     public static String getAIPrompt() {
-        return CONFIG.getString("ai.prompt");
+        return CONFIG.getStringOr("ai.prompt", "");
     }
     public static boolean isAIShowThink(){
-        return CONFIG.getBoolean("ai.show_think");
+        return CONFIG.getBooleanOr("ai.show_think", false);
     }
 
     /** Get the current AI service provider ID. */
     public static String getAIService(){
-        return CONFIG.getString("ai.service");
+        return CONFIG.getStringOr("ai.service", "");
     }
 
     /** Get the API key for the active provider. */
     public static String getAIKey(){
-        return CONFIG.getString("ai.key");
+        return CONFIG.getStringOr("ai.key", "");
     }
 
     /** Get the model for the active provider. */
     public static String getAIModel(){
-        return CONFIG.getString("ai.model");
+        return CONFIG.getStringOr("ai.model", "");
     }
 
     /** Get the custom base URL (empty = use provider default). */
     public static String getAIBaseUrl(){
-        return CONFIG.getString("ai.base_url");
+        return CONFIG.getStringOr("ai.base_url", "");
     }
 
     /**
@@ -395,156 +395,156 @@ public class ConfigUtil {
 
     /** Get the chat prefix for natural proximity chat. Empty = disabled. */
     public static String getAIChatPrefix() {
-        return CONFIG.getString("ai.chat_prefix");
+        return CONFIG.getStringOr("ai.chat_prefix", "");
     }
 
     /** Whether AI debug logging is enabled. */
     public static boolean isAIDebugEnabled() {
-        return CONFIG.getBoolean("ai.debug");
+        return CONFIG.getBooleanOr("ai.debug", false);
     }
 
     /** 最大会话长度（条数），0 或负数表示不限制 */
     public static int getAIMaxHistory() {
-        return CONFIG.getInt("ai.max_history");
+        return CONFIG.getIntOr("ai.max_history", 0);
     }
 
     /** 同一玩家的请求冷却（秒），0 或负数表示不限制 */
     public static int getAICooldown() {
-        return CONFIG.getInt("ai.cooldown");
+        return CONFIG.getIntOr("ai.cooldown", 0);
     }
 
     /** 区域聊天时单个玩家同时触发的最大猫娘数量，0 或负数表示不限制 */
     public static int getAIMaxConcurrentNeko() {
-        return CONFIG.getInt("ai.max_concurrent_neko");
+        return CONFIG.getIntOr("ai.max_concurrent_neko", 0);
     }
 
     /** 是否启用长对话自动总结 */
     public static boolean isAISummaryEnabled() {
-        return CONFIG.getBoolean("ai.summary.enable");
+        return CONFIG.getBooleanOr("ai.summary.enable", false);
     }
 
     /** 每次总结的对话条数（把最早的 N 条总结为一条） */
     public static int getAISummaryCount() {
-        return CONFIG.getInt("ai.summary.count");
+        return CONFIG.getIntOr("ai.summary.count", 0);
     }
 
     /** 是否启用 AI 动作 */
     public static boolean isAIActionsEnabled() {
-        return CONFIG.getBoolean("ai.actions.enable");
+        return CONFIG.getBooleanOr("ai.actions.enable", false);
     }
 
     /** 猫娘写日记的最小间隔（秒），0 或负数表示不限制 */
     public static int getAIActionsDiaryCooldown() {
-        return CONFIG.getInt("ai.actions.diary.cooldown");
+        return CONFIG.getIntOr("ai.actions.diary.cooldown", 0);
     }
 
     /** 猫娘日记最大保留篇数，超出删最旧；配置非法或过小时回退默认值 */
     public static int getAIActionsDiaryMaxEntries() {
-        return Math.max(1, CONFIG.getInt("ai.actions.diary.max_entries"));
+        return Math.max(1, CONFIG.getIntOr("ai.actions.diary.max_entries", 0));
     }
 
     /** 改变好感度的最小间隔（秒），0 或负数表示不限制 */
     public static int getAIActionsAffectionCooldown() {
-        return CONFIG.getInt("ai.actions.affection.cooldown");
+        return CONFIG.getIntOr("ai.actions.affection.cooldown", 0);
     }
 
     /** 单次好感度变化的幅度上限（绝对值），0 或负数表示不限制 */
     public static int getAIActionsAffectionMaxChange() {
-        return CONFIG.getInt("ai.actions.affection.max_change");
+        return CONFIG.getIntOr("ai.actions.affection.max_change", 0);
     }
 
     /** 是否启用 AI 环境感知（附近实体/环境特征注入 prompt） */
     public static boolean isAISurroundingsEnabled() {
-        return CONFIG.getBoolean("ai.surroundings.enable");
+        return CONFIG.getBooleanOr("ai.surroundings.enable", false);
     }
 
     /** 是否允许 AI 虚拟生成物品（背包没有时） */
     public static boolean isAIActionsVirtualItems() {
-        return CONFIG.getBoolean("ai.actions.virtual_items");
+        return CONFIG.getBooleanOr("ai.actions.virtual_items", false);
     }
 
     /** 虚拟生成每件物品消耗的猫娘能量 */
     public static int getAIActionsEnergyCost() {
-        return CONFIG.getInt("ai.actions.energy_cost");
+        return CONFIG.getIntOr("ai.actions.energy_cost", 0);
     }
 
     /** 是否启用猫娘主动发言 */
     public static boolean isAIProactiveEnabled() {
-        return CONFIG.getBoolean("ai.proactive.enable");
+        return CONFIG.getBooleanOr("ai.proactive.enable", false);
     }
 
     /** 猫娘主动发言的最小间隔（秒） */
     public static int getAIProactiveInterval() {
-        return CONFIG.getInt("ai.proactive.interval");
+        return CONFIG.getIntOr("ai.proactive.interval", 0);
     }
 
     public static boolean isNekoTalkEnabled() {
-        return CONFIG.getBoolean("ai.nekotalk.enable");
+        return CONFIG.getBooleanOr("ai.nekotalk.enable", false);
     }
 
     /** 猫娘间聊天链的最大接话轮数，0 或负数表示不限制 */
     public static int getNekoTalkRounds() {
-        return CONFIG.getInt("ai.nekotalk.rounds");
+        return CONFIG.getIntOr("ai.nekotalk.rounds", 0);
     }
 
     /** 猫娘被点名后接话的最小间隔（秒），0 或负数表示不限制 */
     public static int getNekoTalkInterval() {
-        return CONFIG.getInt("ai.nekotalk.interval");
+        return CONFIG.getIntOr("ai.nekotalk.interval", 0);
     }
 
     public static boolean isTriggerEnabled() {
-        return CONFIG.getBoolean("ai.trigger.enable");
+        return CONFIG.getBooleanOr("ai.trigger.enable", false);
     }
 
     /** 摸头反应概率（0~1） */
     public static float getTriggerPetChance() {
-        return CONFIG.getFloat("ai.trigger.pet.chance");
+        return CONFIG.getFloatOr("ai.trigger.pet.chance", 0f);
     }
 
     /** 受击反应概率（0~1） */
     public static float getTriggerHurtChance() {
-        return CONFIG.getFloat("ai.trigger.hurt.chance");
+        return CONFIG.getFloatOr("ai.trigger.hurt.chance", 0f);
     }
 
-    public static float getFlySwordFuelMultiplier()  { return clampConfig(CONFIG.getFloat("fly_sword.fuel_multiplier"), 1.0f); }
-    public static float getFlySwordMassMultiplier()  { return clampConfig(CONFIG.getFloat("fly_sword.mass_multiplier"), 1.0f); }
-    public static float getFlySwordSpeedMultiplier() { return clampConfig(CONFIG.getFloat("fly_sword.speed_multiplier"), 1.0f); }
-    public static float getFlySwordDamageMultiplier(){ return clampConfig(CONFIG.getFloat("fly_sword.damage_multiplier"), 1.0f); }
-    public static boolean isFlySwordEnabled()         { return CONFIG.getBoolean("fly_sword.enable"); }
-    public static boolean isFlySwordTntEnabled()      { return CONFIG.getBoolean("fly_sword.tnt_enable"); }
+    public static float getFlySwordFuelMultiplier()  { return clampConfig(CONFIG.getFloatOr("fly_sword.fuel_multiplier", 0f), 1.0f); }
+    public static float getFlySwordMassMultiplier()  { return clampConfig(CONFIG.getFloatOr("fly_sword.mass_multiplier", 0f), 1.0f); }
+    public static float getFlySwordSpeedMultiplier() { return clampConfig(CONFIG.getFloatOr("fly_sword.speed_multiplier", 0f), 1.0f); }
+    public static float getFlySwordDamageMultiplier(){ return clampConfig(CONFIG.getFloatOr("fly_sword.damage_multiplier", 0f), 1.0f); }
+    public static boolean isFlySwordEnabled()         { return CONFIG.getBooleanOr("fly_sword.enable", false); }
+    public static boolean isFlySwordTntEnabled()      { return CONFIG.getBooleanOr("fly_sword.tnt_enable", false); }
     private static float clampConfig(float v, float def) { return v > 0 ? v : def; }
 
     // ===== 绝对领域光环 =====
-    public static boolean isZettaiRyouikiAuraEnabled() { return CONFIG.getBoolean("legwear.aura.enable"); }
+    public static boolean isZettaiRyouikiAuraEnabled() { return CONFIG.getBooleanOr("legwear.aura.enable", false); }
     public static float getZettaiRyouikiAuraRadius() { return 8.0f; }
     public static int getZettaiRyouikiAuraIntervalTicks() { return 40; }
     public static int getZettaiRyouikiAuraDurationTicks() { return 100; }
 
     // ===== 魅力值 / 脸红偷看 =====
-    public static boolean isCharmEnabled() { return CONFIG.getBoolean("legwear.charm.enable"); }
-    public static int getCharmHighThreshold() { return CONFIG.getInt("legwear.charm.high_threshold"); }
-    public static boolean isCharmAffectionEnabled() { return CONFIG.getBoolean("legwear.charm.affection.enable"); }
+    public static boolean isCharmEnabled() { return CONFIG.getBooleanOr("legwear.charm.enable", false); }
+    public static int getCharmHighThreshold() { return CONFIG.getIntOr("legwear.charm.high_threshold", 0); }
+    public static boolean isCharmAffectionEnabled() { return CONFIG.getBooleanOr("legwear.charm.affection.enable", false); }
     public static int getCharmAffectionIntervalTicks() { return 6000; }
     public static float getCharmAffectionRadius() { return 16.0f; }
     public static int getCharmAffectionAmount() { return 1; }
     public static int getCharmAffectionMax() { return 100; }
-    public static boolean isCharmBlushEnabled() { return CONFIG.getBoolean("legwear.charm.blush.enable"); }
+    public static boolean isCharmBlushEnabled() { return CONFIG.getBooleanOr("legwear.charm.blush.enable", false); }
     public static int getCharmBlushIntervalTicks() { return 400; }
     public static float getCharmBlushRadius() { return 16.0f; }
 
     // ===== 袜子滑落 =====
-    public static boolean isLegwearSagEnabled() { return CONFIG.getBoolean("legwear.sag.enable"); }
+    public static boolean isLegwearSagEnabled() { return CONFIG.getBooleanOr("legwear.sag.enable", false); }
     public static float getLegwearSagDecayPerTick() { return 0.0005f; }
     public static float getLegwearSagRecoverPerTick() { return 0.001f; }
     public static float getLegwearSagMinLength() { return 0.4f; }
     public static int getLegwearSagPullupCooldownTicks() { return 40; }
-    public static float getLegwearSagWetSlowdown() { return CONFIG.getFloat("legwear.sag.wet_slowdown"); }
+    public static float getLegwearSagWetSlowdown() { return CONFIG.getFloatOr("legwear.sag.wet_slowdown", 0f); }
 
     // ===== 气味 =====
-    public static boolean isScentEnabled() { return CONFIG.getBoolean("legwear.scent.enable"); }
-    public static float getScentBaseRate() { return CONFIG.getFloat("legwear.scent.base_rate"); }
-    public static boolean isScentCauldronEnabled() { return CONFIG.getBoolean("legwear.scent.cauldron.enable"); }
-    public static float getScentCauldronWashRate() { return CONFIG.getFloat("legwear.scent.cauldron.wash_rate"); }
+    public static boolean isScentEnabled() { return CONFIG.getBooleanOr("legwear.scent.enable", false); }
+    public static float getScentBaseRate() { return CONFIG.getFloatOr("legwear.scent.base_rate", 0f); }
+    public static boolean isScentCauldronEnabled() { return CONFIG.getBooleanOr("legwear.scent.cauldron.enable", false); }
+    public static float getScentCauldronWashRate() { return CONFIG.getFloatOr("legwear.scent.cauldron.wash_rate", 0f); }
     public static float getScentIdleFactor() { return 0.4f; }
     public static float getScentSprintFactor() { return 1.6f; }
     public static float getScentWetFactor() { return 1.8f; }
@@ -552,37 +552,37 @@ public class ConfigUtil {
     public static float getScentThickFactor() { return 1.5f; }
     public static float getScentThinFactor() { return 0.7f; }
     public static boolean isScentTemperatureEffect() { return true; }
-    public static boolean isScentNekoSniffEnabled() { return CONFIG.getBoolean("legwear.scent.neko_sniff.enable"); }
+    public static boolean isScentNekoSniffEnabled() { return CONFIG.getBooleanOr("legwear.scent.neko_sniff.enable", false); }
     public static float getScentNekoSniffRadius() { return 12.0f; }
     public static int getScentNekoSniffIntervalTicks() { return 600; }
     public static int getScentNekoSniffThreshold() { return 40; }
-    public static boolean isScentDetectEnabled() { return CONFIG.getBoolean("legwear.scent.detect.enable"); }
+    public static boolean isScentDetectEnabled() { return CONFIG.getBooleanOr("legwear.scent.detect.enable", false); }
     public static float getScentDetectRadius() { return 6.0f; }
     public static int getScentDetectThreshold() { return 40; }
     public static int getScentDetectCooldownTicks() { return 200; }
-    public static boolean isScentWolfTrackingEnabled() { return CONFIG.getBoolean("legwear.scent.wolf_tracking.enable"); }
+    public static boolean isScentWolfTrackingEnabled() { return CONFIG.getBooleanOr("legwear.scent.wolf_tracking.enable", false); }
     public static float getScentWolfTrackingRadius() { return 24.0f; }
     public static int getScentWolfTrackingThreshold() { return 60; }
-    public static boolean isScentZombieAttractEnabled() { return CONFIG.getBoolean("legwear.scent.zombie_attract"); }
-    public static boolean isScentCatAttractEnabled() { return CONFIG.getBoolean("legwear.scent.cat_attract"); }
-    public static boolean isScentAnimalRepelEnabled() { return CONFIG.getBoolean("legwear.scent.animal_repel"); }
-    public static boolean isScentVillagerRepelEnabled() { return CONFIG.getBoolean("legwear.scent.villager_repel"); }
-    public static boolean isScentSpiderRepelEnabled() { return CONFIG.getBoolean("legwear.scent.spider_repel"); }
+    public static boolean isScentZombieAttractEnabled() { return CONFIG.getBooleanOr("legwear.scent.zombie_attract", false); }
+    public static boolean isScentCatAttractEnabled() { return CONFIG.getBooleanOr("legwear.scent.cat_attract", false); }
+    public static boolean isScentAnimalRepelEnabled() { return CONFIG.getBooleanOr("legwear.scent.animal_repel", false); }
+    public static boolean isScentVillagerRepelEnabled() { return CONFIG.getBooleanOr("legwear.scent.villager_repel", false); }
+    public static boolean isScentSpiderRepelEnabled() { return CONFIG.getBooleanOr("legwear.scent.spider_repel", false); }
 
     // ===== 湿度 =====
-    public static boolean isWetnessEnabled() { return CONFIG.getBoolean("legwear.wetness.enable"); }
+    public static boolean isWetnessEnabled() { return CONFIG.getBooleanOr("legwear.wetness.enable", false); }
     public static float getWetnessRainRate() { return 0.05f; }
     public static float getWetnessWaterRate() { return 1.0f; }
     public static float getWetnessDryRate() { return 0.01f; }
     public static boolean isWetnessTemperatureEffect() { return true; }
 
     // ===== 晾衣架 =====
-    public static boolean isClotheslineEnabled() { return CONFIG.getBoolean("legwear.clothesline.enable"); }
+    public static boolean isClotheslineEnabled() { return CONFIG.getBooleanOr("legwear.clothesline.enable", false); }
     public static int getClotheslineFireRadius() { return 3; }
-    public static float getClotheslineDryPerSecond() { return CONFIG.getFloat("legwear.clothesline.dry_per_second"); }
+    public static float getClotheslineDryPerSecond() { return CONFIG.getFloatOr("legwear.clothesline.dry_per_second", 0f); }
     public static float getClotheslineFireDryPerSecond() { return 5.0f; }
     public static float getClotheslineFireScentPerSecond() { return 2.0f; }
-    public static float getClotheslineAirScentDecayPerSecond() { return CONFIG.getFloat("legwear.clothesline.air_scent_decay_per_second"); }
+    public static float getClotheslineAirScentDecayPerSecond() { return CONFIG.getFloatOr("legwear.clothesline.air_scent_decay_per_second", 0f); }
 
     /**
      * Save the current flat AI config to per-provider storage for the given provider ID.
@@ -637,24 +637,24 @@ public class ConfigUtil {
     // ===== Legacy AI accessors (kept for backward compat) =====
 
     public static boolean isAIProxyEnabled(){
-        return CONFIG.getBoolean("ai.proxy.enable");
+        return CONFIG.getBooleanOr("ai.proxy.enable", false);
     }
     public static String getAIProxyIp(){
-        return CONFIG.getString("ai.proxy.ip");
+        return CONFIG.getStringOr("ai.proxy.ip", "");
     }
     public static String getAIProxyPort(){
-        return CONFIG.getString("ai.proxy.port");
+        return CONFIG.getStringOr("ai.proxy.port", "");
     }
 
     // ===== TTS =====
     public static boolean isAITTSEnabled(){
-        return CONFIG.getBoolean("ai.tts.enable");
+        return CONFIG.getBooleanOr("ai.tts.enable", false);
     }
     public static String getAITTSVoice(){
-        return CONFIG.getString("ai.tts.voice");
+        return CONFIG.getStringOr("ai.tts.voice", "");
     }
     public static String getAITTSPort(){
-        return CONFIG.getString("ai.tts.port");
+        return CONFIG.getStringOr("ai.tts.port", "");
     }
 
     /**
@@ -671,7 +671,7 @@ public class ConfigUtil {
 
         // API key: from per-provider storage first, then flat key
         String perProviderKey = CONFIG.getString("ai.providers." + providerId + ".key");
-        String flatKey = CONFIG.getString("ai.key");
+        String flatKey = CONFIG.getStringOr("ai.key", "");
         String key = getAIProviderKey(providerId);
         if (key == null || key.isEmpty()) key = flatKey;
 
@@ -698,7 +698,7 @@ public class ConfigUtil {
 
         // Model
         String perProviderModel = CONFIG.getString("ai.providers." + providerId + ".model");
-        String flatModel = CONFIG.getString("ai.model");
+        String flatModel = CONFIG.getStringOr("ai.model", "");
         String model = getAIProviderModel(providerId);
         if (model == null || model.isEmpty()) model = flatModel;
         if ((model == null || model.isEmpty()) && provider != null) {
@@ -784,22 +784,22 @@ public class ConfigUtil {
 
     // ===== LoliHead 配置访问方法 =====
     public static boolean isLoliHeadEnabled() {
-        return CONFIG.getBoolean("lolihead.enable");
+        return CONFIG.getBooleanOr("lolihead.enable", false);
     }
     public static boolean isLoliHeadAlgorithmEnabled() {
-        return CONFIG.getBoolean("lolihead.algorithm.enable");
+        return CONFIG.getBooleanOr("lolihead.algorithm.enable", false);
     }
     public static float getLoliHeadAlgorithmRatio() {
-        return CONFIG.getFloat("lolihead.algorithm.ratio");
+        return CONFIG.getFloatOr("lolihead.algorithm.ratio", 0f);
     }
     public static float getLoliHeadCustomXScale() {
-        return CONFIG.getFloat("lolihead.custom_head_scale.xScale");
+        return CONFIG.getFloatOr("lolihead.custom_head_scale.xScale", 0f);
     }
     public static float getLoliHeadCustomYScale() {
-        return CONFIG.getFloat("lolihead.custom_head_scale.yScale");
+        return CONFIG.getFloatOr("lolihead.custom_head_scale.yScale", 0f);
     }
     public static float getLoliHeadCustomZScale() {
-        return CONFIG.getFloat("lolihead.custom_head_scale.zScale");
+        return CONFIG.getFloatOr("lolihead.custom_head_scale.zScale", 0f);
     }
 
     // ===== Migration & sync =====
@@ -809,7 +809,7 @@ public class ConfigUtil {
      * save the current config to per-provider storage.
      */
     private static void runAIConfigMigration() {
-        String service = CONFIG.getString("ai.service");
+        String service = CONFIG.getStringOr("ai.service", "");
         if (service == null || service.isEmpty()) return;
 
         String providerKey = CONFIG.getString("ai.providers." + service + ".key");

@@ -36,15 +36,15 @@ public class CrystalNekoQuirk extends Quirk {
         super.onDamage(neko, damageSource, amount);
         if (neko instanceof Player nekoPlayer) {
             if (nekoPlayer.getHealth() <= 4) {
-                nekoPlayer.displayClientMessage(randomTranslatabledComponent("quirk.toneko.crystal_neko.damage.critical",5), true);
+                nekoPlayer.sendOverlayMessage(randomTranslatabledComponent("quirk.toneko.crystal_neko.damage.critical",5));
                 return;
             }
             if (amount < 3) {
-                nekoPlayer.displayClientMessage(randomTranslatabledComponent("quirk.toneko.crystal_neko.damage.low",5), true);
+                nekoPlayer.sendOverlayMessage(randomTranslatabledComponent("quirk.toneko.crystal_neko.damage.low",5));
             } else if (amount < 6) {
-                nekoPlayer.displayClientMessage(randomTranslatabledComponent("quirk.toneko.crystal_neko.damage.medium",5), true);
+                nekoPlayer.sendOverlayMessage(randomTranslatabledComponent("quirk.toneko.crystal_neko.damage.medium",5));
             } else if (amount >= 6) {
-                nekoPlayer.displayClientMessage(randomTranslatabledComponent("quirk.toneko.crystal_neko.damage.high",5), true);
+                nekoPlayer.sendOverlayMessage(randomTranslatabledComponent("quirk.toneko.crystal_neko.damage.high",5));
             }
         }
     }
@@ -53,7 +53,7 @@ public class CrystalNekoQuirk extends Quirk {
     public void onJoin(INeko neko) {
         super.onJoin(neko);
         if (neko instanceof Player nekoPlayer) {
-            nekoPlayer.displayClientMessage(randomTranslatabledComponent("quirk.toneko.crystal_neko.join",5), true);
+            nekoPlayer.sendOverlayMessage(randomTranslatabledComponent("quirk.toneko.crystal_neko.join",5));
         }
     }
 
@@ -63,15 +63,15 @@ public class CrystalNekoQuirk extends Quirk {
         if (neko instanceof Player nekoPlayer) {
             float ratio = entity.getHealth() / entity.getMaxHealth(); // 比率
             if (ratio > 0.8) {
-                nekoPlayer.displayClientMessage(randomTranslatabledComponent("quirk.toneko.crystal_neko.attack.high",5), true);
+                nekoPlayer.sendOverlayMessage(randomTranslatabledComponent("quirk.toneko.crystal_neko.attack.high",5));
             } else if (ratio > 0.5) {
-                nekoPlayer.displayClientMessage(randomTranslatabledComponent("quirk.toneko.crystal_neko.attack.medium",5), true);
+                nekoPlayer.sendOverlayMessage(randomTranslatabledComponent("quirk.toneko.crystal_neko.attack.medium",5));
             } else if (ratio > 0.2) {
-                nekoPlayer.displayClientMessage(randomTranslatabledComponent("quirk.toneko.crystal_neko.attack.low",5), true);
+                nekoPlayer.sendOverlayMessage(randomTranslatabledComponent("quirk.toneko.crystal_neko.attack.low",5));
             } else if (ratio <= 0.2) {
-                nekoPlayer.displayClientMessage(randomTranslatabledComponent("quirk.toneko.crystal_neko.attack.critical",5), true);
+                nekoPlayer.sendOverlayMessage(randomTranslatabledComponent("quirk.toneko.crystal_neko.attack.critical",5));
             } else if (entity.getHealth() <= 0) {
-                nekoPlayer.displayClientMessage(randomTranslatabledComponent("quirk.toneko.crystal_neko.attack.dead",5), true);
+                nekoPlayer.sendOverlayMessage(randomTranslatabledComponent("quirk.toneko.crystal_neko.attack.dead",5));
             }
         }
         return InteractionResult.PASS;
@@ -82,11 +82,11 @@ public class CrystalNekoQuirk extends Quirk {
         super.onWeatherChange(neko,serverLevel, clearTime, weatherTime, isRaining, isThundering);
         if (neko instanceof Player player) {
             if (isRaining) {
-                player.displayClientMessage(randomTranslatabledComponent("quirk.toneko.crystal_neko.weather.rain",5), true);
+                player.sendOverlayMessage(randomTranslatabledComponent("quirk.toneko.crystal_neko.weather.rain",5));
             } else if (isThundering) {
-                player.displayClientMessage(randomTranslatabledComponent("quirk.toneko.crystal_neko.weather.thunder",5), true);
+                player.sendOverlayMessage(randomTranslatabledComponent("quirk.toneko.crystal_neko.weather.thunder",5));
             } else {
-                player.displayClientMessage(randomTranslatabledComponent("quirk.toneko.crystal_neko.weather.sunny",5), true);
+                player.sendOverlayMessage(randomTranslatabledComponent("quirk.toneko.crystal_neko.weather.sunny",5));
             }
         }
     }
@@ -95,7 +95,7 @@ public class CrystalNekoQuirk extends Quirk {
     public void startSleep(INeko neko, BlockPos pos) {
         super.startSleep(neko, pos);
         if (neko instanceof Player player) {
-            player.displayClientMessage(randomTranslatabledComponent("quirk.toneko.crystal_neko.sleep.start",5), true);
+            player.sendOverlayMessage(randomTranslatabledComponent("quirk.toneko.crystal_neko.sleep.start",5));
         }
     }
 
@@ -103,11 +103,11 @@ public class CrystalNekoQuirk extends Quirk {
     public void stopSleep(INeko neko, BlockPos pos) {
         super.stopSleep(neko, pos);
         if (neko instanceof Player player) {
-            int daytime = (int) (player.level().getDayTime() % 24000);
+            int daytime = (int) (player.level().getOverworldClockTime() % 24000);
             if (daytime>=0&&daytime<=12000){
-                player.displayClientMessage(randomTranslatabledComponent("quirk.toneko.crystal_neko.sleep.stop.day",5), true);
+                player.sendOverlayMessage(randomTranslatabledComponent("quirk.toneko.crystal_neko.sleep.stop.day",5));
             }else {
-                player.displayClientMessage(randomTranslatabledComponent("quirk.toneko.crystal_neko.sleep.stop.night",5), true);
+                player.sendOverlayMessage(randomTranslatabledComponent("quirk.toneko.crystal_neko.sleep.stop.night",5));
             }
         }
     }

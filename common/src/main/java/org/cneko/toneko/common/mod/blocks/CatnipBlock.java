@@ -24,10 +24,10 @@ public class CatnipBlock extends CropBlock {
 
 
     public CatnipBlock() {
-        super(BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.CROP).pushReaction(PushReaction.DESTROY));
+        super(org.cneko.toneko.common.mod.util.NekoIds.blockProps("catnip").mapColor(MapColor.PLANT).noCollision().randomTicks().instabreak().sound(SoundType.CROP).pushReaction(PushReaction.DESTROY));
     }
 
-    public @NotNull MapCodec<CatnipBlock> codec() {
+    public @NotNull MapCodec<? extends net.minecraft.world.level.block.CropBlock> codec() {
         return CODEC;
     }
 

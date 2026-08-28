@@ -1,4 +1,6 @@
 package org.cneko.toneko.common.mod.items;
+import org.cneko.toneko.common.mod.util.NekoIds;
+import org.cneko.toneko.common.mod.entities.INeko;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -21,7 +23,7 @@ public class NineLivesCharmItem extends Item {
     public static final int MAX_LIVES = 9;
 
     public NineLivesCharmItem() {
-        super(new Properties().stacksTo(1).durability(MAX_LIVES).rarity(Rarity.RARE));
+        super(NekoIds.itemProps(ID).stacksTo(1).durability(MAX_LIVES).rarity(Rarity.RARE));
     }
 
     /**
@@ -31,7 +33,7 @@ public class NineLivesCharmItem extends Item {
      * @return {@code true} 表示允许死亡（护符未触发），{@code false} 表示死亡被阻止
      */
     public static boolean tryPreventDeath(ServerPlayer player) {
-        if (player.isNeko()) {
+        if (((INeko) player).isNeko()) {
             return tryUseAsNeko(player);
         } else {
             return tryUseAsNonNeko(player);
@@ -61,10 +63,10 @@ public class NineLivesCharmItem extends Item {
         if (!(stack.getItem() instanceof NineLivesCharmItem)) return false;
         if (isBroken(stack)) return false;
         float cost = calcEnergyCost(stack);
-        if (player.getNekoEnergy() < cost) return false;
+        if (((INeko) player).getNekoEnergy() < cost) return false;
 
         // 触发护符
-        player.setNekoEnergy(player.getNekoEnergy() - cost);
+        ((INeko) player).setNekoEnergy(((INeko) player).getNekoEnergy() - cost);
         int remainingBefore = getRemainingLives(stack);
         consumeLife(stack);
         applyResurrection(player);
@@ -166,21 +168,24 @@ public class NineLivesCharmItem extends Item {
     }
 
     private static void broadcastUse(ServerPlayer player, int remainingAfter) {
-        if (player.getServer() == null) return;
+        if (player.level().getServer() == null) return;
         String msg = Component.translatable("message.toneko.nine_lives_charm.use",
                 player.getName().getString(), remainingAfter).getString();
-        player.getServer().getPlayerList().broadcastSystemMessage(Component.literal(msg), false);
+        player.level().getServer().getPlayerList().broadcastSystemMessage(Component.literal(msg), false);
     }
 
     // ========================
     //  Tooltip
     // ========================
-    @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context,
-                                @NotNull List<Component> tooltipComponents, @NotNull TooltipFlag tooltipFlag) {
-        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+        @Override
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull net.minecraft.world.item.component.TooltipDisplay display, @NotNull java.util.function.Consumer<Component> adder, @NotNull TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, display, adder, tooltipFlag);
+        // 兼容旧实现：先收集到 List，再逐条发送
+        java.util.List<Component> tooltips = new java.util.ArrayList<>();
         int remaining = getRemainingLives(stack);
-        tooltipComponents.add(Component.translatable("item.toneko.nine_lives_charm.tip", remaining));
-        tooltipComponents.add(Component.translatable("item.toneko.nine_lives_charm.tip.non_neko"));
+        tooltips.add(Component.translatable("item.toneko.nine_lives_charm.tip", remaining));
+        tooltips.add(Component.translatable("item.toneko.nine_lives_charm.tip.non_neko"));
+    
+        for (Component t : tooltips) adder.accept(t);
     }
 }

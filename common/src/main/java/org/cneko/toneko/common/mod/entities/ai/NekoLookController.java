@@ -70,7 +70,7 @@ public class NekoLookController extends LookControl {
     }
 
     @Override
-    protected float rotateTowards(float from, float to, float maxDelta) {
+    public float rotateTowards(float from, float to, float maxDelta) {
         float diff = Mth.degreesDifference(from, to);
         float clamped = Mth.clamp(diff, -maxDelta, maxDelta);
         return from + clamped;

@@ -4,12 +4,8 @@
     "BCB"
   ],
   "key": {
-    "B": {
-      "item" : "minecraft:bread"
-    },
-    "C": {
-      "item" : "toneko:catnip"
-    }
+    "B": "minecraft:bread",
+    "C": "toneko:catnip"
   },
   "result": {
     "id": "toneko:catnip_sandwich",

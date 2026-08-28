@@ -13,8 +13,8 @@ import org.cneko.toneko.common.mod.util.TickTaskQueue;
 import java.io.File;
 import java.nio.file.Path;
 
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
+import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.argument;
+import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.literal;
 
 public class TestGalCommand {
     public static void init() {

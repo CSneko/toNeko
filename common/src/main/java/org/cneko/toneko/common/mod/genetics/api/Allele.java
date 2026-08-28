@@ -3,7 +3,7 @@ package org.cneko.toneko.common.mod.genetics.api;
 import lombok.Getter;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -21,7 +21,7 @@ import java.util.function.Function;
  */
 public class Allele {
     @Getter
-    private final ResourceLocation id;
+    private final Identifier id;
     @Getter
     private final int dominance; // 显性权重
 
@@ -35,7 +35,7 @@ public class Allele {
     // AI 注入模板
     private final List<Function<Mob, PrioritizedGoal>> aiTemplates = new ArrayList<>();
 
-    public Allele(ResourceLocation id, int dominance,
+    public Allele(Identifier id, int dominance,
                   BiConsumer<LivingEntity, CompoundTag> onExpress,
                   BiConsumer<LivingEntity, CompoundTag> onRemove) {
         this.id = id;
@@ -73,7 +73,7 @@ public class Allele {
             }
             AttributeInstance instance = entity.getAttribute(template.attribute);
             if (instance != null) {
-                ResourceLocation modifierId = getDynamicModifierId(locus.id(), template.suffix);
+                Identifier modifierId = getDynamicModifierId(locus.id(), template.suffix);
                 // 确保先清除旧的，防止因为数值更新导致的崩溃
                 instance.removeModifier(modifierId);
                 instance.addPermanentModifier(new AttributeModifier(modifierId, template.amount, template.operation));
@@ -101,15 +101,15 @@ public class Allele {
             }
             AttributeInstance instance = entity.getAttribute(template.attribute);
             if (instance != null) {
-                ResourceLocation modifierId = getDynamicModifierId(locus.id(), template.suffix);
+                Identifier modifierId = getDynamicModifierId(locus.id(), template.suffix);
                 instance.removeModifier(modifierId);
             }
         }
     }
 
     // 生成唯一的 Modifier ID，格式例如： toneko:genetic_locusid_modifiername
-    private ResourceLocation getDynamicModifierId(ResourceLocation locusId, String suffix) {
-        return ResourceLocation.fromNamespaceAndPath(id.getNamespace(),
+    private Identifier getDynamicModifierId(Identifier locusId, String suffix) {
+        return Identifier.fromNamespaceAndPath(id.getNamespace(),
                 "genetic_" + locusId.getPath() + "_" + suffix);
     }
 

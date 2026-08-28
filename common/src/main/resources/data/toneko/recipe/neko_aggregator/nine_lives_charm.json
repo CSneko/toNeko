@@ -1,18 +1,10 @@
 {
   "type": "toneko:neko_aggregator",
   "key": {
-    "I": {
-      "item": "toneko:neko_ingot"
-    },
-    "D": {
-      "item": "toneko:neko_diamond"
-    },
-    "T": {
-      "item": "minecraft:totem_of_undying"
-    },
-    "C": {
-      "item": "toneko:neko_energy_storage_large_charged"
-    }
+    "I": "toneko:neko_ingot",
+    "D": "toneko:neko_diamond",
+    "T": "minecraft:totem_of_undying",
+    "C": "toneko:neko_energy_storage_large_charged"
   },
   "pattern": [
     "IDI",

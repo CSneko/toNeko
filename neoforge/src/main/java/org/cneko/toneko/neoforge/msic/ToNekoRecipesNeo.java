@@ -18,7 +18,7 @@ public class ToNekoRecipesNeo {
                 return "neko_aggregator";
             }
         };
-        NEKO_AGGREGATOR_SERIALIZER = new NekoAggregatorRecipe.Serializer();
+        NEKO_AGGREGATOR_SERIALIZER = NekoAggregatorRecipe.Serializer;
         // 延迟到 RegisterEvent 再注册到原版注册表
         bus.addListener(ToNekoRecipesNeo::onRegisterRecipes);
     }

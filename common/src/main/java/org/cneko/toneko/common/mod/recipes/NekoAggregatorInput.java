@@ -28,7 +28,7 @@ public class NekoAggregatorInput implements RecipeInput {
         for(ItemStack itemStack : item) {
             if (!itemStack.isEmpty()) {
                 ++i;
-                this.stackedContents.accountStack(itemStack, 1);
+                this.stackedContents.account(itemStack, 1);
             }
         }
 

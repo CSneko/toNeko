@@ -5,12 +5,8 @@
     "S S"
   ],
   "key": {
-    "T": {
-      "item": "minecraft:terracotta"
-    },
-    "S": {
-      "item": "minecraft:stick"
-    }
+    "T": "minecraft:terracotta",
+    "S": "minecraft:stick"
   },
   "result": {
     "id": "toneko:sheng_deng",

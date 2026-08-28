@@ -72,7 +72,7 @@ public class AIUtil {
     /** 当前 AI/TTS 服务是否为 Player2（只有 Player2 需要/接受心跳） */
     private static boolean isPlayer2Service() {
         return "player2".equalsIgnoreCase(ConfigUtil.getAIService())
-                || "player2".equalsIgnoreCase(ConfigUtil.CONFIG.getString("ai.tts.service"));
+                || "player2".equalsIgnoreCase(ConfigUtil.CONFIG.getStringOr("ai.tts.service", ""));
     }
 
     /**

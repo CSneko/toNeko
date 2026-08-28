@@ -13,7 +13,7 @@ public class ChestLootInjection {
     public static void init() {
         LootTableEvents.MODIFY.register((key, tableBuilder, source, holder) -> {
             if (source.isBuiltin()) {
-                ChestLootTableRegistry.addToTable(key.location(), tableBuilder);
+                ChestLootTableRegistry.addToTable(key.identifier(), tableBuilder);
             }
         });
     }

@@ -1,7 +1,7 @@
 package org.cneko.toneko.common.mod.mixin;
 
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.animal.Cat;
+import net.minecraft.world.entity.animal.feline.Cat;
 import org.cneko.toneko.common.mod.entities.INeko;
 import org.spongepowered.asm.mixin.Mixin;
 

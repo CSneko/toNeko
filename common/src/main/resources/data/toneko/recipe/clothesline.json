@@ -6,12 +6,8 @@
     "P P"
   ],
   "key": {
-    "S": {
-      "item": "minecraft:string"
-    },
-    "P": {
-      "item": "minecraft:stick"
-    }
+    "S": "minecraft:string",
+    "P": "minecraft:stick"
   },
   "result": {
     "id": "toneko:clothesline",

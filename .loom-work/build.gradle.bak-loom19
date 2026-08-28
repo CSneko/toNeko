@@ -1,0 +1,164 @@
+buildscript {
+    configurations.classpath {
+        resolutionStrategy.eachDependency {
+            if (requested.group == "org.ow2.asm") {
+                useVersion("9.10.1")
+                because("MC 26.2 (Java 25 / class 69) requires ASM 9.8+, arch-loom 1.9 has 9.7.1")
+            }
+        }
+    }
+}
+
+plugins {
+    id 'dev.architectury.loom' version '1.9-SNAPSHOT' apply false
+    id 'architectury-plugin' version '3.4-SNAPSHOT'
+    id 'com.github.johnrengelman.shadow' version '8.1.1' apply false
+}
+
+architectury {
+    minecraft = project.minecraft_version
+}
+
+allprojects {
+    group = rootProject.maven_group
+    version = rootProject.mod_version
+}
+
+subprojects {
+    // Bukkit doesn't use Architectury Loom
+    boolean isLoom = project.name != 'bukkit'
+    if (isLoom) {
+        apply plugin: 'dev.architectury.loom'
+        apply plugin: 'architectury-plugin'
+    }
+    apply plugin: 'maven-publish'
+
+    if (isLoom) {
+        base {
+            archivesName = "$rootProject.archives_name-$project.name"
+        }
+    }
+
+    repositories {
+        // Add repositories to retrieve artifacts from in here.
+        // You should only use this when depending on other mods because
+        // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
+        // See https://docs.gradle.org/current/userguide/declaring_repositories.html
+        // for more information about repositories.
+//        maven {
+//            name = 'ParchmentMC'
+//            url = 'https://maven.parchmentmc.org'
+//        }
+        maven {
+            name = "Modrinth"
+            url = "https://api.modrinth.com/maven"
+        }
+        maven { url = uri("https://oss.sonatype.org/content/groups/public/") }
+        maven {
+            name = "TerraformersMC"
+            url = "https://maven.terraformersmc.com/"
+        }
+        maven {
+            name = "Ladysnake Libs"
+            url = 'https://maven.ladysnake.org/releases'
+        }
+        maven {
+            name = 'GeckoLib'
+            url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+            content {
+                includeGroup("software.bernie.geckolib")
+                includeGroup("com.geckolib")
+            }
+        }
+
+        maven { url 'https://jitpack.io' }
+        maven {
+            name = "KosmX"
+            url = "https://maven.kosmx.dev/"
+        }
+        flatDir {
+            dirs 'libs'
+        }
+    }
+
+    if (isLoom) {
+        loom {
+            silentMojangMappingsLicense()
+            // 26.2 为 Mojang 去混淆版本（unobfuscated，见 Fabric 文档 Migrating Mappings / What's Going On with Mappings）：
+            // 1.21.11 是最后一个混淆版本，Mounts of Mayhem 之后（26.1+）不再需要 Yarn / Mojang Mappings。
+            // Fabric 侧 intermediary 对 26.2 仅为 0.0.0 占位，若走默认 IntermediaryMappingsProvider 会在
+            // detachedConfiguration 解析 net.fabricmc:intermediary:26.2 时因 gradle module metadata 校验
+            // "expected='26.2' found='0.0.0'" 而失败；且官方也不再发布 client_mappings。
+            // 这里显式启用 NoOpIntermediateMappingsProvider（见 LoomGradleExtensionAPI#noIntermediateMappings），
+            // 使 loom 不再下载 intermediary，直接以 official==named 进行 remap。
+            noIntermediateMappings()
+            // Fabric API 等 mod 的 providedJavadoc 仍以 intermediary 为源命名空间，在去混淆版本下与
+            // ModJavadocProcessor 的校验 "must be have an intermediary source namespace" 冲突。
+            // 通过官方开关关闭该 processor（CompileConfiguration.registerGameProcessors 中受
+            // extension.getEnableModProvidedJavadoc() 控制，默认为 !isForgeLike()）。
+            // 必须在 finalizeValueOnRead 之前设置，否则会在 setupMinecraft 阶段被 finalize。
+            enableModProvidedJavadoc = false
+            // 26.2 的 Fabric 依赖（如 fabric-content-registries）仍通过 classTweaker (fabric.mod.json 的 "accessWidener"
+            // 指向 *.classtweaker) 提供 AW，内容为 "classTweaker v1 official" 等。旧 loom/access-widener 2.1.0 的
+            // AccessWidenerReader.readHeader 仅识别 "accessWidener <version> <ns>"，对 "classTweaker ..." 会直接抛
+            // "Invalid access widener file header"。该处理器对 26.2 的去混淆构建并非必需（Mojang 已移除混淆，且
+            // 我们的 AW 已改为 named），因此禁用对依赖的 AW 的合并，避免在 remap 阶段因不可识别的 header 而整体失败。
+            getEnableTransitiveAccessWideners().set(false)
+        }
+
+        dependencies {
+            minecraft "net.minecraft:minecraft:$rootProject.minecraft_version"
+            // 26.2 去混淆后不需要任何 mappings 层，但 arch-loom 1.9 的 CompileConfiguration 仍校验
+            // `mappings` configuration 至少有 1 个依赖（DependencyInfo.create），否则抛
+            // "Configuration 'mappings' has no dependencies"。因此提供一个本地空 Tiny jar
+            // （仅 header "tiny\t2\t0\tofficial\tintermediary\tnamed"），配合上面的 NoOp 中间映射
+            // 由 UnobfuscatedMappingNsCompleter 补全 named==official。
+            mappings files("libs/empty-mappings.jar")
+
+            modCompileOnly "me.lucko:fabric-permissions-api:0.3.1"
+            modImplementation "net.fabricmc.fabric-api:fabric-api:$rootProject.fabric_api_version"
+
+            implementation "com.github.CSneko:NekoAI:$rootProject.nekoai_version"
+            implementation 'com.github.umjammer:jlayer:1.0.3'
+            implementation 'dev.architectury:architectury-transformer:5.2.88'
+        }
+    }
+
+    if (isLoom) {
+        dependencies {
+            compileOnly("org.projectlombok:lombok:1.18.38")
+            annotationProcessor("org.projectlombok:lombok:1.18.38")
+        }
+    }
+
+    if (isLoom) {
+        java {
+            withSourcesJar()
+            sourceCompatibility = JavaVersion.VERSION_25
+            targetCompatibility = JavaVersion.VERSION_25
+        }
+        tasks.withType(JavaCompile).configureEach {
+            it.options.release = 25
+        }
+    }
+
+    // Configure Maven publishing.
+    if (isLoom) {
+        publishing {
+            publications {
+                mavenJava(MavenPublication) {
+                    artifactId = base.archivesName.get()
+                    from components.java
+                }
+            }
+
+        // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+        repositories {
+            // Add repositories to publish to here.
+            // Notice: This block does NOT have the same function as the block in the top level.
+            // The repositories here will be used for publishing your artifact, not for
+            // retrieving dependencies.
+        }
+    }
+    }
+}

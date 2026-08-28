@@ -5,18 +5,10 @@
     "RRC"
   ],
   "key": {
-    "N": {
-       "item": "minecraft:nether_wart"
-    },
-    "B": {
-      "item": "minecraft:blaze_powder"
-    },
-    "R": {
-      "item": "minecraft:redstone"
-    },
-    "C": {
-      "item": "toneko:catnip"
-    }
+    "N": "minecraft:nether_wart",
+    "B": "minecraft:blaze_powder",
+    "R": "minecraft:redstone",
+    "C": "toneko:catnip"
   },
   "result": {
     "id": "toneko:lightning_bomb",

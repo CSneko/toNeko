@@ -82,7 +82,7 @@ public class ToNekoNetworkEvents {
             boolean holdingEditor = player.getMainHandItem().getItem() instanceof GeneEditorItem
                     || player.getOffhandItem().getItem() instanceof GeneEditorItem;
 
-            if (!holdingEditor && (!player.hasPermissions(2) && !PermissionUtil.has(player, Permissions.GENETICS_EDIT))) {
+            if (!holdingEditor && !PermissionUtil.has(player, Permissions.GENETICS_EDIT)) {
                 player.sendSystemMessage(Component.literal("§c安全拒绝：你没有手持基因编辑器，无法修改基因！"));
                 return;
             }
@@ -103,13 +103,13 @@ public class ToNekoNetworkEvents {
         // 猫娘潜行切换
         ServerPlayNetworking.registerGlobalReceiver(NekoStealthPayload.ID, (payload, context) -> {
             ServerPlayer player = context.player();
-            if (!player.isNeko()) return;
-            player.setStealthActive(payload.active());
+            if (!((INeko) player).isNeko()) return;
+            ((INeko) player).setStealthActive(payload.active());
         });
         // 猫爪爬墙
         ServerPlayNetworking.registerGlobalReceiver(ClimbWallPayload.ID, (payload, context) -> {
             ServerPlayer player = context.player();
-            if (!player.isNeko()) return;
+            if (!((INeko) player).isNeko()) return;
             if (payload.active()) {
                 if (ClimbWallHandler.isClimbing(player)) {
                     // 已在爬墙，只更新方向
@@ -173,7 +173,7 @@ public class ToNekoNetworkEvents {
                         ? ToNekoComponents.LEGWEAR_DYE_LEFT_COMPONENT
                         : ToNekoComponents.LEGWEAR_DYE_RIGHT_COMPONENT);
             } else {
-                DyedItemColor dye = new DyedItemColor(payload.rgb() & 0xFFFFFF, true);
+                DyedItemColor dye = new DyedItemColor(payload.rgb() & 0xFFFFFF);
                 if (payload.side() == 0) {
                     stack.set(ToNekoComponents.LEGWEAR_DYE_LEFT_COMPONENT, dye);
                 } else {
@@ -262,8 +262,7 @@ public class ToNekoNetworkEvents {
         if (payload.action() == 0) {
             NekoMultiToolItem.cycleRangeMode(stack, player);
             int range = NekoMultiToolItem.getRangeMode(stack);
-            player.displayClientMessage(
-                    Component.translatable("item.toneko.neko_multi_tool.mode.range." + range), true);
+            player.sendOverlayMessage(Component.translatable("item.toneko.neko_multi_tool.mode.range." + range));
         }
     }
 
@@ -273,7 +272,7 @@ public class ToNekoNetworkEvents {
     public static void onMateWithCrystalNeko(MateWithCrystalNekoPayload mateWithCrystalNekoPayload, ServerPlayNetworking.Context context) {
         processNekoInteractive(context.player(), mateWithCrystalNekoPayload.uuid(), neko -> {
             if (neko instanceof CrystalNekoEntity cneko){
-                cneko.tryMating((ServerLevel) neko.level(), context.player());
+                cneko.tryMating((ServerLevel) neko.level(), (INeko) context.player());
             }
         });
     }
@@ -304,7 +303,7 @@ public class ToNekoNetworkEvents {
                     @Override
                     public void onChunk(String chunk) {
                         // AI回调在后台线程执行，网络发送必须切回服务器主线程；玩家可能已断线
-                        player.getServer().execute(() -> {
+                        player.level().getServer().execute(() -> {
                             if (player.connection == null) return;
                             try {
                                 ServerPlayNetworking.send(player, new ChatStreamPayload(nekoUuid, chunk, false, null));
@@ -317,7 +316,7 @@ public class ToNekoNetworkEvents {
                     @Override
                     public void onFinished(AIResponse response) {
                         // AI回调在后台线程执行，所有Minecraft世界/实体操作必须切回服务器主线程
-                        player.getServer().execute(() -> {
+                        player.level().getServer().execute(() -> {
                             // 先发收尾包让客户端打字机落定（不等思考动画）
                             if (player.connection != null) {
                                 try {
@@ -353,7 +352,7 @@ public class ToNekoNetworkEvents {
 
                     @Override
                     public void onError(AIResponse error) {
-                        player.getServer().execute(() -> {
+                        player.level().getServer().execute(() -> {
                             // 屏幕显示错误行（若打开着对应聊天屏）
                             if (player.connection != null) {
                                 try {
@@ -557,7 +556,7 @@ public class ToNekoNetworkEvents {
                 neko.generateAIPrompt(requester),
                 LanguageUtil.translatable("misc.toneko.ai.mate.request"),
                 response -> {
-                    requester.getServer().execute(() -> {
+                    requester.level().getServer().execute(() -> {
                         // 解析动作：allow_mate = 同意交配
                         NekoActionParser.ParseResult result = NekoActionParser.parse(response.getResponse());
                         boolean approved = result.actions().stream()
@@ -592,7 +591,7 @@ public class ToNekoNetworkEvents {
                 if (neko.isSitting()){
                     neko.stopRiding();
                 }else {
-                    neko.startRiding(entity, true);
+                    neko.startRiding(entity, true, true);
                     if (entity instanceof ServerPlayer sp) {
                         sp.connection.send(new ClientboundSetPassengersPacket(entity));
                     }
@@ -637,7 +636,7 @@ public class ToNekoNetworkEvents {
             return;
         }
         // 保存数据（过滤未知 id：getById 对未注册 id 返回 null，注入列表会引发后续 NPE）
-        var quirks = player.getQuirks();
+        var quirks = ((INeko) player).getQuirks();
         quirks.clear();
         quirks.addAll(payload.getQuirks().stream()
                 .map(QuirkRegister::getById)
@@ -698,13 +697,13 @@ public class ToNekoNetworkEvents {
     }
 
     private static void handleGuiSendRequest(ServerPlayer player, String targetUuid) {
-        ServerPlayer neko = player.getServer().getPlayerList().getPlayer(UUID.fromString(targetUuid));
+        ServerPlayer neko = player.level().getServer().getPlayerList().getPlayer(UUID.fromString(targetUuid));
         if (neko == null) return;
-        if (!neko.isNeko()) {
+        if (!((INeko) neko).isNeko()) {
             player.sendSystemMessage(Component.translatable("command.toneko.player.notNeko", neko.getName().getString()));
             return;
         }
-        if (neko.hasOwner(player.getUUID())) {
+        if (((INeko) neko).hasOwner(player.getUUID())) {
             player.sendSystemMessage(Component.translatable("command.toneko.player.alreadyOwner", neko.getName().getString()));
             return;
         }
@@ -712,9 +711,9 @@ public class ToNekoNetworkEvents {
         player.sendSystemMessage(Component.translatable("command.toneko.player.send_request", neko.getName().getString()).withStyle(ChatFormatting.LIGHT_PURPLE));
         MutableComponent component = Component.translatable("command.toneko.player.request", player.getName().getString()).withStyle(ChatFormatting.GOLD);
         MutableComponent denyButton = Component.translatable("misc.toneko.deny").withStyle(ChatFormatting.RED);
-        denyButton.setStyle(denyButton.getStyle().withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/toneko deny " + player.getName().getString())));
+        denyButton.setStyle(denyButton.getStyle().withClickEvent(new net.minecraft.network.chat.ClickEvent.RunCommand("/toneko deny " + player.getName().getString())));
         MutableComponent acceptButton = Component.translatable("misc.toneko.accept").withStyle(ChatFormatting.GREEN);
-        acceptButton.setStyle(acceptButton.getStyle().withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/toneko accept " + player.getName().getString())));
+        acceptButton.setStyle(acceptButton.getStyle().withClickEvent(new net.minecraft.network.chat.ClickEvent.RunCommand("/toneko accept " + player.getName().getString())));
         component.append(acceptButton);
         component.append(denyButton);
         neko.sendSystemMessage(component);
@@ -722,10 +721,10 @@ public class ToNekoNetworkEvents {
 
     private static void handleGuiAccept(ServerPlayer player, String ownerUuid) {
         Map<Player, Player> ownerMap = ToNekoCommand.getOwnerMap();
-        Player owner = player.getServer().getPlayerList().getPlayer(UUID.fromString(ownerUuid));
+        Player owner = player.level().getServer().getPlayerList().getPlayer(UUID.fromString(ownerUuid));
         if (owner == null) return;
         if (ownerMap.containsKey(owner) && ownerMap.get(owner).equals(player)) {
-            player.addOwner(owner.getUUID(), new INeko.Owner(new java.util.ArrayList<>(), 0));
+            ((INeko) player).addOwner(owner.getUUID(), new INeko.Owner(new java.util.ArrayList<>(), 0));
             player.sendSystemMessage(Component.translatable("command.toneko.accept", owner.getName()).withStyle(ChatFormatting.GREEN));
             owner.sendSystemMessage(Component.translatable("command.toneko.player.accept", player.getName()).withStyle(ChatFormatting.GREEN));
             ownerMap.remove(owner);
@@ -736,7 +735,7 @@ public class ToNekoNetworkEvents {
 
     private static void handleGuiDeny(ServerPlayer player, String ownerUuid) {
         Map<Player, Player> ownerMap = ToNekoCommand.getOwnerMap();
-        Player owner = player.getServer().getPlayerList().getPlayer(UUID.fromString(ownerUuid));
+        Player owner = player.level().getServer().getPlayerList().getPlayer(UUID.fromString(ownerUuid));
         if (owner == null) return;
         if (ownerMap.containsKey(owner) && ownerMap.get(owner).equals(player)) {
             player.sendSystemMessage(Component.translatable("command.toneko.deny", owner.getName()).withStyle(ChatFormatting.RED));
@@ -748,43 +747,43 @@ public class ToNekoNetworkEvents {
     }
 
     private static void handleGuiAddAlias(ServerPlayer player, String nekoUuid, String alias) {
-        ServerPlayer neko = player.getServer().getPlayerList().getPlayer(UUID.fromString(nekoUuid));
+        ServerPlayer neko = player.level().getServer().getPlayerList().getPlayer(UUID.fromString(nekoUuid));
         if (neko == null) return;
-        if (!neko.hasOwner(player.getUUID())) return;
-        neko.getOwner(player.getUUID()).getAliases().add(alias);
+        if (!((INeko) neko).hasOwner(player.getUUID())) return;
+        ((INeko) neko).getOwner(player.getUUID()).getAliases().add(alias);
         player.sendSystemMessage(Component.translatable("command.toneko.aliases.add", alias));
     }
 
     private static void handleGuiRemoveAlias(ServerPlayer player, String nekoUuid, String alias) {
-        ServerPlayer neko = player.getServer().getPlayerList().getPlayer(UUID.fromString(nekoUuid));
+        ServerPlayer neko = player.level().getServer().getPlayerList().getPlayer(UUID.fromString(nekoUuid));
         if (neko == null) return;
-        if (!neko.hasOwner(player.getUUID())) return;
-        neko.getOwner(player.getUUID()).getAliases().remove(alias);
+        if (!((INeko) neko).hasOwner(player.getUUID())) return;
+        ((INeko) neko).getOwner(player.getUUID()).getAliases().remove(alias);
         player.sendSystemMessage(Component.translatable("command.toneko.aliases.remove", alias));
     }
 
     private static void handleGuiAddBlock(ServerPlayer player, String nekoUuid, String block, String replace, String method) {
-        ServerPlayer neko = player.getServer().getPlayerList().getPlayer(UUID.fromString(nekoUuid));
+        ServerPlayer neko = player.level().getServer().getPlayerList().getPlayer(UUID.fromString(nekoUuid));
         if (neko == null) return;
-        if (!neko.hasOwner(player.getUUID())) return;
+        if (!((INeko) neko).hasOwner(player.getUUID())) return;
         INeko.BlockedWord.BlockMethod bm = INeko.BlockedWord.BlockMethod.fromString(method);
         if (bm == null) bm = INeko.BlockedWord.BlockMethod.WORD;
-        neko.addBlockedWord(new INeko.BlockedWord(block, replace, bm));
+        ((INeko) neko).addBlockedWord(new INeko.BlockedWord(block, replace, bm));
         player.sendSystemMessage(Component.translatable("messages.toneko.block.add"));
     }
 
     private static void handleGuiRemoveBlock(ServerPlayer player, String nekoUuid, String block) {
-        ServerPlayer neko = player.getServer().getPlayerList().getPlayer(UUID.fromString(nekoUuid));
+        ServerPlayer neko = player.level().getServer().getPlayerList().getPlayer(UUID.fromString(nekoUuid));
         if (neko == null) return;
-        if (!neko.hasOwner(player.getUUID())) return;
-        neko.removeBlockedWord(block);
+        if (!((INeko) neko).hasOwner(player.getUUID())) return;
+        ((INeko) neko).removeBlockedWord(block);
         player.sendSystemMessage(Component.translatable("messages.toneko.block.remove"));
     }
 
     private static void handleGuiRemoveOwner(ServerPlayer player, String nekoUuid) {
-        ServerPlayer neko = player.getServer().getPlayerList().getPlayer(UUID.fromString(nekoUuid));
+        ServerPlayer neko = player.level().getServer().getPlayerList().getPlayer(UUID.fromString(nekoUuid));
         if (neko == null) return;
-        neko.removeOwner(player.getUUID());
+        ((INeko) neko).removeOwner(player.getUUID());
         player.sendSystemMessage(Component.translatable("command.toneko.remove", neko.getName().getString()));
     }
 
@@ -871,7 +870,7 @@ public class ToNekoNetworkEvents {
     private static String resolveStorageId(ServerPlayer player, String entityUuid) {
         try {
             UUID uuid = UUID.fromString(entityUuid);
-            for (ServerLevel level : player.getServer().getAllLevels()) {
+            for (ServerLevel level : player.level().getServer().getAllLevels()) {
                 Entity entity = level.getEntity(uuid);
                 if (entity instanceof NekoEntity neko) {
                     return neko.getAIStorageId();

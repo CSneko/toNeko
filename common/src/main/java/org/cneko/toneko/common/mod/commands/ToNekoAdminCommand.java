@@ -165,7 +165,7 @@ public class ToNekoAdminCommand {
             return 0;
         }
         float level = FloatArgumentType.getFloat(context, "level");
-        org.cneko.toneko.common.mod.api.NekoLevelRegistry.base().setRaw(neko, level);
+        org.cneko.toneko.common.mod.api.NekoLevelRegistry.base().setRaw((INeko) neko, level);
         source.sendSystemMessage(translatable("command.tonekoadmin.set_level", neko.getName().getString(), level));
         return 1;
     }
@@ -240,10 +240,10 @@ public class ToNekoAdminCommand {
         }
         boolean isNeko = context.getArgument("is", Boolean.class);
         if(isNeko){
-            neko.setNeko(true);
+            ((INeko) neko).setNeko(true);
             source.sendSystemMessage(translatable("command.tonekoadmin.set.true", neko.getName().getString()));
         }else {
-            neko.setNeko(false);
+            ((INeko) neko).setNeko(false);
             source.sendSystemMessage(translatable("command.tonekoadmin.set.false", neko.getName().getString()));
         }
         return 1;

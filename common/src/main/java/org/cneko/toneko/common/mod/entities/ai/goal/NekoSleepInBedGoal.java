@@ -107,7 +107,7 @@ public class NekoSleepInBedGoal extends Goal {
     }
 
     private boolean isNightTime() {
-        long time = this.level.getDayTime() % 24000;
+        long time = this.level.getOverworldClockTime() % 24000;
         return time > 12500 && time < 23000; // 夜晚时间段
     }
 

@@ -3,7 +3,6 @@ package org.cneko.toneko.common.mod.items;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
@@ -25,7 +24,7 @@ public class DeageTreatItem extends Item {
     public @NotNull ItemStack finishUsingItem(@NotNull ItemStack stack, @NotNull Level level, @NotNull LivingEntity livingEntity) {
         FoodProperties foodProperties = stack.get(DataComponents.FOOD);
         if (foodProperties != null) {
-            if (!level.isClientSide && livingEntity instanceof INeko neko && neko.isNeko()) {
+            if (!level.isClientSide() && livingEntity instanceof INeko neko && neko.isNeko()) {
                 int currentAge = neko.getNekoAge();
                 int maxAge = neko.getMaxAge();
                 if (currentAge > -maxAge) {
@@ -37,7 +36,7 @@ public class DeageTreatItem extends Item {
                     }
                 }
             }
-            return livingEntity.eat(level, stack, foodProperties);
+            return stack.finishUsingItem(level, livingEntity);
         }
         return stack;
     }

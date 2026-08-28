@@ -1,7 +1,7 @@
 package org.cneko.toneko.common.mod.mixin;
 
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -40,7 +40,7 @@ public class BlockPlaceMixin {
      */
     private static double getHomesteadXp(Block block) {
         // 猫娘模组方块：统一 30 XP
-        ResourceLocation id = BuiltInRegistries.BLOCK.getKey(block);
+        Identifier id = BuiltInRegistries.BLOCK.getKey(block);
         if ("toneko".equals(id.getNamespace())) {
             return 30.0;
         }

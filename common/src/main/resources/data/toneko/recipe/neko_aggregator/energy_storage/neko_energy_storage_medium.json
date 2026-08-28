@@ -1,23 +1,12 @@
 {
   "type": "toneko:neko_aggregator",
   "key": {
-    "I": {
-      "item": "toneko:neko_crystal"
-    },
-    "G": {
-      "item": "minecraft:glowstone_dust"
-    },
-    "R": {
-      "item": "minecraft:redstone"
-    },
-    "N": {
-      "item": "toneko:neko_energy_storage_small"
-    },
-    "E": {
-      "item": "minecraft:ender_eye"
-    }
+    "I": "toneko:neko_crystal",
+    "G": "minecraft:glowstone_dust",
+    "R": "minecraft:redstone",
+    "N": "toneko:neko_energy_storage_small",
+    "E": "minecraft:ender_eye"
   },
-
   "pattern": [
     "GIR",
     "NEN",

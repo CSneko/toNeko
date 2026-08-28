@@ -4,12 +4,8 @@
     "IWW"
   ],
   "key": {
-    "I": {
-      "tag": "c:nuggets/iron_nuggets"
-    },
-    "W": {
-      "tag" : "c:wool"
-    }
+    "I": "#c:nuggets/iron_nuggets",
+    "W": "#c:wool"
   },
   "result": {
     "id": "toneko:neko_tail",

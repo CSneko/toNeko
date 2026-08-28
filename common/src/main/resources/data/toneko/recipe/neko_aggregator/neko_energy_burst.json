@@ -1,26 +1,13 @@
 {
   "type": "toneko:neko_aggregator",
   "key": {
-    "I": {
-      "item": "toneko:neko_ingot"
-    },
-    "D": {
-      "item": "toneko:neko_diamond"
-    },
-    "L": {
-      "item": "toneko:neko_crystal"
-    },
-    "C": {
-      "item": "toneko:catnip"
-    },
-    "R": {
-      "item": "minecraft:lightning_rod"
-    },
-    "G": {
-      "item": "minecraft:glass_bottle"
-    }
+    "I": "toneko:neko_ingot",
+    "D": "toneko:neko_diamond",
+    "L": "toneko:neko_crystal",
+    "C": "toneko:catnip",
+    "R": "minecraft:lightning_rod",
+    "G": "minecraft:glass_bottle"
   },
-
   "pattern": [
     "IRI",
     "DGD",

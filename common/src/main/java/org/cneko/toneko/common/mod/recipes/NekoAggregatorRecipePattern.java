@@ -7,8 +7,6 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.chars.CharArraySet;
 import it.unimi.dsi.fastutil.chars.CharSet;
-import net.minecraft.Util;
-import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ExtraCodecs;
@@ -21,31 +19,50 @@ import java.util.Optional;
 import java.util.function.Function;
 
 public class NekoAggregatorRecipePattern {
+    // 26.x：Ingredient.EMPTY 已彻底移除，且空配方成分构造会抛
+    // "Ingredients can't be empty"；与原版 ShapedRecipePattern 一致，空槽位用 Optional.empty() 表示。
     private static final int MAX_SIZE = 3;
     public static final MapCodec<NekoAggregatorRecipePattern> MAP_CODEC;
     public static final StreamCodec<RegistryFriendlyByteBuf, NekoAggregatorRecipePattern> STREAM_CODEC;
     private final int width;
     private final int height;
-    private final NonNullList<Ingredient> ingredients;
+    private final List<Optional<Ingredient>> ingredients;
     private final Optional<NekoAggregatorRecipePattern.Data> data;
     private final int ingredientCount;
     private final boolean symmetrical;
 
-    public NekoAggregatorRecipePattern(int width, int height, NonNullList<Ingredient> ingredients, Optional<NekoAggregatorRecipePattern.Data> data) {
+    public NekoAggregatorRecipePattern(int width, int height, List<Optional<Ingredient>> ingredients, Optional<NekoAggregatorRecipePattern.Data> data) {
         this.width = width;
         this.height = height;
         this.ingredients = ingredients;
         this.data = data;
         int i = 0;
 
-        for(Ingredient ingredient : ingredients) {
-            if (!ingredient.isEmpty()) {
+        for(Optional<Ingredient> optionalIngredient : ingredients) {
+            if (optionalIngredient.isPresent()) {
                 ++i;
             }
         }
 
         this.ingredientCount = i;
-        this.symmetrical = Util.isSymmetrical(width, height, ingredients);
+        this.symmetrical = isSymmetrical(width, height, ingredients);
+    }
+
+    // 26.x：原 net.minecraft.Util#isSymmetrical 已移除，此处保留原有左右对称判断
+    private static boolean isSymmetrical(int width, int height, List<Optional<Ingredient>> ingredients) {
+        if (width == 1) {
+            return true;
+        }
+        for (int y = 0; y < height; ++y) {
+            for (int x = 0; x < width / 2; ++x) {
+                Optional<Ingredient> left = ingredients.get(x + y * width);
+                Optional<Ingredient> right = ingredients.get(width - x - 1 + y * width);
+                if (!left.equals(right)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     public static NekoAggregatorRecipePattern of(Map<Character, Ingredient> key, String... pattern) {
@@ -61,7 +78,10 @@ public class NekoAggregatorRecipePattern {
         String[] strings = shrink(data.pattern);
         int i = strings[0].length();
         int j = strings.length;
-        NonNullList<Ingredient> nonNullList = NonNullList.withSize(i * j, Ingredient.EMPTY);
+        List<Optional<Ingredient>> list = new java.util.ArrayList<>(i * j);
+        for(int slot = 0; slot < i * j; ++slot) {
+            list.add(Optional.empty());
+        }
         CharSet charSet = new CharArraySet(data.key.keySet());
 
         for(int k = 0; k < strings.length; ++k) {
@@ -69,20 +89,20 @@ public class NekoAggregatorRecipePattern {
 
             for(int l = 0; l < string.length(); ++l) {
                 char c = string.charAt(l);
-                Ingredient ingredient = c == ' ' ? Ingredient.EMPTY : (Ingredient)data.key.get(c);
-                if (ingredient == null) {
+                Ingredient ingredient = c == ' ' ? null : (Ingredient)data.key.get(c);
+                if (c != ' ' && ingredient == null) {
                     return DataResult.error(() -> "Pattern references symbol '" + c + "' but it's not defined in the key");
                 }
 
                 charSet.remove(c);
-                nonNullList.set(l + i * k, ingredient);
+                list.set(l + i * k, Optional.ofNullable(ingredient));
             }
         }
 
         if (!charSet.isEmpty()) {
             return DataResult.error(() -> "Key defines symbols that aren't used in pattern: " + String.valueOf(charSet));
         } else {
-            return DataResult.success(new NekoAggregatorRecipePattern(i, j, nonNullList, Optional.of(data)));
+            return DataResult.success(new NekoAggregatorRecipePattern(i, j, list, Optional.of(data)));
         }
     }
 
@@ -155,15 +175,16 @@ public class NekoAggregatorRecipePattern {
     private boolean matches(NekoAggregatorInput input, boolean symmetrical) {
         for(int i = 0; i < this.height; ++i) {
             for(int j = 0; j < this.width; ++j) {
-                Ingredient ingredient;
+                Optional<Ingredient> optionalIngredient;
                 if (symmetrical) {
-                    ingredient = this.ingredients.get(this.width - j - 1 + i * this.width);
+                    optionalIngredient = this.ingredients.get(this.width - j - 1 + i * this.width);
                 } else {
-                    ingredient = this.ingredients.get(j + i * this.width);
+                    optionalIngredient = this.ingredients.get(j + i * this.width);
                 }
 
                 ItemStack itemStack = input.getItem(j, i);
-                if (!ingredient.test(itemStack)) {
+                // 空槽位要求该位置无物品；非空槽位按普通配方成分匹配
+                if (optionalIngredient.isEmpty() ? !itemStack.isEmpty() : !optionalIngredient.get().test(itemStack)) {
                     return false;
                 }
             }
@@ -176,8 +197,8 @@ public class NekoAggregatorRecipePattern {
         buffer.writeVarInt(this.width);
         buffer.writeVarInt(this.height);
 
-        for(Ingredient ingredient : this.ingredients) {
-            Ingredient.CONTENTS_STREAM_CODEC.encode(buffer, ingredient);
+        for(Optional<Ingredient> optionalIngredient : this.ingredients) {
+            Ingredient.OPTIONAL_CONTENTS_STREAM_CODEC.encode(buffer, optionalIngredient);
         }
 
     }
@@ -185,9 +206,11 @@ public class NekoAggregatorRecipePattern {
     private static NekoAggregatorRecipePattern fromNetwork(RegistryFriendlyByteBuf buffer) {
         int i = buffer.readVarInt();
         int j = buffer.readVarInt();
-        NonNullList<Ingredient> nonNullList = NonNullList.withSize(i * j, Ingredient.EMPTY);
-        nonNullList.replaceAll((ingredient) -> (Ingredient)Ingredient.CONTENTS_STREAM_CODEC.decode(buffer));
-        return new NekoAggregatorRecipePattern(i, j, nonNullList, Optional.empty());
+        List<Optional<Ingredient>> list = new java.util.ArrayList<>(i * j);
+        for(int k = 0; k < i * j; ++k) {
+            list.add((Optional<Ingredient>)Ingredient.OPTIONAL_CONTENTS_STREAM_CODEC.decode(buffer));
+        }
+        return new NekoAggregatorRecipePattern(i, j, list, Optional.empty());
     }
 
     public int width() {
@@ -198,7 +221,7 @@ public class NekoAggregatorRecipePattern {
         return this.height;
     }
 
-    public NonNullList<Ingredient> ingredients() {
+    public List<Optional<Ingredient>> ingredients() {
         return this.ingredients;
     }
 
@@ -241,7 +264,7 @@ public class NekoAggregatorRecipePattern {
                     return " ".equals(string) ? DataResult.error(() -> "Invalid key entry: ' ' is a reserved symbol.") : DataResult.success(string.charAt(0));
                 }
             }, String::valueOf);
-            MAP_CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(ExtraCodecs.strictUnboundedMap(SYMBOL_CODEC, Ingredient.CODEC_NONEMPTY).fieldOf("key").forGetter((data) -> data.key), PATTERN_CODEC.fieldOf("pattern").forGetter((data) -> data.pattern)).apply(instance, NekoAggregatorRecipePattern.Data::new));
+            MAP_CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(ExtraCodecs.strictUnboundedMap(SYMBOL_CODEC, Ingredient.CODEC).fieldOf("key").forGetter((data) -> data.key), PATTERN_CODEC.fieldOf("pattern").forGetter((data) -> data.pattern)).apply(instance, NekoAggregatorRecipePattern.Data::new));
         }
     }
 }

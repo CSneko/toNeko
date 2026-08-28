@@ -1,10 +1,10 @@
 {
   "type": "toneko:neko_aggregator",
   "key": {
-    "B": { "item": "minecraft:redstone_block" },
-    "C": { "item": "toneko:neko_crystal" },
-    "D": { "item": "minecraft:redstone" },
-    "S": { "item": "toneko:neko_energy_storage_medium_charged" }
+    "B": "minecraft:redstone_block",
+    "C": "toneko:neko_crystal",
+    "D": "minecraft:redstone",
+    "S": "toneko:neko_energy_storage_medium_charged"
   },
   "pattern": [
     "BCB",

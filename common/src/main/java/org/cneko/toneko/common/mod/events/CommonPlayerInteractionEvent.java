@@ -120,7 +120,7 @@ public class CommonPlayerInteractionEvent {
         // 【修改点】：创建一个统一的 XP 处理器，在这里判断是否有主人
         Consumer<Quirk> xpHandler = q -> {
             if (targetNeko.hasOwner(sp.getUUID())) {
-                sp.setXpWithOwner(sp.getUUID(), q.getInteractionValue() + sp.getXpWithOwner(sp.getUUID()));
+                ((INeko) sp).setXpWithOwner(sp.getUUID(), q.getInteractionValue() + ((INeko) sp).getXpWithOwner(sp.getUUID()));
             }
         };
 
@@ -153,7 +153,7 @@ public class CommonPlayerInteractionEvent {
         }
         int spoilage = ScentedWaterUtil.getSpoilage(stack);
         if (spoilage <= 0) return InteractionResult.PASS;
-        if (level.isClientSide) return InteractionResult.SUCCESS;
+        if (level.isClientSide()) return InteractionResult.SUCCESS;
 
         String wearer = ScentedWaterUtil.getWearer(stack);
         String playerName = player.getName().getString();
@@ -168,7 +168,7 @@ public class CommonPlayerInteractionEvent {
         }
 
         stack.shrink(1);
-        level.playSound(null, player.blockPosition(), SoundEvents.CAT_STRAY_AMBIENT,
+        level.playSound(null, player.blockPosition(), net.minecraft.sounds.SoundEvents.STRAY_AMBIENT,
                 SoundSource.PLAYERS, 1.0f, 1.2f);
         if (level instanceof ServerLevel serverLevel) {
             serverLevel.sendParticles(ParticleTypes.HEART,
@@ -184,7 +184,7 @@ public class CommonPlayerInteractionEvent {
         } else {
             msg = Component.translatable("item.toneko.spoiled_water.neko.unknown_scent");
         }
-        player.displayClientMessage(msg, true);
+        player.sendOverlayMessage(msg);
         return InteractionResult.SUCCESS;
     }
 
@@ -207,15 +207,15 @@ public class CommonPlayerInteractionEvent {
         }
 
         // 猫娘潜行：攻击后暂时解除潜行
-        if (sp.isNeko()) {
-            sp.breakStealth();
+        if (((INeko) sp).isNeko()) {
+            ((INeko) sp).breakStealth();
         }
 
-        for (Quirk q : sp.getQuirks()) {
+        for (Quirk q : ((INeko) sp).getQuirks()) {
             if (q != null) {
-                InteractionResult result = q.onNekoAttack(sp, level, hand, le, hitResult);
+                InteractionResult result = q.onNekoAttack((INeko) sp, level, hand, le, hitResult);
                 if (result == InteractionResult.SUCCESS) {
-                    sp.setXpWithOwner(sp.getUUID(), q.getInteractionValue() + sp.getXpWithOwner(sp.getUUID()));
+                    ((INeko) sp).setXpWithOwner(sp.getUUID(), q.getInteractionValue() + ((INeko) sp).getXpWithOwner(sp.getUUID()));
                 }
             }
         }

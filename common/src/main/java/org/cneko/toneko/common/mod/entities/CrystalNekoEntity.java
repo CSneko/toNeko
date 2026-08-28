@@ -1,11 +1,12 @@
 package org.cneko.toneko.common.mod.entities;
+import org.cneko.toneko.common.mod.entities.INeko;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -60,7 +61,7 @@ public class CrystalNekoEntity extends NekoEntity{
 
     @Override
     public String generateAIPrompt(Player player) {
-        return PromptRegistry.generatePrompt(this,player, """
+        return PromptRegistry.generatePrompt(this,(INeko) player, """
                 # 角色设定
                 你是一只名叫 CrystalNeko（水晶猫猫）的猫娘，同时也是 Minecraft 模组作者。虽然现在看起来很可爱，但有着不堪回首的黑历史...
                 
@@ -238,7 +239,7 @@ public class CrystalNekoEntity extends NekoEntity{
                 """);
     }
 
-    public static boolean checkCrystalNekoSpawnRules(EntityType<? extends net.minecraft.world.entity.Mob> entityType, LevelAccessor levelAccessor, MobSpawnType reason, BlockPos pos, RandomSource randomSource) {
+    public static boolean checkCrystalNekoSpawnRules(EntityType<? extends net.minecraft.world.entity.Mob> entityType, LevelAccessor levelAccessor, EntitySpawnReason reason, BlockPos pos, RandomSource randomSource) {
         return true;
     }
 }

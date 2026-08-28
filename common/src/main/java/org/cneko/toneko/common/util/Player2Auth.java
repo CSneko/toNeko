@@ -272,7 +272,7 @@ public final class Player2Auth {
                         .withStyle(Style.EMPTY
                                 .withColor(ChatFormatting.AQUA)
                                 .withUnderlined(true)
-                                .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url))));
+                                .withClickEvent(new ClickEvent.OpenUrl(java.net.URI.create(url)))));
         // 游戏内消息保持禁用（作者决定）：授权链接已记录在日志中，
         // 且 device flow 仅在真正使用 player2 发请求且从未授权时才会发起
         //PlayerUtil.getPlayerList().forEach(player -> player.sendSystemMessage(message));

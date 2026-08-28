@@ -1,6 +1,6 @@
 package org.cneko.toneko.common.mod.genetics.api;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public class SpeciesKaryotype {
-    private ResourceLocation id;
+    private Identifier id;
     private int chromosomePairs;
     private final Map<Integer, List<Locus>> chromosomes = new HashMap<>();
 
@@ -56,9 +56,9 @@ public class SpeciesKaryotype {
         return chromosomes.getOrDefault(chromosomeId, List.of());
     }
 
-    public ResourceLocation getId() { return id; }
+    public Identifier getId() { return id; }
 
-    public void setId(ResourceLocation id) { this.id = id; }
+    public void setId(Identifier id) { this.id = id; }
 
     /**
      * 确保核型支持指定的染色体编号，如果目标编号超出当前范围则自动扩展。

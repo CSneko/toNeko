@@ -1,6 +1,6 @@
 package org.cneko.toneko.common.mod.genetics;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
 import org.cneko.toneko.common.mod.genetics.api.Allele;
 import org.cneko.toneko.common.mod.genetics.api.GeneticsRegistry;
@@ -23,10 +23,10 @@ public class MoeGenetics {
         GeneticsRegistry.registerLocus(MOE_SLOT_1);
         GeneticsRegistry.registerLocus(MOE_SLOT_2);
 
-        List<ResourceLocation> registeredMoeAlleles = new ArrayList<>();
+        List<Identifier> registeredMoeAlleles = new ArrayList<>();
 
         for (String tagName : NekoEntity.MOE_TAGS) {
-            ResourceLocation alleleId = toNekoLoc("moe_" + tagName);
+            Identifier alleleId = toNekoLoc("moe_" + tagName);
 
             Allele moeAllele = new Allele(alleleId, 20,
                     (entity, tagCompound) -> {
@@ -59,12 +59,12 @@ public class MoeGenetics {
         populateMoeWildPool(MOE_SLOT_2.id(), registeredMoeAlleles, 350);
     }
 
-    private static void populateMoeWildPool(ResourceLocation locusId, List<ResourceLocation> moeAlleles, int blankWeight) {
+    private static void populateMoeWildPool(Identifier locusId, List<Identifier> moeAlleles, int blankWeight) {
         if (blankWeight > 0) {
             GeneticsRegistry.addWildAllele(locusId, ToNekoAlleles.WILD_TYPE.getId(), blankWeight);
         }
         int singleTagWeight = 10;
-        for (ResourceLocation alleleId : moeAlleles) {
+        for (Identifier alleleId : moeAlleles) {
             GeneticsRegistry.addWildAllele(locusId, alleleId, singleTagWeight);
         }
     }

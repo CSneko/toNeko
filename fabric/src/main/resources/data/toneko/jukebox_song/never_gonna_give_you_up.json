@@ -1,0 +1,8 @@
+{
+  "comparator_output": 10,
+  "description": "CrystalNeko - Never Gonna Give You Up(Cover:Rick Astley)",
+  "length_in_seconds": 214.0,
+  "sound_event":{
+    "sound_id": "toneko:music.never_gonna_give_you_up"
+  }
+}

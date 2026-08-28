@@ -1,11 +1,8 @@
 {
   "type": "toneko:neko_aggregator",
   "key": {
-    "I": {
-      "item": "minecraft:amethyst_shard"
-    }
+    "I": "minecraft:amethyst_shard"
   },
-
   "pattern": [
     "   ",
     " I ",

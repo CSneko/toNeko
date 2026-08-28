@@ -1,4 +1,5 @@
 package org.cneko.toneko.common.mod.commands.arguments;
+import org.cneko.toneko.common.mod.entities.INeko;
 
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
@@ -37,11 +38,11 @@ public class NekoSuggestionProvider implements SuggestionProvider<CommandSourceS
 
     private boolean isValidNeko(ServerPlayer target, ServerPlayer commander, boolean checkOwnership) {
         // 服务器端检查是否为Neko
-        if (!target.isNeko()) return false;
+        if (!((INeko) target).isNeko()) return false;
 
         // 若需要检查主人关系
         if (checkOwnership) {
-            return commander != null && target.hasOwner(commander.getUUID());
+            return commander != null && ((INeko) target).hasOwner(commander.getUUID());
         }
 
         return true;

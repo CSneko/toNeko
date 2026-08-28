@@ -1,6 +1,6 @@
 package org.cneko.toneko.common.mod.effects;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
@@ -13,7 +13,7 @@ import static org.cneko.toneko.common.Bootstrap.MODID;
 
 public class ExcitingEffect extends MobEffect {
     public static final String ID = "exciting";
-    public static final ResourceLocation LOCATION = ResourceLocation.fromNamespaceAndPath(MODID, ID);
+    public static final Identifier LOCATION = Identifier.fromNamespaceAndPath(MODID, ID);
 
     public ExcitingEffect() {
         super(MobEffectCategory.NEUTRAL, 0xFF00FF);
@@ -30,7 +30,7 @@ public class ExcitingEffect extends MobEffect {
     }
 
     @Override
-    public boolean applyEffectTick(@NotNull LivingEntity entity, int amplifier) {
-        return super.applyEffectTick(entity, amplifier);
+    public boolean applyEffectTick(@NotNull net.minecraft.server.level.ServerLevel serverLevel, @NotNull LivingEntity entity, int amplifier) {
+        return super.applyEffectTick(serverLevel, entity, amplifier);
     }
 }

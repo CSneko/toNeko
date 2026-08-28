@@ -1,47 +1,26 @@
 package org.cneko.toneko.common.mod.misc.fabric;
 
-import dev.emi.trinkets.api.SlotReference;
-import dev.emi.trinkets.api.TrinketComponent;
-import dev.emi.trinkets.api.TrinketsApi;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import org.cneko.toneko.common.mod.items.LegwearItem;
 
+/**
+ * 26.x 迁移说明：Trinkets 尚无 Minecraft 26.x（去混淆版本）发布，
+ * 原先经 Trinkets 饰品槽读取/标记丝袜的逻辑暂时移除，仅保留原版 LEGS 槽位路径。
+ * 待 Trinkets 适配 26.x 后从 git 历史（tag V1.9.6 前后）恢复。
+ */
 public class LegwearUtilImpl {
-    /** Trinkets 为可选依赖：运行期反射探测，避免未安装时 NoClassDefFoundError。 */
-    private static final boolean TRINKETS = classExists("dev.emi.trinkets.api.TrinketsApi");
 
     public static ItemStack getWornLegwear(LivingEntity entity) {
-        if (TRINKETS) {
-            var component = TrinketsApi.getTrinketComponent(entity);
-            if (component.isPresent()) {
-                for (Tuple<SlotReference, ItemStack> pair : component.get().getEquipped(LegwearItem::isLegwear)) {
-                    return pair.getB();
-                }
-            }
-        }
         ItemStack legs = entity.getItemBySlot(EquipmentSlot.LEGS);
         return LegwearItem.isLegwear(legs) ? legs : ItemStack.EMPTY;
     }
 
     public static void markLegwearDirty(LivingEntity entity) {
-        if (TRINKETS) {
-            TrinketsApi.getTrinketComponent(entity).ifPresent(TrinketComponent::update);
-        }
         if (entity instanceof ServerPlayer player) {
             player.getInventory().setChanged();
-        }
-    }
-
-    private static boolean classExists(String name) {
-        try {
-            Class.forName(name);
-            return true;
-        } catch (Throwable t) {
-            return false;
         }
     }
 }

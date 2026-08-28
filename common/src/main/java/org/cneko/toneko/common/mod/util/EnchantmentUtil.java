@@ -4,7 +4,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -12,7 +12,7 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 
 public class EnchantmentUtil {
-    public static boolean hasEnchantment(ResourceLocation id, ItemStack stack){
+    public static boolean hasEnchantment(Identifier id, ItemStack stack){
         AtomicBoolean returnValue = new AtomicBoolean(false);
         stack.getEnchantments().keySet().forEach(enchantment -> {
             if(enchantment.getRegisteredName().equals(id.toString())){

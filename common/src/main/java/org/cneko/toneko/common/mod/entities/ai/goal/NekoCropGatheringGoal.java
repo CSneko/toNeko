@@ -2,7 +2,7 @@ package org.cneko.toneko.common.mod.entities.ai.goal;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.item.ItemNameBlockItem;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -228,7 +228,7 @@ public class NekoCropGatheringGoal extends Goal {
         BlockPos farmlandPos = target.below();
         BlockState farmlandState = level.getBlockState(farmlandPos);
         if (farmlandState.getBlock() == Blocks.FARMLAND && level.isEmptyBlock(target)) {
-            ItemNameBlockItem seedItem = getSeedFromInventory();
+            BlockItem seedItem = getSeedFromInventory();
             if (seedItem != null && seedItem.getBlock() instanceof CropBlock cropBlock) {
                 // 利用种子对应的作物状态进行种植
                 BlockState cropState = cropBlock.defaultBlockState();
@@ -250,9 +250,9 @@ public class NekoCropGatheringGoal extends Goal {
     /**
      * 获取猫娘库存中第一个可种植的种子（支持所有 SeedsItem）
      */
-    private ItemNameBlockItem getSeedFromInventory() {
+    private BlockItem getSeedFromInventory() {
         for (ItemStack stack : this.neko.getInventory().items) {
-            if (!stack.isEmpty() && stack.getItem() instanceof ItemNameBlockItem i && i.getBlock() instanceof CropBlock) {
+            if (!stack.isEmpty() && stack.getItem() instanceof BlockItem i && i.getBlock() instanceof CropBlock) {
                 return i;
             }
         }
@@ -262,7 +262,7 @@ public class NekoCropGatheringGoal extends Goal {
     /**
      * 从猫娘库存中移除一个指定种子
      */
-    private void removeSeedFromInventory(ItemNameBlockItem seedItem) {
+    private void removeSeedFromInventory(BlockItem seedItem) {
         for (int i = 0; i < this.neko.getInventory().items.size(); i++) {
             ItemStack stack = this.neko.getInventory().items.get(i);
             if (!stack.isEmpty() && stack.getItem() == seedItem) {

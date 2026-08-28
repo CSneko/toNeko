@@ -113,7 +113,7 @@ public class NekoProactiveManager {
                 new Object[]{player.getName().getString()});
         AIUtil.sendMessage(neko.getAIStorageId(), player.getUUID(),
                 neko.generateAIPrompt(player), trigger.getMessage(neko, player), response -> {
-            player.getServer().execute(() -> {
+            player.level().getServer().execute(() -> {
                 if (!player.isAlive() || player.isRemoved()) return;
                 // 主动发言回复走统一显示包（客户端按配置显示）
                 String displayText = NekoActionExecutor.process(neko, player, response.getResponse());

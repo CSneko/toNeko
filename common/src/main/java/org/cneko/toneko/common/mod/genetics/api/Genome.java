@@ -1,7 +1,7 @@
 package org.cneko.toneko.common.mod.genetics.api;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -72,11 +72,11 @@ public class Genome {
 
         // 遍历该物种核型定义的所有染色体
         for (int chrId = 1; chrId <= karyotype.getChromosomePairs(); chrId++) {
-            Map<ResourceLocation, ResourceLocation> strand = new HashMap<>();
+            Map<Identifier, Identifier> strand = new HashMap<>();
 
             // 遍历该条染色体上的所有基因座（坑位）
             for (Locus locus : karyotype.getLociOnChromosome(chrId)) {
-                ResourceLocation locusId = locus.id();
+                Identifier locusId = locus.id();
                 List<GeneticsRegistry.WeightedAllele> pool = GeneticsRegistry.WILD_POOLS.get(locusId);
 
                 if (pool != null && !pool.isEmpty()) {
@@ -123,12 +123,12 @@ public class Genome {
 
         // 【第二步：计算并应用新的遗传因子】
         for (ChromosomePair pair : pairs.values()) {
-            for (ResourceLocation locusId : pair.strandA.keySet()) {
+            for (Identifier locusId : pair.strandA.keySet()) {
                 Locus locus = GeneticsRegistry.LOCI.get(locusId);
                 if (locus == null) continue;
 
-                ResourceLocation alleleIdA = pair.strandA.get(locusId);
-                ResourceLocation alleleIdB = pair.strandB.get(locusId);
+                Identifier alleleIdA = pair.strandA.get(locusId);
+                Identifier alleleIdB = pair.strandB.get(locusId);
 
                 Allele alleleA = GeneticsRegistry.getAllele(alleleIdA);
                 Allele alleleB = GeneticsRegistry.getAllele(alleleIdB);
@@ -176,17 +176,17 @@ public class Genome {
 
     public void load(CompoundTag tag) {
         pairs.clear();
-        for (String chrKey : tag.getAllKeys()) {
+        for (String chrKey : tag.keySet()) {
             try {
                 int chrId = Integer.parseInt(chrKey);
-                CompoundTag pairTag = tag.getCompound(chrKey);
+                CompoundTag pairTag = tag.getCompoundOrEmpty(chrKey);
                 ChromosomePair pair = new ChromosomePair();
 
-                CompoundTag strandA = pairTag.getCompound("A");
-                strandA.getAllKeys().forEach(k -> pair.strandA.put(ResourceLocation.parse(k), ResourceLocation.parse(strandA.getString(k))));
+                CompoundTag strandA = pairTag.getCompoundOrEmpty("A");
+                strandA.keySet().forEach(k -> pair.strandA.put(Identifier.parse(k), Identifier.parse(strandA.getStringOr(k, "minecraft:air"))));
 
-                CompoundTag strandB = pairTag.getCompound("B");
-                strandB.getAllKeys().forEach(k -> pair.strandB.put(ResourceLocation.parse(k), ResourceLocation.parse(strandB.getString(k))));
+                CompoundTag strandB = pairTag.getCompoundOrEmpty("B");
+                strandB.keySet().forEach(k -> pair.strandB.put(Identifier.parse(k), Identifier.parse(strandB.getStringOr(k, "minecraft:air"))));
 
                 pairs.put(chrId, pair);
             } catch (NumberFormatException ignored) {}
@@ -197,7 +197,7 @@ public class Genome {
      * 内部类：同源染色体对
      */
     public static class ChromosomePair {
-        public final Map<ResourceLocation, ResourceLocation> strandA = new HashMap<>(); // 来自父亲
-        public final Map<ResourceLocation, ResourceLocation> strandB = new HashMap<>(); // 来自母亲
+        public final Map<Identifier, Identifier> strandA = new HashMap<>(); // 来自父亲
+        public final Map<Identifier, Identifier> strandB = new HashMap<>(); // 来自母亲
     }
 }

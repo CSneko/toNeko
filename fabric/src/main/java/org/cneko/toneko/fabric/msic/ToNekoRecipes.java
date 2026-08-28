@@ -13,7 +13,7 @@ import static org.cneko.toneko.common.mod.util.ResourceLocationUtil.toNekoLoc;
 public class ToNekoRecipes {
     public static void init(){
         NEKO_AGGREGATOR = registerType("neko_aggregator");
-        NEKO_AGGREGATOR_SERIALIZER = registerSer("neko_aggregator", new NekoAggregatorRecipe.Serializer());
+        NEKO_AGGREGATOR_SERIALIZER = registerSer("neko_aggregator", NekoAggregatorRecipe.Serializer);
     }
 
 

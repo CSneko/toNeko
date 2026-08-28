@@ -1,0 +1,21 @@
+{
+  "name": "欢迎来到toNeko",
+  "category": "toneko:intro",
+  "icon": "toneko:neko_tail",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "$(thing)toNeko$() 是一个以 $(#FF69B4)猫娘$() 为主题的 Minecraft 模组。$(br2)在这里，你可以：$(li)变成一只可爱的猫娘$(li)与其他猫娘互动$(li)探索猫猫的世界$(br2)$(#FFB6C1)可爱即是正义！$()"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "如何成为猫娘？",
+      "text": "首先，你需要一瓶 $(item)猫娘药水$()。$(br2)使用 $(item)猫猫聚合台$() 来制作它，然后喝下去——喵！你就是一只可爱的猫娘啦！$(br2)作为猫娘，你可以使用 $(k:toneko.roulette) 打开技能轮盘，使用各种猫猫技能。"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "猫猫能量",
+      "text": "猫娘需要 $(thing)猫猫能量$() 来使用技能。$(br2)你可以通过 $(item)喵喵吸收器$() 来吸收猫猫能量，或者与其他猫娘贴贴来获取能量。$(br2)记得随时关注你的能量条哦，没有能量的话可就没办法喵喵叫了~"
+    }
+  ]
+}

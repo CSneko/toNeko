@@ -1,0 +1,23 @@
+{
+  "anvil_cost": 2,
+  "weight": 10,
+  "description": {
+    "type": "translatable",
+    "translate": "enchantment.toneko.hiss_power"
+  },
+  "supported_items": "toneko:neko_energy_burst",
+  "primary_items": "toneko:neko_energy_burst",
+  "min_cost": {
+    "base": 1,
+    "per_level_above_first": 10
+  },
+  "max_cost": {
+    "base": 15,
+    "per_level_above_first": 10
+  },
+  "max_level": 3,
+  "slots": [
+    "mainhand",
+    "offhand"
+  ]
+}

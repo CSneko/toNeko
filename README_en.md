@@ -26,7 +26,8 @@ If you like this mod, please give it a star~
 - [Forgified Fabric API](https://modrinth.com/mod/forgified-fabric-api) (NeoForge only)
 
 Optional:
-- [trinkets](https://modrinth.com/mod/trinkets) (adds accessory slot support)
+- [trinkets](https://modrinth.com/mod/trinkets) (adds accessory slot support, Fabric only)
+- [curios](https://modrinth.com/mod/curios) (adds accessory slot support, NeoForge only)
 - [luckperms](https://luckperms.net/) (permission management)
 - [patchouli](https://modrinth.com/mod/patchouli) (adds an in-game guide book)
 
@@ -125,7 +126,7 @@ Every neko has a level and affection. Their level grows through interaction, com
 There's also a powerful **Mouflet Boss** waiting for you to challenge! It steals your items, flies around while attacking, acts cute, charms you, and carries you up into the sky — not easy to deal with! But if you're strong enough, you can tame it with a Contract and ride it through the skies nya~
 
 ## Accessories
-toNeko adds several accessories (neko ears, tail, paws, etc.) that you can find in the creative inventory. Of course, they're all craftable. Accessories can be worn directly in armor slots, and if you have [trinkets](https://modrinth.com/mod/trinkets) installed, they can go in accessory slots too~
+toNeko adds several accessories (neko ears, tail, paws, legwear, etc.) that you can find in the creative inventory. Of course, they're all craftable. Accessories can be worn directly in armor slots, and if you have [trinkets](https://modrinth.com/mod/trinkets) (Fabric) or [curios](https://modrinth.com/mod/curios) (NeoForge) installed, they can go in accessory slots too (ears → head slot, tail → back slot, paws → generic curio slot, legwear → socks slot). On NeoForge the mod grants players 4 accessory slots (head / back / curio / socks); add more via the `slots` list in the Curios config if you like.
 
 ## Commands & Permissions (all granted by default)
 ```yaml

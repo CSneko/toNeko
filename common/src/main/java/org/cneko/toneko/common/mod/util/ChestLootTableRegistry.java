@@ -1,7 +1,7 @@
 package org.cneko.toneko.common.mod.util;
 
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -15,7 +15,7 @@ import java.util.Set;
 /**
  * 将 toNeko 模组的物品注入到原版的箱子战利品表中。
  * 此类放在 common 模块中，包含所有战利品定义和添加逻辑。
- * 各平台只需通过 LootTableEvents.MODIFY 事件调用 {@link #addToTable(ResourceLocation, LootTable.Builder)} 即可。
+ * 各平台只需通过 LootTableEvents.MODIFY 事件调用 {@link #addToTable(Identifier, LootTable.Builder)} 即可。
  * <p>
  * 注意：所有物品引用均通过 {@link BuiltInRegistries#ITEM} 运行时查找，
  * 以避免 common 模块中 ToNekoItems 静态字段未被平台模块赋值的问题。
@@ -26,87 +26,87 @@ public final class ChestLootTableRegistry {
 
     // ============ 原版箱子战利品表 ID 集合 ============
 
-    private static final Set<ResourceLocation> VILLAGE_CHESTS = Set.of(
-            ResourceLocation.withDefaultNamespace("chests/village/village_plains_house"),
-            ResourceLocation.withDefaultNamespace("chests/village/village_desert_house"),
-            ResourceLocation.withDefaultNamespace("chests/village/village_savanna_house"),
-            ResourceLocation.withDefaultNamespace("chests/village/village_snowy_house"),
-            ResourceLocation.withDefaultNamespace("chests/village/village_taiga_house"),
-            ResourceLocation.withDefaultNamespace("chests/village/village_armorer"),
-            ResourceLocation.withDefaultNamespace("chests/village/village_butcher"),
-            ResourceLocation.withDefaultNamespace("chests/village/village_cartographer"),
-            ResourceLocation.withDefaultNamespace("chests/village/village_fisher"),
-            ResourceLocation.withDefaultNamespace("chests/village/village_fletcher"),
-            ResourceLocation.withDefaultNamespace("chests/village/village_mason"),
-            ResourceLocation.withDefaultNamespace("chests/village/village_shepherd"),
-            ResourceLocation.withDefaultNamespace("chests/village/village_tannery"),
-            ResourceLocation.withDefaultNamespace("chests/village/village_temple"),
-            ResourceLocation.withDefaultNamespace("chests/village/village_toolsmith"),
-            ResourceLocation.withDefaultNamespace("chests/village/village_weaponsmith")
+    private static final Set<Identifier> VILLAGE_CHESTS = Set.of(
+            Identifier.withDefaultNamespace("chests/village/village_plains_house"),
+            Identifier.withDefaultNamespace("chests/village/village_desert_house"),
+            Identifier.withDefaultNamespace("chests/village/village_savanna_house"),
+            Identifier.withDefaultNamespace("chests/village/village_snowy_house"),
+            Identifier.withDefaultNamespace("chests/village/village_taiga_house"),
+            Identifier.withDefaultNamespace("chests/village/village_armorer"),
+            Identifier.withDefaultNamespace("chests/village/village_butcher"),
+            Identifier.withDefaultNamespace("chests/village/village_cartographer"),
+            Identifier.withDefaultNamespace("chests/village/village_fisher"),
+            Identifier.withDefaultNamespace("chests/village/village_fletcher"),
+            Identifier.withDefaultNamespace("chests/village/village_mason"),
+            Identifier.withDefaultNamespace("chests/village/village_shepherd"),
+            Identifier.withDefaultNamespace("chests/village/village_tannery"),
+            Identifier.withDefaultNamespace("chests/village/village_temple"),
+            Identifier.withDefaultNamespace("chests/village/village_toolsmith"),
+            Identifier.withDefaultNamespace("chests/village/village_weaponsmith")
     );
 
-    private static final Set<ResourceLocation> DUNGEON_CHESTS = Set.of(
-            ResourceLocation.withDefaultNamespace("chests/simple_dungeon")
+    private static final Set<Identifier> DUNGEON_CHESTS = Set.of(
+            Identifier.withDefaultNamespace("chests/simple_dungeon")
     );
 
-    private static final Set<ResourceLocation> MINESHAFT_CHESTS = Set.of(
-            ResourceLocation.withDefaultNamespace("chests/abandoned_mineshaft")
+    private static final Set<Identifier> MINESHAFT_CHESTS = Set.of(
+            Identifier.withDefaultNamespace("chests/abandoned_mineshaft")
     );
 
-    private static final Set<ResourceLocation> TREASURE_CHESTS = Set.of(
-            ResourceLocation.withDefaultNamespace("chests/desert_pyramid"),
-            ResourceLocation.withDefaultNamespace("chests/jungle_temple"),
-            ResourceLocation.withDefaultNamespace("chests/shipwreck_treasure")
+    private static final Set<Identifier> TREASURE_CHESTS = Set.of(
+            Identifier.withDefaultNamespace("chests/desert_pyramid"),
+            Identifier.withDefaultNamespace("chests/jungle_temple"),
+            Identifier.withDefaultNamespace("chests/shipwreck_treasure")
     );
 
-    private static final Set<ResourceLocation> STRONGHOLD_CHESTS = Set.of(
-            ResourceLocation.withDefaultNamespace("chests/stronghold_corridor"),
-            ResourceLocation.withDefaultNamespace("chests/stronghold_crossing"),
-            ResourceLocation.withDefaultNamespace("chests/stronghold_library")
+    private static final Set<Identifier> STRONGHOLD_CHESTS = Set.of(
+            Identifier.withDefaultNamespace("chests/stronghold_corridor"),
+            Identifier.withDefaultNamespace("chests/stronghold_crossing"),
+            Identifier.withDefaultNamespace("chests/stronghold_library")
     );
 
-    private static final Set<ResourceLocation> ANCIENT_CITY_CHESTS = Set.of(
-            ResourceLocation.withDefaultNamespace("chests/ancient_city"),
-            ResourceLocation.withDefaultNamespace("chests/ancient_city_ice_box")
+    private static final Set<Identifier> ANCIENT_CITY_CHESTS = Set.of(
+            Identifier.withDefaultNamespace("chests/ancient_city"),
+            Identifier.withDefaultNamespace("chests/ancient_city_ice_box")
     );
 
-    private static final Set<ResourceLocation> END_CITY_CHESTS = Set.of(
-            ResourceLocation.withDefaultNamespace("chests/end_city_treasure")
+    private static final Set<Identifier> END_CITY_CHESTS = Set.of(
+            Identifier.withDefaultNamespace("chests/end_city_treasure")
     );
 
-    private static final Set<ResourceLocation> BASTION_CHESTS = Set.of(
-            ResourceLocation.withDefaultNamespace("chests/bastion_treasure"),
-            ResourceLocation.withDefaultNamespace("chests/bastion_other"),
-            ResourceLocation.withDefaultNamespace("chests/bastion_bridge"),
-            ResourceLocation.withDefaultNamespace("chests/bastion_hoglin_stable")
+    private static final Set<Identifier> BASTION_CHESTS = Set.of(
+            Identifier.withDefaultNamespace("chests/bastion_treasure"),
+            Identifier.withDefaultNamespace("chests/bastion_other"),
+            Identifier.withDefaultNamespace("chests/bastion_bridge"),
+            Identifier.withDefaultNamespace("chests/bastion_hoglin_stable")
     );
 
-    private static final Set<ResourceLocation> WOODLAND_MANSION_CHESTS = Set.of(
-            ResourceLocation.withDefaultNamespace("chests/woodland_mansion")
+    private static final Set<Identifier> WOODLAND_MANSION_CHESTS = Set.of(
+            Identifier.withDefaultNamespace("chests/woodland_mansion")
     );
 
-    private static final Set<ResourceLocation> PILLAGER_OUTPOST_CHESTS = Set.of(
-            ResourceLocation.withDefaultNamespace("chests/pillager_outpost")
+    private static final Set<Identifier> PILLAGER_OUTPOST_CHESTS = Set.of(
+            Identifier.withDefaultNamespace("chests/pillager_outpost")
     );
 
-    private static final Set<ResourceLocation> SHIPWRECK_SUPPLY_CHESTS = Set.of(
-            ResourceLocation.withDefaultNamespace("chests/shipwreck_supply")
+    private static final Set<Identifier> SHIPWRECK_SUPPLY_CHESTS = Set.of(
+            Identifier.withDefaultNamespace("chests/shipwreck_supply")
     );
 
-    private static final Set<ResourceLocation> RUINED_PORTAL_CHESTS = Set.of(
-            ResourceLocation.withDefaultNamespace("chests/ruined_portal")
+    private static final Set<Identifier> RUINED_PORTAL_CHESTS = Set.of(
+            Identifier.withDefaultNamespace("chests/ruined_portal")
     );
 
-    private static final Set<ResourceLocation> BURIED_TREASURE_CHESTS = Set.of(
-            ResourceLocation.withDefaultNamespace("chests/buried_treasure")
+    private static final Set<Identifier> BURIED_TREASURE_CHESTS = Set.of(
+            Identifier.withDefaultNamespace("chests/buried_treasure")
     );
 
-    private static final Set<ResourceLocation> NETHER_BRIDGE_CHESTS = Set.of(
-            ResourceLocation.withDefaultNamespace("chests/nether_bridge")
+    private static final Set<Identifier> NETHER_BRIDGE_CHESTS = Set.of(
+            Identifier.withDefaultNamespace("chests/nether_bridge")
     );
 
-    private static final Set<ResourceLocation> IGLOO_CHESTS = Set.of(
-            ResourceLocation.withDefaultNamespace("chests/igloo_chest")
+    private static final Set<Identifier> IGLOO_CHESTS = Set.of(
+            Identifier.withDefaultNamespace("chests/igloo_chest")
     );
 
     // ============ 辅助：通过注册表运行时查找物品 ============
@@ -117,7 +117,7 @@ public final class ChestLootTableRegistry {
      * （这些字段在 Fabric/NeoForge 平台模块中会被 shadow，永远为 null）。
      */
     private static Item item(String name) {
-        return BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("toneko", name));
+        return BuiltInRegistries.ITEM.getValue(Identifier.fromNamespaceAndPath("toneko", name));
     }
 
     // ============ 公开入口：由各平台的事件回调调用 ============
@@ -126,10 +126,10 @@ public final class ChestLootTableRegistry {
      * 根据战利品表 ID 向其中添加该模组的物品。
      * 由各平台（Fabric/NeoForge）的 LootTableEvents.MODIFY 回调调用。
      *
-     * @param tableId 原版战利品表的 ResourceLocation
+     * @param tableId 原版战利品表的 Identifier
      * @param builder 战利品表的 Builder
      */
-    public static void addToTable(ResourceLocation tableId, LootTable.Builder builder) {
+    public static void addToTable(Identifier tableId, LootTable.Builder builder) {
         if (VILLAGE_CHESTS.contains(tableId)) {
             addVillageLoot(builder);
         } else if (DUNGEON_CHESTS.contains(tableId)) {

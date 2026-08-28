@@ -1,4 +1,6 @@
 package org.cneko.toneko.common.mod.items;
+import org.cneko.toneko.common.mod.util.NekoIds;
+import org.cneko.toneko.common.mod.entities.INeko;
 
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.component.DataComponents;
@@ -9,7 +11,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -28,8 +29,10 @@ public class NekoPotionItem extends PotionItem {
     public static final String ID = "neko_potion";
 
     public NekoPotionItem() {
-        super(new Properties().stacksTo(1));
-
+        // 26.1.2：饮用行为由 CONSUMABLE 组件驱动（同原版药水），缺失则 use() 直接无效
+        super(NekoIds.itemProps(ID).stacksTo(1)
+                .component(net.minecraft.core.component.DataComponents.CONSUMABLE,
+                        net.minecraft.world.item.component.Consumables.DEFAULT_DRINK));
     }
 
     @Override
@@ -41,10 +44,11 @@ public class NekoPotionItem extends PotionItem {
     }
     public void toneko(Level world, Player neko, InteractionHand hand) {
         // 如果食物被成功吃掉并且玩家还不是猫猫，则把玩家变成猫猫
-        InteractionResultHolder<ItemStack> result = super.use(world, neko, hand);
+        // 26.x：Item.use 直接返回 InteractionResult（不再包 Holder）
+        net.minecraft.world.InteractionResult result = super.use(world, neko, hand);
         if (world.isClientSide()) return;
-        if(result.getResult() == InteractionResult.CONSUME && !neko.isNeko()){
-            neko.setNeko(true);
+        if(result == net.minecraft.world.InteractionResult.CONSUME && !((INeko) neko).isNeko()){
+            ((INeko) neko).setNeko(true);
             if(neko instanceof ServerPlayer player){
                 //哼!哼!喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵!
                 // 向猫猫显示标题
@@ -59,9 +63,9 @@ public class NekoPotionItem extends PotionItem {
                 // 触发成就：变身！猫娘！
                 ToNekoCriteria.NEKO_BECOME.trigger(player);
             }
-        }else if (result.getResult() == InteractionResult.CONSUME &&neko.isNeko()){
+        }else if (result == net.minecraft.world.InteractionResult.CONSUME &&((INeko) neko).isNeko()){
             // 恢复一些能量
-            neko.setNekoEnergy(neko.getNekoEnergy() + 100);
+            ((INeko) neko).setNekoEnergy(((INeko) neko).getNekoEnergy() + 100);
         }
     }
 
@@ -82,7 +86,7 @@ public class NekoPotionItem extends PotionItem {
 
         if (playerEntity == null || !playerEntity.getAbilities().instabuild) {
             // 把玩家变成猫猫
-            if (!world.isClientSide) {
+            if (!world.isClientSide()) {
                 toneko(world, playerEntity, user.getUsedItemHand());
             }
             if (stack.isEmpty()) {
@@ -95,7 +99,7 @@ public class NekoPotionItem extends PotionItem {
 
         }
         // 把玩家变成猫猫
-        if (!world.isClientSide) {
+        if (!world.isClientSide()) {
             toneko(world, playerEntity, user.getUsedItemHand());
         }
         user.gameEvent(GameEvent.DRINK);

@@ -28,7 +28,7 @@ public class NekoHutEntitySpawner {
         // 扫描 chunk 中是否存在聚合台
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
-                for (int y = level.getMinBuildHeight(); y < level.getMaxBuildHeight(); y++) {
+                for (int y = level.getMinY(); y < level.getMaxY(); y++) {
                     BlockPos pos = start.offset(x, y, z);
                     if (level.getBlockState(pos).is(aggregator)) {
                         spawnNeko(level, pos);
@@ -43,7 +43,7 @@ public class NekoHutEntitySpawner {
     }
 
     private static void spawnNeko(ServerLevel level, BlockPos aggregatorPos) {
-        AdventurerNeko neko = ToNekoEntities.ADVENTURER_NEKO.create(level);
+        AdventurerNeko neko = ToNekoEntities.ADVENTURER_NEKO.create(level, net.minecraft.world.entity.EntitySpawnReason.STRUCTURE);
         if (neko != null) {
             neko.setPos(aggregatorPos.getX() + 0.5, aggregatorPos.getY() + 1, aggregatorPos.getZ() + 0.5);
             neko.setPersistenceRequired();

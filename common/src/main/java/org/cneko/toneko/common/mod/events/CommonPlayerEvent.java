@@ -1,4 +1,5 @@
 package org.cneko.toneko.common.mod.events;
+import org.cneko.toneko.common.mod.entities.INeko;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
@@ -25,9 +26,9 @@ public class CommonPlayerEvent {
 
     public static void startSleep(LivingEntity entity, BlockPos pos) {
         if(entity instanceof ServerPlayer player){
-            for (Quirk quirk : player.getQuirks()){
+            for (Quirk quirk : ((INeko) player).getQuirks()){
                 if(quirk instanceof ModQuirk modQuirk){
-                    modQuirk.startSleep(player,pos);
+                    modQuirk.startSleep((INeko) player,pos);
                 }
             }
         }
@@ -35,9 +36,9 @@ public class CommonPlayerEvent {
 
     public static void stopSleep(LivingEntity entity, BlockPos pos) {
         if(entity instanceof ServerPlayer player){
-            for (Quirk quirk : player.getQuirks()){
+            for (Quirk quirk : ((INeko) player).getQuirks()){
                 if(quirk instanceof ModQuirk modQuirk){
-                    modQuirk.stopSleep(player,pos);
+                    modQuirk.stopSleep((INeko) player,pos);
                 }
             }
         }

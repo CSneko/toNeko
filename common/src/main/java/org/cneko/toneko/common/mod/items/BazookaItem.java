@@ -6,10 +6,10 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -34,7 +34,7 @@ import java.util.List;
 
 public class BazookaItem extends Item {
     public static final String ID = "bazooka";
-    private static final ResourceLocation EMPTY = ResourceLocation.withDefaultNamespace("empty");
+    private static final Identifier EMPTY = Identifier.withDefaultNamespace("empty");
 
     public BazookaItem(Properties properties) {
         super(properties);
@@ -42,20 +42,24 @@ public class BazookaItem extends Item {
 
 
 
-    @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltips, @NotNull TooltipFlag tooltipFlag) {
-        super.appendHoverText(stack, context, tooltips, tooltipFlag);
+        @Override
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull net.minecraft.world.item.component.TooltipDisplay display, @NotNull java.util.function.Consumer<Component> adder, @NotNull TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, display, adder, tooltipFlag);
+        // 兼容旧实现：先收集到 List，再逐条发送
+        List<Component> tooltips = new ArrayList<>();
         Ammunition ammo = getAmmunition(stack);
         if (ammo instanceof Item ammoItem) {
             // 弹药类型显示
             tooltips.add(Component.translatable("item.toneko.bazooka.tip.ammo_type")
                     .append(" ")
-                    .append(ammoItem.getDescription())
+                    .append(ammoItem.getName(ItemStack.EMPTY))
             );
         } else {
             tooltips.add(Component.translatable("item.toneko.bazooka.tip.no_ammo"));
         }
         tooltips.add(Component.translatable("item.toneko.bazooka.tip.reload"));
+    
+        for (Component t : tooltips) adder.accept(t);
     }
 
     public boolean isAmmunitionLegal(Item item) {
@@ -64,13 +68,13 @@ public class BazookaItem extends Item {
 
     @Nullable
     public Ammunition getAmmunition(ItemStack stack) {
-        ResourceLocation res = stack.getOrDefault(ToNekoComponents.ITEM_ID_COMPONENT, EMPTY);
-        Item item = BuiltInRegistries.ITEM.get(res);
+        Identifier res = stack.getOrDefault(ToNekoComponents.ITEM_ID_COMPONENT, EMPTY);
+        Item item = BuiltInRegistries.ITEM.getValue(res);
         return item instanceof Ammunition am ? am : null;
     }
 
     public ItemStack foundAmmunitionInventory(Player shooter, Ammunition am) {
-        for (ItemStack stack : shooter.getInventory().items) {
+        for (ItemStack stack : shooter.getInventory().getNonEquipmentItems()) {
             if (stack.getItem() == am) {
                 return stack;
             }
@@ -81,7 +85,7 @@ public class BazookaItem extends Item {
     private @Nullable Ammunition findNextAmmoType(Player player, ItemStack bazookaStack) {
         List<Ammunition> availableAmmo = new ArrayList<>();
         // 收集所有可用的弹药类型
-        for (ItemStack stack : player.getInventory().items) {
+        for (ItemStack stack : player.getInventory().getNonEquipmentItems()) {
             if (stack.getItem() instanceof Ammunition ammo && !availableAmmo.contains(ammo)) {
                 availableAmmo.add(ammo);
             }
@@ -95,37 +99,37 @@ public class BazookaItem extends Item {
         return availableAmmo.get(nextIndex);
     }
 
-    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
+    public @NotNull InteractionResult use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
         ItemStack bazookaStack = player.getItemInHand(hand);
 
         if (player.isShiftKeyDown()) {
             // 换弹操作
-            if (!level.isClientSide) {
+            if (!level.isClientSide()) {
                 Ammunition newAmmo = findNextAmmoType(player, bazookaStack);
                 if (newAmmo != null) {
                     setAmmunitionType((Item) newAmmo, bazookaStack);
-                    player.displayClientMessage(Component.translatable("item.toneko.bazooka.reloaded")
+                    player.sendOverlayMessage(Component.translatable("item.toneko.bazooka.reloaded")
                             .append(" ")
-                            .append(((Item) newAmmo).getDescription()), true);
+                            .append(((Item) newAmmo).getName(ItemStack.EMPTY)));
                 }
             }
         } else {
             // 发射逻辑
-            if (!level.isClientSide) {
+            if (!level.isClientSide()) {
                 Ammunition ammoType = getAmmunition(bazookaStack);
                 if (ammoType == null) {
-                    player.displayClientMessage(Component.translatable("item.toneko.bazooka.no_ammo_selected"), true);
-                    return InteractionResultHolder.fail(bazookaStack);
+                    player.sendOverlayMessage(Component.translatable("item.toneko.bazooka.no_ammo_selected"));
+                    return InteractionResult.FAIL;
                 }
 
                 ItemStack ammoStack = foundAmmunitionInventory(player, ammoType);
                 if (ammoStack.isEmpty()) {
-                    player.displayClientMessage(Component.translatable("item.toneko.bazooka.out_of_ammo"), true);
-                    return InteractionResultHolder.fail(bazookaStack);
+                    player.sendOverlayMessage(Component.translatable("item.toneko.bazooka.out_of_ammo"));
+                    return InteractionResult.FAIL;
                 }
 
                 fire(player, bazookaStack, ammoStack);
-                player.getCooldowns().addCooldown(this, ammoType.getCooldownTicks(bazookaStack, ammoStack));
+                player.getCooldowns().addCooldown(bazookaStack, ammoType.getCooldownTicks(bazookaStack, ammoStack));
 
             }
             // 播放音效
@@ -138,7 +142,7 @@ public class BazookaItem extends Item {
                     1.0f
             );
         }
-        return InteractionResultHolder.success(bazookaStack);
+        return InteractionResult.SUCCESS;
     }
 
     @Override
@@ -149,12 +153,12 @@ public class BazookaItem extends Item {
     // 设置当前装填的弹药类型
     public void setAmmunitionType(Item ammoItem, ItemStack bazookaStack) {
         if (ammoItem instanceof Ammunition) {
-            ResourceLocation ammoId = BuiltInRegistries.ITEM.getKey(ammoItem);
+            Identifier ammoId = BuiltInRegistries.ITEM.getKey(ammoItem);
             bazookaStack.set(ToNekoComponents.ITEM_ID_COMPONENT, ammoId);
         }
     }
 
-    public InteractionResultHolder<ItemStack> reload(Player player, ItemStack bazooka, ItemStack ammoStack) {
+    public @NotNull InteractionResult reload(Player player, ItemStack bazooka, ItemStack ammoStack) {
         if (ammoStack.getItem() instanceof Ammunition) {
             // 设置弹药类型
             setAmmunitionType(ammoStack.getItem(), bazooka);
@@ -162,9 +166,9 @@ public class BazookaItem extends Item {
             if (!player.isCreative()) {
                 ammoStack.shrink(1);
             }
-            return InteractionResultHolder.success(bazooka);
+            return InteractionResult.SUCCESS;
         }
-        return InteractionResultHolder.pass(bazooka);
+        return InteractionResult.PASS;
     }
     public void fire(LivingEntity shooter, ItemStack bazookaStack, ItemStack ammunition) {
         if (ammunition.isEmpty()) return;
@@ -216,15 +220,7 @@ public class BazookaItem extends Item {
         return super.canBeEnchantedWith(stack, enchantment, context);
     }
 
-    @Override
-    public boolean isEnchantable(@NotNull ItemStack stack) {
-        return true; // 允许被附魔
-    }
 
-    @Override
-    public int getEnchantmentValue() {
-        return 10;
-    }
 
     public interface Ammunition {
         void hitOnEntity(LivingEntity shooter, LivingEntity target, ItemStack bazooka, ItemStack ammunition);

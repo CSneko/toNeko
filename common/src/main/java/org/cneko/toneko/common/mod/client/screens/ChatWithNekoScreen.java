@@ -2,7 +2,7 @@ package org.cneko.toneko.common.mod.client.screens;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
@@ -155,10 +155,11 @@ public class ChatWithNekoScreen extends Screen implements INekoScreen {
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    public boolean keyPressed(net.minecraft.client.input.KeyEvent ke) {
+        int keyCode = ke.key();
         if (keyCode == 257 || keyCode == 335) { sendMessage(); return true; }
         if (keyCode == 256) { onClose(); return true; }
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(ke);
     }
 
     @Override
@@ -171,7 +172,9 @@ public class ChatWithNekoScreen extends Screen implements INekoScreen {
     }
 
     @Override
-    public boolean mouseClicked(double mx, double my, int button) {
+    public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent event, boolean active) {
+        double mx = event.x(), my = event.y();
+        int button = event.button();
         if (button == 0 && contentHeight > chatH()) {
             int sx = chatX() + chatW() - 3;
             int sh = scrollbarHeight();
@@ -184,11 +187,12 @@ public class ChatWithNekoScreen extends Screen implements INekoScreen {
                 return true;
             }
         }
-        return super.mouseClicked(mx, my, button);
+        return super.mouseClicked(event, active);
     }
 
     @Override
-    public boolean mouseDragged(double mx, double my, int button, double dx, double dy) {
+    public boolean mouseDragged(net.minecraft.client.input.MouseButtonEvent event, double dx, double dy) {
+        double mx = event.x(), my = event.y();
         if (draggingScrollbar) {
             double maxScroll = Math.max(0, contentHeight - chatH());
             double track = chatH();
@@ -197,25 +201,26 @@ public class ChatWithNekoScreen extends Screen implements INekoScreen {
             scrollAmount = Mth.clamp(desiredTop / track * maxScroll, 0, maxScroll);
             return true;
         }
-        return super.mouseDragged(mx, my, button, dx, dy);
+        return super.mouseDragged(event, dx, dy);
     }
 
     @Override
-    public boolean mouseReleased(double mx, double my, int button) {
+    public boolean mouseReleased(net.minecraft.client.input.MouseButtonEvent event) {
+        int button = event.button();
         if (button == 0 && draggingScrollbar) {
             draggingScrollbar = false;
             double maxScroll = Math.max(0, contentHeight - chatH());
             stickToBottom = scrollAmount >= maxScroll - 1;
             return true;
         }
-        return super.mouseReleased(mx, my, button);
+        return super.mouseReleased(event);
     }
 
     @Override
-    public void render(@NotNull GuiGraphics g, int mx, int my, float pt) {
+    public void extractRenderState(@NotNull GuiGraphicsExtractor g, int mx, int my, float pt) {
         g.fill(0, 0, width, height, 0x80000000);
         g.fill(0, 0, width, 30, 0xC0000000);
-        g.drawCenteredString(font, getTitle(), width / 2, 8, 0xFFFFFF);
+        g.centeredText(font, getTitle(), width / 2, 8, 0xFFFFFF);
 
         int chatX = chatX();
         int chatY = chatY();
@@ -273,7 +278,7 @@ public class ChatWithNekoScreen extends Screen implements INekoScreen {
             g.fill(scrollbarX(), scrollbarY(), scrollbarX() + 3, scrollbarY() + scrollbarHeight(), 0x80FFB6C1);
         }
 
-        super.render(g, mx, my, pt);
+        super.extractRenderState(g, mx, my, pt);
     }
 
     // ===== 消息块渲染（角色解析 + 气泡绘制） =====
@@ -303,7 +308,7 @@ public class ChatWithNekoScreen extends Screen implements INekoScreen {
      * 绘制一条消息块：AI 消息左对齐带深色气泡，用户消息右对齐带橙色气泡，错误/无角色无背景。
      * 历史行前缀中的 § 码在 Component.literal 下不生效，颜色由这里按角色显式指定。
      */
-    private void renderBlock(GuiGraphics g, String line, int chatX, int chatW, int renderY) {
+    private void renderBlock(GuiGraphicsExtractor g, String line, int chatX, int chatW, int renderY) {
         MsgRole role = roleOf(line);
         String text = textOf(line);
         int chatY = chatY();
@@ -341,7 +346,7 @@ public class ChatWithNekoScreen extends Screen implements INekoScreen {
                 int tx = role == MsgRole.USER
                         ? x1 - BUBBLE_X_PAD - font.width(w)
                         : x0 + BUBBLE_X_PAD;
-                g.drawString(font, Component.literal(w), tx, ty, color);
+                g.text(font, Component.literal(w), tx, ty, color);
             }
             ty += lineH;
         }
@@ -405,5 +410,5 @@ public class ChatWithNekoScreen extends Screen implements INekoScreen {
     @Override public boolean isPauseScreen() { return false; }
 
     @Override
-    public void renderBackground(@NotNull GuiGraphics g, int mx, int my, float pt) {}
+    public void extractBackground(@NotNull GuiGraphicsExtractor g, int mx, int my, float pt) {}
 }

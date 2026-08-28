@@ -171,7 +171,7 @@ public class MobSunBaskingGoal extends Goal {
      * 检查是否是白天
      */
     private boolean isDaytime() {
-        long dayTime = this.level.getDayTime() % 24000;
+        long dayTime = this.level.getOverworldClockTime() % 24000;
         return dayTime >= 0 && dayTime <= 12000; // 白天时间
     }
 

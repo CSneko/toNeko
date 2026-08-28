@@ -4,7 +4,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -148,7 +148,7 @@ public class NekoActionExecutor {
                 String msg = LanguageUtil.translatable("misc.toneko.ai.actions.pet_request.message");
                 Messaging.sendNekoChat(speaker, neko, msg);
                 neko.level().playSound(null, neko.getX(), neko.getY(), neko.getZ(),
-                        SoundEvents.CAT_PURR, neko.getSoundSource(), 1.0f, 1.0f);
+                        SoundEvents.CAT_PURR_BABY, neko.getSoundSource(), 1.0f, 1.0f);
                 return true;
             }
             @Override
@@ -163,7 +163,7 @@ public class NekoActionExecutor {
             public boolean handle(NekoEntity neko, ServerPlayer speaker, LivingEntity target, NekoAction action) {
                 neko.playExpressAnim("purr");
                 neko.level().playSound(null, neko.getX(), neko.getY(), neko.getZ(),
-                        SoundEvents.CAT_PURR, neko.getSoundSource(), 1.0f, 1.0f);
+                        SoundEvents.CAT_PURR_BABY, neko.getSoundSource(), 1.0f, 1.0f);
                 String msg = LanguageUtil.translatable("misc.toneko.ai.actions.purr.message");
                 Messaging.sendNekoChat(speaker, neko, msg);
                 return true;
@@ -185,7 +185,7 @@ public class NekoActionExecutor {
                     level.sendParticles(ParticleTypes.NOTE,
                             neko.getX(), neko.getY() + 1.0, neko.getZ(), 6, 0.4, 0.4, 0.4, 0.05);
                     level.playSound(null, neko.getX(), neko.getY(), neko.getZ(),
-                            SoundEvents.CAT_AMBIENT, neko.getSoundSource(), 1.0f, 1.0f);
+                            SoundEvents.CAT_AMBIENT_BABY, neko.getSoundSource(), 1.0f, 1.0f);
                 });
                 return true;
             }
@@ -280,7 +280,7 @@ public class NekoActionExecutor {
                     level.sendParticles(ParticleTypes.NOTE,
                             neko.getX(), neko.getY() + 1.0, neko.getZ(), 8, 0.4, 0.4, 0.4, 0.05);
                     level.playSound(null, neko.getX(), neko.getY(), neko.getZ(),
-                            SoundEvents.CAT_AMBIENT, neko.getSoundSource(), 1.0f, 1.0f);
+                            SoundEvents.CAT_AMBIENT_BABY, neko.getSoundSource(), 1.0f, 1.0f);
                     Messaging.sendNekoChat(speaker, neko,
                             LanguageUtil.translatable("misc.toneko.ai.actions.play.message"));
                 });
@@ -303,7 +303,7 @@ public class NekoActionExecutor {
                     level.sendParticles(ParticleTypes.HEART,
                             neko.getX(), neko.getY() + 1.0, neko.getZ(), 6, 0.4, 0.4, 0.4, 0.1);
                     level.playSound(null, neko.getX(), neko.getY(), neko.getZ(),
-                            SoundEvents.CAT_PURR, neko.getSoundSource(), 1.0f, 1.0f);
+                            SoundEvents.CAT_PURR_BABY, neko.getSoundSource(), 1.0f, 1.0f);
                     Messaging.sendNekoChat(speaker, neko,
                             LanguageUtil.translatable("misc.toneko.ai.actions.groom.message"));
                 });
@@ -340,11 +340,11 @@ public class NekoActionExecutor {
             @Override
             public boolean handle(NekoEntity neko, ServerPlayer speaker, LivingEntity target, NekoAction action) {
                 net.minecraft.world.level.Level level = neko.level();
-                if (!level.isDay() || !level.canSeeSkyFromBelowWater(neko.blockPosition())) return false;
+                if (!org.cneko.toneko.common.mod.util.NekoLevelUtil.isDay(level) || !level.canSeeSkyFromBelowWater(neko.blockPosition())) return false;
                 neko.setNekoEnergy(neko.getNekoEnergy() + 10);
                 neko.playExpressAnim("purr");
                 level.playSound(null, neko.getX(), neko.getY(), neko.getZ(),
-                        SoundEvents.CAT_PURR, neko.getSoundSource(), 1.0f, 1.0f);
+                        SoundEvents.CAT_PURR_BABY, neko.getSoundSource(), 1.0f, 1.0f);
                 ((ServerLevel) level).sendParticles(ParticleTypes.NOTE,
                         neko.getX(), neko.getY() + 1.0, neko.getZ(), 6, 0.4, 0.4, 0.4, 0.05);
                 Messaging.sendNekoChat(speaker, neko,
@@ -453,20 +453,20 @@ public class NekoActionExecutor {
                 if (slot < 0) return false;
                 ItemStack stack = inv.removeItem(slot, 1);
                 // 盔甲穿对应部位，其他物品拿在主手
-                EquipmentSlot equipSlot = stack.getItem() instanceof net.minecraft.world.item.ArmorItem armor
-                        ? armor.getEquipmentSlot() : EquipmentSlot.MAINHAND;
+                net.minecraft.world.item.equipment.Equippable equippable = stack.get(net.minecraft.core.component.DataComponents.EQUIPPABLE);
+                EquipmentSlot equipSlot = equippable != null ? equippable.slot() : EquipmentSlot.MAINHAND;
                 if (equipSlot == null || equipSlot == EquipmentSlot.MAINHAND || equipSlot == EquipmentSlot.OFFHAND) {
                     // 手持（或非装备类物品）：拿在主手
                     ItemStack old = neko.getItemInHand(InteractionHand.MAIN_HAND);
                     neko.setItemInHand(InteractionHand.MAIN_HAND, stack);
                     if (!old.isEmpty() && !neko.addItem(old)) {
-                        neko.spawnAtLocation(old); // 背包满：旧装备掉落
+                        neko.drop(old, false, false); // 背包满：旧装备掉落
                     }
                 } else {
                     ItemStack old = neko.getItemBySlot(equipSlot);
                     neko.setItemSlot(equipSlot, stack);
                     if (!old.isEmpty() && !neko.addItem(old)) {
-                        neko.spawnAtLocation(old);
+                        neko.drop(old, false, false);
                     }
                 }
                 return true;
@@ -790,7 +790,7 @@ public class NekoActionExecutor {
                     ItemStack old = neko.getItemBySlot(EquipmentSlot.LEGS);
                     neko.setItemSlot(EquipmentSlot.LEGS, toWear);
                     if (!old.isEmpty() && !neko.addItem(old)) {
-                        neko.spawnAtLocation(old); // 背包满：旧装备掉落
+                        neko.drop(old, false, false); // 背包满：旧装备掉落
                     }
                     return true;
                 }
@@ -815,7 +815,7 @@ public class NekoActionExecutor {
                     level.sendParticles(ParticleTypes.HEART,
                             neko.getX(), neko.getY() + 1.0, neko.getZ(), 6, 0.4, 0.4, 0.4, 0.1);
                     level.playSound(null, neko.getX(), neko.getY(), neko.getZ(),
-                            SoundEvents.CAT_AMBIENT, neko.getSoundSource(), 1.0f, 1.0f);
+                            SoundEvents.CAT_AMBIENT_BABY, neko.getSoundSource(), 1.0f, 1.0f);
                 });
                 return true;
             }
@@ -969,14 +969,14 @@ public class NekoActionExecutor {
             }
         } else {
             // 非玩家实体：掉落到其位置
-            target.spawnAtLocation(stack);
+            target.drop(stack, false, false);
         }
     }
 
     private static Item parseItem(String itemId) {
-        ResourceLocation id = ResourceLocation.tryParse(itemId);
+        Identifier id = Identifier.tryParse(itemId);
         if (id == null) return null;
-        Item item = BuiltInRegistries.ITEM.get(id);
+        Item item = BuiltInRegistries.ITEM.getValue(id);
         return item == null || item == net.minecraft.world.item.Items.AIR ? null : item;
     }
 

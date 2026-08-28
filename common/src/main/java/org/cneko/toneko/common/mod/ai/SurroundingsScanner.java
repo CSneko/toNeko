@@ -61,9 +61,8 @@ public final class SurroundingsScanner {
     );
     /** 矿石 tag 列表（仅地下时扫描） */
     private static final List<TagKey<Block>> ORE_TAGS = List.of(
-            BlockTags.COAL_ORES, BlockTags.IRON_ORES, BlockTags.GOLD_ORES,
-            BlockTags.REDSTONE_ORES, BlockTags.LAPIS_ORES, BlockTags.DIAMOND_ORES,
-            BlockTags.EMERALD_ORES, BlockTags.COPPER_ORES
+            // 26.x：煤矿/红石等精细 tag 被移除，保留仍存在的常见矿石 tag
+            BlockTags.IRON_ORES, BlockTags.GOLD_ORES, BlockTags.COPPER_ORES
     );
 
     // ---- 缓存：同一猫娘 5 秒内且位移 < 8 格直接复用（同批次多只猫娘触发时最多 1 次真扫描） ----

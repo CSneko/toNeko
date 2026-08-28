@@ -10,7 +10,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.network.Filterable;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
@@ -40,12 +40,12 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.WrittenBookContent;
-import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -81,13 +81,13 @@ import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.common.util.LanguageUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.RawAnimation;
-import software.bernie.geckolib.constant.DefaultAnimations;
-import software.bernie.geckolib.util.GeckoLibUtil;
+import com.geckolib.animatable.GeoEntity;
+import com.geckolib.animatable.instance.AnimatableInstanceCache;
+import com.geckolib.animatable.manager.AnimatableManager;
+import com.geckolib.animation.AnimationController;
+import com.geckolib.animation.RawAnimation;
+import com.geckolib.constant.DefaultAnimations;
+import com.geckolib.util.GeckoLibUtil;
 
 import java.util.*;
 
@@ -131,7 +131,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     // 受伤求救冷却时间，避免被连击时疯狂扫描附近实体
     private long lastHelpCallTime = 0;
     // ====== 通用仇恨系统（绕过GoalSystem，直接在tick中处理）=======
-    protected static final ResourceLocation HATRED_ATTACK_BOOST_ID = toNekoLoc("hatred_attack_boost");
+    protected static final Identifier HATRED_ATTACK_BOOST_ID = toNekoLoc("hatred_attack_boost");
     protected static final double HATRED_ATTACK_BOOST = 0.2; // 攻击力倍率（×1.2）
     protected static final double HATRED_ATTACK_RANGE = 4.0; // 攻击距离（平方根后为2格）
     protected static final int HATRED_ATTACK_COOLDOWN = 20; // 攻击间隔（tick）
@@ -160,8 +160,12 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     private final AnimatableInstanceCache cache;
     @Getter
     private boolean isSitting = false;
-    @Getter
     final NekoInventory inventory = new NekoInventory(this);
+
+    /** 显式公开访问器（原 Lombok 包私有 getter 无法被 ai.goal 子包访问） */
+    public NekoInventory getInventory() {
+        return this.inventory;
+    }
     private short slowTimer = 20;
     private CompoundTag nekoLevelFactorData = new CompoundTag();
 
@@ -220,8 +224,15 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
 
 
 
-    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
+    @Override
+    protected void addAdditionalSaveData(net.minecraft.world.level.storage.ValueOutput out) {
+        super.addAdditionalSaveData(out);
+        CompoundTag data = new CompoundTag();
+        this.writeExtraData(data);
+        org.cneko.toneko.common.mod.util.NbtBridge.store(data, out);
+    }
+
+    private void writeExtraData(@NotNull CompoundTag compound) {
         compound.putString("Skin", this.getSkin());
         compound.put("Inventory", this.inventory.save(new ListTag()));
         compound.putInt("SelectedItemSlot", this.inventory.selected);
@@ -247,53 +258,58 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
         compound.putInt("LastFoodHealTick", this.lastFoodHealTick);
     }
 
-    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
+    @Override
+    protected void readAdditionalSaveData(net.minecraft.world.level.storage.ValueInput in) {
+        super.readAdditionalSaveData(in);
+        this.readExtraData(org.cneko.toneko.common.mod.util.NbtBridge.read(in));
+    }
+
+    private void readExtraData(@NotNull CompoundTag compound) {
         if (compound.contains("Skin")) {
-            this.setSkin(compound.getString("Skin"));
+            this.setSkin(compound.getStringOr("Skin", ""));
         }
         if (compound.contains("LastFoodHealTick")) {
-            this.lastFoodHealTick = compound.getInt("LastFoodHealTick");
+            this.lastFoodHealTick = compound.getIntOr("LastFoodHealTick", 0);
         }
         if (compound.contains("Inventory")) {
-            ListTag listTag = compound.getList("Inventory", 10);
+            ListTag listTag = compound.getListOrEmpty("Inventory");
             this.inventory.load(listTag);
             if (compound.contains("SelectedItemSlot")) {
-                this.inventory.selected = compound.getInt("SelectedItemSlot");
+                this.inventory.selected = compound.getIntOr("SelectedItemSlot", 0);
             }
         }
         if (compound.contains("GatheringPower")){
-            this.setGatheringPower(compound.getInt("GatheringPower"));
+            this.setGatheringPower(compound.getIntOr("GatheringPower", 0));
         }
         if (compound.contains("MoeTags")) {
-            this.entityData.set(MOE_TAGS_ID, compound.getString("MoeTags"));
+            this.entityData.set(MOE_TAGS_ID, compound.getStringOr("MoeTags", ""));
         }
         // 无 MoeTags 时不再随机生成：萌属性完全由基因表达决定（见 expressTraits）
         this.loadNekoNBTData(compound);
         // 读取持久化的 AI 存储 ID
         if (compound.contains(AI_STORAGE_ID_TAG)) {
-            this.aiStorageId = compound.getString(AI_STORAGE_ID_TAG);
+            this.aiStorageId = compound.getStringOr(AI_STORAGE_ID_TAG, "");
         }
         // 读取日记条目（限配置上限防旧数据超限）与上次写日记时间
         if (compound.contains(DIARY_ENTRIES_TAG)) {
             this.diaryEntries.clear();
-            ListTag diaryList = compound.getList(DIARY_ENTRIES_TAG, ListTag.TAG_STRING);
+            ListTag diaryList = compound.getListOrEmpty(DIARY_ENTRIES_TAG);
             int max = NekoDiary.maxDiaryEntries();
             for (int i = 0; i < diaryList.size() && this.diaryEntries.size() < max; i++) {
-                this.diaryEntries.add(diaryList.getString(i));
+                this.diaryEntries.add(diaryList.getStringOr(i, ""));
             }
         }
         if (compound.contains(LAST_DIARY_WRITE_TIME_TAG)) {
-            this.lastDiaryWriteTime = compound.getLong(LAST_DIARY_WRITE_TIME_TAG);
+            this.lastDiaryWriteTime = compound.getLongOr(LAST_DIARY_WRITE_TIME_TAG, 0);
         }
         if (compound.contains(LAST_AFFECTION_CHANGE_TIME_TAG)) {
-            this.lastAffectionChangeTime = compound.getLong(LAST_AFFECTION_CHANGE_TIME_TAG);
+            this.lastAffectionChangeTime = compound.getLongOr(LAST_AFFECTION_CHANGE_TIME_TAG, 0);
         }
         if (compound.contains("Genome")) {
-            this.genome.load(compound.getCompound("Genome"));
+            this.genome.load(compound.getCompoundOrEmpty("Genome"));
         }
         if (compound.contains("GeneticData")) {
-            this.geneticData.merge(compound.getCompound("GeneticData"));
+            this.geneticData.merge(compound.getCompoundOrEmpty("GeneticData"));
         }
 
         // 载入完成后必须表达基因
@@ -479,7 +495,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
             // 播放爱心粒子
             this.level().addParticle(ParticleTypes.HEART,this.getX()+1.8, this.getY(), this.getZ(),1,1,1);
             // 发送给客户端
-            ClientboundLevelParticlesPacket packet = new ClientboundLevelParticlesPacket(ParticleTypes.HEART, true, this.getX() + 1.8, this.getY(), this.getZ(), 2, 2, 2, 1, 1);
+            ClientboundLevelParticlesPacket packet = new ClientboundLevelParticlesPacket(ParticleTypes.HEART, true, true, this.getX() + 1.8, this.getY(), this.getZ(), 2, 2, 2, 1, 1);
             sp.connection.send(packet);
             // 随机发送感谢消息
             sendGiftMessageToPlayer(player);
@@ -494,8 +510,8 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
             }
             // 增加互动等级因子
             NekoLevelRegistry.interaction().addRaw(this, 15.0);
-            if (player.isNeko()) {
-                NekoLevelRegistry.interaction().addRaw(player, 15.0);
+            if (((INeko) player).isNeko()) {
+                NekoLevelRegistry.interaction().addRaw((org.cneko.toneko.common.mod.entities.INeko) player, 15.0);
             }
             return true;
         }else {
@@ -510,11 +526,15 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     }
 
     @Override
-    public void setLastHurtByPlayer(@Nullable Player player) {
+    public void setLastHurtByPlayer(@Nullable Player player, int memoryTime) {
         if (player == null || !this.hasOwner(player.getUUID())) {
-            super.setLastHurtByPlayer(player);
+            if (player == null) {
+                super.setLastHurtByPlayer((java.util.UUID) null, memoryTime);
+            } else {
+                super.setLastHurtByPlayer(player, memoryTime);
+            }
         } else {
-            super.setLastHurtByPlayer(null);
+            super.setLastHurtByPlayer((java.util.UUID) null, memoryTime);
         }
     }
 
@@ -529,7 +549,6 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     }
 
     public void setItemSlot(@NotNull EquipmentSlot slot, @NotNull ItemStack stack) {
-        this.verifyEquippedItem(stack);
         if (slot == EquipmentSlot.MAINHAND) {
             this.onEquipItem(slot, this.inventory.items.set(this.inventory.selected, stack), stack);
         } else if (slot == EquipmentSlot.OFFHAND) {
@@ -555,16 +574,25 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
         }
         // 如果是食物，则吃掉回血并获取对应的效果
         FoodProperties food = stack.getItem().components().get(DataComponents.FOOD);
-        if (food!=null && (this.getHealth() < this.getMaxHealth() || !food.effects().isEmpty())){
+        if (food!=null && (this.getHealth() < this.getMaxHealth() )){
             // 回血
             this.heal(food.nutrition());
-            this.eat(this.level(), stack);
+            stack.finishUsingItem(this.level(), this);
         }
         // 否则放入背包
         return this.inventory.add(stack);
     }
     public @NotNull Iterable<ItemStack> getArmorSlots() {
-        return this.inventory.armor;
+        java.util.List<ItemStack> armor = new java.util.ArrayList<>();
+        for (net.minecraft.world.entity.EquipmentSlot slot : new net.minecraft.world.entity.EquipmentSlot[]{
+                net.minecraft.world.entity.EquipmentSlot.FEET,
+                net.minecraft.world.entity.EquipmentSlot.LEGS,
+                net.minecraft.world.entity.EquipmentSlot.CHEST,
+                net.minecraft.world.entity.EquipmentSlot.HEAD}) {
+            ItemStack stack = this.getItemBySlot(slot);
+            if (!stack.isEmpty()) armor.add(stack);
+        }
+        return armor;
     }
 
     public boolean equipArmors(ItemStack stack) {
@@ -613,7 +641,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
 
             // 丢弃旧装备（如果存在）
             if (!currentArmor.isEmpty()) {
-                this.spawnAtLocation(currentArmor);
+                this.drop(currentArmor, false, false);
             }
             return true;
         }
@@ -624,12 +652,19 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     private int calculateDefenseValue(ItemStack stack) {
         if (stack.isEmpty()) return 0;
 
-        // 基础防御值
-        int defense = 0;
-        if (stack.getItem() instanceof ArmorItem armorItem) {
-            defense = armorItem.getDefense();
-        }
-        return defense;
+        // 26.x：ArmorItem 已移除，防御值在物品的 ATTRIBUTE_MODIFIERS 组件中
+        ItemAttributeModifiers modifiers = stack.get(DataComponents.ATTRIBUTE_MODIFIERS);
+        if (modifiers == null) return 0;
+        final double[] defense = {0};
+        modifiers.forEach(EquipmentSlotGroup.ANY, (attribute, modifier) -> {
+            if (attribute == Attributes.ARMOR) {
+                defense[0] += switch (modifier.operation()) {
+                    case ADD_VALUE -> modifier.amount();
+                    case ADD_MULTIPLIED_BASE, ADD_MULTIPLIED_TOTAL -> 0;
+                };
+            }
+        });
+        return (int) Math.round(defense[0]);
     }
 
     /**
@@ -720,7 +755,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
 
             // 掉落猫娘日记：有 AI 写的日记数据时 100% 掉落（用数据生成），无数据时 30% 概率随机
             if (!diaryEntries.isEmpty() || random.nextFloat() < 0.30f) {
-                this.spawnAtLocation(createNekoDiary());
+                this.drop(createNekoDiary(), false, false);
             }
 
             // 聊过 AI 或有主人的猫娘，死后化作幽灵保留记忆（幽灵不再变幽灵）。
@@ -773,7 +808,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
 
         AIUtil.sendMessage(ghost.getAIStorageId(), speakTarget.getUUID(),
                 ghost.generateAIPrompt(speakTarget), message, response -> {
-            speakTarget.getServer().execute(() -> {
+            speakTarget.level().getServer().execute(() -> {
                 if (ghost.isRemoved()) return;
                 String displayText = NekoActionExecutor.process(ghost, speakTarget, response.getResponse());
                 Messaging.sendNekoChatInRange(ghost, ghost, displayText, 64.0);
@@ -949,7 +984,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
             if (this.getMoeTags().contains("dojikko") && this.random.nextFloat() < 0.005f) {
                 ItemStack dropped = this.getRandomInventoryItem();
                 if (!dropped.isEmpty()) {
-                    this.spawnAtLocation(dropped.split(1));
+                    this.drop(dropped.split(1), false, false);
                 }
             }
             // 被动回血：缓慢自然恢复
@@ -1005,7 +1040,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
         if (droppedItem.isEmpty()) {
             return null;
         } else {
-            if (this.level().isClientSide) {
+            if (this.level().isClientSide()) {
                 this.swing(InteractionHand.MAIN_HAND);
             }
 
@@ -1039,14 +1074,14 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
 
     public void tryMating(ServerLevel level, INeko mate) {
         if (this.isNekoBaby() || mate.isNekoBaby()) {
-            mate.getEntity().sendSystemMessage(Component.translatable("message.toneko.neko.mate.fail",this.getName(), mate.getEntity().getName()).withStyle(ChatFormatting.RED));
+            systemMsg(mate.getEntity(), Component.translatable("message.toneko.neko.mate.fail",this.getName(), mate.getEntity().getName()).withStyle(ChatFormatting.RED));
             return;
         }
         if (this.canMate(mate)) {
             this.nekoMateGoal.setTarget(mate);
-            mate.getEntity().sendSystemMessage(Component.translatable("message.toneko.neko.mate.start",this.getName(), mate.getEntity().getName()).withStyle(ChatFormatting.GREEN));
+            systemMsg(mate.getEntity(), Component.translatable("message.toneko.neko.mate.start",this.getName(), mate.getEntity().getName()).withStyle(ChatFormatting.GREEN));
         }else {
-            mate.getEntity().sendSystemMessage(Component.translatable("message.toneko.neko.mate.fail",this.getName(), mate.getEntity().getName()).withStyle(ChatFormatting.RED));
+            systemMsg(mate.getEntity(), Component.translatable("message.toneko.neko.mate.fail",this.getName(), mate.getEntity().getName()).withStyle(ChatFormatting.RED));
         }
     }
     public void afterMate() {
@@ -1060,7 +1095,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     public void breed(ServerLevel level, INeko mate) {
         // 冒爱心
         level.addParticle(ParticleTypes.HEART, this.getX(), this.getY(), this.getZ(), 1, 1, 1);
-        Packet<?> packet = new ClientboundLevelParticlesPacket(ParticleTypes.HEART,true, this.getX(), this.getY(), this.getZ(),3,3,3,0.2f,25);
+        Packet<?> packet = new ClientboundLevelParticlesPacket(ParticleTypes.HEART, true, true, this.getX(), this.getY(), this.getZ(), 3f, 3f, 3f, 0.2f, 25);
         if (mate instanceof ServerPlayer sp){
             sp.connection.send(packet);
         }
@@ -1113,7 +1148,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
         level.broadcastEntityEvent(this, (byte)18);
         child.setNekoBaby(true); // 使用 INeko 统一的 MaxAge 机制
         child.randomize(); // 随机化名字、皮肤、体型、速度、萌属性
-        if (level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)) {
+        if (level.getGameRules().get(GameRules.MOB_DROPS)) {
             level.addFreshEntity(new ExperienceOrb(level, this.getX(), this.getY(), this.getZ(), this.getRandom().nextInt(7) + 1));
         }
     }
@@ -1177,7 +1212,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
             level.sendParticles(ParticleTypes.HEART,
                     this.getX(), this.getY() + 1.0, this.getZ(), 8, 0.5, 0.5, 0.5, 0.1);
             level.playSound(null, this.getX(), this.getY(), this.getZ(),
-                    SoundEvents.CAT_PURR, this.getSoundSource(), 1.0f, 1.0f);
+                    SoundEvents.CAT_PURR_BABY, this.getSoundSource(), 1.0f, 1.0f);
         }
     }
 
@@ -1186,8 +1221,8 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     }
 
     @Override
-    public boolean startRiding(@NotNull Entity vehicle, boolean force) {
-        this.isSitting = super.startRiding(vehicle, force);
+    public boolean startRiding(@NotNull Entity vehicle, boolean force, boolean emitGameEvent) {
+        this.isSitting = super.startRiding(vehicle, force, emitGameEvent);
         return this.isSitting;
     }
 
@@ -1200,7 +1235,9 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         // 动画速度随心情（精力+健康）动态变化：心情越好尾巴摇得越快、动作越活泼
-        AnimationController<NekoEntity> main = new AnimationController<>(this, 20, state -> {
+        AnimationController<NekoEntity> main = new AnimationController<>("main", 20, state -> {
+            // 动画速度随心情（精力+健康）动态变化：心情越好尾巴摇得越快、动作越活泼
+            state.setControllerSpeed((float) state.animatable().tailSpeedByMood());
             // 地上趴着
             if (this.getPose() == Pose.SWIMMING && !this.clientIsInLiquid){
                 return state.setAndContinue(DefaultAnimations.CRAWL);
@@ -1226,11 +1263,11 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
                 return state.setAndContinue(DefaultAnimations.WALK);
             }
 
-        }).setAnimationSpeedHandler(neko -> neko.tailSpeedByMood());
+        });
         controllers.add(main);
         // 表现动画控制器：一次性/循环表情动画，由动作系统与触发反应通过
         // NekoExpressAnimPayload 触发（服务端 playExpressAnim），播放完回落到 idle
-        controllers.add(new AnimationController<>(this, "express", 5, state ->
+        controllers.add(new AnimationController<>("express", 5, state ->
                 state.setAndContinue(DefaultAnimations.IDLE))
                 .triggerableAnim("wave", RawAnimation.begin().thenPlay("express.wave"))
                 .triggerableAnim("hug", RawAnimation.begin().thenPlay("express.hug"))
@@ -1324,10 +1361,9 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
         super.move(type, pos);
     }
 
-    @Override
     public void moveTo(double x, double y, double z, float yRot, float xRot) {
-        // moveTo 是直接设置位置的 teleport/生成 API，不是 AI 移动，不应用 canMove 限制
-        super.moveTo(x, y, z, yRot, xRot);
+        // 26.x：Entity.moveTo 已改名为 snapTo
+        this.snapTo(x, y, z, yRot, xRot);
     }
 
     public boolean canMove() {
@@ -1335,14 +1371,14 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     }
 
     @Override
-    public boolean hurt(@NotNull DamageSource source, float amount) {
+    public boolean hurtServer(net.minecraft.server.level.ServerLevel serverLevel, @NotNull DamageSource source, float amount) {
         if (source.getEntity() instanceof Player player){
             // 栓住玩家
             if (player.getMainHandItem().is(Items.LEAD)){
-                if (player.isLeashed()){
-                    player.dropLeash(true, true);
+                if (((Leashable) player).isLeashed()){
+                    ((Leashable) player).dropLeash();
                 }else {
-                    player.setLeashedTo(this, true);
+                    ((Leashable) player).setLeashedTo(this, true);
                     // 减少栓绳
                     player.getMainHandItem().setCount(player.getMainHandItem().getCount() - 1);
                 }
@@ -1356,7 +1392,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
             triggerLoliAlarm(player);
         }
 
-        boolean result = super.hurt(source, amount);
+        boolean result = super.hurtServer(serverLevel, source, amount);
 
         if (!result) return false;
         // 触发型行为反应（害怕逃跑/装死等，本地行为不烧 token；消息已由 on_hurt 按萌属性发送）
@@ -1375,11 +1411,11 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
             for (ItemStack stack : this.getInventory().items){
                 // 如果是食物，则吃掉回血并获取对应的效果
                 FoodProperties food = stack.getItem().components().get(DataComponents.FOOD);
-                if (food!=null && (this.getHealth() < this.getMaxHealth() || !food.effects().isEmpty())){
+                if (food!=null && (this.getHealth() < this.getMaxHealth() )){
                     // 回血
                     this.heal(food.nutrition());
                     // eat() 内部已消耗 1 个（LivingEntity.eat → ItemStack.consume），无需再 shrink
-                    this.eat(this.level(), stack);
+                    stack.finishUsingItem(this.level(), this);
                     this.lastFoodHealTick = currentTick;
                     break; // 一次只吃一个
                 }
@@ -1422,7 +1458,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
         this.setTarget(target);
         this.setAggressive(true);
         // 伤害加成
-        this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, duration, 1, false, false));
+        this.addEffect(new MobEffectInstance(MobEffects.STRENGTH, duration, 1, false, false));
         AttributeInstance attr = this.getAttribute(Attributes.ATTACK_DAMAGE);
         if (attr != null && attr.getModifier(HATRED_ATTACK_BOOST_ID) == null) {
             attr.addTransientModifier(new AttributeModifier(
@@ -1447,10 +1483,10 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
 
         equipBestMeleeWeapon();
         // 标准mob攻击
-        boolean damaged = this.doHurtTarget(this.hatredTarget);
+        boolean damaged = this.doHurtTarget((net.minecraft.server.level.ServerLevel) this.level(), this.hatredTarget);
         if (!damaged) {
             // 备用方案：使用通用伤害类型（绕过可能的mobAttack免疫）
-            damaged = this.hatredTarget.hurt(this.damageSources().generic(), 4.0f);
+            damaged = org.cneko.toneko.common.mod.util.EntityHurtUtil.hurt(this.hatredTarget, this.damageSources().generic(), 4.0f);
         }
         if (damaged) {
             this.hatredAttackCooldown = HATRED_ATTACK_COOLDOWN;
@@ -1488,7 +1524,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
      * 战斗中向仇恨目标发送消息，群殴时自动降低频率避免刷屏
      */
     protected void trySendHatredMessage() {
-        if (this.level().isClientSide) return;
+        if (this.level().isClientSide()) return;
         if (!(this.hatredTarget instanceof Player player)) return;
         if (this.getCustomName() == null || this.getName().getString().equals("null")) {
             this.setCustomName(Component.literal(NekoNameRegistry.getRandomName()));
@@ -1520,7 +1556,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
         if (attr != null) {
             attr.removeModifier(HATRED_ATTACK_BOOST_ID);
         }
-        this.removeEffect(MobEffects.DAMAGE_BOOST);
+        this.removeEffect(MobEffects.STRENGTH);
     }
 
     /**
@@ -1534,7 +1570,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
      * 触发萝莉防狼警报：播放警报声音，并使周围所有Neko对攻击者产生攻击欲望
      */
     public void triggerLoliAlarm(Player attacker) {
-        if (!this.level().isClientSide) {
+        if (!this.level().isClientSide()) {
             // 播放警报声音
             this.level().playSound(
                     null,
@@ -1557,15 +1593,15 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
                 neko.setHatredTarget(attacker, HATRED_DEFAULT_DURATION);
                 // 立即发动一次攻击，确保即时反馈
                 neko.equipBestMeleeWeapon();
-                neko.doHurtTarget(attacker);
+                neko.doHurtTarget((net.minecraft.server.level.ServerLevel) neko.level(), attacker);
             }
             // 附近有FightingNeko时，召唤一道纯视觉闪电劈向玩家，伤害仅对玩家生效
             if (hasFightingNeko) {
-                LightningBolt lightning = new LightningBolt(EntityType.LIGHTNING_BOLT, this.level());
+                LightningBolt lightning = new LightningBolt((net.minecraft.world.entity.EntityType<LightningBolt>) net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("lightning_bolt")), this.level());
                 lightning.setPos(attacker.getX(), attacker.getY(), attacker.getZ());
                 lightning.setVisualOnly(true);
                 this.level().addFreshEntity(lightning);
-                attacker.hurt(this.damageSources().lightningBolt(), 5.0f);
+                org.cneko.toneko.common.mod.util.EntityHurtUtil.hurt(attacker, this.damageSources().lightningBolt(), 5.0f);
             }
         }
     }
@@ -1637,9 +1673,9 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
         }
         FoodProperties food = stack.getItem().components().get(DataComponents.FOOD);
         if (food != null){
-            if(this.getHealth() < this.getMaxHealth() || !food.effects().isEmpty()){
+            if(this.getHealth() < this.getMaxHealth() ){
                 this.heal(food.nutrition());
-                this.eat(this.level(), stack);
+                stack.finishUsingItem(this.level(), this);
             }else {
                 if (this.getInventory().isFull()) return false;
                 this.getInventory().add(stack.copy());
@@ -1701,7 +1737,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     }
 
     public String generateAIPrompt(Player player) {
-        return PromptRegistry.generatePrompt(this,player,ConfigUtil.getAIPrompt());
+        return PromptRegistry.generatePrompt(this,(INeko) player,ConfigUtil.getAIPrompt());
     }
 
     @Override
@@ -1856,7 +1892,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     }
 
     @Override
-    public boolean checkSpawnRules(@NotNull LevelAccessor level, @NotNull MobSpawnType reason) {
+    public boolean checkSpawnRules(@NotNull LevelAccessor level, @NotNull EntitySpawnReason reason) {
         return true;
     }
 
@@ -1885,14 +1921,14 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
 
     @Override
     public void expressTraits() {
-        if (!this.level().isClientSide) {
+        if (!this.level().isClientSide()) {
             // 萌属性完全由基因决定：先清空旧值（包括历史上随机生成的残留），再按基因表达
             this.setMoeTags(List.of());
             this.genome.express(this);
 
             // 同步胸部大小缩放值到客户端
-            float chestScale = this.geneticData.contains("chest_scale", CompoundTag.TAG_FLOAT)
-                    ? this.geneticData.getFloat("chest_scale")
+            float chestScale = this.geneticData.contains("chest_scale")
+                    ? this.geneticData.getFloatOr("chest_scale", 0f)
                     : 1.0f;
             this.entityData.set(CHEST_SCALE_ID, chestScale);
 
@@ -1920,10 +1956,10 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
 
     // 初始生成时的随机基因分配
     @Override
-    public @NotNull SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType reason, @Nullable SpawnGroupData spawnData) {
+    public @NotNull SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, EntitySpawnReason reason, @Nullable SpawnGroupData spawnData) {
         // 对所有非繁殖的生成方式分配基因（覆盖刷怪蛋、SPAWNER、TRIGGERED、指令等）
         // 繁殖走的 mate()→spawnChildFromBreeding() 流程已单独处理基因
-        if (reason != MobSpawnType.BREEDING) {
+        if (reason != EntitySpawnReason.BREEDING) {
             // 生成两套随机配子并结合，模拟”野生猫娘基因库”
             Gamete gamete1 = Genome.generateFallbackGamete(this.random, ToNekoLocus.NEKO_KARYOTYPE);
             Gamete gamete2 = Genome.generateFallbackGamete(this.random, ToNekoLocus.NEKO_KARYOTYPE);
@@ -1943,7 +1979,14 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
 
 
     public static AttributeSupplier.Builder createNekoAttributes(){
-        return createMobAttributes().add(Attributes.ATTACK_DAMAGE).add(Attributes.ATTACK_SPEED).add(ToNekoAttributes.NEKO_DEGREE).add(ToNekoAttributes.MAX_NEKO_ENERGY);
+        // 26.x：TemptGoal#canUse 直接读 Attributes.TEMPT_RANGE（原版 Animal 属性自带 10.0），
+        // 未注册会导致 getAttributeValue NPE
+        return createMobAttributes().add(Attributes.ATTACK_DAMAGE).add(Attributes.ATTACK_SPEED)
+                .add(ToNekoAttributes.NEKO_DEGREE).add(ToNekoAttributes.MAX_NEKO_ENERGY)
+                .add(Attributes.TEMPT_RANGE, 10.0);
     }
 
+    private static void systemMsg(net.minecraft.world.entity.LivingEntity target, net.minecraft.network.chat.Component msg) {
+        if (target instanceof Player player) player.sendSystemMessage(msg);
+    }
 }

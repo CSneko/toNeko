@@ -1,14 +1,14 @@
 package org.cneko.toneko.fabric.datagen;
 
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementType;
-import net.minecraft.advancements.critereon.InventoryChangeTrigger;
+import net.minecraft.advancements.criterion.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.cneko.toneko.common.mod.advencements.*;
 import org.cneko.toneko.common.mod.items.ToNekoItems;
 
@@ -54,9 +54,9 @@ public class AdvancementsProvider extends FabricAdvancementProvider {
     public static AdvancementHolder LEGWEAR_FIRST_DYE;
     public static AdvancementHolder LEGWEAR_GRADE_S;
 
-    private static final ResourceLocation BG = ResourceLocation.parse("textures/gui/advancements/backgrounds/adventure.png");
+    private static final Identifier BG = Identifier.parse("textures/gui/advancements/backgrounds/adventure.png");
 
-    protected AdvancementsProvider(FabricDataOutput output) {
+    protected AdvancementsProvider(FabricPackOutput output) {
         super(output, ToNekoDataGenerator.generator.getRegistries());
     }
 

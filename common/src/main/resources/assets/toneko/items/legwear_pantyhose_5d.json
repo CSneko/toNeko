@@ -1,0 +1,9 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "toneko:item/legwear_pantyhose_5d",
+    "model": {
+      "type": "geckolib:geckolib"
+    }
+  }
+}

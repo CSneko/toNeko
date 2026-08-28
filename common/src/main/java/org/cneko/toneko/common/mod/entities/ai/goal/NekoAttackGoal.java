@@ -258,7 +258,7 @@ public class NekoAttackGoal extends Goal {
     protected boolean hasMeleeWeapon() {
         for (int i = 0; i < neko.getInventory().getContainerSize(); i++) {
             ItemStack stack = neko.getInventory().getItem(i);
-            if ((stack.is(FightingNekoEntity.MELEE_WEAPON) || stack.getItem() instanceof net.minecraft.world.item.SwordItem) &&
+            if ((stack.is(FightingNekoEntity.MELEE_WEAPON) || stack.is(net.minecraft.tags.ItemTags.SWORDS)) &&
                     !(stack.getItem() instanceof BazookaItem)) {
                 return true;
             }
@@ -370,7 +370,7 @@ public class NekoAttackGoal extends Goal {
 
     // 执行近战攻击
     protected void performMeleeAttack() {
-        neko.doHurtTarget(target);
+        neko.doHurtTarget((net.minecraft.server.level.ServerLevel) neko.level(), target);
     }
 
     // 执行远程攻击

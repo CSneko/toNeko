@@ -1,7 +1,6 @@
 package org.cneko.toneko.common.mod.mixin;
 
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.entities.boss.mouflet.MoufletNekoBoss;
@@ -16,39 +15,23 @@ public class ServerPlayerEntityMixin {
     private void toneko$restoreFrom(ServerPlayer oldPlayer, boolean keepEverything, CallbackInfo ci) {
         INeko newNeko = (INeko) this;
 
-        newNeko.setNeko(oldPlayer.isNeko());
-        newNeko.setNekoAge(oldPlayer.getNekoAge());
-        newNeko.setNekoLevelFactorData(oldPlayer.getNekoLevelFactorData());
-        newNeko.setNekoEnergy(oldPlayer.getNekoEnergy());
-        newNeko.setNickName(oldPlayer.getNickName());
+        newNeko.setNeko(((INeko) oldPlayer).isNeko());
+        newNeko.setNekoAge(((INeko) oldPlayer).getNekoAge());
+        newNeko.setNekoLevelFactorData(((INeko) oldPlayer).getNekoLevelFactorData());
+        newNeko.setNekoEnergy(((INeko) oldPlayer).getNekoEnergy());
+        newNeko.setNickName(((INeko) oldPlayer).getNickName());
 
         newNeko.getOwners().clear();
-        newNeko.getOwners().putAll(oldPlayer.getOwners());
+        newNeko.getOwners().putAll(((INeko) oldPlayer).getOwners());
 
         newNeko.getBlockedWords().clear();
-        newNeko.getBlockedWords().addAll(oldPlayer.getBlockedWords());
+        newNeko.getBlockedWords().addAll(((INeko) oldPlayer).getBlockedWords());
 
         newNeko.getQuirks().clear();
-        newNeko.getQuirks().addAll(oldPlayer.getQuirks());
+        newNeko.getQuirks().addAll(((INeko) oldPlayer).getQuirks());
 
         newNeko.getVisitedBiomes().clear();
-        newNeko.getVisitedBiomes().addAll(oldPlayer.getVisitedBiomes());
+        newNeko.getVisitedBiomes().addAll(((INeko) oldPlayer).getVisitedBiomes());
     }
 
-    @Inject(method = "stopRiding" , at = @At("HEAD"),cancellable = true)
-    private void toneko$stopRiding(CallbackInfo ci) {
-        ServerPlayer player = (ServerPlayer) (Object) this;
-        Entity vehicle = player.getVehicle();
-        if (vehicle instanceof MoufletNekoBoss boss) {
-            if (!boss.allowDismount(player)){
-                // 需要消耗100能量挣脱
-                if (player.getNekoEnergy() >= 100) {
-                    player.setNekoEnergy(player.getNekoEnergy() - 100);
-                } else {
-                    // 能量不足，取消下车
-                    ci.cancel();
-                }
-            }
-        }
-    }
 }

@@ -36,19 +36,17 @@
     "main": [
       "org.cneko.toneko.fabric.ToNeko"
     ],
-    "modmenu": [ "org.cneko.toneko.fabric.client.msic.ModMenuImpl" ],
-    "emi": [ "org.cneko.toneko.fabric.client.msic.ToNekoEmiPlugin" ]
+    "modmenu": [ "org.cneko.toneko.fabric.client.msic.ModMenuImpl" ]
   },
   "depends": {
-    "fabricloader": "*",
-    "fabric": "*",
-    "minecraft": "1.21.1",
-    "geckolib": "*",
-    "playeranimator": "*"
+    "fabricloader": ">=0.19.4",
+    "fabric-api": "*",
+    "minecraft": "26.1.2",
+    "java": ">=25",
+    "geckolib": "*"
   },
   "suggests": {
     "luckperms": "*",
-    "trinkets": "*",
     "patchouli": "*"
   },
   "breaks": {

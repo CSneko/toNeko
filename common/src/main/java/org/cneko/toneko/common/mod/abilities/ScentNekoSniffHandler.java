@@ -64,7 +64,7 @@ public class ScentNekoSniffHandler {
         neko.getLookControl().setLookAt(player.getX(), player.getY() + 0.5, player.getZ());
         spawnHeartParticles(neko, compound ? 6 : 3);
         neko.level().playSound(null, neko.getX(), neko.getY(), neko.getZ(),
-                SoundEvents.CAT_AMBIENT, neko.getSoundSource(), 1.0f, 1.0f);
+                SoundEvents.CAT_AMBIENT_BABY, neko.getSoundSource(), 1.0f, 1.0f);
     }
 
     private static void spawnHeartParticles(NekoEntity neko, int count) {
@@ -75,7 +75,7 @@ public class ScentNekoSniffHandler {
         for (ServerPlayer p : level.getServer().getPlayerList().getPlayers()) {
             if (p.distanceToSqr(neko) <= 4096) { // 64 格内可见
                 p.connection.send(new ClientboundLevelParticlesPacket(
-                        ParticleTypes.HEART, true, x, y, z, 0.3f, 0.3f, 0.3f, 0.02f, count));
+                        ParticleTypes.HEART, true, true, x, y, z, 0.3f, 0.3f, 0.3f, 0.02f, count));
             }
         }
     }

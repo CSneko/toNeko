@@ -16,10 +16,14 @@ public abstract class AmmoItem extends Item implements BazookaItem.Ammunition {
         super(properties);
     }
 
-    @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltips, @NotNull TooltipFlag tooltipFlag) {
-        super.appendHoverText(stack, context, tooltips, tooltipFlag);
+        @Override
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull net.minecraft.world.item.component.TooltipDisplay display, @NotNull java.util.function.Consumer<Component> adder, @NotNull TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, display, adder, tooltipFlag);
+        // 兼容旧实现：先收集到 List，再逐条发送
+        java.util.List<Component> tooltips = new java.util.ArrayList<>();
         tooltips.add(Component.translatable("item.toneko.ammo.use_with_bazooka"));
+    
+        for (Component t : tooltips) adder.accept(t);
     }
 
     public abstract static class SameEffectItem extends AmmoItem{

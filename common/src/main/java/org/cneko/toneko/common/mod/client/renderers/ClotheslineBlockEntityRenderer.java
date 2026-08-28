@@ -5,11 +5,17 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer.CrumblingOverlay;
+import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import org.cneko.toneko.common.mod.blocks.ClotheslineBlockEntity;
 import org.cneko.toneko.common.mod.items.LegwearItem;
@@ -24,17 +30,43 @@ import static org.cneko.toneko.common.mod.util.ResourceLocationUtil.toNekoLoc;
  * 模型数据由脚本从 geo/item/legwear/legwear.geo.json 生成。
  */
 @Environment(EnvType.CLIENT)
-public class ClotheslineBlockEntityRenderer implements BlockEntityRenderer<ClotheslineBlockEntity> {
-    private static final ResourceLocation LEGWEAR_TEXTURE = toNekoLoc("textures/item/legwear/legwear.png");
+public class ClotheslineBlockEntityRenderer implements BlockEntityRenderer<ClotheslineBlockEntity, ClotheslineBlockEntityRenderer.RenderState> {
+
+    public static final class RenderState extends BlockEntityRenderState {
+        private ItemStack stack = ItemStack.EMPTY;
+        private float time;
+
+        private RenderState() {}
+    }
+    private static final Identifier LEGWEAR_TEXTURE = toNekoLoc("textures/item/legwear/legwear.png");
 
     public ClotheslineBlockEntityRenderer(BlockEntityRendererProvider.Context ctx) {
     }
 
     @Override
-    public void render(ClotheslineBlockEntity be, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
-        ItemStack stack = be.getItem();
+    public RenderState createRenderState() {
+        return new RenderState();
+    }
+
+    @Override
+    public void extractRenderState(ClotheslineBlockEntity blockEntity, RenderState state, float partialTicks,
+                                   @Nullable Vec3 cameraPos, @Nullable CrumblingOverlay breakingProgress) {
+        BlockEntityRenderState.extractBase(blockEntity, state, breakingProgress);
+        state.stack = blockEntity.getItem();
+        state.time = blockEntity.getLevel() == null ? partialTicks : blockEntity.getLevel().getGameTime() + partialTicks;
+    }
+
+    @Override
+    public void submit(RenderState state, PoseStack poseStack, SubmitNodeCollector nodeCollector,
+                       CameraRenderState cameraRenderState) {
+        ItemStack stack = state.stack;
         if (stack.isEmpty() || !LegwearItem.isLegwear(stack)) return;
 
+        nodeCollector.submitCustomGeometry(poseStack, net.minecraft.client.renderer.rendertype.RenderTypes.entityTranslucent(LEGWEAR_TEXTURE),
+                (pose, vertexConsumer) -> this.draw(poseStack, vertexConsumer, state.lightCoords, stack, state.time));
+    }
+
+    private void draw(PoseStack poseStack, VertexConsumer vc, int packedLight, ItemStack stack, float time) {
         int rgb = ((LegwearItem.getLeftRenderColor(stack) + LegwearItem.getRightRenderColor(stack)) / 2) & 0xFFFFFF;
         int denier = LegwearItem.getDenier(stack);
         int a = denier >= 40 ? 255 : (denier >= 20 ? 160 : 70);
@@ -57,14 +89,13 @@ public class ClotheslineBlockEntityRenderer implements BlockEntityRenderer<Cloth
         poseStack.pushPose();
         // 挂点：腿顶（geo y=12）对齐晾绳，中心对齐方块中心；geo 单位 1/16 方块
         poseStack.translate(0.5, 0.85, 0.5);
-        float t = be.getLevel() == null ? 0f : be.getLevel().getGameTime() + partialTick;
+        float t = time;
         float sway = (float) Math.sin(t * 0.03) * 6.0f;
         poseStack.mulPose(Axis.XP.rotationDegrees(sway));
         poseStack.scale(1.3f, 1.3f, 1.3f);
         poseStack.translate(-2.0f / 16f, -topY / 16f, 0f);
         poseStack.scale(1f / 16f, 1f / 16f, 1f / 16f);
 
-        VertexConsumer vc = bufferSource.getBuffer(RenderType.entityTranslucent(LEGWEAR_TEXTURE));
         PoseStack.Pose pose = poseStack.last();
         Matrix4f mat = pose.pose();
         int light = packedLight;

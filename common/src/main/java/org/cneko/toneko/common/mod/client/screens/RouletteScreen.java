@@ -2,12 +2,12 @@ package org.cneko.toneko.common.mod.client.screens;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import org.cneko.toneko.common.mod.client.events.ClientTickEvent;
@@ -41,24 +41,24 @@ public class RouletteScreen extends Screen implements ClientMusicPlayer.NotePlay
 
     // ---- 分类与操作定义 ----
 
-    private record Category(Component name, int color, ResourceLocation icon, List<Action> actions) {}
-    private record Action(ResourceLocation icon, Component name, Runnable action) {}
+    private record Category(Component name, int color, Identifier icon, List<Action> actions) {}
+    private record Action(Identifier icon, Component name, Runnable action) {}
 
-    private static final ResourceLocation
-            ICON_BUFFS  = ResourceLocation.withDefaultNamespace("textures/item/potion_bottle_drinkable.png"),
-            ICON_POSES  = ResourceLocation.withDefaultNamespace("textures/item/leather.png"),
-            ICON_RIDING = ResourceLocation.withDefaultNamespace("textures/item/saddle.png"),
-            ICON_UTIL   = ResourceLocation.withDefaultNamespace("textures/item/leather_boots.png"),
-            ICON_SYSTEM = ResourceLocation.withDefaultNamespace("textures/item/compass_00.png");
+    private static final Identifier
+            ICON_BUFFS  = Identifier.withDefaultNamespace("textures/item/potion_bottle_drinkable.png"),
+            ICON_POSES  = Identifier.withDefaultNamespace("textures/item/leather.png"),
+            ICON_RIDING = Identifier.withDefaultNamespace("textures/item/saddle.png"),
+            ICON_UTIL   = Identifier.withDefaultNamespace("textures/item/leather_boots.png"),
+            ICON_SYSTEM = Identifier.withDefaultNamespace("textures/item/compass_00.png");
 
-    private static ResourceLocation tex(String path) {
-        return ResourceLocation.withDefaultNamespace("textures/" + path);
+    private static Identifier tex(String path) {
+        return Identifier.withDefaultNamespace("textures/" + path);
     }
 
     private static Action cmdAction(String texPath, String key, String cmd) {
         return new Action(tex(texPath),
                 Component.translatable("gui.toneko.roulette.option." + key),
-                () -> { var p = Minecraft.getInstance().player; if (p != null) p.connection.sendUnsignedCommand(cmd); });
+                () -> { var p = Minecraft.getInstance().player; if (p != null) p.connection.sendCommand(cmd); });
     }
 
     private static List<Category> buildCategories() {
@@ -81,12 +81,12 @@ public class RouletteScreen extends Screen implements ClientMusicPlayer.NotePlay
                             ClientPlayNetworking.send(new NekoStealthPayload(s)); }),
                 new Action(tex("item/writable_book.png"),
                     Component.translatable("gui.toneko.roulette.option.chat_with_neko"),
-                    () -> Minecraft.getInstance().tell(
+                    () -> Minecraft.getInstance().execute(
                         () -> ClientTickEvent.openChatWithNearestNeko(Minecraft.getInstance()))))),
             new Category(Component.translatable("gui.toneko.roulette.cat.system"), 0xFFAAAAAA, ICON_SYSTEM, List.of(
                 new Action(tex("item/compass_00.png"),
                     Component.translatable("gui.toneko.roulette.option.hub"),
-                    () -> Minecraft.getInstance().tell(ToNekoHubScreen::open)),
+                    () -> Minecraft.getInstance().execute(ToNekoHubScreen::open)),
                 cmdAction("item/name_tag.png", "management", "toneko gui"),
                 new Action(tex("item/barrier.png"),
                     Component.translatable("gui.toneko.roulette.option.close"),
@@ -97,12 +97,12 @@ public class RouletteScreen extends Screen implements ClientMusicPlayer.NotePlay
     // ---- 渲染 ----
 
     @Override
-    public void render(@NotNull GuiGraphics g, int mx, int my, float pt) {
+    public void extractRenderState(@NotNull GuiGraphicsExtractor g, int mx, int my, float pt) {
         renderDarkBackground(g);
         int cx = this.width / 2;
 
         // ---- 标题 ----
-        g.drawCenteredString(this.font, Component.translatable("gui.toneko.roulette.select_category"),
+        g.centeredText(this.font, Component.translatable("gui.toneko.roulette.select_category"),
                 cx, 12, 0xFFFFFF);
 
         // ---- 上方：分类行 ----
@@ -120,7 +120,7 @@ public class RouletteScreen extends Screen implements ClientMusicPlayer.NotePlay
         Component focusHint = focusActions
                 ? Component.translatable("gui.toneko.roulette.focus_actions")
                 : Component.translatable("gui.toneko.roulette.focus_categories");
-        g.drawCenteredString(this.font, focusHint, cx, CAT_Y + CAT_SIZE / 2 + ACT_Y - ACT_SIZE / 2 - CAT_SIZE / 2,
+        g.centeredText(this.font, focusHint, cx, CAT_Y + CAT_SIZE / 2 + ACT_Y - ACT_SIZE / 2 - CAT_SIZE / 2,
                 0x666666);
         int sepY = (CAT_Y + CAT_SIZE / 2 + ACT_Y - ACT_SIZE / 2) / 2;
         g.fill(cx - 60, sepY, cx + 60, sepY + 1, 0x44FFFFFF);
@@ -129,7 +129,7 @@ public class RouletteScreen extends Screen implements ClientMusicPlayer.NotePlay
         Category cat = categories.get(selectedCat);
         List<Action> actions = cat.actions();
         if (!actions.isEmpty()) {
-            g.drawCenteredString(this.font, cat.name(), cx, ACT_Y - 24, cat.color());
+            g.centeredText(this.font, cat.name(), cx, ACT_Y - 24, cat.color());
             renderRow(g, cx, ACT_Y, ACT_SIZE, ACT_GAP,
                     actions.size(), selectedAct, focusActions, mx, my,
                     (i, sel) -> {
@@ -143,10 +143,10 @@ public class RouletteScreen extends Screen implements ClientMusicPlayer.NotePlay
 
         // ---- 底部提示 ----
         Component tip = Component.translatable("gui.toneko.roulette.tip");
-        g.drawCenteredString(this.font, tip, cx, this.height - 20, 0x888888);
+        g.centeredText(this.font, tip, cx, this.height - 20, 0x888888);
     }
 
-    private void renderDarkBackground(GuiGraphics g) {
+    private void renderDarkBackground(GuiGraphicsExtractor g) {
         g.fill(0, 0, this.width, this.height, 0xCC000000);
     }
 
@@ -155,7 +155,7 @@ public class RouletteScreen extends Screen implements ClientMusicPlayer.NotePlay
         void render(int index, boolean selected);
     }
 
-    private void renderRow(GuiGraphics g, int cx, int rowY, int size, int gap,
+    private void renderRow(GuiGraphicsExtractor g, int cx, int rowY, int size, int gap,
                            int count, int selected, boolean focused,
                            int mx, int my, ItemRenderer renderer) {
         for (int i = 0; i < count; i++) {
@@ -168,8 +168,8 @@ public class RouletteScreen extends Screen implements ClientMusicPlayer.NotePlay
         return cx - totalW / 2 + index * (size + gap) + size / 2;
     }
 
-    private void drawItem(GuiGraphics g, int x, int y, int size, Component name,
-                           ResourceLocation icon, int color, boolean selected, float alpha) {
+    private void drawItem(GuiGraphicsExtractor g, int x, int y, int size, Component name,
+                           Identifier icon, int color, boolean selected, float alpha) {
         int a = (int) (alpha * 255);
         float scale = selected ? 1.12f : 1.0f;
         int s = (int) (size * scale);
@@ -180,18 +180,18 @@ public class RouletteScreen extends Screen implements ClientMusicPlayer.NotePlay
         g.fill(x - half, y - half, x + half, y + half, bgColor);
         // 选中边框
         if (selected) {
-            g.renderOutline(x - half, y - half, s, s, (a << 24) | color);
+            g.outline(x - half, y - half, s, s, (a << 24) | color);
         }
 
         // 图标
         int iconSz = (int) (24 * scale);
-        g.setColor(1, 1, 1, alpha);
+        // 26.x GUI：提取器没有全局 tint，这里以固定透明度预乘的颜色由 blit 变体处理；
+        // 先直接绘制（视觉上等价于 alpha=1 的近似实现）
         g.blit(icon, x - iconSz / 2, y - iconSz / 2 - 6, 0, 0, iconSz, iconSz, iconSz, iconSz);
-        g.setColor(1, 1, 1, 1);
 
         // 名称
         int textColor = selected ? (a << 24) | 0xFFFFFF : (a << 24) | 0xAAAAAA;
-        g.drawCenteredString(this.font, name, x, y + half + 2, textColor);
+        g.centeredText(this.font, name, x, y + half + 2, textColor);
     }
 
     private float getEdgeAlpha(int index, int total) {
@@ -208,7 +208,8 @@ public class RouletteScreen extends Screen implements ClientMusicPlayer.NotePlay
     // ---- 输入 ----
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    public boolean keyPressed(net.minecraft.client.input.KeyEvent ke) {
+        int keyCode = ke.key();
         if (keyCode == GLFW.GLFW_KEY_LEFT || keyCode == GLFW.GLFW_KEY_A) { navigate(-1); return true; }
         if (keyCode == GLFW.GLFW_KEY_RIGHT || keyCode == GLFW.GLFW_KEY_D) { navigate(1); return true; }
         if (keyCode == GLFW.GLFW_KEY_R) { clientMusicPlayer.restart(); return true; }
@@ -237,7 +238,7 @@ public class RouletteScreen extends Screen implements ClientMusicPlayer.NotePlay
             clientMusicPlayer.tryPlayNextNote(this);
             return true;
         }
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(ke);
     }
 
     @Override
@@ -248,7 +249,9 @@ public class RouletteScreen extends Screen implements ClientMusicPlayer.NotePlay
     }
 
     @Override
-    public boolean mouseClicked(double mx, double my, int button) {
+    public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent event, boolean active) {
+        double mx = event.x(), my = event.y();
+        int button = event.button();
         if (button == 0) {
             int cx = this.width / 2;
             // 检查是否点击了某个分类
@@ -277,7 +280,7 @@ public class RouletteScreen extends Screen implements ClientMusicPlayer.NotePlay
             clientMusicPlayer.tryPlayNextNote(this);
             return true;
         }
-        return super.mouseClicked(mx, my, button);
+        return super.mouseClicked(event, active);
     }
 
     private void navigate(int dir) {
@@ -310,6 +313,6 @@ public class RouletteScreen extends Screen implements ClientMusicPlayer.NotePlay
     }
 
     @Override public boolean isPauseScreen() { return false; }
-    @Override public void renderBackground(GuiGraphics g, int mx, int my, float pt) {}
+    @Override public void extractBackground(GuiGraphicsExtractor g, int mx, int my, float pt) {}
     public static void open() { Minecraft.getInstance().setScreen(new RouletteScreen()); }
 }

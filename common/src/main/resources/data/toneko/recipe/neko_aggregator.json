@@ -6,24 +6,12 @@
     "CIC"
   ],
   "key": {
-    "N": {
-      "item": "toneko:neko_collector"
-    },
-    "C": {
-      "item": "toneko:catnip"
-    },
-    "E": {
-      "item": "minecraft:enchanting_table"
-    },
-    "S": {
-      "item": "minecraft:smithing_table"
-    },
-    "T": {
-      "item": "minecraft:crafting_table"
-    },
-    "I": {
-      "item": "minecraft:iron_block"
-    }
+    "N": "toneko:neko_collector",
+    "C": "toneko:catnip",
+    "E": "minecraft:enchanting_table",
+    "S": "minecraft:smithing_table",
+    "T": "minecraft:crafting_table",
+    "I": "minecraft:iron_block"
   },
   "result": {
     "id": "toneko:neko_aggregator",

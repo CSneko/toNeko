@@ -1,0 +1,36 @@
+# Done to increase the memory available to Gradle.
+org.gradle.jvmargs=-Xmx2G
+org.gradle.parallel=true
+
+# Mod properties
+mod_version = 1.9.6
+
+maven_group = org.cneko
+archives_name = toneko
+# 26.2 暂无 Forgified Fabric API，neoforge 侧已在 settings.gradle 禁用
+enabled_platforms = fabric,bukkit
+
+# Minecraft properties — 26.2 requires Java 25 (see piston-meta javaVersion epsilon)
+minecraft_version = 26.2
+
+# Dependencies — aligned to 26.2
+fabric_loader_version = 0.19.4
+fabric_api_version = 0.158.0+26.2
+forgified_fabric_api_version = 0.158.0+26.2
+neoforge_version = 26.2.0.69
+# GeckoLib — unified version for fabric/neoforge on 26.2
+geckolib_version=5.5.3
+# Trinkets — no 26.2 release yet (latest is 3.10.0 for 1.21.1), kept as placeholder (compileOnly path disabled via gradle)
+trinkets_version = 3.10.0
+# Curios (NeoForge) — 26.2 available
+curios_version = 16.0.0+26.2
+# ModMenu — 26.2 available
+modmenu_version = 20.0.1
+# NekoAI
+nekoai_version = v0.2.1-beta
+# EMI — no 26.2 release yet, kept compileOnly
+emi_version = 1.1.22+1.21.1
+# Patchouli — no 26.2 release yet (latest is 26.1-94), kept compileOnly
+patchouli_version = 1.21.1-93
+# Player Animator (KosmX) — no 26.2 maven release yet, kept compileOnly
+player_animator_version = 2.0.4+1.21.1

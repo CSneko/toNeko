@@ -1,12 +1,8 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "item": "minecraft:book"
-    },
-    {
-      "item": "toneko:catnip"
-    }
+    "minecraft:book",
+    "toneko:catnip"
   ],
   "result": {
     "id": "patchouli:guide_book",

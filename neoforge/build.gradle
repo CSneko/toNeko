@@ -1,5 +1,5 @@
 plugins {
-    id 'com.github.johnrengelman.shadow'
+    id 'com.gradleup.shadow'
 }
 
 architectury {
@@ -40,15 +40,23 @@ dependencies {
 
     common(project(path: ':common', configuration: 'namedElements')) { transitive false }
     shadowBundle project(path: ':common', configuration: 'transformProductionNeoForge')
-    //implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
+    // loom-no-remap 无 include/JIJ，改为随 shadowJar 平铺打包
+    shadowBundle "com.github.CSneko:NekoAI:$rootProject.nekoai_version"
+    shadowBundle "com.github.umjammer:jlayer:1.0.3"
     include "com.github.CSneko:NekoAI:$rootProject.nekoai_version"
     include "com.github.umjammer:jlayer:1.0.3"
 
+    // loom-no-remap 无 mod* 配置（全部官方映射，无需重映射），mod 依赖走普通 configuration
+    // Forgified Fabric API：在 NeoForge 侧提供 net.fabricmc.* Fabric API 类
     implementation "org.sinytra.forgified-fabric-api:forgified-fabric-api:${forgified_fabric_api_version}"
-    modImplementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
-    modImplementation "dev.kosmx.player-anim:player-animation-lib-forge:${player_animator_version}"
-    modCompileOnly "maven.modrinth:emi:1.1.24+1.21.1+neoforge"
-    modCompileOnly "maven.modrinth:patchouli:${patchouli_version}-neoforge"
+    implementation "com.geckolib:geckolib-neoforge-26.1.2:${geckolib_version}"
+    // PlayerAnimator has no 26.2 maven release — optional, disabled for 26.2 build
+    // modImplementation "dev.kosmx.player-anim:player-animation-lib-forge:${player_animator_version}"
+    // EMI / Patchouli have no 26.2 releases — kept unavailable for now
+    // modCompileOnly "maven.modrinth:emi:1.1.24+1.21.1+neoforge"
+    // modCompileOnly "maven.modrinth:patchouli:${patchouli_version}-neoforge"
+    // Curios via Modrinth Maven (maven.modrinth) — artifactId is the project id slug handled by modrinth maven, but direct maven.modrinth:curios works as maven.modrinth:curios
+    implementation "maven.modrinth:curios:${curios_version}"
 
 }
 
@@ -62,9 +70,11 @@ processResources {
 
 shadowJar {
     configurations = [project.configurations.shadowBundle]
-    archiveClassifier = 'dev-shadow'
+    // loom-no-remap：无 remapJar 任务；shadowJar 即发布主产物
+    archiveClassifier = ''
 }
 
-remapJar {
-    input.set shadowJar.archiveFile
+tasks.named('jar') {
+    // 模块自身的裸 jar 保留为 thin 分类，避免与 shadowJar 主产物冲突
+    archiveClassifier = 'thin'
 }

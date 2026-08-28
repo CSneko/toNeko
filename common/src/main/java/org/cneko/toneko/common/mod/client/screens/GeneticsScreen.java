@@ -1,12 +1,12 @@
 package org.cneko.toneko.common.mod.client.screens;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import org.cneko.toneko.common.mod.genetics.api.GeneticsRegistry;
@@ -30,7 +30,7 @@ public class GeneticsScreen extends Screen {
     private int leftMaxScroll = 0;
 
     // 右侧显示的列表内容
-    private final List<ResourceLocation> displayAlleles = new ArrayList<>();
+    private final List<Identifier> displayAlleles = new ArrayList<>();
     private double rightScrollY = 0;
     private int rightMaxScroll = 0;
 
@@ -60,7 +60,7 @@ public class GeneticsScreen extends Screen {
             }
         } else {
             // 退化逻辑：如果没有核型，则直接读 NBT 的 Key
-            this.chromosomes.addAll(genomeNbt.getAllKeys());
+            this.chromosomes.addAll(genomeNbt.keySet());
             this.chromosomes.sort(GeneticsScreen::compareNaturally);
         }
     }
@@ -116,7 +116,7 @@ public class GeneticsScreen extends Screen {
         displayAlleles.clear();
         if (editingLocus == null) return;
 
-        ResourceLocation locusId = ResourceLocation.parse(editingLocus);
+        Identifier locusId = Identifier.parse(editingLocus);
 
         if (showAllAllelesMode) {
             // 全量模式：显示所有已注册基因
@@ -136,33 +136,35 @@ public class GeneticsScreen extends Screen {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (button != 0) return super.mouseClicked(mouseX, mouseY, button);
+    public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent event, boolean active) {
+        double mouseX = event.x(), mouseY = event.y();
+        int button = event.button();
+        if (button != 0) return super.mouseClicked(event, active);
 
         int centerX = this.width / 2;
         int listTop = 50;
         int listBottom = this.height - 40;
 
-        if (mouseY < listTop || mouseY > listBottom) return super.mouseClicked(mouseX, mouseY, button);
+        if (mouseY < listTop || mouseY > listBottom) return super.mouseClicked(event, active);
 
         // --- 处理左侧点击 (选择基因座) ---
         if (mouseX < centerX) {
             String chrIdStr = chromosomes.get(currentChrIndex);
-            CompoundTag pairTag = genomeNbt.getCompound(chrIdStr);
-            CompoundTag strandA = pairTag.getCompound("A");
+            CompoundTag pairTag = genomeNbt.getCompoundOrEmpty(chrIdStr);
+            CompoundTag strandA = pairTag.getCompoundOrEmpty("A");
             int y = listTop - (int) leftScrollY;
 
             // 这里根据实际有的 Locus 列表循环
-            for (String locusId : strandA.getAllKeys()) {
+            for (String locusId : strandA.keySet()) {
                 // A 链点击
                 if (mouseX >= 15 && mouseX <= centerX / 2 - 5 && mouseY >= y + 16 && mouseY <= y + 26) {
-                    setEditingTarget(locusId, "A", strandA.getString(locusId));
+                    setEditingTarget(locusId, "A", strandA.getStringOr(locusId, ""));
                     return true;
                 }
                 // B 链点击
-                CompoundTag strandB = pairTag.getCompound("B");
+                CompoundTag strandB = pairTag.getCompoundOrEmpty("B");
                 if (mouseX >= centerX / 2 && mouseX <= centerX - 15 && mouseY >= y + 16 && mouseY <= y + 26) {
-                    setEditingTarget(locusId, "B", strandB.getString(locusId));
+                    setEditingTarget(locusId, "B", strandB.getStringOr(locusId, ""));
                     return true;
                 }
                 y += 35;
@@ -172,7 +174,7 @@ public class GeneticsScreen extends Screen {
         else if (canEdit && editingLocus != null) {
             int y = listTop - (int) rightScrollY;
             int startX = centerX + 20;
-            for (ResourceLocation alleleIdObj : displayAlleles) {
+            for (Identifier alleleIdObj : displayAlleles) {
                 if (mouseX >= startX && mouseX <= this.width - 20 && mouseY >= y && mouseY < y + 16) {
                     applyAlleleChange(alleleIdObj.toString());
                     return true;
@@ -181,13 +183,13 @@ public class GeneticsScreen extends Screen {
             }
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, active);
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(graphics, mouseX, mouseY, partialTick);
-        super.render(graphics, mouseX, mouseY, partialTick);
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        // 26.x：背景由抽取管线处理
+        super.extractRenderState(graphics, mouseX, mouseY, partialTick);
 
         if (chromosomes.isEmpty()) return;
 
@@ -196,7 +198,7 @@ public class GeneticsScreen extends Screen {
         int listBottom = this.height - 40;
 
         String chrId = chromosomes.get(currentChrIndex);
-        graphics.drawCenteredString(this.font, Component.translatable("gui.toneko.genetics_viewer.chromosome", chrId), centerX / 2, 26, 0xFFAA00);
+        graphics.centeredText(this.font, Component.translatable("gui.toneko.genetics_viewer.chromosome", chrId), centerX / 2, 26, 0xFFAA00);
 
         // 渲染左侧面板
         graphics.enableScissor(0, listTop, centerX, listBottom);
@@ -205,7 +207,7 @@ public class GeneticsScreen extends Screen {
 
         // 渲染右侧面板
         if (canEdit && editingLocus != null) {
-            graphics.drawCenteredString(this.font, showAllAllelesMode
+            graphics.centeredText(this.font, showAllAllelesMode
                             ? Component.translatable("gui.toneko.genetics_viewer.pool.all")
                             : Component.translatable("gui.toneko.genetics_viewer.pool.recommended"),
                     centerX + centerX / 2, 26, showAllAllelesMode ? 0xFFAAAA : 0x55FFFF);
@@ -218,40 +220,40 @@ public class GeneticsScreen extends Screen {
         graphics.fill(centerX, listTop, centerX + 1, listBottom, 0x55FFFFFF);
     }
 
-    private void renderLeftPanel(GuiGraphics graphics, String chrId, int mouseX, int mouseY, int top, int bottom) {
-        CompoundTag pair = genomeNbt.getCompound(chrId);
-        CompoundTag strandA = pair.getCompound("A");
-        CompoundTag strandB = pair.getCompound("B");
+    private void renderLeftPanel(GuiGraphicsExtractor graphics, String chrId, int mouseX, int mouseY, int top, int bottom) {
+        CompoundTag pair = genomeNbt.getCompoundOrEmpty(chrId);
+        CompoundTag strandA = pair.getCompoundOrEmpty("A");
+        CompoundTag strandB = pair.getCompoundOrEmpty("B");
         int y = top - (int) leftScrollY;
         int centerX = this.width / 2;
 
         // 这里遍历 A 链的所有 Key
-        for (String locusId : strandA.getAllKeys()) {
+        for (String locusId : strandA.keySet()) {
             graphics.fill(10, y, centerX - 10, y + 30, 0x44000000);
 
             // 翻译基因座名称（如果有的话）
             String locusName = getLocusTranslatedName(locusId);
-            graphics.drawString(this.font, Component.translatable("gui.toneko.genetics_viewer.locus", locusName).getString(), 15, y + 4, 0xAAAAAA);
+            graphics.text(this.font, Component.translatable("gui.toneko.genetics_viewer.locus", locusName).getString(), 15, y + 4, 0xAAAAAA);
 
             boolean isSelA = locusId.equals(editingLocus) && "A".equals(editingStrand);
             boolean hoverA = canEdit && mouseX >= 15 && mouseX <= centerX / 2 - 5 && mouseY >= y + 16 && mouseY <= y + 26 && mouseY > top && mouseY < bottom;
-            graphics.drawString(this.font, Component.translatable("gui.toneko.genetics_viewer.paternal", getTranslatedName(strandA.getString(locusId))).getString(), 15, y + 16, isSelA ? 0xFFFF55 : (hoverA ? 0x55FF55 : 0xDDDDDD));
+            graphics.text(this.font, Component.translatable("gui.toneko.genetics_viewer.paternal", getTranslatedName(strandA.getStringOr(locusId, ""))).getString(), 15, y + 16, isSelA ? 0xFFFF55 : (hoverA ? 0x55FF55 : 0xDDDDDD));
 
             boolean isSelB = locusId.equals(editingLocus) && "B".equals(editingStrand);
             boolean hoverB = canEdit && mouseX >= centerX / 2 && mouseX <= centerX - 15 && mouseY >= y + 16 && mouseY <= y + 26 && mouseY > top && mouseY < bottom;
-            graphics.drawString(this.font, Component.translatable("gui.toneko.genetics_viewer.maternal", getTranslatedName(strandB.getString(locusId))).getString(), centerX / 2, y + 16, isSelB ? 0xFFFF55 : (hoverB ? 0x55FF55 : 0xDDDDDD));
+            graphics.text(this.font, Component.translatable("gui.toneko.genetics_viewer.maternal", getTranslatedName(strandB.getStringOr(locusId, ""))).getString(), centerX / 2, y + 16, isSelB ? 0xFFFF55 : (hoverB ? 0x55FF55 : 0xDDDDDD));
 
             y += 35;
         }
         leftMaxScroll = Math.max(0, (strandA.size() * 35) - (bottom - top));
     }
 
-    private void renderRightPanel(GuiGraphics graphics, int mouseX, int mouseY, int top, int bottom) {
+    private void renderRightPanel(GuiGraphicsExtractor graphics, int mouseX, int mouseY, int top, int bottom) {
         int y = top - (int) rightScrollY;
         int centerX = this.width / 2;
         int startX = centerX + 20;
 
-        for (ResourceLocation alleleIdObj : displayAlleles) {
+        for (Identifier alleleIdObj : displayAlleles) {
             String alleleId = alleleIdObj.toString();
             boolean isCurrent = alleleId.equals(currentAlleleId);
             boolean hover = mouseX >= startX && mouseX <= this.width - 20 && mouseY >= y && mouseY < y + 16 && mouseY > top && mouseY < bottom;
@@ -259,7 +261,7 @@ public class GeneticsScreen extends Screen {
             if (isCurrent) graphics.fill(startX - 2, y - 2, this.width - 18, y + 14, 0x66FFD700);
             else if (hover) graphics.fill(startX - 2, y - 2, this.width - 18, y + 14, 0x44FFFFFF);
 
-            graphics.drawString(this.font, getTranslatedName(alleleId), startX, y, isCurrent ? 0xFFFF55 : 0xFFFFFF);
+            graphics.text(this.font, getTranslatedName(alleleId), startX, y, isCurrent ? 0xFFFF55 : 0xFFFFFF);
             y += 16;
         }
         rightMaxScroll = Math.max(0, (displayAlleles.size() * 16) - (bottom - top));
@@ -276,8 +278,8 @@ public class GeneticsScreen extends Screen {
     // ... [applyAlleleChange 方法保持不变] ...
     private void applyAlleleChange(String newAlleleId) {
         if (editingLocus != null && editingStrand != null) {
-            CompoundTag pair = genomeNbt.getCompound(chromosomes.get(currentChrIndex));
-            pair.getCompound(editingStrand).putString(editingLocus, newAlleleId);
+            CompoundTag pair = genomeNbt.getCompoundOrEmpty(chromosomes.get(currentChrIndex));
+            pair.getCompoundOrEmpty(editingStrand).putString(editingLocus, newAlleleId);
             this.currentAlleleId = newAlleleId;
             this.minecraft.getSoundManager().play(net.minecraft.client.resources.sounds.SimpleSoundInstance.forUI(net.minecraft.sounds.SoundEvents.NOTE_BLOCK_CHIME, 1.5F));
         }

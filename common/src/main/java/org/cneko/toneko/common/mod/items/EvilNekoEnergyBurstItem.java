@@ -1,4 +1,6 @@
 package org.cneko.toneko.common.mod.items;
+import org.cneko.toneko.common.mod.util.NekoIds;
+import net.minecraft.world.item.Item;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
@@ -17,8 +19,8 @@ import java.util.function.Predicate;
  */
 public class EvilNekoEnergyBurstItem extends NekoEnergyBurstItem {
 
-    public EvilNekoEnergyBurstItem(float damage, float radius, float energyCost) {
-        super(damage, radius, energyCost);
+    public EvilNekoEnergyBurstItem(String idPath, float damage, float radius, float energyCost) {
+        super(idPath, damage, radius, energyCost);
     }
 
     @Override
@@ -49,12 +51,17 @@ public class EvilNekoEnergyBurstItem extends NekoEnergyBurstItem {
         return "item.toneko.evil_neko_energy_burst";
     }
 
-    @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context,
-                                 @NotNull List<Component> tooltipComponents, @NotNull TooltipFlag tooltipFlag) {
-        tooltipComponents.add(Component.translatable("item.toneko.evil_neko_energy_burst.tip"));
-        tooltipComponents.add(Component.translatable("item.toneko.evil_neko_energy_burst.tip.damage", getDamage()));
-        tooltipComponents.add(Component.translatable("item.toneko.evil_neko_energy_burst.tip.radius", getRadius()));
-        tooltipComponents.add(Component.translatable("item.toneko.evil_neko_energy_burst.tip.energy_cost", getEnergyCost()));
+        @Override
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull net.minecraft.world.item.component.TooltipDisplay display, @NotNull java.util.function.Consumer<Component> adder, @NotNull TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, display, adder, tooltipFlag);
+        // 兼容旧实现：先收集到 List，再逐条发送
+        java.util.List<Component> tooltips = new java.util.ArrayList<>();
+
+        tooltips.add(Component.translatable("item.toneko.evil_neko_energy_burst.tip"));
+        tooltips.add(Component.translatable("item.toneko.evil_neko_energy_burst.tip.damage", getDamage()));
+        tooltips.add(Component.translatable("item.toneko.evil_neko_energy_burst.tip.radius", getRadius()));
+        tooltips.add(Component.translatable("item.toneko.evil_neko_energy_burst.tip.energy_cost", getEnergyCost()));
+    
+        for (Component t : tooltips) adder.accept(t);
     }
 }

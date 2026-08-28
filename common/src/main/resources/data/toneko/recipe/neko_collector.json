@@ -6,12 +6,8 @@
     "GGG"
   ],
   "key": {
-    "R": {
-      "tag" : "c:rods"
-    },
-    "G": {
-      "tag" : "c:glass_blocks"
-    }
+    "R": "#c:rods",
+    "G": "#c:glass_blocks"
   },
   "result": {
     "id": "toneko:neko_collector",

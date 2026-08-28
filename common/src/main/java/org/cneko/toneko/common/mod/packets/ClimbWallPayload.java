@@ -4,7 +4,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import static org.cneko.toneko.common.Bootstrap.MODID;
@@ -16,7 +16,7 @@ import static org.cneko.toneko.common.Bootstrap.MODID;
  */
 public record ClimbWallPayload(boolean active, float verticalInput) implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<ClimbWallPayload> ID =
-            new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(MODID, "climb_wall"));
+            new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(MODID, "climb_wall"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ClimbWallPayload> CODEC =
             StreamCodec.composite(

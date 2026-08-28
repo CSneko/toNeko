@@ -1,3 +1,6 @@
 {
-  "parent": "builtin/entity"
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "toneko:block/sheng_deng_red"
+  }
 }

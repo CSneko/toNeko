@@ -1,11 +1,13 @@
 package org.cneko.toneko.common.mod.entities.boss.mouflet;
 
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TieredItem;
-import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import org.cneko.toneko.common.mod.items.CatnipItem;
 
 import java.util.List;
@@ -65,9 +67,16 @@ public class MoufletStealItemGoal extends Goal {
                 if (boss.isPetMode() && boss.hasOwner(player.getUUID())) continue;
                 for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
                     ItemStack stack = player.getInventory().getItem(i);
-                    if (!stack.isEmpty() && stack.getItem() instanceof TieredItem tiered) {
-                        Tier tier = tiered.getTier();
-                        float attackDamage = tier.getAttackDamageBonus() + 1.0F;
+                    if (!stack.isEmpty() && stack.has(DataComponents.TOOL)) {
+                        ItemAttributeModifiers modifiers = stack.get(DataComponents.ATTRIBUTE_MODIFIERS);
+                        if (modifiers == null) continue;
+                        double attackDamage = 1.0D;
+                        for (ItemAttributeModifiers.Entry entry : modifiers.modifiers()) {
+                            if (entry.attribute() == Attributes.ATTACK_DAMAGE
+                                    && entry.modifier().operation() == AttributeModifier.Operation.ADD_VALUE) {
+                                attackDamage += entry.modifier().amount();
+                            }
+                        }
                         if (attackDamage > 10.0F) {
                             boss.eatOrStoreFood(stack); // 契约：成功时恰好消耗 1 个
                             lastStealWeaponTime = boss.level().getGameTime();

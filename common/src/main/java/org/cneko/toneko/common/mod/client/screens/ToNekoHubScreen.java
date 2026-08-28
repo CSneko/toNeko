@@ -1,7 +1,7 @@
 package org.cneko.toneko.common.mod.client.screens;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.client.gui.components.Button;
@@ -82,8 +82,8 @@ public class ToNekoHubScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
-        super.render(guiGraphics, mouseX, mouseY, delta);
+    public void extractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float delta) {
+        super.extractRenderState(guiGraphics, mouseX, mouseY, delta);
 
         int cx = this.width / 2;
 
@@ -114,13 +114,13 @@ public class ToNekoHubScreen extends Screen {
         return (this.width / 2) - (totalWidth / 2);
     }
 
-    private void drawCenteredString(GuiGraphics guiGraphics, Component text, int x, int y, int color) {
-        guiGraphics.drawString(this.font, text, x - this.font.width(text) / 2, y, color, false);
+    private void drawCenteredString(GuiGraphicsExtractor guiGraphics, Component text, int x, int y, int color) {
+        guiGraphics.text(this.font, text, x - this.font.width(text) / 2, y, color, false);
     }
 
     private void sendCommand(String command) {
         if (Minecraft.getInstance().player != null) {
-            Minecraft.getInstance().player.connection.sendUnsignedCommand(command);
+            Minecraft.getInstance().player.connection.sendCommand(command);
         }
     }
 

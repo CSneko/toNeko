@@ -1,49 +1,67 @@
 package org.cneko.toneko.common.mod.client.renderers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.cneko.toneko.common.mod.entities.AmmunitionEntity;
-import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.model.GeoModel;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
+import com.geckolib.model.GeoModel;
+import com.geckolib.renderer.GeoEntityRenderer;
+import com.geckolib.renderer.base.RenderPassInfo;
 
 import static org.cneko.toneko.common.Bootstrap.MODID;
 
-public class AmmunitionRenderer extends GeoEntityRenderer<AmmunitionEntity> {
+/**
+ * 弹药实体渲染器。
+ *
+ * <h2>26.x / GeckoLib 5.5 迁移说明</h2>
+ * preRender 缩放挂钩改为 {@link #firePreRenderEvent}；模型资源方法改用渲染状态入参。
+ * 弹药实体是 ThrowableProjectile（非生物），状态类必须用
+ * {@link TonekoGeoEntityState}（EntityRenderState 系），否则会在
+ * GeoEntityRenderer#extractRenderState 里被 (LivingEntity) 强转崩溃。
+ */
+public class AmmunitionRenderer extends GeoEntityRenderer<AmmunitionEntity, TonekoGeoEntityState> {
     public AmmunitionRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new AmmunitionModel());
     }
 
     @Override
-    public void preRender(PoseStack poseStack, AmmunitionEntity animatable, BakedGeoModel model, @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
-        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
-        poseStack.scale(0.1f,0.1f,0.1f);
+    public TonekoGeoEntityState createRenderState(AmmunitionEntity entity, Void unused) {
+        return new TonekoGeoEntityState();
+    }
+
+    @Override
+    public boolean firePreRenderEvent(RenderPassInfo<TonekoGeoEntityState> info,
+                                      SubmitNodeCollector collector) {
+        boolean proceed = super.firePreRenderEvent(info, collector);
+        if (proceed) {
+            PoseStack poseStack = info.poseStack();
+            poseStack.scale(0.1f, 0.1f, 0.1f);
+        }
+        return proceed;
     }
 
     public static class AmmunitionModel extends GeoModel<AmmunitionEntity> {
 
         @Override
-        public ResourceLocation getModelResource(AmmunitionEntity ammunitionEntity) {
-            return ResourceLocation.fromNamespaceAndPath(
-                    MODID,"geo/neko/crystal_neko.geo.json"
+        public Identifier getModelResource(com.geckolib.renderer.base.GeoRenderState renderState) {
+            // 物理文件在 assets/toneko/geckolib/models/neko/crystal_neko.geo.json，返回 GeckoLib 5.5 短 ID
+            return Identifier.fromNamespaceAndPath(
+                    MODID,"neko/crystal_neko"
             );
         }
 
         @Override
-        public ResourceLocation getTextureResource(AmmunitionEntity ammunitionEntity) {
-            return ResourceLocation.fromNamespaceAndPath(
+        public Identifier getTextureResource(com.geckolib.renderer.base.GeoRenderState renderState) {
+            return Identifier.fromNamespaceAndPath(
                     MODID,"textures/neko/crystal_neko.png"
             );
         }
 
         @Override
-        public ResourceLocation getAnimationResource(AmmunitionEntity ammunitionEntity) {
-            return ResourceLocation.fromNamespaceAndPath(
-                    MODID,"animations/neko/crystal_neko.animation.json"
+        public Identifier getAnimationResource(AmmunitionEntity ammunitionEntity) {
+            return Identifier.fromNamespaceAndPath(
+                    MODID,"neko/crystal_neko"
             );
         }
     }

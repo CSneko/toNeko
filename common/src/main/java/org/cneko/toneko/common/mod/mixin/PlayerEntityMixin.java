@@ -107,7 +107,7 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
     @Inject(method = "tick", at = @At("HEAD"))
     public void tick(CallbackInfo ci) {
         Player player = (Player)(Object)this;
-        Leashable.tickLeash(player);
+        // 26.x：Leashable.tickLeash 仅适用于实现 Leashable 的实体，Player 不再实现该接口，移除调用
         if (toneko$tick++>=20) {
             toneko$slowTick();
             toneko$tick = 0;
@@ -171,12 +171,12 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
 
     @Unique
     private void checkBiomeExploration(ServerPlayer sp) {
-        sp.serverLevel().getBiome(sp.blockPosition()).unwrapKey().ifPresent(key -> {
-            String biomeId = key.location().toString();
+        ((ServerLevel) sp.level()).getBiome(sp.blockPosition()).unwrapKey().ifPresent(key -> {
+            String biomeId = key.identifier().toString();
             if (!toneko$visitedBiomes.contains(biomeId)) {
                 toneko$visitedBiomes.add(biomeId);
                 double xp = ExplorationLevelFactor.getBiomeXp(
-                        sp.serverLevel().getBiome(sp.blockPosition()));
+                        ((ServerLevel) sp.level()).getBiome(sp.blockPosition()));
                 NekoLevelRegistry.exploration().addRaw((INeko)(Object)this, xp);
             }
         });
@@ -269,23 +269,27 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
         toneko$nickName = nickName;
     }
 
+    // 26.x：实体序列化改为 ValueInput/ValueOutput；自有数据块经 NbtBridge 以 CompoundTag 编解码
     @Inject(method = "addAdditionalSaveData", at = @At("HEAD"))
-    public void addAdditionalSaveData(CompoundTag compound, CallbackInfo ci) {
-        this.saveNekoNBTData(compound);
+    public void addAdditionalSaveData(net.minecraft.world.level.storage.ValueOutput output, CallbackInfo ci) {
+        CompoundTag data = new CompoundTag();
+        this.saveNekoNBTData(data);
+        org.cneko.toneko.common.mod.util.NbtBridge.store(data, output);
     }
     @Inject(method = "readAdditionalSaveData", at = @At("HEAD"))
-    public void readAdditionalSaveData(CompoundTag compound, CallbackInfo ci) {
-        this.loadNekoNBTData(compound);
+    public void readAdditionalSaveData(net.minecraft.world.level.storage.ValueInput input, CallbackInfo ci) {
+        this.loadNekoNBTData(org.cneko.toneko.common.mod.util.NbtBridge.read(input));
     }
 
-    @Inject(method = "hurt", at = @At("HEAD"), cancellable = true)
-    public void hurt(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+    // 26.x：LivingEntity#hurt 拆分为 hurtServer/hurtClient（服务端路径带 ServerLevel）
+    @Inject(method = "hurtServer", at = @At("HEAD"), cancellable = true)
+    public void hurt(net.minecraft.server.level.ServerLevel level, DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         Player player = (Player)(Object)this;
         if(source.getEntity() instanceof Player holder){
             ItemStack stack = holder.getMainHandItem();
-            if (stack.is(Items.LEAD) && !player.isLeashed()){
+            if (stack.is(Items.LEAD) && !((Leashable) player).isLeashed()){
                 // 栓住玩家
-                player.setLeashedTo(holder, true);
+                ((Leashable) player).setLeashedTo(holder, true);
                 // 减少栓绳
                 holder.getMainHandItem().setCount(holder.getMainHandItem().getCount() - 1);
                 // 在服务端运行的话呢同时发给客户端
@@ -300,8 +304,10 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
 
     }
 
+    // 26.x：interactOn 增加 Vec3 命中点参数
     @Inject(method = "interactOn", at = @At("HEAD"), cancellable = true)
-    public void interactOn(Entity entityToInteractOn, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
+    public void interactOn(Entity entityToInteractOn, InteractionHand hand,
+                           net.minecraft.world.phys.Vec3 hitPoint, CallbackInfoReturnable<InteractionResult> cir) {
         if(entityToInteractOn instanceof INeko neko){
             Player player = (Player)(Object)this;
             ItemStack itemStack = player.getItemInHand(hand);
@@ -311,7 +317,7 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
                 // 显示来源
                 itemStack2.set(DataComponents.LORE, new ItemLore(Collections.singletonList(Component.translatable("item.minecraft.milk_bucket.source", neko.getEntity().getName()).withStyle(ChatFormatting.LIGHT_PURPLE))));
                 player.setItemInHand(hand, itemStack2);
-                cir.setReturnValue(InteractionResult.sidedSuccess(player.level().isClientSide));
+                cir.setReturnValue(player.level().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER);
                 cir.cancel();
             }
             // 空手摸头：仅服务端触发型反应（客户端 player 恒为 LocalPlayer，instanceof ServerPlayer 必为 false，
@@ -340,7 +346,7 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
     @Inject(method = "updatePlayerPose", at = @At("RETURN"))
     public void toneko$reapplyPinnedPose(CallbackInfo ci) {
         Player self = (Player)(Object)this;
-        boolean clientSide = self.level().isClientSide;
+        boolean clientSide = self.level().isClientSide();
 
         Pose pinned = clientSide
                 ? org.cneko.toneko.common.mod.client.api.ClientPoseState.applyTo(self)

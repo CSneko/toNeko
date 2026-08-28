@@ -12,7 +12,7 @@ public class ExplosiveBombItem extends AmmoItem.SameEffectItem {
 
     @Override
     public void applyEffect(LivingEntity shooter, BlockPos pos, ItemStack bazooka, ItemStack ammunition) {
-        if (!shooter.level().isClientSide) {
+        if (!shooter.level().isClientSide()) {
             shooter.level().explode(null, pos.getX(), pos.getY(), pos.getZ(), 2, false, Level.ExplosionInteraction.NONE);
         }
     }

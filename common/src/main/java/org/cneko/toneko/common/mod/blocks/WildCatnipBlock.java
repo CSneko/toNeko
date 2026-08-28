@@ -19,19 +19,16 @@ public class WildCatnipBlock extends BushBlock {
     private static final VoxelShape SHAPE = Block.box(0.0, 0.0, 0.0, 16.0, 9.0, 16.0);
 
     public WildCatnipBlock() {
-        super(BlockBehaviour.Properties.of()
+        super(org.cneko.toneko.common.mod.util.NekoIds.blockProps("wild_catnip")
                 .mapColor(MapColor.PLANT)
-                .noCollission()
+                .noCollision()
                 .instabreak()
                 .sound(SoundType.GRASS)
                 .offsetType(BlockBehaviour.OffsetType.XZ)
                 .pushReaction(PushReaction.DESTROY));
     }
 
-    @Override
-    public @NotNull MapCodec<WildCatnipBlock> codec() {
-        return CODEC;
-    }
+
 
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {

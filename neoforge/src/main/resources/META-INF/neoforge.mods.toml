@@ -19,14 +19,14 @@ logoFile = "assets/toneko/icon.png"
 [[dependencies.toneko]]
 modId = "neoforge"
 type = "required"
-versionRange = "[21.0,)"
+versionRange = "[26.1.2,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.toneko]]
 modId = "minecraft"
 type = "required"
-versionRange = "[1.21,1.21.2)"
+versionRange = "[26.1.2,26.2)"
 ordering = "NONE"
 side = "BOTH"
 
@@ -58,9 +58,17 @@ versionRange = "*"
 ordering = "NONE"
 side = "BOTH"
 
+# Curios：猫耳/猫尾/猫爪饰品槽支持（可选，运行时探测）
+[[dependencies.toneko]]
+modId = "curios"
+type = "optional"
+versionRange = "*"
+ordering = "AFTER"
+side = "BOTH"
+
 [[dependencies.toneko]]
 modId = "playeranimator"
-type = "required"
+type = "optional"
 versionRange = "*"
 ordering = "NONE"
 side = "BOTH"

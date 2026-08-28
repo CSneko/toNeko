@@ -9,7 +9,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -28,30 +28,31 @@ import static org.cneko.toneko.common.mod.util.ResourceLocationUtil.toNekoLoc;
  * 从数据包加载遗传学数据（等位基因、基因座、核型修改）。
  * 监听 {namespace}/toneko_genetics/ 目录下的 JSON 文件，支持 /reload 热重载。
  */
-public class GeneticsDataLoader extends SimpleJsonResourceReloadListener implements IdentifiableResourceReloadListener {
-    private static final ResourceLocation ID = toNekoLoc("genetics_data_loader");
+public class GeneticsDataLoader extends SimpleJsonResourceReloadListener<com.google.gson.JsonElement> implements IdentifiableResourceReloadListener {
+    private static final Identifier ID = toNekoLoc("genetics_data_loader");
     private static final Gson GSON = new GsonBuilder().setLenient().create();
     private static final Logger LOGGER = LoggerFactory.getLogger(GeneticsDataLoader.class);
 
     public GeneticsDataLoader() {
-        super(GSON, "toneko_genetics");
+        // 26.x：SimpleJsonResourceReloadListener 改为 Codec 泛型驱动；此处按原样透传 JSON
+        super(net.minecraft.util.ExtraCodecs.JSON, net.minecraft.resources.FileToIdConverter.json("toneko_genetics"));
     }
 
     @Override
-    public ResourceLocation getFabricId() {
+    public Identifier getFabricId() {
         return ID;
     }
 
     @Override
-    protected void apply(Map<ResourceLocation, JsonElement> entries, ResourceManager manager, ProfilerFiller profiler) {
+    protected void apply(Map<Identifier, JsonElement> entries, ResourceManager manager, ProfilerFiller profiler) {
         // 清除上一次加载的动态数据
         GeneticsRegistry.clearDynamicData();
 
         // Phase 1: 加载所有等位基因
-        for (Map.Entry<ResourceLocation, JsonElement> entry : entries.entrySet()) {
+        for (Map.Entry<Identifier, JsonElement> entry : entries.entrySet()) {
             String path = entry.getKey().getPath();
             if (!path.startsWith("alleles/")) continue;
-            ResourceLocation id = filePathToId(entry.getKey(), "alleles/");
+            Identifier id = filePathToId(entry.getKey(), "alleles/");
             try {
                 loadAllele(id, entry.getValue().getAsJsonObject());
             } catch (Exception e) {
@@ -60,10 +61,10 @@ public class GeneticsDataLoader extends SimpleJsonResourceReloadListener impleme
         }
 
         // Phase 2: 加载所有基因座
-        for (Map.Entry<ResourceLocation, JsonElement> entry : entries.entrySet()) {
+        for (Map.Entry<Identifier, JsonElement> entry : entries.entrySet()) {
             String path = entry.getKey().getPath();
             if (!path.startsWith("loci/")) continue;
-            ResourceLocation id = filePathToId(entry.getKey(), "loci/");
+            Identifier id = filePathToId(entry.getKey(), "loci/");
             try {
                 loadLocus(id, entry.getValue().getAsJsonObject());
             } catch (Exception e) {
@@ -72,7 +73,7 @@ public class GeneticsDataLoader extends SimpleJsonResourceReloadListener impleme
         }
 
         // Phase 3: 加载所有核型补丁（此时基因座已就绪）
-        for (Map.Entry<ResourceLocation, JsonElement> entry : entries.entrySet()) {
+        for (Map.Entry<Identifier, JsonElement> entry : entries.entrySet()) {
             String path = entry.getKey().getPath();
             if (!path.startsWith("karyotypes/")) continue;
             try {
@@ -87,12 +88,12 @@ public class GeneticsDataLoader extends SimpleJsonResourceReloadListener impleme
     }
 
     /**
-     * 将文件路径（如 "alleles/super_jump"）转换为 ResourceLocation。
+     * 将文件路径（如 "alleles/super_jump"）转换为 Identifier。
      * 命名空间取自文件所属数据包，路径为文件名部分。
      */
-    private ResourceLocation filePathToId(ResourceLocation fileId, String prefix) {
+    private Identifier filePathToId(Identifier fileId, String prefix) {
         String name = fileId.getPath().substring(prefix.length());
-        return ResourceLocation.fromNamespaceAndPath(fileId.getNamespace(), name);
+        return Identifier.fromNamespaceAndPath(fileId.getNamespace(), name);
     }
 
     /**
@@ -115,7 +116,7 @@ public class GeneticsDataLoader extends SimpleJsonResourceReloadListener impleme
      * }
      * </pre>
      */
-    private void loadAllele(ResourceLocation id, JsonObject json) {
+    private void loadAllele(Identifier id, JsonObject json) {
         int dominance = 10;
         if (json.has("dominance")) {
             dominance = json.get("dominance").getAsInt();
@@ -144,9 +145,9 @@ public class GeneticsDataLoader extends SimpleJsonResourceReloadListener impleme
                 if (op == null) continue;
 
                 // 解析属性引用
-                ResourceLocation attrRl = ResourceLocation.parse(attrId);
+                Identifier attrRl = Identifier.parse(attrId);
                 ResourceKey<Attribute> attrKey = ResourceKey.create(Registries.ATTRIBUTE, attrRl);
-                var attribute = BuiltInRegistries.ATTRIBUTE.getHolder(attrKey).orElse(null);
+                var attribute = BuiltInRegistries.ATTRIBUTE.get(attrRl).orElse(null);
                 if (attribute == null) {
                     LOGGER.warn("等位基因 {} 引用了不存在的属性: {}", id, attrId);
                     continue;
@@ -163,7 +164,7 @@ public class GeneticsDataLoader extends SimpleJsonResourceReloadListener impleme
         if (json.has("wild_pool")) {
             for (JsonElement elem : json.getAsJsonArray("wild_pool")) {
                 JsonObject poolEntry = elem.getAsJsonObject();
-                ResourceLocation locusId = ResourceLocation.parse(poolEntry.get("locus").getAsString());
+                Identifier locusId = Identifier.parse(poolEntry.get("locus").getAsString());
                 int weight = poolEntry.get("weight").getAsInt();
                 GeneticsRegistry.addWildAllele(locusId, id, weight);
                 GeneticsRegistry.DYNAMIC_WILD_POOLS
@@ -185,7 +186,7 @@ public class GeneticsDataLoader extends SimpleJsonResourceReloadListener impleme
      * }
      * </pre>
      */
-    private void loadLocus(ResourceLocation id, JsonObject json) {
+    private void loadLocus(Identifier id, JsonObject json) {
         Locus locus = new Locus(id);
         GeneticsRegistry.registerLocus(locus);
         GeneticsRegistry.DYNAMIC_LOCI.add(id);
@@ -194,7 +195,7 @@ public class GeneticsDataLoader extends SimpleJsonResourceReloadListener impleme
         if (json.has("wild_pool")) {
             for (JsonElement elem : json.getAsJsonArray("wild_pool")) {
                 JsonObject poolEntry = elem.getAsJsonObject();
-                ResourceLocation alleleId = ResourceLocation.parse(poolEntry.get("allele").getAsString());
+                Identifier alleleId = Identifier.parse(poolEntry.get("allele").getAsString());
                 int weight = poolEntry.get("weight").getAsInt();
 
                 // 等位基因可能尚未加载（不同数据包加载顺序），但 GeneticRegistry 中应已存在
@@ -229,7 +230,7 @@ public class GeneticsDataLoader extends SimpleJsonResourceReloadListener impleme
             LOGGER.warn("核型补丁缺少 'target' 字段");
             return;
         }
-        ResourceLocation targetId = ResourceLocation.parse(json.get("target").getAsString());
+        Identifier targetId = Identifier.parse(json.get("target").getAsString());
         SpeciesKaryotype karyotype = GeneticsRegistry.getKaryotypeById(targetId);
         if (karyotype == null) {
             LOGGER.warn("核型补丁指向了不存在的核型: {}", targetId);
@@ -251,7 +252,7 @@ public class GeneticsDataLoader extends SimpleJsonResourceReloadListener impleme
                 karyotype.ensureChromosomeCapacity(chromosomeId);
 
                 for (JsonElement elem : addLoci.getAsJsonArray(chrKey)) {
-                    ResourceLocation locusId = ResourceLocation.parse(elem.getAsString());
+                    Identifier locusId = Identifier.parse(elem.getAsString());
                     Locus locus = GeneticsRegistry.getLocus(locusId);
                     if (locus == null) {
                         LOGGER.warn("核型补丁引用了不存在的基因座: {}", locusId);

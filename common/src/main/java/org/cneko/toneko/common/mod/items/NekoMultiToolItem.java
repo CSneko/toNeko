@@ -1,4 +1,7 @@
 package org.cneko.toneko.common.mod.items;
+import org.cneko.toneko.common.mod.util.NekoIds;
+import net.minecraft.world.item.Item;
+import org.cneko.toneko.common.mod.entities.INeko;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -11,7 +14,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -62,7 +64,7 @@ public class NekoMultiToolItem extends Item {
     public static boolean isSilkTouchMode(int mode) { return mode == DIG_SILK_TOUCH || mode == DIG_SILK_TOUCH_SLOW; }
 
     public NekoMultiToolItem() {
-        super(new Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant());
+        super(NekoIds.itemProps(ID).stacksTo(1).rarity(Rarity.EPIC).fireResistant());
     }
 
     // ========================
@@ -71,8 +73,8 @@ public class NekoMultiToolItem extends Item {
 
     public static int getRangeMode(ItemStack stack) {
         CustomData data = stack.get(DataComponents.CUSTOM_DATA);
-        if (data != null && data.copyTag().contains("clawRange", CompoundTag.TAG_INT)) {
-            return data.copyTag().getInt("clawRange");
+        if (data != null && data.copyTag().contains("clawRange")) {
+            return data.copyTag().getIntOr("clawRange", 0);
         }
         return 1;
     }
@@ -85,8 +87,8 @@ public class NekoMultiToolItem extends Item {
 
     public static int getDigMode(ItemStack stack) {
         CustomData data = stack.get(DataComponents.CUSTOM_DATA);
-        if (data != null && data.copyTag().contains("clawMode", CompoundTag.TAG_INT)) {
-            return data.copyTag().getInt("clawMode");
+        if (data != null && data.copyTag().contains("clawMode")) {
+            return data.copyTag().getIntOr("clawMode", 0);
         }
         return DIG_DEFAULT;
     }
@@ -107,7 +109,7 @@ public class NekoMultiToolItem extends Item {
         int current = getRangeMode(stack);
         int next;
         if (current == 1) next = 3;
-        else if (current == 3) next = (player.isNeko() && player.getNekoLevel() >= 15) ? 5 : 1;
+        else if (current == 3) next = (((INeko) player).isNeko() && ((INeko) player).getNekoLevel() >= 15) ? 5 : 1;
         else next = 1;
         setRangeMode(stack, next);
     }
@@ -124,20 +126,20 @@ public class NekoMultiToolItem extends Item {
     // ========================
 
     public static float getMiningSpeed(Player player) {
-        if (!player.isNeko()) return NON_NEKO_SPEED;
-        float speed = BASE_SPEED + player.getNekoLevel() * SPEED_PER_LEVEL;
+        if (!((INeko) player).isNeko()) return NON_NEKO_SPEED;
+        float speed = BASE_SPEED + ((INeko) player).getNekoLevel() * SPEED_PER_LEVEL;
         return Math.min(speed, SPEED_CAP);
     }
 
     public static float getAttackDamage(Player player) {
-        if (!player.isNeko()) return NON_NEKO_DAMAGE;
-        float damage = BASE_DAMAGE + player.getNekoLevel() * DAMAGE_PER_LEVEL;
+        if (!((INeko) player).isNeko()) return NON_NEKO_DAMAGE;
+        float damage = BASE_DAMAGE + ((INeko) player).getNekoLevel() * DAMAGE_PER_LEVEL;
         return Math.min(damage, DAMAGE_CAP);
     }
 
     /** 每方块基础能量消耗 */
     public static float getEnergyCostPerBlock(Player player, ItemStack stack) {
-        if (!player.isNeko()) return 0;
+        if (!((INeko) player).isNeko()) return 0;
         int unbreaking = getEnchantmentLevel(Enchantments.UNBREAKING, stack, player.level());
         float base = 0.5f;
         return Math.max(0.1f, base * (1.0f - unbreaking * 0.10f));
@@ -162,14 +164,16 @@ public class NekoMultiToolItem extends Item {
     }
 
     @Override
-    public void inventoryTick(@NotNull ItemStack stack, @NotNull Level level, @NotNull Entity entity,
-                               int slotId, boolean isSelected) {
-        if (!level.isClientSide && entity instanceof Player player && isSelected) {
+    public void inventoryTick(@NotNull ItemStack stack, @NotNull net.minecraft.server.level.ServerLevel level,
+                              @NotNull Entity entity, @NotNull net.minecraft.world.entity.EquipmentSlot slot) {
+        boolean isSelected = slot == net.minecraft.world.entity.EquipmentSlot.MAINHAND
+                || slot == net.minecraft.world.entity.EquipmentSlot.OFFHAND;
+        if (entity instanceof Player player && isSelected) {
             // 每 20 tick (~1秒) 同步猫娘等级到物品 NBT，供 getDestroySpeed 使用
             if (level.getGameTime() % 20 == 0) {
                 CompoundTag tag = getOrCreateTag(stack);
-                tag.putBoolean("isNeko", player.isNeko());
-                tag.putFloat("nekoLevel", player.isNeko() ? player.getNekoLevel() : 0);
+                tag.putBoolean("isNeko", ((INeko) player).isNeko());
+                tag.putFloat("nekoLevel", ((INeko) player).isNeko() ? ((INeko) player).getNekoLevel() : 0);
                 stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
             }
         }
@@ -180,8 +184,8 @@ public class NekoMultiToolItem extends Item {
         CustomData data = stack.get(DataComponents.CUSTOM_DATA);
         if (data != null && data.copyTag().contains("isNeko")) {
             CompoundTag tag = data.copyTag();
-            if (tag.getBoolean("isNeko")) {
-                return tag.getFloat("nekoLevel");
+            if (tag.getBooleanOr("isNeko", false)) {
+                return tag.getFloatOr("nekoLevel", 0f);
             }
         }
         return 0;
@@ -198,16 +202,16 @@ public class NekoMultiToolItem extends Item {
     }
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand usedHand) {
+    public @NotNull InteractionResult use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand usedHand) {
         if (player.isShiftKeyDown()) {
             // Shift+右键：循环挖掘模式
             ItemStack stack = player.getItemInHand(usedHand);
-            if (!level.isClientSide) {
+            if (!level.isClientSide()) {
                 cycleDigMode(stack);
                 int mode = getDigMode(stack);
-                player.displayClientMessage(Component.translatable(getModeLangKey(mode)), true);
+                player.sendOverlayMessage(Component.translatable(getModeLangKey(mode)));
             }
-            return InteractionResultHolder.success(player.getItemInHand(usedHand));
+            return InteractionResult.SUCCESS;
         }
         return super.use(level, player, usedHand);
     }
@@ -230,7 +234,7 @@ public class NekoMultiToolItem extends Item {
         // 获取范围
         ItemStack stack = context.getItemInHand();
         int range = getRangeMode(stack);
-        if (range == 5 && (!player.isNeko() || player.getNekoLevel() < 15)) range = 3;
+        if (range == 5 && (!((INeko) player).isNeko() || ((INeko) player).getNekoLevel() < 15)) range = 3;
 
         // 收集范围内可锄方块
         List<BlockPos> targets = new ArrayList<>();
@@ -254,10 +258,10 @@ public class NekoMultiToolItem extends Item {
             }
         }
 
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             // 客户端只播声音
             level.playSound(player, center, SoundEvents.HOE_TILL, SoundSource.BLOCKS, 1.0F, 1.0F);
-            return InteractionResult.sidedSuccess(true);
+            return InteractionResult.SUCCESS;
         }
 
         // 服务端：计算能量
@@ -265,8 +269,8 @@ public class NekoMultiToolItem extends Item {
         for (BlockPos ignored : targets) {
             totalCost += getEnergyCostPerBlock(player, stack);
         }
-        if (player.isNeko() && player.getNekoEnergy() < totalCost) {
-            player.displayClientMessage(Component.translatable("item.toneko.neko_multi_tool.no_energy"), true);
+        if (((INeko) player).isNeko() && ((INeko) player).getNekoEnergy() < totalCost) {
+            player.sendOverlayMessage(Component.translatable("item.toneko.neko_multi_tool.no_energy"));
             return InteractionResult.FAIL;
         }
 
@@ -281,11 +285,11 @@ public class NekoMultiToolItem extends Item {
         level.playSound(null, center, SoundEvents.HOE_TILL, SoundSource.BLOCKS, 1.0F, 1.0F);
 
         // 扣除能量
-        if (player.isNeko()) {
-            player.setNekoEnergy(player.getNekoEnergy() - totalCost);
+        if (((INeko) player).isNeko()) {
+            ((INeko) player).setNekoEnergy(((INeko) player).getNekoEnergy() - totalCost);
         }
 
-        return InteractionResult.sidedSuccess(false);
+        return InteractionResult.FAIL;
     }
 
     /** 锄地映射：输入方块 → 耕地 */
@@ -301,16 +305,6 @@ public class NekoMultiToolItem extends Item {
     // ========================
     //  附魔
     // ========================
-
-    @Override
-    public boolean isEnchantable(@NotNull ItemStack stack) {
-        return true;
-    }
-
-    @Override
-    public int getEnchantmentValue() {
-        return 15;
-    }
 
     @Override
     public boolean canBeEnchantedWith(ItemStack stack, Holder<Enchantment> enchantment, net.fabricmc.fabric.api.item.v1.EnchantingContext context) {
@@ -337,15 +331,14 @@ public class NekoMultiToolItem extends Item {
     // ========================
 
     @Override
-    public boolean hurtEnemy(@NotNull ItemStack stack, @NotNull LivingEntity target, @NotNull LivingEntity attacker) {
-        if (attacker instanceof Player player && player.isNeko()) {
+    public void hurtEnemy(@NotNull ItemStack stack, @NotNull LivingEntity target, @NotNull LivingEntity attacker) {
+        if (attacker instanceof Player player && ((INeko) player).isNeko()) {
             float energyCost = getEnergyCostPerBlock(player, stack);
-            if (player.getNekoEnergy() >= energyCost) {
-                player.setNekoEnergy(player.getNekoEnergy() - energyCost);
+            if (((INeko) player).getNekoEnergy() >= energyCost) {
+                ((INeko) player).setNekoEnergy(((INeko) player).getNekoEnergy() - energyCost);
             }
         }
         // 工具不会因攻击损失耐久（无耐久条）
-        return true;
     }
 
     @Override
@@ -358,19 +351,21 @@ public class NekoMultiToolItem extends Item {
     //  Tooltip
     // ========================
 
-    @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context,
-                                @NotNull List<Component> tooltipComponents, @NotNull TooltipFlag tooltipFlag) {
-        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
-
+        @Override
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull net.minecraft.world.item.component.TooltipDisplay display, @NotNull java.util.function.Consumer<Component> adder, @NotNull TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, display, adder, tooltipFlag);
+        // 兼容旧实现：先收集到 List，再逐条发送
+        List<Component> tooltips = new ArrayList<>();
         int range = getRangeMode(stack);
         int digMode = getDigMode(stack);
 
-        tooltipComponents.add(Component.translatable("item.toneko.neko_multi_tool.tip"));
-        tooltipComponents.add(Component.translatable("item.toneko.neko_multi_tool.mode.range." + range));
-        tooltipComponents.add(Component.translatable(getModeLangKey(digMode)));
-        tooltipComponents.add(Component.translatable("item.toneko.neko_multi_tool.tip.modes"));
-        tooltipComponents.add(Component.translatable("item.toneko.neko_multi_tool.tip.range_locked"));
+        tooltips.add(Component.translatable("item.toneko.neko_multi_tool.tip"));
+        tooltips.add(Component.translatable("item.toneko.neko_multi_tool.mode.range." + range));
+        tooltips.add(Component.translatable(getModeLangKey(digMode)));
+        tooltips.add(Component.translatable("item.toneko.neko_multi_tool.tip.modes"));
+        tooltips.add(Component.translatable("item.toneko.neko_multi_tool.tip.range_locked"));
+    
+        for (Component t : tooltips) adder.accept(t);
     }
 
     /** 根据模式编号返回对应的翻译键 */

@@ -5,13 +5,12 @@ import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLevelEvents;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -19,7 +18,6 @@ import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -117,7 +115,7 @@ public class ToNekoEvents {
         ServerTickEvents.START_SERVER_TICK.register(ScentDetectionHandler::onServerTick);
         ServerTickEvents.START_SERVER_TICK.register(ScentWolfTrackingHandler::onServerTick);
         ServerTickEvents.START_SERVER_TICK.register(ScentEcologyHandler::onServerTick);
-        ServerWorldEvents.UNLOAD.register(CommonWorldEvent::onWorldUnLoad);
+        ServerLevelEvents.UNLOAD.register(CommonWorldEvent::onWorldUnLoad);
         WorldEvents.ON_WEATHER_CHANGE.register(CommonWorldEvent::onWeatherChange);
         EntitySleepEvents.START_SLEEPING.register((entity, pos) -> {
             CommonPlayerEvent.startSleep(entity, pos);
@@ -127,17 +125,8 @@ public class ToNekoEvents {
         });
         EntitySleepEvents.STOP_SLEEPING.register(CommonPlayerEvent::stopSleep);
         NekoMultiToolEvents.init();
-        TradeOfferHelper.registerVillagerOffers(VillagerProfession.FARMER,
-                1,
-                (factories) -> factories.add((trader, random) -> new MerchantOffer(
-                        new ItemCost(Items.EMERALD, 2),
-                        ToNekoItems.CATNIP_SEED.getDefaultInstance(),
-                        10,
-                        10,
-                        1.1f
-                ))
-        );
-
+        // TODO: Fabric API 26.2 已移除 TradeOfferHelper；农民村民出售猫薄荷种子的
+        // 交易需要改用 Minecraft 26.x 的 TradeSet / 数据包注册后恢复。
     }
 
     /**
@@ -169,7 +158,7 @@ public class ToNekoEvents {
 
         AIUtil.sendMessage(neko.getAIStorageId(), player.getUUID(),
                 neko.generateAIPrompt(player), message, response -> {
-            player.getServer().execute(() -> {
+            player.level().getServer().execute(() -> {
                 if (neko.isRemoved()) return;
                 String displayText = NekoActionExecutor.process(neko, player, response.getResponse());
                 Messaging.sendNekoChatInRange(neko, neko, displayText, 64.0);
@@ -197,18 +186,18 @@ public class ToNekoEvents {
             }
         }
 
-        if(player.isNeko()){
+        if(((INeko) player).isNeko()){
             // 修复quirks
-            player.fixQuirks();
+            ((INeko) player).fixQuirks();
             String name = TextUtil.getPlayerName(player);
-            for (Quirk quirk : player.getQuirks()){
+            for (Quirk quirk : ((INeko) player).getQuirks()){
                 if (quirk instanceof ModQuirk mq){
-                    mq.onJoin(player);
+                    mq.onJoin((INeko) player);
                 }
             }
             // Welcome broadcast
             if (ConfigUtil.isWelcomeMessageEnabled()) {
-                String nick = player.getNickName().isEmpty() ? name : player.getNickName();
+                String nick = ((INeko) player).getNickName().isEmpty() ? name : ((INeko) player).getNickName();
                 String msg = ConfigUtil.getWelcomeMessage().replace("%s", nick);
                 server.getPlayerList().broadcastSystemMessage(Component.literal(msg), false);
             }
@@ -219,7 +208,7 @@ public class ToNekoEvents {
         ServerPlayer player = serverPlayNetworkHandler.getPlayer();
         // 清理踩踏会话：若该玩家正在踩别人，恢复被踩者姿态
         StompSessionManager.onPlayerQuit(player);
-        if(player.isNeko()){
+        if(((INeko) player).isNeko()){
             String name = TextUtil.getPlayerName(player);
         }
     }

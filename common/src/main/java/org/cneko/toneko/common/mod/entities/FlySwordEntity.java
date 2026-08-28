@@ -6,7 +6,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -17,7 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.entity.vehicle.AbstractMinecart;
+import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.item.MinecartItem;
 import net.minecraft.world.level.block.TntBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -54,19 +54,19 @@ public class FlySwordEntity extends Entity {
 
     // Minecart item-to-entity type mapping
     private static final Map<Item, EntityType<? extends AbstractMinecart>> MINECART_ITEM_TO_ENTITY = Map.of(
-            Items.MINECART,         EntityType.MINECART,
-            Items.CHEST_MINECART,   EntityType.CHEST_MINECART,
-            Items.FURNACE_MINECART, EntityType.FURNACE_MINECART,
-            Items.HOPPER_MINECART,  EntityType.HOPPER_MINECART,
-            Items.TNT_MINECART,     EntityType.TNT_MINECART
+            Items.MINECART,         resolve("minecraft", "minecart"),
+            Items.CHEST_MINECART,   resolve("minecraft", "chest_minecart"),
+            Items.FURNACE_MINECART, resolve("minecraft", "furnace_minecart"),
+            Items.HOPPER_MINECART,  resolve("minecraft", "hopper_minecart"),
+            Items.TNT_MINECART,     resolve("minecraft", "tnt_minecart")
     );
 
     private static final Map<String, EntityType<? extends AbstractMinecart>> TYPE_NAME_TO_ENTITY = Map.of(
-            "rideable", EntityType.MINECART,
-            "chest",    EntityType.CHEST_MINECART,
-            "furnace",  EntityType.FURNACE_MINECART,
-            "hopper",   EntityType.HOPPER_MINECART,
-            "tnt",      EntityType.TNT_MINECART
+            "rideable", resolve("minecraft", "minecart"),
+            "chest",    resolve("minecraft", "chest_minecart"),
+            "furnace",  resolve("minecraft", "furnace_minecart"),
+            "hopper",   resolve("minecraft", "hopper_minecart"),
+            "tnt",      resolve("minecraft", "tnt_minecart")
     );
 
     private float targetPitch, targetRoll;
@@ -116,7 +116,6 @@ public class FlySwordEntity extends Entity {
 
     public FlySwordEntity(EntityType<?> type, Level level) {
         super(type, level);
-        this.noCulling = true;
     }
 
     @Override
@@ -176,10 +175,10 @@ public class FlySwordEntity extends Entity {
         return entityData.get(IS_MINECART);
     }
     public EntityType<? extends AbstractMinecart> getMinecartEntityType() {
-        return MINECART_ITEM_TO_ENTITY.getOrDefault(swordStack.getItem(), EntityType.MINECART);
+        return MINECART_ITEM_TO_ENTITY.getOrDefault(swordStack.getItem(), resolve("minecraft","minecart"));
     }
     public EntityType<? extends AbstractMinecart> getMinecartEntityTypeClient() {
-        return TYPE_NAME_TO_ENTITY.getOrDefault(entityData.get(MINECART_TYPE), EntityType.MINECART);
+        return TYPE_NAME_TO_ENTITY.getOrDefault(entityData.get(MINECART_TYPE), resolve("minecraft","minecart"));
     }
 
     // Client-side cached minecart entity for rendering
@@ -189,13 +188,13 @@ public class FlySwordEntity extends Entity {
 
     @Nullable
     public AbstractMinecart getOrCreateRenderMinecart() {
-        if (!level().isClientSide) return null;
+        if (!level().isClientSide()) return null;
 
         String currentType = entityData.get(MINECART_TYPE);
         if (cachedRenderMinecart == null || !currentType.equals(cachedRenderMinecartType)) {
             EntityType<? extends AbstractMinecart> entityType = getMinecartEntityTypeClient();
             if (entityType != null) {
-                cachedRenderMinecart = (AbstractMinecart) entityType.create(level());
+                cachedRenderMinecart = entityType.create(level(), net.minecraft.world.entity.EntitySpawnReason.TRIGGERED);
                 cachedRenderMinecartType = currentType;
             }
         }
@@ -220,7 +219,7 @@ public class FlySwordEntity extends Entity {
     /** Build an item stack representing this fly sword (with upgrades + stored item preserved) */
     /** Build a fly sword item stack with upgrades preserved (always returns the fly sword item) */
     public ItemStack buildFlySwordItem() {
-        Item item = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("toneko", "fly_sword"));
+        Item item = BuiltInRegistries.ITEM.getValue(Identifier.fromNamespaceAndPath("toneko", "fly_sword"));
         if (item == null) return ItemStack.EMPTY;
         ItemStack result = new ItemStack(item);
         CompoundTag data = new CompoundTag();
@@ -249,14 +248,14 @@ public class FlySwordEntity extends Entity {
             entityData.set(MINECART_TYPE, "");
         } else if (swordStack.getItem() instanceof MinecartItem) {
             // Minecart items: still set DISPLAY_ITEM for backward compat, flag minecart mode
-            ResourceLocation rl = BuiltInRegistries.ITEM.getKey(swordStack.getItem());
+            Identifier rl = BuiltInRegistries.ITEM.getKey(swordStack.getItem());
             entityData.set(DISPLAY_ITEM, rl != null ? rl.toString() : "");
             entityData.set(BLOCK_ID, "");
             entityData.set(IS_MINECART, true);
             entityData.set(MINECART_TYPE, getMinecartTypeString(swordStack.getItem()));
             refreshDimensions();
         } else {
-            ResourceLocation rl = BuiltInRegistries.ITEM.getKey(swordStack.getItem());
+            Identifier rl = BuiltInRegistries.ITEM.getKey(swordStack.getItem());
             entityData.set(DISPLAY_ITEM, rl != null ? rl.toString() : "");
             entityData.set(IS_MINECART, false);
             entityData.set(MINECART_TYPE, "");
@@ -272,7 +271,7 @@ public class FlySwordEntity extends Entity {
     }
 
     public BlockState getBlockState() {
-        ResourceLocation rl = ResourceLocation.tryParse(entityData.get(BLOCK_ID));
+        Identifier rl = Identifier.tryParse(entityData.get(BLOCK_ID));
         if (rl != null) {
             return BuiltInRegistries.BLOCK.getOptional(rl).orElse(Blocks.DIAMOND_BLOCK).defaultBlockState();
         }
@@ -296,7 +295,7 @@ public class FlySwordEntity extends Entity {
         if (hitCooldown > 0) hitCooldown--;
 
         // Client-side speed: sample position delta every tick, smooth with moving average
-        if (level().isClientSide && tickCount % 2 == 0) {
+        if (level().isClientSide() && tickCount % 2 == 0) {
             double px = getX(); double py = getY(); double pz = getZ();
             speedSamples[speedIdx % 10] = Math.sqrt(
                     (px - _lx) * (px - _lx) + (py - _ly) * (py - _ly) + (pz - _lz) * (pz - _lz)
@@ -319,7 +318,7 @@ public class FlySwordEntity extends Entity {
             setDeltaMovement(getDeltaMovement().add(0, -0.04 * gravityScale, 0));
         }
 
-        if (!level().isClientSide) {
+        if (!level().isClientSide()) {
             float p = entityData.get(PITCH);
             float r = entityData.get(ROLL);
             entityData.set(PITCH, p + (targetPitch - p) * 0.15f);
@@ -336,7 +335,7 @@ public class FlySwordEntity extends Entity {
         boolean hitX = spdBefore > 0.1 && Math.abs(preMoveVel.x) > 0.01 && Math.abs(postMoveVel.x) < 0.001;
         boolean hitY = spdBefore > 0.1 && Math.abs(preMoveVel.y) > 0.01 && Math.abs(postMoveVel.y) < 0.001;
         boolean hitZ = spdBefore > 0.1 && Math.abs(preMoveVel.z) > 0.01 && Math.abs(postMoveVel.z) < 0.001;
-        boolean blockHit = !level().isClientSide && (hitX || hitY || hitZ);
+        boolean blockHit = !level().isClientSide() && (hitX || hitY || hitZ);
 
         // TNT fly sword: explode on hard landing and clear block (if enabled)
         boolean tntEnabled = ConfigUtil.isFlySwordTntEnabled();
@@ -421,7 +420,7 @@ public class FlySwordEntity extends Entity {
         if (Math.abs(getDeltaMovement().x) < 0.001) setDeltaMovement(new Vec3(0, getDeltaMovement().y, getDeltaMovement().z));
         if (Math.abs(getDeltaMovement().z) < 0.001) setDeltaMovement(new Vec3(getDeltaMovement().x, getDeltaMovement().y, 0));
 
-        if (!level().isClientSide && isVehicle() && hitCooldown <= 0) {
+        if (!level().isClientSide() && isVehicle() && hitCooldown <= 0) {
             checkHitEntities();
         }
     }
@@ -459,7 +458,7 @@ public class FlySwordEntity extends Entity {
 
             if (damage > 0) {
                 DamageSource source = level().damageSources().playerAttack(player);
-                target.hurt(source, damage);
+                target.hurtServer((net.minecraft.server.level.ServerLevel) target.level(), source, damage);
             }
 
             // === Vector-based collision ===
@@ -507,7 +506,7 @@ public class FlySwordEntity extends Entity {
             if (isHoldingTnt && !netherStarUpgrade) {
                 fuel = null;
             }
-            if (fuel != null && !level().isClientSide) {
+            if (fuel != null && !level().isClientSide()) {
                 held.shrink(1);
                 fuelTicks = fuel.ticks;
                 maxFuelTicks = Math.max(fuel.ticks, 1);
@@ -521,14 +520,14 @@ public class FlySwordEntity extends Entity {
         float flyMultiplier = ConfigUtil.getFlySwordFuelMultiplier();
         float boost = fuelTicks > 0 ? fuelPower * flyMultiplier : 0.1f;
         // TNT fuel: explosion on every beat before decrement
-        if (tntFuel && fuelTicks > 0 && fuelTicks % 9 == 0 && !level().isClientSide) {
+        if (tntFuel && fuelTicks > 0 && fuelTicks % 9 == 0 && !level().isClientSide()) {
             float pow = netherStarUpgrade ? 0 : 1.0f;
             level().explode(this, getX(), getY() - 1, getZ(), pow, Level.ExplosionInteraction.NONE);
         }
         if (fuelTicks > 0) {
             fuelTicks--;
             if (isSyncedMinecartMode()) fuelTicks--;
-            if (!level().isClientSide) entityData.set(SYNC_FUEL, fuelTicks);
+            if (!level().isClientSide()) entityData.set(SYNC_FUEL, fuelTicks);
             if (tntFuel && fuelTicks <= 0) {
                 tntFuel = false;
             }
@@ -569,7 +568,7 @@ public class FlySwordEntity extends Entity {
         setDeltaMovement(getDeltaMovement().add(move));
 
         // Sync max speed for client HUD
-        if (!level().isClientSide) entityData.set(MAX_SPEED, maxSpeed * boost);
+        if (!level().isClientSide()) entityData.set(MAX_SPEED, maxSpeed * boost);
         // Cap speed
         if (getDeltaMovement().length() > maxSpeed * boost) {
             setDeltaMovement(getDeltaMovement().scale((maxSpeed * boost) / getDeltaMovement().length()));
@@ -582,7 +581,7 @@ public class FlySwordEntity extends Entity {
         targetPitch = Math.clamp(vy * -35f, -60, 60);
         targetRoll = -strafe * 25f;
 
-        if (level().isClientSide && getDeltaMovement().length() > 0.05) {
+        if (level().isClientSide() && getDeltaMovement().length() > 0.05) {
             int particles = fuelTicks > 0 ? 5 : 2;
             for (int i = 0; i < particles; i++) {
                 level().addParticle(fuelTicks > 0
@@ -597,8 +596,8 @@ public class FlySwordEntity extends Entity {
     // === Interaction ===
 
     @Override
-    public boolean hurt(@NotNull DamageSource source, float amount) {
-        if (level().isClientSide) return false;
+    public boolean hurtServer(net.minecraft.server.level.ServerLevel level, @NotNull DamageSource source, float amount) {
+        if (level().isClientSide()) return false;
         // Nether star upgrade: immune to explosion damage
         if (netherStarUpgrade && source.is(net.minecraft.tags.DamageTypeTags.IS_EXPLOSION)) return false;
         // Drop stored weapon if present
@@ -617,63 +616,63 @@ public class FlySwordEntity extends Entity {
     }
 
     @Override
-    public @NotNull InteractionResult interact(Player player, @NotNull InteractionHand hand) {
+    public @NotNull InteractionResult interact(Player player, @NotNull InteractionHand hand, @NotNull net.minecraft.world.phys.Vec3 hitPos) {
         if (player.isSecondaryUseActive()) return InteractionResult.PASS;
         ItemStack held = player.getItemInHand(hand);
 
         // Upgrade with iron ingot (increases mass)
         if (held.is(Items.IRON_INGOT) && ironLevel < maxUpgradeLimit) {
-            if (!level().isClientSide) {
+            if (!level().isClientSide()) {
                 ironLevel++;
                 held.shrink(1);
                 level().playSound(null, getX(), getY(), getZ(),
                         SoundEvents.ANVIL_USE, SoundSource.PLAYERS, 0.5f, 1.5f);
             }
-            return InteractionResult.sidedSuccess(level().isClientSide);
+            return level().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER;
         }
 
         // Upgrade with diamond (increases damage)
         if (held.is(Items.DIAMOND) && diamondLevel < maxUpgradeLimit) {
-            if (!level().isClientSide) {
+            if (!level().isClientSide()) {
                 diamondLevel++;
                 held.shrink(1);
                 level().playSound(null, getX(), getY(), getZ(),
                         SoundEvents.ANVIL_USE, SoundSource.PLAYERS, 0.5f, 2.0f);
             }
-            return InteractionResult.sidedSuccess(level().isClientSide);
+            return level().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER;
         }
 
         // Netherite ingot (increases speed/acceleration)
         if (held.is(Items.NETHERITE_INGOT) && netheriteLevel < maxUpgradeLimit) {
-            if (!level().isClientSide) {
+            if (!level().isClientSide()) {
                 netheriteLevel++;
                 held.shrink(1);
                 level().playSound(null, getX(), getY(), getZ(),
                         SoundEvents.ANVIL_USE, SoundSource.PLAYERS, 0.5f, 2.0f);
             }
-            return InteractionResult.sidedSuccess(level().isClientSide);
+            return level().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER;
         }
 
         // Nether Star (explosion-proof)
         if (held.is(Items.NETHER_STAR) && !netherStarUpgrade) {
-            if (!level().isClientSide) {
+            if (!level().isClientSide()) {
                 netherStarUpgrade = true;
                 held.shrink(1);
                 level().playSound(null, getX(), getY(), getZ(),
                         SoundEvents.WITHER_BREAK_BLOCK, SoundSource.PLAYERS, 0.5f, 2.0f);
             }
-            return InteractionResult.sidedSuccess(level().isClientSide);
+            return level().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER;
         }
 
         // Gold ingot (increases max upgrade limit, up to 100)
         if (held.is(Items.GOLD_INGOT) && maxUpgradeLimit < 100) {
-            if (!level().isClientSide) {
+            if (!level().isClientSide()) {
                 maxUpgradeLimit++;
                 held.shrink(1);
                 level().playSound(null, getX(), getY(), getZ(),
                         SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 0.5f, 1.0f);
             }
-            return InteractionResult.sidedSuccess(level().isClientSide);
+            return level().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER;
         }
 
         // Don't transfer fuel items — they're fuel while riding
@@ -683,7 +682,7 @@ public class FlySwordEntity extends Entity {
 
         // Transfer item into sword
         if (!held.isEmpty()) {
-            if (!level().isClientSide) {
+            if (!level().isClientSide()) {
                 if (!swordStack.isEmpty()) {
                     player.getInventory().add(swordStack.copy());
                 }
@@ -693,14 +692,14 @@ public class FlySwordEntity extends Entity {
                 level().playSound(null, getX(), getY(), getZ(),
                         SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.PLAYERS, 0.5f, 2.0f);
             }
-            return InteractionResult.sidedSuccess(level().isClientSide);
+            return level().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER;
         }
 
         // Empty hand = mount
-        if (!player.isPassenger() && !level().isClientSide) {
+        if (!player.isPassenger() && !level().isClientSide()) {
             player.startRiding(this);
         }
-        return InteractionResult.sidedSuccess(level().isClientSide);
+        return level().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER;
     }
 
     @Override public boolean isPickable() { return true; }
@@ -723,7 +722,7 @@ public class FlySwordEntity extends Entity {
         super.positionRider(p, cb);
         if (p instanceof Player player) {
             player.setYRot(player.getYRot() + entityData.get(YAW_OFFSET));
-            if (!player.level().isClientSide && player instanceof net.minecraft.server.level.ServerPlayer sp) {
+            if (!player.level().isClientSide() && player instanceof net.minecraft.server.level.ServerPlayer sp) {
                 // 御剑时解除姿势钉定，避免与强制站姿互相打架
                 org.cneko.toneko.common.mod.api.PoseStateSync.unpin(sp);
             }
@@ -741,25 +740,29 @@ public class FlySwordEntity extends Entity {
 
     // === NBT ===
     @Override
-    protected void readAdditionalSaveData(@NotNull CompoundTag tag) {
-        if (tag.contains("BlockId")) entityData.set(BLOCK_ID, tag.getString("BlockId"));
-        if (tag.contains("DisplayItem")) entityData.set(DISPLAY_ITEM, tag.getString("DisplayItem"));
-        if (tag.contains("SwordItem"))
-            swordStack = ItemStack.parseOptional(level().registryAccess(), tag.getCompound("SwordItem"));
-        ironLevel = tag.getInt("IronLevel");
-        diamondLevel = tag.getInt("DiamondLevel");
-        netheriteLevel = tag.getInt("NetheriteLevel");
-        netherStarUpgrade = tag.getBoolean("NetherStar");
-        maxUpgradeLimit = tag.contains("MaxUpLimit") ? tag.getInt("MaxUpLimit") : 10;
-        fuelTicks = tag.getInt("FuelTicks");
-        maxFuelTicks = tag.getInt("MaxFuelTicks");
-        tntFuel = tag.getBoolean("TntFuel");
-        fuelPower = tag.getFloat("FuelPower");
+    protected void readAdditionalSaveData(net.minecraft.world.level.storage.ValueInput in) {
+        this.readExtraData(org.cneko.toneko.common.mod.util.NbtBridge.read(in));
+    }
+
+    private void readExtraData(@NotNull CompoundTag compound) {
+        if (compound.contains("BlockId")) entityData.set(BLOCK_ID, compound.getStringOr("BlockId", ""));
+        if (compound.contains("DisplayItem")) entityData.set(DISPLAY_ITEM, compound.getStringOr("DisplayItem", ""));
+        if (compound.contains("SwordItem"))
+            swordStack = org.cneko.toneko.common.mod.util.NbtBridge.decodeStack(level().registryAccess(), compound.getCompoundOrEmpty("SwordItem"));
+        ironLevel = compound.getIntOr("IronLevel", 0);
+        diamondLevel = compound.getIntOr("DiamondLevel", 0);
+        netheriteLevel = compound.getIntOr("NetheriteLevel", 0);
+        netherStarUpgrade = compound.getBooleanOr("NetherStar", false);
+        maxUpgradeLimit = compound.contains("MaxUpLimit") ? compound.getIntOr("MaxUpLimit", 0) : 10;
+        fuelTicks = compound.getIntOr("FuelTicks", 0);
+        maxFuelTicks = compound.getIntOr("MaxFuelTicks", 0);
+        tntFuel = compound.getBooleanOr("TntFuel", false);
+        fuelPower = compound.getFloatOr("FuelPower", 0f);
         entityData.set(SYNC_FUEL, fuelTicks);
         entityData.set(SYNC_MAX_FUEL, maxFuelTicks);
-        entityData.set(PITCH, tag.getFloat("Pitch"));
-        entityData.set(ROLL, tag.getFloat("Roll"));
-        entityData.set(YAW_OFFSET, tag.getFloat("YawOffset"));
+        entityData.set(PITCH, compound.getFloatOr("Pitch", 0f));
+        entityData.set(ROLL, compound.getFloatOr("Roll", 0f));
+        entityData.set(YAW_OFFSET, compound.getFloatOr("YawOffset", 0f));
         // Sync appearance (minecart mode, etc.) from loaded swordStack
         updateAppearanceFromStack();
         if (isSyncedMinecartMode()) {
@@ -768,22 +771,35 @@ public class FlySwordEntity extends Entity {
     }
 
     @Override
-    protected void addAdditionalSaveData(@NotNull CompoundTag tag) {
-        tag.putString("BlockId", entityData.get(BLOCK_ID));
-        tag.putString("DisplayItem", entityData.get(DISPLAY_ITEM));
-        if (!swordStack.isEmpty())
-            tag.put("SwordItem", swordStack.save(level().registryAccess()));
-        tag.putInt("IronLevel", ironLevel);
-        tag.putInt("DiamondLevel", diamondLevel);
-        tag.putInt("NetheriteLevel", netheriteLevel);
-        tag.putBoolean("NetherStar", netherStarUpgrade);
-        tag.putInt("MaxUpLimit", maxUpgradeLimit);
-        tag.putInt("FuelTicks", fuelTicks);
-        tag.putInt("MaxFuelTicks", maxFuelTicks);
-        tag.putBoolean("TntFuel", tntFuel);
-        tag.putFloat("FuelPower", fuelPower);
-        tag.putFloat("Pitch", entityData.get(PITCH));
-        tag.putFloat("Roll", entityData.get(ROLL));
-        tag.putFloat("YawOffset", entityData.get(YAW_OFFSET));
+    protected void addAdditionalSaveData(net.minecraft.world.level.storage.ValueOutput out) {
+        CompoundTag data = new CompoundTag();
+        this.writeExtraData(data);
+        org.cneko.toneko.common.mod.util.NbtBridge.store(data, out);
     }
+
+    private void writeExtraData(@NotNull CompoundTag compound) {
+        compound.putString("BlockId", entityData.get(BLOCK_ID));
+        compound.putString("DisplayItem", entityData.get(DISPLAY_ITEM));
+        if (!swordStack.isEmpty())
+            compound.put("SwordItem", org.cneko.toneko.common.mod.util.NbtBridge.encodeStack(level().registryAccess(), swordStack));
+        compound.putInt("IronLevel", ironLevel);
+        compound.putInt("DiamondLevel", diamondLevel);
+        compound.putInt("NetheriteLevel", netheriteLevel);
+        compound.putBoolean("NetherStar", netherStarUpgrade);
+        compound.putInt("MaxUpLimit", maxUpgradeLimit);
+        compound.putInt("FuelTicks", fuelTicks);
+        compound.putInt("MaxFuelTicks", maxFuelTicks);
+        compound.putBoolean("TntFuel", tntFuel);
+        compound.putFloat("FuelPower", fuelPower);
+        compound.putFloat("Pitch", entityData.get(PITCH));
+        compound.putFloat("Roll", entityData.get(ROLL));
+        compound.putFloat("YawOffset", entityData.get(YAW_OFFSET));
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends AbstractMinecart> EntityType<T> resolve(String namespace, String path) {
+        return (EntityType<T>) net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE
+                .getValue(net.minecraft.resources.Identifier.fromNamespaceAndPath(namespace, path));
+    }
+
 }

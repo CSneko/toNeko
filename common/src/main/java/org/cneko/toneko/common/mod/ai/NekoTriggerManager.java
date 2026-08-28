@@ -62,7 +62,7 @@ public final class NekoTriggerManager {
         if (tags.contains("yandere") || tags.contains("paranoia")) {
             petMessage(neko, player, "message.toneko.trigger.pet.yandere", 3);
             neko.playExpressAnim("angry");
-            playSound(neko, SoundEvents.CAT_HISS);
+            playSound(neko, () -> net.minecraft.sounds.SoundEvents.CAT_HISS_BABY.value());
             return;
         }
         // 傲娇/小恶魔：傲娇跑开
@@ -78,7 +78,7 @@ public final class NekoTriggerManager {
             neko.playExpressAnim("trip");
             level.sendParticles(ParticleTypes.POOF,
                     neko.getX(), neko.getY() + 0.5, neko.getZ(), 6, 0.3, 0.3, 0.3, 0.05);
-            playSound(neko, SoundEvents.ITEM_PICKUP);
+            playSound(neko, () -> SoundEvents.ITEM_PICKUP);
             return;
         }
         // 文静/软弱/温柔：害羞缩起来（蹲下 + 爱心粒子）
@@ -93,7 +93,7 @@ public final class NekoTriggerManager {
         // 默认：呼噜撒娇 + 爱心粒子
         petMessage(neko, player, "message.toneko.trigger.pet.default", 4);
         neko.playExpressAnim("purr");
-        playSound(neko, SoundEvents.CAT_PURR);
+        playSound(neko, () -> net.minecraft.sounds.SoundEvents.CAT_PURR_BABY.value());
         level.sendParticles(ParticleTypes.HEART,
                 neko.getX(), neko.getY() + 1.2, neko.getZ(), 6, 0.4, 0.4, 0.4, 0.1);
     }
@@ -104,7 +104,7 @@ public final class NekoTriggerManager {
      */
     public static void onNekoHurt(NekoEntity neko, DamageSource source, float amount) {
         if (!ConfigUtil.isTriggerEnabled()) return;
-        if (neko.level().isClientSide) return;
+        if (neko.level().isClientSide()) return;
         float chance = ConfigUtil.getTriggerHurtChance();
         if (chance <= 0 || neko.getRandom().nextFloat() >= chance) return;
 
@@ -119,12 +119,12 @@ public final class NekoTriggerManager {
         // 病娇/黑化：嘶吼威胁（不跑，靠近气势）
         if (tags.contains("yandere") || tags.contains("haraguro") || tags.contains("shoakuma")) {
             neko.playExpressAnim("angry");
-            playSound(neko, SoundEvents.CAT_HISS);
+            playSound(neko, () -> net.minecraft.sounds.SoundEvents.CAT_HISS_BABY.value());
             return;
         }
         // 默认/温柔/成熟：缩起来（蹲下害怕状）
         neko.playExpressAnim("shy");
-        playSound(neko, SoundEvents.CAT_HISS);
+        playSound(neko, () -> net.minecraft.sounds.SoundEvents.CAT_HISS_BABY.value());
         setPoseTemporarily(neko, Pose.CROUCHING, 40);
     }
 
@@ -158,8 +158,8 @@ public final class NekoTriggerManager {
     }
 
     /** 播放音效（周围可闻） */
-    private static void playSound(NekoEntity neko, net.minecraft.sounds.SoundEvent sound) {
+    private static void playSound(NekoEntity neko, java.util.function.Supplier<net.minecraft.sounds.SoundEvent> sound) {
         neko.level().playSound(null, neko.getX(), neko.getY(), neko.getZ(),
-                sound, neko.getSoundSource(), 1.0f, 1.0f);
+                sound.get(), neko.getSoundSource(), 1.0f, 1.0f);
     }
 }

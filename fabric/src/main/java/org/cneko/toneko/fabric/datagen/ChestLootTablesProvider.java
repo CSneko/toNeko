@@ -1,11 +1,11 @@
 package org.cneko.toneko.fabric.datagen;
 
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableProvider;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableSubProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
@@ -19,11 +19,10 @@ import java.util.function.BiConsumer;
 
 import static org.cneko.toneko.common.Bootstrap.MODID;
 
-public class ChestLootTablesProvider extends SimpleFabricLootTableProvider {
-    public static final ResourceLocation NEKO_CHEST = ResourceLocation.fromNamespaceAndPath(MODID, "chests/neko_loot");
-    public ChestLootTablesProvider(FabricDataOutput output) {
+public class ChestLootTablesProvider extends SimpleFabricLootTableSubProvider {
+    public static final Identifier NEKO_CHEST = Identifier.fromNamespaceAndPath(MODID, "chests/neko_loot");
+    public ChestLootTablesProvider(FabricPackOutput output) {
         super(output, getWrapperLookup(), LootContextParamSets.CHEST);
-
     }
 
     @Override

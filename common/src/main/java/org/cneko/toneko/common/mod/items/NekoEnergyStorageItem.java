@@ -1,5 +1,6 @@
 package org.cneko.toneko.common.mod.items;
 
+import org.cneko.toneko.common.mod.util.NekoIds;
 import lombok.Getter;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
@@ -14,21 +15,25 @@ public class NekoEnergyStorageItem extends Item {
     private double energyCapacity;
     @Getter
     private boolean isCharged;
-    public NekoEnergyStorageItem(double energyCapacity,boolean isCharged) {
-        super(new Properties());
+    public NekoEnergyStorageItem(String idPath, double energyCapacity, boolean isCharged) {
+        super(NekoIds.itemProps(idPath));
         this.energyCapacity = energyCapacity;
         this.isCharged = isCharged;
     }
 
-    @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltipComponents, @NotNull TooltipFlag tooltipFlag) {
-        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
-        tooltipComponents.add(Component.translatable("item.toneko.neko_energy_storage.tip.energy_count",energyCapacity));
+        @Override
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull net.minecraft.world.item.component.TooltipDisplay display, @NotNull java.util.function.Consumer<Component> adder, @NotNull TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, display, adder, tooltipFlag);
+        // 兼容旧实现：先收集到 List，再逐条发送
+        java.util.List<Component> tooltips = new java.util.ArrayList<>();
+        tooltips.add(Component.translatable("item.toneko.neko_energy_storage.tip.energy_count",energyCapacity));
         if (isCharged) {
-            tooltipComponents.add(Component.translatable("item.toneko.neko_energy_storage.tip.charged"));
+            tooltips.add(Component.translatable("item.toneko.neko_energy_storage.tip.charged"));
         } else {
-            tooltipComponents.add(Component.translatable("item.toneko.neko_energy_storage.tip.uncharged"));
+            tooltips.add(Component.translatable("item.toneko.neko_energy_storage.tip.uncharged"));
         }
+    
+        for (Component t : tooltips) adder.accept(t);
     }
 
     // 附魔光效

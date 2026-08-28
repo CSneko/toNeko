@@ -2,7 +2,7 @@ package org.cneko.toneko.common.mod.entities;
 
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -19,28 +19,28 @@ import java.util.function.Supplier;
 import static org.cneko.toneko.common.mod.util.ResourceLocationUtil.toNekoLoc;
 
 public class ToNekoEntities {
-    public static ResourceLocation ADVENTURER_NEKO_ID = toNekoLoc("adventurer_neko");
+    public static Identifier ADVENTURER_NEKO_ID = toNekoLoc("adventurer_neko");
     public static EntityType<AdventurerNeko> ADVENTURER_NEKO;
-    public static ResourceLocation CRYSTAL_NEKO_ID = toNekoLoc("crystal_neko");
+    public static Identifier CRYSTAL_NEKO_ID = toNekoLoc("crystal_neko");
     public static EntityType<CrystalNekoEntity> CRYSTAL_NEKO;
-    public static ResourceLocation GHOST_NEKO_ID = toNekoLoc("ghost_neko");
+    public static Identifier GHOST_NEKO_ID = toNekoLoc("ghost_neko");
     public static EntityType<GhostNekoEntity> GHOST_NEKO;
-    public static ResourceLocation FIGHTING_NEKO_ID = toNekoLoc("fighting_neko");
+    public static Identifier FIGHTING_NEKO_ID = toNekoLoc("fighting_neko");
     public static EntityType<FightingNekoEntity> FIGHTING_NEKO;
-    public static ResourceLocation MOUFLET_NEKO_BOSS_ID = toNekoLoc("mouflet_neko_boss");
+    public static Identifier MOUFLET_NEKO_BOSS_ID = toNekoLoc("mouflet_neko_boss");
     public static EntityType<MoufletNekoBoss> MOUFLET_NEKO_BOSS;
-    public static ResourceLocation RAVENN_ID = toNekoLoc("ravenn");
+    public static Identifier RAVENN_ID = toNekoLoc("ravenn");
     public static EntityType<RavennEntity> RAVENN_ENTITY;
-    public static ResourceLocation NOELLE_MAID_NEKO_ID = toNekoLoc("noelle_maid_neko");
+    public static Identifier NOELLE_MAID_NEKO_ID = toNekoLoc("noelle_maid_neko");
     public static EntityType<NoelleMaidNekoEntity> NOELLE_MAID_NEKO;
     public static EntityType<AmmunitionEntity> AMMUNITION_ENTITY;
-    public static ResourceLocation AMMUNITION_ENTITY_ID = toNekoLoc("ammunition_entity");
+    public static Identifier AMMUNITION_ENTITY_ID = toNekoLoc("ammunition_entity");
     public static EntityType<FlySwordEntity> FLY_SWORD_ENTITY;
-    public static ResourceLocation FLY_SWORD_ENTITY_ID = toNekoLoc("fly_sword");
+    public static Identifier FLY_SWORD_ENTITY_ID = toNekoLoc("fly_sword");
     public static EntityType<SeatEntity> SEAT_ENTITY;
-    public static ResourceLocation SEAT_ENTITY_ID = toNekoLoc("seat_entity");
+    public static Identifier SEAT_ENTITY_ID = toNekoLoc("seat_entity");
     public static EntityType<SpoiledWaterProjectile> SPOILED_WATER_PROJECTILE_ENTITY;
-    public static ResourceLocation SPOILED_WATER_PROJECTILE_ENTITY_ID = toNekoLoc("spoiled_water_projectile");
+    public static Identifier SPOILED_WATER_PROJECTILE_ENTITY_ID = toNekoLoc("spoiled_water_projectile");
     public static void init() {
         // 注册名字
         Set<String> names = Set.of(
@@ -61,10 +61,17 @@ public class ToNekoEntities {
 
     }
 
+
+    /** 26.x：EntityType.Builder.build 需要 ResourceKey<EntityType<?>> */
+    private static net.minecraft.resources.ResourceKey<net.minecraft.world.entity.EntityType<?>> key(String path) {
+        return net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.ENTITY_TYPE,
+                net.minecraft.resources.Identifier.fromNamespaceAndPath("toneko", path));
+    }
+
     @ApiStatus.Internal
     public static Supplier<EntityType<FlySwordEntity>> getFlySwordEntity(){
         return () -> EntityType.Builder.of(FlySwordEntity::new, MobCategory.MISC)
-                .sized(0.6f, 0.6f).clientTrackingRange(10).build("fly_sword");
+                .sized(0.6f, 0.6f).clientTrackingRange(10).build(key("fly_sword"));
     }
 
     @ApiStatus.Internal
@@ -72,62 +79,62 @@ public class ToNekoEntities {
         return
                 ()-> EntityType.Builder.of(CrystalNekoEntity::new, MobCategory.CREATURE)
                 .sized(0.5f,1.7f).eyeHeight(1.6f).clientTrackingRange(8)
-                .build("crystal_neko");
+                .build(key("crystal_neko"));
     }
     @ApiStatus.Internal
     public static Supplier<EntityType<AdventurerNeko>> getAdventurerNeko(){
         return
                 ()-> EntityType.Builder.of(AdventurerNeko::new, MobCategory.CREATURE)
                         .sized(0.5f,1.7f).eyeHeight(1.6f).clientTrackingRange(8)
-                        .build("adventure_neko");
+                        .build(key("adventure_neko"));
     }
     @ApiStatus.Internal
     public static Supplier<EntityType<GhostNekoEntity>> getGhostNeko(){
         return
                 ()-> EntityType.Builder.of(GhostNekoEntity::new, MobCategory.CREATURE)
                         .sized(0.5f,1.6f).eyeHeight(1.5f).clientTrackingRange(8)
-                        .build("ghost_neko");
+                        .build(key("ghost_neko"));
     }
     @ApiStatus.Internal
      public static Supplier<EntityType<FightingNekoEntity>> getFightingNeko(){
         return
                 ()-> EntityType.Builder.of(FightingNekoEntity::new, MobCategory.CREATURE)
                         .sized(0.5f,1.7f).eyeHeight(1.6f).clientTrackingRange(8)
-                        .build("fighting_neko");
+                        .build(key("fighting_neko"));
     }
     @ApiStatus.Internal
     public static Supplier<EntityType<MoufletNekoBoss>> getMoufletNekoBoss(){
         return
                 ()-> EntityType.Builder.of(MoufletNekoBoss::new, MobCategory.MONSTER)
                         .sized(0.5f,1.6f).clientTrackingRange(8).updateInterval(3)
-                        .build("mouflet_neko_boss");
+                        .build(key("mouflet_neko_boss"));
     }
     @ApiStatus.Internal
     public static Supplier<EntityType<AmmunitionEntity>> getAmmunitionEntity(){
         return
                 ()-> EntityType.Builder.of(AmmunitionEntity::new, MobCategory.MISC)
                         .sized(0.25f,0.25f).clientTrackingRange(4).updateInterval(20)
-                        .build("ammunition_entity");
+                        .build(key("ammunition_entity"));
     }
     @ApiStatus.Internal
     public static Supplier<EntityType<RavennEntity>> getRavennEntity(){
         return
                 ()-> EntityType.Builder.of(RavennEntity::new,MobCategory.CREATURE)
                         .sized(0.5f,1.7f).clientTrackingRange(8)
-                        .build("ravenn");
+                        .build(key("ravenn"));
     }
     @ApiStatus.Internal
     public static Supplier<EntityType<SeatEntity>> getSeatEntity(){
         return () -> EntityType.Builder.of(SeatEntity::new, MobCategory.MISC)
                 .sized(0.5f, 0.5f).clientTrackingRange(4).updateInterval(20)
-                .build("seat_entity");
+                .build(key("seat_entity"));
     }
 
     @ApiStatus.Internal
     public static Supplier<EntityType<SpoiledWaterProjectile>> getSpoiledWaterProjectileEntity(){
         return () -> EntityType.Builder.<SpoiledWaterProjectile>of((type, level) -> new SpoiledWaterProjectile(type, level), MobCategory.MISC)
                 .sized(0.25f, 0.25f).clientTrackingRange(4).updateInterval(20)
-                .build("spoiled_water_projectile");
+                .build(key("spoiled_water_projectile"));
     }
 
     @ApiStatus.Internal
@@ -135,7 +142,7 @@ public class ToNekoEntities {
         return
                 ()-> EntityType.Builder.of(NoelleMaidNekoEntity::new, MobCategory.CREATURE)
                         .sized(0.5f,1.7f).eyeHeight(1.6f).clientTrackingRange(8)
-                        .build("noelle_maid_neko");
+                        .build(key("noelle_maid_neko"));
     }
 
     /**

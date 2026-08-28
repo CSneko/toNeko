@@ -5,9 +5,7 @@
     "W W"
   ],
   "key": {
-    "W": {
-      "tag": "c:wool"
-    }
+    "W": "#c:wool"
   },
   "result": {
     "id": "toneko:neko_paws",

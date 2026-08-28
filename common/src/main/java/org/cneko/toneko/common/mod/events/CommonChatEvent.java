@@ -33,10 +33,10 @@ public class CommonChatEvent {
         String playerName = TextUtil.getPlayerName(sender);
 
         // 1. 处理内容
-        String processedContent = Messaging.prepareMessage(originalContent, sender);
+        String processedContent = Messaging.prepareMessage(originalContent, (INeko) sender);
 
         // 2. 应用格式
-        String finalString = Messaging.formatMessage(processedContent, sender);
+        String finalString = Messaging.formatMessage(processedContent, (INeko) sender);
 
         // 2.5 区域模式加头衔
         boolean areaMode = ToNekoNetworkEvents.isPlayerAreaChat(sender.getUUID());
@@ -46,14 +46,14 @@ public class CommonChatEvent {
 
         // 3. 统计与经验逻辑
         int meowCount = Stats.getMeow(finalString);
-        org.cneko.toneko.common.mod.api.NekoLevelRegistry.interaction().addRaw(sender, meowCount / 1000.0);
+        org.cneko.toneko.common.mod.api.NekoLevelRegistry.interaction().addRaw((INeko) sender, meowCount / 1000.0);
 
         if (ConfigUtil.isStatsEnable()) {
             Stats.meowInChat(playerName, meowCount);
         }
 
         // 4. 消息发送：区域模式仅附近玩家，全服模式所有玩家
-        Component finalComponent = Messaging.createComponentWithHover(finalString, sender);
+        Component finalComponent = Messaging.createComponentWithHover(finalString, (INeko) sender);
 
         if (areaMode) {
             sendMessageInRange(finalComponent, sender, AREA_RANGE);
@@ -94,7 +94,7 @@ public class CommonChatEvent {
             // 同一条玩家消息的批次：第一只正常检查冷却并计时，其余跳过冷却（ignoreCooldown）
             AIUtil.sendMessage(neko.getAIStorageId(), sender.getUUID(), neko.generateAIPrompt(sender), message, response -> {
                 // AI回调在后台线程执行，切回服务器主线程再发消息
-                sender.getServer().execute(() -> {
+                sender.level().getServer().execute(() -> {
                     // 解析并执行 AI 动作（移动/给予物品），回复广播给区域内玩家（与玩家消息范围一致）
                     String displayText = NekoActionExecutor.process(neko, sender, response.getResponse());
                     Messaging.sendNekoChatInRange(sender, neko, displayText, AREA_RANGE);
@@ -120,7 +120,7 @@ public class CommonChatEvent {
 
         AIUtil.sendMessage(neko.getAIStorageId(), sender.getUUID(), neko.generateAIPrompt(sender), aiMessage, response -> {
             // AI回调在后台线程执行，切回服务器主线程再发消息
-            sender.getServer().execute(() -> {
+            sender.level().getServer().execute(() -> {
                 // 解析并执行 AI 动作（移动/给予物品），回复走统一显示包（客户端按配置显示）
                 String displayText = NekoActionExecutor.process(neko, sender, response.getResponse());
                 Messaging.sendNekoChat(sender, neko, displayText);

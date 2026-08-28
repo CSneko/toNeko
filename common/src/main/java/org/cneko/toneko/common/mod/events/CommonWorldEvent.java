@@ -1,4 +1,5 @@
 package org.cneko.toneko.common.mod.events;
+import org.cneko.toneko.common.mod.entities.INeko;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -11,9 +12,9 @@ public class CommonWorldEvent {
     public static void onWeatherChange(ServerLevel serverLevel, int clearTime, int weatherTime, boolean isRaining, boolean isThundering) {
         var players = serverLevel.players();
         for (var player : players){
-            for (var quirk: player.getQuirks()){
+            for (var quirk: ((INeko) player).getQuirks()){
                 if (quirk instanceof ModQuirk mq){
-                    mq.onWeatherChange(player,serverLevel,clearTime,weatherTime,isRaining,isThundering);
+                    mq.onWeatherChange((INeko) player,serverLevel,clearTime,weatherTime,isRaining,isThundering);
                 }
             }
         }

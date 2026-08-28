@@ -33,19 +33,27 @@ public class GhostNekoEntity extends NekoEntity{
         this.moveControl = new FlyingMoveControl(this,  20, true);
     }
 
-    @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-        if (pastTypeName != null) {
+        @Override
+    protected void addAdditionalSaveData(net.minecraft.world.level.storage.ValueOutput out) {
+        super.addAdditionalSaveData(out);
+        CompoundTag data = new CompoundTag();
+        this.writeExtraData(data);
+        org.cneko.toneko.common.mod.util.NbtBridge.store(data, out);
+    }
+
+    private void writeExtraData(@NotNull CompoundTag compound) {        if (pastTypeName != null) {
             compound.putString(PAST_TYPE_NAME_TAG, pastTypeName);
         }
     }
 
-    @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
-        if (compound.contains(PAST_TYPE_NAME_TAG)) {
-            this.pastTypeName = compound.getString(PAST_TYPE_NAME_TAG);
+        @Override
+    protected void readAdditionalSaveData(net.minecraft.world.level.storage.ValueInput in) {
+        super.readAdditionalSaveData(in);
+        this.readExtraData(org.cneko.toneko.common.mod.util.NbtBridge.read(in));
+    }
+
+    private void readExtraData(@NotNull CompoundTag compound) {        if (compound.contains(PAST_TYPE_NAME_TAG)) {
+            this.pastTypeName = compound.getStringOr(PAST_TYPE_NAME_TAG, "");
         }
     }
 
@@ -81,13 +89,13 @@ public class GhostNekoEntity extends NekoEntity{
     }
 
     @Override
-    public boolean hurt(@NotNull DamageSource source, float amount) {
+    public boolean hurtServer(net.minecraft.server.level.ServerLevel level, @NotNull DamageSource source, float amount) {
         if (source.getEntity() instanceof Player player && player.getMainHandItem().is(Items.LEAD)) {
-            return super.hurt(source, amount);
+            return super.hurtServer(level, source, amount);
         }
         // 除非命令或魔法，否则不造成伤害
         if (source.is(DamageTypes.GENERIC_KILL) || source.is(DamageTypes.MAGIC)){
-            return super.hurt(source, amount);
+            return super.hurtServer(level, source, amount);
         }
         return false;
     }
@@ -122,12 +130,16 @@ public class GhostNekoEntity extends NekoEntity{
             CompoundTag tag = new CompoundTag();
             // saveWithoutId 而非 addAdditionalSaveData：CustomName/UUID/Pos 等基础数据
             // 写在 saveWithoutId 里，addAdditionalSaveData 只有附加数据（会漏掉名字）
-            dying.saveWithoutId(tag);
+            {
+            net.minecraft.world.level.storage.TagValueOutput bridge = net.minecraft.world.level.storage.TagValueOutput.createWithoutContext(net.minecraft.util.ProblemReporter.DISCARDING);
+            dying.saveWithoutId(bridge);
+            tag.merge(bridge.buildResult());
+        }
             // 调试：定位名字继承问题
             LOGGER.info("[GHOST] dying name={} customName={} | tag has CustomName={} value={}",
                     dying.getName().getString(), dying.getCustomName(),
                     tag.contains("CustomName"),
-                    tag.contains("CustomName") ? tag.getString("CustomName") : "<none>");
+                    tag.contains("CustomName") ? tag.getStringOr("CustomName", "") : "<none>");
             // 新实体不能继承旧 UUID
             tag.remove("UUID");
             // 防御性清理：实体类型 id 不参与加载，移除避免意外
@@ -138,8 +150,8 @@ public class GhostNekoEntity extends NekoEntity{
             tag.remove("Leash");
             tag.remove("Motion");
 
-            GhostNekoEntity ghost = ToNekoEntities.GHOST_NEKO.create(serverLevel);
-            ghost.readAdditionalSaveData(tag);   // 末尾自动 expressTraits()，基因与生前一致
+            GhostNekoEntity ghost = ToNekoEntities.GHOST_NEKO.create(serverLevel, net.minecraft.world.entity.EntitySpawnReason.TRIGGERED);
+            ghost.readAdditionalSaveData(net.minecraft.world.level.storage.TagValueInput.create(net.minecraft.util.ProblemReporter.DISCARDING, serverLevel.registryAccess(), tag)); // 末尾自动 expressTraits()，基因与生前一致
             // 兜底：显式复制名字（防御 NBT 读取链的意外，保证名字一定继承）
             if (dying.getCustomName() != null) {
                 ghost.setCustomName(dying.getCustomName());

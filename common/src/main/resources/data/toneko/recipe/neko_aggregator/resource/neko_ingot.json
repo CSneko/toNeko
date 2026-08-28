@@ -1,11 +1,8 @@
 {
   "type": "toneko:neko_aggregator",
   "key": {
-    "I": {
-      "item": "minecraft:iron_ingot"
-    }
+    "I": "minecraft:iron_ingot"
   },
-
   "pattern": [
     "   ",
     " I ",

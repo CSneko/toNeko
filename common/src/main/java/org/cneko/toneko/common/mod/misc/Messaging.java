@@ -38,8 +38,10 @@ public class Messaging {
         // 2. 构建带悬停事件的组件
         Component component = createComponentWithHover(finalMsgString, sender);
 
-        // 3. 发送
-        target.sendSystemMessage(component);
+        // 3. 发送（26.x：Entity 无 sendSystemMessage，落到 ServerPlayer）
+        if (target instanceof net.minecraft.server.level.ServerPlayer sp) {
+            sp.sendSystemMessage(component);
+        }
     }
 
     /**
@@ -66,8 +68,7 @@ public class Messaging {
         // 使用 literal 包含格式化后的文本
         return Component.literal(formattedMessage)
                 .withStyle(style -> style.withHoverEvent(
-                        new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                                Component.literal("§f" + realName))
+                        new HoverEvent.ShowText(Component.literal("§f" + realName))
                 ));
     }
 

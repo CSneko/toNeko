@@ -1,7 +1,7 @@
 package org.cneko.toneko.common.mod.effects;
 
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
@@ -13,7 +13,7 @@ import static org.cneko.toneko.common.Bootstrap.MODID;
 
 public class HissIntimidationEffect extends MobEffect {
     public static final String ID = "hiss_intimidation";
-    public static final ResourceLocation LOCATION = ResourceLocation.fromNamespaceAndPath(MODID, ID);
+    public static final Identifier LOCATION = Identifier.fromNamespaceAndPath(MODID, ID);
 
     public HissIntimidationEffect() {
         super(MobEffectCategory.HARMFUL, 0xFFFFFF);
@@ -28,7 +28,7 @@ public class HissIntimidationEffect extends MobEffect {
     }
 
     @Override
-    public boolean applyEffectTick(@NotNull LivingEntity entity, int amplifier) {
+    public boolean applyEffectTick(@NotNull net.minecraft.server.level.ServerLevel serverLevel, @NotNull LivingEntity entity, int amplifier) {
         // 60%概率在受影响实体周围冒出白色气雾粒子，模拟"被哈气包围"
         if (entity.level().getRandom().nextFloat() < 0.6f) {
             entity.level().addParticle(
@@ -39,6 +39,6 @@ public class HissIntimidationEffect extends MobEffect {
                 0, 0.02, 0
             );
         }
-        return super.applyEffectTick(entity, amplifier);
+        return super.applyEffectTick(serverLevel, entity, amplifier);
     }
 }

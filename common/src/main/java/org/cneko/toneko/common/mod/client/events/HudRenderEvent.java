@@ -1,18 +1,14 @@
 package org.cneko.toneko.common.mod.client.events;
+import org.cneko.toneko.common.mod.entities.INeko;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.PostChain;
-import net.minecraft.client.renderer.ShaderInstance;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
@@ -21,7 +17,6 @@ import org.cneko.toneko.common.mod.client.api.GiftSelectionManager;
 import org.cneko.toneko.common.mod.client.events.ClientTickEvent;
 import org.cneko.toneko.common.mod.entities.FlySwordEntity;
 import org.cneko.toneko.common.mod.effects.ToNekoEffects;
-import org.joml.Matrix4f;
 
 import java.io.IOException;
 
@@ -32,7 +27,8 @@ import static org.cneko.toneko.common.mod.util.ResourceLocationUtil.toNekoLoc;
 public class HudRenderEvent {
 
     public static void init() {
-        HudRenderCallback.EVENT.register((guiGraphics, deltaTracker) -> {
+        // 26.x Fabric：HudRenderCallback 已移除，改用 HudElementRegistry 注册 HUD 元素
+        HudElementRegistry.addLast(toNekoLoc("hud"), (HudElement) (guiGraphics, deltaTracker) -> {
             Player player = Minecraft.getInstance().player;
             if (player == null) return;
             renderNekoEnergyBar(guiGraphics);
@@ -70,76 +66,28 @@ public class HudRenderEvent {
      * 渲染魅惑效果的粉色晕影覆盖层。
      * 此效果没有纹理，而是通过在屏幕边缘绘制带颜色梯度的顶点来动态生成。
      *
-     * @param guiGraphics GuiGraphics 实例
+     * @param guiGraphics GuiGraphicsExtractor 实例
      * @param player      玩家实体
      */
-    private static void renderBewitchedOverlay(GuiGraphics guiGraphics, Player player) {
+    private static void renderBewitchedOverlay(GuiGraphicsExtractor guiGraphics, Player player) {
         int width = guiGraphics.guiWidth();
         int height = guiGraphics.guiHeight();
 
-        // --- 渲染状态设置 ---
-        RenderSystem.disableDepthTest(); // 在所有东西之上绘制
-        RenderSystem.depthMask(false);   // 不写入深度缓冲区
-        RenderSystem.enableBlend();      // 启用混合以实现半透明
-        // 设置标准的alpha混合函数
-        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        // 使用仅处理位置和颜色的基础着色器
-        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+        // 26.x 迁移：核心着色器/Tesselator 直绘已被移除，
+        // 粉色晕影改用提取器自身的渐变/填充实现（视觉近似）。
+        int r = 0xFF, g2 = 105, b = 180; // 靓粉色
+        int edge = (120 << 24) | (r << 16) | (g2 << 8) | b;
+        int clear = b & 0xFFFFFF;
 
-        // --- 顶点数据准备 ---
-        Tesselator tesselator = Tesselator.getInstance();
-        BufferBuilder bufferBuilder = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-
-        // 定义颜色和透明度
-        int r = 255, g = 105, b = 180; // 靓粉色
-        int edgeAlpha = 120; // 屏幕边缘的透明度
-        float z = 0.0f; // 2D屏幕空间的Z坐标
-
-        // 定义晕影的内部边界（完全透明的区域）
-        float innerX1 = width * 0.25f;
         float innerY1 = height * 0.25f;
-        float innerX2 = width * 0.75f;
         float innerY2 = height * 0.75f;
-
-        // 我们将晕影绘制为环绕中心透明区域的四个梯形（四边形）
-        // 颜色将从边缘（有alpha）渐变到内部（alpha为0）
-
-        // 顶部四边形
-        bufferBuilder.addVertex(0, innerY1, z).setColor(r, g, b, 0);
-        bufferBuilder.addVertex(width, innerY1, z).setColor(r, g, b, 0);
-        bufferBuilder.addVertex(width, 0, z).setColor(r, g, b, edgeAlpha);
-        bufferBuilder.addVertex(0, 0, z).setColor(r, g, b, edgeAlpha);
-
-        // 底部四边形
-        bufferBuilder.addVertex(0, height, z).setColor(r, g, b, edgeAlpha);
-        bufferBuilder.addVertex(width, height, z).setColor(r, g, b, edgeAlpha);
-        bufferBuilder.addVertex(width, innerY2, z).setColor(r, g, b, 0);
-        bufferBuilder.addVertex(0, innerY2, z).setColor(r, g, b, 0);
-
-        // 左侧四边形（高度覆盖整个屏幕）
-        bufferBuilder.addVertex(0, height, z).setColor(r, g, b, edgeAlpha);
-        bufferBuilder.addVertex(innerX1, height, z).setColor(r, g, b, 0);
-        bufferBuilder.addVertex(innerX1, 0, z).setColor(r, g, b, 0);
-        bufferBuilder.addVertex(0, 0, z).setColor(r, g, b, edgeAlpha);
-
-        // 右侧四边形（高度覆盖整个屏幕）
-        bufferBuilder.addVertex(innerX2, height, z).setColor(r, g, b, 0);
-        bufferBuilder.addVertex(width, height, z).setColor(r, g, b, edgeAlpha);
-        bufferBuilder.addVertex(width, 0, z).setColor(r, g, b, edgeAlpha);
-        bufferBuilder.addVertex(innerX2, 0, z).setColor(r, g, b, 0);
-
-        // --- 绘制 ---
-        // 构建网格数据并使用着色器进行绘制
-        MeshData mesh = bufferBuilder.build();
-        if (mesh != null) {
-            // BufferUploader会处理VBO上传和绘制调用
-            BufferUploader.drawWithShader(mesh);
-        }
-
-        // --- 恢复渲染状态 ---
-        RenderSystem.disableBlend();
-        RenderSystem.depthMask(true);
-        RenderSystem.enableDepthTest();
+        // 顶部：边缘色 → 透明
+        guiGraphics.fillGradient(0, 0, width, (int) innerY1, edge, clear);
+        // 底部：透明 → 边缘色
+        guiGraphics.fillGradient(0, (int) innerY2, width, height, clear, edge);
+        // 左右两侧近似为常量 alpha 填充
+        guiGraphics.fill(0, 0, (int) (width * 0.25f), height, edge);
+        guiGraphics.fill((int) (width * 0.75f), 0, width, height, edge);
     }
 
 
@@ -148,7 +96,7 @@ public class HudRenderEvent {
     /**
      * 当玩家被骑乘时，在屏幕右侧显示按键提示
      */
-    private static void renderDismountHint(GuiGraphics guiGraphics) {
+    private static void renderDismountHint(GuiGraphicsExtractor guiGraphics) {
         Minecraft client = Minecraft.getInstance();
         if (client.options.hideGui) return;
 
@@ -162,11 +110,11 @@ public class HudRenderEvent {
         int x = width - textWidth - 10;
         int y = height / 2 - 20;
 
-        guiGraphics.drawString(client.font, hint, x, y, 0xAAFFFFFF);
+        guiGraphics.text(client.font, hint, x, y, 0xAAFFFFFF);
     }
 
     /** 趴下/躺下时右侧的起身提示（与下马提示同一位置，互斥不会同时出现） */
-    private static void renderStandUpHint(GuiGraphics guiGraphics) {
+    private static void renderStandUpHint(GuiGraphicsExtractor guiGraphics) {
         Minecraft client = Minecraft.getInstance();
         if (client.options.hideGui) return;
 
@@ -180,38 +128,38 @@ public class HudRenderEvent {
         int x = width - textWidth - 10;
         int y = height / 2 - 20;
 
-        guiGraphics.drawString(client.font, hint, x, y, 0xAAFFFFFF);
+        guiGraphics.text(client.font, hint, x, y, 0xAAFFFFFF);
     }
 
     /** 送礼选择模式：金色描边高亮当前选中的快捷栏槽 + 快捷栏上方提示 */
-    private static void renderGiftSelection(GuiGraphics guiGraphics) {
+    private static void renderGiftSelection(GuiGraphicsExtractor guiGraphics) {
         Minecraft client = Minecraft.getInstance();
         if (client.options.hideGui || client.player == null) return;
 
         int width = guiGraphics.guiWidth();
         int height = guiGraphics.guiHeight();
-        int slot = client.player.getInventory().selected;
+        int slot = client.player.getInventory().getSelectedSlot();
 
         // 原版快捷栏布局：left = width/2 - 91；选中槽高亮 24x23，从 (left-1, height-23) 开始
         int left = width / 2 - 91;
         int x = left - 1 + slot * 20;
         int y = height - 23;
 
-        guiGraphics.renderOutline(x, y, 24, 23, 0xFFFFD700);
+        guiGraphics.outline(x, y, 24, 23, 0xFFFFD700);
 
         Component hint = GiftSelectionManager.hint();
-        guiGraphics.drawCenteredString(client.font, hint, width / 2, y - 12, 0xFFFFFFFF);
+        guiGraphics.centeredText(client.font, hint, width / 2, y - 12, 0xFFFFFFFF);
     }
 
-    private static final ResourceLocation CATNIP_ICON = ResourceLocation.fromNamespaceAndPath(MODID,"textures/item/catnip.png");
-    public static void renderNekoEnergyBar(GuiGraphics context) {
+    private static final Identifier CATNIP_ICON = Identifier.fromNamespaceAndPath(MODID,"textures/item/catnip.png");
+    public static void renderNekoEnergyBar(GuiGraphicsExtractor context) {
         Minecraft client = Minecraft.getInstance();
         if (client.options.hideGui) return;
 
         Player player = client.player;
 
-        float nekoEnergy = player.getNekoEnergy();
-        float maxNekoEnergy = player.getMaxNekoEnergy();
+        float nekoEnergy = ((INeko) player).getNekoEnergy();
+        float maxNekoEnergy = ((INeko) player).getMaxNekoEnergy();
 
         // 如果能量是满的，则隐藏
         if (nekoEnergy >= maxNekoEnergy) return;
@@ -265,7 +213,7 @@ public class HudRenderEvent {
     }
 
     /** 潜行模式指示器：屏幕右下角能量条上方显示状态文字 */
-    private static void renderStealthIndicator(GuiGraphics context) {
+    private static void renderStealthIndicator(GuiGraphicsExtractor context) {
         Minecraft client = Minecraft.getInstance();
         if (client.options.hideGui || client.player == null) return;
 
@@ -283,10 +231,10 @@ public class HudRenderEvent {
         int x = width - margin - textWidth;
         int y = height - margin - 12; // 能量条上方
 
-        context.drawString(client.font, text, x, y, color);
+        context.text(client.font, text, x, y, color);
     }
 
-    private static void renderFlySwordHUD(GuiGraphics g, FlySwordEntity entity) {
+    private static void renderFlySwordHUD(GuiGraphicsExtractor g, FlySwordEntity entity) {
         Minecraft client = Minecraft.getInstance();
         if (client.options.hideGui) return;
 
@@ -301,7 +249,7 @@ public class HudRenderEvent {
         String ft = entity.getFuelTicks() > 0
                 ? String.format("§6Fuel: %d%%", (int)(fp * 100))
                 : "§7Fuel: --";
-        g.drawCenteredString(client.font, ft, g.guiWidth() / 2, fuelY - 10, 0xFFFFFF);
+        g.centeredText(client.font, ft, g.guiWidth() / 2, fuelY - 10, 0xFFFFFFFF);
 
         // Speed bar — % of current max speed (synced from server)
         int spdY = g.guiHeight() - 46;
@@ -314,7 +262,7 @@ public class HudRenderEvent {
             int c = spd > 0.8f ? 0xFF55FF55 : spd > 0.4f ? 0xFFFFFF55 : 0xFFFF5555;
             g.fill(x, spdY, x + (int)(barW * spd), spdY + barH, c);
         }
-        g.drawCenteredString(client.font, String.format("§f%.1f m/s", speed),
+        g.centeredText(client.font, String.format("§f%.1f m/s", speed),
                 g.guiWidth() / 2, spdY + barH + 2, 0xFFFFFF);
     }
 }

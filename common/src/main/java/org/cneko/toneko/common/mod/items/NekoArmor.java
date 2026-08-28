@@ -1,70 +1,59 @@
 package org.cneko.toneko.common.mod.items;
 
+import org.cneko.toneko.common.mod.util.NekoIds;
 import net.fabricmc.fabric.api.item.v1.EnchantingContext;
-import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.core.Holder;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.decoration.ArmorStand;
+
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import org.cneko.toneko.common.mod.client.items.NekoArmorRenderer;
 import org.cneko.toneko.common.mod.misc.ToNekoEnchantments;
-import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoItem;
-import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
-import software.bernie.geckolib.animatable.client.GeoRenderProvider;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.PlayState;
-import software.bernie.geckolib.constant.DataTickets;
-import software.bernie.geckolib.constant.DefaultAnimations;
-import software.bernie.geckolib.renderer.GeoArmorRenderer;
-import software.bernie.geckolib.util.GeckoLibUtil;
+import com.geckolib.animatable.GeoItem;
+import com.geckolib.animatable.SingletonGeoAnimatable;
+import com.geckolib.animatable.client.GeoRenderProvider;
+import com.geckolib.animatable.instance.AnimatableInstanceCache;
+import com.geckolib.animatable.manager.AnimatableManager;
+import com.geckolib.animation.AnimationController;
+import com.geckolib.animation.object.PlayState;
+
+
+import com.geckolib.constant.DefaultAnimations;
+import com.geckolib.util.GeckoLibUtil;
 
 import java.util.function.Consumer;
 
-public abstract class NekoArmor<N extends Item & GeoItem> extends ArmorItem implements GeoItem {
+/**
+ * 猫娘套装（尾巴/耳朵/爪爪）。
+ *
+ * <h2>26.x 迁移说明</h2>
+ * {@code ArmorItem} 已被移除，盔甲通过
+ * {@code Item.Properties#humanArmor(ArmorMaterial, ArmorType)} 装配；
+ * 右键穿戴由 Equippable 组件自动处理，本类仅在成功穿戴时扣除少量血量。
+ */
+public abstract class NekoArmor<N extends Item & GeoItem> extends Item implements GeoItem {
     public final AnimatableInstanceCache cache;
-    public NekoArmor(Holder<ArmorMaterial> material, Type type, Properties settings) {
-        super(material, type, settings);
+
+    protected NekoArmor(Properties settings) {
+        super(settings);
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
         this.cache = GeckoLibUtil.createInstanceCache(this);
     }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, 40, state -> {
-            Entity e = state.getData(DataTickets.ENTITY);
-            /*if (e.getMovement().lengthSquared() > 0) {
-                // 行走动画
-                if (e.getVelocity().lengthSquared() <= 0.025)
-                    state.getController().setAnimation(DefaultAnimations.WALK);
-                    // 跑动动画
-                else state.getController().setAnimation(DefaultAnimations.RUN);
-            }else*/
-            state.getController().setAnimation(DefaultAnimations.IDLE);
-            if (! (e instanceof LivingEntity entity)) return PlayState.STOP;
-            if (entity instanceof ArmorStand)
-                return PlayState.CONTINUE;
-            for (ItemStack stack : entity.getArmorSlots()) {
-                // 只要有任意一件穿了就播放
-                if (!stack.isEmpty())
-                    return PlayState.CONTINUE;
-            }
-            return PlayState.STOP;
+        controllers.add(new AnimationController<>("idle", 40, state -> {
+            // 26.x/GeckoLib 5.5：渲染态数据票变化后，穿戴判定交由渲染层；
+            // 盔甲渲染器只在穿戴时被调用，这里恒定播放 idle 即可。
+            state.setAndContinue(DefaultAnimations.IDLE);
+            return PlayState.CONTINUE;
         }));
-
     }
 
     @Override
@@ -75,26 +64,17 @@ public abstract class NekoArmor<N extends Item & GeoItem> extends ArmorItem impl
     @Override
     public void createGeoRenderer(Consumer<GeoRenderProvider> consumer) {
         consumer.accept(new GeoRenderProvider() {
-            private GeoArmorRenderer<N> renderer;
+            private com.geckolib.renderer.GeoArmorRenderer<?, ?> renderer;
 
             @Override
-            public <T extends LivingEntity> HumanoidModel<?> getGeoArmorRenderer(@Nullable T livingEntity, ItemStack itemStack, @Nullable EquipmentSlot equipmentSlot, @Nullable HumanoidModel<T> original) {
-                if(this.renderer == null) // Important that we do this. If we just instantiate  it directly in the field it can cause incompatibilities with some mods.
-                    this.renderer = (GeoArmorRenderer<N>)NekoArmor.this.getRenderer();
+            public com.geckolib.renderer.GeoArmorRenderer<?, ?> getGeoArmorRenderer(ItemStack itemStack,
+                                                                                    net.minecraft.world.entity.EquipmentSlot equipmentSlot) {
+                if (this.renderer == null) // Important that we do this. If we just instantiate it directly in the field it can cause incompatibilities with some mods.
+                    this.renderer = (com.geckolib.renderer.GeoArmorRenderer<?, ?>) NekoArmor.this.getRenderer();
 
                 return this.renderer;
             }
         });
-    }
-
-    @Override
-    public boolean isEnchantable(ItemStack stack) {
-        return true;
-    }
-
-    @Override
-    public int getEnchantmentValue() {
-        return 10;
     }
 
     @Override
@@ -110,8 +90,8 @@ public abstract class NekoArmor<N extends Item & GeoItem> extends ArmorItem impl
 
     public static class NekoTailItem extends NekoArmor<NekoTailItem> {
         public static final String ID = "neko_tail";
-        public NekoTailItem(Holder<ArmorMaterial> material) {
-            super(material,Type.CHESTPLATE,new Properties().stacksTo(1));
+        public NekoTailItem(net.minecraft.world.item.equipment.ArmorMaterial material) {
+            super(NekoIds.itemProps(ID).humanoidArmor(material, net.minecraft.world.item.equipment.ArmorType.CHESTPLATE).stacksTo(1));
         }
 
         @Override
@@ -119,35 +99,33 @@ public abstract class NekoArmor<N extends Item & GeoItem> extends ArmorItem impl
             return new NekoArmorRenderer.NekoTailRenderer();
         }
 
+        /** 穿戴（含与身上装备互换）成功时扣 0.5 血。 */
         @Override
-        public InteractionResultHolder<ItemStack> swapWithEquipmentSlot(Item item, Level world, Player user, InteractionHand hand) {
-            InteractionResultHolder<ItemStack> result = super.swapWithEquipmentSlot(item, world, user, hand);
-            // 如果成功，则扣除玩家0.5血量
-            if (result.getResult().consumesAction()) {
-                user.hurt(user.damageSources().generic(), 0.5f);
+        public InteractionResult use(Level level, Player player, InteractionHand hand) {
+            InteractionResult result = super.use(level, player, hand);
+            if (result.consumesAction()) {
+                org.cneko.toneko.common.mod.util.EntityHurtUtil.hurt(player, player.damageSources().generic(), 0.5f);
             }
             return result;
         }
-
     }
 
     public static class NekoEarsItem extends NekoArmor<NekoEarsItem> {
         public static final String ID = "neko_ears";
-        public NekoEarsItem(Holder<ArmorMaterial> material) {
-            super(material,Type.HELMET,new Properties().stacksTo(1));
+        public NekoEarsItem(net.minecraft.world.item.equipment.ArmorMaterial material) {
+            super(NekoIds.itemProps(ID).humanoidArmor(material, net.minecraft.world.item.equipment.ArmorType.HELMET).stacksTo(1));
         }
 
         @Override
         public NekoArmorRenderer.NekoEarsRenderer getRenderer() {
             return new NekoArmorRenderer.NekoEarsRenderer();
         }
-
     }
 
     public static class NekoPawsItem extends NekoArmor<NekoPawsItem> {
         public static final String ID = "neko_paws";
-        public NekoPawsItem(Holder<ArmorMaterial> material) {
-            super(material,Type.BOOTS,new Properties().stacksTo(1));
+        public NekoPawsItem(net.minecraft.world.item.equipment.ArmorMaterial material) {
+            super(NekoIds.itemProps(ID).humanoidArmor(material, net.minecraft.world.item.equipment.ArmorType.BOOTS).stacksTo(1));
         }
 
         @Override
@@ -155,6 +133,4 @@ public abstract class NekoArmor<N extends Item & GeoItem> extends ArmorItem impl
             return new NekoArmorRenderer.NekoPawsRenderer();
         }
     }
-
-
 }

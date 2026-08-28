@@ -1,4 +1,5 @@
 package org.cneko.toneko.common.mod.entities.ai.goal;
+import net.minecraft.world.entity.player.Player;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
@@ -72,9 +73,9 @@ public class NekoMateGoal extends Goal {
     public void breed(){
         if (nekoEntity.level() instanceof ServerLevel sl) {
             nekoEntity.breed(sl, target);
-            target.getEntity().sendSystemMessage(Component.translatable("message.toneko.neko.mate.finish").withStyle(ChatFormatting.GREEN));
+            systemMsg(target.getEntity(), Component.translatable("message.toneko.neko.mate.finish").withStyle(ChatFormatting.GREEN));
             // 显示爱心粒子（加随机）
-            RandomSource random = sl.random;
+            RandomSource random = sl.getRandom();
             sl.getLevel().addParticle(
                     ParticleTypes.HEART,
                     nekoEntity.getX() + random.nextDouble() * 0.5 - 0.25,
@@ -108,4 +109,8 @@ public class NekoMateGoal extends Goal {
     public void setFollowSpeed(double followSpeed) {
         this.followSpeed = followSpeed;
     }
+    private static void systemMsg(net.minecraft.world.entity.LivingEntity target, net.minecraft.network.chat.Component msg) {
+        if (target instanceof Player player) player.sendSystemMessage(msg);
+    }
+
 }

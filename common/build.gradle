@@ -11,15 +11,17 @@ dependencies {
     // which get remapped to the correct annotations on each platform.
     // Do NOT use other classes from Fabric Loader.
     modImplementation "net.fabricmc:fabric-loader:$rootProject.fabric_loader_version"
-    //include "maven.modrinth:ctlibmod:0.1.13"
-    modImplementation "software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}"
-    modCompileOnly "dev.emi:emi-xplat-intermediary:${emi_version}:api"
-    modCompileOnly "dev.kosmx.player-anim:player-animation-lib:${player_animator_version}"
-    modCompileOnly "dev.kosmx.player-anim:anim-core:${player_animator_version}"
-
+    // GeckoLib 5.x for 26.2 moved to com.geckolib (not software.bernie.geckolib)
+    // Fabric/NeoForge variants are com.geckolib:geckolib-fabric-26.2 / geckolib-neoforge-26.2, common is geckolib-common-26.1.2
+    modImplementation "com.geckolib:geckolib-common-26.1.2:${geckolib_version}"
+    // 26.x 迁移说明：EMI（emi-xplat-intermediary）与 PlayerAnimator（dev.kosmx.player-anim）
+    // 目前均没有 26.x 的发布；其旧版 jar 内嵌 intermediary 命名空间的 accessWidener，
+    // 在去混淆构建的 official 生产命名空间下 remap 会直接失败，因此相关依赖与集成代码一并移除。
+    // permissions-api 为纯 API（无 AW），保留。
 }
 
 
 loom {
     accessWidenerPath = file("src/main/resources/toneko.accesswidener")
 }
+

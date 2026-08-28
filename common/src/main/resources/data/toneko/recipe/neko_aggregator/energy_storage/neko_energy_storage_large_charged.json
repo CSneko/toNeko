@@ -1,11 +1,8 @@
 {
   "type": "toneko:neko_aggregator",
   "key": {
-    "I": {
-      "item": "toneko:neko_energy_storage_large"
-    }
+    "I": "toneko:neko_energy_storage_large"
   },
-
   "pattern": [
     "   ",
     " I ",

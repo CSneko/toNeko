@@ -34,7 +34,7 @@ public final class ClientTextUtil {
                     flush(root, seg, style);
                     if (fmt == ChatFormatting.RESET) {
                         style = Style.EMPTY;
-                    } else if (fmt.isFormat()) {
+                    } else if (isFormatCode(code)) {
                         style = switch (fmt) {
                             case BOLD -> style.withBold(true);
                             case ITALIC -> style.withItalic(true);
@@ -74,5 +74,12 @@ public final class ClientTextUtil {
             root.append(Component.literal(seg.toString()).withStyle(style));
             seg.setLength(0);
         }
+    }
+
+    private static final String FORMAT_CODES = "klmnorKLMNOR";
+
+    private static boolean isFormatCode(char code) {
+        // 26.x：ChatFormatting.isFormat/isColor 被移除，按遗留格式码字符判断
+        return code != 'r' && code != 'R' && FORMAT_CODES.indexOf(code) >= 0;
     }
 }

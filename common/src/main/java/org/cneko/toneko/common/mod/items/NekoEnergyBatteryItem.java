@@ -1,4 +1,6 @@
 package org.cneko.toneko.common.mod.items;
+import org.cneko.toneko.common.mod.util.NekoIds;
+import org.cneko.toneko.common.mod.entities.INeko;
 
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -26,8 +28,8 @@ public class NekoEnergyBatteryItem extends Item {
     private final int dischargeRate;
     private final int chargeRate;
 
-    public NekoEnergyBatteryItem(int capacity, int dischargeRate, int chargeRate) {
-        super(new Properties().stacksTo(1).rarity(Rarity.RARE));
+    public NekoEnergyBatteryItem(String idPath, int capacity, int dischargeRate, int chargeRate) {
+        super(NekoIds.itemProps(idPath).stacksTo(1).rarity(Rarity.RARE));
         this.capacity = capacity;
         this.dischargeRate = dischargeRate;
         this.chargeRate = chargeRate;
@@ -40,7 +42,7 @@ public class NekoEnergyBatteryItem extends Item {
     public static float getStoredEnergy(ItemStack stack) {
         CustomData data = stack.get(DataComponents.CUSTOM_DATA);
         if (data != null && data.copyTag().contains("storedEnergy")) {
-            return data.copyTag().getFloat("storedEnergy");
+            return data.copyTag().getFloatOr("storedEnergy", 0f);
         }
         return 0;
     }
@@ -71,9 +73,9 @@ public class NekoEnergyBatteryItem extends Item {
         if (server.getTickCount() % 20 != 0) return;
 
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-            if (!player.isNeko()) continue;
-            float maxEnergy = player.getMaxNekoEnergy();
-            float current = player.getNekoEnergy();
+            if (!((INeko) player).isNeko()) continue;
+            float maxEnergy = ((INeko) player).getMaxNekoEnergy();
+            float current = ((INeko) player).getNekoEnergy();
             if (current >= maxEnergy) continue;
 
             float deficit = maxEnergy - current;
@@ -90,7 +92,7 @@ public class NekoEnergyBatteryItem extends Item {
                 if (transfer <= 0) continue;
 
                 setStoredEnergy(stack, stored - transfer);
-                player.setNekoEnergy(current + transfer);
+                ((INeko) player).setNekoEnergy(current + transfer);
 
                 current += transfer;
                 deficit -= transfer;
@@ -104,7 +106,7 @@ public class NekoEnergyBatteryItem extends Item {
     // ========================
 
     public static void chargeBatteries(Entity entity, float excess) {
-        if (!(entity instanceof Player player) || !player.isNeko()) return;
+        if (!(entity instanceof Player player) || !((INeko) player).isNeko()) return;
 
         Inventory inv = player.getInventory();
         float remaining = excess;
@@ -150,12 +152,15 @@ public class NekoEnergyBatteryItem extends Item {
     //  Tooltip
     // ========================
 
-    @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context,
-                                @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
-        super.appendHoverText(stack, context, tooltip, flag);
+        @Override
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull net.minecraft.world.item.component.TooltipDisplay display, @NotNull java.util.function.Consumer<Component> adder, @NotNull TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, display, adder, tooltipFlag);
+        // 兼容旧实现：先收集到 List，再逐条发送
+        java.util.List<Component> tooltips = new java.util.ArrayList<>();
         float stored = getStoredEnergy(stack);
-        tooltip.add(Component.translatable("item.toneko.neko_energy_battery.tip", stored, capacity));
-        tooltip.add(Component.translatable("item.toneko.neko_energy_battery.tip.rate", dischargeRate, chargeRate));
+        tooltips.add(Component.translatable("item.toneko.neko_energy_battery.tip", stored, capacity));
+        tooltips.add(Component.translatable("item.toneko.neko_energy_battery.tip.rate", dischargeRate, chargeRate));
+    
+        for (Component t : tooltips) adder.accept(t);
     }
 }

@@ -243,7 +243,7 @@ public class HttpBase {
         public String getJumpUrl() {
             if (responseCode >= 300 && responseCode < 400 && responseHeaders != null) {
                 // 解析响应头中的重定向URL
-                String locationHeader = getResponseHeadersJson().getString("Location");
+                String locationHeader = getResponseHeadersJson().getStringOr("Location", "");
                 if (locationHeader != null) {
                     return locationHeader;
                 }

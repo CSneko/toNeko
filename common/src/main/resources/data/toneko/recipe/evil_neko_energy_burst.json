@@ -1,12 +1,8 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "item": "toneko:neko_energy_burst"
-    },
-    {
-      "item": "minecraft:wither_rose"
-    }
+    "toneko:neko_energy_burst",
+    "minecraft:wither_rose"
   ],
   "result": {
     "id": "toneko:evil_neko_energy_burst",

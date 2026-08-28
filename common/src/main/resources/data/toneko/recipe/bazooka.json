@@ -6,21 +6,11 @@
     "PDG"
   ],
   "key": {
-    "D": {
-      "item": "minecraft:diamond"
-    },
-    "P": {
-      "item": "minecraft:piston"
-    },
-    "G": {
-      "item": "minecraft:gunpowder"
-    },
-    "I": {
-      "item": "minecraft:iron_ingot"
-    },
-    "C": {
-      "item": "toneko:catnip"
-    }
+    "D": "minecraft:diamond",
+    "P": "minecraft:piston",
+    "G": "minecraft:gunpowder",
+    "I": "minecraft:iron_ingot",
+    "C": "toneko:catnip"
   },
   "result": {
     "id": "toneko:bazooka",

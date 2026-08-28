@@ -153,11 +153,12 @@ public class MoufletNekoBoss extends NekoEntity implements NekoBoss, PlayerRidea
     private static final EntityDataAccessor<Integer> AFFECTION_ID = SynchedEntityData.defineId(MoufletNekoBoss.class, EntityDataSerializers.INT);
 
     private final ServerBossEvent bossEvent =
-            new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.BLUE, BossEvent.BossBarOverlay.PROGRESS);
+            new ServerBossEvent(java.util.UUID.randomUUID(), this.getDisplayName(),
+                    BossEvent.BossBarColor.BLUE, BossEvent.BossBarOverlay.PROGRESS);
 
     public MoufletNekoBoss(EntityType<? extends NekoEntity> entityType, Level level) {
         super(entityType, level);
-        if (!level.isClientSide && !this.isPersistenceRequired() && !this.isPetMode()) {
+        if (!level.isClientSide() && !this.isPersistenceRequired() && !this.isPetMode()) {
             // 头盔、胸甲、护腿、靴子
             this.addItem(new ItemStack(net.minecraft.world.item.Items.DIAMOND_HELMET));
             this.addItem(new ItemStack(net.minecraft.world.item.Items.DIAMOND_CHESTPLATE));
@@ -211,7 +212,7 @@ public class MoufletNekoBoss extends NekoEntity implements NekoBoss, PlayerRidea
         return this.entityData.get(AFFECTION_ID);
     }
     private void modifyAffection(int delta) {
-        if (!isPetMode() || this.level().isClientSide) return;
+        if (!isPetMode() || this.level().isClientSide()) return;
         int val = Math.max(0, Math.min(MAX_AFFECTION, getAffection() + delta));
         this.entityData.set(AFFECTION_ID, val);
     }
@@ -224,27 +225,35 @@ public class MoufletNekoBoss extends NekoEntity implements NekoBoss, PlayerRidea
         return 0;
     }
 
-    @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
-        if (compound.contains("PetMode")) {
-            this.setPetMode(compound.getBoolean("PetMode"));
+        @Override
+    protected void readAdditionalSaveData(net.minecraft.world.level.storage.ValueInput in) {
+        super.readAdditionalSaveData(in);
+        this.readExtraData(org.cneko.toneko.common.mod.util.NbtBridge.read(in));
+    }
+
+    private void readExtraData(@NotNull CompoundTag compound) {        if (compound.contains("PetMode")) {
+            this.setPetMode(compound.getBooleanOr("PetMode", false));
         }
         if (compound.contains("SpoilTicks")) {
-            this.spoilTicks = compound.getInt("SpoilTicks");
+            this.spoilTicks = compound.getIntOr("SpoilTicks", 0);
         }
         if (compound.contains("VulnTicks")) {
-            this.vulnerabilityTicks = compound.getInt("VulnTicks");
-            this.vulnerabilityMultiplier = compound.getFloat("VulnMult");
+            this.vulnerabilityTicks = compound.getIntOr("VulnTicks", 0);
+            this.vulnerabilityMultiplier = compound.getFloatOr("VulnMult", 0f);
         }
         if (compound.contains("Affection")) {
-            this.entityData.set(AFFECTION_ID, compound.getInt("Affection"));
+            this.entityData.set(AFFECTION_ID, compound.getIntOr("Affection", 0));
         }
     }
-    @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-        compound.putBoolean("PetMode", this.isPetMode());
+        @Override
+    protected void addAdditionalSaveData(net.minecraft.world.level.storage.ValueOutput out) {
+        super.addAdditionalSaveData(out);
+        CompoundTag data = new CompoundTag();
+        this.writeExtraData(data);
+        org.cneko.toneko.common.mod.util.NbtBridge.store(data, out);
+    }
+
+    private void writeExtraData(@NotNull CompoundTag compound) {        compound.putBoolean("PetMode", this.isPetMode());
         compound.putInt("SpoilTicks", this.spoilTicks);
         compound.putInt("VulnTicks", this.vulnerabilityTicks);
         compound.putFloat("VulnMult", this.vulnerabilityMultiplier);
@@ -294,7 +303,7 @@ public class MoufletNekoBoss extends NekoEntity implements NekoBoss, PlayerRidea
         if (fp == null) return null;
         if (fp instanceof Player player) {
             // 客户端：不检查 owner（数据未同步），直接返回乘客
-            if (this.level().isClientSide) return player;
+            if (this.level().isClientSide()) return player;
             // 服务端：必须是主人
             return this.hasOwner(player.getUUID()) ? player : null;
         }
@@ -302,7 +311,7 @@ public class MoufletNekoBoss extends NekoEntity implements NekoBoss, PlayerRidea
     }
 
     @Override
-    public boolean causeFallDamage(float fallDistance, float multiplier, DamageSource source) {
+    public boolean causeFallDamage(double fallDistance, float multiplier, DamageSource source) {
         // 宠物模式被骑乘：不传递坠落伤害给乘客
         if (isPetMode() && this.isVehicle()) {
             this.fallDistance = 0;
@@ -377,10 +386,11 @@ public class MoufletNekoBoss extends NekoEntity implements NekoBoss, PlayerRidea
     }
 
     @Override
-    public boolean hurt(@NotNull DamageSource source, float amount) {
+    public boolean hurtServer(net.minecraft.server.level.ServerLevel serverLevel, @NotNull DamageSource source, float amount) {
         // 只在服务端处理
-        if (!level().isClientSide) {
-            this.unhurtTime = 0; // 重置无伤时间计数器
+        if (serverLevel.isClientSide()) { return false; }
+
+        this.unhurtTime = 0; // 重置无伤时间计数器
 
             // 弱点窗口：伤害倍率
             if (vulnerabilityTicks > 0) {
@@ -396,20 +406,20 @@ public class MoufletNekoBoss extends NekoEntity implements NekoBoss, PlayerRidea
                 this.defenseStanceTicks = 15 * 20; // 15秒
                 this.thornsTicks = 10 * 20;        // 10秒
                 // 抗性IV
-                this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, defenseStanceTicks, 3));
+                this.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, defenseStanceTicks, 3));
                 // TODO 发送触发特效/消息
             }
             // 反弹伤害
             if (thornsTicks > 0 && source.getEntity() instanceof net.minecraft.world.entity.player.Player player) {
                 // 反弹80%伤害
                 float reflect = amount * 0.8f;
-                player.hurt(player.damageSources().thorns(this), reflect);
+                org.cneko.toneko.common.mod.util.EntityHurtUtil.hurt(player, player.damageSources().thorns(this), reflect);
                 // 攻击者失去饱食8能量10
                 player.getFoodData().eat(-8, 0.0f); // 饱食度减少
-                if (player.getNekoEnergy() > 50) {
-                    player.setNekoEnergy(player.getNekoEnergy() - 50); // 能量减少
+                if (((INeko) player).getNekoEnergy() > 50) {
+                    ((INeko) player).setNekoEnergy(((INeko) player).getNekoEnergy() - 50); // 能量减少
                 } else {
-                    player.setNekoEnergy(0); // 能量不能为负
+                    ((INeko) player).setNekoEnergy(0); // 能量不能为负
                 }
             }
             // 宠物模式战斗保护：主人被攻击时，临时提升攻击力
@@ -417,7 +427,7 @@ public class MoufletNekoBoss extends NekoEntity implements NekoBoss, PlayerRidea
                 for (var entry : this.getOwners().entrySet()) {
                     Player owner = this.level().getPlayerByUUID(entry.getKey());
                     if (owner != null && (owner.getLastHurtByMob() == attacker || owner.getLastHurtMob() == attacker)) {
-                        this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 200, 0, false, true));
+                        this.addEffect(new MobEffectInstance(MobEffects.STRENGTH, 200, 0, false, true));
                         if (this.random.nextFloat() < 0.3f) {
                             owner.sendSystemMessage(Component.translatable(
                                 "boss.toneko.mouflet.affection.protect." + this.random.nextInt(3),
@@ -427,8 +437,7 @@ public class MoufletNekoBoss extends NekoEntity implements NekoBoss, PlayerRidea
                     }
                 }
             }
-        }
-        return super.hurt(source, amount);
+        return super.hurtServer(serverLevel, source, amount);
     }
 
     @Override
@@ -585,7 +594,7 @@ public class MoufletNekoBoss extends NekoEntity implements NekoBoss, PlayerRidea
             despairTicks++;
             if (despairTicks == 20 * 20) { // 20秒后自爆
                 this.level().explode(this, this.getX(), this.getY(), this.getZ(), 9.0f, Level.ExplosionInteraction.MOB);
-                this.hurt(this.damageSources().generic(), Float.MAX_VALUE); // 立即死亡
+                org.cneko.toneko.common.mod.util.EntityHurtUtil.hurt(this, this.damageSources().generic(), Float.MAX_VALUE); // 立即死亡
             }
         }
 
@@ -595,7 +604,7 @@ public class MoufletNekoBoss extends NekoEntity implements NekoBoss, PlayerRidea
                 // 脱战 64 秒后回复一次生命；重置计数，避免每 tick 施加瞬间治疗（≈无敌）
                 unhurtTime = 0;
                 this.addEffect(new MobEffectInstance(
-                        MobEffects.HEAL,
+                        MobEffects.INSTANT_HEALTH,
                         1, // 持续时间为1 tick
                         0 // 强度为0
                 ));
@@ -606,7 +615,7 @@ public class MoufletNekoBoss extends NekoEntity implements NekoBoss, PlayerRidea
             this.getPassengers().forEach(passenger -> {
                 // 只对活着的实体造成伤害
                 if (passenger instanceof LivingEntity living) {
-                    living.hurt(this.damageSources().magic(), 5.0f); // 每tick造成5点伤害
+                    org.cneko.toneko.common.mod.util.EntityHurtUtil.hurt(living, this.damageSources().magic(), 5.0f); // 每tick造成5点伤害
                 }
             });
         }
@@ -623,7 +632,7 @@ public class MoufletNekoBoss extends NekoEntity implements NekoBoss, PlayerRidea
         this.sendSkillMessage("spoil", this.getName().getString());
 
         // 添加减伤buff
-        this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 10 * 20, 2)); // 10秒，60%减伤
+        this.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 10 * 20, 2)); // 10秒，60%减伤
         // 清除debuff
         List<MobEffect> toRemove = this.getActiveEffects().stream()
                 .filter(e -> !e.getEffect().value().isBeneficial() && e.getEffect() != MobEffects.WEAKNESS)
@@ -656,7 +665,7 @@ public class MoufletNekoBoss extends NekoEntity implements NekoBoss, PlayerRidea
             return;
         }
         this.grabbedPlayer = player;
-        target.startRiding(this, true);
+        target.startRiding(this, true, true);
         this.grabFlyTicks = 0;
         this.sendSkillMessage("grabfly", target.getName().getString());
     }
@@ -702,7 +711,7 @@ public class MoufletNekoBoss extends NekoEntity implements NekoBoss, PlayerRidea
         // 宠物模式 + 主人 + 不潜行 + 空手 → 亲昵互动
         if (isPetMode() && hasOwner(player.getUUID()) && !player.isShiftKeyDown()
                 && player.getItemInHand(hand).isEmpty()) {
-            if (this.level().isClientSide) return InteractionResult.SUCCESS;
+            if (this.level().isClientSide()) return InteractionResult.SUCCESS;
             modifyAffection(AFFECTION_INTERACT);
             int r = this.random.nextInt(100);
             if (r < 40) {
@@ -835,7 +844,7 @@ public class MoufletNekoBoss extends NekoEntity implements NekoBoss, PlayerRidea
         // 只有血量低于40且玩家持有猫薄荷>=5才可收服
         boolean lowHealth = this.getHealth() < 40.0f;
         int catnipCount = 0;
-        for (ItemStack stack : player.getInventory().items) {
+        for (ItemStack stack : player.getInventory().getNonEquipmentItems()) {
             if (stack.is(org.cneko.toneko.common.mod.items.ToNekoItems.CATNIP_TAG)) {
                 catnipCount += stack.getCount();
             }
@@ -854,7 +863,7 @@ public class MoufletNekoBoss extends NekoEntity implements NekoBoss, PlayerRidea
 
         // 消耗5个猫薄荷
         int toConsume = 5;
-        for (ItemStack stack : player.getInventory().items) {
+        for (ItemStack stack : player.getInventory().getNonEquipmentItems()) {
             if (toConsume <= 0) break;
             if (stack.is(org.cneko.toneko.common.mod.items.ToNekoItems.CATNIP_TAG)) {
                 int used = Math.min(stack.getCount(), toConsume);

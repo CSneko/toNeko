@@ -207,6 +207,13 @@ public class JsonConfiguration {
         }
     }
 
+    // ===== 带 默认值 的快捷读取（26.x 迁移期间为统一 NBT/Config 两种 API 而新增）=====
+    public String getStringOr(String path, String def) { try { return getJsonPrimitive(path).getAsString(); }catch (Exception e){ return def; } }
+    public float getFloatOr(String path, float def) { try { return getJsonPrimitive(path).getAsFloat(); }catch (Exception e){ return def; } }
+    public double getDoubleOr(String path, double def) { try { return getJsonPrimitive(path).getAsDouble(); }catch (Exception e){ return def; } }
+    public int getIntOr(String path, int def) { try { return getJsonPrimitive(path).getAsInt(); }catch (Exception e){ return def; } }
+    public boolean getBooleanOr(String path, boolean def) { try { return getJsonPrimitive(path).getAsBoolean(); }catch (Exception e){ return def; } }
+
     public float getFloat(String path) { try { return getJsonPrimitive(path).getAsFloat(); }catch (Exception e){ return 0; } }
     public double getDouble(String path) { try { return getJsonPrimitive(path).getAsDouble(); }catch (Exception e){ return 0; } }
     public int getInt(String path) { try { return getJsonPrimitive(path).getAsInt(); }catch (Exception e){ return 0; } }

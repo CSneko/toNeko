@@ -1,6 +1,7 @@
 package org.cneko.toneko.common.mod.blocks;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.*;
@@ -33,7 +34,7 @@ public class NekoAggregatorBlock extends Block {
 
     @Override
     protected @NotNull InteractionResult useWithoutItem(@NotNull BlockState state, Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull BlockHitResult hitResult) {
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             return InteractionResult.SUCCESS;
         } else {
             player.openMenu(new SimpleMenuProvider(
@@ -45,6 +46,10 @@ public class NekoAggregatorBlock extends Block {
     }
 
     public static class NekoAggregatorMenu extends AbstractContainerMenu {
+        public static final int INPUT_SLOTS = 9; // 3x3
+        /** 容器数据槽下标：当前配方所需能量（服务端计算并同步到客户端） */
+        public static final int DATA_REQUIRED_ENERGY = 0;
+
         private final Container container;
         private final ContainerData data;
         private final ContainerLevelAccess access;
@@ -89,10 +94,10 @@ public class NekoAggregatorBlock extends Block {
                         if (recipeOptional.isPresent()) {
                             NekoAggregatorRecipe recipe = recipeOptional.get().value();
                             // 检查能量（再次检查以防万一）
-                            if (player.getNekoEnergy() >= recipe.energy) {
+                            if (((INeko) player).getNekoEnergy() >= recipe.energy) {
                                 // 消耗原料和能量
                                 consumeInputs(); // 调用消耗方法
-                                player.setNekoEnergy((float) (player.getNekoEnergy() - recipe.energy));
+                                ((INeko) player).setNekoEnergy((float) (((INeko) player).getNekoEnergy() - recipe.energy));
                                 onInputChanged();
                             }
                         }
@@ -120,7 +125,7 @@ public class NekoAggregatorBlock extends Block {
         public void onInputChanged() {
             this.access.execute((level, blockPos) -> {
                 // 确保在服务器端执行配方检查
-                if (!level.isClientSide) {
+                if (!level.isClientSide()) {
                     updateResult(level);
                 }
             });
@@ -135,25 +140,72 @@ public class NekoAggregatorBlock extends Block {
             for (int i = 0; i < INPUT_SLOTS; i++) {
                 inputs.add(this.container.getItem(i).copy());
             }
+            // 临时诊断日志（仅输入变化时触发）
+            org.slf4j.Logger diag = org.slf4j.LoggerFactory.getLogger("ToNekoAggregatorDebug");
+            int nonEmpty = 0;
+            for (ItemStack s : inputs) if (!s.isEmpty()) nonEmpty++;
+            diag.info("updateResult: nonEmptySlots={} energy={}", nonEmpty, ((INeko) player).getNekoEnergy());
             NekoAggregatorInput recipeInput = NekoAggregatorInput.of(3, 3, inputs, 0); // 这里的 energy 只是占位符
 
             // 查找配方
-            Optional<RecipeHolder<NekoAggregatorRecipe>> recipeHolder = level.getRecipeManager()
-                    .getRecipeFor(ToNekoRecipes.NEKO_AGGREGATOR, recipeInput, level);
+            Optional<RecipeHolder<NekoAggregatorRecipe>> recipeHolder = findMatchingRecipe(level);
+            diag.info("recipe found = {} (input w={} h={})",
+                    recipeHolder.map(h -> h.id().identifier().toString()).orElse("NONE"),
+                    recipeInput.width(), recipeInput.height());
+            // 探针：直接按 id 查配方表，判定配方是否被加载
+            try {
+                var probeKey = net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.RECIPE,
+                        net.minecraft.resources.Identifier.parse("toneko:neko_aggregator/resource/neko_ingot"));
+                var rm = (net.minecraft.world.item.crafting.RecipeManager) level.recipeAccess();
+                var probe = rm.byKey(probeKey);
+                var all = rm.getRecipes();
+                long ours = 0;
+                for (var h : all) if (h.value().getType() == ToNekoRecipes.NEKO_AGGREGATOR) ours++;
+                diag.info("probe neko_ingot={} totalRecipes={} oursType={} serializerReg={}",
+                        probe.isPresent(), all.size(), ours,
+                        net.minecraft.core.registries.BuiltInRegistries.RECIPE_SERIALIZER
+                                .containsKey(net.minecraft.resources.Identifier.parse("toneko:neko_aggregator")));
+                // 实时绑定状态
+                var bellKey = net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.ITEM,
+                        net.minecraft.resources.Identifier.parse("toneko:neko_bell"));
+                Boolean bellBound = net.minecraft.core.registries.BuiltInRegistries.ITEM.get(bellKey)
+                        .map(java.util.function.Function.identity()).map(h -> h.areComponentsBound()).orElse(null);
+                diag.info("neko_bell bound={} at craft time", bellBound);
+                // 实时解析：用服务器资源管理器 + 服务器注册表上下文重演配方加载
+                var server = ((net.minecraft.server.level.ServerLevel) level).getServer();
+                var res = server.getResourceManager()
+                        .getResource(net.minecraft.resources.Identifier.parse("toneko:recipe/neko_aggregator/resource/neko_ingot.json"));
+                if (res.isEmpty()) {
+                    diag.info("LIVE: recipe file NOT in server resource manager");
+                } else {
+                    try (var in = res.get().open()) {
+                        var json = com.google.gson.JsonParser.parseReader(new java.io.InputStreamReader(in));
+                        var ops = server.registryAccess().createSerializationContext(com.mojang.serialization.JsonOps.INSTANCE);
+                        var dr = net.minecraft.world.item.crafting.Recipe.CODEC.parse(ops, json);
+                        diag.info("LIVE parse: {}", dr.result().isPresent() ? "OK" : "FAILED");
+                        dr.resultOrPartial(msg -> diag.info("LIVE parse error: {}", msg));
+                    }
+                }
+            } catch (Throwable t) {
+                diag.info("probe failed: {}", t.toString());
+            }
 
             if (recipeHolder.isPresent()) {
                 NekoAggregatorRecipe recipe = recipeHolder.get().value();
+                // 所需能量同步到客户端（ContainerData 随 broadcastChanges 自动同步）
+                this.data.set(DATA_REQUIRED_ENERGY, (int) recipe.energy);
                 // 检查能量是否足够
-                if (this.player.getNekoEnergy() >= recipe.energy) {
+                if (((INeko) player).getNekoEnergy() >= recipe.energy) {
                     // 合成并设置结果
-                    ItemStack resultStack = recipe.assemble(recipeInput, level.registryAccess());
+                    ItemStack resultStack = recipe.assemble(recipeInput);
                     resultSlot.set(resultStack);
                 } else {
                     // 能量不足，清空结果槽
                     resultSlot.set(ItemStack.EMPTY);
                 }
             } else {
-                // 没有匹配的配方，清空结果槽
+                // 没有匹配的配方，清空结果槽 + 能量归零
+                this.data.set(DATA_REQUIRED_ENERGY, 0);
                 resultSlot.set(ItemStack.EMPTY);
             }
 
@@ -174,10 +226,12 @@ public class NekoAggregatorBlock extends Block {
 
                 // 当从输出槽 Shift-点击时
                 if (index == 9) {
-                    // 1. 检查条件 (这部分是好的，保留)
-                    Optional<RecipeHolder<NekoAggregatorRecipe>> recipeOptional = this.findMatchingRecipe(player.level());
-                    if (recipeOptional.isEmpty() || player.getNekoEnergy() < recipeOptional.get().value().energy) {
-                        return ItemStack.EMPTY; // 如果不满足条件，阻止移动
+                    // 1. 检查条件（仅服务端；客户端无完整配方表，预测放行、服务端兜底）
+                    if (!player.level().isClientSide()) {
+                        Optional<RecipeHolder<NekoAggregatorRecipe>> recipeOptional = this.findMatchingRecipe(player.level());
+                        if (recipeOptional.isEmpty() || ((INeko) player).getNekoEnergy() < recipeOptional.get().value().energy) {
+                            return ItemStack.EMPTY; // 如果不满足条件，阻止移动
+                        }
                     }
 
                     // 2. 移动物品
@@ -227,7 +281,7 @@ public class NekoAggregatorBlock extends Block {
         }
 
         private Optional<RecipeHolder<NekoAggregatorRecipe>> findMatchingRecipe(Level level) {
-            if (level == null) return Optional.empty();
+            if (level == null || level.isClientSide()) return Optional.empty(); // 客户端无完整配方表（26.1.2）
 
             List<ItemStack> inputs = new ArrayList<>();
             for (int i = 0; i < INPUT_SLOTS; i++) {
@@ -236,7 +290,12 @@ public class NekoAggregatorBlock extends Block {
             }
             NekoAggregatorInput input = NekoAggregatorInput.of(3, 3, inputs, 0);
 
-            return level.getRecipeManager().getRecipeFor(ToNekoRecipes.NEKO_AGGREGATOR, input, level);
+            return ((net.minecraft.world.item.crafting.RecipeManager) level.recipeAccess()).getRecipeFor(ToNekoRecipes.NEKO_AGGREGATOR, input, level);
+        }
+
+        /** 客户端读取服务端同步的所需能量（容器数据槽） */
+        public int getRequiredEnergy() {
+            return this.data.get(DATA_REQUIRED_ENERGY);
         }
 
         @Override

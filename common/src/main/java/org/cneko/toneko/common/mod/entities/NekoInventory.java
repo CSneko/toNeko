@@ -1,4 +1,5 @@
 package org.cneko.toneko.common.mod.entities;
+import net.minecraft.world.entity.Leashable;
 
 import com.google.common.collect.ImmutableList;
 import java.util.Iterator;
@@ -201,7 +202,7 @@ public class NekoInventory implements Container, Nameable {
 
             for (int i = 0; i < compartment.size(); ++i) {
                 if (!compartment.get(i).isEmpty()) {
-                    compartment.get(i).inventoryTick(this.neko.level(), this.neko, i, this.selected == i);
+                    compartment.get(i).inventoryTick(this.neko.level(), this.neko, net.minecraft.world.entity.EquipmentSlot.MAINHAND);
                 }
             }
         }
@@ -432,7 +433,7 @@ public class NekoInventory implements Container, Nameable {
             if (!this.items.get(i).isEmpty()) {
                 compoundTag = new CompoundTag();
                 compoundTag.putByte("Slot", (byte)i);
-                listTag.add(this.items.get(i).save(this.neko.registryAccess(), compoundTag));
+                listTag.add(org.cneko.toneko.common.mod.util.NbtBridge.encodeStack(this.neko.registryAccess(), this.items.get(i)));
             }
         }
 
@@ -440,7 +441,7 @@ public class NekoInventory implements Container, Nameable {
             if (!this.armor.get(i).isEmpty()) {
                 compoundTag = new CompoundTag();
                 compoundTag.putByte("Slot", (byte)(i + 100));
-                listTag.add(this.armor.get(i).save(this.neko.registryAccess(), compoundTag));
+                listTag.add(org.cneko.toneko.common.mod.util.NbtBridge.encodeStack(this.neko.registryAccess(), this.armor.get(i)));
             }
         }
 
@@ -448,7 +449,7 @@ public class NekoInventory implements Container, Nameable {
             if (!this.offhand.get(i).isEmpty()) {
                 compoundTag = new CompoundTag();
                 compoundTag.putByte("Slot", (byte)(i + 150));
-                listTag.add(this.offhand.get(i).save(this.neko.registryAccess(), compoundTag));
+                listTag.add(org.cneko.toneko.common.mod.util.NbtBridge.encodeStack(this.neko.registryAccess(), this.offhand.get(i)));
             }
         }
 
@@ -461,9 +462,9 @@ public class NekoInventory implements Container, Nameable {
         this.offhand.clear();
 
         for(int i = 0; i < listTag.size(); ++i) {
-            CompoundTag compoundTag = listTag.getCompound(i);
-            int j = compoundTag.getByte("Slot") & 255;
-            ItemStack itemStack = ItemStack.parse(this.neko.registryAccess(), compoundTag).orElse(ItemStack.EMPTY);
+            CompoundTag compoundTag = listTag.getCompoundOrEmpty(i);
+            int j = compoundTag.getByteOr("Slot", (byte)0) & 255;
+            ItemStack itemStack = org.cneko.toneko.common.mod.util.NbtBridge.decodeStack(this.neko.registryAccess(), compoundTag);
             //noinspection ConstantValue
             if (j >= 0 && j < this.items.size()) {
                 this.items.set(j, itemStack);
@@ -563,7 +564,7 @@ public class NekoInventory implements Container, Nameable {
     }
 
     public boolean stillValid(Player player) {
-        return player.canInteractWithEntity(this.neko, 4.0);
+        return player.isWithinEntityInteractionRange(this.neko, 4.0);
     }
 
     public boolean contains(ItemStack stack) {

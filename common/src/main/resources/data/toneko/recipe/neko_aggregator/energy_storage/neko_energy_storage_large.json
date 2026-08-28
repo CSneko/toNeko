@@ -1,20 +1,11 @@
 {
   "type": "toneko:neko_aggregator",
   "key": {
-    "I": {
-      "item": "toneko:neko_diamond"
-    },
-    "G": {
-      "item": "minecraft:ancient_debris"
-    },
-    "N": {
-      "item": "toneko:neko_energy_storage_medium"
-    },
-    "E": {
-      "item": "minecraft:emerald_block"
-    }
+    "I": "toneko:neko_diamond",
+    "G": "minecraft:ancient_debris",
+    "N": "toneko:neko_energy_storage_medium",
+    "E": "minecraft:emerald_block"
   },
-
   "pattern": [
     "EIE",
     "NGN",

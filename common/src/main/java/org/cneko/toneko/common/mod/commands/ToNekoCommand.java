@@ -152,12 +152,12 @@ public class ToNekoCommand {
             ServerPlayer neko = context.getArgument("neko", ServerPlayer.class);
             String nekoName = neko.getName().getString();
             assert player != null;
-            if (!neko.isNeko()) {
+            if (!((INeko) neko).isNeko()) {
                 // 不是猫娘
                 player.sendSystemMessage(translatable("command.toneko.player.notNeko", nekoName));
                 return 1;
             }
-            if (neko.hasOwner(player.getUUID())) {
+            if (((INeko) neko).hasOwner(player.getUUID())) {
                 // 已经是主人
                 player.sendSystemMessage(translatable("command.toneko.player.alreadyOwner", nekoName));
                 return 1;
@@ -166,9 +166,9 @@ public class ToNekoCommand {
             player.sendSystemMessage(Component.translatable("command.toneko.player.send_request", nekoName).withStyle(ChatFormatting.LIGHT_PURPLE));
             MutableComponent component = Component.translatable("command.toneko.player.request", player.getName().getString()).withStyle(ChatFormatting.GOLD);
             MutableComponent denyButton = Component.translatable("misc.toneko.deny").withStyle(ChatFormatting.RED);
-            denyButton.setStyle(denyButton.getStyle().withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/toneko deny "+player.getName().getString())));
+            denyButton.setStyle(denyButton.getStyle().withClickEvent(new net.minecraft.network.chat.ClickEvent.RunCommand("/toneko deny "+player.getName().getString())));
             MutableComponent acceptButton = Component.translatable("misc.toneko.accept").withStyle(ChatFormatting.GREEN);
-            acceptButton.setStyle(acceptButton.getStyle().withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/toneko accept "+player.getName().getString())));
+            acceptButton.setStyle(acceptButton.getStyle().withClickEvent(new net.minecraft.network.chat.ClickEvent.RunCommand("/toneko accept "+player.getName().getString())));
             component.append(acceptButton);
             component.append(denyButton);
             neko.sendSystemMessage(component);
@@ -196,7 +196,7 @@ public class ToNekoCommand {
         }
         if (ownerMap.containsKey(owner) && ownerMap.get(owner).equals(neko)){
             if (accept){
-                neko.addOwner(owner.getUUID(),new INeko.Owner(new ArrayList<>(), 0));
+                ((INeko) neko).addOwner(owner.getUUID(),new INeko.Owner(new ArrayList<>(), 0));
                 neko.sendSystemMessage(Component.translatable("command.toneko.accept", owner.getName()).withStyle(ChatFormatting.GREEN));
                 owner.sendSystemMessage(Component.translatable("command.toneko.player.accept", neko.getName()).withStyle(ChatFormatting.GREEN));
             }else {
@@ -221,7 +221,7 @@ public class ToNekoCommand {
             final Player player = context.getSource().getPlayer();
             ServerPlayer neko = NekoArgument.checkOwned(context, "neko"); //属主校验
             if (neko == null) return 0;
-            neko.removeOwner(player.getUUID());
+            ((INeko) neko).removeOwner(player.getUUID());
             player.sendSystemMessage(translatable("command.toneko.remove", neko.getName().getString()));
             return 1;
         }catch (Exception e){
@@ -243,7 +243,7 @@ public class ToNekoCommand {
 
 
             // 添加屏蔽词
-            neko.addBlockedWord(new INeko.BlockedWord(block,replace, INeko.BlockedWord.BlockMethod.fromString(method)));
+            ((INeko) neko).addBlockedWord(new INeko.BlockedWord(block,replace, INeko.BlockedWord.BlockMethod.fromString(method)));
             player.sendSystemMessage(translatable("messages.toneko.block.add"));
             return 1;
         }catch (Exception e){
@@ -260,7 +260,7 @@ public class ToNekoCommand {
             if (neko == null) return 0;
             String block = context.getArgument("block", String.class); //屏蔽词
 
-            neko.removeBlockedWord(block);
+            ((INeko) neko).removeBlockedWord(block);
             player.sendSystemMessage(translatable("messages.toneko.block.remove"));
             return 1;
         }catch (Exception e){
@@ -274,7 +274,7 @@ public class ToNekoCommand {
             ServerPlayer player = context.getSource().getPlayer();
             ServerPlayer neko = NekoArgument.checkOwned(context, "neko"); //属主校验
             if (neko == null) return 0;
-            player.sendSystemMessage(translatable("command.toneko.xp", neko.getName().getString(), neko.getXpWithOwner(player.getUUID())));
+            player.sendSystemMessage(translatable("command.toneko.xp", neko.getName().getString(), ((INeko) neko).getXpWithOwner(player.getUUID())));
             return 1;
         }catch (Exception e){
             Bootstrap.LOGGER.error(e);
@@ -288,7 +288,7 @@ public class ToNekoCommand {
             ServerPlayer neko = NekoArgument.checkOwned(context, "neko"); //属主校验
             if (neko == null) return 0;
             String aliases = StringArgumentType.getString(context, "aliases");
-            neko.getOwner(player.getUUID()).getAliases().remove(aliases);
+            ((INeko) neko).getOwner(player.getUUID()).getAliases().remove(aliases);
             player.sendSystemMessage(translatable("command.toneko.aliases.remove", aliases));
         return 1;
         }catch (Exception e){
@@ -303,7 +303,7 @@ public class ToNekoCommand {
             ServerPlayer neko = NekoArgument.checkOwned(context, "neko"); //属主校验
             if (neko == null) return 0;
             String aliases = StringArgumentType.getString(context, "aliases");
-            neko.getOwner(player.getUUID()).getAliases().add(aliases);
+            ((INeko) neko).getOwner(player.getUUID()).getAliases().add(aliases);
             player.sendSystemMessage(translatable("command.toneko.aliases.add", aliases));
             return 1;
         }catch (Exception e){
@@ -326,7 +326,7 @@ public class ToNekoCommand {
      */
     public static CompoundTag buildManagementData(ServerPlayer player) {
         CompoundTag data = new CompoundTag();
-        data.putBoolean("isNeko", player.isNeko());
+        data.putBoolean("isNeko", ((INeko) player).isNeko());
 
         // Pending incoming requests (as a neko: owners who sent requests to this player)
         ListTag pendingRequests = new ListTag();
@@ -338,14 +338,14 @@ public class ToNekoCommand {
             if (neko.equals(player)) {
                 // Someone wants to own this player
                 CompoundTag req = new CompoundTag();
-                req.putUUID("uuid", owner.getUUID());
+                req.store("uuid", net.minecraft.core.UUIDUtil.CODEC, owner.getUUID());
                 req.putString("name", owner.getName().getString());
                 pendingRequests.add(req);
             }
             if (owner.equals(player)) {
                 // This player has sent a request to someone
                 CompoundTag req = new CompoundTag();
-                req.putUUID("uuid", neko.getUUID());
+                req.store("uuid", net.minecraft.core.UUIDUtil.CODEC, neko.getUUID());
                 req.putString("name", neko.getName().getString());
                 outgoingRequests.add(req);
             }
@@ -355,12 +355,12 @@ public class ToNekoCommand {
 
         // Owned nekos (players who have this player as an owner)
         ListTag ownedNekos = new ListTag();
-        for (ServerPlayer onlinePlayer : player.getServer().getPlayerList().getPlayers()) {
-            if (onlinePlayer.isNeko() && onlinePlayer.hasOwner(player.getUUID())) {
+        for (ServerPlayer onlinePlayer : player.level().getServer().getPlayerList().getPlayers()) {
+            if (((INeko) onlinePlayer).isNeko() && ((INeko) onlinePlayer).hasOwner(player.getUUID())) {
                 CompoundTag nekoTag = new CompoundTag();
-                nekoTag.putUUID("uuid", onlinePlayer.getUUID());
+                nekoTag.store("uuid", net.minecraft.core.UUIDUtil.CODEC, onlinePlayer.getUUID());
                 nekoTag.putString("name", onlinePlayer.getName().getString());
-                INeko.Owner ownerData = onlinePlayer.getOwner(player.getUUID());
+                INeko.Owner ownerData = ((INeko) onlinePlayer).getOwner(player.getUUID());
                 nekoTag.putInt("xp", ownerData != null ? ownerData.getXp() : 0);
                 ListTag aliases = new ListTag();
                 if (ownerData != null) {
@@ -371,7 +371,7 @@ public class ToNekoCommand {
                 nekoTag.put("aliases", aliases);
                 // Blocked words
                 ListTag blockedWords = new ListTag();
-                for (INeko.BlockedWord bw : onlinePlayer.getBlockedWords()) {
+                for (INeko.BlockedWord bw : ((INeko) onlinePlayer).getBlockedWords()) {
                     CompoundTag bwTag = new CompoundTag();
                     bwTag.putString("block", bw.block());
                     bwTag.putString("replace", bw.replace());
@@ -386,12 +386,12 @@ public class ToNekoCommand {
 
         // My owners (if this player is a neko)
         ListTag myOwners = new ListTag();
-        if (player.isNeko()) {
-            for (Map.Entry<UUID, INeko.Owner> entry : player.getOwners().entrySet()) {
+        if (((INeko) player).isNeko()) {
+            for (Map.Entry<UUID, INeko.Owner> entry : ((INeko) player).getOwners().entrySet()) {
                 CompoundTag ownerTag = new CompoundTag();
-                ownerTag.putUUID("uuid", entry.getKey());
+                ownerTag.store("uuid", net.minecraft.core.UUIDUtil.CODEC, entry.getKey());
                 // Try to get the owner's name
-                Player ownerPlayer = player.getServer().getPlayerList().getPlayer(entry.getKey());
+                Player ownerPlayer = player.level().getServer().getPlayerList().getPlayer(entry.getKey());
                 ownerTag.putString("name", ownerPlayer != null ? ownerPlayer.getName().getString() : entry.getKey().toString());
                 ownerTag.putInt("xp", entry.getValue().getXp());
                 ListTag aliases = new ListTag();
@@ -406,10 +406,10 @@ public class ToNekoCommand {
 
         // Online nekos (for sending new requests)
         ListTag onlineNekos = new ListTag();
-        for (ServerPlayer onlinePlayer : player.getServer().getPlayerList().getPlayers()) {
-            if (onlinePlayer.isNeko() && !onlinePlayer.equals(player)) {
+        for (ServerPlayer onlinePlayer : player.level().getServer().getPlayerList().getPlayers()) {
+            if (((INeko) onlinePlayer).isNeko() && !onlinePlayer.equals(player)) {
                 CompoundTag onlineTag = new CompoundTag();
-                onlineTag.putUUID("uuid", onlinePlayer.getUUID());
+                onlineTag.store("uuid", net.minecraft.core.UUIDUtil.CODEC, onlinePlayer.getUUID());
                 onlineTag.putString("name", onlinePlayer.getName().getString());
                 onlineNekos.add(onlineTag);
             }

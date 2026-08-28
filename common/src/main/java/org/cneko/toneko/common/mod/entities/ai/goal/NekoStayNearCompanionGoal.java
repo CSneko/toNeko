@@ -106,7 +106,7 @@ public class NekoStayNearCompanionGoal extends Goal {
         // 玩家猫娘（isNeko() 为 true 的玩家）
         companions.addAll(neko.level().getEntitiesOfClass(Player.class,
                 neko.getBoundingBox().inflate(DETECTION_RANGE),
-                p -> p.isAlive() && !p.isSpectator() && p.isNeko()));
+                p -> p.isAlive() && !p.isSpectator() && ((INeko) p).isNeko()));
 
         return companions.stream()
                 .min(Comparator.comparingDouble(neko::distanceToSqr))

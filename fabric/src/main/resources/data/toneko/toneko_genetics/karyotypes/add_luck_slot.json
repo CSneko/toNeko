@@ -1,0 +1,6 @@
+{
+  "target": "toneko:neko",
+  "add_loci": {
+    "9": ["toneko:luck_slot_0"]
+  }
+}

@@ -42,7 +42,7 @@ public class NekoProactiveTriggers {
 
             @Override
             public boolean canTrigger(NekoEntity neko, ServerPlayer player) {
-                return !neko.level().isDay();
+                return !org.cneko.toneko.common.mod.util.NekoLevelUtil.isDay(neko.level());
             }
 
             @Override

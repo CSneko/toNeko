@@ -2,7 +2,7 @@ package org.cneko.toneko.common.mod.client.screens;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -66,7 +66,7 @@ public class NekoMateScreen extends Screen implements INekoScreen {
         int doneButtonX = this.width / 2 - buttonWidth;
         int doneButtonY = y + buttonSpacing*4; // 放置在所有quirk按钮下方
         addRenderableWidget(Button.builder(translatable("gui.back"), (btn) -> {
-            minecraft.setScreen(null);
+            Minecraft.getInstance().setScreen(null);
         }).bounds(doneButtonX, doneButtonY, buttonWidth, buttonHeight)
                 .size(buttonWidth*2, buttonHeight).build());
     }
@@ -77,20 +77,20 @@ public class NekoMateScreen extends Screen implements INekoScreen {
         return false;
     }
 
-    // 移除背景渲染
+    // 26.x：背景由抽取管线处理；保留空实现以维持原视觉
     @Override
-    public void renderBackground(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractBackground(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
+    public void extractRenderState(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         // 添加标题
-        guiGraphics.drawString(this.font, translatable("screen.toneko.mate"), this.width / 2 - this.font.width(translatable("screen.toneko.mate")) / 2, 20, 0xFFFFFFFF, true);
+        guiGraphics.text(this.font, translatable("screen.toneko.mate"), this.width / 2 - this.font.width(translatable("screen.toneko.mate")) / 2, 20, 0xFFFFFFFF, true);
     }
 
     @Override
     public void onClose() {
-        minecraft.setScreen(lastScreen);
+        Minecraft.getInstance().setScreen(lastScreen);
     }
 }

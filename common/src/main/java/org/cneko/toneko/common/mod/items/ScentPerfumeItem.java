@@ -1,10 +1,11 @@
 package org.cneko.toneko.common.mod.items;
 
+import org.cneko.toneko.common.mod.util.NekoIds;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -26,31 +27,31 @@ public class ScentPerfumeItem extends Item {
     public static final String ID = "scent_perfume";
 
     public ScentPerfumeItem() {
-        super(new Properties().stacksTo(1)
+        super(NekoIds.itemProps(ID).stacksTo(1)
                 .component(ToNekoComponents.SPOILED_WATER_SPOILAGE_COMPONENT, 0)
                 .component(ToNekoComponents.SPOILED_WATER_WEARER_COMPONENT, ""));
     }
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player,
+    public @NotNull InteractionResult use(@NotNull Level level, @NotNull Player player,
                                                            @NotNull InteractionHand hand) {
         ItemStack perfume = player.getItemInHand(hand);
         ItemStack legwear = player.getItemInHand(hand == InteractionHand.MAIN_HAND
                 ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
 
-        if (level.isClientSide) {
-            return InteractionResultHolder.success(perfume);
+        if (level.isClientSide()) {
+            return InteractionResult.SUCCESS;
         }
 
         if (!org.cneko.toneko.common.mod.items.LegwearItem.isLegwear(legwear)
                 || !legwear.has(ToNekoComponents.LEGWEAR_SCENT_COMPONENT)) {
-            player.displayClientMessage(Component.translatable("item.toneko.scent_perfume.tip.need_legwear"), true);
-            return InteractionResultHolder.fail(perfume);
+            player.sendOverlayMessage(Component.translatable("item.toneko.scent_perfume.tip.need_legwear"));
+            return InteractionResult.FAIL;
         }
 
         if (ScentUtil.getIntensity(legwear) > 0) {
-            player.displayClientMessage(Component.translatable("item.toneko.scent_perfume.tip.not_clean"), true);
-            return InteractionResultHolder.fail(perfume);
+            player.sendOverlayMessage(Component.translatable("item.toneko.scent_perfume.tip.not_clean"));
+            return InteractionResult.FAIL;
         }
 
         int spoilage = ScentedWaterUtil.getSpoilage(perfume);
@@ -59,22 +60,25 @@ public class ScentPerfumeItem extends Item {
         perfume.shrink(1);
         level.playSound(null, player.blockPosition(), SoundEvents.BOTTLE_EMPTY,
                 SoundSource.PLAYERS, 0.8f, 1.0f);
-        player.displayClientMessage(Component.translatable("item.toneko.scent_perfume.tip.applied",
-                Component.translatable("item.toneko.spoiled_water_bucket.spoilage." + ScentedWaterUtil.grade(spoilage))), true);
-        return InteractionResultHolder.success(perfume);
+        player.sendOverlayMessage(Component.translatable("item.toneko.scent_perfume.tip.applied",
+                Component.translatable("item.toneko.spoiled_water_bucket.spoilage." + ScentedWaterUtil.grade(spoilage))));
+        return InteractionResult.SUCCESS;
     }
 
-    @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context,
-                                @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
-        super.appendHoverText(stack, context, tooltip, flag);
+        @Override
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull net.minecraft.world.item.component.TooltipDisplay display, @NotNull java.util.function.Consumer<Component> adder, @NotNull TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, display, adder, tooltipFlag);
+        // 兼容旧实现：先收集到 List，再逐条发送
+        java.util.List<Component> tooltips = new java.util.ArrayList<>();
         int spoilage = ScentedWaterUtil.getSpoilage(stack);
-        tooltip.add(Component.translatable("item.toneko.scent_perfume.tip.spoilage",
+        tooltips.add(Component.translatable("item.toneko.scent_perfume.tip.spoilage",
                 Component.translatable("item.toneko.spoiled_water_bucket.spoilage." + ScentedWaterUtil.grade(spoilage))));
         String wearer = ScentedWaterUtil.getWearer(stack);
         if (!wearer.isEmpty()) {
-            tooltip.add(Component.translatable("item.toneko.spoiled_water.tip.wearer", wearer));
+            tooltips.add(Component.translatable("item.toneko.spoiled_water.tip.wearer", wearer));
         }
-        tooltip.add(Component.translatable("item.toneko.scent_perfume.tip.use"));
+        tooltips.add(Component.translatable("item.toneko.scent_perfume.tip.use"));
+    
+        for (Component t : tooltips) adder.accept(t);
     }
 }

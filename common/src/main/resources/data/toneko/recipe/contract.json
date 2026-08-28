@@ -6,12 +6,8 @@
     "CCC"
   ],
   "key": {
-    "P": {
-      "item": "minecraft:paper"
-    },
-    "C": {
-      "item": "toneko:catnip"
-    }
+    "P": "minecraft:paper",
+    "C": "toneko:catnip"
   },
   "result": {
     "id": "toneko:contract",

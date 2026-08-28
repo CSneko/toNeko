@@ -6,15 +6,9 @@
     "IEI"
   ],
   "key": {
-    "I": {
-      "item": "minecraft:iron_ingot"
-    },
-    "D": {
-      "item": "minecraft:diamond_block"
-    },
-    "E": {
-      "item": "minecraft:elytra"
-    }
+    "I": "minecraft:iron_ingot",
+    "D": "minecraft:diamond_block",
+    "E": "minecraft:elytra"
   },
   "result": {
     "id": "toneko:fly_sword",

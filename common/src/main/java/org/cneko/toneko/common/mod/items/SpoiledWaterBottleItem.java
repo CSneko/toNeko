@@ -1,4 +1,6 @@
 package org.cneko.toneko.common.mod.items;
+import org.cneko.toneko.common.mod.util.NekoIds;
+import net.minecraft.world.item.Item;
 
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.component.DataComponents;
@@ -34,7 +36,7 @@ public class SpoiledWaterBottleItem extends PotionItem {
     public static final String ID = "spoiled_water_bottle";
 
     public SpoiledWaterBottleItem() {
-        super(new Properties().stacksTo(1)
+        super(NekoIds.itemProps(ID).stacksTo(1)
                 .component(DataComponents.POTION_CONTENTS, PotionContents.EMPTY)
                 .component(ToNekoComponents.SPOILED_WATER_SPOILAGE_COMPONENT, 0)
                 .component(ToNekoComponents.SPOILED_WATER_WEARER_COMPONENT, ""));
@@ -59,13 +61,13 @@ public class SpoiledWaterBottleItem extends PotionItem {
             player.awardStat(Stats.ITEM_USED.get(this));
         }
 
-        if (!level.isClientSide && player != null) {
+        if (!level.isClientSide() && player != null) {
             int spoilage = ScentedWaterUtil.getSpoilage(stack);
             applyDrinkEffects(player, spoilage);
             if (spoilage >= 80 && player instanceof ServerPlayer sp) {
                 ToNekoCriteria.SPOILED_WATER_DRINK.trigger(sp);
             }
-            level.playSound(null, player.blockPosition(), SoundEvents.HONEY_DRINK,
+            level.playSound(null, player.blockPosition(), SoundEvents.HONEY_DRINK.value(),
                     SoundSource.PLAYERS, 0.8f, 1.0f);
         }
         user.gameEvent(GameEvent.DRINK);
@@ -85,37 +87,40 @@ public class SpoiledWaterBottleItem extends PotionItem {
     private void applyDrinkEffects(Player player, int spoilage) {
         if (spoilage <= 0) return;
         if (spoilage < 20) {
-            player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 100, 0));
+            player.addEffect(new MobEffectInstance(MobEffects.NAUSEA, 100, 0));
         } else if (spoilage < 40) {
-            player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 200, 0));
+            player.addEffect(new MobEffectInstance(MobEffects.NAUSEA, 200, 0));
             player.addEffect(new MobEffectInstance(MobEffects.HUNGER, 200, 0));
         } else if (spoilage < 60) {
-            player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 300, 0));
+            player.addEffect(new MobEffectInstance(MobEffects.NAUSEA, 300, 0));
             player.addEffect(new MobEffectInstance(MobEffects.POISON, 100, 0));
             player.addEffect(new MobEffectInstance(MobEffects.HUNGER, 300, 0));
         } else if (spoilage < 80) {
-            player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 400, 0));
+            player.addEffect(new MobEffectInstance(MobEffects.NAUSEA, 400, 0));
             player.addEffect(new MobEffectInstance(MobEffects.POISON, 200, 0));
             player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 200, 0));
         } else {
-            player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 600, 0));
+            player.addEffect(new MobEffectInstance(MobEffects.NAUSEA, 600, 0));
             player.addEffect(new MobEffectInstance(MobEffects.POISON, 300, 0));
             player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 300, 0));
-            player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 300, 0));
+            player.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 300, 0));
         }
     }
 
-    @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context,
-                                @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
-        super.appendHoverText(stack, context, tooltip, flag);
+        @Override
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull net.minecraft.world.item.component.TooltipDisplay display, @NotNull java.util.function.Consumer<Component> adder, @NotNull TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, display, adder, tooltipFlag);
+        // 兼容旧实现：先收集到 List，再逐条发送
+        java.util.List<Component> tooltips = new java.util.ArrayList<>();
         int spoilage = ScentedWaterUtil.getSpoilage(stack);
-        tooltip.add(Component.translatable("item.toneko.spoiled_water_bottle.tip.spoilage",
+        tooltips.add(Component.translatable("item.toneko.spoiled_water_bottle.tip.spoilage",
                 Component.translatable("item.toneko.spoiled_water_bucket.spoilage." + ScentedWaterUtil.grade(spoilage))));
         String wearer = ScentedWaterUtil.getWearer(stack);
         if (!wearer.isEmpty()) {
-            tooltip.add(Component.translatable("item.toneko.spoiled_water.tip.wearer", wearer));
+            tooltips.add(Component.translatable("item.toneko.spoiled_water.tip.wearer", wearer));
         }
-        tooltip.add(Component.translatable("item.toneko.spoiled_water_bottle.tip.drink"));
+        tooltips.add(Component.translatable("item.toneko.spoiled_water_bottle.tip.drink"));
+    
+        for (Component t : tooltips) adder.accept(t);
     }
 }

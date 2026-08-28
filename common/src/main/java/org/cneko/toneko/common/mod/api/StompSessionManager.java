@@ -39,7 +39,7 @@ public class StompSessionManager {
         // 若该踩踏者已有会话（换目标重踩），先结束旧的
         StompSession old = SESSIONS.get(stomperUuid);
         if (old != null) {
-            endSession(old, stomper.serverLevel(), stomper);
+            endSession(old, ((ServerLevel) stomper.level()), stomper);
         }
 
         // 记录目标原本的 NoAi 状态，并对非玩家 Mob 锁定 AI（玩家除外，可自行挣脱）
@@ -69,7 +69,7 @@ public class StompSessionManager {
     public static void stop(ServerPlayer stomper) {
         StompSession session = SESSIONS.remove(stomper.getUUID());
         if (session != null) {
-            endSession(session, stomper.serverLevel(), stomper);
+            endSession(session, ((ServerLevel) stomper.level()), stomper);
         }
     }
 
@@ -80,7 +80,7 @@ public class StompSessionManager {
     public static void onPlayerQuit(ServerPlayer player) {
         StompSession session = SESSIONS.remove(player.getUUID());
         if (session == null) return;
-        restoreTarget(player.serverLevel(), session);
+        restoreTarget(((ServerLevel) player.level()), session);
     }
 
     /**
@@ -130,7 +130,7 @@ public class StompSessionManager {
                 session.part(),
                 session.pose(),
                 active);
-        for (Player p : EntityUtil.getPlayersInRange(stomper, stomper.serverLevel(), 64)) {
+        for (Player p : EntityUtil.getPlayersInRange(stomper, ((ServerLevel) stomper.level()), 64)) {
             ServerPlayNetworking.send((ServerPlayer) p, anim);
         }
     }

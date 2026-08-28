@@ -15,7 +15,7 @@ public class FabricLanguageImpl implements Language{
     public void load() {
         try {
             List<String> languages = List.of("en_us","zh_cn","zh_tw","ko_kr","ja_jp");
-            language = CONFIG.getString("language");
+            language = CONFIG.getStringOr("language", "");
             // 创建文件夹如果不存在
             FileUtil.CreatePath(LANG_PATH);
             // 删除旧语言文件
@@ -36,7 +36,7 @@ public class FabricLanguageImpl implements Language{
             LANG = JsonConfiguration.of("{}");
             LOGGER.error("Failed to load language file",e);
         }
-        phrase = translatable(LANG.getString("misc.toneko.nya"));
-        prefix = translatable(LANG.getString("misc.toneko.prefix"));
+        phrase = translatable(LANG.getStringOr("misc.toneko.nya", ""));
+        prefix = translatable(LANG.getStringOr("misc.toneko.prefix", ""));
     }
 }

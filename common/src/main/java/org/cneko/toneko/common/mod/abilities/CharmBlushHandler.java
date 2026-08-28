@@ -69,7 +69,7 @@ public class CharmBlushHandler {
         for (ServerPlayer p : level.getServer().getPlayerList().getPlayers()) {
             if (p.distanceToSqr(neko) <= 4096) { // 64 格内可见
                 p.connection.send(new ClientboundLevelParticlesPacket(
-                        ParticleTypes.HEART, true, x, y, z, 0.3f, 0.3f, 0.3f, 0.02f, 3));
+                        ParticleTypes.HEART, true, true, x, y, z, 0.3f, 0.3f, 0.3f, 0.02f, 3));
             }
         }
     }

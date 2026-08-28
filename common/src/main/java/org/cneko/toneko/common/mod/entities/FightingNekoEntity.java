@@ -1,7 +1,7 @@
 package org.cneko.toneko.common.mod.entities;
 
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
@@ -28,8 +28,8 @@ import static org.cneko.toneko.common.mod.util.ResourceLocationUtil.toNekoLoc;
 
 public class FightingNekoEntity extends NekoEntity{
     public static final TagKey<Item> NEKO_WEAPON = TagKey.create(Registries.ITEM,toNekoLoc("neko/weapon"));
-    public static final TagKey<Item> MELEE_WEAPON = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c","tools/melee_weapon"));
-    public static final TagKey<Item> RANGED_WEAPON = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c","tools/ranged_weapon"));
+    public static final TagKey<Item> MELEE_WEAPON = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c","tools/melee_weapon"));
+    public static final TagKey<Item> RANGED_WEAPON = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c","tools/ranged_weapon"));
 
     public static final List<String> NEKO_SKINS = List.of(
             "ronin","miruu","muineow","myrrka","peelll"
@@ -97,9 +97,9 @@ public class FightingNekoEntity extends NekoEntity{
     }
 
     @Override
-    public boolean hurt(@NotNull DamageSource source, float amount) {
+    public boolean hurtServer(net.minecraft.server.level.ServerLevel level, @NotNull DamageSource source, float amount) {
         unhurtTime = 0; // 重置未受伤时间
-        return super.hurt(source, amount);
+        return super.hurtServer(level, source, amount);
     }
 
     @Override
@@ -132,16 +132,16 @@ public class FightingNekoEntity extends NekoEntity{
         // 战斗由NekoAttackGoal完全接管（通过setHatredTarget已传入目标）
 
         // 萝莉形态：周期性对仇恨玩家释放闪电攻击
-        if (this.isNekoBaby() && this.hatredTarget instanceof Player && !this.level().isClientSide) {
+        if (this.isNekoBaby() && this.hatredTarget instanceof Player && !this.level().isClientSide()) {
             if (loliLightningCooldown > 0) {
                 loliLightningCooldown--;
             } else {
                 loliLightningCooldown = 100; // 5秒冷却
-                LightningBolt lightning = new LightningBolt(EntityType.LIGHTNING_BOLT, this.level());
+                LightningBolt lightning = new LightningBolt((net.minecraft.world.entity.EntityType<LightningBolt>) net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("lightning_bolt")), this.level());
                 lightning.setPos(this.hatredTarget.getX(), this.hatredTarget.getY(), this.hatredTarget.getZ());
                 lightning.setVisualOnly(true);
                 this.level().addFreshEntity(lightning);
-                this.hatredTarget.hurt(this.damageSources().lightningBolt(), 5.0f);
+                org.cneko.toneko.common.mod.util.EntityHurtUtil.hurt(this.hatredTarget, this.damageSources().lightningBolt(), 5.0f);
             }
         }
 

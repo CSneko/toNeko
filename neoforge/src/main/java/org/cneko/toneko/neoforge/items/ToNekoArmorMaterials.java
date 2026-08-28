@@ -1,96 +1,70 @@
 package org.cneko.toneko.neoforge.items;
 
 import net.minecraft.core.Holder;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvent;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import org.cneko.toneko.neoforge.ToNekoNeoForge;
+import net.minecraft.world.item.equipment.ArmorMaterial;
+import net.minecraft.world.item.equipment.ArmorType;
+import net.minecraft.world.item.equipment.EquipmentAsset;
+import net.minecraft.world.item.equipment.EquipmentAssets;
 
-import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
 import static org.cneko.toneko.common.Bootstrap.MODID;
 
+/**
+ * 26.x 迁移说明：{@code ArmorMaterial} 变为不可注册的 record
+ * (durability, defense, enchantmentValue, equipSound, toughness, knockbackResistance, repairable, asset)，
+ * 相关注册表（ARMOR_MATERIAL 等）已删除。
+ * 这里改为直接构造材质实例；装备渲染资源键使用自定义 id，客户端需要 assets/toneko/equipment/*.json（由 GeckoLib/原版资源提供）。
+ */
 public class ToNekoArmorMaterials {
-    public static DeferredHolder<ArmorMaterial,ArmorMaterial> NEKO;
-    public static DeferredHolder<ArmorMaterial,ArmorMaterial> LEGWEAR;
+    public static ArmorMaterial NEKO;
+    public static ArmorMaterial LEGWEAR;
     public static void init(){
         // 如果启用了仅服务器端，则不注册物品
         registerWithOutConfig();
     }
 
     /**
-     * 强制注册物品，无论配置文件如何设置
+     * 强制构建材质，无论配置文件如何设置
      */
     public static void registerWithOutConfig() {
-        NEKO = register(
-                "neko_tail",
-                Map.of(
-                        ArmorItem.Type.LEGGINGS, 0 // 猫尾巴要啥防御点呀
-                ),
-                15, // 嗯...还是让你们可以附魔吧
-                Holder.direct(SoundEvents.CAT_AMBIENT), // 喵喵喵~
-                () -> Ingredient.of(TagKey.create(BuiltInRegistries.ITEM.key(), ResourceLocation.fromNamespaceAndPath("c","wool"))), //wooooooooool
-                0.5F, // 猫尾巴可以吸收什么伤害呢
-                0.5F, // 猫尾巴还能抵御击退吗?肯定不能啦
-                true // 猫尾巴可以染色吗?当然可以啦,但是现在技术还不够呢,求原谅
+        ResourceKey<EquipmentAsset> nekoAsset = equipmentAsset("neko_tail");
+        ResourceKey<EquipmentAsset> legwearAsset = equipmentAsset("legwear");
+
+        NEKO = new ArmorMaterial(
+                15, // durability
+                Map.of(ArmorType.CHESTPLATE, 0), // 猫尾巴要啥防御点呀
+                15, // enchantability：嗯...还是让你们可以附魔吧
+                SoundEvents.CAT_AMBIENT_BABY, // 喵喵喵~
+                0.5F, // toughness：猫尾巴可以吸收什么伤害呢
+                0.5F, // knockbackResistance：猫尾巴还能抵御击退吗?肯定不能啦
+                woolTag(), // 修复材料：羊毛
+                nekoAsset
         );
 
-        LEGWEAR = register(
-                "legwear",
-                Map.of(
-                        ArmorItem.Type.LEGGINGS, 1 // 丝袜：象征性的 1 点防御
-                ),
-                15, // 可以附魔
+        LEGWEAR = new ArmorMaterial(
+                15, // durability
+                Map.of(ArmorType.LEGGINGS, 1), // 丝袜：象征性的 1 点防御
+                15, // enchantability：可以附魔
                 SoundEvents.ARMOR_EQUIP_LEATHER, // 皮革摩擦声比较贴切
-                () -> Ingredient.of(TagKey.create(BuiltInRegistries.ITEM.key(), ResourceLocation.fromNamespaceAndPath("c","wool"))), //wooooooooool
                 0F, // 丝袜当然吸收不了伤害啦
                 0F, // 也抵御不了击退
-                true // 丝袜必须在染色缸里染色！
+                woolTag(), // 修复材料：羊毛
+                legwearAsset
         );
-
     }
 
-    /**
-     *  注册一个新的盔甲
-     * @param id 盔甲id
-     * @param defensePoints 防御点
-     * @param enchantability 附魔能力
-     * @param equipSound 音效
-     * @param repairIngredientSupplier 修复原料
-     * @param toughness 盔甲会吸收多少伤害
-     * @param knockbackResistance 击退抗性
-     * @param dyeable 是否可染色
-     * @return 盔甲材料
-     */
-    public static DeferredHolder<ArmorMaterial,ArmorMaterial> register(
-            String id, Map<ArmorItem.Type, Integer> defensePoints,
-            int enchantability, Holder<SoundEvent> equipSound,
-            Supplier<Ingredient> repairIngredientSupplier,
-            float toughness,
-            float knockbackResistance,
-            boolean dyeable) {
-        // Get the supported layers for the armor material
-        List<ArmorMaterial.Layer> layers = List.of(
-                // 纹理层的 ID、后缀以及该层是否可染色。
-                // 我们可以将盔甲材质 ID 作为纹理层 ID 传递。
-                // 我们不需要后缀，因此我们将传递一个空字符串。
-                // 我们将传递收到的可染色布尔值作为可染色参数。
-                new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(MODID, id), "", dyeable)
-        );
-
-        ArmorMaterial material = new ArmorMaterial(defensePoints, enchantability, equipSound, repairIngredientSupplier, layers, toughness, knockbackResistance);
-        // Register the material within the ArmorMaterials registry.
-        DeferredHolder<ArmorMaterial,ArmorMaterial> materialHolder = ToNekoNeoForge.ARMOR_MATERIALS.register(id, () -> material);
-
-        return materialHolder;
+    /** 羊毛标签，用于铁砧修复。 */
+    private static TagKey<net.minecraft.world.item.Item> woolTag() {
+        return TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "wool"));
     }
 
+    private static ResourceKey<EquipmentAsset> equipmentAsset(String id) {
+        return ResourceKey.create(EquipmentAssets.ROOT_ID, Identifier.fromNamespaceAndPath(MODID, id));
+    }
 }

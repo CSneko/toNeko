@@ -49,7 +49,7 @@ public class NekoYandereDefenseGoal extends Goal {
         if (target == null || !target.isAlive()) return;
 
         if (neko.distanceToSqr(target) < 3.0) {
-            neko.doHurtTarget(target);
+            neko.doHurtTarget((net.minecraft.server.level.ServerLevel) neko.level(), target);
             target = null; // one hit then stop
         } else {
             if (--timeToRecalcPath <= 0) {

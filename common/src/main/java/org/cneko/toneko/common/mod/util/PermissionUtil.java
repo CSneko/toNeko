@@ -1,34 +1,35 @@
 package org.cneko.toneko.common.mod.util;
 
-import me.lucko.fabric.api.permissions.v0.Permissions;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.permissions.LevelBasedPermissionSet;
+import net.minecraft.server.permissions.PermissionLevel;
+import net.minecraft.server.permissions.PermissionSet;
 import net.minecraft.world.entity.Entity;
 
 import static org.cneko.toneko.common.api.Permissions.*;
 
+/**
+ * 26.x：原 fabric-permissions-api 依赖仍指向 yarn 中间名（class_2172 等），无法解析，
+ * 且 1.21.9+ 权限系统重构为 {@link net.minecraft.server.permissions.PermissionSet}。
+ * 这里统一改为使用原版基于等级的权限集合；
+ * LuckPerms 集成留给后续版本的 permissions.json / 数据包方式实现。
+ */
 public class PermissionUtil {
     public static boolean installed = false;
 
     public static void init() {
-        // 是否有permissions API 且安装了luckperms
-        try {
-            Class.forName("me.lucko.fabric.api.permissions.v0.Permissions");
-            installed = FabricLoader.getInstance().isModLoaded("luckperms");
-            registerAll();
-        }catch (Exception e){
-            installed = false;
-        }
+        // 原权限 API 在 26.x 下不可用，仅保留接口占位
+        installed = false;
     }
 
-    // 在luckperms中注册权限组
-    public static void register(String perm){
-        if(installed){
-            Permissions.check(uuid, perm);
-        }
+    /** 兼容保留：注册全部权限节点（当前为 no-op） */
+    public static void register(String perm) {
+        // no-op: 数据包/permissions.json 注册未来在这里接入
     }
-    // 注册所有权限
-    public static void registerAll(){
+
+    /** 兼容保留 */
+    public static void registerAll() {
         register(COMMAND_TONEKOADMIN);
         register(COMMAND_TONEKOADMIN_SET);
         register(COMMAND_TONEKOADMIN_SET_LEVEL);
@@ -60,48 +61,65 @@ public class PermissionUtil {
         register(COMMAND_QUIRK_HELP);
         register(COMMAND_GENETICS);
     }
-    // 是否拥有权限
-    public static boolean has(Entity entity, String perm){
-        try {
-            if (installed) {
-                return Permissions.check(entity, perm);
-            }
-            // 没有权限API
-            return entity.hasPermissions(getPermLevel(perm));
-        }catch (Exception e){
+
+    /**
+     * 是否拥有权限：玩家走其权限集合与需求等级比较；非玩家实体一律 false。
+     */
+    public static boolean has(Entity entity, String perm) {
+        if (!(entity instanceof ServerPlayer player)) {
             return false;
         }
+        return levelAtLeast(player.permissions(), getPermLevel(perm));
     }
-    // 权限是否属于管理员权限
-    public static int getPermLevel(String perm){
-        if( perm.startsWith("command.tonekoadmin")){
+
+    /** 权限等级映射：admin 节点 4 级，玩家可用节点 0 级。 */
+    public static int getPermLevel(String perm) {
+        if (perm.startsWith("command.tonekoadmin")) {
             return 4;
-        }else if (perm.startsWith("command.neko") || perm.startsWith("command.quirk") || perm.startsWith("command.toneko")){
+        } else if (perm.startsWith("command.neko") || perm.startsWith("command.quirk") || perm.startsWith("command.toneko")) {
             return 0;
         }
         return 0;
     }
 
-
-    public static boolean has(CommandSourceStack source, String permission){
+    /**
+     * 命令来源权限校验：
+     * 控制台（无实体来源）恒通过；命令块/函数等按来源的权限集合检查，
+     * 防止命令块绕过 /tonekoadmin 的管理员限制。
+     */
+    public static boolean has(CommandSourceStack source, String permission) {
         try {
-            // 无实体来源的区分：控制台的权限等级恒为 4，命令块/函数最高只有 2 级。
-            // 因此仅对 4 级来源（即控制台）直接放行；命令块等落入下方常规检查，
-            // 防止命令块绕过 /tonekoadmin 的管理员权限限制。
-            if (source.getEntity() == null && source.hasPermission(4)) {
+            if (source.getEntity() == null) {
+                // 控制台永远放行
                 return true;
             }
-            if (installed) {
-                return Permissions.check(source, permission);
-            }
-            // 没有权限API
-            return source.hasPermission(getPermLevel(permission));
-        }catch (Exception e){
+            return levelAtLeast(source.permissions(), getPermLevel(permission));
+        } catch (Exception e) {
             return false;
         }
     }
+
     @Deprecated
     public static boolean has(String permission, CommandSourceStack source) {
         return has(source, permission);
+    }
+
+    private static boolean levelAtLeast(PermissionSet set, int requiredLevel) {
+        if (set == null) return false;
+        if (set == PermissionSet.ALL_PERMISSIONS) return true;
+        if (set instanceof LevelBasedPermissionSet levelBased) {
+            return levelBased.level().isEqualOrHigherThan(levelFromInt(requiredLevel));
+        }
+        return false;
+    }
+
+    private static PermissionLevel levelFromInt(int level) {
+        return switch (level) {
+            case 0 -> PermissionLevel.ALL;
+            case 1 -> PermissionLevel.MODERATORS;
+            case 2 -> PermissionLevel.GAMEMASTERS;
+            case 3 -> PermissionLevel.ADMINS;
+            default -> PermissionLevel.OWNERS;
+        };
     }
 }

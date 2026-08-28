@@ -1,0 +1,9 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "toneko:item/legwear_over_knee",
+    "model": {
+      "type": "geckolib:geckolib"
+    }
+  }
+}

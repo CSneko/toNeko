@@ -1,7 +1,7 @@
 package org.cneko.toneko.common.mod.client.screens;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
@@ -56,15 +56,15 @@ public class NekoInfoScreen extends Screen {
                 Component.translatable("screen.toneko.neko_info.management"),
                 button -> {
                     if (Minecraft.getInstance().player != null) {
-                        Minecraft.getInstance().player.connection.sendUnsignedCommand("toneko gui");
+                        Minecraft.getInstance().player.connection.sendCommand("toneko gui");
                     }
                 }
         ).bounds(startX + panelWidth / 2 + 5, startY + panelHeight - 28, 90, 20).build());
     }
 
     @Override
-    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
-        this.renderBackground(guiGraphics, mouseX, mouseY, delta); // 绘制暗色遮罩
+    public void extractRenderState(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float delta) {
+        this.extractBackground(guiGraphics, mouseX, mouseY, delta); // 绘制暗色遮罩
 
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
@@ -79,7 +79,7 @@ public class NekoInfoScreen extends Screen {
         // 2. 居中绘制总标题
         Component cuteTitle = Component.literal("❤ ").append(this.title).append(" ❤");
         int titleWidth = this.font.width(cuteTitle);
-        guiGraphics.drawString(this.font, cuteTitle, startX + (panelWidth - titleWidth) / 2, startY + 12, TEXT_TITLE, true);
+        guiGraphics.text(this.font, cuteTitle, startX + (panelWidth - titleWidth) / 2, startY + 12, TEXT_TITLE, true);
 
         // ==========================================
         // 左半区：模型、身份、年龄、能量
@@ -90,56 +90,56 @@ public class NekoInfoScreen extends Screen {
 
         // 渲染玩家 3D 模型 (看着鼠标)
         // 参数解释: 渲染框左上角X,Y, 右下角X,Y, 缩放大小, y偏移, 鼠标X, 鼠标Y, 实体
-        InventoryScreen.renderEntityInInventoryFollowsMouse(guiGraphics,
-                leftColX, leftY, leftColX + 100, leftY + 65, 40, 0.0625F, mouseX, mouseY, player);
+        InventoryScreen.extractEntityInInventoryFollowsMouse(guiGraphics,
+                leftColX, leftY, leftColX + 100, leftY + 65, 40, 0.0625F, (float) mouseX, (float) mouseY, player);
 
         leftY += 72; // 移动到模型下方
 
         // 名字与状态
-        String nick = player.getNickName().isEmpty() ? player.getName().getString() : player.getNickName();
-        guiGraphics.drawCenteredString(this.font, nick, leftCenterX, leftY, TEXT_VALUE);
+        String nick = ((INeko) player).getNickName().isEmpty() ? player.getName().getString() : ((INeko) player).getNickName();
+        guiGraphics.centeredText(this.font, nick, leftCenterX, leftY, TEXT_VALUE);
         leftY += 12;
 
         Component statusText = translatable("screen.toneko.neko_info.status",
-                translatable(player.isNeko() ? "screen.toneko.neko_info.yes" : "screen.toneko.neko_info.no"));
-        guiGraphics.drawCenteredString(this.font, statusText, leftCenterX, leftY, TEXT_LABEL);
+                translatable(((INeko) player).isNeko() ? "screen.toneko.neko_info.yes" : "screen.toneko.neko_info.no"));
+        guiGraphics.centeredText(this.font, statusText, leftCenterX, leftY, TEXT_LABEL);
         leftY += 16;
 
-        if (!player.isNeko()) {
-            guiGraphics.drawCenteredString(this.font, translatable("screen.toneko.neko_info.not_neko"),
+        if (!((INeko) player).isNeko()) {
+            guiGraphics.centeredText(this.font, translatable("screen.toneko.neko_info.not_neko"),
                     leftCenterX, leftY, 0xFF5555);
             return; // 如果不是猫娘，中止后续绘制
         }
 
         // 年龄 & 成长 (移到左侧)
-        guiGraphics.drawString(this.font, translatable("screen.toneko.neko_info.age_section"), leftColX, leftY, TEXT_SECTION, true);
+        guiGraphics.text(this.font, translatable("screen.toneko.neko_info.age_section"), leftColX, leftY, TEXT_SECTION, true);
         leftY += 12;
 
-        double ageScale = player.getNekoAgeScale();
+        double ageScale = ((INeko) player).getNekoAgeScale();
         int growthPercent = (int) Math.round((ageScale - 0.3) / 0.7 * 100);
         growthPercent = Math.max(0, Math.min(100, growthPercent));
 
-        guiGraphics.drawString(this.font, translatable("screen.toneko.neko_info.apparent_age", getApparentAge(ageScale)), leftColX + 5, leftY, TEXT_VALUE, false);
+        guiGraphics.text(this.font, translatable("screen.toneko.neko_info.apparent_age", getApparentAge(ageScale)), leftColX + 5, leftY, TEXT_VALUE, false);
         leftY += 12;
 
         // 年龄进度条
         drawProgressBar(guiGraphics, leftColX + 5, leftY, 90, 6, growthPercent / 100.0f, BAR_AGE_BG, BAR_AGE_FG);
-        guiGraphics.drawString(this.font, Component.literal(growthPercent + "%"), leftColX + 100, leftY - 1, 0xFFFFFF);
+        guiGraphics.text(this.font, Component.literal(growthPercent + "%"), leftColX + 100, leftY - 1, 0xFFFFFFFF);
         leftY += 16;
 
         // 能量状态 (移到左侧)
-        guiGraphics.drawString(this.font, translatable("screen.toneko.neko_info.energy_section"), leftColX, leftY, TEXT_SECTION, true);
+        guiGraphics.text(this.font, translatable("screen.toneko.neko_info.energy_section"), leftColX, leftY, TEXT_SECTION, true);
         leftY += 12;
 
-        float energy = player.getNekoEnergy();
-        float maxEnergy = player.getMaxNekoEnergy();
+        float energy = ((INeko) player).getNekoEnergy();
+        float maxEnergy = ((INeko) player).getMaxNekoEnergy();
 
         // 能量进度条
         drawProgressBar(guiGraphics, leftColX + 5, leftY, 90, 8, energy / maxEnergy, BAR_ENERGY_BG, BAR_ENERGY_FG);
         String energyStr = String.format("%.0f/%.0f", energy, maxEnergy);
 
         // 调整能量文字的位置，稍微缩小字距或右移防止重叠
-        guiGraphics.drawString(this.font, Component.literal(energyStr), leftColX + 98, leftY, 0xFFFFFF);
+        guiGraphics.text(this.font, Component.literal(energyStr), leftColX + 98, leftY, 0xFFFFFFFF);
 
 
         // ==========================================
@@ -149,11 +149,11 @@ public class NekoInfoScreen extends Screen {
         int rightY = startY + 35;
         int lineHeight = 14;
 
-        guiGraphics.drawString(this.font, translatable("screen.toneko.neko_info.level_section"), rightColX, rightY, TEXT_SECTION, true);
+        guiGraphics.text(this.font, translatable("screen.toneko.neko_info.level_section"), rightColX, rightY, TEXT_SECTION, true);
         rightY += lineHeight;
 
-        float totalLevel = player.getNekoLevel();
-        guiGraphics.drawString(this.font, translatable("screen.toneko.neko_info.total_level", String.format("%.1f", totalLevel)), rightColX + 5, rightY, TEXT_VALUE, false);
+        float totalLevel = ((INeko) player).getNekoLevel();
+        guiGraphics.text(this.font, translatable("screen.toneko.neko_info.total_level", String.format("%.1f", totalLevel)), rightColX + 5, rightY, TEXT_VALUE, false);
         rightY += lineHeight + 4; // 额外空隙
 
         // 回归垂直列表，彻底解决文字重叠问题
@@ -178,18 +178,18 @@ public class NekoInfoScreen extends Screen {
         rightY += lineHeight + 12;
 
         // 能力
-        guiGraphics.drawString(this.font, translatable("screen.toneko.neko_info.ability_section"), rightColX, rightY, TEXT_SECTION, true);
+        guiGraphics.text(this.font, translatable("screen.toneko.neko_info.ability_section"), rightColX, rightY, TEXT_SECTION, true);
         rightY += lineHeight;
-        guiGraphics.drawString(this.font, translatable("screen.toneko.neko_info.ability", player.getNekoAbility()), rightColX + 5, rightY, TEXT_VALUE, false);
+        guiGraphics.text(this.font, translatable("screen.toneko.neko_info.ability", ((INeko) player).getNekoAbility()), rightColX + 5, rightY, TEXT_VALUE, false);
 
         // 最后渲染按钮 (调用父类)
-        super.render(guiGraphics, mouseX, mouseY, delta);
+        super.extractRenderState(guiGraphics, mouseX, mouseY, delta);
     }
 
     /**
      * 绘制带边框的圆角风格背景板
      */
-    private void drawRoundedPanel(GuiGraphics graphics, int x, int y, int width, int height) {
+    private void drawRoundedPanel(GuiGraphicsExtractor graphics, int x, int y, int width, int height) {
         graphics.fill(x + 2, y, x + width - 2, y + height, PANEL_BG_COLOR);
         graphics.fill(x, y + 2, x + width, y + height - 2, PANEL_BG_COLOR);
 
@@ -207,7 +207,7 @@ public class NekoInfoScreen extends Screen {
     /**
      * 绘制可爱的进度条
      */
-    private void drawProgressBar(GuiGraphics graphics, int x, int y, int width, int height, float progress, int bgColor, int fgColor) {
+    private void drawProgressBar(GuiGraphicsExtractor graphics, int x, int y, int width, int height, float progress, int bgColor, int fgColor) {
         progress = Math.max(0.0f, Math.min(1.0f, progress));
         int fillWidth = (int) (width * progress);
 
@@ -221,8 +221,8 @@ public class NekoInfoScreen extends Screen {
     /**
      * 封装属性绘制
      */
-    private void drawFactor(GuiGraphics graphics, String type, int x, int y, Player player) {
-        double raw = player.getNekoLevelFactorRaw(type);
+    private void drawFactor(GuiGraphicsExtractor graphics, String type, int x, int y, Player player) {
+        double raw = ((INeko) player).getNekoLevelFactorRaw(type);
         double level = 0.0;
 
         switch (type) {
@@ -236,7 +236,7 @@ public class NekoInfoScreen extends Screen {
 
         Component text = translatable("screen.toneko.neko_info." + type + "_factor",
                 String.format("%.1f", level), String.format("%.0f", raw));
-        graphics.drawString(this.font, text, x, y, TEXT_SUB_VALUE, false);
+        graphics.text(this.font, text, x, y, TEXT_SUB_VALUE, false);
     }
 
     private static int getApparentAge(double ageScale) {

@@ -2,7 +2,7 @@ package org.cneko.toneko.common.mod.client.screens;
 
 import lombok.Setter;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
@@ -90,12 +90,27 @@ public class InteractionScreen extends Screen implements INekoScreen {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
+    public void extractRenderState(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         try {
             if (tooltips != null) {
-                for (TooltipWidget tooltip : tooltips) {
-                    guiGraphics.renderTooltip(this.font, tooltip.tooltip().build(this), tooltip.x(), tooltip.y());
+                for (TooltipWidget widget : tooltips) {
+                    net.minecraft.network.chat.Component comp = widget.tooltip().build(this);
+                    if (comp == null || comp.getString().isEmpty()) {
+                        continue;
+                    }
+                    // 26.1.2：setTooltipForNextFrame 每帧只保留最后一次调用，导致多行信息只剩一条；
+                    // 这里改为在固定位置逐条绘制带底色的文本（保留原悬浮框观感，超宽自动换行）
+                    int x = widget.x();
+                    int y = widget.y();
+                    var lines = this.font.split(comp, 200);
+                    for (var line : lines) {
+                        int textWidth = this.font.width(line);
+                        guiGraphics.fill(x - 3, y - 3, x + textWidth + 3, y + this.font.lineHeight + 2, 0xF0100010);
+                        // 26.1.2：GuiGraphicsExtractor.text 要求颜色带非 0 alpha，否则整条文本被跳过
+                        guiGraphics.text(this.font, line, x, y, 0xFFFFFFFF, false);
+                        y += this.font.lineHeight + 2;
+                    }
                 }
             }
         } catch (Exception ignored) {
@@ -112,9 +127,9 @@ public class InteractionScreen extends Screen implements INekoScreen {
         return false;
     }
 
-    // 移除背景渲染
+    // 26.x：背景由抽取管线处理；保留空实现以维持原视觉
     @Override
-    public void renderBackground(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractBackground(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
     }
 
     @Override

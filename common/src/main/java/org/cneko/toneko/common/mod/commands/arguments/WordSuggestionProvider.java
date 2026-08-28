@@ -1,4 +1,5 @@
 package org.cneko.toneko.common.mod.commands.arguments;
+import org.cneko.toneko.common.mod.entities.INeko;
 
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
@@ -32,13 +33,13 @@ public class WordSuggestionProvider implements SuggestionProvider<CommandSourceS
         }else {
             if (!isValidNeko(neko, commander)) return builder.buildFuture();
             if (type == Types.BLOCK) {
-                neko.getBlockedWords().forEach(blockWord -> {
+                ((INeko) neko).getBlockedWords().forEach(blockWord -> {
                     if (blockWord.replace().toLowerCase().startsWith(remaining)) {
                         builder.suggest(blockWord.replace());
                     }
                 });
             } else if (type == Types.ALIASES) {
-                neko.getOwner(commander.getUUID()).getAliases().forEach(alias -> {
+                ((INeko) neko).getOwner(commander.getUUID()).getAliases().forEach(alias -> {
                     if (alias.toLowerCase().startsWith(remaining)) {
                         builder.suggest(alias);
                     }
@@ -50,10 +51,10 @@ public class WordSuggestionProvider implements SuggestionProvider<CommandSourceS
 
     private boolean isValidNeko(ServerPlayer neko, ServerPlayer commander) {
         // 服务器端检查是否为Neko
-        if (!neko.isNeko()) return false;
+        if (!((INeko) neko).isNeko()) return false;
 
         // 若需要检查主人关系
-        return commander != null && neko.hasOwner(commander.getUUID());
+        return commander != null && ((INeko) neko).hasOwner(commander.getUUID());
     }
 
     enum Types{

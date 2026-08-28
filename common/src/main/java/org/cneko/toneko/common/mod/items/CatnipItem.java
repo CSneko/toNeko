@@ -6,7 +6,6 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -29,7 +28,7 @@ public class CatnipItem extends Item implements BazookaItem.Ammunition {
     @Override
     public @NotNull ItemStack finishUsingItem(ItemStack stack, @NotNull Level level, @NotNull LivingEntity livingEntity) {
         FoodProperties foodProperties = stack.get(DataComponents.FOOD);
-        if (foodProperties != null && !livingEntity.level().isClientSide) {
+        if (foodProperties != null && !livingEntity.level().isClientSide()) {
             if (livingEntity instanceof INeko neko && neko.isNeko()){
                 livingEntity.addEffect(new MobEffectInstance(
                         BuiltInRegistries.MOB_EFFECT.wrapAsHolder(ToNekoEffects.NEKO_EFFECT),
@@ -39,14 +38,15 @@ public class CatnipItem extends Item implements BazookaItem.Ammunition {
                 // 恢复一点猫猫能量
                 neko.setNekoEnergy(neko.getNekoEnergy() + 30);
             }
-            return livingEntity.eat(level, stack, foodProperties);
+            // 26.1.2：交给 Item.finishUsingItem（由 CONSUMABLE 组件驱动），避免对 stack.finishUsingItem 的无限递归
+            return super.finishUsingItem(stack, level, livingEntity);
         }
         return stack;
     }
 
     @Override
     public void hitOnEntity(LivingEntity shooter, LivingEntity target, ItemStack bazooka, ItemStack ammunition) {
-        if (!shooter.level().isClientSide) {
+        if (!shooter.level().isClientSide()) {
             if (target instanceof INeko neko && neko.isNeko()) {
                 target.addEffect(new MobEffectInstance(
                         BuiltInRegistries.MOB_EFFECT.wrapAsHolder(ToNekoEffects.NEKO_EFFECT),
@@ -65,7 +65,7 @@ public class CatnipItem extends Item implements BazookaItem.Ammunition {
     @Override
     public void hitOnAir(LivingEntity shooter, BlockPos pos, ItemStack bazooka, ItemStack ammunition) {
         // 粒子
-        if (!shooter.level().isClientSide) {
+        if (!shooter.level().isClientSide()) {
             shooter.level().addParticle(
                     ()-> BuiltInRegistries.PARTICLE_TYPE.wrapAsHolder(ParticleTypes.EFFECT).value(),
                     pos.getX() + 0.5,
@@ -105,7 +105,7 @@ public class CatnipItem extends Item implements BazookaItem.Ammunition {
 
             // 2. 如果使用者是玩家，添加 5 秒冷却时间
             if (livingEntity instanceof Player player) {
-                player.getCooldowns().addCooldown(this, 100);
+                player.getCooldowns().addCooldown(stack, 100);
             }
 
             // 3. 执行父类逻辑
@@ -120,11 +120,15 @@ public class CatnipItem extends Item implements BazookaItem.Ammunition {
             return stack;
         }
 
-        @Override
-        public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltipComponents, @NotNull TooltipFlag tooltipFlag) {
-            super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
-            tooltipComponents.add(Component.translatable("item.toneko.infinite_catnip.tip"));
-        }
+            @Override
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull net.minecraft.world.item.component.TooltipDisplay display, @NotNull java.util.function.Consumer<Component> adder, @NotNull TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, display, adder, tooltipFlag);
+        // 兼容旧实现：先收集到 List，再逐条发送
+        java.util.List<Component> tooltips = new java.util.ArrayList<>();
+            tooltips.add(Component.translatable("item.toneko.infinite_catnip.tip"));
+        
+        for (Component t : tooltips) adder.accept(t);
+    }
     }
 
 }

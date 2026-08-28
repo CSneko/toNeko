@@ -55,9 +55,9 @@ public class GiftSelectionManager {
             cancel();
             return;
         }
-        int slot = client.player.getInventory().selected;
+        int slot = client.player.getInventory().getSelectedSlot();
         if (client.player.getInventory().getItem(slot).isEmpty()) {
-            client.player.displayClientMessage(Component.translatable("message.toneko.gift.empty_slot"), true);
+            client.player.sendOverlayMessage(Component.translatable("message.toneko.gift.empty_slot"));
             return;
         }
         ClientPlayNetworking.send(new GiftItemPayload(nekoUuid, slot));

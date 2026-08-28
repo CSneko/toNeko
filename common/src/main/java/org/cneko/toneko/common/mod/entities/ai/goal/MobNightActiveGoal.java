@@ -40,7 +40,7 @@ public class MobNightActiveGoal extends Goal {
         this.searchCooldown = this.mob.getRandom().nextInt(20) + 20;
         
         // 根据时间决定行为
-        long dayTime = this.level.getDayTime() % 24000;
+        long dayTime = this.level.getOverworldClockTime() % 24000;
         boolean isNight = dayTime >= 13000 && dayTime <= 23000; // 夜晚时间
         
         if (isNight) {
