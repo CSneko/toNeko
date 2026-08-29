@@ -60,8 +60,9 @@ public class ShengDengSpecialModel implements net.minecraft.client.renderer.spec
 
     /** 图集里取凳面贴图精灵。 */
     private static TextureAtlasSprite atlasSprite() {
-        // 26.x：InventoryMenu.BLOCK_ATLAS 常量被移除，直接使用图集 id
-        var atlasId = Identifier.withDefaultNamespace("textures/atlas/blocks.png");
+        // 26.x：InventoryMenu.BLOCK_ATLAS 常量被移除，图集按“图集定义 id”（AtlasIds.BLOCKS）索引，
+        // texture 路径（textures/atlas/blocks.png）旧写法会触发 getAtlasOrThrow 的 IllegalArgumentException。
+        var atlasId = Identifier.withDefaultNamespace("blocks");
         return Minecraft.getInstance().getAtlasManager()
                 .getAtlasOrThrow(atlasId)
                 .getSprite(TEXTURE);
