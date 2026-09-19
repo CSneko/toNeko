@@ -10,7 +10,10 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.SpawnPlacementTypes;
+import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.world.level.levelgen.Heightmap;
 import org.cneko.toneko.common.mod.api.NekoNameRegistry;
 import org.cneko.toneko.common.mod.api.NekoSkinRegistry;
 import org.cneko.toneko.common.mod.entities.*;
@@ -121,5 +124,27 @@ public class ToNekoEntities {
 
         // 注册群系生成（委托 common 方法）
         registerBiomeSpawns(ADVENTURER_NEKO, GHOST_NEKO, CRYSTAL_NEKO, FIGHTING_NEKO);
+
+        // 注册生成位置规则：必须站在实心方块上生成。
+        // Fabric 没有像 NeoForge 那样的 RegisterSpawnPlacementsEvent，只能直接调用原版注册方法
+        // （由 toneko.accesswidener 放开访问权限）。
+        // 若不注册，SpawnPlacements.getPlacementType 会退化为 NO_RESTRICTIONS（任何位置都合法），
+        // 自然生成时就会在下界这类空旷维度直接刷在半空中。
+        registerSpawnPlacements();
+    }
+
+    /**
+     * 注册猫娘的自然生成位置与判定规则（与 NeoForge 侧 {@code onCreatureSpawn} 保持一致）。
+     */
+    private static void registerSpawnPlacements() {
+        SpawnPlacements.register(ADVENTURER_NEKO, SpawnPlacementTypes.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, NekoSpawnRules::canAdventurerSpawn);
+        SpawnPlacements.register(GHOST_NEKO, SpawnPlacementTypes.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, NekoSpawnRules::canGhostSpawn);
+        SpawnPlacements.register(CRYSTAL_NEKO, SpawnPlacementTypes.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, NekoSpawnRules::canCrystalSpawn);
+        SpawnPlacements.register(FIGHTING_NEKO, SpawnPlacementTypes.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, NekoSpawnRules::canFightingSpawn);
+        // 诺艾尔猫娘不注册：只能通过 /summon 召唤
     }
 }

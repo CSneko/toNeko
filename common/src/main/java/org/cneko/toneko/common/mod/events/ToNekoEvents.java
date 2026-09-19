@@ -16,6 +16,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
@@ -171,18 +172,20 @@ public class ToNekoEvents {
     public static void onPlayerJoin(ServerGamePacketListenerImpl serverPlayNetworkHandler, PacketSender sender, MinecraftServer server) {
         ServerPlayer player = serverPlayNetworkHandler.getPlayer();
 
-        // 首次进服或丢失手册：自动给予猫猫手册
-        boolean hasGuideBook = false;
-        for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
-            if (GuideBookItem.isOurGuideBook(player.getInventory().getItem(i))) {
-                hasGuideBook = true;
-                break;
-            }
-        }
-        if (!hasGuideBook) {
+        // 猫猫手册：每个存档每人只自动发一次（标记随玩家数据持久化）。
+        // 新存档首次进服自动送；旧存档里领过的玩家不会每次进服都被塞一本，
+        // 手册丢了/放进箱子也不会再补发（避免无限刷书）。
+        INeko nekoPlayer = (INeko) player;
+        if (!nekoPlayer.hasReceivedGuideBook()) {
             ItemStack guideBook = GuideBookItem.createGuideBookStack();
+            // 未安装帕秋莉时 createGuideBookStack 返回空，此时不打标记，
+            // 以后装上手册模组进服仍能正常领到
             if (!guideBook.isEmpty()) {
-                player.getInventory().add(guideBook);
+                // 老存档里已经自己拿到手册的，只补标记、不重复发
+                if (!hasOurGuideBook(player)) {
+                    player.getInventory().add(guideBook);
+                }
+                nekoPlayer.setReceivedGuideBook(true);
             }
         }
 
@@ -202,6 +205,21 @@ public class ToNekoEvents {
                 server.getPlayerList().broadcastSystemMessage(Component.literal(msg), false);
             }
         }
+    }
+
+    /** 玩家背包（含副手/装备栏）里是否已经有本模组的猫猫手册 */
+    private static boolean hasOurGuideBook(ServerPlayer player) {
+        for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+            if (GuideBookItem.isOurGuideBook(player.getInventory().getItem(i))) {
+                return true;
+            }
+        }
+        for (EquipmentSlot slot : EquipmentSlot.values()) {
+            if (GuideBookItem.isOurGuideBook(player.getItemBySlot(slot))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static void onPlayerQuit(ServerGamePacketListenerImpl serverPlayNetworkHandler, MinecraftServer server) {

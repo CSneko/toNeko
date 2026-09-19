@@ -5,7 +5,9 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.sprite.SpriteId;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import org.cneko.toneko.common.mod.items.ShengDengItem;
@@ -60,12 +62,16 @@ public class ShengDengSpecialModel implements net.minecraft.client.renderer.spec
 
     /** 图集里取凳面贴图精灵。 */
     private static TextureAtlasSprite atlasSprite() {
-        // 26.x：InventoryMenu.BLOCK_ATLAS 常量被移除，图集按“图集定义 id”（AtlasIds.BLOCKS）索引，
-        // texture 路径（textures/atlas/blocks.png）旧写法会触发 getAtlasOrThrow 的 IllegalArgumentException。
-        var atlasId = Identifier.withDefaultNamespace("blocks");
+        // 26.x 取精灵的正确姿势：SpriteId =（图集“纹理”id + 精灵 id），经 SpriteGetter.get 查询，
+        // 与平台侧模型钩子（ShengDengModelHook）完全一致，找不到精灵时回退 missing sprite，不会抛异常。
+        //
+        // 易错点：AtlasManager 内部有两套键——
+        //   atlasById      : AtlasIds.BLOCKS = minecraft:blocks                  （图集“定义”id）
+        //   atlasByTexture : TextureAtlas.LOCATION_BLOCKS = minecraft:textures/atlas/blocks.png（图集“纹理”id）
+        // getAtlasOrThrow(...) 只认前者，传纹理路径（textures/atlas/blocks.png）会抛
+        // IllegalArgumentException: Invalid atlas id。SpriteId 的第一个参数用的正是后者。
         return Minecraft.getInstance().getAtlasManager()
-                .getAtlasOrThrow(atlasId)
-                .getSprite(TEXTURE);
+                .get(new SpriteId(TextureAtlas.LOCATION_BLOCKS, TEXTURE));
     }
 
     /** 画一张大排档红凳（凳面 + 4 腿 + 环形横撑 + 防滑脚垫），第 index 张（0 起）沿 Y 偏移 index 格 */

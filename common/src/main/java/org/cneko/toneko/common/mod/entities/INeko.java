@@ -57,6 +57,16 @@ public interface INeko {
     }
     default void setNekoAge(int age) {
     }
+
+    // ---- 猫猫手册发放标记（随玩家数据保存在当前存档，每个存档每人只自动发一次）----
+    default boolean hasReceivedGuideBook() {
+        return false;
+    }
+    default void setReceivedGuideBook(boolean received) {
+        // no-op — PlayerEntityMixin overrides with real storage
+    }
+    // -------------------------------------------------------------------------
+
     default int getMaxAge() {
         return 24000; // 1 game day for NekoEntity
     }
@@ -216,6 +226,8 @@ public interface INeko {
         nbt.putInt("NekoAge", this.getNekoAge());
         nbt.putString("NickName", this.getNickName());
         nbt.put("Owners", owners);
+        // 保存猫猫手册发放标记
+        nbt.putBoolean("GuideBookGiven", this.hasReceivedGuideBook());
         // 保存已访问群系
         ListTag visitedBiomesList = new ListTag();
         for (String biomeKey : this.getVisitedBiomes()) {
@@ -265,6 +277,10 @@ public interface INeko {
         }
         if (nbt.contains("NickName")){
             this.setNickName(nbt.getStringOr("NickName", ""));
+        }
+        // 加载猫猫手册发放标记（旧存档没有该字段 → 保持 false，进服时按“未发放”处理一次）
+        if (nbt.contains("GuideBookGiven")) {
+            this.setReceivedGuideBook(nbt.getBooleanOr("GuideBookGiven", false));
         }
         // 加载已访问群系
         if (nbt.contains("VisitedBiomes")) {

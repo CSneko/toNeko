@@ -64,7 +64,10 @@ public class NekoInfoScreen extends Screen {
 
     @Override
     public void extractRenderState(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float delta) {
-        this.extractBackground(guiGraphics, mouseX, mouseY, delta); // 绘制暗色遮罩
+        // 注意：背景（模糊 + 暗色遮罩）已由 Screen.extractRenderStateWithTooltipAndSubtitles
+        // 在此之前调用 extractBackground 绘制过了。这里不能再调用一次，
+        // 否则同一帧内会第二次触发 blurBeforeThisStratum，
+        // 抛出 IllegalStateException: Can only blur once per frame 导致客户端崩溃。
 
         Player player = Minecraft.getInstance().player;
         if (player == null) return;

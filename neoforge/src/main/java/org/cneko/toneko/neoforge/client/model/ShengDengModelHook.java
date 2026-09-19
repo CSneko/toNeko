@@ -1,6 +1,5 @@
 package org.cneko.toneko.neoforge.client.model;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.client.renderer.item.SpecialModelWrapper;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -27,7 +26,8 @@ public final class ShengDengModelHook {
         var models = event.getBakingResult().itemStackModels();
         if (!models.containsKey(ITEM_ID)) return;
 
-        Identifier atlasId = Identifier.withDefaultNamespace("textures/atlas/blocks.png");
+        // getTextureGetter() 固定查方块图集，参数是“精灵 id”（toneko:block/...），
+        // 不涉及图集 id——千万不要传 textures/atlas/blocks.png 之类的图集路径。
         Identifier spriteId = Identifier.fromNamespaceAndPath(Bootstrap.MODID, "block/sheng_deng_red");
         TextureAtlasSprite sprite = event.getTextureGetter().apply(spriteId);
         var bakedMaterial = new Material.Baked(sprite, true);

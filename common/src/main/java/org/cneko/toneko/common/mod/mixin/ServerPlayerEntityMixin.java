@@ -32,6 +32,9 @@ public class ServerPlayerEntityMixin {
 
         newNeko.getVisitedBiomes().clear();
         newNeko.getVisitedBiomes().addAll(((INeko) oldPlayer).getVisitedBiomes());
+
+        // 手册发放标记也要跟着走，否则死亡/换维度后会被当成“新玩家”再送一本
+        newNeko.setReceivedGuideBook(((INeko) oldPlayer).hasReceivedGuideBook());
     }
 
 }

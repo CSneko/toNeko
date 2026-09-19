@@ -70,6 +70,8 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
     List<Quirk> toneko$quirks = new ArrayList<>();
     @Unique
     Set<String> toneko$visitedBiomes = new HashSet<>();
+    @Unique
+    boolean toneko$guideBookGiven = false;
     // ---------------------------
 
     // 猫娘潜行
@@ -267,6 +269,15 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
     @Override
     public void setNickName(@NotNull String nickName) {
         toneko$nickName = nickName;
+    }
+
+    @Override
+    public boolean hasReceivedGuideBook() {
+        return toneko$guideBookGiven;
+    }
+    @Override
+    public void setReceivedGuideBook(boolean received) {
+        toneko$guideBookGiven = received;
     }
 
     // 26.x：实体序列化改为 ValueInput/ValueOutput；自有数据块经 NbtBridge 以 CompoundTag 编解码

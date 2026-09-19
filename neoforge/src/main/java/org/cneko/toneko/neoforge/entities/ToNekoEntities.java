@@ -1,13 +1,7 @@
 package org.cneko.toneko.neoforge.entities;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.tags.BiomeTags;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.SpawnPlacementTypes;
-import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
@@ -15,7 +9,6 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import org.cneko.toneko.common.mod.api.NekoSkinRegistry;
 import org.cneko.toneko.common.mod.entities.*;
 import org.cneko.toneko.common.mod.entities.boss.mouflet.MoufletNekoBoss;
-import org.cneko.toneko.common.util.ConfigUtil;
 import org.cneko.toneko.neoforge.ToNekoNeoForge;
 
 import static org.cneko.toneko.common.mod.entities.ToNekoEntities.*;
@@ -80,72 +73,15 @@ public class ToNekoEntities {
 
     @SubscribeEvent
     public static void onCreatureSpawn(RegisterSpawnPlacementsEvent event) {
+        // 生成判定逻辑统一放在 common 的 NekoSpawnRules 中，与 Fabric 侧保持一致
         event.register(ADVENTURER_NEKO_HOLDER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                (EntityType<AdventurerNeko> type, ServerLevelAccessor accessor, EntitySpawnReason spawnType, BlockPos pos, RandomSource random) -> {
-            // 樱花林、花海、草甸：95% 超高概率
-            if (accessor.getBiome(pos).is(Biomes.CHERRY_GROVE)
-                    || accessor.getBiome(pos).is(Biomes.FLOWER_FOREST)
-                    || accessor.getBiome(pos).is(Biomes.SUNFLOWER_PLAINS)
-                    || accessor.getBiome(pos).is(Biomes.MEADOW)) {
-                return random.nextFloat() < 0.95f;
-            }
-            // 广泛群系：65% 概率生成
-            if (accessor.getBiome(pos).is(BiomeTags.IS_MOUNTAIN)
-                    || accessor.getBiome(pos).is(BiomeTags.IS_FOREST)
-                    || accessor.getBiome(pos).is(BiomeTags.IS_TAIGA)
-                    || accessor.getBiome(pos).is(BiomeTags.IS_JUNGLE)
-                    || accessor.getBiome(pos).is(BiomeTags.IS_SAVANNA)
-                    || accessor.getBiome(pos).is(Biomes.PLAINS)
-                    || accessor.getBiome(pos).is(BiomeTags.IS_RIVER)
-                    || accessor.getBiome(pos).is(BiomeTags.IS_BEACH)
-                    || accessor.getBiome(pos).is(BiomeTags.IS_HILL)) {
-                return random.nextFloat() < 0.65f;
-            }
-            return false;
-        }, RegisterSpawnPlacementsEvent.Operation.OR);
+                NekoSpawnRules::canAdventurerSpawn, RegisterSpawnPlacementsEvent.Operation.OR);
         event.register(GHOST_NEKO_HOLDER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                (EntityType<GhostNekoEntity> type, ServerLevelAccessor accessor, EntitySpawnReason spawnType, BlockPos pos, RandomSource random) -> {
-            // 樱花林、黑森林、红树林沼泽：75% 高概率
-            if (accessor.getBiome(pos).is(Biomes.CHERRY_GROVE)
-                    || accessor.getBiome(pos).is(Biomes.DARK_FOREST)
-                    || accessor.getBiome(pos).is(Biomes.MANGROVE_SWAMP)) {
-                return random.nextFloat() < 0.75f;
-            }
-            // 神秘地带 + 森林针叶林：50% 概率生成
-            if (accessor.getBiome(pos).is(BiomeTags.ALLOWS_SURFACE_SLIME_SPAWNS)
-                    || accessor.getBiome(pos).is(BiomeTags.HAS_JUNGLE_TEMPLE)
-                    || accessor.getBiome(pos).is(BiomeTags.HAS_NETHER_FOSSIL)
-                    || accessor.getBiome(pos).is(BiomeTags.HAS_SWAMP_HUT)
-                    || accessor.getBiome(pos).is(BiomeTags.HAS_ANCIENT_CITY)
-                    || accessor.getBiome(pos).is(BiomeTags.IS_FOREST)
-                    || accessor.getBiome(pos).is(BiomeTags.IS_TAIGA)) {
-                return random.nextFloat() < 0.5f;
-            }
-            return false;
-        }, RegisterSpawnPlacementsEvent.Operation.OR);
+                NekoSpawnRules::canGhostSpawn, RegisterSpawnPlacementsEvent.Operation.OR);
         event.register(CRYSTAL_NEKO_HOLDER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                (EntityType<CrystalNekoEntity> type, ServerLevelAccessor accessor, EntitySpawnReason spawnType, BlockPos pos, RandomSource random) -> {
-            if (ConfigUtil.IS_BIRTHDAY) {
-                // 樱花林、花海、草甸：95% 超高概率
-                if (accessor.getBiome(pos).is(Biomes.CHERRY_GROVE)
-                        || accessor.getBiome(pos).is(Biomes.FLOWER_FOREST)
-                        || accessor.getBiome(pos).is(Biomes.MEADOW)) {
-                    return random.nextFloat() < 0.95f;
-                }
-                // 全群系：50% 概率生成
-                return random.nextFloat() < 0.5f;
-            }
-            return false;
-        }, RegisterSpawnPlacementsEvent.Operation.OR);
-
+                NekoSpawnRules::canCrystalSpawn, RegisterSpawnPlacementsEvent.Operation.OR);
         event.register(FIGHTING_NEKO_HOLDER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                (EntityType<FightingNekoEntity> type, ServerLevelAccessor accessor, EntitySpawnReason spawnType, BlockPos pos, RandomSource random) -> {
-            // 地狱、古城、山地：45% 概率生成
-             return (accessor.getBiome(pos).is(BiomeTags.IS_NETHER)
-                     || accessor.getBiome(pos).is(BiomeTags.HAS_ANCIENT_CITY)
-                     || accessor.getBiome(pos).is(BiomeTags.IS_MOUNTAIN))
-                     && random.nextFloat() < 0.45f;
-        }, RegisterSpawnPlacementsEvent.Operation.OR);
+                NekoSpawnRules::canFightingSpawn, RegisterSpawnPlacementsEvent.Operation.OR);
 
         // 诺艾尔猫娘：不注册自然生成规则（无群系生成 + 无生成位置），
         // 只能通过 /summon toneko:noelle_maid_neko 命令召唤
