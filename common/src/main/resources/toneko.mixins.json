@@ -24,7 +24,8 @@
     "MushroomPlayerRidingMixin",
     "PlayerEntityMixin",
     "ServerLevelMixin",
-    "ServerPlayerEntityMixin"
+    "ServerPlayerEntityMixin",
+    "ZombieMushroomTargetMixin"
   ],
   "injectors": {
     "defaultRequire": 1

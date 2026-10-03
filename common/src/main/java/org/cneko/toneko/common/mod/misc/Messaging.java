@@ -10,6 +10,7 @@ import org.cneko.toneko.common.mod.ai.NekoTalkManager;
 import org.cneko.toneko.common.mod.api.events.ChatEvents;
 import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
+import org.cneko.toneko.common.mod.entities.MushroomGirlEntity;
 import org.cneko.toneko.common.mod.packets.NekoChatDisplayPayload;
 import org.cneko.toneko.common.mod.util.PlayerUtil;
 import org.cneko.toneko.common.util.AIUtil;
@@ -27,10 +28,15 @@ public class Messaging {
 
     private static final String PREFIX_FORMAT = "[§a%s§f§r]";
 
+    public static boolean canSpeak(INeko sender) {
+        return !(sender instanceof MushroomGirlEntity) || ConfigUtil.isMushroomMessagesEnabled();
+    }
+
     /**
      * 修改消息并发送给指定实体
      */
     public static void modifyAndSendMessage(INeko sender, String message, Entity target) {
+        if (!canSpeak(sender)) return;
         // 1. 获取处理后的文本
         String processedMsg = prepareMessage(message, sender);
         String finalMsgString = formatMessage(processedMsg, sender);
@@ -48,6 +54,7 @@ public class Messaging {
      * 修改消息并发送给所有人
      */
     public static void modifyAndSendMessageToAll(INeko sender, String message) {
+        if (!canSpeak(sender)) return;
         String processedMsg = prepareMessage(message, sender);
         String finalMsgString = formatMessage(processedMsg, sender);
 
@@ -121,7 +128,7 @@ public class Messaging {
      * @param displayText 清理掉动作 JSON 后的回复文本（可为空，空则不发）
      */
     public static void sendNekoChat(ServerPlayer player, INeko neko, String displayText) {
-        if (displayText == null || displayText.isEmpty()) return;
+        if (!canSpeak(neko) || displayText == null || displayText.isEmpty()) return;
         // 显示给玩家的文本不含 [对X] 内部格式标记（模型可能误输出）
         String r = format(AIUtil.removeReplyPrefixes(displayText), neko,
                 Collections.singletonList(LanguageUtil.prefix), ConfigUtil.getChatFormat());
@@ -140,7 +147,7 @@ public class Messaging {
      * center 可为猫娘（猫娘间对话以说话猫娘为中心广播）。
      */
     public static void sendNekoChatInRange(Entity center, INeko neko, String displayText, double range) {
-        if (displayText == null || displayText.isEmpty()) return;
+        if (!canSpeak(neko) || displayText == null || displayText.isEmpty()) return;
         double rangeSq = range * range;
         for (ServerPlayer player : PlayerUtil.getPlayerList()) {
             if (player == center || center.distanceToSqr(player) <= rangeSq) {

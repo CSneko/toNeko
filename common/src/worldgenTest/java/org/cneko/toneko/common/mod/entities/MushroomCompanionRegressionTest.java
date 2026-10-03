@@ -47,6 +47,12 @@ import net.minecraft.util.ProblemReporter;
 import net.minecraft.util.RandomSource;
 import org.cneko.toneko.common.mod.entities.ai.NekoBrain;
 import org.cneko.toneko.common.mod.entities.ai.BehaviorPriority;
+import org.cneko.toneko.common.mod.entities.ai.goal.ZombieMushroomTargetGoal;
+import org.cneko.toneko.common.mod.misc.Messaging;
+import org.cneko.toneko.common.util.ConfigUtil;
+import org.cneko.toneko.common.util.JsonConfiguration;
+import net.minecraft.world.entity.ai.sensing.Sensing;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.phys.Vec3;
 import sun.misc.Unsafe;
 import java.util.Optional;
@@ -355,7 +361,8 @@ public final class MushroomCompanionRegressionTest {
         checkTimidReactions(world, player);
         checkProjectileAim();
         checkGrowth(world, player);
-        System.out.println("Mushroom companion regression: " + checks + " checks passed with production riding and projectile mixins applied.");
+        checkTemporaryBehavior(world, player);
+        System.out.println("Mushroom companion regression: " + checks + " checks passed with production riding, projectile and zombie targeting mixins applied.");
     }
 
     private static void checkTimidReactions(WorldProbe world, PlayerProbe player) throws Exception {
@@ -597,6 +604,113 @@ public final class MushroomCompanionRegressionTest {
         world.players = List.of(player); world.dayTime = 0;
     }
 
+    private static void checkTemporaryBehavior(WorldProbe world, PlayerProbe player) throws Exception {
+        var previousConfig = ConfigUtil.CONFIG;
+        try {
+            ConfigUtil.CONFIG = new JsonConfiguration("{}");
+            var mushroom = fixture(world, player);
+            Component original = Component.translatable("name.toneko.mushroom_girl.yelu_zi");
+            Component fixed = Component.translatable("name.toneko.mushroom_girl.ziye_bai");
+            mushroom.setCustomName(original);
+            mushroom.setNickName("nickname");
+            mushroom.updateConfiguredName();
+            check(fixed.equals(mushroom.getCustomName()) && mushroom.getNickName().isEmpty(),
+                    "Default name lock synchronizes the actual name and suppresses nickname overrides");
+            mushroom.updateConfiguredName();
+            var out = TagValueOutput.createWithoutContext(ProblemReporter.DISCARDING);
+            out.store("MushroomState", CompoundTag.CODEC, mushroom.saveMushroomState());
+            var saved = TagValueInput.create(ProblemReporter.DISCARDING, RegistryAccess.EMPTY, out.buildResult())
+                    .read("MushroomState", CompoundTag.CODEC).orElseThrow();
+            var loaded = fixture(world, player);
+            loaded.setCustomName(fixed); loaded.readMushroomState(saved);
+            ConfigUtil.CONFIG.set("mushroom_girl.fixed_name", false);
+            loaded.updateConfiguredName(); mushroom.updateConfiguredName();
+            check(original.equals(loaded.getCustomName()) && original.equals(mushroom.getCustomName()),
+                    "Disabling the name lock restores original names after repeated updates and a native save round trip");
+            check(mushroom.getNickName().equals("nickname"), "Disabling the lock also restores the original nickname");
+            var oldSave = fixture(world, player); oldSave.setCustomName(original);
+            ConfigUtil.CONFIG.set("mushroom_girl.fixed_name", true); oldSave.readMushroomState(new CompoundTag());
+            ConfigUtil.CONFIG.set("mushroom_girl.fixed_name", false); oldSave.updateConfiguredName();
+            check(original.equals(oldSave.getCustomName()), "Old saves without name backups keep their original names");
+            check(!Messaging.canSpeak(mushroom), "Mushroom speech defaults to muted");
+            // These calls must return before formatting or touching a network connection.
+            Messaging.sendNekoChat(null, mushroom, "muted reply");
+            Messaging.sendNekoChatInRange(null, mushroom, "muted broadcast", 64);
+            Messaging.modifyAndSendMessage(mushroom, "muted interaction", null);
+            Messaging.modifyAndSendMessageToAll(mushroom, "muted interaction broadcast");
+            var neko = (CrystalNekoEntity) fixtures.allocateInstance(CrystalNekoEntity.class);
+            check(Messaging.canSpeak(neko), "The mushroom mute switch does not silence other nekos");
+            ConfigUtil.CONFIG.set("mushroom_girl.messages.enable", true);
+            check(Messaging.canSpeak(mushroom), "The same entity can speak again when the switch is enabled");
+
+            var zombie = (TargetingZombieProbe) fixtures.allocateInstance(TargetingZombieProbe.class);
+            field(zombie, Entity.class, "level", world);
+            field(zombie, Entity.class, "type", EntityType.ZOMBIE);
+            field(zombie, Entity.class, "position", new Vec3(0.5, 64, 0.5));
+            field(zombie, Entity.class, "random", RandomSource.create(1));
+            field(zombie, Mob.class, "goalSelector", new GoalSelector());
+            field(zombie, Mob.class, "targetSelector", new GoalSelector());
+            field(zombie, Mob.class, "navigation", fixtures.allocateInstance(NavigationProbe.class));
+            zombie.setBoundingBox(new AABB(0, 64, 0, 1, 66, 1));
+            zombie.attributes = new AttributeMap(Zombie.createAttributes().build());
+            zombie.sensing = new Sensing(zombie); zombie.visible = true;
+            zombie.installNativeGoals();
+            var installed = zombie.targets().getAvailableGoals().stream()
+                    .filter(g -> g.getGoal() instanceof ZombieMushroomTargetGoal).toList();
+            check(installed.size() == 1 && installed.getFirst().getPriority() == 1,
+                    "The production mixin adds exactly one mushroom target goal at priority 1");
+            check(zombie.targets().getAvailableGoals().stream()
+                    .filter(g -> g.getGoal() instanceof NearestAttackableTargetGoal && !(g.getGoal() instanceof ZombieMushroomTargetGoal))
+                    .allMatch(g -> g.getPriority() > installed.getFirst().getPriority()),
+                    "Mushroom targeting precedes vanilla player and village targets");
+            var goal = (ZombieMushroomTargetGoal) installed.getFirst().getGoal();
+            world.mushrooms = List.of(mushroom);
+            check(goal.canUse(), "A visible mushroom in vanilla follow range is found by the actual native targeting code");
+            zombie.visible = false; zombie.sensing.tick();
+            check(!goal.canUse(), "Mushroom targeting does not see through walls");
+            zombie.visible = true; zombie.sensing.tick();
+            zombie.attributes.getInstance(net.minecraft.world.entity.ai.attributes.Attributes.FOLLOW_RANGE).setBaseValue(2);
+            check(!goal.canUse(), "Reduced vanilla follow range also limits mushroom targeting");
+            zombie.attributes.getInstance(net.minecraft.world.entity.ai.attributes.Attributes.FOLLOW_RANGE).setBaseValue(35);
+            world.mushrooms = List.of();
+            var selector = new GoalSelector();
+            selector.addGoal(2, new Goal() {
+                { setFlags(java.util.EnumSet.of(Flag.TARGET)); }
+                @Override public boolean canUse() { return true; }
+                @Override public void start() { zombie.setTarget(player); }
+            });
+            selector.addGoal(1, goal); selector.tick();
+            check(zombie.getTarget() == player, "Vanilla-priority targets remain usable when no mushroom is available");
+            world.mushrooms = List.of(mushroom); zombie.sensing.tick(); selector.tick();
+            check(zombie.getTarget() == mushroom, "The native goal selector switches from a player target to a nearby mushroom");
+            ConfigUtil.CONFIG.set("mushroom_girl.zombie_targeting", false);
+            check(!goal.canUse() && !goal.canContinueToUse(), "Disabling targeting prevents new starts and stops an existing pursuit");
+            selector.tick();
+            check(zombie.getTarget() == player, "Disabling targeting releases the target flag to vanilla-priority goals");
+        } finally {
+            ConfigUtil.CONFIG = previousConfig;
+            world.mushrooms = List.of();
+        }
+    }
+
+    private static final class TargetingZombieProbe extends Zombie {
+        AttributeMap attributes;
+        Sensing sensing;
+        LivingEntity target;
+        boolean visible;
+        private TargetingZombieProbe() { super(null, null); }
+        void installNativeGoals() { super.registerGoals(); }
+        GoalSelector targets() { return targetSelector; }
+        @Override public AttributeMap getAttributes() { return attributes; }
+        @Override public Sensing getSensing() { return sensing; }
+        @Override public LivingEntity getTarget() { return target; }
+        @Override public void setTarget(LivingEntity value) { target = value; }
+        @Override public boolean hasLineOfSight(Entity entity) { return visible; }
+        @Override public boolean canAttack(LivingEntity entity) { return entity.isAlive(); }
+        @Override public net.minecraft.world.scores.PlayerTeam getTeam() { return null; }
+        @Override public double getEyeY() { return getY() + 1.6; }
+    }
+
     private static final class MushroomProbe extends MushroomGirlEntity {
         int trust;
         boolean drowsy;
@@ -622,6 +736,7 @@ public final class MushroomCompanionRegressionTest {
         @Override public int getFamiliarity(UUID player) { return actualRelationships ? super.getFamiliarity(player) : trust; }
         @Override public boolean isDrowsy() { return drowsy; }
         @Override public boolean isAlive() { return true; }
+        @Override public net.minecraft.world.scores.PlayerTeam getTeam() { return null; }
         @Override public float getHealth() { return health; }
         @Override public void setHealth(float value) { health = Math.clamp(value, 0, getMaxHealth()); }
         @Override public boolean isLookingAtFace(net.minecraft.world.entity.player.Player player) { return looking; }
@@ -678,6 +793,7 @@ public final class MushroomCompanionRegressionTest {
         long time, dayTime;
         boolean client;
         List<MonsterProbe> monsters = List.of();
+        List<MushroomProbe> mushrooms = List.of();
         int steamPuffs;
         private WorldProbe() { super(null, null, null, null, null, null, false, 0, java.util.List.of(), false); }
         @Override public boolean isClientSide() { return client; }
@@ -694,7 +810,8 @@ public final class MushroomCompanionRegressionTest {
             return 0;
         }
         @Override public <T extends Entity> List<T> getEntitiesOfClass(Class<T> type,AABB bounds,java.util.function.Predicate<? super T> predicate) {
-            return monsters == null ? List.of() : monsters.stream().filter(type::isInstance).map(type::cast)
+            return java.util.stream.Stream.concat(monsters == null ? java.util.stream.Stream.empty() : monsters.stream(),
+                            mushrooms == null ? java.util.stream.Stream.empty() : mushrooms.stream()).filter(type::isInstance).map(type::cast)
                     .filter(e -> bounds.contains(e.position())).filter(predicate).toList();
         }
         @Override public BlockState getBlockState(BlockPos pos) {

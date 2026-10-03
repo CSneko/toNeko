@@ -300,6 +300,11 @@ public class ToNekoNetworkEvents {
     public static void onChatWithNeko(ChatWithNekoPayload payload, ServerPlayNetworking.Context context) {
         processNekoInteractive(context.player(), payload.uuid(), neko -> {
             if (neko instanceof org.cneko.toneko.common.mod.entities.MushroomGirlEntity mushroom) mushroom.recordInteraction(context.player(), 4);
+            if (!Messaging.canSpeak(neko)) {
+                // Finish the chat screen's pending stream without displaying a reply.
+                ServerPlayNetworking.send(context.player(), new ChatStreamPayload(neko.getUUID().toString(), "", true, null));
+                return;
+            }
             if (!ConfigUtil.isAIEnabled()){
                 context.player().sendSystemMessage(Component.translatable("messages.toneko.ai.not_enabled"));
             } else {
@@ -310,7 +315,7 @@ public class ToNekoNetworkEvents {
                     public void onChunk(String chunk) {
                         // AI回调在后台线程执行，网络发送必须切回服务器主线程；玩家可能已断线
                         player.level().getServer().execute(() -> {
-                            if (player.connection == null) return;
+                            if (!Messaging.canSpeak(neko) || player.connection == null) return;
                             try {
                                 ServerPlayNetworking.send(player, new ChatStreamPayload(nekoUuid, chunk, false, null));
                             } catch (Exception ignored) {
@@ -331,6 +336,7 @@ public class ToNekoNetworkEvents {
                                     // 玩家断线等，忽略
                                 }
                             }
+                            if (!Messaging.canSpeak(neko)) return;
                             // 解析并执行 AI 动作（移动/给予物品），聊天窗口显示清理掉 JSON 代码块后的文本
                             String displayText = NekoActionExecutor.process(neko, player, response.getResponse());
                             // 历史存储以猫娘的持久 AI 存储 ID 为 key（实体 UUID 会变化），payload 仍用实体 UUID 供客户端匹配
@@ -340,6 +346,7 @@ public class ToNekoNetworkEvents {
                                 int totalDelay = spawnFloatingText(neko, response, world);
                                 TickTaskQueue task = new TickTaskQueue();
                                 task.addTask(totalDelay, () -> {
+                                    if (!Messaging.canSpeak(neko)) return;
                                     // AI 回复显示统一发包，客户端按配置选择聊天栏/气泡
                                     Messaging.sendNekoChat(player, neko, displayText);
                                     sendHistory.run();
@@ -362,11 +369,13 @@ public class ToNekoNetworkEvents {
                             // 屏幕显示错误行（若打开着对应聊天屏）
                             if (player.connection != null) {
                                 try {
-                                    ServerPlayNetworking.send(player, new ChatStreamPayload(nekoUuid, "", true, error.getResponse()));
+                                    ServerPlayNetworking.send(player, new ChatStreamPayload(nekoUuid, "", true,
+                                            Messaging.canSpeak(neko) ? error.getResponse() : null));
                                 } catch (Exception ignored) {
                                     // 玩家断线等，忽略
                                 }
                             }
+                            if (!Messaging.canSpeak(neko)) return;
                             // AI 错误提示走统一显示包（客户端按配置选择聊天栏/气泡）
                             String displayText = NekoActionExecutor.process(neko, player, error.getResponse());
                             Messaging.sendNekoChat(player, neko, displayText);

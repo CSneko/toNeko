@@ -8,7 +8,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -55,6 +57,7 @@ import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import org.cneko.toneko.common.mod.misc.Messaging;
 import org.cneko.toneko.common.mod.entities.ai.BehaviorPriority;
 import org.cneko.toneko.common.util.LanguageUtil;
+import org.cneko.toneko.common.util.ConfigUtil;
 
 import java.util.*;
 
@@ -65,6 +68,8 @@ public class MushroomGirlEntity extends NekoEntity {
     public static final TagKey<Biome> HABITATS = TagKey.create(Registries.BIOME, id("mushroom_girl_habitats"));
     public static final List<String> NAMES = List.of("ziye_bai", "yelu_zi", "yueai_bai", "muyu_ling",
             "xingtai_mian", "qinglu_wan", "zixia_shuang", "baiwu_yao", "yuyue_jin", "mushuang_yin");
+    private static final Component FIXED_NAME = Component.translatable("name.toneko.mushroom_girl.ziye_bai");
+    private static final EntityDataAccessor<Boolean> NAME_FIXED = SynchedEntityData.defineId(MushroomGirlEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> RESTING = SynchedEntityData.defineId(MushroomGirlEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> DROWSY = SynchedEntityData.defineId(MushroomGirlEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> STAYING = SynchedEntityData.defineId(MushroomGirlEntity.class, EntityDataSerializers.BOOLEAN);
@@ -103,12 +108,14 @@ public class MushroomGirlEntity extends NekoEntity {
     private int admirationTicks, gazeTicks, blushTicks;
     private boolean bedSleepVisit;
     private int regenerationTicks, regenerationDelay, companionshipTicks, combatExperienceCooldown;
+    private Component originalName;
 
     private record ObservedThreat(LivingEntity entity, int lastSeen) { }
 
     public MushroomGirlEntity(EntityType<? extends NekoEntity> type, Level level) {
         super(type, level);
         setCustomName(Component.translatable("name.toneko.mushroom_girl." + NAMES.get(random.nextInt(NAMES.size()))));
+        if (!level.isClientSide()) updateConfiguredName();
         setNekoEnergy(getMaxNekoEnergy());
         refreshDimensions();
     }
@@ -117,6 +124,7 @@ public class MushroomGirlEntity extends NekoEntity {
 
     @Override protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
+        builder.define(NAME_FIXED, false);
         builder.define(RESTING, false);
         builder.define(DROWSY, false);
         builder.define(STAYING, false);
@@ -126,6 +134,29 @@ public class MushroomGirlEntity extends NekoEntity {
         builder.define(REACTION, CALM);
         builder.define(EMOTION, NEUTRAL);
         builder.define(GROWTH_XP, 0);
+    }
+
+    // Keep the original component, including custom name tags, so this temporary lock is reversible.
+    void updateConfiguredName() {
+        boolean fixed = ConfigUtil.isMushroomNameFixed();
+        if (fixed && !FIXED_NAME.equals(getCustomName())) {
+            originalName = getCustomName();
+            setCustomName(FIXED_NAME.copy());
+        } else if (!fixed && originalName != null) {
+            setCustomName(originalName);
+            originalName = null;
+        }
+        entityData.set(NAME_FIXED, fixed);
+    }
+
+    @Override public String getNickName() {
+        return entityData.get(NAME_FIXED) ? "" : super.getNickName();
+    }
+
+    private void sendInteractionMessage(Player player, Component message, boolean overlay) {
+        if (!ConfigUtil.isMushroomMessagesEnabled()) return;
+        if (overlay) player.sendOverlayMessage(message);
+        else player.sendSystemMessage(message);
     }
 
     public boolean isResting() { return entityData.get(RESTING); }
@@ -184,12 +215,12 @@ public class MushroomGirlEntity extends NekoEntity {
         if (mode == NONE) return;
         noteAttention(player);
         if (mode != CARRIED && !isPlayerLying(player)) {
-            player.sendOverlayMessage(Component.translatable("message.toneko.mushroom_girl.lie_first"));
+            sendInteractionMessage(player, Component.translatable("message.toneko.mushroom_girl.lie_first"), true);
             return;
         }
         if (!requireFamiliarity(player, MushroomRules.companionFamiliarity(mode == CARRIED, MushroomBedRest.bed(player).isPresent()))) return;
         if (getVehicle() == player) { setCompanionPose(mode); syncCompanionTo(player); return; }
-        if (!joinPlayer(player, mode)) player.sendOverlayMessage(Component.translatable("message.toneko.mushroom_girl.companion_unavailable"));
+        if (!joinPlayer(player, mode)) sendInteractionMessage(player, Component.translatable("message.toneko.mushroom_girl.companion_unavailable"), true);
     }
 
     private boolean joinPlayer(ServerPlayer player, byte mode) {
@@ -298,7 +329,7 @@ public class MushroomGirlEntity extends NekoEntity {
     }
 
     private void say(ServerPlayer player, String category) {
-        if (LanguageUtil.LANG == null || !player.isAlive()) return;
+        if (!ConfigUtil.isMushroomMessagesEnabled() || LanguageUtil.LANG == null || !player.isAlive()) return;
         String key = "dialogue.toneko.mushroom_girl." + category + "." + random.nextInt(3);
         Messaging.sendNekoChat(player, this, LanguageUtil.translatable(key));
         dialogueCooldown = 900 + random.nextInt(900);
@@ -316,7 +347,7 @@ public class MushroomGirlEntity extends NekoEntity {
     }
 
     @Override protected void tickProactiveSpeech() {
-        if (dialogueCooldown > 0 || !isAlive() || isInDistress()) return;
+        if (!ConfigUtil.isMushroomMessagesEnabled() || dialogueCooldown > 0 || !isAlive() || isInDistress()) return;
         ServerPlayer player = nearbyListener(isResting() ? 3 : 8);
         if (player == null) { lastGreetedPlayer = null; return; }
         String category;
@@ -404,11 +435,11 @@ public class MushroomGirlEntity extends NekoEntity {
         syncFamiliarity();
         setPersistenceRequired();
         if (old < MushroomRules.FRIEND_FAMILIARITY && score >= MushroomRules.FRIEND_FAMILIARITY) {
-            player.sendSystemMessage(Component.translatable("message.toneko.mushroom_girl.friend", getName()));
+            sendInteractionMessage(player, Component.translatable("message.toneko.mushroom_girl.friend", getName()), false);
             if (player instanceof ServerPlayer sp) say(sp, "greet_friend");
         }
         if (old < MushroomRules.MAX_FAMILIARITY && score == MushroomRules.MAX_FAMILIARITY) {
-            player.sendSystemMessage(Component.translatable("message.toneko.mushroom_girl.affection_unlocked", getName()));
+            sendInteractionMessage(player, Component.translatable("message.toneko.mushroom_girl.affection_unlocked", getName()), false);
         }
     }
 
@@ -421,7 +452,7 @@ public class MushroomGirlEntity extends NekoEntity {
 
     public boolean requireFamiliarity(Player player, int threshold) {
         if (getFamiliarity(player.getUUID()) >= threshold) return true;
-        if (!level().isClientSide()) player.sendOverlayMessage(Component.translatable("message.toneko.mushroom_girl.shy", getName()));
+        if (!level().isClientSide()) sendInteractionMessage(player, Component.translatable("message.toneko.mushroom_girl.shy", getName()), true);
         return false;
     }
 
@@ -437,8 +468,8 @@ public class MushroomGirlEntity extends NekoEntity {
         entityData.set(STAYING, !isStaying());
         getNekoBrain().stopMoving(this);
         getNavigation().stop();
-        player.sendOverlayMessage(Component.translatable(isStaying()
-                ? "message.toneko.mushroom_girl.stay" : "message.toneko.mushroom_girl.roam", getName()));
+        sendInteractionMessage(player, Component.translatable(isStaying()
+                ? "message.toneko.mushroom_girl.stay" : "message.toneko.mushroom_girl.roam", getName()), true);
     }
 
     @Override public void followOwner(Player player, double maxDistance, double speed) {
@@ -487,7 +518,7 @@ public class MushroomGirlEntity extends NekoEntity {
                 wakeUp();
                 recordInteraction(player, 4);
                 playExpressAnim("yawn");
-                player.sendOverlayMessage(Component.translatable("message.toneko.mushroom_girl.wake", getName()));
+                sendInteractionMessage(player, Component.translatable("message.toneko.mushroom_girl.wake", getName()), true);
                 if (player instanceof ServerPlayer sp) say(sp, "drowsy");
             } else if (player.isShiftKeyDown()) {
                 if (requireFamiliarity(player, MushroomRules.HUG_FAMILIARITY)) {
@@ -498,7 +529,7 @@ public class MushroomGirlEntity extends NekoEntity {
                 if (player instanceof ServerPlayer sp) openInteractiveMenu(sp);
                 if (getFamiliarity(player.getUUID()) >= MushroomRules.PET_FAMILIARITY) {
                     playExpressAnim("happy_jump");
-                    player.sendOverlayMessage(Component.translatable("message.toneko.mushroom_girl.pet", getName()));
+                    sendInteractionMessage(player, Component.translatable("message.toneko.mushroom_girl.pet", getName()), true);
                 }
             }
         } else if (player instanceof ServerPlayer sp) {
@@ -518,8 +549,8 @@ public class MushroomGirlEntity extends NekoEntity {
         playExpressAnim(coffee ? "happy_jump" : "shy");
         if (level() instanceof ServerLevel server) server.sendParticles(ParticleTypes.HEART,
                 getX(), getY() + getScale(), getZ(), 5, 0.3, 0.3, 0.3, 0.02);
-        player.sendOverlayMessage(Component.translatable(coffee
-                ? "message.toneko.mushroom_girl.coffee" : "message.toneko.mushroom_girl.feed", getName()));
+        sendInteractionMessage(player, Component.translatable(coffee
+                ? "message.toneko.mushroom_girl.coffee" : "message.toneko.mushroom_girl.feed", getName()), true);
         if (player instanceof ServerPlayer sp) say(sp, coffee ? "coffee" : "feed");
         return true;
     }
@@ -567,6 +598,7 @@ public class MushroomGirlEntity extends NekoEntity {
         if (level().isClientSide()) {
             if (clientSpeechTicks > 0) clientSpeechTicks--;
         } else {
+            updateConfiguredName();
             if (wakeTicks > 0) wakeTicks--;
             if (coffeeTicks > 0) coffeeTicks--;
             if (birthCooldown > 0) birthCooldown--;
@@ -1240,6 +1272,8 @@ public class MushroomGirlEntity extends NekoEntity {
 
     CompoundTag saveMushroomState() {
         CompoundTag data = new CompoundTag();
+        if (originalName != null) ComponentSerialization.CODEC.encodeStart(NbtOps.INSTANCE, originalName)
+                .result().ifPresent(name -> data.put("OriginalName", name));
         data.putBoolean("Resting", isResting());
         data.putBoolean("Drowsy", isDrowsy());
         data.putInt("WakeTicks", wakeTicks);
@@ -1289,6 +1323,10 @@ public class MushroomGirlEntity extends NekoEntity {
     }
 
     void readMushroomState(CompoundTag data) {
+        originalName = data.contains("OriginalName")
+                ? ComponentSerialization.CODEC.parse(NbtOps.INSTANCE, data.get("OriginalName")).result().orElse(null)
+                : null;
+        updateConfiguredName();
         wakeTicks = Math.clamp(data.getIntOr("WakeTicks", 0), 0, MushroomRules.WAKE_TICKS);
         coffeeTicks = Math.clamp(data.getIntOr("CoffeeTicks", 0), 0, MushroomRules.COFFEE_TICKS);
         birthCooldown = Math.clamp(data.getIntOr("BirthCooldown", 0), 0, MushroomRules.BIRTH_COOLDOWN);

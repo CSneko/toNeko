@@ -75,7 +75,7 @@ public final class NekoTalkManager {
      * @param text    发言文本（广播的显示文本）
      */
     public static void onNekoSpeaks(NekoEntity speaker, String text) {
-        if (!ConfigUtil.isNekoTalkEnabled()) return;
+        if (!Messaging.canSpeak(speaker) || !ConfigUtil.isNekoTalkEnabled()) return;
         if (text == null || text.isEmpty()) {
             // 无正文不发话：清掉未消费的定向请求
             directedPending.remove(speaker.getUUID());
@@ -120,7 +120,8 @@ public final class NekoTalkManager {
     private static NekoEntity findNamedTarget(NekoEntity speaker, String text, Level level) {
         AABB box = speaker.getBoundingBox().inflate(TALK_RANGE);
         // getEntities(except=speaker, ...)：自动排除说话者自己
-        List<Entity> found = level.getEntities(speaker, box, e -> e instanceof NekoEntity n && n.isAlive());
+        List<Entity> found = level.getEntities(speaker, box,
+                e -> e instanceof NekoEntity n && n.isAlive() && Messaging.canSpeak(n));
         found.sort(Comparator.comparingDouble(e -> speaker.distanceToSqr(e.getX(), e.getY(), e.getZ())));
 
         long now = System.currentTimeMillis();
@@ -154,6 +155,7 @@ public final class NekoTalkManager {
     /** 延迟后的回话：先校验再调 AI，像玩家一样走现有链路 */
     private static void doReply(NekoEntity speaker, NekoEntity target, String text) {
         pendingReplies.remove(target.getUUID());
+        if (!Messaging.canSpeak(speaker) || !Messaging.canSpeak(target)) return;
         // 说话者或回话者已死亡/移除 → 取消（没听到）
         if (!speaker.isAlive() || speaker.isRemoved()) return;
         if (!target.isAlive() || target.isRemoved()) return;
@@ -178,7 +180,7 @@ public final class NekoTalkManager {
                     // AI 回调在后台线程执行，切回服务器主线程再发消息
                     ServerLevel sl = (ServerLevel) target.level();
                     sl.getServer().execute(() -> {
-                        if (!target.isAlive() || target.isRemoved()) return;
+                        if (!Messaging.canSpeak(target) || !target.isAlive() || target.isRemoved()) return;
                         // 猫娘间对话不执行动作（无玩家目标），只清理 JSON 动作块取显示文本
                         String displayText = NekoActionParser.parse(response.getResponse()).cleanedText();
                         if (displayText == null || displayText.isEmpty()) return;
@@ -204,6 +206,7 @@ public final class NekoTalkManager {
      * 超时 30 秒取消。回话与点名对话共用链路（3 秒反应延迟/范围/轮数/冷却/去重）。
      */
     private static void onNekoDirectedTalk(NekoEntity speaker, NekoEntity target, String text) {
+        if (!Messaging.canSpeak(speaker) || !Messaging.canSpeak(target)) return;
         if (!ConfigUtil.isNekoTalkEnabled()) return;
         if (text == null || text.isEmpty()) return;
         if (!speaker.isAlive() || speaker.isRemoved() || !target.isAlive() || target.isRemoved()) return;

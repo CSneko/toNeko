@@ -29,6 +29,16 @@ public class ConfigUtil {
             .addString("chat.welcome.message","§d%s §e加入了服务器 §d❤",null,
                     "猫娘加入欢迎消息，%s=玩家名",
                     "Neko join welcome message, %s=player name")
+            // ===== 蘑菇娘临时行为开关 =====
+            .addBoolean("mushroom_girl.messages.enable", false, null,
+                    "启用蘑菇娘的台词、互动消息与 AI 回复（暂时关闭，开启可恢复）",
+                    "Enable mushroom girl dialogue, interaction messages and AI replies")
+            .addBoolean("mushroom_girl.fixed_name", true, null,
+                    "将蘑菇娘的名字暂时固定为紫夜白，关闭后恢复各自原名",
+                    "Temporarily name all mushroom girls Ziye Bai; disable to restore their original names")
+            .addBoolean("mushroom_girl.zombie_targeting", true, null,
+                    "让僵尸优先主动攻击蘑菇娘，关闭可恢复原版索敌",
+                    "Let zombies prefer mushroom girls as targets; disable to restore vanilla targeting")
             // ===== AI 配置 =====
             .addBoolean("ai.enable",false,AI_URL,
                     "是否启用AI",
@@ -319,6 +329,16 @@ public class ConfigUtil {
     }
     public static boolean isStatsEnable() {
         return CONFIG.getBooleanOr("stats", false);
+    }
+
+    public static boolean isMushroomMessagesEnabled() {
+        return CONFIG.getBooleanOr("mushroom_girl.messages.enable", false);
+    }
+    public static boolean isMushroomNameFixed() {
+        return !CONFIG.contains("mushroom_girl.fixed_name") || CONFIG.getBooleanOr("mushroom_girl.fixed_name", true);
+    }
+    public static boolean isMushroomZombieTargetingEnabled() {
+        return !CONFIG.contains("mushroom_girl.zombie_targeting") || CONFIG.getBooleanOr("mushroom_girl.zombie_targeting", true);
     }
 
     // ===== AI Config accessors =====

@@ -82,7 +82,8 @@ public class CommonChatEvent {
         if (message.isEmpty()) return;
 
         // 范围内所有猫娘按距离近到远排序，按配置限制同时触发的数量
-        List<NekoEntity> nekos = EntityUtil.findNekoEntitiesInRange(sender, sender.level(), (float) NEKO_AI_RANGE);
+        List<NekoEntity> nekos = EntityUtil.findNekoEntitiesInRange(sender, sender.level(), (float) NEKO_AI_RANGE)
+                .stream().filter(Messaging::canSpeak).toList();
         int max = ConfigUtil.getAIMaxConcurrentNeko();
         if (max > 0 && nekos.size() > max) {
             nekos = new ArrayList<>(nekos.subList(0, max));
@@ -95,6 +96,7 @@ public class CommonChatEvent {
             AIUtil.sendMessage(neko.getAIStorageId(), sender.getUUID(), neko.generateAIPrompt(sender), message, response -> {
                 // AI回调在后台线程执行，切回服务器主线程再发消息
                 sender.level().getServer().execute(() -> {
+                    if (!Messaging.canSpeak(neko)) return;
                     // 解析并执行 AI 动作（移动/给予物品），回复广播给区域内玩家（与玩家消息范围一致）
                     String displayText = NekoActionExecutor.process(neko, sender, response.getResponse());
                     Messaging.sendNekoChatInRange(sender, neko, displayText, AREA_RANGE);
@@ -115,12 +117,14 @@ public class CommonChatEvent {
         String aiMessage = message.substring(prefix.length()).trim();
         if (aiMessage.isEmpty()) return;
 
-        NekoEntity neko = EntityUtil.findNearestNekoEntity(sender, sender.level(), (float) NEKO_AI_RANGE);
+        NekoEntity neko = EntityUtil.findNekoEntitiesInRange(sender, sender.level(), (float) NEKO_AI_RANGE)
+                .stream().filter(Messaging::canSpeak).findFirst().orElse(null);
         if (neko == null) return;
 
         AIUtil.sendMessage(neko.getAIStorageId(), sender.getUUID(), neko.generateAIPrompt(sender), aiMessage, response -> {
             // AI回调在后台线程执行，切回服务器主线程再发消息
             sender.level().getServer().execute(() -> {
+                if (!Messaging.canSpeak(neko)) return;
                 // 解析并执行 AI 动作（移动/给予物品），回复走统一显示包（客户端按配置显示）
                 String displayText = NekoActionExecutor.process(neko, sender, response.getResponse());
                 Messaging.sendNekoChat(sender, neko, displayText);
