@@ -33,6 +33,8 @@ public interface INeko {
         return this.getEntity() instanceof Player;
     }
 
+    default boolean supportsSexualBreeding() { return true; }
+
     default boolean allowMateIfNotNeko(){
         return false;
     }

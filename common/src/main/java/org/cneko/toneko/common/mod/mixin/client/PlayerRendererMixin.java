@@ -44,6 +44,11 @@ public class PlayerRendererMixin {
         at = @At("TAIL")
     )
     private void toneko$afterExtract(Avatar player, AvatarRenderState state, float partialTick, CallbackInfo ci) {
+        if (player instanceof net.minecraft.world.entity.player.Player resting
+                && org.cneko.toneko.common.mod.api.MushroomBedRest.restingBed(resting).isPresent()) {
+            state.bedOrientation = org.cneko.toneko.common.mod.api.MushroomBedRest.direction(resting);
+            state.eyeHeight = resting.getEyeHeight(net.minecraft.world.entity.Pose.STANDING);
+        }
         if (!ConfigUtil.isLoliHeadEnabled()) return;
         // 只有猫娘才触发萝莉头效果
         if (!(player instanceof INeko neko) || !neko.isNeko()) return;

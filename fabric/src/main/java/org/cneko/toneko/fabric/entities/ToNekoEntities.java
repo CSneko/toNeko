@@ -31,6 +31,7 @@ public class ToNekoEntities {
     }
 
     public static void init(){
+        MUSHROOM_SPORE = Registry.register(BuiltInRegistries.ENTITY_TYPE, MUSHROOM_SPORE_ID, getMushroomSpore().get());
         ADVENTURER_NEKO = Registry.register(
                 BuiltInRegistries.ENTITY_TYPE,
                 ADVENTURER_NEKO_ID,
@@ -113,6 +114,11 @@ public class ToNekoEntities {
                         .sized(0.25f, 0.25f).clientTrackingRange(4).updateInterval(20).build(key("spoiled_water_projectile_entity"))
         );
 
+        MUSHROOM_GIRL = Registry.register(BuiltInRegistries.ENTITY_TYPE, MUSHROOM_GIRL_ID,
+                org.cneko.toneko.common.mod.entities.ToNekoEntities.getMushroomGirl().get());
+        FabricDefaultAttributeRegistry.register(MUSHROOM_GIRL, MushroomGirlEntity.createMushroomAttributes());
+        org.cneko.toneko.common.mod.entities.ToNekoEntities.registerMushroomSpawns(MUSHROOM_GIRL);
+
         org.cneko.toneko.common.mod.entities.ToNekoEntities.init();
 
         // 注册皮肤
@@ -137,6 +143,8 @@ public class ToNekoEntities {
      * 注册猫娘的自然生成位置与判定规则（与 NeoForge 侧 {@code onCreatureSpawn} 保持一致）。
      */
     private static void registerSpawnPlacements() {
+        SpawnPlacements.register(MUSHROOM_GIRL, SpawnPlacementTypes.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, MushroomGirlEntity::canSpawn);
         SpawnPlacements.register(ADVENTURER_NEKO, SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, NekoSpawnRules::canAdventurerSpawn);
         SpawnPlacements.register(GHOST_NEKO, SpawnPlacementTypes.ON_GROUND,

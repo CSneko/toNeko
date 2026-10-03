@@ -15,6 +15,7 @@ import org.cneko.toneko.common.mod.client.renderers.FlySwordRenderer;
 import org.cneko.toneko.common.mod.client.renderers.GhostNekoRenderer;
 import org.cneko.toneko.common.mod.client.renderers.NekoBossRenderer;
 import org.cneko.toneko.common.mod.client.renderers.NekoRenderer;
+import org.cneko.toneko.common.mod.client.renderers.MushroomGirlRenderer;
 import org.cneko.toneko.common.mod.client.renderers.SeatRenderer;
 import org.cneko.toneko.common.mod.client.renderers.SpoiledWaterProjectileRenderer;
 import org.cneko.toneko.common.mod.client.events.ClientNetworkEvents;
@@ -46,6 +47,8 @@ public class ToNekoClient implements ClientModInitializer {
         EntityRendererRegistry.register(ToNekoEntities.MOUFLET_NEKO_BOSS, (EntityRendererProvider<? super MoufletNekoBoss>) NekoBossRenderer::new);
         EntityRendererRegistry.register(ToNekoEntities.RAVENN_ENTITY, (EntityRendererProvider<? super RavennEntity>) NekoRenderer::new);
         EntityRendererRegistry.register(ToNekoEntities.NOELLE_MAID_NEKO, (EntityRendererProvider<? super NoelleMaidNekoEntity>) NekoRenderer::new);
+        EntityRendererRegistry.register(ToNekoEntities.MUSHROOM_GIRL, MushroomGirlRenderer::new);
+        EntityRendererRegistry.register(ToNekoEntities.MUSHROOM_SPORE, net.minecraft.client.renderer.entity.NoopRenderer::new);
         EntityRendererRegistry.register(ToNekoEntities.FLY_SWORD_ENTITY, FlySwordRenderer::new);
         EntityRendererRegistry.register(ToNekoEntities.SEAT_ENTITY, SeatRenderer::new);
         EntityRendererRegistry.register(ToNekoEntities.SPOILED_WATER_PROJECTILE_ENTITY, SpoiledWaterProjectileRenderer::new);

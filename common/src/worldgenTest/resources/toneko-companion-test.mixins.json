@@ -1,0 +1,9 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "org.cneko.toneko.common.mod.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "mixins": ["MushroomPlayerRidingMixin", "HallucinationProjectileMixin"],
+  "client": ["client.BedRestBodyMixin", "client.BedRestCameraMixin", "client.BedRestWakeMixin"],
+  "injectors": {"defaultRequire": 1}
+}

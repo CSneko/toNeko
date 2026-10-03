@@ -2,6 +2,7 @@ package org.cneko.toneko.common.mod.client.screens.factories;
 
 import org.cneko.toneko.common.mod.client.screens.NekoScreenBuilder;
 public class ScreenBuilders {
+    public static final NekoScreenBuilder MUSHROOM_INTERACTION_SCREEN = MushroomScreen.create();
     public static final NekoScreenBuilder COMMON_TOOLTIP = new NekoScreenBuilder()
             .addTooltip(TooltipFactories.NAME_TOOLTIP)
             .addTooltip(TooltipFactories.MOE_TAGS_TOOLTIP)

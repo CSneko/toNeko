@@ -64,6 +64,11 @@ public class ToNekoNetworkEvents {
         ServerPlayNetworking.registerGlobalReceiver(FollowOwnerPayload.ID, ToNekoNetworkEvents::onFollowOwner);
         ServerPlayNetworking.registerGlobalReceiver(RideEntityPayload.ID, ToNekoNetworkEvents::onRideEntity);
         ServerPlayNetworking.registerGlobalReceiver(NekoPosePayload.ID, ToNekoNetworkEvents::onSetPose);
+        ServerPlayNetworking.registerGlobalReceiver(MushroomInteractionPayload.ID, (payload, context) ->
+                context.server().execute(() -> processNekoInteractive(context.player(), payload.uuid(), neko -> {
+                    if (neko instanceof org.cneko.toneko.common.mod.entities.MushroomGirlEntity mushroom)
+                        mushroom.handleCompanionAction(context.player(), payload.action());
+                })));
         ServerPlayNetworking.registerGlobalReceiver(NekoMatePayload.ID, ToNekoNetworkEvents::onBreed);
         ServerPlayNetworking.registerGlobalReceiver(ChatWithNekoPayload.ID, ToNekoNetworkEvents::onChatWithNeko);
         ServerPlayNetworking.registerGlobalReceiver(ChatHistoryRequestPayload.ID, ToNekoNetworkEvents::onChatHistoryRequest);
@@ -294,6 +299,7 @@ public class ToNekoNetworkEvents {
 
     public static void onChatWithNeko(ChatWithNekoPayload payload, ServerPlayNetworking.Context context) {
         processNekoInteractive(context.player(), payload.uuid(), neko -> {
+            if (neko instanceof org.cneko.toneko.common.mod.entities.MushroomGirlEntity mushroom) mushroom.recordInteraction(context.player(), 4);
             if (!ConfigUtil.isAIEnabled()){
                 context.player().sendSystemMessage(Component.translatable("messages.toneko.ai.not_enabled"));
             } else {
@@ -576,6 +582,10 @@ public class ToNekoNetworkEvents {
 
     public static void onSetPose(NekoPosePayload payload, ServerPlayNetworking.Context context) {
         processNekoInteractive(context.player(), payload.uuid(), neko -> {
+            if (neko instanceof org.cneko.toneko.common.mod.entities.MushroomGirlEntity mushroom) {
+                mushroom.toggleStay(context.player());
+                return;
+            }
             if (!EntityPoseManager.contains(neko)){
                 EntityPoseManager.setPose(neko, payload.pose());
             }else {
@@ -586,6 +596,7 @@ public class ToNekoNetworkEvents {
 
     public static void onRideEntity(RideEntityPayload payload, ServerPlayNetworking.Context context) {
         processNekoInteractive(context.player(), payload.uuid(), neko -> {
+           if (neko instanceof org.cneko.toneko.common.mod.entities.MushroomGirlEntity) return;
            Entity entity = findNearbyEntityByUuid(context.player(),UUID.fromString(payload.vehicleUuid()),5);
             if (entity != null){
                 if (neko.isSitting()){
@@ -892,4 +903,3 @@ public class ToNekoNetworkEvents {
         pushChatHistory(player, storageId, nekoUuid);
     }
 }
-

@@ -5,18 +5,20 @@ package org.cneko.toneko.common.mod.entities.ai;
  * 数字越小优先级越高，用于 NekoBrain 的导航仲裁。
  */
 public enum BehaviorPriority {
-    /** 逃跑、yandere防御 —— 生存本能，不可打断 */
+    /** 床上陪伴 —— 满足互动条件时最高优先级，立即抢占其它导航 */
+    COMPANION(-1),
+    /** 逃跑、yandere防御 —— 生存本能 */
     CRITICAL(0),
     /** 攻击、仇恨追击 —— 战斗状态 */
     COMBAT(1),
     /** 跟随主人、繁殖 —— 高优先级社交 */
-    HIGH(2),
+    HIGH(3),
     /** 治疗、睡觉、采集、拾取、活泼、自保、陪伴 —— 日常行为 */
-    NORMAL(3),
+    NORMAL(4),
     /** 漫游、中二、晒太阳、夜行 —— 低优先级自主行为 */
-    LOW(4),
+    LOW(5),
     /** 围观玩家、幽灵飞行 —— 最低优先级，随时可被打断 */
-    IDLE(5);
+    IDLE(6);
 
     private final int rank;
 

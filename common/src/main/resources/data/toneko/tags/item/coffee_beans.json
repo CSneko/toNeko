@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "toneko:coffee_beans",
+    "#c:coffee_beans",
+    {
+      "id": "herbalbrews:coffee_beans",
+      "required": false
+    },
+    {
+      "id": "farmersrespite:coffee_beans",
+      "required": false
+    }
+  ]
+}

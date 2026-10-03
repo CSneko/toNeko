@@ -52,6 +52,12 @@ public class ToNekoItems {
                 new FoodProperties(2, 1.0f, true)).component(DataComponents.CONSUMABLE, Consumables.DEFAULT_FOOD));
         INFINITE_CATNIP = new CatnipItem.InfiniteCatnipItem(NekoIds.itemProps("infinite_catnip").component(DataComponents.FOOD,new FoodProperties(2, 1.0f, false)).component(DataComponents.CONSUMABLE, Consumables.DEFAULT_FOOD).rarity(Rarity.UNCOMMON));
         CATNIP_SANDWICH = new CatnipItem(NekoIds.itemProps("catnip_sandwich").component(DataComponents.FOOD,new FoodProperties(10, 12f, false)).component(DataComponents.CONSUMABLE, Consumables.DEFAULT_FOOD));
+        COFFEE_BEANS = Registry.register(BuiltInRegistries.ITEM, toNekoLoc("coffee_beans"),
+                new BlockItem(ToNekoBlocks.COFFEE_CROP, NekoIds.itemProps("coffee_beans")));
+        WILD_COFFEE = Registry.register(BuiltInRegistries.ITEM, toNekoLoc("wild_coffee"),
+                new BlockItem(ToNekoBlocks.WILD_COFFEE, NekoIds.itemProps("wild_coffee")));
+        MUSHROOM_GIRL_SPAWN_EGG = Registry.register(BuiltInRegistries.ITEM, toNekoLoc("mushroom_girl_spawn_egg"),
+                new SpawnEggItem(NekoIds.itemProps("mushroom_girl_spawn_egg").spawnEgg(org.cneko.toneko.common.mod.entities.ToNekoEntities.MUSHROOM_GIRL)));
         CATNIP_SEED = new BlockItem(ToNekoBlocks.CATNIP, NekoIds.itemProps("catnip_seed"));
         WILD_CATNIP = new BlockItem(ToNekoBlocks.WILD_CATNIP, NekoIds.itemProps("wild_catnip"));
         MUSIC_DISC_KAWAII = new Item(NekoIds.itemProps("music_disc_kawaii").stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ToNekoSongs.KAWAII));
@@ -182,6 +188,9 @@ public class ToNekoItems {
             content.accept(CATNIP);
             content.accept(INFINITE_CATNIP);
             content.accept(CATNIP_SANDWICH);
+            content.accept(COFFEE_BEANS);
+            content.accept(WILD_COFFEE);
+            content.accept(MUSHROOM_GIRL_SPAWN_EGG);
             content.accept(CATNIP_SEED);
             content.accept(WILD_CATNIP);
             content.accept(ADVENTURER_NEKO_SPAWN_EGG);

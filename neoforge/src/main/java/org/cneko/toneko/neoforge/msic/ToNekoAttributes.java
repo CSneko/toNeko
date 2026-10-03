@@ -9,6 +9,7 @@ import org.cneko.toneko.common.mod.entities.CrystalNekoEntity;
 import org.cneko.toneko.common.mod.entities.FightingNekoEntity;
 import org.cneko.toneko.common.mod.entities.GhostNekoEntity;
 import org.cneko.toneko.common.mod.entities.NoelleMaidNekoEntity;
+import org.cneko.toneko.common.mod.entities.MushroomGirlEntity;
 import org.cneko.toneko.common.mod.entities.boss.mouflet.MoufletNekoBoss;
 import org.cneko.toneko.neoforge.entities.ToNekoEntities;
 
@@ -29,6 +30,7 @@ public class ToNekoAttributes {
         event.add(EntityType.PLAYER,MAX_NEKO_ENERGY);
     }
     public static void registerAttributes(EntityAttributeCreationEvent event){
+        event.put(ToNekoEntities.MUSHROOM_GIRL_HOLDER.get(), MushroomGirlEntity.createMushroomAttributes().build());
         event.put(ToNekoEntities.ADVENTURER_NEKO_HOLDER.get(), AdventurerNeko.createAdventurerNekoAttributes().build());
         event.put(ToNekoEntities.CRYSTAL_NEKO_HOLDER.get(), CrystalNekoEntity.createNekoAttributes().build());
         event.put(ToNekoEntities.GHOST_NEKO_HOLDER.get(), GhostNekoEntity.createGhostNekoAttributes().build());

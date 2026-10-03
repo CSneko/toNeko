@@ -8,6 +8,7 @@ import net.minecraft.world.effect.MobEffect;
 import static org.cneko.toneko.common.Bootstrap.MODID;
 
 public class ToNekoEffects {
+    public static MobEffect HALLUCINATION;
     public static MobEffect NEKO_EFFECT;
     public static MobEffect BEWITCHED_EFFECT;
     public static MobEffect HISS_INTIMIDATION_EFFECT;

@@ -10,6 +10,8 @@ import static org.cneko.toneko.common.mod.effects.ToNekoEffects.*;
 public class ToNekoEffectFabric {
 
     public static void init(){
+        HALLUCINATION = Registry.register(BuiltInRegistries.MOB_EFFECT,
+                org.cneko.toneko.common.mod.effects.HallucinationEffect.LOCATION, new org.cneko.toneko.common.mod.effects.HallucinationEffect());
         NEKO_EFFECT = Registry.register(BuiltInRegistries.MOB_EFFECT, ExcitingEffect.LOCATION, new ExcitingEffect());
         BEWITCHED_EFFECT = Registry.register(BuiltInRegistries.MOB_EFFECT, BewitchedEffect.LOCATION, new BewitchedEffect());
         HISS_INTIMIDATION_EFFECT = Registry.register(BuiltInRegistries.MOB_EFFECT, HissIntimidationEffect.LOCATION, new HissIntimidationEffect());

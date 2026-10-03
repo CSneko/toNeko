@@ -46,7 +46,10 @@ public class CauldronSpoilageData extends SavedData {
     private final Map<BlockPos, SpoiledWater> spoilage;
 
     private CauldronSpoilageData(Map<BlockPos, SpoiledWater> spoilage) {
-        this.spoilage = spoilage;
+        // 注意：ExtraCodecs.strictUnboundedMap 解码出来的是 ImmutableMap（内部用 ImmutableMap.builder）。
+        // 直接持有它的话，读档后第一次 setSpoilage/clearSpoilage 就会在 put/remove 上抛
+        // UnsupportedOperationException，把服务器主线程 tick 打崩，因此这里必须复制成可变 Map。
+        this.spoilage = new HashMap<>(spoilage);
     }
 
     /** SavedDataType 需要的默认构造器 */

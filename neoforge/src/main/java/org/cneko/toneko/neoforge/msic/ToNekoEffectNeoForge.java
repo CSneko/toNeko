@@ -14,12 +14,15 @@ public class ToNekoEffectNeoForge {
     public static DeferredHolder<MobEffect, ExcitingEffect> NEKO_EFFECT_HOLDER;
     public static DeferredHolder<MobEffect, BewitchedEffect> BEWITCHED_EFFECT_HOLDER;
     public static DeferredHolder<MobEffect, HissIntimidationEffect> HISS_INTIMIDATION_EFFECT_HOLDER;
+    public static DeferredHolder<MobEffect, org.cneko.toneko.common.mod.effects.HallucinationEffect> HALLUCINATION_HOLDER;
     public static void init() {
+        HALLUCINATION_HOLDER = MOB_EFFECTS.register("hallucination", org.cneko.toneko.common.mod.effects.HallucinationEffect::new);
         NEKO_EFFECT_HOLDER = MOB_EFFECTS.register("exciting", ExcitingEffect::new);
         BEWITCHED_EFFECT_HOLDER = MOB_EFFECTS.register("bewitched", BewitchedEffect::new);
         HISS_INTIMIDATION_EFFECT_HOLDER = MOB_EFFECTS.register("hiss_intimidation", HissIntimidationEffect::new);
     }
     public static void reg() {
+        org.cneko.toneko.common.mod.effects.ToNekoEffects.HALLUCINATION = HALLUCINATION_HOLDER.get();
         NEKO_EFFECT = NEKO_EFFECT_HOLDER.get();
         BEWITCHED_EFFECT = BEWITCHED_EFFECT_HOLDER.get();
         HISS_INTIMIDATION_EFFECT = HISS_INTIMIDATION_EFFECT_HOLDER.get();

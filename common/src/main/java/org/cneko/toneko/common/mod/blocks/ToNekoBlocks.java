@@ -3,6 +3,8 @@ package org.cneko.toneko.common.mod.blocks;
 import net.minecraft.world.level.block.Block;
 
 public class ToNekoBlocks {
+    public static Block COFFEE_CROP;
+    public static Block WILD_COFFEE;
     public static Block CATNIP;
     public static Block WILD_CATNIP;
     public static Block NEKO_AGGREGATOR;

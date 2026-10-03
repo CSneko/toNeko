@@ -162,6 +162,12 @@ public class ClientNetworkEvents {
             context.client().execute(() -> {
                 Minecraft mc = context.client();
                 if (mc.level == null || mc.player == null) return; // 断线竞态防护
+                try {
+                    if (findNearbyNekoByUuid(UUID.fromString(payload.nekoUuid()), 64)
+                            instanceof org.cneko.toneko.common.mod.entities.MushroomGirlEntity mushroom) {
+                        mushroom.showSpeech(payload.text().length());
+                    }
+                } catch (IllegalArgumentException ignored) { }
                 if (ClientConfig.isBubbleMode()) {
                     NekoBubbleRenderer.show(payload.nekoUuid(), payload.text());
                 } else {

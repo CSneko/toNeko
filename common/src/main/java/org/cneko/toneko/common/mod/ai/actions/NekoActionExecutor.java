@@ -507,6 +507,10 @@ public class NekoActionExecutor {
         register("stop_follow", new NekoActionHandler() {
             @Override
             public boolean handle(NekoEntity neko, ServerPlayer speaker, LivingEntity target, NekoAction action) {
+                if (neko instanceof org.cneko.toneko.common.mod.entities.MushroomGirlEntity mushroom) {
+                    mushroom.stopFollowing();
+                    return true;
+                }
                 var goal = neko.getFollowingOwner();
                 if (goal != null) {
                     goal.stop();
@@ -854,6 +858,8 @@ public class NekoActionExecutor {
                     LOGGER.warn("[AI-ACTION] target not found for {}: {}", action.type(), action.target());
                     continue;
                 }
+                if (neko instanceof org.cneko.toneko.common.mod.entities.MushroomGirlEntity mushroom
+                        && !mushroom.allowSocialAction(target instanceof Player p ? p : player, action.type())) continue;
                 handler.handle(neko, player, target, action);
             } catch (Exception e) {
                 LOGGER.warn("[AI-ACTION] failed to execute {}: {}", action.type(), e.toString());

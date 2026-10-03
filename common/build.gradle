@@ -25,3 +25,75 @@ loom {
     accessWidenerPath = file("src/main/resources/toneko.accesswidener")
 }
 
+
+// Keep plain Java regression checks separate from the JUnit test source set.
+sourceSets {
+    mushroomTest {
+        java.srcDir 'src/mushroomTest/java'
+        compileClasspath = files(sourceSets.main.output)
+        runtimeClasspath = files(output, sourceSets.main.output)
+    }
+    worldgenTest {
+        java.srcDir 'src/worldgenTest/java'
+        compileClasspath = files(sourceSets.main.output, sourceSets.main.compileClasspath)
+        runtimeClasspath = files(output, sourceSets.main.runtimeClasspath)
+    }
+}
+tasks.named('compileMushroomTestJava', JavaCompile) {
+    options.compilerArgumentProviders.clear()
+}
+tasks.named('compileWorldgenTestJava', JavaCompile) {
+    options.compilerArgumentProviders.clear()
+}
+tasks.register('mushroomRulesTest', JavaExec) {
+    dependsOn mushroomTestClasses
+    classpath = sourceSets.mushroomTest.runtimeClasspath
+    mainClass = 'org.cneko.toneko.common.mod.entities.MushroomRulesTest'
+}
+tasks.register('coffeeWorldgenCodecTest', JavaExec) {
+    dependsOn worldgenTestClasses
+    classpath = sourceSets.worldgenTest.runtimeClasspath
+    mainClass = 'org.cneko.toneko.common.mod.worldgen.CoffeeWorldgenCodecTest'
+    args file('src/main/resources/data/toneko/worldgen').absolutePath
+    workingDir layout.buildDirectory.dir('worldgenTest').get().asFile
+    doFirst { workingDir.mkdirs() }
+}
+tasks.register('mushroomNativeRegressionTest', JavaExec) {
+    dependsOn worldgenTestClasses
+    classpath = sourceSets.worldgenTest.runtimeClasspath
+    mainClass = 'org.cneko.toneko.common.mod.entities.MushroomNativeRegressionTest'
+    workingDir layout.buildDirectory.dir('worldgenTest').get().asFile
+    doFirst { workingDir.mkdirs() }
+}
+tasks.register('mushroomSporeRegressionTest', JavaExec) {
+    dependsOn worldgenTestClasses
+    classpath = sourceSets.worldgenTest.runtimeClasspath
+    mainClass = 'org.cneko.toneko.common.mod.entities.MushroomSporeRegressionTest'
+    workingDir layout.buildDirectory.dir('worldgenTest').get().asFile
+    doFirst { workingDir.mkdirs() }
+}
+tasks.register('mushroomBedRestRegressionTest', JavaExec) {
+    dependsOn worldgenTestClasses
+    classpath = sourceSets.worldgenTest.runtimeClasspath
+    mainClass = 'org.cneko.toneko.common.mod.entities.MushroomBedRestRegressionTest'
+    workingDir layout.buildDirectory.dir('worldgenTest').get().asFile
+    doFirst { workingDir.mkdirs() }
+}
+tasks.register('mushroomCompanionRegressionTest', JavaExec) {
+    dependsOn worldgenTestClasses
+    classpath = sourceSets.worldgenTest.runtimeClasspath
+    mainClass = 'org.cneko.toneko.common.mod.testing.CompanionMixinLauncher'
+    workingDir layout.buildDirectory.dir('companionTest').get().asFile
+    systemProperty 'fabric.addMods', sourceSets.worldgenTest.output.resourcesDir.absolutePath
+    doFirst { workingDir.mkdirs() }
+}
+tasks.register('mushroomClientRegressionTest', JavaExec) {
+    dependsOn worldgenTestClasses
+    classpath = sourceSets.worldgenTest.runtimeClasspath
+    mainClass = 'org.cneko.toneko.common.mod.testing.CompanionMixinLauncher'
+    args 'client'
+    workingDir layout.buildDirectory.dir('clientRegressionTest').get().asFile
+    systemProperty 'fabric.addMods', sourceSets.worldgenTest.output.resourcesDir.absolutePath
+    doFirst { workingDir.mkdirs() }
+}
+tasks.named('check') { dependsOn 'mushroomRulesTest', 'coffeeWorldgenCodecTest', 'mushroomNativeRegressionTest', 'mushroomSporeRegressionTest', 'mushroomBedRestRegressionTest', 'mushroomCompanionRegressionTest', 'mushroomClientRegressionTest' }

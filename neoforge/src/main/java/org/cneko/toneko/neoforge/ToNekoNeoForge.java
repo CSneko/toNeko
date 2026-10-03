@@ -136,6 +136,8 @@ public final class ToNekoNeoForge {
         // 在所有注册表完成后：解析 DeferredRegister 值并注册群系生成
         bus.addListener(FMLLoadCompleteEvent.class, event -> {
             ToNekoItems.reg();
+            org.cneko.toneko.common.mod.entities.ToNekoEntities.registerMushroomSpawns(ToNekoEntities.MUSHROOM_GIRL_HOLDER.get());
+            org.cneko.toneko.common.mod.worldgen.CoffeeWorldgen.register();
             ToNekoBlockEntities.reg();
             // 调用 common 中的群系生成注册（使用 FFAPI 桥接的 BiomeModifications）
             org.cneko.toneko.common.mod.entities.ToNekoEntities.registerBiomeSpawns(

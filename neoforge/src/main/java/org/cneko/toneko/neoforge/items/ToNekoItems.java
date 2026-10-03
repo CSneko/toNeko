@@ -51,6 +51,9 @@ public class ToNekoItems {
     public static DeferredHolder<Item,LegwearItem.OverKneeSockItem> LEGWEAR_OVER_KNEE_HOLDER;
     public static DeferredHolder<Item, CatnipItem> CATNIP_HOLDER;
     public static DeferredHolder<Item, CatnipItem> CATNIP_SANDWICH_HOLDER;
+    public static DeferredHolder<Item, BlockItem> COFFEE_BEANS_HOLDER;
+    public static DeferredHolder<Item, BlockItem> WILD_COFFEE_HOLDER;
+    public static DeferredHolder<Item, SpawnEggItem> MUSHROOM_GIRL_SPAWN_EGG_HOLDER;
     public static DeferredHolder<Item,Item> CATNIP_SEED_HOLDER;
     public static DeferredHolder<Item, BlockItem> WILD_CATNIP_HOLDER;
     public static DeferredHolder<CreativeModeTab,CreativeModeTab> TONEKO_ITEM_GROUP_HOLDER;
@@ -125,6 +128,10 @@ public class ToNekoItems {
         CATNIP_SANDWICH_HOLDER = ITEMS.register("catnip_sandwich", ()->new CatnipItem(NekoIds.itemProps("catnip_sandwich").component(DataComponents.FOOD,
                 new FoodProperties(6, 3.0f, false)).component(DataComponents.CONSUMABLE, Consumables.DEFAULT_FOOD)));
 
+        COFFEE_BEANS_HOLDER = ITEMS.register("coffee_beans", () -> new BlockItem(ToNekoBlocks.COFFEE_CROP_HOLDER.get(), NekoIds.itemProps("coffee_beans")));
+        WILD_COFFEE_HOLDER = ITEMS.register("wild_coffee", () -> new BlockItem(ToNekoBlocks.WILD_COFFEE_HOLDER.get(), NekoIds.itemProps("wild_coffee")));
+        MUSHROOM_GIRL_SPAWN_EGG_HOLDER = ITEMS.register("mushroom_girl_spawn_egg", () -> new SpawnEggItem(
+                NekoIds.itemProps("mushroom_girl_spawn_egg").spawnEgg(ToNekoEntities.MUSHROOM_GIRL_HOLDER.get())));
         CATNIP_SEED_HOLDER = ITEMS.register("catnip_seed",()->new BlockItem(ToNekoBlocks.CATNIP_HOLDER.get(), NekoIds.itemProps("catnip_seed")));
 
         WILD_CATNIP_HOLDER = ITEMS.register("wild_catnip",()->new BlockItem(ToNekoBlocks.WILD_CATNIP_HOLDER.get(), NekoIds.itemProps("wild_catnip")));
@@ -231,6 +238,9 @@ public class ToNekoItems {
                     event.accept(FIGHTING_NEKO_SPAWN_EGG_HOLDER.get());
                     event.accept(CATNIP_HOLDER.get());
                     event.accept(CATNIP_SANDWICH_HOLDER.get());
+                    event.accept(COFFEE_BEANS_HOLDER.get());
+                    event.accept(WILD_COFFEE_HOLDER.get());
+                    event.accept(MUSHROOM_GIRL_SPAWN_EGG_HOLDER.get());
                     event.accept(CATNIP_SEED_HOLDER.get());
                     event.accept(WILD_CATNIP_HOLDER.get());
                     event.accept(MUSIC_DISC_KAWAII_HOLDER.get());
@@ -312,6 +322,9 @@ public class ToNekoItems {
             event.accept(PLOT_SCROLL_HOLDER.get());
             event.accept(CATNIP_HOLDER.get());
             event.accept(CATNIP_SANDWICH_HOLDER.get());
+            event.accept(COFFEE_BEANS_HOLDER.get());
+            event.accept(WILD_COFFEE_HOLDER.get());
+            event.accept(MUSHROOM_GIRL_SPAWN_EGG_HOLDER.get());
             event.accept(CATNIP_SEED_HOLDER.get());
             event.accept(WILD_CATNIP_HOLDER.get());
             event.accept(MUSIC_DISC_KAWAII_HOLDER.get());
@@ -378,6 +391,9 @@ public class ToNekoItems {
         INFINITE_CATNIP = INFINITE_CATNIP_HOLDER.get();
         WILD_CATNIP = WILD_CATNIP_HOLDER.get();
         CATNIP_SANDWICH = CATNIP_SANDWICH_HOLDER.get();
+        COFFEE_BEANS = COFFEE_BEANS_HOLDER.get();
+        WILD_COFFEE = WILD_COFFEE_HOLDER.get();
+        MUSHROOM_GIRL_SPAWN_EGG = MUSHROOM_GIRL_SPAWN_EGG_HOLDER.get();
         CATNIP_SEED = CATNIP_SEED_HOLDER.get();
         NEKO_COLLECTOR = NEKO_COLLECTOR_HOLDER.get();
         FURRY_BOHE = FURRY_BOHE_HOLDER.get();

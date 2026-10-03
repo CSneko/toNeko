@@ -4,10 +4,14 @@
   "compatibilityLevel": "JAVA_21",
   "minVersion": "0.8",
   "client": [
+    "client.BedRestBodyMixin",
+    "client.BedRestCameraMixin",
+    "client.BedRestWakeMixin",
+    "client.HallucinationCameraMixin",
     "client.ChatScreenMixin",
     "client.ClientLevelAccessor",
     "client.PlayerRendererMixin",
-    "client.SoundEngineMixin",
+    "client.SoundEngineMixin"
   ],
   "mixins": [
     "BlockPlaceMixin",
@@ -15,7 +19,9 @@
     "CreeperMixin",
     "EntityMixin",
     "FishingHookMixin",
+    "HallucinationProjectileMixin",
     "LivingEntityMixin",
+    "MushroomPlayerRidingMixin",
     "PlayerEntityMixin",
     "ServerLevelMixin",
     "ServerPlayerEntityMixin"

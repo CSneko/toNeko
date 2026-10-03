@@ -6,15 +6,18 @@ import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import org.cneko.toneko.common.api.TickTasks;
+import org.cneko.toneko.common.mod.client.api.ClientPoseState;
 import org.cneko.toneko.common.mod.packets.PluginDetectPayload;
 import org.cneko.toneko.common.mod.util.TickTaskQueue;
 
 public class ClientPlayerJoinEvent {
     public static void init(){
         ClientPlayConnectionEvents.JOIN.register(ClientPlayerJoinEvent::onJoin);
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> ClientPoseState.deactivate());
     }
 
     public static void onJoin(ClientPacketListener handler, PacketSender sender, Minecraft client) {
+        ClientPoseState.deactivate();
         var t = new TickTaskQueue();
         t.addTask(40,()->{
             if (ClientPlayNetworking.canSend(PluginDetectPayload.ID)) {

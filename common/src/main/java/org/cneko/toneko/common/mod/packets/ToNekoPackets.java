@@ -14,6 +14,7 @@ public class ToNekoPackets {
         PayloadTypeRegistry.serverboundPlay().register(FollowOwnerPayload.ID, FollowOwnerPayload.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(RideEntityPayload.ID, RideEntityPayload.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(NekoPosePayload.ID, NekoPosePayload.CODEC);
+        PayloadTypeRegistry.serverboundPlay().register(MushroomInteractionPayload.ID, MushroomInteractionPayload.CODEC);
         PayloadTypeRegistry.clientboundPlay().register(VehicleStopRidePayload.ID, VehicleStopRidePayload.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(NekoMatePayload.ID, NekoMatePayload.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(ChatWithNekoPayload.ID, ChatWithNekoPayload.CODEC);

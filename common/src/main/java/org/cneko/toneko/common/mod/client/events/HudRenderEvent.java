@@ -31,6 +31,7 @@ public class HudRenderEvent {
         HudElementRegistry.addLast(toNekoLoc("hud"), (HudElement) (guiGraphics, deltaTracker) -> {
             Player player = Minecraft.getInstance().player;
             if (player == null) return;
+            HallucinationOverlay.render(guiGraphics);
             renderNekoEnergyBar(guiGraphics);
             // 潜行模式指示器
             if (ClientTickEvent.isStealthActive()) {

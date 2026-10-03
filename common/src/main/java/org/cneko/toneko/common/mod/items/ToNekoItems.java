@@ -21,6 +21,9 @@ public class ToNekoItems {
     public static CatnipItem CATNIP;
     public static CatnipItem INFINITE_CATNIP;
     public static CatnipItem CATNIP_SANDWICH;
+    public static Item COFFEE_BEANS;
+    public static Item WILD_COFFEE;
+    public static Item MUSHROOM_GIRL_SPAWN_EGG;
     public static Item CATNIP_SEED;
     public static Item WILD_CATNIP;
     public static Item MUSIC_DISC_KAWAII;

@@ -70,6 +70,8 @@ public class ToNeko implements ModInitializer {
                         Identifier.fromNamespaceAndPath(MODID, "patch_wild_catnip"))
         );
 
+        org.cneko.toneko.common.mod.worldgen.CoffeeWorldgen.register();
+
         // 注册装备
         ToNekoArmorMaterials.init();
         // 注册物品

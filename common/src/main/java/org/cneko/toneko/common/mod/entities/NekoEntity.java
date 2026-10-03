@@ -527,15 +527,11 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
 
     @Override
     public void setLastHurtByPlayer(@Nullable Player player, int memoryTime) {
-        if (player == null || !this.hasOwner(player.getUUID())) {
-            if (player == null) {
-                super.setLastHurtByPlayer((java.util.UUID) null, memoryTime);
-            } else {
-                super.setLastHurtByPlayer(player, memoryTime);
-            }
-        } else {
-            super.setLastHurtByPlayer((java.util.UUID) null, memoryTime);
-        }
+        // EntityReference.of(UUID) accepts null but stores an invalid Either.Left(null).
+        // Clearing the reference itself avoids a later NPE in vanilla damage attribution.
+        if (player == null || this.hasOwner(player.getUUID()))
+            super.setLastHurtByPlayer((Player) null, 0);
+        else super.setLastHurtByPlayer(player, memoryTime);
     }
 
     public @NotNull ItemStack getItemBySlot(@NotNull EquipmentSlot slot) {
@@ -760,7 +756,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
 
             // 聊过 AI 或有主人的猫娘，死后化作幽灵保留记忆（幽灵不再变幽灵）。
             // 转化放在掉落之后：背包/装备已清空，幽灵天然不带物品副本
-            if (!(this instanceof GhostNekoEntity)
+            if (this.isNeko() && !(this instanceof GhostNekoEntity)
                     && (this.aiStorageId != null || !this.getOwners().isEmpty())) {
                 GhostNekoEntity ghost = GhostNekoEntity.createGhostFrom(this);
                 if (ghost != null) {
@@ -971,7 +967,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     public void slowTick(){
         if (!this.level().isClientSide()){
             // 猫娘主动发言调度（每秒检查一次，由注册的触发器按概率触发）
-            NekoProactiveManager.tick(this);
+            tickProactiveSpeech();
             this.setMoeTags(this.getMoeTags());
             this.setSkin(this.getSkin());
             this.serverNekoSlowTick();
@@ -998,6 +994,8 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
             }
         }
     }
+
+    protected void tickProactiveSpeech() { NekoProactiveManager.tick(this); }
 
     /** 每次被动回血的量，子类可重写以改变回血速度 */
     protected float getPassiveHealAmount() {
@@ -1073,7 +1071,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     }
 
     public void tryMating(ServerLevel level, INeko mate) {
-        if (this.isNekoBaby() || mate.isNekoBaby()) {
+        if (!supportsSexualBreeding() || !mate.supportsSexualBreeding() || this.isNekoBaby() || mate.isNekoBaby()) {
             systemMsg(mate.getEntity(), Component.translatable("message.toneko.neko.mate.fail",this.getName(), mate.getEntity().getName()).withStyle(ChatFormatting.RED));
             return;
         }
@@ -1088,11 +1086,12 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
         this.nekoMateGoal.mating = 0;
     }
     public boolean canMate(INeko other){
-        if (this.isNekoBaby() || other.isNekoBaby()) return false;
+        if (!supportsSexualBreeding() || !other.supportsSexualBreeding() || this.isNekoBaby() || other.isNekoBaby()) return false;
         return (other.isNeko() || other.allowMateIfNotNeko()) && !this.hasEffect(MobEffects.WEAKNESS) && !other.getEntity().hasEffect(MobEffects.WEAKNESS);
     }
 
     public void breed(ServerLevel level, INeko mate) {
+        if (!supportsSexualBreeding() || !mate.supportsSexualBreeding()) return;
         // 冒爱心
         level.addParticle(ParticleTypes.HEART, this.getX(), this.getY(), this.getZ(), 1, 1, 1);
         Packet<?> packet = new ClientboundLevelParticlesPacket(ParticleTypes.HEART, true, true, this.getX(), this.getY(), this.getZ(), 3f, 3f, 3f, 0.2f, 25);
@@ -1127,6 +1126,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
         mate.getEntity().addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 3000, 0));
     }
     public NekoEntity spawnChildFromBreeding(ServerLevel level, INeko mate) {
+        if (!supportsSexualBreeding() || !mate.supportsSexualBreeding()) return null;
         NekoEntity child = this.getBreedOffspring(level, mate);
         if (child != null) {
             child.setNekoBaby(true);
@@ -1157,7 +1157,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     @Nullable
     @Override
     public AgeableMob getBreedOffspring(@NotNull ServerLevel level, @NotNull AgeableMob otherParent) {
-        if (otherParent instanceof INeko neko){
+        if (supportsSexualBreeding() && otherParent instanceof INeko neko && neko.supportsSexualBreeding()){
             NekoEntity child = this.getBreedOffspring(level, neko);
             if (child != null) {
                 // 分配随机基因（兼容刷怪蛋、繁殖等不走finalizeSpawn的路径）
@@ -1356,7 +1356,8 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
     public void move(@NotNull MoverType type, @NotNull Vec3 pos) {
         // 仅阻止 AI 驱动的移动（SELF），不阻止物理推送（PISTON、WATER 等）
         if (type == MoverType.SELF && !this.canMove()) {
-            return;
+            if (this instanceof MushroomGirlEntity) pos = new Vec3(0, pos.y, 0);
+            else return;
         }
         super.move(type, pos);
     }
@@ -1387,7 +1388,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
         }
 
         // 萝莉猫娘防狼警报：被玩家空手攻击才警报（持武器攻击是正常战斗，不再构成威胁）
-        if (source.getEntity() instanceof Player player && this.isNekoBaby()
+        if (this.isNeko() && source.getEntity() instanceof Player player && this.isNekoBaby()
                 && player.getMainHandItem().isEmpty()) {
             triggerLoliAlarm(player);
         }
@@ -1423,7 +1424,7 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
         }
         // 召集附近猫娘共同作战（40tick冷却）
         // 只在攻击者是生物实体且不是主人的情况下召集
-        if (source.getEntity() instanceof LivingEntity attacker
+        if (this.isNeko() && source.getEntity() instanceof LivingEntity attacker
                 && !this.hasOwner(attacker.getUUID())) {
             long currentTime = this.level().getGameTime();
             if (currentTime - this.lastHelpCallTime > 40) {

@@ -14,6 +14,8 @@ import static org.cneko.toneko.common.Bootstrap.MODID;
 
 public class ToNekoBlocks {
     public static void init(){
+        COFFEE_CROP = Registry.register(BuiltInRegistries.BLOCK, Identifier.fromNamespaceAndPath(MODID, "coffee_crop"), new CoffeeCropBlock());
+        WILD_COFFEE = Registry.register(BuiltInRegistries.BLOCK, Identifier.fromNamespaceAndPath(MODID, "wild_coffee"), new WildCoffeeBlock());
         CATNIP = Registry.register(BuiltInRegistries.BLOCK, Identifier.fromNamespaceAndPath(MODID, "catnip"),
                 new CatnipBlock());
         WILD_CATNIP = Registry.register(BuiltInRegistries.BLOCK, Identifier.fromNamespaceAndPath(MODID, "wild_catnip"),

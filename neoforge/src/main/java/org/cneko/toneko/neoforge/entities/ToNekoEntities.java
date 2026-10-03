@@ -24,7 +24,13 @@ public class ToNekoEntities {
     public static DeferredHolder<EntityType<?>, EntityType<FlySwordEntity>> FLY_SWORD_HOLDER;
     public static DeferredHolder<EntityType<?>, EntityType<SeatEntity>> SEAT_ENTITY_HOLDER;
     public static DeferredHolder<EntityType<?>, EntityType<SpoiledWaterProjectile>> SPOILED_WATER_PROJECTILE_HOLDER;
+    public static DeferredHolder<EntityType<?>, EntityType<MushroomGirlEntity>> MUSHROOM_GIRL_HOLDER;
+    public static DeferredHolder<EntityType<?>, EntityType<MushroomSporeProjectile>> MUSHROOM_SPORE_HOLDER;
     public static void init(){
+        MUSHROOM_SPORE_HOLDER = ToNekoNeoForge.ENTITY_TYPES.register("mushroom_spore",
+                org.cneko.toneko.common.mod.entities.ToNekoEntities.getMushroomSpore());
+        MUSHROOM_GIRL_HOLDER = ToNekoNeoForge.ENTITY_TYPES.register("mushroom_girl",
+                org.cneko.toneko.common.mod.entities.ToNekoEntities.getMushroomGirl());
         CRYSTAL_NEKO_HOLDER = ToNekoNeoForge.ENTITY_TYPES.register(CRYSTAL_NEKO_ID.getPath(),
                 org.cneko.toneko.common.mod.entities.ToNekoEntities.getCrystalNeko()
         );
@@ -73,6 +79,8 @@ public class ToNekoEntities {
 
     @SubscribeEvent
     public static void onCreatureSpawn(RegisterSpawnPlacementsEvent event) {
+        event.register(MUSHROOM_GIRL_HOLDER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                MushroomGirlEntity::canSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         // 生成判定逻辑统一放在 common 的 NekoSpawnRules 中，与 Fabric 侧保持一致
         event.register(ADVENTURER_NEKO_HOLDER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 NekoSpawnRules::canAdventurerSpawn, RegisterSpawnPlacementsEvent.Operation.OR);
@@ -90,6 +98,8 @@ public class ToNekoEntities {
     }
 
     public static void reg(){
+        MUSHROOM_SPORE = MUSHROOM_SPORE_HOLDER.get();
+        MUSHROOM_GIRL = MUSHROOM_GIRL_HOLDER.get();
         CRYSTAL_NEKO = CRYSTAL_NEKO_HOLDER.get();
         ADVENTURER_NEKO = ADVENTURER_NEKO_HOLDER.get();
         GHOST_NEKO = GHOST_NEKO_HOLDER.get();

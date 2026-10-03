@@ -1,0 +1,6 @@
+{
+  "schemaVersion": 1,
+  "id": "toneko_companion_regression",
+  "version": "1.0.0",
+  "mixins": ["toneko-companion-test.mixins.json"]
+}

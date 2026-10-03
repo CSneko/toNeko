@@ -31,6 +31,10 @@ public class ToNekoEntities {
     public static EntityType<MoufletNekoBoss> MOUFLET_NEKO_BOSS;
     public static Identifier RAVENN_ID = toNekoLoc("ravenn");
     public static EntityType<RavennEntity> RAVENN_ENTITY;
+    public static Identifier MUSHROOM_GIRL_ID = toNekoLoc("mushroom_girl");
+    public static EntityType<MushroomGirlEntity> MUSHROOM_GIRL;
+    public static Identifier MUSHROOM_SPORE_ID = toNekoLoc("mushroom_spore");
+    public static EntityType<MushroomSporeProjectile> MUSHROOM_SPORE;
     public static Identifier NOELLE_MAID_NEKO_ID = toNekoLoc("noelle_maid_neko");
     public static EntityType<NoelleMaidNekoEntity> NOELLE_MAID_NEKO;
     public static EntityType<AmmunitionEntity> AMMUNITION_ENTITY;
@@ -66,6 +70,22 @@ public class ToNekoEntities {
     private static net.minecraft.resources.ResourceKey<net.minecraft.world.entity.EntityType<?>> key(String path) {
         return net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.ENTITY_TYPE,
                 net.minecraft.resources.Identifier.fromNamespaceAndPath("toneko", path));
+    }
+
+    @ApiStatus.Internal
+    public static Supplier<EntityType<MushroomGirlEntity>> getMushroomGirl() {
+        return () -> EntityType.Builder.of(MushroomGirlEntity::new, MobCategory.CREATURE)
+                .sized(0.9f, 2.2f).eyeHeight(1.5f).clientTrackingRange(8).build(key("mushroom_girl"));
+    }
+
+    public static Supplier<EntityType<MushroomSporeProjectile>> getMushroomSpore() {
+        return () -> EntityType.Builder.<MushroomSporeProjectile>of(MushroomSporeProjectile::new, MobCategory.MISC)
+                .sized(0.18f, 0.18f).clientTrackingRange(8).updateInterval(1).build(key("mushroom_spore"));
+    }
+
+    public static void registerMushroomSpawns(EntityType<MushroomGirlEntity> type) {
+        BiomeModifications.addSpawn(BiomeSelectors.tag(MushroomGirlEntity.HABITATS),
+                MobCategory.CREATURE, type, 3, 1, 1);
     }
 
     @ApiStatus.Internal

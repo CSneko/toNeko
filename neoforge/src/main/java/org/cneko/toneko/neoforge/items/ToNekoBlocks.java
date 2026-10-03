@@ -5,6 +5,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.cneko.toneko.common.mod.blocks.CatnipBlock;
+import org.cneko.toneko.common.mod.blocks.CoffeeCropBlock;
+import org.cneko.toneko.common.mod.blocks.WildCoffeeBlock;
 import org.cneko.toneko.common.mod.blocks.ClotheslineBlock;
 import org.cneko.toneko.common.mod.blocks.LegwearWorkbenchBlock;
 import org.cneko.toneko.common.mod.blocks.NekoAggregatorBlock;
@@ -23,7 +25,11 @@ public class ToNekoBlocks {
     public static DeferredHolder<Block, ShengDengBlock> SHENG_DENG_HOLDER;
     public static DeferredHolder<Block, LegwearWorkbenchBlock> LEGWEAR_WORKBENCH_HOLDER;
     public static DeferredHolder<Block, ClotheslineBlock> CLOTHESLINE_HOLDER;
+    public static DeferredHolder<Block, CoffeeCropBlock> COFFEE_CROP_HOLDER;
+    public static DeferredHolder<Block, WildCoffeeBlock> WILD_COFFEE_HOLDER;
     public static void init(){
+        COFFEE_CROP_HOLDER = ToNekoNeoForge.BLOCKS.register("coffee_crop", CoffeeCropBlock::new);
+        WILD_COFFEE_HOLDER = ToNekoNeoForge.BLOCKS.register("wild_coffee", WildCoffeeBlock::new);
         CATNIP_HOLDER = ToNekoNeoForge.BLOCKS.register("catnip", CatnipBlock::new);
         WILD_CATNIP_HOLDER = ToNekoNeoForge.BLOCKS.register("wild_catnip", WildCatnipBlock::new);
         NEKO_AGGREGATOR_BLOCK_HOLDER = ToNekoNeoForge.BLOCKS.register("neko_aggregator", () -> new NekoAggregatorBlock(NekoIds.blockProps("neko_aggregator")));
@@ -35,6 +41,8 @@ public class ToNekoBlocks {
     }
 
     public static void reg(){
+        COFFEE_CROP = COFFEE_CROP_HOLDER.get();
+        WILD_COFFEE = WILD_COFFEE_HOLDER.get();
         CATNIP = CATNIP_HOLDER.get();
         WILD_CATNIP = WILD_CATNIP_HOLDER.get();
         NEKO_AGGREGATOR = NEKO_AGGREGATOR_BLOCK_HOLDER.get();

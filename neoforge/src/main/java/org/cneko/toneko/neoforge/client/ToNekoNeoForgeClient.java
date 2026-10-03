@@ -25,6 +25,7 @@ import org.cneko.toneko.common.mod.client.renderers.FlySwordRenderer;
 import org.cneko.toneko.common.mod.client.renderers.GhostNekoRenderer;
 import org.cneko.toneko.common.mod.client.renderers.NekoBossRenderer;
 import org.cneko.toneko.common.mod.client.renderers.NekoRenderer;
+import org.cneko.toneko.common.mod.client.renderers.MushroomGirlRenderer;
 import org.cneko.toneko.common.mod.client.renderers.SeatRenderer;
 import org.cneko.toneko.common.mod.client.renderers.SpoiledWaterProjectileRenderer;
 import org.cneko.toneko.common.mod.client.screens.ConfigScreen;
@@ -62,6 +63,8 @@ public class ToNekoNeoForgeClient {
 
     @SubscribeEvent
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event){
+        event.registerEntityRenderer(ToNekoEntities.MUSHROOM_GIRL_HOLDER.get(), MushroomGirlRenderer::new);
+        event.registerEntityRenderer(ToNekoEntities.MUSHROOM_SPORE_HOLDER.get(), net.minecraft.client.renderer.entity.NoopRenderer::new);
         event.registerEntityRenderer(
                 ToNekoEntities.ADVENTURER_NEKO_HOLDER.get(),
                 NekoRenderer::new

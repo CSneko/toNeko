@@ -119,7 +119,7 @@ public class PromptRegistry {
             buildGhostPastLife(parts, ghost);
             parts.add(Prompts.translateOrReadable("misc.toneko.ai.persona.ghost"));
         }
-        if (neko.isNekoBaby()) {
+        if (neko.isNeko() && neko.isNekoBaby()) {
             parts.add(Prompts.translateOrReadable("misc.toneko.ai.persona.loli"));
         }
         if (neko.getMoeTags().contains("mesugaki")) {

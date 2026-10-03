@@ -25,6 +25,13 @@ import org.cneko.toneko.common.mod.api.EntityPoseManager;
 import org.cneko.toneko.common.mod.api.ExplorationLevelFactor;
 import org.cneko.toneko.common.mod.api.NekoLevelRegistry;
 import org.cneko.toneko.common.mod.api.PoseStateSync;
+import org.cneko.toneko.common.mod.api.BedRestingPlayer;
+import org.cneko.toneko.common.mod.api.MushroomBedRest;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.entities.NekoEntity;
 import org.cneko.toneko.common.mod.misc.mixininterface.SlowTickable;
@@ -45,7 +52,44 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.*;
 
 @Mixin(Player.class)
-public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickable {
+public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickable, BedRestingPlayer {
+    @Unique private static final EntityDataAccessor<Optional<BlockPos>> TONEKO_RESTING_BED =
+            SynchedEntityData.defineId(Player.class, EntityDataSerializers.OPTIONAL_BLOCK_POS);
+    @Unique private MushroomBedRest.WakeSnapshot toneko$wakeSnapshot;
+
+    @Inject(method = "defineSynchedData", at = @At("TAIL"))
+    private void toneko$defineRestingBed(SynchedEntityData.Builder builder, CallbackInfo ci) {
+        builder.define(TONEKO_RESTING_BED, Optional.empty());
+    }
+
+    @Override public Optional<BlockPos> toneko$getRestingBed() {
+        return ((Player)(Object)this).getEntityData().get(TONEKO_RESTING_BED);
+    }
+
+    @Override public void toneko$setRestingBed(Optional<BlockPos> bed) {
+        Player player = (Player)(Object)this;
+        player.getEntityData().set(TONEKO_RESTING_BED, bed);
+        if (player instanceof ServerPlayer serverPlayer && serverPlayer.connection != null) {
+            serverPlayer.connection.send(new ClientboundSetEntityDataPacket(player.getId(),
+                    List.of(SynchedEntityData.DataValue.create(TONEKO_RESTING_BED, bed))));
+        }
+    }
+
+    @Inject(method = "stopSleepInBed", at = @At("HEAD"))
+    private void toneko$captureBedWake(boolean immediately, boolean updateSleepList, CallbackInfo ci) {
+        toneko$wakeSnapshot = MushroomBedRest.beforeWake((Player)(Object)this);
+    }
+
+    @Inject(method = "stopSleepInBed", at = @At("RETURN"))
+    private void toneko$stayWithCompanion(boolean immediately, boolean updateSleepList, CallbackInfo ci) {
+        MushroomBedRest.afterWake((Player)(Object)this, toneko$wakeSnapshot);
+        toneko$wakeSnapshot = null;
+    }
+
+    @Inject(method = "tick", at = @At("TAIL"))
+    private void toneko$keepBedRestPosition(CallbackInfo ci) {
+        MushroomBedRest.tick((Player)(Object)this);
+    }
 
     @Shadow private boolean reducedDebugInfo;
 
@@ -319,6 +363,7 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
     @Inject(method = "interactOn", at = @At("HEAD"), cancellable = true)
     public void interactOn(Entity entityToInteractOn, InteractionHand hand,
                            net.minecraft.world.phys.Vec3 hitPoint, CallbackInfoReturnable<InteractionResult> cir) {
+        if (entityToInteractOn instanceof org.cneko.toneko.common.mod.entities.MushroomGirlEntity) return;
         if(entityToInteractOn instanceof INeko neko){
             Player player = (Player)(Object)this;
             ItemStack itemStack = player.getItemInHand(hand);
@@ -359,7 +404,7 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
         Player self = (Player)(Object)this;
         boolean clientSide = self.level().isClientSide();
 
-        Pose pinned = clientSide
+        Pose pinned = MushroomBedRest.restingBed(self).isPresent() ? Pose.SLEEPING : clientSide
                 ? org.cneko.toneko.common.mod.client.api.ClientPoseState.applyTo(self)
                 : EntityPoseManager.getNullablePose(self);
         if (pinned == null || self.isPassenger()) {
@@ -370,6 +415,7 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
         if ((pinned == Pose.SWIMMING || pinned == Pose.SLEEPING) && self.isShiftKeyDown()) {
             if (clientSide) {
                 org.cneko.toneko.common.mod.client.api.ClientPoseState.deactivate();
+                MushroomBedRest.release(self);
             } else {
                 PoseStateSync.unpin((ServerPlayer) self);
             }
