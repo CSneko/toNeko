@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "entities": [
+    "player"
+  ],
+  "slots": [
+    "head",
+    "back",
+    "curio",
+    "socks"
+  ]
+}
+
