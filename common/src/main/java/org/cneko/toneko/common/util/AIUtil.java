@@ -52,6 +52,32 @@ public class AIUtil {
      * 历史消息以 [说话人] 前缀标注，模型能区分谁说了什么。
      */
     public static final String SESSION_ID = "shared";
+    /** 异常信息写日志/回给玩家前的最大长度（异常里可能夹带整包 prompt 或响应体） */
+    private static final int MAX_ERROR_MESSAGE_LENGTH = 300;
+
+    /**
+     * 把异常压成一行短文本再写日志。
+     * 起因：AI 请求异常的消息里可能整包携带 prompt/响应体（例如把 JSON 当 header 值时
+     * JDK 抛的 IllegalArgumentException 会把整个 prompt 原样带出来，一条日志上百 KB），
+     * 直接 e.toString() 会刷屏并把玩家聊天内容明文写进日志。
+     */
+    private static String briefError(Throwable e) {
+        if (e == null) {
+            return "null";
+        }
+        String message = e.getMessage();
+        String detail = (message == null || message.isEmpty()) ? "" : ": " + oneLine(message);
+        String text = e.getClass().getName() + detail;
+        if (text.length() > MAX_ERROR_MESSAGE_LENGTH) {
+            return text.substring(0, MAX_ERROR_MESSAGE_LENGTH) + "…(共 " + text.length() + " 字符，已截断)";
+        }
+        return text;
+    }
+
+    /** 去掉换行/制表符，保证一条日志不会因为异常消息里的换行被拆成多行 */
+    private static String oneLine(String text) {
+        return text.replace('\r', ' ').replace('\n', ' ').replace('\t', ' ');
+    }
 
     public static void init(){
         // 向 Player2（Elefant）发送一个简单的get请求，发现本地 AI 服务
@@ -334,12 +360,10 @@ public class AIUtil {
                 }
 
                 if (debug) {
-                    String keyPreview = serviceConfig.getApiKey().isEmpty() ? "(none)"
-                            : serviceConfig.getApiKey().substring(0, Math.min(8, serviceConfig.getApiKey().length())) + "***";
-                    LOGGER.info("[AI-DEBUG] >>> REQUEST | provider={} model={} host={}:{} endpoint={} tls={} key={} msg({}c)=\"{}\"",
+                    LOGGER.info("[AI-DEBUG] >>> REQUEST | provider={} model={} host={}:{} endpoint={} tls={} hasKey={} msg({}c)=\"{}\"",
                             providerId, serviceConfig.getModel(),
                             serviceConfig.getHost(), serviceConfig.getPort(), serviceConfig.getEndpoint(),
-                            serviceConfig.isTls(), keyPreview, msgSnippet.length(), msgSnippet);
+                            serviceConfig.isTls(), !serviceConfig.getApiKey().isEmpty(), msgSnippet.length(), msgSnippet);
                 }
 
                 String uuidStr = nekoStorageId;
@@ -407,8 +431,8 @@ public class AIUtil {
             }catch (AIException e){
                 // 库层统一错误：超时/认证/限流/网络/解析等
                 long elapsed = System.currentTimeMillis() - startTime;
-                LOGGER.warn("[AI-DEBUG] <<< AI ERROR | type={} code={} time={}ms error=\"{}\"",
-                        e.getType(), e.getStatusCode(), elapsed, e.getMessage());
+                LOGGER.warn("[AI-DEBUG] <<< AI ERROR | type={} code={} time={}ms error={}",
+                        e.getType(), e.getStatusCode(), elapsed, briefError(e));
                 if (debug) {
                     LOGGER.error("[AI-DEBUG] AI exception details:", e);
                 }
@@ -416,11 +440,11 @@ public class AIUtil {
                         e.getStatusCode() != 0 ? e.getStatusCode() : 500));
             }catch (Exception e){
                 long elapsed = System.currentTimeMillis() - startTime;
-                LOGGER.warn("[AI-DEBUG] <<< EXCEPTION | time={}ms error=\"{}\"", elapsed, e.toString());
+                LOGGER.warn("[AI-DEBUG] <<< EXCEPTION | time={}ms error={}", elapsed, briefError(e));
                 if (debug) {
                     LOGGER.error("[AI-DEBUG] Exception details:", e);
                 }
-                guardedCallback.execute(new AIResponse("AI request failed: " + e.getMessage(), 500));
+                guardedCallback.execute(new AIResponse("AI request failed: " + briefError(e), 500));
             }
         });
 
@@ -695,12 +719,10 @@ public class AIUtil {
                 }
 
                 if (debug) {
-                    String keyPreview = serviceConfig.getApiKey().isEmpty() ? "(none)"
-                            : serviceConfig.getApiKey().substring(0, Math.min(8, serviceConfig.getApiKey().length())) + "***";
-                    LOGGER.info("[AI-DEBUG] >>> REQUEST(stream) | provider={} model={} host={}:{} endpoint={} tls={} key={} msg({}c)=\"{}\"",
+                    LOGGER.info("[AI-DEBUG] >>> REQUEST(stream) | provider={} model={} host={}:{} endpoint={} tls={} hasKey={} msg({}c)=\"{}\"",
                             providerId, serviceConfig.getModel(),
                             serviceConfig.getHost(), serviceConfig.getPort(), serviceConfig.getEndpoint(),
-                            serviceConfig.isTls(), keyPreview, msgSnippet.length(), msgSnippet);
+                            serviceConfig.isTls(), !serviceConfig.getApiKey().isEmpty(), msgSnippet.length(), msgSnippet);
                 }
 
                 String uuidStr = nekoStorageId;
@@ -780,8 +802,8 @@ public class AIUtil {
             }catch (AIException e){
                 // 库层统一错误：超时/认证/限流/网络/解析等（含流中段错误还原）
                 long elapsed = System.currentTimeMillis() - startTime;
-                LOGGER.warn("[AI-DEBUG] <<< AI ERROR | type={} code={} time={}ms error=\"{}\"",
-                        e.getType(), e.getStatusCode(), elapsed, e.getMessage());
+                LOGGER.warn("[AI-DEBUG] <<< AI ERROR | type={} code={} time={}ms error={}",
+                        e.getType(), e.getStatusCode(), elapsed, briefError(e));
                 if (debug) {
                     LOGGER.error("[AI-DEBUG] AI exception details:", e);
                 }
@@ -789,11 +811,11 @@ public class AIUtil {
                         e.getStatusCode() != 0 ? e.getStatusCode() : 500));
             }catch (Exception e){
                 long elapsed = System.currentTimeMillis() - startTime;
-                LOGGER.warn("[AI-DEBUG] <<< EXCEPTION | time={}ms error=\"{}\"", elapsed, e.toString());
+                LOGGER.warn("[AI-DEBUG] <<< EXCEPTION | time={}ms error={}", elapsed, briefError(e));
                 if (debug) {
                     LOGGER.error("[AI-DEBUG] Exception details:", e);
                 }
-                callback.onError(new AIResponse("AI request failed: " + e.getMessage(), 500));
+                callback.onError(new AIResponse("AI request failed: " + briefError(e), 500));
             }
         });
 
