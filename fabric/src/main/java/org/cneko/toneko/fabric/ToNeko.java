@@ -97,12 +97,12 @@ public class ToNeko implements ModInitializer {
         // 注册遗传学数据包加载器（支持 /reload 热重载）
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new GeneticsDataLoader());
 
-        // 26.1.2：主动绑定模组物品的默认组件（配方解析需要，见 ComponentBinding 注释）
-        org.cneko.toneko.common.mod.util.ComponentBinding.bindAll();
-
         // 启动事件
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             ModMeta.INSTANCE.setServer(server);
+            // 26.1.2：绑定模组物品的默认组件（配方解析需要，见 ComponentBinding 注释）。
+            // 必须在数据包 tag 加载完成后执行，模组初始化阶段执行会因缺少 tag 而整批失败。
+            org.cneko.toneko.common.mod.util.ComponentBinding.bindAll(server.registryAccess());
             // 26.1.2：组件绑定完成后重载资源，使配方管理器重新解析（首次加载时组件未绑定被拒）
             org.cneko.toneko.common.mod.util.ComponentBinding.reloadRecipesAfterStart(server);
             // 启动监Event

@@ -1,8 +1,8 @@
 package org.cneko.toneko.common.mod.util;
 
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
@@ -17,8 +17,13 @@ import org.slf4j.LoggerFactory;
  * 服务器资源加载使用的 lookup 不含模组物品，导致所有以模组物品为结果的配方
  * 在解析时报 "Item xxx does not have components yet" 而被拒载。
  *
- * 修复：直接基于活注册表（BuiltInRegistries.REGISTRY，含模组物品）构建 RegistryAccess
- * 并执行绑定。PendingComponents.apply() 只是 holder.bindComponents(map)，幂等可重复执行。
+ * 修复：基于活注册表（含模组物品）执行绑定。PendingComponents.apply() 只是
+ * holder.bindComponents(map)，幂等可重复执行。
+ *
+ * 注意：绑定时机必须在数据包（tag）加载完成之后。物品初始化器里存在
+ * Item.Properties#fireResistant 这类需要 minecraft:is_fire 伤害类型 tag 的条目，
+ * 模组初始化阶段该 tag 尚未加载，build() 会抛异常，导致整批绑定（列表都没返回）
+ * 全部失败。因此改由服务器启动完成后用 server.registryAccess() 触发。
  */
 public final class ComponentBinding {
     private static final Logger LOGGER = LoggerFactory.getLogger("ToNekoComponentBinding");
@@ -26,19 +31,26 @@ public final class ComponentBinding {
     private ComponentBinding() {
     }
 
-    public static void bindAll() {
+    /**
+     * 绑定物品默认组件。
+     *
+     * @param provider 同时提供注册表（含模组物品）与数据包 tag 的 lookup
+     * @return 绑定是否成功
+     */
+    public static boolean bindAll(HolderLookup.Provider provider) {
         try {
-            var access = RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY);
-            var pending = BuiltInRegistries.DATA_COMPONENT_INITIALIZERS.build(access);
+            var pending = BuiltInRegistries.DATA_COMPONENT_INITIALIZERS.build(provider);
             for (var pc : pending) {
                 pc.apply();
             }
             boolean bellBound = checkBound("toneko:neko_bell");
             boolean catnipBound = checkBound("toneko:catnip");
-            LOGGER.info("Early-bound item components ({} groups). bound check: neko_bell={} catnip={}",
+            LOGGER.info("Bound item components ({} groups). bound check: neko_bell={} catnip={}",
                     pending.size(), bellBound, catnipBound);
+            return bellBound;
         } catch (Throwable t) {
-            LOGGER.warn("Failed to early-bind item components", t);
+            LOGGER.warn("Failed to bind item components", t);
+            return false;
         }
     }
 
