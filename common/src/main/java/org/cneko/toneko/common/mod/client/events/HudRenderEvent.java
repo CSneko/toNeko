@@ -33,6 +33,8 @@ public class HudRenderEvent {
             if (player == null) return;
             HallucinationOverlay.render(guiGraphics);
             renderNekoEnergyBar(guiGraphics);
+            // 扑跃蓄力条（复用原版马跳跃条，盖在经验条位置）
+            PounceClientHandler.renderBar(guiGraphics);
             // 潜行模式指示器
             if (ClientTickEvent.isStealthActive()) {
                 renderStealthIndicator(guiGraphics);
@@ -48,7 +50,9 @@ public class HudRenderEvent {
             // 趴下/躺下时显示起身提示（摔倒趴下、/neko lie、/neko getDown 共用）
             // 姿势现在由原版 DATA_POSE 同步 + 客户端预测对齐，直接读真实姿势即可
             Pose lyingPose = player.getPose();
-            if (lyingPose == Pose.SWIMMING || lyingPose == Pose.SLEEPING) {
+            // 扑跃期间强制游泳姿势，不显示起身提示
+            if (!PounceClientHandler.isLaunching()
+                    && (lyingPose == Pose.SWIMMING || lyingPose == Pose.SLEEPING)) {
                 renderStandUpHint(guiGraphics);
             }
             if (player.getVehicle() instanceof FlySwordEntity flySword) {

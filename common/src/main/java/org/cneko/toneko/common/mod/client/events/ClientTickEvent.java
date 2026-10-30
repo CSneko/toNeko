@@ -37,6 +37,8 @@ public class ClientTickEvent {
     }
 
     public static void processKeyInput(Minecraft client) {
+        // 扑跃：潜行 + 疾跑蓄力、释放（纯客户端状态，服务端只收释放包）
+        PounceClientHandler.tick(client);
         while (ToNekoKeyBindings.LIE_KEY.consumeClick()) {
             client.player.connection.sendCommand("neko lie");
         }

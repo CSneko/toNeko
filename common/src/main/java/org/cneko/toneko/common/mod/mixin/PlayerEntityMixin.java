@@ -21,6 +21,7 @@ import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.ItemLore;
 import org.cneko.toneko.common.mod.ai.NekoTriggerManager;
+import org.cneko.toneko.common.mod.abilities.PounceHandler;
 import org.cneko.toneko.common.mod.api.EntityPoseManager;
 import org.cneko.toneko.common.mod.api.ExplorationLevelFactor;
 import org.cneko.toneko.common.mod.api.NekoLevelRegistry;
@@ -402,6 +403,14 @@ public abstract class PlayerEntityMixin implements INeko, Leashable, SlowTickabl
     @Inject(method = "updatePlayerPose", at = @At("RETURN"))
     public void toneko$reapplyPinnedPose(CallbackInfo ci) {
         Player self = (Player)(Object)this;
+
+        // 扑跃：起跳 → 落地期间强制使用趴下（游泳）姿势。
+        // 该分支优先于姿势钉定与 Shift 起身：扑跃时潜行键本来就是操作键，不能让它把姿势顶掉。
+        if (PounceHandler.isPouncing(self)) {
+            self.setPose(Pose.SWIMMING);
+            return;
+        }
+
         boolean clientSide = self.level().isClientSide();
 
         Pose pinned = MushroomBedRest.restingBed(self).isPresent() ? Pose.SLEEPING : clientSide

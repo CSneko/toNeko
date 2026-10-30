@@ -41,6 +41,7 @@ public class ToNekoPackets {
         PayloadTypeRegistry.serverboundPlay().register(ToNekoActionPayload.ID, ToNekoActionPayload.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(NekoMultiToolModePayload.ID, NekoMultiToolModePayload.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(ClimbWallPayload.ID, ClimbWallPayload.CODEC);
+        PayloadTypeRegistry.serverboundPlay().register(PouncePayload.ID, PouncePayload.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(NekoStealthPayload.ID, NekoStealthPayload.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(LegwearAdjustPayload.ID, LegwearAdjustPayload.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(LegwearDyePayload.ID, LegwearDyePayload.CODEC);
