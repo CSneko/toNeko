@@ -1656,7 +1656,6 @@
   "hud.toneko.stealth.idle": "§7潜行待机",
   "messages.toneko.climb.no_energy": "§c猫娘能量不足，无法继续爬墙！",
   "messages.toneko.climb.no_wall": "附近没有可以攀爬的墙壁",
-  "messages.toneko.pounce.not_neko": "§c只有猫娘才能扑跃！",
   "message.toneko.guide.need_patchouli": "§c需要安装帕秋莉手册（Patchouli）模组才能阅读本指南喵！",
   "block.toneko.sheng_deng": "省凳",
   "block.toneko.sheng_deng.tooltip": "§c广东省省凳 —— 万物皆可省凳",

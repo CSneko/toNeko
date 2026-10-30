@@ -250,7 +250,6 @@
   "message.toneko.gift.empty_slot": "§c선택한 핫바 슬롯이 비어 있습니다",
   "messages.toneko.climb.no_energy": "§c네코 에너지가 부족합니다!",
   "messages.toneko.climb.no_wall": "근처에 오를 수 있는 벽이 없습니다",
-  "messages.toneko.pounce.not_neko": "§c네코만 도약할 수 있습니다!",
   "block.toneko.sheng_deng": "광둥성 의자",
   "block.toneko.sheng_deng.tooltip": "§c광둥성 의자 - 만능 해결사",
   "block.toneko.sheng_deng.tumble": "§4아야! 의자가 넘어져서 떨어졌다!",

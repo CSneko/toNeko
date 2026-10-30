@@ -1662,7 +1662,6 @@
   "hud.toneko.stealth.idle": "§7Stealth Standby",
   "messages.toneko.climb.no_energy": "§cNot enough neko energy to climb!",
   "messages.toneko.climb.no_wall": "No wall nearby to climb",
-  "messages.toneko.pounce.not_neko": "§cOnly neko can pounce!",
   "message.toneko.guide.need_patchouli": "§cYou need to install Patchouli to read this guide book!",
   "block.toneko.sheng_deng": "Provincial Stool",
   "block.toneko.sheng_deng.tooltip": "§cGuangdong Provincial Stool - The Universal Solution",

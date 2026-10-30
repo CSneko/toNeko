@@ -6,7 +6,6 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
@@ -91,13 +90,9 @@ public final class PounceClientHandler {
 
         if (sneakDown && sprintDown && !keysDownLogged) {
             keysDownLogged = true;
-            boolean neko = isNeko(player);
             LOGGER.info("[pounce] keys down: onGround={} water={} flying={} passenger={} hurt={} neko={} cooldown={} launched={} charging={}",
                     player.onGround(), player.isInWater(), player.getAbilities().flying, player.isPassenger(),
-                    player.hurtTime, neko, cooldown, launched, charging);
-            if (!neko) {
-                player.sendOverlayMessage(Component.translatable("messages.toneko.pounce.not_neko"));
-            }
+                    player.hurtTime, isNeko(player), cooldown, launched, charging);
         } else if ((!sneakDown || !sprintDown) && keysDownLogged) {
             keysDownLogged = false;
         }

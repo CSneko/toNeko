@@ -1288,7 +1288,6 @@
   "message.toneko.gift.empty_slot": "§c選択中のホットバースロットは空です",
   "messages.toneko.climb.no_energy": "§c猫娘エネルギーが不足しています！",
   "messages.toneko.climb.no_wall": "近くに登れる壁がありません",
-  "messages.toneko.pounce.not_neko": "§c猫娘だけが飛びかかれます！",
   "block.toneko.sheng_deng": "省凳",
   "block.toneko.sheng_deng.tooltip": "§c広東省の省凳 —— なんでも省凳で解決",
   "block.toneko.sheng_deng.tumble": "§4痛っ！凳が倒れて転んじゃった！",

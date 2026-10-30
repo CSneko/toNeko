@@ -1441,7 +1441,6 @@
   "message.toneko.gift.empty_slot": "§c選中的快捷欄槽位是空的",
   "messages.toneko.climb.no_energy": "§c貓娘能量不足，無法繼續爬牆！",
   "messages.toneko.climb.no_wall": "附近沒有可以攀爬的牆壁",
-  "messages.toneko.pounce.not_neko": "§c只有貓娘才能撲躍！",
   "message.toneko.guide.need_patchouli": "§c需要安裝帕秋莉手冊（Patchouli）模組才能閱讀本指南喵！",
   "block.toneko.sheng_deng": "省凳",
   "block.toneko.sheng_deng.tooltip": "§c廣東省省凳 —— 萬物皆可省凳",
