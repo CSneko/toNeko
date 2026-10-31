@@ -31,7 +31,7 @@ import static org.cneko.toneko.common.mod.util.ResourceLocationUtil.toNekoLoc;
  * <ol>
  *   <li>客户端 {@code PounceClientHandler} 负责按键、蓄力条与本地预测；</li>
  *   <li>松开潜行时发 {@link org.cneko.toneko.common.mod.packets.PouncePayload}；</li>
- *   <li>服务端在本类中重新计算冲量并覆盖客户端预测，同时挂 3 秒 +6 近战攻击力、摔落减半；</li>
+ *   <li>服务端在本类中重新计算冲量并覆盖客户端预测，同时挂 3 秒伤害倍率、免疫摔落；</li>
  *   <li>起跳至落地期间 {@code PlayerEntityMixin} 把姿势钉成 {@code Pose.SWIMMING}（趴下/游泳）。</li>
  * </ol>
  *
@@ -45,12 +45,18 @@ public final class PounceHandler {
     /** 扑跃后的冷却 */
     public static final int COOLDOWN_TICKS = 10;
 
-    /** 落地前获得的近战攻击力加成 */
-    public static final double DAMAGE_BONUS = 6.0;
-    /** 攻击力加成持续时间：3 秒 */
+    /** 伤害倍率 = 2 + 0.1 × 猫娘等级（通过 ADD_MULTIPLIED_TOTAL 实现，3 秒） */
+    public static final double DAMAGE_MULTIPLIER_BASE = 2.0;
+    public static final double DAMAGE_MULTIPLIER_PER_LEVEL = 0.1;
+    /** 伤害倍率持续时间：3 秒 */
     public static final int DAMAGE_BONUS_TICKS = 60;
-    /** 扑跃期间摔落伤害减半（FALL_DAMAGE_MULTIPLIER 基础值 -50%） */
-    public static final double FALL_DAMAGE_REDUCTION = -0.5;
+    /** 扑跃期间完全免疫摔落伤害（FALL_DAMAGE_MULTIPLIER 归零） */
+    public static final double FALL_DAMAGE_NEGATION = -1.0;
+
+    /** 水平距离基础倍率：改版前满蓄力水平距离的 1/2 */
+    private static final double BASE_DISTANCE_SCALE = 0.5;
+    /** 每 1 级猫娘等级增加的距离倍率：基础 × (1 + 0.02 × 等级) */
+    private static final double DISTANCE_SCALE_PER_LEVEL = 0.02;
 
     /** 初速度：轻点 0.6 格/tick，蓄满 1.35 格/tick */
     private static final double MIN_POWER = 0.60;
@@ -166,7 +172,26 @@ public final class PounceHandler {
             vz *= scale;
         }
         vy = Mth.clamp(vy, MAX_DOWN, MAX_UP);
-        return new Vec3(vx, vy, vz);
+
+        // 距离上限随猫娘等级提升：只缩放水平分量（高度/滞空保持原样），
+        // 这样水平距离严格按 0.5 × (1 + 0.02 × 等级) 线性变化
+        double distanceScale = distanceScale(nekoLevelOf(player));
+        return new Vec3(vx * distanceScale, vy, vz * distanceScale);
+    }
+
+    /** 扑跃水平距离倍率：0.5 × (1 + 0.02 × 等级)，即改版前满蓄力水平距离的 1/2 起步 */
+    public static double distanceScale(float nekoLevel) {
+        return BASE_DISTANCE_SCALE * (1.0 + DISTANCE_SCALE_PER_LEVEL * Math.max(0.0f, nekoLevel));
+    }
+
+    /** 扑跃伤害倍率：2 + 0.1 × 猫娘等级 */
+    public static double damageMultiplier(float nekoLevel) {
+        return DAMAGE_MULTIPLIER_BASE + DAMAGE_MULTIPLIER_PER_LEVEL * Math.max(0.0f, nekoLevel);
+    }
+
+    /** 取猫娘等级（非猫娘按 0 处理） */
+    public static float nekoLevelOf(Player player) {
+        return player instanceof INeko neko ? neko.getNekoLevel() : 0.0f;
     }
 
     /** 该玩家此刻是否处于「扑跃后到落地前」的空中阶段（双端可调用）。 */
@@ -254,7 +279,7 @@ public final class PounceHandler {
             }
             int ticks = entry.getValue() + 1;
             entry.setValue(ticks);
-            // 落地：恢复姿势（isPouncing 变 false 后由原版 updatePlayerPose 重算）、清摔落减伤
+            // 落地：恢复姿势（isPouncing 变 false 后由原版 updatePlayerPose 重算）、清摔落免疫
             boolean landed = ticks > 2 && player.onGround();
             if (landed) {
                 spawnLandingDust(player);
@@ -272,8 +297,10 @@ public final class PounceHandler {
         if (attr == null) {
             return;
         }
+        // 倍率 M 通过 ADD_MULTIPLIED_TOTAL 实现：最终攻击力 = 原值 × (1 + amount) = 原值 × M
+        double amount = damageMultiplier(nekoLevelOf(player)) - 1.0;
         attr.addOrUpdateTransientModifier(new AttributeModifier(
-                DAMAGE_BONUS_ID, DAMAGE_BONUS, AttributeModifier.Operation.ADD_VALUE
+                DAMAGE_BONUS_ID, amount, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
         ));
         // 重复扑跃只刷新持续时间，不叠加
         BUFF_EXPIRY.put(player.getUUID(), now + DAMAGE_BONUS_TICKS);
@@ -291,8 +318,9 @@ public final class PounceHandler {
         if (attr == null) {
             return;
         }
+        // -100% 基础倍率 → 摔落伤害归零：扑跃期间及落地瞬间完全不摔伤
         attr.addOrUpdateTransientModifier(new AttributeModifier(
-                FALL_REDUCTION_ID, FALL_DAMAGE_REDUCTION, AttributeModifier.Operation.ADD_MULTIPLIED_BASE
+                FALL_REDUCTION_ID, FALL_DAMAGE_NEGATION, AttributeModifier.Operation.ADD_MULTIPLIED_BASE
         ));
     }
 
