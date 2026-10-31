@@ -29,6 +29,7 @@ import org.cneko.toneko.common.api.Permissions;
 import org.cneko.toneko.common.api.TickTasks;
 import org.cneko.toneko.common.mod.advencements.ToNekoCriteria;
 import org.cneko.toneko.common.mod.abilities.ClimbWallHandler;
+import org.cneko.toneko.common.mod.abilities.PounceHandler;
 import org.cneko.toneko.common.mod.api.EntityPoseManager;
 import org.cneko.toneko.common.mod.api.StompSessionManager;
 import org.cneko.toneko.common.mod.entities.CrystalNekoEntity;
@@ -134,6 +135,9 @@ public class ToNekoNetworkEvents {
         ServerPlayNetworking.registerGlobalReceiver(LegwearPullUpPayload.ID, ToNekoNetworkEvents::onLegwearPullUp);
         // 玩味的踩
         ServerPlayNetworking.registerGlobalReceiver(StompActionPayload.ID, ToNekoNetworkEvents::onStomp);
+        // 扑跃：松开潜行键时释放，服务端重新校验并计算冲量
+        ServerPlayNetworking.registerGlobalReceiver(PouncePayload.ID, (payload, context) ->
+                context.server().execute(() -> PounceHandler.launch(context.player(), payload.chargeTicks())));
     }
 
     /**

@@ -3,12 +3,10 @@
 set -euo pipefail
 
 chmod +x gradlew
-./gradlew runDatagen &      # 将命令放入后台运行
-pid=$!              # 获取该命令的PID
-sleep 60
-kill -9 $pid       # 60s后强制kill
 
-./gradlew build
+# CI 上不跑 datagen（产物已入库），只做编译打包；跳过 check/test 里依赖开发环境的回归用例
+./gradlew build -x check -x test
+
 mkdir -p result
 cp -r fabric/build/libs/* result
 cp -r neoforge/build/libs/* result

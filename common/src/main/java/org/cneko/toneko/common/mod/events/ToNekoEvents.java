@@ -30,6 +30,7 @@ import org.cneko.toneko.common.mod.abilities.CharmAffectionHandler;
 import org.cneko.toneko.common.mod.abilities.ScentAreaHandler;
 import org.cneko.toneko.common.mod.abilities.CharmBlushHandler;
 import org.cneko.toneko.common.mod.abilities.ClimbWallHandler;
+import org.cneko.toneko.common.mod.abilities.PounceHandler;
 import org.cneko.toneko.common.mod.abilities.LegwearSagHandler;
 import org.cneko.toneko.common.mod.abilities.ScentAccumulationHandler;
 import org.cneko.toneko.common.mod.abilities.ScentDetectionHandler;
@@ -76,6 +77,15 @@ public class ToNekoEvents {
         UseEntityCallback.EVENT.register(CommonPlayerInteractionEvent::useEntity);
         UseBlockCallback.EVENT.register(CommonPlayerInteractionEvent::useBlock);
         ServerLivingEntityEvents.ALLOW_DAMAGE.register(CommonPlayerInteractionEvent::onDamage);
+        // 扑跃加成：首次近战命中后结束。放在伤害结算之后，保证这一下能吃到 +6；
+        // 只认直接造成伤害的实体，弓箭/投掷物（directEntity 是弹射物）不消耗。
+        ServerLivingEntityEvents.AFTER_DAMAGE.register((entity, source, baseDamage, damageTaken, blocked) -> {
+            if (blocked || damageTaken <= 0) return;
+            if (source.getEntity() instanceof ServerPlayer attacker
+                    && source.getDirectEntity() == attacker) {
+                PounceHandler.consumeDamageBonus(attacker);
+            }
+        });
         ServerLivingEntityEvents.AFTER_DEATH.register((entity, source) -> {
             if (entity instanceof INeko || !(entity instanceof Monster)) return;
             Entity killer = source.getEntity();
@@ -104,6 +114,7 @@ public class ToNekoEvents {
         ServerTickEvents.START_SERVER_TICK.register(NekoEnergyBurstItem::tickComboBossBars);
         ServerTickEvents.START_SERVER_TICK.register(NekoEnergyBatteryItem::dischargeAllPlayers);
         ServerTickEvents.START_SERVER_TICK.register(ClimbWallHandler::onServerTick);
+        ServerTickEvents.START_SERVER_TICK.register(PounceHandler::onServerTick);
         ServerTickEvents.START_SERVER_TICK.register(ZettaiRyouikiAuraHandler::onServerTick);
         ServerTickEvents.START_SERVER_TICK.register(LegwearSagHandler::onServerTick);
         ServerTickEvents.START_SERVER_TICK.register(CharmAffectionHandler::onServerTick);
