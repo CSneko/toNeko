@@ -25,6 +25,11 @@
     },
     {
       "type": "patchouli:text",
+      "title": "Dyeing",
+      "text": "Put $(item)Neko Ears$(), $(item)Neko Tail$() or $(item)Neko Paws$() in a $(thing)crafting grid$() together with any $(item)Dye$() to color them; just like leather armor, dyeing again mixes the colors.$(br2)To reset the color, wash the dyed piece in a water-filled $(item)Cauldron$()."
+    },
+    {
+      "type": "patchouli:text",
       "title": "Trinkets Support",
       "text": "If you have the $(thing)Trinkets$() mod installed, neko armor can be equipped in $(#FF69B4)trinket slots$() without occupying regular armor slots:$(br2)$(li)Neko Ears → Head trinket slot$(li)Neko Tail → Back trinket slot$(br2)This lets you wear full diamond armor AND neko armor at the same time — powerful AND cute!"
     },
