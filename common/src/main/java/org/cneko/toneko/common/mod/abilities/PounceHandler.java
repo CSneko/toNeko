@@ -53,8 +53,8 @@ public final class PounceHandler {
     /** 扑跃期间完全免疫摔落伤害（FALL_DAMAGE_MULTIPLIER 归零） */
     public static final double FALL_DAMAGE_NEGATION = -1.0;
 
-    /** 水平距离基础倍率：改版前满蓄力水平距离的 1/2 */
-    private static final double BASE_DISTANCE_SCALE = 0.5;
+    /** 基础冲量倍率：原 0.5 的三倍（1.5），0 级即为改版前满蓄力的 1.5 倍 */
+    private static final double BASE_DISTANCE_SCALE = 1.5;
     /** 每 1 级猫娘等级增加的距离倍率：基础 × (1 + 0.02 × 等级) */
     private static final double DISTANCE_SCALE_PER_LEVEL = 0.02;
 
@@ -153,7 +153,8 @@ public final class PounceHandler {
     public static Vec3 computeImpulse(Player player, double t) {
         double clamped = Mth.clamp(t, 0.0, 1.0);
         Vec3 look = player.getLookAngle();
-        double speed = MAX_POWER * clamped * distanceScale(nekoLevelOf(player));
+        // 开方：距离/高度都与 (1 + 0.02 × 等级) 近似线性增长，避免高等级时按平方爆炸
+        double speed = MAX_POWER * clamped * Math.sqrt(distanceScale(nekoLevelOf(player)));
         return new Vec3(look.x * speed, look.y * speed, look.z * speed);
     }
 
