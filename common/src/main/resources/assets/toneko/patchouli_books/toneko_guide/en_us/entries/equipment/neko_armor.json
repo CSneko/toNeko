@@ -27,6 +27,11 @@
       "type": "patchouli:text",
       "title": "Trinkets Support",
       "text": "If you have the $(thing)Trinkets$() mod installed, neko armor can be equipped in $(#FF69B4)trinket slots$() without occupying regular armor slots:$(br2)$(li)Neko Ears → Head trinket slot$(li)Neko Tail → Back trinket slot$(br2)This lets you wear full diamond armor AND neko armor at the same time — powerful AND cute!"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Curios Support",
+      "text": "With $(thing)Curios$() installed on NeoForge, the ears and tail get $(#FF69B4)dedicated curio slots$():$(br2)$(li)Neko Ears → $(thing)ears$() slot$(li)Neko Tail → $(thing)tail$() slot$(br2)By default they stay in their own slots instead of competing with helmets and backpacks for $(thing)head$() / $(thing)back$(), so you can wear a helmet and cat ears at the same time~$(br2)Ears and tails already equipped in the head/back curio slots in $(#FF69B4)old saves$() keep working (the original slots are still available)."
     }
   ]
 }

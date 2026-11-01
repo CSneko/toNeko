@@ -27,6 +27,11 @@
       "type": "patchouli:text",
       "title": "Trinkets 支持",
       "text": "如果你安装了 $(thing)Trinkets$() 模组，猫娘护甲可以装备在 $(#FF69B4)饰品栏$() 中，不占用普通护甲槽：$(br2)$(li)猫耳 → 头部饰品槽$(li)猫尾 → 背部饰品槽$(br2)这样你就能同时穿戴钻石套和猫娘护甲，又强又可爱！"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Curios 支持",
+      "text": "NeoForge 上安装 $(thing)Curios$() 后，猫耳和猫尾会多出 $(#FF69B4)专属饰品槽$()：$(br2)$(li)猫耳 → $(thing)ears$() 耳部槽$(li)猫尾 → $(thing)tail$() 尾部槽$(br2)默认情况下它们会待在专属槽里，不再和头盔、背包抢 $(thing)head$() / $(thing)back$() 槽位，想同时戴头盔和猫耳也没问题~$(br2)$(#FF69B4)旧存档$()里已经装在头部/背部饰品槽的猫耳猫尾仍然有效（原来的槽位也保留着）。"
     }
   ]
 }

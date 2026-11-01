@@ -30,9 +30,11 @@ import static org.cneko.toneko.neoforge.items.ToNekoItems.NEKO_TAIL_HOLDER;
  * <p>
  * 与 Fabric 的 Trinkets 集成（{@code NekoArmorTrinkets} / {@code LegwearTrinkets}）对齐：
  * <ul>
- *   <li>猫耳 → {@code head} 头部槽、猫尾 → {@code back} 背部槽：
- *       Curios 默认槽位带 {@code curios:tag} 校验器，通过物品标签
- *       （{@code data/curios/tags/item/}，位于 common 资源）准入；</li>
+ *   <li>猫耳 → 专属 {@code ears} 耳部槽、猫尾 → 专属 {@code tail} 尾部槽
+ *       （{@code data/toneko/curios/slots/ears.json} / {@code tail.json}，
+ *       准入标签 {@code data/curios/tags/item/ears.json} / {@code tail.json}），
+ *       这样戴猫耳不再占用 {@code head}、戴猫尾不再占用 {@code back}；
+ *       旧的 {@code head}/{@code back} 标签保留，老存档已装备的物品不会被踢出；</li>
  *   <li>猫爪 → 无标签限制，可放入通用 {@code curio} 槽（默认无校验器）；</li>
  *   <li>丝袜（4 款腿部服饰）→ 自定义 {@code socks} 槽
  *       （{@code data/toneko/curios/slots/socks.json}，同样带 tag 校验器；
@@ -62,7 +64,7 @@ public final class NekoArmorCurios {
         CuriosApi.registerCurio(LEGWEAR_PANTYHOSE_5D_HOLDER.get(), legwear);
         CuriosApi.registerCurio(LEGWEAR_OVER_KNEE_HOLDER.get(), legwear);
         LOGGER.info("Curios detected, registering Neko Armors & Legwear as Curios "
-                + "(ears→head, tail→back, paws→curio, legwear→socks)");
+                + "(ears→ears slot, tail→tail slot, paws→curio, legwear→socks)");
     }
 
     /** 猫耳行为：+0.05 猫娘度 + 1 个额外头部饰品槽 */
