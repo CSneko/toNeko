@@ -25,7 +25,7 @@ import static org.cneko.toneko.common.Bootstrap.LOGGER;
 import static org.cneko.toneko.common.mod.util.ResourceLocationUtil.toNekoLoc;
 
 /**
- * 扑跃（Pounce）：猫娘按住潜行 + 疾跑蓄力，松开潜行后向前上方弹出。
+ * 扑跃（Pounce）：猫娘按住潜行 + 疾跑蓄力，松开潜行后沿视线方向弹出。
  *
  * <p>流程：
  * <ol>
@@ -58,16 +58,8 @@ public final class PounceHandler {
     /** 每 1 级猫娘等级增加的距离倍率：基础 × (1 + 0.02 × 等级) */
     private static final double DISTANCE_SCALE_PER_LEVEL = 0.02;
 
-    /** 初速度：轻点 0.6 格/tick，蓄满 1.35 格/tick */
-    private static final double MIN_POWER = 0.60;
+    /** 满蓄力冲量大小（沿视线方向，1.35 格/tick） */
     private static final double MAX_POWER = 1.35;
-    /** 蓄力附加的向上分量：轻点 0.12，蓄满 0.72；俯仰角仍决定基础方向 */
-    private static final double MIN_LIFT = 0.12;
-    private static final double MAX_LIFT = 0.72;
-    /** 冲量上限：水平约 11 格、垂直约 8.5 格（避免看天时飞出天际） */
-    private static final double MAX_HORIZONTAL = 1.15;
-    private static final double MAX_UP = 1.30;
-    private static final double MAX_DOWN = -1.00;
 
     private static final Identifier DAMAGE_BONUS_ID = toNekoLoc("pounce_damage_bonus");
     private static final Identifier FALL_REDUCTION_ID = toNekoLoc("pounce_fall_reduction");
@@ -152,34 +144,20 @@ public final class PounceHandler {
     /**
      * 计算扑跃冲量（客户端预测与服务端权威共用，保证两端一致）。
      *
+     * <p>方向完全取视线方向（含俯仰），大小只由蓄力进度与猫娘等级决定：
+     * 同样的蓄力 = 同样的冲量大小，抬头就飞、平视就贴地平推、看地就往下扑。
+     *
      * @param player 玩家
      * @param t      蓄力进度 0~1
      */
     public static Vec3 computeImpulse(Player player, double t) {
         double clamped = Mth.clamp(t, 0.0, 1.0);
         Vec3 look = player.getLookAngle();
-        double power = MIN_POWER + (MAX_POWER - MIN_POWER) * clamped;
-        double lift = MIN_LIFT + (MAX_LIFT - MIN_LIFT) * clamped;
-
-        double vx = look.x * power;
-        double vz = look.z * power;
-        double vy = look.y * power + lift;
-
-        double horizontal = Math.sqrt(vx * vx + vz * vz);
-        if (horizontal > MAX_HORIZONTAL) {
-            double scale = MAX_HORIZONTAL / horizontal;
-            vx *= scale;
-            vz *= scale;
-        }
-        vy = Mth.clamp(vy, MAX_DOWN, MAX_UP);
-
-        // 距离上限随猫娘等级提升：只缩放水平分量（高度/滞空保持原样），
-        // 这样水平距离严格按 0.5 × (1 + 0.02 × 等级) 线性变化
-        double distanceScale = distanceScale(nekoLevelOf(player));
-        return new Vec3(vx * distanceScale, vy, vz * distanceScale);
+        double speed = MAX_POWER * clamped * distanceScale(nekoLevelOf(player));
+        return new Vec3(look.x * speed, look.y * speed, look.z * speed);
     }
 
-    /** 扑跃水平距离倍率：0.5 × (1 + 0.02 × 等级)，即改版前满蓄力水平距离的 1/2 起步 */
+    /** 扑跃冲量倍率：0.5 × (1 + 0.02 × 等级)，冲量大小与水平距离都按此线性成长 */
     public static double distanceScale(float nekoLevel) {
         return BASE_DISTANCE_SCALE * (1.0 + DISTANCE_SCALE_PER_LEVEL * Math.max(0.0f, nekoLevel));
     }
