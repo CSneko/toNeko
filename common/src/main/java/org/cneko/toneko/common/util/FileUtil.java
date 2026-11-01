@@ -107,7 +107,8 @@ public class FileUtil {
     }
 
     public static int readNumberFromFile(String filePath) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+        try (BufferedReader reader = java.nio.file.Files.newBufferedReader(
+                java.nio.file.Path.of(filePath), StandardCharsets.UTF_8)) {
             String line = reader.readLine();
             if (line != null) {
                 return Integer.parseInt(line);
@@ -119,7 +120,8 @@ public class FileUtil {
     }
 
     public static String readStringFromFile(String filePath) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+        try (BufferedReader reader = java.nio.file.Files.newBufferedReader(
+                java.nio.file.Path.of(filePath), StandardCharsets.UTF_8)) {
             StringBuilder content = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
@@ -153,7 +155,8 @@ public class FileUtil {
 
     public static String readFileWithException(String filePath) throws IOException {
         StringBuilder content = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+        try (BufferedReader reader = java.nio.file.Files.newBufferedReader(
+                java.nio.file.Path.of(filePath), StandardCharsets.UTF_8)) {
             String line;
             while ((line = reader.readLine()) != null) {
                 content.append(line).append("\n");

@@ -67,7 +67,7 @@ public class HttpBase {
             }
 
             // 获取响应内容
-            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), java.nio.charset.StandardCharsets.UTF_8));
             StringBuilder response = new StringBuilder();
             String line;
 
