@@ -4,6 +4,8 @@ import org.cneko.toneko.common.mod.entities.INeko;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.world.damagesource.DamageSource;
 import org.cneko.toneko.common.mod.advencements.ToNekoCriteria;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -29,10 +31,18 @@ public class NineLivesCharmItem extends Item {
     /**
      * 当玩家即将死亡时调用。尝试消耗护符阻止死亡。
      *
+     * <p>与原版不死图腾一致：{@link DamageTypeTags#BYPASSES_INVULNERABILITY} 类伤害
+     * （虚空/出界、{@code /kill} 等）不可被护符抵消，否则玩家会卡在虚空里反复消耗护符，
+     * 创造模式掉入虚空也会被意外“救回”。
+     *
      * @param player 即将死亡的玩家
+     * @param source 致死伤害来源
      * @return {@code true} 表示允许死亡（护符未触发），{@code false} 表示死亡被阻止
      */
-    public static boolean tryPreventDeath(ServerPlayer player) {
+    public static boolean tryPreventDeath(ServerPlayer player, DamageSource source) {
+        if (source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
+            return true;
+        }
         if (((INeko) player).isNeko()) {
             return tryUseAsNeko(player);
         } else {
