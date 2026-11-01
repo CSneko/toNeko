@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "Becoming a neko grants you not just a cute appearance, but also $(#FF69B4)three special abilities$()：$(thing)Neko Stealth$(), $(thing)Claw Climbing$(), and $(thing)Creeper Affinity$().$(br2)All three consume $(thing)Neko Energy$() to use — managing your energy wisely is a must-learn skill for every neko!$(br2)$(#FFB6C1)Nekos aren't just cute — we're quite capable!$()"
+      "text": "Becoming a neko grants you not just a cute appearance, but also $(#FF69B4)four special abilities$()：$(thing)Neko Stealth$(), $(thing)Claw Climbing$(), $(thing)Creeper Affinity$(), and $(thing)Neko Pounce$().$(br2)Stealth and climbing consume $(thing)Neko Energy$(); pounce costs no energy and only has a short cooldown. Managing your energy wisely is a must-learn skill for every neko!$(br2)$(#FFB6C1)Nekos aren't just cute — we're quite capable!$()"
     },
     {
       "type": "patchouli:text",
@@ -30,8 +30,18 @@
     },
     {
       "type": "patchouli:text",
+      "title": "🐈 Neko Pounce",
+      "text": "Hold $(#FF69B4)Sneak (Shift)$() and $(#FF69B4)Sprint (Ctrl)$() together to charge up, then $(thing)release Sneak$() to launch yourself along your $(#FF69B4)look direction$().$(br2)$(li)Max charge is $(#FF69B4)2 seconds$(); anything under $(#FF69B4)0.25s$() counts as a misclick$(li)A charge bar appears where the XP bar normally is$(li)Direction is purely your crosshair: look up to fly, straight ahead to dash, down to dive$(li)Wind-charge sound on launch, dust on landing$(br2)Only $(thing)Nekos$() can use it, and you must be standing on the ground — it won't fire in water, while gliding, or while riding."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Pounce Numbers & Tips",
+      "text": "What pounce gives you:$(br2)$(li)For $(#FF69B4)3 seconds$() after launch, melee damage ×$(#FF69B4)(2 + 0.1 × Neko level)$(); ends early on the first hit$(li)$(#FF69B4)Complete fall-damage immunity$() during the pounce and on the landing tick$(li)You automatically take a $(thing)swimming/prone$() pose in the air, standing upright again on landing$(li)Only a $(#FF69B4)0.5s$() cooldown, and no Neko Energy cost$(br2)Impulse = $(#FF69B4)1.35 × charge progress × √(1.5 × (1 + 0.02 × level))$() blocks/tick — longer charge and higher level mean farther and higher.$(br2)$(#FFB6C1)Ground dash, wall-hop, or face-first dive — your crosshair decides how you pounce!$()"
+    },
+    {
+      "type": "patchouli:text",
       "title": "Energy Management Tips",
-      "text": "All three abilities rely on $(thing)Neko Energy$(). Manage it well:$(br2)$(li)Always carry some $(item)Catnip$() — quick 30 energy boost$(li)Keep a $(item)Neko Energy Battery$() in your bag — automatic buffering$(li)Get close with neko NPCs — $(thing)cuddling$() restores energy for both sides$(li)Stealth + climbing in a row is very energy-hungry — pace yourself$(br2)$(#FFB6C1)Energy is a neko's second life — cherish it well, meow~$()"
+      "text": "Stealth and climbing rely on $(thing)Neko Energy$()（pounce costs none, it only has a 0.5s cooldown）. Manage it well:$(br2)$(li)Always carry some $(item)Catnip$() — quick 30 energy boost$(li)Keep a $(item)Neko Energy Battery$() in your bag — automatic buffering$(li)Get close with neko NPCs — $(thing)cuddling$() restores energy for both sides$(li)Stealth + climbing in a row is very energy-hungry — pace yourself$(br2)$(#FFB6C1)Energy is a neko's second life — cherish it well, meow~$()"
     }
   ]
 }
