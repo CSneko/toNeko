@@ -475,7 +475,11 @@ public abstract class NekoEntity extends AgeableMob implements GeoEntity, INeko,
             // 增长动力
             this.addGatheringPower(10);
             if (this.equipArmors(stack)){
-                // 装备
+                // 装备成功也要从玩家手上扣掉一个：equipArmors 复制的是 stack.copy().split(1)，
+                // 不扣就会复制物品（#123）
+                if (!player.isCreative()) {
+                    stack.shrink(1);
+                }
                 return true;
             }
             // 达成进度
