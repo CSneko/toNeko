@@ -105,7 +105,7 @@ public class ToNekoEvents {
         CauldronScentHandler.registerCauldronInteractions();
         ServerLivingEntityEvents.ALLOW_DEATH.register((entity, source, amount) -> {
             if (entity instanceof ServerPlayer player) {
-                return NineLivesCharmItem.tryPreventDeath(player);
+                return NineLivesCharmItem.tryPreventDeath(player, source);
             }
             return true;
         });

@@ -7,7 +7,7 @@
     {
       "type": "patchouli:spotlight",
       "item": "toneko:nine_lives_charm",
-      "text": "The $(item)Nine Lives Charm$() is a $(#FF69B4)rare talisman$() — cats are said to have nine lives, and now you can too!$(br2)When you take fatal damage, the charm automatically activates to $(#FF69B4)prevent death$() and restore some of your health. Each activation consumes 1 \"life\", with $(#FF69B4)9 lives$() in total.$(br2)The durability bar tracks your remaining lives — once depleted, the charm vanishes meow~"
+      "text": "The $(item)Nine Lives Charm$() is a $(#FF69B4)rare talisman$() — cats are said to have nine lives, and now you can too!$(br2)When you take fatal damage, the charm automatically activates to $(#FF69B4)prevent death$() and restore some of your health. Each activation consumes 1 \"life\", with $(#FF69B4)9 lives$() in total.$(br2)The durability bar tracks your remaining lives — once depleted, the charm vanishes meow~$(br2)Like a vanilla $(item)Totem of Undying$(), $(#FF69B4)void damage$()（falling out of the world）and $(thing)/kill$() cannot be prevented."
     },
     {
       "type": "patchouli:text",

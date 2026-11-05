@@ -43,9 +43,32 @@ public class CNekoAIService extends AbstractAIService<GeminiConfig> {
 
         return HttpRequest.newBuilder(buildUri("/?" + query))
                 .header("Content-Type", "application/json")
-                .header("msg", jsonBody)
+                .header("msg", toAsciiJson(jsonBody))
                 .POST(HttpRequest.BodyPublishers.ofString(jsonBody, StandardCharsets.UTF_8))
                 .build();
+    }
+
+    /**
+     * 把 JSON 里的非 ASCII 字符转成 {@code \\uXXXX} 转义。
+     *
+     * <p>{@link HttpRequest.Builder#header} 只接受 ISO-8859-1 范围内的头值，遇到中文等字符会直接抛
+     * {@link IllegalArgumentException}（JDK 行为），导致历史里只要出现一次中文，后续请求就全部失败。
+     * HTTP 头本身也不适合承载 UTF-8 文本：旧实现把 UTF-8 字节直接塞进头里，服务端按 Latin-1 解码后
+     * 历史就成了乱码（#118）。
+     *
+     * <p>转义后的串仍是合法 JSON，服务端 {@code JSON.parse} 会还原成同样的字符串，且全部字符都是 ASCII。
+     */
+    private static String toAsciiJson(String json) {
+        StringBuilder sb = new StringBuilder(json.length() + 16);
+        for (int i = 0; i < json.length(); i++) {
+            char c = json.charAt(i);
+            if (c < 0x80) {
+                sb.append(c);
+            } else {
+                sb.append(String.format("\\u%04x", (int) c));
+            }
+        }
+        return sb.toString();
     }
 
     @Override

@@ -5,7 +5,9 @@
   ],
   "slots": [
     "head",
+    "ears",
     "back",
+    "tail",
     "curio",
     "socks"
   ]

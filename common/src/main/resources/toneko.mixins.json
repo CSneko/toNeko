@@ -10,6 +10,7 @@
     "client.HallucinationCameraMixin",
     "client.ChatScreenMixin",
     "client.ClientLevelAccessor",
+    "client.FirstPersonLeashMixin",
     "client.PlayerRendererMixin",
     "client.SoundEngineMixin"
   ],
