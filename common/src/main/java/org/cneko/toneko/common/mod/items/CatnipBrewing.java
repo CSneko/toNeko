@@ -26,8 +26,8 @@ import java.util.Optional;
  * <p>暂时还没有实际效果，{@link PotionContents} 里只带一个绿色用于染色；效果后续再加。
  */
 public final class CatnipBrewing {
-    /** 猫薄荷水的颜色（给原版 potion 染色层用） */
-    public static final int COLOR = 0x7CBF4A;
+    /** 猫薄荷水的颜色：取自猫薄荷物品贴图的主色（#88B008） */
+    public static final int COLOR = 0x88B008;
 
     /**
      * 物品默认的 {@link PotionContents}。
