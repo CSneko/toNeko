@@ -1,5 +1,6 @@
 package org.cneko.toneko.common.mod.items;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.effect.MobEffect;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * 猫薄荷水的酿造规则与药水内容。
+ * 猫薄荷水的酿造规则、默认药水内容与运行时效果。
  *
  * <p>三条配方，全部在酿造台里完成（和原版药水一样）：
  * <ol>
@@ -24,55 +25,61 @@ import java.util.Optional;
  *   <li>{@code 喷溅型猫薄荷水 + 龙息 → 滞留型猫薄荷水}（同上）。</li>
  * </ol>
  *
- * <p>原版 {@code PotionBrewing} 只认识 {@code Items.POTION/SPLASH_POTION/LINGERING_POTION}，
- * 所以这三条配方由 {@code PotionBrewingMixin} 在 {@code isIngredient/hasMix/mix} 处注入。
+ * <p><b>为什么默认内容里不带效果：</b>物品的默认组件来自 {@code Item.Properties}，
+ * 而 {@code /give}、创造模式物品栏都用 {@code new ItemStack(item)} 读取它（不会走
+ * {@code getDefaultInstance}）。Fabric 上物品注册早于效果注册、NeoForge 上效果 Holder 更是
+ * 在注册事件里才可用，所以 Properties 阶段拿不到 NEKO_EFFECT / CATNIP_AROMA。
  *
- * <p>药水内容按需构建：物品注册（Fabric 上）早于效果注册，静态常量会在效果还没注册时初始化，
- * 所以这里用惰性构建，并且效果缺失时退回「只有颜色、没有效果」的版本。
+ * <p>于是拆成两层：
+ * <ul>
+ *   <li>Properties / 默认实例：只放「水 + 绿色」的静态内容（染色 + 酿造槽识别）；</li>
+ *   <li>喝下 / 抛出时：再通过 {@link #excitementInstance()} / {@link #aromaContents()} 挂效果。</li>
+ * </ul>
  */
 public final class CatnipBrewing {
     /** 猫薄荷水的颜色：取自猫薄荷物品贴图的主色（#88B008） */
     public static final int COLOR = 0x88B008;
 
     /** 普通猫薄荷水：兴奋 II 持续 10000 tick（和猫薄荷本体一致） */
-    private static final int DRINK_DURATION = 10000;
+    public static final int DRINK_DURATION = 10000;
     /** 喷溅 / 滞留：猫薄荷香气持续 8 分钟 */
-    private static final int AROMA_DURATION = 8 * 60 * 20;
+    public static final int AROMA_DURATION = 8 * 60 * 20;
 
     private static PotionContents baseContents;
-    private static PotionContents drinkContents;
     private static PotionContents aromaContents;
 
     private CatnipBrewing() {
     }
 
-    /** 只带颜色、没有效果的兜底内容（效果尚未注册时使用）。 */
-    private static PotionContents baseContents() {
+    /**
+     * 默认内容：水（让酿造槽和 {@code PotionSlot} 认为这是药水）+ 自定义颜色，没有效果。
+     * 这个可以在物品构造阶段安全使用。
+     */
+    public static PotionContents baseContents() {
         if (baseContents == null) {
             baseContents = new PotionContents(Optional.of(Potions.WATER), Optional.of(COLOR), List.of(), Optional.empty());
         }
         return baseContents;
     }
 
-    /** 普通猫薄荷水喝下后的内容：兴奋 II。 */
-    public static PotionContents drinkContents() {
+    /** 普通猫薄荷水喝下时挂的「兴奋 II」；效果未注册时返回 {@code null}。 */
+    public static MobEffectInstance excitementInstance() {
         MobEffect exciting = ToNekoEffects.NEKO_EFFECT;
-        if (drinkContents == null && exciting != null) {
-            drinkContents = new PotionContents(
-                    Optional.of(Potions.WATER),
-                    Optional.of(COLOR),
-                    List.of(new MobEffectInstance(holder(exciting), DRINK_DURATION, 1)),
-                    Optional.empty());
-        }
-        return drinkContents != null ? drinkContents : baseContents();
+        return exciting == null ? null : new MobEffectInstance(holder(exciting), DRINK_DURATION, 1);
     }
 
-    /** 喷溅 / 滞留的内容：猫薄荷香气（只对玩家生效）。 */
+    /**
+     * 喷溅 / 滞留的内容：猫薄荷香气（只对玩家生效）；效果未注册时退回默认内容。
+     *
+     * <p>药水部分故意用 {@link Potions#AWKWARD} 而不是水：{@code AbstractThrownPotion#onHit}
+     * 会先判断内容是不是水，是水就只走「浇水」分支、不调用 {@code onHitAsPotion}，
+     * 香气就永远挂不上。粗制的药水没有效果，但 customEffects 非空，能正常走药水分支。
+     */
     public static PotionContents aromaContents() {
         MobEffect aroma = ToNekoEffects.CATNIP_AROMA;
         if (aromaContents == null && aroma != null) {
             aromaContents = new PotionContents(
-                    Optional.of(Potions.WATER),
+                    Optional.of(Potions.AWKWARD),
                     Optional.of(COLOR),
                     List.of(new MobEffectInstance(holder(aroma), AROMA_DURATION, 0)),
                     Optional.empty());
@@ -80,7 +87,7 @@ public final class CatnipBrewing {
         return aromaContents != null ? aromaContents : baseContents();
     }
 
-    private static net.minecraft.core.Holder<MobEffect> holder(MobEffect effect) {
+    private static Holder<MobEffect> holder(MobEffect effect) {
         return BuiltInRegistries.MOB_EFFECT.wrapAsHolder(effect);
     }
 
@@ -91,11 +98,10 @@ public final class CatnipBrewing {
                 && instance.getEffect().value() == ToNekoEffects.CATNIP_AROMA;
     }
 
-    /** 造一个带正确药水内容的猫薄荷水物品堆。 */
+    /** 造一个带默认药水内容的猫薄荷水物品堆。 */
     public static ItemStack newStack(Item item) {
         ItemStack stack = new ItemStack(item);
-        stack.set(DataComponents.POTION_CONTENTS,
-                item == ToNekoItems.CATNIP_WATER ? drinkContents() : aromaContents());
+        stack.set(DataComponents.POTION_CONTENTS, baseContents());
         return stack;
     }
 
