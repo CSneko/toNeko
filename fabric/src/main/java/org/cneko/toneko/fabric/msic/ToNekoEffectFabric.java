@@ -3,6 +3,7 @@ package org.cneko.toneko.fabric.msic;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import org.cneko.toneko.common.mod.effects.BewitchedEffect;
+import org.cneko.toneko.common.mod.effects.CatnipAromaEffect;
 import org.cneko.toneko.common.mod.effects.ExcitingEffect;
 import org.cneko.toneko.common.mod.effects.HissIntimidationEffect;
 
@@ -15,5 +16,6 @@ public class ToNekoEffectFabric {
         NEKO_EFFECT = Registry.register(BuiltInRegistries.MOB_EFFECT, ExcitingEffect.LOCATION, new ExcitingEffect());
         BEWITCHED_EFFECT = Registry.register(BuiltInRegistries.MOB_EFFECT, BewitchedEffect.LOCATION, new BewitchedEffect());
         HISS_INTIMIDATION_EFFECT = Registry.register(BuiltInRegistries.MOB_EFFECT, HissIntimidationEffect.LOCATION, new HissIntimidationEffect());
+        CATNIP_AROMA = Registry.register(BuiltInRegistries.MOB_EFFECT, CatnipAromaEffect.LOCATION, new CatnipAromaEffect());
     }
 }

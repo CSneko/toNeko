@@ -23,7 +23,7 @@ public class CatnipLingeringItem extends LingeringPotionItem {
     @Override
     public @NotNull ItemStack getDefaultInstance() {
         ItemStack stack = super.getDefaultInstance();
-        stack.set(DataComponents.POTION_CONTENTS, CatnipBrewing.CONTENTS);
+        stack.set(DataComponents.POTION_CONTENTS, CatnipBrewing.aromaContents());
         return stack;
     }
 

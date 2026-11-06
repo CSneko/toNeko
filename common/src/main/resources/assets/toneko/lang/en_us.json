@@ -223,6 +223,7 @@
   "command.tonekoadmin.skin.list": "§bAll neko skins are here:\n %s",
   "command.tonekoadmin.skin.remove": "§aSuccessfully deleted %s §a skins meow",
   "effect.toneko.exciting": "Exciting",
+  "effect.toneko.catnip_aroma": "Catnip Aroma",
   "effect.toneko.bewitched": "Bewitched",
   "effect.toneko.hiss_intimidation": "Hiss Intimidation",
   "enchantment.toneko.enforcement": "Enforcement",
