@@ -65,6 +65,9 @@ public class ToNekoItems {
     public static Item SPOILED_WATER_SPLASH;
     public static Item SPOILED_WATER_LINGERING;
     public static Item SCENT_PERFUME;
+    public static CatnipWaterItem CATNIP_WATER;
+    public static CatnipSplashItem CATNIP_SPLASH;
+    public static CatnipLingeringItem CATNIP_LINGERING;
 
     public static final TagKey<Item> CATNIP_TAG = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c","foods/catnip"));
     public static final TagKey<Item> BAZOOKA_AMMO_TAG = TagKey.create(Registries.ITEM, toNekoLoc("bazooka_ammo"));

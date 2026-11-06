@@ -98,6 +98,9 @@ public class ToNekoItems {
     public static DeferredHolder<Item,SpoiledWaterThrowableItem> SPOILED_WATER_SPLASH_HOLDER;
     public static DeferredHolder<Item,SpoiledWaterThrowableItem> SPOILED_WATER_LINGERING_HOLDER;
     public static DeferredHolder<Item,ScentPerfumeItem> SCENT_PERFUME_HOLDER;
+    public static DeferredHolder<Item,CatnipWaterItem> CATNIP_WATER_HOLDER;
+    public static DeferredHolder<Item,CatnipSplashItem> CATNIP_SPLASH_HOLDER;
+    public static DeferredHolder<Item,CatnipLingeringItem> CATNIP_LINGERING_HOLDER;
 
     public static void init() {
         registerWithOutConfig();
@@ -218,6 +221,9 @@ public class ToNekoItems {
         SPOILED_WATER_SPLASH_HOLDER = ITEMS.register(SpoiledWaterThrowableItem.SPLASH_ID, () -> new SpoiledWaterThrowableItem(SpoiledWaterThrowableItem.SPLASH_ID, false));
         SPOILED_WATER_LINGERING_HOLDER = ITEMS.register(SpoiledWaterThrowableItem.LINGERING_ID, () -> new SpoiledWaterThrowableItem(SpoiledWaterThrowableItem.LINGERING_ID, true));
         SCENT_PERFUME_HOLDER = ITEMS.register(ScentPerfumeItem.ID, ScentPerfumeItem::new);
+        CATNIP_WATER_HOLDER = ITEMS.register(CatnipWaterItem.ID, CatnipWaterItem::new);
+        CATNIP_SPLASH_HOLDER = ITEMS.register(CatnipSplashItem.ID, CatnipSplashItem::new);
+        CATNIP_LINGERING_HOLDER = ITEMS.register(CatnipLingeringItem.ID, CatnipLingeringItem::new);
 
         // 注册物品组
         TONEKO_ITEM_GROUP_HOLDER = ToNekoNeoForge.CREATIVE_MODE_TABS.register("toneko_group", ()-> CreativeModeTab.builder()
@@ -284,6 +290,9 @@ public class ToNekoItems {
                     event.accept(SPOILED_WATER_SPLASH_HOLDER.get());
                     event.accept(SPOILED_WATER_LINGERING_HOLDER.get());
                     event.accept(SCENT_PERFUME_HOLDER.get());
+                    event.accept(CATNIP_WATER_HOLDER.get());
+                    event.accept(CATNIP_SPLASH_HOLDER.get());
+                    event.accept(CATNIP_LINGERING_HOLDER.get());
                     // 猫猫手册（Patchouli 指南书）
                     ItemStack guideBook = GuideBookItem.createGuideBookStack();
                     if (!guideBook.isEmpty()) {
@@ -369,6 +378,9 @@ public class ToNekoItems {
             event.accept(SPOILED_WATER_SPLASH_HOLDER.get());
             event.accept(SPOILED_WATER_LINGERING_HOLDER.get());
             event.accept(SCENT_PERFUME_HOLDER.get());
+            event.accept(CATNIP_WATER_HOLDER.get());
+            event.accept(CATNIP_SPLASH_HOLDER.get());
+            event.accept(CATNIP_LINGERING_HOLDER.get());
             // 猫猫手册（Patchouli 指南书）
             ItemStack guideBook = GuideBookItem.createGuideBookStack();
             if (!guideBook.isEmpty()) {
@@ -387,6 +399,9 @@ public class ToNekoItems {
         SPOILED_WATER_SPLASH = SPOILED_WATER_SPLASH_HOLDER.get();
         SPOILED_WATER_LINGERING = SPOILED_WATER_LINGERING_HOLDER.get();
         SCENT_PERFUME = SCENT_PERFUME_HOLDER.get();
+        CATNIP_WATER = CATNIP_WATER_HOLDER.get();
+        CATNIP_SPLASH = CATNIP_SPLASH_HOLDER.get();
+        CATNIP_LINGERING = CATNIP_LINGERING_HOLDER.get();
         CATNIP = CATNIP_HOLDER.get();
         INFINITE_CATNIP = INFINITE_CATNIP_HOLDER.get();
         WILD_CATNIP = WILD_CATNIP_HOLDER.get();
