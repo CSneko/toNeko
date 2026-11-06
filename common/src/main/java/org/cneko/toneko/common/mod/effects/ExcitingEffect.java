@@ -50,11 +50,12 @@ public class ExcitingEffect extends MobEffect {
     @Override
     public void addAttributeModifiers(@NotNull AttributeMap attributes, int amplifier) {
         float bonus = bonus(amplifier);
-        add(attributes, Attributes.MOVEMENT_SPEED, bonus);
-        add(attributes, Attributes.ATTACK_SPEED, bonus);
-        add(attributes, Attributes.JUMP_STRENGTH, bonus);
-        add(attributes, Attributes.ATTACK_DAMAGE, bonus);
-        add(attributes, ToNekoAttributes.NEKO_DEGREE, degreeBonus(amplifier));
+        add(attributes, Attributes.MOVEMENT_SPEED, bonus, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
+        add(attributes, Attributes.ATTACK_SPEED, bonus, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
+        add(attributes, Attributes.JUMP_STRENGTH, bonus, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
+        add(attributes, Attributes.ATTACK_DAMAGE, bonus, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
+        // 猫娘度保持原来的 ADD_VALUE 语义（基础值 1.0，+0.05 / +0.15）
+        add(attributes, ToNekoAttributes.NEKO_DEGREE, degreeBonus(amplifier), AttributeModifier.Operation.ADD_VALUE);
     }
 
     @Override
@@ -66,11 +67,11 @@ public class ExcitingEffect extends MobEffect {
         remove(attributes, ToNekoAttributes.NEKO_DEGREE);
     }
 
-    private static void add(AttributeMap attributes, Holder<Attribute> attribute, float amount) {
+    private static void add(AttributeMap attributes, Holder<Attribute> attribute, float amount,
+                            AttributeModifier.Operation operation) {
         AttributeInstance instance = attributes.getInstance(attribute);
         if (instance != null) {
-            instance.addOrUpdateTransientModifier(
-                    new AttributeModifier(LOCATION, amount, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
+            instance.addOrUpdateTransientModifier(new AttributeModifier(LOCATION, amount, operation));
         }
     }
 
