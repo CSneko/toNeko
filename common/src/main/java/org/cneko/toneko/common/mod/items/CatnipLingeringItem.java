@@ -8,16 +8,11 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.LingeringPotionItem;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import org.cneko.toneko.common.mod.util.NekoIds;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.function.Consumer;
 
 /**
  * 滞留型猫薄荷水：喷溅型猫薄荷水 + 龙息在酿造台酿造。
@@ -32,7 +27,8 @@ public class CatnipLingeringItem extends LingeringPotionItem {
 
     public CatnipLingeringItem() {
         super(NekoIds.itemProps(ID).stacksTo(1)
-                .component(DataComponents.POTION_CONTENTS, CatnipBrewing.baseContents()));
+                .component(DataComponents.POTION_CONTENTS, CatnipBrewing.baseContents())
+                .component(DataComponents.TOOLTIP_DISPLAY, CatnipBrewing.HIDE_POTION_TOOLTIP));
     }
 
     @Override
@@ -60,13 +56,5 @@ public class CatnipLingeringItem extends LingeringPotionItem {
     @Override
     public @NotNull Component getName(@NotNull ItemStack stack) {
         return Component.translatable(this.getDescriptionId());
-    }
-
-    @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context,
-                                @NotNull TooltipDisplay display, @NotNull Consumer<Component> adder,
-                                @NotNull TooltipFlag flag) {
-        super.appendHoverText(stack, context, display, adder, flag);
-        adder.accept(Component.translatable("item.toneko.catnip_lingering.tip"));
     }
 }

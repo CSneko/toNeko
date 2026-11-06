@@ -10,8 +10,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.component.TooltipDisplay;
 import org.cneko.toneko.common.mod.effects.ToNekoEffects;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,6 +49,13 @@ public final class CatnipBrewing {
 
     private static PotionContents baseContents;
     private static PotionContents aromaContents;
+
+    /**
+     * 隐藏药水组件的 tooltip：默认内容里没有效果，原版会显示一行「无效果」。
+     * 猫薄荷水不需要这行，直接把这个组件从 tooltip 里藏掉。
+     */
+    public static final TooltipDisplay HIDE_POTION_TOOLTIP = new TooltipDisplay(false,
+            new LinkedHashSet<>(List.of(DataComponents.POTION_CONTENTS)));
 
     private CatnipBrewing() {
     }

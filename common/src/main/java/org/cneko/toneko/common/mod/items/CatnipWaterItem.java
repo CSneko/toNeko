@@ -5,19 +5,14 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.PotionItem;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.Consumables;
-import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import org.cneko.toneko.common.mod.entities.INeko;
 import org.cneko.toneko.common.mod.util.NekoIds;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.function.Consumer;
 
 /**
  * 猫薄荷水：由「水瓶 + 猫薄荷」在酿造台酿造。
@@ -40,6 +35,7 @@ public class CatnipWaterItem extends PotionItem {
         super(NekoIds.itemProps(ID).stacksTo(1)
                 .component(DataComponents.CONSUMABLE, Consumables.DEFAULT_DRINK)
                 .component(DataComponents.POTION_CONTENTS, CatnipBrewing.baseContents())
+                .component(DataComponents.TOOLTIP_DISPLAY, CatnipBrewing.HIDE_POTION_TOOLTIP)
                 .usingConvertsTo(Items.GLASS_BOTTLE));
     }
 
@@ -72,13 +68,5 @@ public class CatnipWaterItem extends PotionItem {
     @Override
     public @NotNull Component getName(@NotNull ItemStack stack) {
         return Component.translatable(this.getDescriptionId());
-    }
-
-    @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context,
-                                @NotNull TooltipDisplay display, @NotNull Consumer<Component> adder,
-                                @NotNull TooltipFlag flag) {
-        super.appendHoverText(stack, context, display, adder, flag);
-        adder.accept(Component.translatable("item.toneko.catnip_water.tip"));
     }
 }
