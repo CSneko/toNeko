@@ -209,10 +209,10 @@ public class HudRenderEvent {
         }
 
         // 绘制猫薄荷图标（在能量条左侧）
-        context.blit(CATNIP_ICON,
+        context.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, CATNIP_ICON,
                 x - iconSize - 2,  // 放在能量条左边，间隔2像素
                 y - (iconSize - barHeight) / 2,
-                0, 0,
+                0.0F, 0.0F,
                 iconSize, iconSize,
                 iconSize, iconSize);
     }
@@ -268,6 +268,6 @@ public class HudRenderEvent {
             g.fill(x, spdY, x + (int)(barW * spd), spdY + barH, c);
         }
         g.centeredText(client.font, String.format("§f%.1f m/s", speed),
-                g.guiWidth() / 2, spdY + barH + 2, 0xFFFFFF);
+                g.guiWidth() / 2, spdY + barH + 2, 0xFFFFFFFF);
     }
 }

@@ -37,7 +37,7 @@ public class ChatWithNekoScreen extends Screen implements INekoScreen {
     private static final int COLOR_USER = 0xFFE8B060;   // 用户：暖橙
     private static final int COLOR_AI = 0xFFB0C8E8;     // AI：浅蓝
     private static final int COLOR_ERROR = 0xFFFF6B6B;  // 错误：红
-    private static final int COLOR_PLAIN = 0xCCCCCC;    // 无角色：灰
+    private static final int COLOR_PLAIN = 0xFFCCCCCC;  // 无角色：灰
     private static final int BG_USER = 0x40E8B060;      // 用户气泡（25% 橙）
     private static final int BG_AI = 0x40304048;        // AI 气泡（25% 深蓝灰）
     private static final int BG_NONE = 0;               // 无背景
@@ -220,7 +220,7 @@ public class ChatWithNekoScreen extends Screen implements INekoScreen {
     public void extractRenderState(@NotNull GuiGraphicsExtractor g, int mx, int my, float pt) {
         g.fill(0, 0, width, height, 0x80000000);
         g.fill(0, 0, width, 30, 0xC0000000);
-        g.centeredText(font, getTitle(), width / 2, 8, 0xFFFFFF);
+        g.centeredText(font, getTitle(), width / 2, 8, 0xFFFFFFFF);
 
         int chatX = chatX();
         int chatY = chatY();

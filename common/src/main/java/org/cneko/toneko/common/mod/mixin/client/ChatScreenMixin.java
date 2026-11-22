@@ -59,6 +59,6 @@ public abstract class ChatScreenMixin extends Screen {
         g.outline(btnX, btnY, btnW, btnH, areaChatMode ? 0xFF55FF55 : 0xFFAAAAAA);
 
         String label = areaChatMode ? "§a区域" : "§7全服";
-        g.centeredText(font, Component.literal(label), btnX + btnW / 2, btnY + 3, 0xFFFFFF);
+        g.centeredText(font, Component.literal(label), btnX + btnW / 2, btnY + 3, 0xFFFFFFFF);
     }
 }

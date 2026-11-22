@@ -110,7 +110,7 @@ public class NekoInfoScreen extends Screen {
 
         if (!((INeko) player).isNeko()) {
             guiGraphics.centeredText(this.font, translatable("screen.toneko.neko_info.not_neko"),
-                    leftCenterX, leftY, 0xFF5555);
+                    leftCenterX, leftY, 0xFFFF5555);
             return; // 如果不是猫娘，中止后续绘制
         }
 

@@ -198,7 +198,7 @@ public class GeneticsScreen extends Screen {
         int listBottom = this.height - 40;
 
         String chrId = chromosomes.get(currentChrIndex);
-        graphics.centeredText(this.font, Component.translatable("gui.toneko.genetics_viewer.chromosome", chrId), centerX / 2, 26, 0xFFAA00);
+        graphics.centeredText(this.font, Component.translatable("gui.toneko.genetics_viewer.chromosome", chrId), centerX / 2, 26, 0xFFFFAA00);
 
         // 渲染左侧面板
         graphics.enableScissor(0, listTop, centerX, listBottom);
@@ -210,7 +210,7 @@ public class GeneticsScreen extends Screen {
             graphics.centeredText(this.font, showAllAllelesMode
                             ? Component.translatable("gui.toneko.genetics_viewer.pool.all")
                             : Component.translatable("gui.toneko.genetics_viewer.pool.recommended"),
-                    centerX + centerX / 2, 26, showAllAllelesMode ? 0xFFAAAA : 0x55FFFF);
+                    centerX + centerX / 2, 26, showAllAllelesMode ? 0xFFFFAAAA : 0xFF55FFFF);
 
             graphics.enableScissor(centerX, listTop, this.width, listBottom);
             renderRightPanel(graphics, mouseX, mouseY, listTop, listBottom);
@@ -233,15 +233,15 @@ public class GeneticsScreen extends Screen {
 
             // 翻译基因座名称（如果有的话）
             String locusName = getLocusTranslatedName(locusId);
-            graphics.text(this.font, Component.translatable("gui.toneko.genetics_viewer.locus", locusName).getString(), 15, y + 4, 0xAAAAAA);
+            graphics.text(this.font, Component.translatable("gui.toneko.genetics_viewer.locus", locusName).getString(), 15, y + 4, 0xFFAAAAAA);
 
             boolean isSelA = locusId.equals(editingLocus) && "A".equals(editingStrand);
             boolean hoverA = canEdit && mouseX >= 15 && mouseX <= centerX / 2 - 5 && mouseY >= y + 16 && mouseY <= y + 26 && mouseY > top && mouseY < bottom;
-            graphics.text(this.font, Component.translatable("gui.toneko.genetics_viewer.paternal", getTranslatedName(strandA.getStringOr(locusId, ""))).getString(), 15, y + 16, isSelA ? 0xFFFF55 : (hoverA ? 0x55FF55 : 0xDDDDDD));
+            graphics.text(this.font, Component.translatable("gui.toneko.genetics_viewer.paternal", getTranslatedName(strandA.getStringOr(locusId, ""))).getString(), 15, y + 16, isSelA ? 0xFFFFFF55 : (hoverA ? 0xFF55FF55 : 0xFFDDDDDD));
 
             boolean isSelB = locusId.equals(editingLocus) && "B".equals(editingStrand);
             boolean hoverB = canEdit && mouseX >= centerX / 2 && mouseX <= centerX - 15 && mouseY >= y + 16 && mouseY <= y + 26 && mouseY > top && mouseY < bottom;
-            graphics.text(this.font, Component.translatable("gui.toneko.genetics_viewer.maternal", getTranslatedName(strandB.getStringOr(locusId, ""))).getString(), centerX / 2, y + 16, isSelB ? 0xFFFF55 : (hoverB ? 0x55FF55 : 0xDDDDDD));
+            graphics.text(this.font, Component.translatable("gui.toneko.genetics_viewer.maternal", getTranslatedName(strandB.getStringOr(locusId, ""))).getString(), centerX / 2, y + 16, isSelB ? 0xFFFFFF55 : (hoverB ? 0xFF55FF55 : 0xFFDDDDDD));
 
             y += 35;
         }
@@ -261,7 +261,7 @@ public class GeneticsScreen extends Screen {
             if (isCurrent) graphics.fill(startX - 2, y - 2, this.width - 18, y + 14, 0x66FFD700);
             else if (hover) graphics.fill(startX - 2, y - 2, this.width - 18, y + 14, 0x44FFFFFF);
 
-            graphics.text(this.font, getTranslatedName(alleleId), startX, y, isCurrent ? 0xFFFF55 : 0xFFFFFF);
+            graphics.text(this.font, getTranslatedName(alleleId), startX, y, isCurrent ? 0xFFFFFF55 : 0xFFFFFFFF);
             y += 16;
         }
         rightMaxScroll = Math.max(0, (displayAlleles.size() * 16) - (bottom - top));

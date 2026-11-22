@@ -39,12 +39,10 @@ dependencies {
     neoForge "net.neoforged:neoforge:$rootProject.neoforge_version"
 
     common(project(path: ':common', configuration: 'namedElements')) { transitive false }
-    shadowBundle project(path: ':common', configuration: 'transformProductionNeoForge')
-    // loom-no-remap 无 include/JIJ，改为随 shadowJar 平铺打包
-    shadowBundle "com.github.CSneko:NekoAI:$rootProject.nekoai_version"
-    shadowBundle "com.github.umjammer:jlayer:1.0.3"
-    include "com.github.CSneko:NekoAI:$rootProject.nekoai_version"
-    include "com.github.umjammer:jlayer:1.0.3"
+    shadowBundle(project(path: ':common', configuration: 'transformProductionNeoForge')) { transitive = false }
+    // loom-no-remap 主产物为 shadowJar：只平铺打包库本体（禁止传递拉入 slf4j / gson / jsr305，避免 NeoForge 模块层包冲突）
+    shadowBundle("com.github.CSneko:NekoAI:$rootProject.nekoai_version") { transitive = false }
+    shadowBundle("com.github.umjammer:jlayer:1.0.3") { transitive = false }
 
     // loom-no-remap 无 mod* 配置（全部官方映射，无需重映射），mod 依赖走普通 configuration
     // Forgified Fabric API：在 NeoForge 侧提供 net.fabricmc.* Fabric API 类
@@ -72,6 +70,12 @@ shadowJar {
     configurations = [project.configurations.shadowBundle]
     // loom-no-remap：无 remapJar 任务；shadowJar 即发布主产物
     archiveClassifier = ''
+    // 防御性排除：防止公共库（slf4j/gson/errorprone/jsr305）混入主包引发 NeoForge JPMS 重复包/模块冲突
+    exclude 'org/slf4j/**'
+    exclude 'com/google/**'
+    exclude 'javax/annotation/**'
+    exclude 'META-INF/maven/**'
+    exclude 'META-INF/proguard/**'
 }
 
 tasks.named('jar') {

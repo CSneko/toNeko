@@ -31,16 +31,14 @@ public class LegwearWorkbenchBlock extends Block {
 
     @Override
     protected @NotNull InteractionResult useWithoutItem(@NotNull BlockState state, Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull BlockHitResult hitResult) {
-        if (level.isClientSide()) {
-            return InteractionResult.SUCCESS;
-        } else {
+        if (!level.isClientSide()) {
             player.openMenu(new SimpleMenuProvider(
                     (containerId, playerInventory, playerEntity) -> new LegwearWorkbenchMenu(
                             containerId, playerInventory, new SimpleContainer(1), ContainerLevelAccess.create(level, pos)),
                     this.getName()
             ));
-            return InteractionResult.PASS;
         }
+        return InteractionResult.SUCCESS;
     }
 
     public static class LegwearWorkbenchMenu extends AbstractContainerMenu {

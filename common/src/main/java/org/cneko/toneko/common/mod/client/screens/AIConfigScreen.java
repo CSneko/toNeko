@@ -453,7 +453,7 @@ public class AIConfigScreen extends Screen {
             boolean hover = mx >= lx && mx < rx && my >= ly && my < ly + getHeight();
             g.fill(lx, ly, rx, ly + getHeight(), hover ? 0x15FFFFFF : 0);
             String s = val ? "§a✔ " : "§c✘ ";
-            g.text(Minecraft.getInstance().font, s + label.getString(), lx + 4, ly + 5, 0xFFFFFF);
+            g.text(Minecraft.getInstance().font, s + label.getString(), lx + 4, ly + 5, 0xFFFFFFFF);
         }
         @Override
         public void rowClicked(double mx, double my, int btn) {
@@ -622,7 +622,7 @@ public class AIConfigScreen extends Screen {
             String name = providers.isEmpty() ? "N/A" : providers.get(providerIndex).getDisplayName();
             String txt = "◀  " + name + "  ▶";
             g.centeredText(Minecraft.getInstance().font, Component.literal(txt),
-                    (lx + rx) / 2, ly + 8, 0xFFFFFF);
+                    (lx + rx) / 2, ly + 8, 0xFFFFFFFF);
         }
         @Override
         public void rowClicked(double mx, double my, int btn) {
@@ -644,7 +644,7 @@ public class AIConfigScreen extends Screen {
             g.fill(lx, ly, rx, ly + getHeight(), hover ? 0x25FF69B4 : 0x10FFFFFF);
             String txt = "▶  " + net.minecraft.client.resources.language.I18n.get("screen.toneko.ai_config.use_player2") + "  ◀";
             g.centeredText(Minecraft.getInstance().font, Component.literal(txt),
-                    (lx + rx) / 2, ly + 8, 0xFF69B4);
+                    (lx + rx) / 2, ly + 8, COLOR_ACCENT);
         }
         @Override
         public void rowClicked(double mx, double my, int btn) {
@@ -729,7 +729,7 @@ public class AIConfigScreen extends Screen {
             }
             int midX = this.lx + 4 + Minecraft.getInstance().font.width(
                     net.minecraft.client.resources.language.I18n.get("screen.toneko.ai_config.tts.voice") + ": ");
-            g.text(Minecraft.getInstance().font, Component.literal(display), midX, ly + 8, 0xFFFFFF);
+            g.text(Minecraft.getInstance().font, Component.literal(display), midX, ly + 8, 0xFFFFFFFF);
 
             // 刷新按钮
             int bx = R - REFRESH_W - 2;
@@ -737,7 +737,7 @@ public class AIConfigScreen extends Screen {
             g.fill(bx, ly + 5, R - 2, ly + getHeight() - 5, btnHover ? 0x55FFFFFF : 0x33FFFFFF);
             g.centeredText(Minecraft.getInstance().font,
                     Component.literal(net.minecraft.client.resources.language.I18n.get("screen.toneko.ai_config.tts.voice.refresh")),
-                    (bx + R - 2) / 2, ly + 9, 0xFFFFFF);
+                    (bx + R - 2) / 2, ly + 9, 0xFFFFFFFF);
         }
 
         @Override

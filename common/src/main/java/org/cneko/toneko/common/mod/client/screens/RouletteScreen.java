@@ -103,7 +103,7 @@ public class RouletteScreen extends Screen implements ClientMusicPlayer.NotePlay
 
         // ---- 标题 ----
         g.centeredText(this.font, Component.translatable("gui.toneko.roulette.select_category"),
-                cx, 12, 0xFFFFFF);
+                cx, 12, 0xFFFFFFFF);
 
         // ---- 上方：分类行 ----
         renderRow(g, cx, CAT_Y, CAT_SIZE, CAT_GAP,
@@ -121,7 +121,7 @@ public class RouletteScreen extends Screen implements ClientMusicPlayer.NotePlay
                 ? Component.translatable("gui.toneko.roulette.focus_actions")
                 : Component.translatable("gui.toneko.roulette.focus_categories");
         g.centeredText(this.font, focusHint, cx, CAT_Y + CAT_SIZE / 2 + ACT_Y - ACT_SIZE / 2 - CAT_SIZE / 2,
-                0x666666);
+                0xFF666666);
         int sepY = (CAT_Y + CAT_SIZE / 2 + ACT_Y - ACT_SIZE / 2) / 2;
         g.fill(cx - 60, sepY, cx + 60, sepY + 1, 0x44FFFFFF);
 
@@ -143,7 +143,7 @@ public class RouletteScreen extends Screen implements ClientMusicPlayer.NotePlay
 
         // ---- 底部提示 ----
         Component tip = Component.translatable("gui.toneko.roulette.tip");
-        g.centeredText(this.font, tip, cx, this.height - 20, 0x888888);
+        g.centeredText(this.font, tip, cx, this.height - 20, 0xFF888888);
     }
 
     private void renderDarkBackground(GuiGraphicsExtractor g) {
@@ -185,9 +185,8 @@ public class RouletteScreen extends Screen implements ClientMusicPlayer.NotePlay
 
         // 图标
         int iconSz = (int) (24 * scale);
-        // 26.x GUI：提取器没有全局 tint，这里以固定透明度预乘的颜色由 blit 变体处理；
-        // 先直接绘制（视觉上等价于 alpha=1 的近似实现）
-        g.blit(icon, x - iconSz / 2, y - iconSz / 2 - 6, 0, 0, iconSz, iconSz, iconSz, iconSz);
+        g.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, icon,
+                x - iconSz / 2, y - iconSz / 2 - 6, 0.0F, 0.0F, iconSz, iconSz, iconSz, iconSz);
 
         // 名称
         int textColor = selected ? (a << 24) | 0xFFFFFF : (a << 24) | 0xAAAAAA;

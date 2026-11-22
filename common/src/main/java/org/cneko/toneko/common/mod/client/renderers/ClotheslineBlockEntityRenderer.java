@@ -63,7 +63,12 @@ public class ClotheslineBlockEntityRenderer implements BlockEntityRenderer<Cloth
         if (stack.isEmpty() || !LegwearItem.isLegwear(stack)) return;
 
         nodeCollector.submitCustomGeometry(poseStack, net.minecraft.client.renderer.rendertype.RenderTypes.entityTranslucent(LEGWEAR_TEXTURE),
-                (pose, vertexConsumer) -> this.draw(poseStack, vertexConsumer, state.lightCoords, stack, state.time));
+                (pose, vertexConsumer) -> {
+                    // 26.1.2：回调执行时外部 poseStack 已被 pop 回单位矩阵，必须以快照 pose 为起点重建局部栈
+                    PoseStack drawPose = new PoseStack();
+                    drawPose.last().set(pose);
+                    this.draw(drawPose, vertexConsumer, state.lightCoords, stack, state.time);
+                });
     }
 
     private void draw(PoseStack poseStack, VertexConsumer vc, int packedLight, ItemStack stack, float time) {

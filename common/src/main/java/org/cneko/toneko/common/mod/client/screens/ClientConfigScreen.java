@@ -109,19 +109,19 @@ public class ClientConfigScreen extends Screen {
         // 行 label
         guiGraphics.text(this.font,
                 Component.translatable("screen.toneko.client_config.chat_display").withStyle(ChatFormatting.GOLD),
-                centerX - 220, rowY + 6, 0xE0E0E0, false);
+                centerX - 220, rowY + 6, 0xFFE0E0E0, false);
         guiGraphics.text(this.font,
                 Component.translatable("screen.toneko.client_config.bubble_duration").withStyle(ChatFormatting.GOLD),
-                centerX - 220, rowY + 42, 0xE0E0E0, false);
+                centerX - 220, rowY + 42, 0xFFE0E0E0, false);
         guiGraphics.text(this.font,
                 Component.translatable("screen.toneko.client_config.bubble_color").withStyle(ChatFormatting.GOLD),
-                centerX - 220, rowY + 78, 0xE0E0E0, false);
+                centerX - 220, rowY + 78, 0xFFE0E0E0, false);
 
         // 说明文字
         int descY = rowY + 110;
         for (String line : Component.translatable("screen.toneko.client_config.desc").getString().split("\n")) {
             guiGraphics.centeredText(this.font, Component.literal(line).withStyle(ChatFormatting.GRAY),
-                    this.width / 2, descY, 0xFFFFFF);
+                    this.width / 2, descY, 0xFFFFFFFF);
             descY += 12;
         }
 

@@ -116,17 +116,28 @@ public class LegwearWorkbenchScreen extends AbstractContainerScreen<LegwearWorkb
     }
 
     @Override
-    public void extractContents(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        // 11 参重载：屏幕 176x196 显示整张 512x512 贴图（用户背景为整幅画布，非左上角分块布局）
-        guiGraphics.blit(BG, this.leftPos, this.topPos,
-                0, 0, this.imageWidth, this.imageHeight,
+    public void extractBackground(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        // 26.1.2：容器界面贴图必须在 extractBackground 中用 GUI_TEXTURED 管线绘制
+        super.extractBackground(guiGraphics, mouseX, mouseY, partialTick);
+        // 12 参重载：屏幕 176x196 显示整张 512x512 贴图（用户背景为整幅画布，非左上角分块布局）
+        guiGraphics.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, BG,
+                this.leftPos, this.topPos,
+                0.0F, 0.0F,
+                this.imageWidth, this.imageHeight,
+                BG_TEXTURE_SIZE, BG_TEXTURE_SIZE,
                 BG_TEXTURE_SIZE, BG_TEXTURE_SIZE);
+    }
 
-        // 两个标签
+    @Override
+    public void extractContents(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        // 26.1.2：extractContents 负责子控件、标题标签与全部槽位物品（含玩家背包），必须先调 super
+        super.extractContents(guiGraphics, mouseX, mouseY, partialTick);
+
+        // 两个标签（26.1.2 text() 要求 ARGB 带 alpha 位）
         guiGraphics.text(this.font, Component.translatable("gui.toneko.legwear_workbench.denier"),
-                this.leftPos + 44, this.topPos + 30, 0x404040, false);
+                this.leftPos + 44, this.topPos + 30, 0xFF404040, false);
         guiGraphics.text(this.font, Component.translatable("gui.toneko.legwear_workbench.length"),
-                this.leftPos + 44, this.topPos + 62, 0x404040, false);
+                this.leftPos + 44, this.topPos + 62, 0xFF404040, false);
 
         ItemStack stack = this.menu.getSlot(0).getItem();
         if (LegwearItem.isLegwear(stack)) {
@@ -135,18 +146,18 @@ public class LegwearWorkbenchScreen extends AbstractContainerScreen<LegwearWorkb
             Component gradeText = Component.translatable("item.toneko.legwear.zettai_ryouiki." + grade);
             if ("full".equals(grade)) {
                 guiGraphics.text(this.font, Component.translatable("gui.toneko.legwear_workbench.zettai_full", gradeText),
-                        this.leftPos + 44, this.topPos + 98, 0x404040, false);
+                        this.leftPos + 44, this.topPos + 98, 0xFF404040, false);
             } else {
                 guiGraphics.text(this.font, Component.translatable("gui.toneko.legwear_workbench.zettai",
                         Math.round(ZettaiRyouiki.computeTerritory(this.previewLength, ZettaiRyouiki.DEFAULT_SKIRT_HEM_HEIGHT) * 100),
                         gradeText),
-                        this.leftPos + 44, this.topPos + 98, 0x404040, false);
+                        this.leftPos + 44, this.topPos + 98, 0xFF404040, false);
             }
         } else {
             // 空槽：领域显示"无"
             guiGraphics.text(this.font, Component.translatable("gui.toneko.legwear_workbench.zettai_full",
                     Component.translatable("item.toneko.legwear.zettai_ryouiki.none")),
-                    this.leftPos + 44, this.topPos + 98, 0x808080, false);
+                    this.leftPos + 44, this.topPos + 98, 0xFF808080, false);
         }
     }
 

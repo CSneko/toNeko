@@ -22,8 +22,8 @@ public class ToNekoHubScreen extends Screen {
     private static final int SECTION2_ROW2_Y = 143;
 
     // Colors (matching NekoInfoScreen style)
-    private static final int TITLE_COLOR = 0xFFFFFF;
-    private static final int SECTION_COLOR = 0x55FFFF;
+    private static final int TITLE_COLOR = 0xFFFFFFFF;
+    private static final int SECTION_COLOR = 0xFF55FFFF;
     private static final int DIVIDER_COLOR = 0x44FFFFFF;
 
     protected ToNekoHubScreen() {

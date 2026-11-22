@@ -1,22 +1,25 @@
 package org.cneko.toneko.common.mod.client.items;
 
-import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
-import net.minecraft.client.renderer.SubmitNodeCollector;
-
-import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.ItemStack;
-import org.cneko.toneko.common.mod.items.LegwearItem;
-import org.cneko.toneko.common.mod.misc.WetnessUtil;
-import com.geckolib.cache.model.GeoBone;
+import com.geckolib.cache.model.BakedGeoModel;
 import com.geckolib.model.DefaultedItemGeoModel;
+import com.geckolib.renderer.GeoArmorRenderer;
 import com.geckolib.renderer.base.BoneSnapshots;
 import com.geckolib.renderer.base.GeoRenderState;
 import com.geckolib.renderer.base.RenderPassInfo;
-import com.geckolib.renderer.specialty.DyeableGeoArmorRenderer;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.OrderedSubmitNodeCollector;
+import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
+import org.cneko.toneko.common.mod.items.LegwearItem;
+import org.cneko.toneko.common.mod.misc.WetnessUtil;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 
 import static org.cneko.toneko.common.Bootstrap.MODID;
 
@@ -24,81 +27,31 @@ import static org.cneko.toneko.common.Bootstrap.MODID;
  * 丝袜渲染器：按 D 值切换半透明管线实现透肉感，
  * 按袜口高度隐藏超出部分的骨骼段，左右腿独立染色。
  *
- * <h2>GeckoLib 5.5 渲染状态说明</h2>
- * GeoArmorRenderer 使用「穿戴者实体的原版渲染状态」（玩家为 AvatarRenderState，
- * 盔甲层路径为 vanilla HumanoidRenderState）——运行期由 GeckoLib 的
- * EntityRenderStateMixin 给原版状态注入 GeoRenderState 接口。
- * 因此渲染器不能持有自定义状态类（会 ClassCastException）；这里用泛型
- * {@code S}（双上界，擦除后为 HumanoidRenderState）同时满足编译期约束，
- * 运行期直接接收原版状态对象。
+ * <h2>GeckoLib 5.5 渲染说明</h2>
+ * 直接继承 {@link GeoArmorRenderer} 而非 {@code DyeableGeoArmorRenderer}：
+ * GeckoLib 5.5.2 的 {@code DyeableGeoArmorRenderer#renderDyedBone} 丢弃传入的 {@code pose}
+ * 并使用空 {@code new PoseStack()} 渲染，导致所有可染色骨骼浮在相机原点（天上）；
+ * 同时它未调用 {@code super.adjustModelBonesForRender} 且无视段隐藏。
+ * 这里在 {@link #submitRenderTasks} 中按腿段分别传入左/右腿染色并沿用正确的 {@code pose}，
+ * 使动画、段显隐、透肉与左右腿独立染色在玩家/猫娘实体/物品栏预览下全部正确生效。
  */
-public class LegwearRenderer<S extends HumanoidRenderState & GeoRenderState> extends DyeableGeoArmorRenderer<LegwearItem<?>, S> {
+public class LegwearRenderer<S extends HumanoidRenderState & GeoRenderState> extends GeoArmorRenderer<LegwearItem<?>, S> {
 
     // 各段显隐阈值（对应 geo 模型：foot y-0.05~3.0 / calf y3.0~6.5 / thigh y6.5~12.0）
     private static final float SEGMENT_THRESHOLD_FOOT = 0.20f;
     private static final float SEGMENT_THRESHOLD_CALF = 0.50f;
     private static final float SEGMENT_THRESHOLD_THIGH = 0.80f;
 
-    /** 单腿全部骨骼前缀（按腿侧后缀 L/R 判定归属） */
-    private static final List<String> LEG_BONES = List.of(
-            "legwearFoot", "legwearCalf", "legwearThigh", "legwearCuffFoot", "legwearCuffCalf");
-
     public LegwearRenderer() {
         super(new DefaultedItemGeoModel<>(Identifier.fromNamespaceAndPath(MODID, "legwear/legwear")));
     }
 
     @Override
-    public void captureDefaultRenderState(LegwearItem<?> item, com.geckolib.renderer.GeoArmorRenderer.RenderData data,
+    public void captureDefaultRenderState(LegwearItem<?> item, GeoArmorRenderer.RenderData data,
                                           S state, float partialTick) {
         super.captureDefaultRenderState(item, data, state, partialTick);
-        // 物品堆入状态，供 getRenderType / 染色读取
+        // 物品堆入状态，供 getRenderType / 段显隐 / 左右腿染色读取
         state.addGeckolibData(NekoArmorRenderer.ITEM_STACK, data.itemStack());
-    }
-
-    // ===== 26.1.2 实体位移补偿（同 NekoArmorRenderer，问题二修复）=====
-    private static final org.slf4j.Logger DBG =
-            org.slf4j.LoggerFactory.getLogger("ToNekoArmorDebug");
-    private static long dbgLast = 0L;
-
-    private void applyEntityTransform(RenderPassInfo<S> info) {
-        try {
-            var st = info.renderState();
-            // 猫娘形态路径（ItemArmorGeoLayer）栈内已带骨骼变换，交由 GeckoLib 自行处理
-            Boolean geckoWearer = st.getOrDefaultGeckolibData(
-                    com.geckolib.renderer.GeoArmorRenderer.IS_GECKOLIB_WEARER, Boolean.FALSE);
-            if (Boolean.TRUE.equals(geckoWearer)) return;
-
-            net.minecraft.client.Camera cam = net.minecraft.client.Minecraft.getInstance().gameRenderer.getMainCamera();
-            float ex = (float) (st.x - cam.position().x);
-            float ey = (float) (st.y - cam.position().y);
-            float ez = (float) (st.z - cam.position().z);
-            long now = System.currentTimeMillis();
-            boolean log = now - dbgLast > 4000L;
-            if (log) {
-                dbgLast = now;
-                DBG.info("[legwear] rebuild entity transform: pos=({}, {}, {}) bodyRot={} scale={}",
-                        String.format("%.2f", ex), String.format("%.2f", ey), String.format("%.2f", ez),
-                        String.format("%.1f", st.bodyRot), String.format("%.2f", st.scale));
-            }
-            // 重建原版 LivingEntityRenderer.submit 的模型空间：
-            // T(实体相对相机) · scale(scale) · rotY(180−bodyRot) · S(-1,-1,1) · T(0,-1.501,0)
-            org.joml.Matrix4f m = info.poseStack().last().pose();
-            m.identity();
-            m.translate(ex, ey, ez);
-            m.scale(st.scale, st.scale, st.scale);
-            m.rotate(com.mojang.math.Axis.YP.rotationDegrees(180f - st.bodyRot));
-            m.scale(-1f, -1f, 1f);
-            m.translate(0f, -1.501f, 0f);
-        } catch (Throwable t) {
-            DBG.info("[legwear] applyEntityTransform failed: {}", t);
-        }
-    }
-    // ===== END FIX =====
-
-    @Override
-    public boolean firePreRenderEvent(RenderPassInfo<S> info, SubmitNodeCollector collector) {
-        applyEntityTransform(info);
-        return super.firePreRenderEvent(info, collector);
     }
 
     // === 按 denier 切 RenderType：40D+ 不透明，以下半透明透肉 ===
@@ -119,25 +72,52 @@ public class LegwearRenderer<S extends HumanoidRenderState & GeoRenderState> ext
         return RenderTypes.entityTranslucent(texture);
     }
 
+    @Override
+    public int getRenderColor(LegwearItem<?> animatable, GeoArmorRenderer.RenderData stackAndSlot, float partialTick) {
+        return 0xFFFFFFFF;
+    }
+
     // === 左右腿独立染色 + 透肉 alpha ===
 
     @Override
-    protected boolean isBoneDyeable(GeoBone bone) {
-        // 只有丝袜本体/袜口骨骼参与染色，其余保持纹理原色
-        String name = bone.name();
-        return LEG_BONES.stream().anyMatch(name::startsWith);
-    }
+    public void submitRenderTasks(RenderPassInfo<S> renderPassInfo, OrderedSubmitNodeCollector renderTasks, @Nullable RenderType renderType) {
+        if (renderType == null) return;
 
-    @Override
-    protected int getColorForBone(S state, GeoBone bone, int baseColor) {
-        ItemStack stack = state.getOrDefaultGeckolibData(NekoArmorRenderer.ITEM_STACK, ItemStack.EMPTY);
-        if (stack.isEmpty()) return baseColor;
+        final int packedLight = renderPassInfo.packedLight();
+        final int packedOverlay = renderPassInfo.packedOverlay();
+        final S renderState = renderPassInfo.renderState();
+        final EquipmentSlot slot = Objects.requireNonNull(renderState.getGeckolibData(CURRENT_SLOT));
+        final BakedGeoModel model = renderPassInfo.model();
 
-        // 骨骼名以 L 结尾 → 左腿色，否则右腿色
-        boolean leftSide = bone.name().endsWith("L");
-        int rgb = leftSide ? LegwearItem.getLeftRenderColor(stack) : LegwearItem.getRightRenderColor(stack);
-        int alpha = renderAlpha(stack);
-        return (alpha << 24) | (rgb & 0xFFFFFF);
+        if (model.isMissingno()) {
+            submitMissingModelRender(renderPassInfo, renderTasks);
+            return;
+        }
+
+        final ItemStack stack = renderState.getOrDefaultGeckolibData(NekoArmorRenderer.ITEM_STACK, ItemStack.EMPTY);
+        final int alpha = stack.isEmpty() ? 255 : renderAlpha(stack);
+        final int leftColor = stack.isEmpty()
+                ? renderPassInfo.renderColor()
+                : ((alpha << 24) | (LegwearItem.getLeftRenderColor(stack) & 0xFFFFFF));
+        final int rightColor = stack.isEmpty()
+                ? renderPassInfo.renderColor()
+                : ((alpha << 24) | (LegwearItem.getRightRenderColor(stack) & 0xFFFFFF));
+
+        renderTasks.submitCustomGeometry(renderPassInfo.poseStack(), renderType, (pose, vertexConsumer) -> {
+            final PoseStack poseStack = renderPassInfo.poseStack();
+
+            poseStack.pushPose();
+            poseStack.last().set(pose);
+            renderPassInfo.renderPosed(() -> {
+                for (ArmorSegment segment : getSegmentsForSlot(renderState, slot)) {
+                    int segColor = (segment == ArmorSegment.LEFT_LEG || segment == ArmorSegment.LEFT_FOOT)
+                            ? leftColor : rightColor;
+                    renderPassInfo.model().getBone(getBoneNameForSegment(renderState, segment))
+                            .ifPresent(bone -> bone.positionAndRender(renderPassInfo, vertexConsumer, packedLight, packedOverlay, segColor));
+                }
+            });
+            poseStack.popPose();
+        });
     }
 
     /** 按袜口高度隐藏段（每帧在骨骼编译阶段重设） */
@@ -163,9 +143,7 @@ public class LegwearRenderer<S extends HumanoidRenderState & GeoRenderState> ext
     }
 
     private static void setBoneSkipped(BoneSnapshots snapshots, String name, boolean skipped) {
-        if (skipped) {
-            snapshots.ifPresent(name, snapshot -> snapshot.skipRender(true));
-        }
+        snapshots.ifPresent(name, snapshot -> snapshot.skipRender(skipped));
     }
 
     /** denier → alpha（0~255）：5D 极透、20D 透肉、40D 不透明 */

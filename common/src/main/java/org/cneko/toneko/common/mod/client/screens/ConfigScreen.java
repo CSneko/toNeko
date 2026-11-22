@@ -431,8 +431,8 @@ public class ConfigScreen extends Screen {
                 editBox.setValue(ConfigUtil.CONFIG.getString(node.fullKey));
                 editBox.setResponder(text -> ConfigUtil.CONFIG.set(node.fullKey, text));
                 editBox.setBordered(true);
-                // 默认颜色修正
-                editBox.setTextColor(0xFFFFFF);
+                // 默认颜色修正（26.1.2 要求带 0xFF alpha）
+                editBox.setTextColor(0xFFFFFFFF);
                 inputWidget = editBox;
             }
             widgets.add(inputWidget);
@@ -449,7 +449,7 @@ public class ConfigScreen extends Screen {
             this.lastRenderY = y;
 
             Component label = Component.translatable("screen.toneko.config.key." + node.fullKey);
-            int labelColor = (url != null && isMouseOverLabel(mouseX, mouseY)) ? COLOR_PINK_ACCENT : 0xE0E0E0;
+            int labelColor = (url != null && isMouseOverLabel(mouseX, mouseY)) ? COLOR_PINK_ACCENT : 0xFFE0E0E0;
 
             guiGraphics.text(Minecraft.getInstance().font, label, x + 10 + indent, y + 6, labelColor, false);
 
