@@ -32,6 +32,8 @@ public class HudRenderEvent {
             Player player = Minecraft.getInstance().player;
             if (player == null) return;
             HallucinationOverlay.render(guiGraphics);
+            // 兴奋 II：四周猫薄荷渐晕 + 飘落的猫薄荷叶
+            CatnipAuraOverlay.render(guiGraphics);
             renderNekoEnergyBar(guiGraphics);
             // 扑跃蓄力条（复用原版马跳跃条，盖在经验条位置）
             PounceClientHandler.renderBar(guiGraphics);

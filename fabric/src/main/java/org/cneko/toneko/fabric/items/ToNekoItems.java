@@ -101,6 +101,9 @@ public class ToNekoItems {
         SPOILED_WATER_SPLASH = new SpoiledWaterThrowableItem(SpoiledWaterThrowableItem.SPLASH_ID, false);
         SPOILED_WATER_LINGERING = new SpoiledWaterThrowableItem(SpoiledWaterThrowableItem.LINGERING_ID, true);
         SCENT_PERFUME = new ScentPerfumeItem();
+        CATNIP_WATER = new CatnipWaterItem();
+        CATNIP_SPLASH = new CatnipSplashItem();
+        CATNIP_LINGERING = new CatnipLingeringItem();
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NekoPotionItem.ID), NEKO_POTION);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(NekoCollectorItem.ID), NEKO_COLLECTOR);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(FurryBoheItem.ID), FURRY_BOHE);
@@ -151,6 +154,9 @@ public class ToNekoItems {
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(SpoiledWaterThrowableItem.SPLASH_ID), SPOILED_WATER_SPLASH);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(SpoiledWaterThrowableItem.LINGERING_ID), SPOILED_WATER_LINGERING);
         Registry.register(BuiltInRegistries.ITEM, toNekoLoc(ScentPerfumeItem.ID), SCENT_PERFUME);
+        Registry.register(BuiltInRegistries.ITEM, toNekoLoc(CatnipWaterItem.ID), CATNIP_WATER);
+        Registry.register(BuiltInRegistries.ITEM, toNekoLoc(CatnipSplashItem.ID), CATNIP_SPLASH);
+        Registry.register(BuiltInRegistries.ITEM, toNekoLoc(CatnipLingeringItem.ID), CATNIP_LINGERING);
 
         // 26.x 迁移说明：Trinkets 尚无 26.x 版本，暂直接注册原版盔甲/丝袜物品
         NEKO_EARS = new NekoArmor.NekoEarsItem(ToNekoArmorMaterials.NEKO);
@@ -236,6 +242,9 @@ public class ToNekoItems {
             content.accept(SPOILED_WATER_SPLASH);
             content.accept(SPOILED_WATER_LINGERING);
             content.accept(SCENT_PERFUME);
+            content.accept(CATNIP_WATER);
+            content.accept(CATNIP_SPLASH);
+            content.accept(CATNIP_LINGERING);
             // 猫猫手册（Patchouli 指南书）
             ItemStack guideBook = GuideBookItem.createGuideBookStack();
             if (!guideBook.isEmpty()) {

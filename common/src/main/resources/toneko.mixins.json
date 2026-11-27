@@ -15,7 +15,9 @@
     "client.SoundEngineMixin"
   ],
   "mixins": [
+    "AreaEffectCloudMixin",
     "BlockPlaceMixin",
+    "BrewingStandBlockEntityMixin",
     "CatEntityMixin",
     "CreeperMixin",
     "EntityMixin",
@@ -24,8 +26,10 @@
     "LivingEntityMixin",
     "MushroomPlayerRidingMixin",
     "PlayerEntityMixin",
+    "PotionBrewingMixin",
     "ServerLevelMixin",
     "ServerPlayerEntityMixin",
+    "ThrownSplashPotionMixin",
     "ZombieMushroomTargetMixin"
   ],
   "injectors": {

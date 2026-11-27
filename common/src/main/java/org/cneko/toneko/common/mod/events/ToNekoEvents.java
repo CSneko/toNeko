@@ -26,6 +26,7 @@ import net.minecraft.world.item.trading.ItemCost;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.Level;
 import org.cneko.toneko.common.mod.abilities.CauldronScentHandler;
+import org.cneko.toneko.common.mod.abilities.CatnipAromaHandler;
 import org.cneko.toneko.common.mod.abilities.CharmAffectionHandler;
 import org.cneko.toneko.common.mod.abilities.ScentAreaHandler;
 import org.cneko.toneko.common.mod.abilities.CharmBlushHandler;
@@ -115,6 +116,7 @@ public class ToNekoEvents {
         ServerTickEvents.START_SERVER_TICK.register(NekoEnergyBatteryItem::dischargeAllPlayers);
         ServerTickEvents.START_SERVER_TICK.register(ClimbWallHandler::onServerTick);
         ServerTickEvents.START_SERVER_TICK.register(PounceHandler::onServerTick);
+        ServerTickEvents.START_SERVER_TICK.register(CatnipAromaHandler::onServerTick);
         ServerTickEvents.START_SERVER_TICK.register(ZettaiRyouikiAuraHandler::onServerTick);
         ServerTickEvents.START_SERVER_TICK.register(LegwearSagHandler::onServerTick);
         ServerTickEvents.START_SERVER_TICK.register(CharmAffectionHandler::onServerTick);

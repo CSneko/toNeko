@@ -1,0 +1,60 @@
+package org.cneko.toneko.common.mod.items;
+
+import net.minecraft.core.Direction;
+import net.minecraft.core.Position;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.LingeringPotionItem;
+import net.minecraft.world.level.Level;
+import org.cneko.toneko.common.mod.util.NekoIds;
+import org.jetbrains.annotations.NotNull;
+
+/**
+ * 滞留型猫薄荷水：喷溅型猫薄荷水 + 龙息在酿造台酿造。
+ *
+ * <p>投掷行为直接复用原版 {@link LingeringPotionItem}；抛出前在 {@link #use} 里把
+ * 「猫薄荷香气」写进内容，云会按原版逻辑持续给范围内玩家挂效果。
+ *
+ * <p>瓶身材质用原版 {@code minecraft:item/lingering_potion} + {@code minecraft:item/potion_overlay}。
+ */
+public class CatnipLingeringItem extends LingeringPotionItem {
+    public static final String ID = "catnip_lingering";
+
+    public CatnipLingeringItem() {
+        super(NekoIds.itemProps(ID).stacksTo(1)
+                .component(DataComponents.POTION_CONTENTS, CatnipBrewing.baseContents())
+                .component(DataComponents.TOOLTIP_DISPLAY, CatnipBrewing.HIDE_POTION_TOOLTIP));
+    }
+
+    @Override
+    public @NotNull ItemStack getDefaultInstance() {
+        ItemStack stack = super.getDefaultInstance();
+        stack.set(DataComponents.POTION_CONTENTS, CatnipBrewing.baseContents());
+        return stack;
+    }
+
+    @Override
+    public @NotNull InteractionResult use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
+        // 抛出前挂上香气（默认内容里不带效果，见 CatnipBrewing 注释）
+        player.getItemInHand(hand).set(DataComponents.POTION_CONTENTS, CatnipBrewing.aromaContents());
+        return super.use(level, player, hand);
+    }
+
+    @Override
+    public @NotNull Projectile asProjectile(@NotNull Level level, @NotNull Position pos,
+                                            @NotNull ItemStack stack, @NotNull Direction direction) {
+        // 发射器路径也要带上香气
+        stack.set(DataComponents.POTION_CONTENTS, CatnipBrewing.aromaContents());
+        return super.asProjectile(level, pos, stack, direction);
+    }
+
+    @Override
+    public @NotNull Component getName(@NotNull ItemStack stack) {
+        return Component.translatable(this.getDescriptionId());
+    }
+}

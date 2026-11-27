@@ -12,4 +12,5 @@ public class ToNekoEffects {
     public static MobEffect NEKO_EFFECT;
     public static MobEffect BEWITCHED_EFFECT;
     public static MobEffect HISS_INTIMIDATION_EFFECT;
+    public static MobEffect CATNIP_AROMA;
 }
